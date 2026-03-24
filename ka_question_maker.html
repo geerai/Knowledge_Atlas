@@ -684,6 +684,22 @@ renderClusters();
 selectTool('google');
 renderQueue();
 </script>
+<script src="ka_page_function.js"></script>
 <script src="ka_demo_wiring.js"></script>
+<script>
+window.KA_ABOUT_PAGE = {
+  pageId: 'ka_question_maker',
+  objective: "Generates research questions from the 20 CNFA topic clusters, helping contributors identify under-studied questions and connect them to article-search or hypothesis-building workflows.",
+  users: "Track 2 and Track 4 contributors; students generating research questions for assignments",
+  uses: [
+    "Browse 20 topic clusters and generate candidate research questions for each",
+    "Filter questions by quality score and move promising candidates to the review queue",
+    "Launch an article search or hypothesis-building session from a selected question",
+    "Export a question set as part of a Track 2 deliverable"
+  ]
+};
+</script>
+<script src="ka_about_page.js"></script>
+
 </body>
 </html>

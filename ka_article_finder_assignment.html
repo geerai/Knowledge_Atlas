@@ -608,6 +608,22 @@ function copyText(id){
 function closeModal(){document.getElementById('confirmModal').classList.remove('open');}
 document.getElementById('confirmModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
 </script>
+<script src="ka_page_function.js"></script>
 <script src="ka_demo_wiring.js"></script>
+<script>
+window.KA_ABOUT_PAGE = {
+  pageId: 'ka_article_finder_assignment',
+  objective: "The Track 2 assignment workbook guiding students through a structured 5-phase article-finding pipeline over Weeks 3–8, from query building to citation report.",
+  users: "Track 2 students (Article Finding Pipeline); instructors reviewing deliverables",
+  uses: [
+    "Build and refine a query diary targeting 15+ search strategies by Week 3",
+    "Assess article relevance and generate 20 research questions by Week 4",
+    "Run full literature campaigns to accumulate 50 PDFs and 150 citation records",
+    "Produce a structured citation report with quality ratings by Week 8"
+  ]
+};
+</script>
+<script src="ka_about_page.js"></script>
+
 </body>
 </html>

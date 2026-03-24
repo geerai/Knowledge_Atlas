@@ -187,7 +187,7 @@ nav {
 
 <div class="page-hero">
   <h1>KA GUI — Complete Site Map</h1>
-  <p>All 14 pages of the Knowledge Atlas prototype. Click any card to open that page. Each card shows the page's audience, purpose summary, and which critical path phase is needed to make it live.</p>
+  <p>The current Knowledge Atlas surface spans 22 root KA pages plus 12 embedded course / studio pages. This sitemap now treats the system as one federated site with three families: Atlas research, contributor / management, and course / studio.</p>
 </div>
 
 <div class="container">
@@ -230,6 +230,75 @@ nav {
       <div class="wf-label">VOI</div>
       <div class="wf-pages">Hypothesis Builder (stage 6) · Gap Explorer</div>
     </div>
+  </div>
+
+  <div class="section-heading">
+    <div class="section-heading-line"></div>
+    <div class="section-heading-text">Current Site Families</div>
+    <div class="section-heading-count">3 families · 34 pages total</div>
+    <div class="section-heading-line"></div>
+  </div>
+
+  <div class="page-grid">
+    <a class="page-card" href="ka_home.html" target="_blank">
+      <div class="page-card-accent research"></div>
+      <div class="page-card-body">
+        <div class="page-card-header">
+          <span class="page-card-icon">Atlas</span>
+          <div>
+            <div class="page-card-title">Main Atlas / Research Surface</div>
+            <span class="page-card-file">22 root KA pages</span>
+          </div>
+        </div>
+        <div class="page-card-audience">Researchers, students, contributors, public visitors</div>
+        <div class="page-card-purpose">The canonical Knowledge Atlas surface. Includes home, topics, evidence, gaps, sensors, dashboard, contributor workflows, and assignments.</div>
+      </div>
+      <div class="page-card-footer">
+        <span class="phase-pill p4">Canonical</span>
+        <span class="status-pill live">Primary</span>
+        <span class="open-link">Root KA</span>
+      </div>
+    </a>
+
+    <a class="page-card" href="Designing_Experiments/cogs160_spring_2026_site.html" target="_blank">
+      <div class="page-card-accent student"></div>
+      <div class="page-card-body">
+        <div class="page-card-header">
+          <span class="page-card-icon">Course</span>
+          <div>
+            <div class="page-card-title">Course / Studio Surface</div>
+            <span class="page-card-file">12 embedded DE pages</span>
+          </div>
+        </div>
+        <div class="page-card-audience">COGS 160 students and instructors</div>
+        <div class="page-card-purpose">The teaching and experiment-design layer. Some pages will stay course-specific; others need to be absorbed or linked into the main Atlas IA.</div>
+      </div>
+      <div class="page-card-footer">
+        <span class="phase-pill p2">Under review</span>
+        <span class="status-pill static">Embedded</span>
+        <span class="open-link">Open →</span>
+      </div>
+    </a>
+
+    <a class="page-card" href="ka_tagger.html" target="_blank">
+      <div class="page-card-accent contrib"></div>
+      <div class="page-card-body">
+        <div class="page-card-header">
+          <span class="page-card-icon">Contrib</span>
+          <div>
+            <div class="page-card-title">Contributor / Management Surface</div>
+            <span class="page-card-file">Assignments, tagging, intake, approval</span>
+          </div>
+        </div>
+        <div class="page-card-audience">Contributors, instructors, admins</div>
+        <div class="page-card-purpose">Operational pages for article intake, image tagging, assignment claiming, approval, and structured capture. These should feel like part of the main Atlas, not a side system.</div>
+      </div>
+      <div class="page-card-footer">
+        <span class="phase-pill p1">Operational</span>
+        <span class="status-pill static">Needs integration</span>
+        <span class="open-link">Open →</span>
+      </div>
+    </a>
   </div>
 
   <!-- Legend -->
@@ -375,7 +444,7 @@ nav {
   <div class="section-heading">
     <div class="section-heading-line"></div>
     <div class="section-heading-text">Core Research Tools</div>
-    <div class="section-heading-count">3 pages</div>
+    <div class="section-heading-count">5 pages</div>
     <div class="section-heading-line"></div>
   </div>
   <div class="page-grid">
@@ -436,6 +505,46 @@ nav {
       <div class="page-card-footer">
         <span class="phase-pill p3">Phase 4 — Core Backends</span>
         <span class="status-pill static">Static (16 demo gaps)</span>
+        <span class="open-link">Open →</span>
+      </div>
+    </a>
+
+    <a class="page-card" href="ka_topics.html" target="_blank">
+      <div class="page-card-accent core"></div>
+      <div class="page-card-body">
+        <div class="page-card-header">
+          <span class="page-card-icon">Topic</span>
+          <div>
+            <div class="page-card-title">Topic Browser</div>
+            <span class="page-card-file">ka_topics.html</span>
+          </div>
+        </div>
+        <div class="page-card-audience">Students and researchers choosing an area of interest</div>
+        <div class="page-card-purpose">Front-door browse surface for topics like materials, plants, curved forms, and room size. This should become one of the first pages wired to real rebuilt content.</div>
+      </div>
+      <div class="page-card-footer">
+        <span class="phase-pill p3">Phase 4–5</span>
+        <span class="status-pill static">Static (high priority)</span>
+        <span class="open-link">Open →</span>
+      </div>
+    </a>
+
+    <a class="page-card" href="ka_question_maker.html" target="_blank">
+      <div class="page-card-accent core"></div>
+      <div class="page-card-body">
+        <div class="page-card-header">
+          <span class="page-card-icon">?</span>
+          <div>
+            <div class="page-card-title">Question Maker</div>
+            <span class="page-card-file">ka_question_maker.html</span>
+          </div>
+        </div>
+        <div class="page-card-audience">Students and researchers refining research questions</div>
+        <div class="page-card-purpose">Question-generation surface for turning topic clusters into sharper research prompts. Important bridge between topic browsing and experimental design.</div>
+      </div>
+      <div class="page-card-footer">
+        <span class="phase-pill p2">Phase 3–4</span>
+        <span class="status-pill static">Static</span>
         <span class="open-link">Open →</span>
       </div>
     </a>
@@ -515,7 +624,7 @@ nav {
   <div class="section-heading">
     <div class="section-heading-line"></div>
     <div class="section-heading-text">Contributor Tools</div>
-    <div class="section-heading-count">3 pages</div>
+    <div class="section-heading-count">5 pages</div>
     <div class="section-heading-line"></div>
   </div>
   <div class="page-grid">
@@ -579,6 +688,114 @@ nav {
         <span class="open-link">Open →</span>
       </div>
     </a>
+
+    <a class="page-card" href="ka_article_propose.html" target="_blank">
+      <div class="page-card-accent contrib"></div>
+      <div class="page-card-body">
+        <div class="page-card-header">
+          <span class="page-card-icon">+</span>
+          <div>
+            <div class="page-card-title">Article Proposal Intake</div>
+            <span class="page-card-file">ka_article_propose.html</span>
+          </div>
+        </div>
+        <div class="page-card-audience">Contributors proposing new papers</div>
+        <div class="page-card-purpose">DOI lookup, scope decision, PDF upload, and intake queue. This should connect the external literature world to the internal article-management pipeline.</div>
+      </div>
+      <div class="page-card-footer">
+        <span class="phase-pill p1">Phase 3</span>
+        <span class="status-pill static">Static + queue</span>
+        <span class="open-link">Open →</span>
+      </div>
+    </a>
+
+    <a class="page-card" href="ka_tag_assignment.html" target="_blank">
+      <div class="page-card-accent contrib"></div>
+      <div class="page-card-body">
+        <div class="page-card-header">
+          <span class="page-card-icon">Bundle</span>
+          <div>
+            <div class="page-card-title">Tag Assignment Claim</div>
+            <span class="page-card-file">ka_tag_assignment.html</span>
+          </div>
+        </div>
+        <div class="page-card-audience">Track 1 contributors and instructors</div>
+        <div class="page-card-purpose">Computational tag-bundle claiming surface. This is tightly coupled to the image tagger and should be treated as part of the main contributor flow, not a hidden course tool.</div>
+      </div>
+      <div class="page-card-footer">
+        <span class="phase-pill p1">Phase 3</span>
+        <span class="status-pill static">Static + modal</span>
+        <span class="open-link">Open →</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="section-heading">
+    <div class="section-heading-line"></div>
+    <div class="section-heading-text">Course / Studio Surfaces</div>
+    <div class="section-heading-count">12 embedded pages</div>
+    <div class="section-heading-line"></div>
+  </div>
+  <div class="page-grid">
+    <a class="page-card" href="Designing_Experiments/cogs160_spring_2026_site.html" target="_blank">
+      <div class="page-card-accent student"></div>
+      <div class="page-card-body">
+        <div class="page-card-header">
+          <span class="page-card-icon">Class</span>
+          <div>
+            <div class="page-card-title">COGS 160 Spring 2026 Site</div>
+            <span class="page-card-file">Designing_Experiments/cogs160_spring_2026_site.html</span>
+          </div>
+        </div>
+        <div class="page-card-audience">Students and instructors</div>
+        <div class="page-card-purpose">Current course narrative hub. Needs revision in parallel with the main Atlas IA so students understand what is class-only versus part of the main system.</div>
+      </div>
+      <div class="page-card-footer">
+        <span class="phase-pill p2">Parallel revision</span>
+        <span class="status-pill static">Course canonical</span>
+        <span class="open-link">Open →</span>
+      </div>
+    </a>
+
+    <a class="page-card" href="Designing_Experiments/knowledge_navigator.html" target="_blank">
+      <div class="page-card-accent student"></div>
+      <div class="page-card-body">
+        <div class="page-card-header">
+          <span class="page-card-icon">Nav</span>
+          <div>
+            <div class="page-card-title">Knowledge Navigator</div>
+            <span class="page-card-file">Designing_Experiments/knowledge_navigator.html</span>
+          </div>
+        </div>
+        <div class="page-card-audience">Students exploring research fronts and experiment choices</div>
+        <div class="page-card-purpose">Strong course-facing navigation concept. Needs disposition relative to main Atlas topics/gaps/evidence pages.</div>
+      </div>
+      <div class="page-card-footer">
+        <span class="phase-pill p2">Disposition needed</span>
+        <span class="status-pill static">Embedded</span>
+        <span class="open-link">Open →</span>
+      </div>
+    </a>
+
+    <a class="page-card" href="Designing_Experiments/experiment_wizard.html" target="_blank">
+      <div class="page-card-accent student"></div>
+      <div class="page-card-body">
+        <div class="page-card-header">
+          <span class="page-card-icon">Wizard</span>
+          <div>
+            <div class="page-card-title">Experiment Builder Wizard</div>
+            <span class="page-card-file">Designing_Experiments/experiment_wizard.html</span>
+          </div>
+        </div>
+        <div class="page-card-audience">Students designing experiments</div>
+        <div class="page-card-purpose">Legacy/shared experiment-design surface. Needs explicit canonical-vs-legacy decision relative to the root hypothesis-builder and future Streamlit studio tools.</div>
+      </div>
+      <div class="page-card-footer">
+        <span class="phase-pill p2">Disposition needed</span>
+        <span class="status-pill static">Embedded</span>
+        <span class="open-link">Open →</span>
+      </div>
+    </a>
   </div>
 
   <!-- ── META ── -->
@@ -600,7 +817,7 @@ nav {
           </div>
         </div>
         <div class="page-card-audience">GUI track evaluators, designers, instructors</div>
-        <div class="page-card-purpose">This page. Complete clickable overview of all 14 KA pages with audience, purpose summary, critical path phase, and workflow position. Entry point for GUI evaluation sessions.</div>
+        <div class="page-card-purpose">This page. Current clickable overview of the KA surface families, including main Atlas pages, contributor workflows, and the embedded course/studio layer. Entry point for GUI evaluation sessions.</div>
       </div>
       <div class="page-card-footer">
         <span class="phase-pill p4">Always available</span>
@@ -618,34 +835,50 @@ nav {
     gap: 14px; text-align: center;
   ">
     <div>
-      <div style="font-size:1.6rem;font-weight:700;color:#1C3D3A;">14</div>
+      <div style="font-size:1.6rem;font-weight:700;color:#1C3D3A;">34</div>
       <div style="font-size:0.75rem;color:#8A7A68;margin-top:2px;">Total pages</div>
     </div>
     <div>
-      <div style="font-size:1.6rem;font-weight:700;color:#E8872A;">0</div>
-      <div style="font-size:0.75rem;color:#8A7A68;margin-top:2px;">With real backend</div>
+      <div style="font-size:1.6rem;font-weight:700;color:#E8872A;">22</div>
+      <div style="font-size:0.75rem;color:#8A7A68;margin-top:2px;">Root KA pages</div>
     </div>
     <div>
-      <div style="font-size:1.6rem;font-weight:700;color:#2A7868;">5</div>
-      <div style="font-size:0.75rem;color:#8A7A68;margin-top:2px;">With working modals</div>
+      <div style="font-size:1.6rem;font-weight:700;color:#2A7868;">12</div>
+      <div style="font-size:0.75rem;color:#8A7A68;margin-top:2px;">Embedded course pages</div>
     </div>
     <div>
-      <div style="font-size:1.6rem;font-weight:700;color:#6B5EA8;">14</div>
-      <div style="font-size:0.75rem;color:#8A7A68;margin-top:2px;">With function spec</div>
+      <div style="font-size:1.6rem;font-weight:700;color:#6B5EA8;">4</div>
+      <div style="font-size:0.75rem;color:#8A7A68;margin-top:2px;">Priority live data pages</div>
     </div>
     <div>
-      <div style="font-size:1.6rem;font-weight:700;color:#C0392B;">5</div>
-      <div style="font-size:0.75rem;color:#8A7A68;margin-top:2px;">Critical path phases</div>
+      <div style="font-size:1.6rem;font-weight:700;color:#C0392B;">3</div>
+      <div style="font-size:0.75rem;color:#8A7A68;margin-top:2px;">Current site families</div>
     </div>
     <div>
-      <div style="font-size:1.6rem;font-weight:700;color:#1C7C54;">~20</div>
-      <div style="font-size:0.75rem;color:#8A7A68;margin-top:2px;">Person-weeks to live system</div>
+      <div style="font-size:1.6rem;font-weight:700;color:#1C7C54;">1</div>
+      <div style="font-size:0.75rem;color:#8A7A68;margin-top:2px;">Unified IA target</div>
     </div>
   </div>
 
 </div>
 
 <div class="version-badge">KA UI · v0.4 · Site Map</div>
+<script src="ka_page_function.js"></script>
 <script src="ka_demo_wiring.js"></script>
+<script>
+window.KA_ABOUT_PAGE = {
+  pageId: 'ka_sitemap',
+  objective: "A visual index of all Knowledge Atlas pages, organised by section and track, to help contributors and administrators find any part of the site quickly.",
+  users: "All users; new contributors orienting themselves; instructors and administrators",
+  uses: [
+    "Find any KA page by section (Authentication, Tools, Tracks, Demo)",
+    "Understand the overall site architecture at a glance",
+    "Navigate directly to any page from a single overview",
+    "Identify pages that are live vs. planned vs. in development"
+  ]
+};
+</script>
+<script src="ka_about_page.js"></script>
+
 </body>
 </html>

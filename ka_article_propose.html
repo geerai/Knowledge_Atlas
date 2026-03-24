@@ -546,6 +546,22 @@ document.getElementById('confirmModal').addEventListener('click',function(e){if(
 
 renderQueue();
 </script>
+<script src="ka_page_function.js"></script>
 <script src="ka_demo_wiring.js"></script>
+<script>
+window.KA_ABOUT_PAGE = {
+  pageId: 'ka_article_propose',
+  objective: "Allows contributors to propose a new article for inclusion in the KA corpus via DOI lookup, metadata review, and a 4-step intake checklist.",
+  users: "Any contributor who has found a potentially relevant article; Track 2 students",
+  uses: [
+    "Paste a DOI and auto-fetch metadata (title, authors, journal, year)",
+    "Complete the 4-step intake checklist (relevance, quality, open-access, duplication check)",
+    "Upload a PDF for the article if not open-access",
+    "Submit the proposal for instructor review and queue tracking"
+  ]
+};
+</script>
+<script src="ka_about_page.js"></script>
+
 </body>
 </html>
