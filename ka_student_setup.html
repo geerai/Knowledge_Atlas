@@ -233,7 +233,8 @@
   <a href="ka_dashboard.html" class="nav-link">Dashboard</a>
   <a href="ka_topics.html" class="nav-link">Topics</a>
   <a href="ka_ai_methodology.html" class="nav-link">AI Methodology</a>
-  <a href="ka_sitemap.html" class="nav-link">Sitemap</a>
+  <a href="ka_schedule.html" class="nav-link">Schedule</a>
+    <a href="ka_sitemap.html" class="nav-link">Sitemap</a>
 </nav>
 
 <div class="page-hero">
@@ -506,13 +507,22 @@ DB_PATH = "data/web_persistence_v5.db"</pre>
         <p style="margin-bottom:14px">Your job: grow the KA article corpus. You will build search queries, run literature searches,
         screen articles, acquire PDFs, and ingest them through the extraction pipeline.
         Hard minimum: 150 citation records, 50 PDFs, by Week 8.</p>
+        <div class="callout callout-info">
+          <strong>One explicit Track 2 front:</strong> help build the future <em>Neural Underpinnings</em> layer.
+          Some article-finder teams will be assigned pathway families such as Predictive Processing, Salience Networks,
+          Interoceptive / Constructionist Affect, Neuromodulatory Systems, Chronobiological Regulation, or Multisensory Integration.
+          For that pathway, your job is to collect classic anchors, recent reviews, direct-measurement papers, and environment-relevant papers,
+          while marking clearly what is directly measured versus only inferred.
+        </div>
         <ul class="checklist">
           <li>Read <code>ka_article_finder_assignment.html</code> in full — the 5-phase pipeline and milestone table are your spec.</li>
           <li>Open <code>data/student/research_queue_state.json</code> — these are your gap targets. You own a slice of this list (assigned in Week 1).</li>
           <li>Run the duplicate check on one test DOI: <code>python3 scripts/check_duplicate.py --doi=10.xxxx/xxxx</code></li>
+          <li>Configure your local AF API settings before heavy search work: use a valid email for OpenAlex / Crossref / Unpaywall polite-pool access, and follow the current class guidance on when the OpenAlex trial key may be used.</li>
           <li>Read the Google AI Query Guide in <code>docs/GOOGLE_AI_QUERY_GUIDE.md</code> before writing any queries.</li>
           <li>Set up your Query Diary: create <code>data/student/query_log_yourname.json</code> using the schema in <code>contracts/QUERY_LOG_SCHEMA.md</code>.</li>
           <li>Run one test query on Google AI or Semantic Scholar. Record it in your Query Diary. This is your Week 3 starting point.</li>
+          <li>If assigned a neural pathway family, start with 3–8 classic anchor papers before expanding to reviews and direct-measurement papers.</li>
           <li>Post your personal branch URL in the Track 2 Slack/Teams channel.</li>
         </ul>
         <table style="margin-top:14px">

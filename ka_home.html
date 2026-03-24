@@ -181,6 +181,44 @@ body { font-family: Arial, sans-serif; color: #2D2D2D; overflow-x: hidden; }
   transition: all 0.15s;
 }
 .btn-secondary:hover { border-color: #A8C8BF; color: #fff; }
+.mode-preview {
+  margin: 0 auto 28px;
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.mode-preview-label {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; color: #7AACA0;
+}
+.mode-pill-row {
+  display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+}
+.mode-btn {
+  border: 1.5px solid rgba(168,200,191,0.36);
+  color: #A8C8BF;
+  background: rgba(255,255,255,0.03);
+  padding: 8px 14px;
+  border-radius: 18px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.mode-btn:hover { border-color: #F5A623; color: #fff; }
+.mode-btn.active {
+  background: rgba(245,166,35,0.16);
+  border-color: #F5A623;
+  color: #fff;
+}
+.mode-preview-note {
+  font-size: 0.84rem;
+  color: #A8C8BF;
+  line-height: 1.6;
+  max-width: 620px;
+}
 
 /* ── DID YOU KNOW CARDS ── */
 .cards-label {
@@ -387,9 +425,11 @@ body { font-family: Arial, sans-serif; color: #2D2D2D; overflow-x: hidden; }
     </div>
   </a>
   <nav class="nav-public">
-    <a class="nav-pub-link" href="#about">About</a>
-    <a class="nav-pub-link" href="#theory">Theory</a>
-    <a class="nav-pub-link" href="#">Documentation</a>
+    <a class="nav-pub-link" id="nav-home-explore" href="ka_topics.html">Explore</a>
+    <a class="nav-pub-link" id="nav-home-theory" href="#theory">Theory</a>
+    <a class="nav-pub-link" id="nav-home-about" href="#about">About</a>
+    <a class="nav-pub-link" id="nav-home-schedule" href="ka_schedule.html">Schedule</a>
+    <a class="nav-pub-link" id="nav-home-docs" href="ka_sitemap.html">Docs</a>
     <a class="btn-login" href="ka_login.html">Log In</a>
     <a class="btn-register-nav" href="ka_register.html">Register →</a>
   </nav>
@@ -405,8 +445,22 @@ body { font-family: Arial, sans-serif; color: #2D2D2D; overflow-x: hidden; }
       LKMs unlike LLMs are based on propositions not tokens.
     </p>
     <div class="cta-group">
-      <a class="btn-enter" href="ka_demo_v04.html">Enter Knowledge Atlas →</a>
-      <a class="btn-secondary" href="#about">How it was built</a>
+      <a class="btn-enter" id="home-primary-cta" href="ka_demo_v04.html">Enter Knowledge Atlas →</a>
+      <a class="btn-secondary" id="home-secondary-cta" href="#about">How it was built</a>
+    </div>
+    <div class="mode-preview">
+      <div class="mode-preview-label">Try a user type and watch the site adapt</div>
+      <div class="mode-pill-row" id="home-mode-pills">
+        <button class="mode-btn" data-ka-mode="student_explorer">Student Explorer</button>
+        <button class="mode-btn" data-ka-mode="researcher">Researcher</button>
+        <button class="mode-btn" data-ka-mode="contributor">Contributor</button>
+        <button class="mode-btn" data-ka-mode="instructor">Instructor</button>
+        <button class="mode-btn" data-ka-mode="practitioner">Practitioner</button>
+        <button class="mode-btn" data-ka-mode="theory_mechanism_explorer">Theory + Mechanisms</button>
+      </div>
+      <div class="mode-preview-note" id="home-mode-note">
+        Choose a mode to preview a more relevant navbar and first actions before you register.
+      </div>
     </div>
   </div>
 
@@ -790,6 +844,75 @@ window.KA_PAGE_FUNCTION = {
 </script>
 <script src="ka_page_function.js"></script>
 <script src="ka_demo_wiring.js"></script>
+<script src="ka_mode_switch.js"></script>
+<script>
+(function() {
+  const HOME_MODE_COPY = {
+    student_explorer: {
+      navOrder: ['nav-home-explore', 'nav-home-about', 'nav-home-theory', 'nav-home-docs'],
+      primary: { text: 'Explore Topics →', href: 'ka_topics.html' },
+      secondary: { text: 'Get Started as a Student', href: 'ka_student_setup.html' },
+      note: 'Student mode foregrounds topics, evidence, and course entry points so the literature becomes the first thing to explore.'
+    },
+    researcher: {
+      navOrder: ['nav-home-explore', 'nav-home-theory', 'nav-home-docs', 'nav-home-about'],
+      primary: { text: 'Search the Literature →', href: 'ka_topics.html' },
+      secondary: { text: 'Inspect Evidence', href: 'ka_evidence.html' },
+      note: 'Researcher mode foregrounds literature exploration, evidence, and theory-linked routes.'
+    },
+    contributor: {
+      navOrder: ['nav-home-docs', 'nav-home-explore', 'nav-home-about', 'nav-home-theory'],
+      primary: { text: 'Open Contributor Setup →', href: 'ka_student_setup.html' },
+      secondary: { text: 'Register as a Contributor', href: 'ka_register.html' },
+      note: 'Contributor mode foregrounds onboarding, setup, and the paths that lead into track work.'
+    },
+    instructor: {
+      navOrder: ['nav-home-docs', 'nav-home-about', 'nav-home-explore', 'nav-home-theory'],
+      primary: { text: 'Open Course Tools →', href: 'Designing_Experiments/cogs160_spring_2026_site.html' },
+      secondary: { text: 'Review Student Setup', href: 'ka_student_setup.html' },
+      note: 'Instructor mode foregrounds course, onboarding, and shared documentation before deep literature tools.'
+    },
+    practitioner: {
+      navOrder: ['nav-home-explore', 'nav-home-about', 'nav-home-docs', 'nav-home-theory'],
+      primary: { text: 'Browse Practical Topics →', href: 'ka_topics.html' },
+      secondary: { text: 'See Evidence Summaries', href: 'ka_evidence.html' },
+      note: 'Practitioner mode foregrounds applied topic browsing and readable evidence, not theory first.'
+    },
+    theory_mechanism_explorer: {
+      navOrder: ['nav-home-theory', 'nav-home-explore', 'nav-home-docs', 'nav-home-about'],
+      primary: { text: 'Open Theory Guides →', href: '../theory_guides/index.html' },
+      secondary: { text: 'Explore Topics', href: 'ka_topics.html' },
+      note: 'Theory + mechanisms mode foregrounds explanatory frameworks while keeping literature exploration one click away.'
+    }
+  };
+
+  function applyHomeMode(mode) {
+    const cfg = HOME_MODE_COPY[mode] || HOME_MODE_COPY.student_explorer;
+    const nav = document.querySelector('.nav-public');
+    const loginBtn = document.querySelector('.btn-login');
+    cfg.navOrder.forEach(function(id) {
+      const el = document.getElementById(id);
+      if (el) nav.insertBefore(el, loginBtn);
+    });
+
+    const primary = document.getElementById('home-primary-cta');
+    primary.textContent = cfg.primary.text;
+    primary.href = cfg.primary.href;
+
+    const secondary = document.getElementById('home-secondary-cta');
+    secondary.textContent = cfg.secondary.text;
+    secondary.href = cfg.secondary.href;
+
+    document.getElementById('home-mode-note').textContent = cfg.note;
+  }
+
+  window.KA_MODE_SWITCH.initModeControls({
+    pillContainerId: 'home-mode-pills',
+    onApply: applyHomeMode,
+    defaultMode: 'student_explorer'
+  });
+})();
+</script>
 
 
 <section id="ka-prev-pages">
