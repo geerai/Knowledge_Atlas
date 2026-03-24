@@ -187,7 +187,25 @@
     .info-note { background:#EDF7F4; border-left:3px solid var(--teal); padding:12px 16px; font-size:0.84rem; color:var(--muted); border-radius:0 6px 6px 0; margin-bottom:24px; }
 
     .version-badge { position:fixed; bottom:70px; right:16px; background:var(--navy); color:#A8C8BF; font-size:10px; padding:3px 8px; border-radius:4px; opacity:.6; z-index:50; }
-  </style>
+  
+    /* Student resource bar */
+    .student-resource-bar {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .student-resource-bar .res-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: #9A8870;
+    }
+    .student-resource-bar a.res-link {
+      font-size: 11px; font-weight: 600; color: #1C6060;
+      text-decoration: none; padding: 4px 11px;
+      background: #F0EBE3; border: 1px solid #D8D0C4;
+      border-radius: 14px;
+    }
+    .student-resource-bar a.res-link:hover { background: #E4DDD3; }
+
+</style>
 </head>
 <body>
 
@@ -207,6 +225,12 @@
 <div class="page-wrap">
   <div class="page-header">
     <div class="breadcrumb"><a href="ka_tagger.html">← Tag Images</a> &nbsp;/&nbsp; Claim Assignment</div>
+<div class="student-resource-bar">
+  <span class="res-label">Student Resources</span>
+  <a href="ka_student_setup.html" class="res-link">⚙ Getting Started</a>
+  <a href="ka_ai_methodology.html" class="res-link">🤖 AI Methodology</a>
+</div>
+
     <h1>Claim a Computational Tag Assignment</h1>
     <p>Each assignment bundle defines five image-analysis computations you will implement as code, run over a batch of workspace images, and submit for review. Select one or more bundles, then click <strong>Submit Claim</strong>. You will receive a confirmation email and the assignment will appear in your contributor profile.</p>
   </div>

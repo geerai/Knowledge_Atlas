@@ -1,6 +1,6 @@
 # TASKS.md — Knowledge_Atlas
 
-*Last updated: 2026-03-24 (session 3)*
+*Last updated: 2026-03-24 (session 4)*
 *Owner repo: `/Users/davidusa/REPOS/Knowledge_Atlas/`*
 *This file is the canonical task log for all GUI / frontend work.*
 
@@ -29,8 +29,11 @@
 |----|------|-------|---------|
 | KA-T2 | **Build GUI evaluation / design agent (Track 4 tool)** | 2026-03-24 | Autonomous agent that navigates KA pages, runs user scenarios, compares actual vs. AI-optimal path, outputs structured UX report (friction, missing affordances, copy issues). |
 | KA-T7 | **Create GitHub remote and push AE recovery pending changes** | 2026-03-24 | 30 tracked modified files in AE recovery await push to `origin/codex/recovery-cc-migration-artifacts`. Awaiting David's go-ahead. |
-| KA-T9 | **Push 4 new session-3 commits to GitHub** | 2026-03-24 | Run `git push origin master` from Mac terminal (sandbox cannot auth HTTPS). Commits: 831f7cd, 0f5657e, 5afb8b5, f7291a2. |
+| KA-T9 | **Push session-3+4 commits to GitHub** | 2026-03-24 | Run `git push origin master` from Mac terminal (sandbox cannot auth HTTPS). Session-3 commits: 831f7cd, 0f5657e, 5afb8b5, f7291a2, 25b02a9. Plus new session-4 commit (see below). |
 | KA-T10 | **Build ka_vr_assignment.html — Track 3 VR Production workbook** | 2026-03-24 | Track 3 currently shows "Assignment coming soon" on homepage. Needs the same milestone-table / phase workbook treatment as T2 (ka_article_finder_assignment). |
+| KA-T11 | **Create Neural Underpinnings architecture and first pathway inventory** | 2026-03-24 | Add explicit neural-underpinnings lane, pathway-guide objects, and classic-paper reading-list structure. Seed from panel-proposed pathways. |
+| KA-T12 | **Integrate neural-underpinnings literature work into article-finder track** | 2026-03-24 | Assign COGS 160 article finders to pathway families. Start from classic anchor papers proposed by panels, then expand with reviews, direct measurement papers, and pathway tests. |
+| KA-T13 | **Add adaptive nav preferences to signup and post-login nav** | 2026-03-24 | Let users declare a primary preference at signup/login, then reorder nav emphasis without changing the underlying IA. |
 
 ---
 
@@ -68,6 +71,8 @@
 | KA-S3-3 | Add `KA_ABOUT_PAGE` + `KA_PAGE_FUNCTION` to all 22 pages | 2026-03-24 | All 22 pages now have both specs defined. 8 pages that were missing ka_page_function.js now have it too. Commit 0f5657e. |
 | KA-S3-4 | Archive DE pages — `COURSE_DESIGN_ARCHIVE_2026-03-24.html` | 2026-03-24 | Full inventory of 12 pre-4-track DE pages with rationale, carry-forward items, Track 4 eval questions. Plus "Previous pages" footer sections on 7 KA pages. Commit 5afb8b5. |
 | KA-S3-5 | Add Contributor Tracks section to `ka_home.html` | 2026-03-24 | 4 track cards (T1–T4) with colour-coded pills, icons, descriptions, and assignment links. Register CTA bar. Register button in top nav. Commit f7291a2. |
+| KA-S4-1 | Build `ka_student_setup.html` — Student Onboarding guide | 2026-03-24 | 7 sections: install, clone + personal branch, student DB copy, per-track Day 1 checklists (accordion, milestones), PR workflow, AI intro. Wired into all 3 assignment pages + sitemap + homepage. |
+| KA-S4-2 | Build `ka_ai_methodology.html` — AI-Directed Development Methodology reference | 2026-03-24 | 6 methods: 5-component prompt structure (annotated + per-track examples), 5 failure modes, contracts/success conditions, trust calibration L0–L5, ruthless-prompt escalation, expert panel pattern. Wired into all 3 assignment pages + sitemap + homepage. |
 
 ---
 
@@ -90,6 +95,17 @@ Until David creates `github.com/dkirsh/Knowledge_Atlas` and CW runs `git remote 
 **4-track homepage integration.** `ka_home.html` now has a Contributor Tracks section (between hero and about) with 4 colour-coded track cards, each linking to the assignment page. A Register button was added to the top nav. Track 3 shows "Assignment coming soon" — the VR workbook (KA-T10) is next on the list.
 
 **Push needed.** 4 commits (831f7cd, 0f5657e, 5afb8b5, f7291a2) are local only. Run `git push origin master` from Mac terminal.
+
+### Session 4 — 2026-03-24
+
+**Student onboarding pages.** Two new pages added to support students who use AI to write code and navigate the git+database workflow:
+
+- `ka_student_setup.html` — Step-by-step getting-started guide covering tool install, personal branch creation (`track/N-staging/username`), student database copy, per-track Day 1 checklists (accordion with milestone table per track), PR submission workflow, and a pointer to the AI methodology page.
+- `ka_ai_methodology.html` — Methodology reference covering: (1) chatbot vs. directed instrument distinction, (2) five-component prompt structure with annotated anatomy block and tabbed per-track worked examples (T1 tagging, T2 query generation, T4 GUI evaluation), (3) five failure modes with diagnostics and fixes, (4) contracts and success conditions, (5) trust calibration L0–L5, (6) ruthless-prompt escalation ladder, (7) expert panel pattern.
+
+Both pages wired into: all three track assignment pages (Student Resources bar above each page's content), `ka_sitemap.html` (two new cards in Contributor Tools section), and `ka_home.html` (Get Started link in register CTA bar).
+
+**Push needed.** All session-4 commits are local. Run `git push origin master` from Mac terminal.
 
 ### GUI agent (KA-T2) — design note
 The planned GUI agent is distinct from `ka_gui_assignment.html` (a student workbook). The agent would: (1) autonomously navigate KA pages using browser tools; (2) run through defined user scenarios; (3) compare its path against the AI-suggested optimal path; (4) output a structured UX report flagging friction points, missing affordances, and copy issues. This is Track 4's analytical deliverable automated.

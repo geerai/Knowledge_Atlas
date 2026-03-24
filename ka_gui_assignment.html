@@ -248,7 +248,25 @@
     .tag-rose { background:var(--rose-lt); color:var(--rose); }
     .tag-blue { background:var(--blue-lt); color:var(--blue); }
     .tag-gold { background:var(--gold-lt); color:var(--gold); }
-  </style>
+  
+    /* Student resource bar */
+    .student-resource-bar {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .student-resource-bar .res-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: #9A8870;
+    }
+    .student-resource-bar a.res-link {
+      font-size: 11px; font-weight: 600; color: #1C6060;
+      text-decoration: none; padding: 4px 11px;
+      background: #F0EBE3; border: 1px solid #D8D0C4;
+      border-radius: 14px;
+    }
+    .student-resource-bar a.res-link:hover { background: #E4DDD3; }
+
+</style>
 </head>
 <body>
 
@@ -267,6 +285,12 @@
 
 <div class="page-wrap">
   <div class="breadcrumb"><a href="ka_home.html">Home</a> &nbsp;/&nbsp; <a href="ka_dashboard.html">Dashboard</a> &nbsp;/&nbsp; GUI &amp; Use-Case Evaluation</div>
+<div class="student-resource-bar">
+  <span class="res-label">Student Resources</span>
+  <a href="ka_student_setup.html" class="res-link">⚙ Getting Started</a>
+  <a href="ka_ai_methodology.html" class="res-link">🤖 AI Methodology</a>
+</div>
+
 
   <!-- Hero -->
   <div class="hero">

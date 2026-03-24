@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-Directed Development: The KA Methodology</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #1C3D3A;
+      --amber:  #E8872A;
+      --cream:  #F7F4EF;
+      --green:  #2A7868;
+      --text:   #2D2010;
+      --muted:  #6A5E50;
+      --border: #DDD6CD;
+      --light:  #EDE8E0;
+    }
+
+    body { font-family: Arial, sans-serif; background: var(--cream); color: var(--text); line-height: 1.65; }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky; top: 0; z-index: 500;
+      background: var(--navy); display: flex; align-items: center;
+      gap: 24px; padding: 0 28px; height: 52px;
+      border-bottom: 2px solid var(--amber);
+    }
+    .nav-brand { color: #A8C8BF; font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; }
+    .nav-brand:hover { color: var(--amber); }
+    nav a.nav-link { color: #7AACA0; font-size: 0.8rem; text-decoration: none; transition: color 0.15s; }
+    nav a.nav-link:hover { color: #fff; }
+    .nav-sep { color: rgba(255,255,255,0.18); }
+
+    /* ── Hero ── */
+    .page-hero {
+      background: linear-gradient(135deg, #163230 0%, var(--navy) 50%, #1A2E2C 100%);
+      padding: 56px 40px 48px;
+      border-bottom: 3px solid var(--amber);
+    }
+    .page-hero .eyebrow {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em;
+      text-transform: uppercase; color: #7AACA0; margin-bottom: 12px;
+    }
+    .page-hero h1 {
+      font-family: Georgia, serif; font-size: 2rem; font-weight: 400;
+      color: #F5F0E8; line-height: 1.25; margin-bottom: 14px;
+    }
+    .page-hero p { font-size: 1rem; color: #A8C8BF; line-height: 1.7; max-width: 680px; }
+
+    .outer { max-width: 900px; margin: 0 auto; padding: 0 32px 80px; }
+
+    /* ── Sections ── */
+    .doc-section { margin-top: 60px; }
+    .section-header {
+      display: flex; align-items: flex-start; gap: 16px;
+      margin-bottom: 24px; padding-bottom: 14px;
+      border-bottom: 2px solid var(--border);
+    }
+    .sec-num {
+      background: var(--navy); color: #A8C8BF;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+      padding: 5px 10px; border-radius: 4px; flex-shrink: 0; margin-top: 4px;
+    }
+    .section-header h2 {
+      font-family: Georgia, serif; font-size: 1.3rem; font-weight: 400; color: var(--navy); line-height: 1.3;
+    }
+    .section-header .sh-sub { font-size: 0.85rem; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+
+    p { font-size: 0.92rem; margin-bottom: 12px; }
+    p:last-child { margin-bottom: 0; }
+
+    /* ── Component grid ── */
+    .component-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 24px 0; }
+    @media (max-width: 720px) { .component-grid { grid-template-columns: 1fr 1fr; } }
+    .component-card {
+      background: var(--navy); border-radius: 8px; padding: 16px 14px;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .comp-num { font-size: 1.4rem; font-weight: 800; color: var(--amber); line-height: 1; }
+    .comp-name { font-size: 0.78rem; font-weight: 700; color: #A8C8BF; line-height: 1.3; }
+    .comp-tag { font-size: 0.68rem; color: #5AC8AA; letter-spacing: 0.06em; }
+
+    /* ── Prompt anatomy ── */
+    .prompt-anatomy {
+      background: #1A2E2C; border-radius: 10px; overflow: hidden;
+      margin: 20px 0; font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+      font-size: 0.82rem; line-height: 1.8;
+    }
+    .pa-header {
+      background: rgba(232,135,42,0.12); padding: 8px 18px;
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--amber); border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .pa-body { padding: 16px 18px; }
+    .pa-c1 { color: #5AC8AA; }   /* role */
+    .pa-c2 { color: #A8D8FF; }   /* task */
+    .pa-c3 { color: #FFCC80; }   /* constraints */
+    .pa-c4 { color: #C8A8FF; }   /* context */
+    .pa-c5 { color: #80FFB8; }   /* format */
+    .pa-label {
+      display: inline-block; font-size: 0.63rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      padding: 0 6px; border-radius: 3px; margin-right: 6px; vertical-align: middle;
+    }
+    .lbl1 { background: rgba(90,200,170,0.18); color: #5AC8AA; }
+    .lbl2 { background: rgba(168,216,255,0.18); color: #A8D8FF; }
+    .lbl3 { background: rgba(255,204,128,0.18); color: #FFCC80; }
+    .lbl4 { background: rgba(200,168,255,0.18); color: #C8A8FF; }
+    .lbl5 { background: rgba(128,255,184,0.18); color: #80FFB8; }
+
+    /* ── Example panels ── */
+    .example-tabs { display: flex; gap: 0; margin-bottom: 0; border-bottom: 2px solid var(--border); }
+    .ex-tab {
+      padding: 8px 18px; font-size: 0.8rem; font-weight: 700;
+      cursor: pointer; border: none; background: none; color: var(--muted);
+      border-bottom: 2px solid transparent; margin-bottom: -2px;
+      transition: all 0.15s;
+    }
+    .ex-tab.active { color: var(--navy); border-bottom-color: var(--amber); }
+    .ex-tab:hover:not(.active) { color: var(--navy); }
+    .ex-panel { display: none; padding: 20px 0; }
+    .ex-panel.active { display: block; }
+    .ex-bad, .ex-good { border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; font-size: 0.85rem; }
+    .ex-bad { background: #FBE9E7; border-left: 3px solid #C62828; color: #5A1010; }
+    .ex-good { background: #E8F5E9; border-left: 3px solid #2E7D32; color: #1A4A1E; }
+    .ex-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+    .ex-bad .ex-label { color: #C62828; }
+    .ex-good .ex-label { color: #2E7D32; }
+    .ex-content { font-family: 'SF Mono', 'Fira Code', Consolas, monospace; line-height: 1.6; }
+    .ex-why { font-size: 0.82rem; color: var(--muted); margin-top: 8px; font-family: Arial, sans-serif; }
+
+    /* ── Failure modes ── */
+    .failure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+    @media (max-width: 640px) { .failure-grid { grid-template-columns: 1fr; } }
+    .failure-card {
+      background: #fff; border: 1px solid var(--border); border-radius: 8px;
+      padding: 16px 18px;
+    }
+    .failure-num { font-size: 1.1rem; font-weight: 800; color: var(--amber); margin-bottom: 6px; }
+    .failure-name { font-size: 0.88rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .failure-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.5; margin-bottom: 8px; }
+    .failure-fix {
+      background: var(--light); border-radius: 4px; padding: 7px 10px;
+      font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+      font-size: 0.78rem; color: var(--navy); line-height: 1.5;
+    }
+
+    /* ── Contract block ── */
+    .contract-block {
+      background: #fff; border: 1px solid var(--border); border-radius: 10px;
+      overflow: hidden; margin: 20px 0;
+    }
+    .contract-header {
+      background: var(--light); padding: 10px 18px;
+      font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+      font-size: 0.78rem; color: var(--navy); font-weight: 700;
+      border-bottom: 1px solid var(--border);
+    }
+    .contract-body { padding: 16px 18px; }
+    .contract-row { display: flex; gap: 12px; padding: 7px 0; border-bottom: 1px dashed var(--border); font-size: 0.85rem; }
+    .contract-row:last-child { border-bottom: none; }
+    .c-key { font-weight: 700; color: var(--navy); min-width: 120px; flex-shrink: 0; font-family: 'SF Mono', Consolas, monospace; font-size: 0.82rem; }
+    .c-val { color: var(--text); }
+    .c-val code { background: var(--light); padding: 1px 5px; border-radius: 3px; font-size: 0.85em; }
+
+    /* ── Trust ladder ── */
+    .trust-ladder { list-style: none; padding: 0; margin: 16px 0; }
+    .trust-ladder li {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+    }
+    .trust-ladder li:last-child { border-bottom: none; }
+    .trust-level {
+      min-width: 72px; text-align: center;
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
+      padding: 4px 8px; border-radius: 4px; flex-shrink: 0; margin-top: 1px;
+    }
+    .tl-0 { background: #FBE9E7; color: #C62828; }
+    .tl-1 { background: #FFF3E0; color: #E65100; }
+    .tl-2 { background: #FFF8E1; color: #F57F17; }
+    .tl-3 { background: #F1F8E9; color: #558B2F; }
+    .tl-4 { background: #E8F5E9; color: #2E7D32; }
+    .tl-5 { background: #E3F2FD; color: #1565C0; }
+    .trust-text { font-size: 0.88rem; color: var(--text); line-height: 1.5; }
+
+    /* ── Code ── */
+    pre {
+      background: #1A2E2C; color: #A8C8BF;
+      font-family: 'SF Mono', 'Fira Code', Consolas, monospace; font-size: 0.82rem; line-height: 1.7;
+      padding: 16px 20px; border-radius: 8px; overflow-x: auto; margin: 12px 0;
+    }
+    code { background: #EDE8E0; color: #1C3D3A; font-family: 'SF Mono', 'Fira Code', Consolas, monospace; font-size: 0.83em; padding: 1px 5px; border-radius: 3px; }
+    pre code { background: none; color: inherit; padding: 0; font-size: 1em; }
+    .cc { color: #5AC8AA; }
+
+    /* ── Callouts ── */
+    .callout { border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: 0.88rem; line-height: 1.6; }
+    .callout-warn { background: #FFF8E8; border-left: 4px solid var(--amber); color: #5A3010; }
+    .callout-info { background: #E6F5F0; border-left: 4px solid var(--green); color: #1a4a3f; }
+    .callout strong { color: #2D1800; }
+    .callout-info strong { color: #1a4a3f; }
+
+    /* ── Escalation ladder ── */
+    .escalation { display: flex; flex-direction: column; gap: 0; margin: 16px 0; }
+    .esc-rung {
+      display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--border);
+    }
+    .esc-rung:last-child { border-bottom: none; }
+    .esc-num {
+      width: 28px; height: 28px; border-radius: 50%; background: var(--amber);
+      color: #fff; font-size: 0.72rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;
+    }
+    .esc-text strong { font-size: 0.9rem; color: var(--navy); display: block; margin-bottom: 3px; }
+    .esc-text span { font-size: 0.83rem; color: var(--muted); line-height: 1.5; }
+
+    /* ── Version badge ── */
+    .version-badge {
+      position: fixed; bottom: 14px; right: 24px; z-index: 400;
+      background: rgba(28,61,58,0.7); color: #7AACA0;
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
+      padding: 3px 10px; border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="ka_home.html" class="nav-brand">Knowledge Atlas</a>
+  <span class="nav-sep">|</span>
+  <a href="ka_student_setup.html" class="nav-link">Student Setup</a>
+  <a href="ka_dashboard.html" class="nav-link">Dashboard</a>
+  <a href="ka_topics.html" class="nav-link">Topics</a>
+  <a href="ka_sitemap.html" class="nav-link">Sitemap</a>
+</nav>
+
+<div class="page-hero">
+  <div class="eyebrow">COGS 160 · AI-Directed Development</div>
+  <h1>AI-Directed Development:<br>The KA Methodology</h1>
+  <p>
+    In this course you use AI as a directed instrument in a production pipeline — not as a chatbot.
+    The goal is not "getting good output." It is producing output that meets a formal specification,
+    passes defined tests, and integrates correctly with the larger system.
+    That requires a specific methodology.
+  </p>
+</div>
+
+<div class="outer">
+
+  <!-- ── CORE PRINCIPLE ── -->
+  <div class="doc-section">
+    <div class="section-header">
+      <span class="sec-num">CORE</span>
+      <div>
+        <h2>The central distinction: chatbot vs. directed instrument</h2>
+        <div class="sh-sub">Why the standard way of using AI fails in production systems</div>
+      </div>
+    </div>
+
+    <p>
+      When you use an AI chatbot casually, the implicit contract is: "give me something useful and I
+      will decide whether to use it." This works for one-off tasks where you can evaluate quality
+      by reading the output. It fails completely when the output must satisfy a formal specification,
+      integrate with other code, and be correct enough that downstream processes do not need to check
+      every claim.
+    </p>
+    <p>
+      In Knowledge Atlas, an AI extracting claims from a scientific paper is part of a 12-stage pipeline.
+      If it invents a citation that does not exist, that fabrication propagates through the epistemic network,
+      inflates credence scores, and corrupts the Bayesian network downstream. By the time a human notices,
+      ten derivative claims may have been generated from the fabricated source. There is no casual recovery.
+    </p>
+    <p>
+      The methodology in this document treats AI as a <em>directed instrument</em>: you specify exactly
+      what role it plays, what its output format must be, what it is forbidden to do, and what context
+      it needs. You write tests that the output must pass. You verify outputs cross-AI when stakes are high.
+      This is how production AI development works, and this is what you are learning.
+    </p>
+
+    <div class="callout callout-info">
+      <strong>The key shift in mental model.</strong> A chatbot user asks "can you help me with X?"
+      and evaluates the response impressionistically. A directed-instrument user writes a specification
+      for what X must look like, provides context and constraints, specifies the output schema, and
+      then runs automated tests on the output. The AI is not the evaluator. You are.
+    </div>
+  </div>
+
+  <!-- ── FIVE COMPONENTS ── -->
+  <div class="doc-section">
+    <div class="section-header">
+      <span class="sec-num">METHOD 1</span>
+      <div>
+        <h2>The Five Components of a Production Prompt</h2>
+        <div class="sh-sub">Every prompt that goes into a KA pipeline must have all five</div>
+      </div>
+    </div>
+
+    <div class="component-grid">
+      <div class="component-card">
+        <div class="comp-num">1</div>
+        <div class="comp-name">Role Assignment</div>
+        <div class="comp-tag">WHO it is</div>
+      </div>
+      <div class="component-card">
+        <div class="comp-num">2</div>
+        <div class="comp-name">Task Definition</div>
+        <div class="comp-tag">WHAT to produce</div>
+      </div>
+      <div class="component-card">
+        <div class="comp-num">3</div>
+        <div class="comp-name">Constraints &amp; Prohibitions</div>
+        <div class="comp-tag">WHAT NOT to do</div>
+      </div>
+      <div class="component-card">
+        <div class="comp-num">4</div>
+        <div class="comp-name">Context Loading</div>
+        <div class="comp-tag">WHAT IT KNOWS</div>
+      </div>
+      <div class="component-card">
+        <div class="comp-num">5</div>
+        <div class="comp-name">Output Format Specification</div>
+        <div class="comp-tag">THE CONTRACT</div>
+      </div>
+    </div>
+
+    <h3 style="font-family:Georgia,serif;font-size:1.0rem;font-weight:600;color:var(--navy);margin-bottom:12px;">
+      Annotated prompt anatomy
+    </h3>
+    <div class="prompt-anatomy">
+      <div class="pa-header">PRODUCTION PROMPT STRUCTURE (annotated)</div>
+      <div class="pa-body">
+<span class="pa-c1"><span class="pa-label lbl1">ROLE</span>You are a bibliometrician specializing in systematic review methodology
+for cognitive science of the built environment. You have deep familiarity
+with CNFA construct taxonomy and the difference between empirical,
+theoretical, and review-type papers.</span>
+
+<span class="pa-c2"><span class="pa-label lbl2">TASK</span>Given the abstract below, extract every quantitative finding (effect size,
+p-value, or confidence interval). For each finding, identify: the independent
+variable, the dependent variable, the sample size, and the study design type.</span>
+
+<span class="pa-c3"><span class="pa-label lbl3">CONSTRAINTS</span>DO NOT invent effect sizes not present in the abstract.
+DO NOT infer or estimate values — only extract explicit numbers.
+DO NOT classify the study design if it is ambiguous — use "UNCLEAR" instead.
+DO NOT output anything outside the JSON schema below.
+If the abstract contains no quantitative findings, return {"findings": []}.</span>
+
+<span class="pa-c4"><span class="pa-label lbl4">CONTEXT</span>Study design taxonomy: RCT, QE (quasi-experimental), CLE (controlled lab),
+FE (field experiment), COR (correlational), META (meta-analysis), REVIEW.
+CNFA constructs include: spatial_cognition, affective_response,
+attention_restoration, thermal_comfort, luminous_comfort, acoustic_comfort,
+biophilic_response, social_density, physical_activity.</span>
+
+<span class="pa-c5"><span class="pa-label lbl5">FORMAT</span>Return ONLY valid JSON matching this schema exactly:
+{
+  "findings": [
+    {
+      "iv": "string — independent variable name",
+      "dv": "string — dependent variable name",
+      "effect_size": "number or null",
+      "effect_type": "d | r | eta2 | OR | null",
+      "p_value": "number or null",
+      "n": "integer or null",
+      "design": "RCT | QE | CLE | FE | COR | META | REVIEW | UNCLEAR",
+      "verbatim_quote": "string — exact text from abstract supporting this finding"
+    }
+  ]
+}</span>
+      </div>
+    </div>
+
+    <h3 style="font-family:Georgia,serif;font-size:1.0rem;font-weight:600;color:var(--navy);margin:24px 0 14px;">
+      Component-by-component guidance
+    </h3>
+
+    <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px;">
+
+      <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:16px 18px;">
+        <div style="font-weight:700;color:#5AC8AA;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">1 · Role Assignment</div>
+        <p>Who the AI is pretending to be. Specific enough to activate domain knowledge.
+        <em>"A bibliometrician who specializes in systematic review methodology"</em> is correct.
+        <em>"A helpful assistant"</em> is wrong — it provides no domain constraint and activates no
+        specific expertise. The role should be specific to the task, not a generic capability claim.</p>
+      </div>
+
+      <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:16px 18px;">
+        <div style="font-weight:700;color:#A8D8FF;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">2 · Task Definition</div>
+        <p>What the AI must produce, defined in terms of output format — not intent. <em>"Extract every
+        quantitative finding"</em> is correct. <em>"Summarize the paper's contributions"</em> is wrong —
+        "summarize" does not specify a format, a level of detail, or what counts as a contribution.
+        The task definition must be testable: after the AI responds, can you write a function that checks
+        whether the task was completed?</p>
+      </div>
+
+      <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:16px 18px;">
+        <div style="font-weight:700;color:#FFCC80;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">3 · Constraints &amp; Prohibitions</div>
+        <p>The "DO NOT" pattern. AIs have systematic failure modes — they confabulate, fill in gaps,
+        average over ambiguity, and add editorial flourishes. Each "DO NOT" clause closes one failure mode.
+        Constraints must be explicit because AIs will otherwise default to seemingly helpful behaviours
+        that violate your requirements. The most common required constraint in KA work:
+        <em>DO NOT invent information not present in the source text.</em></p>
+      </div>
+
+      <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:16px 18px;">
+        <div style="font-weight:700;color:#C8A8FF;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">4 · Context Loading</div>
+        <p>Vocabulary sheets, canonical term lists, and reference documents the AI needs to do
+        the task correctly. The AI does not know your domain vocabulary — if you do not define
+        "CNFA construct," it will map it to whatever seems closest in its training data.
+        Provide taxonomy tables, enum values, and term definitions inline rather than assuming
+        shared knowledge. Keep context loading concise: a 200-word taxonomy table is better than
+        linking to a 50-page document the AI cannot read.</p>
+      </div>
+
+      <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:16px 18px;">
+        <div style="font-weight:700;color:#80FFB8;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">5 · Output Format Specification</div>
+        <p>The exact structure of the response — a JSON schema with required fields, not free text.
+        This is the contract between the AI's output and the next step in your pipeline.
+        If your pipeline expects a JSON array and the AI returns a prose summary, the pipeline
+        breaks. Define the schema first (before writing the task), then write constraints and context
+        that enforce it. Include an example of a valid response if the schema is complex.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── TRACK EXAMPLES ── -->
+  <div class="doc-section">
+    <div class="section-header">
+      <span class="sec-num">EXAMPLES</span>
+      <div>
+        <h2>Track-specific prompt examples</h2>
+        <div class="sh-sub">The gap between a vague request and a production prompt</div>
+      </div>
+    </div>
+
+    <div class="example-tabs" id="exTabs">
+      <button class="ex-tab active" data-panel="ex-t1">Track 1 · Tagging</button>
+      <button class="ex-tab" data-panel="ex-t2">Track 2 · Articles</button>
+      <button class="ex-tab" data-panel="ex-t4">Track 4 · GUI Eval</button>
+    </div>
+
+    <!-- T1 -->
+    <div id="ex-t1" class="ex-panel active">
+      <div class="ex-bad">
+        <div class="ex-label">❌ Vague — will not work in production</div>
+        <div class="ex-content">"Look at this image and tell me what CNFA constructs are present."</div>
+        <div class="ex-why">No output format. "CNFA constructs" is undefined. The AI will guess what that means, produce a prose description, and the result cannot be ingested by the tagger system.</div>
+      </div>
+      <div class="ex-good">
+        <div class="ex-label">✅ Production prompt</div>
+        <div class="ex-content">You are a cognitive-science trained image annotator specializing in the CNFA (Cognitive Neuroscience of the Functional Architecture) taxonomy.
+
+TASK: Given the image, score each of the 5 algorithm bundles on a 0–2 scale (0=absent, 1=partial, 2=present) based on the Phase 0 reference table provided.
+
+DO NOT assign a score greater than 0 if the evidence is ambiguous.
+DO NOT describe the image narrative — only score the bundles.
+DO NOT add bundles not in the Phase 0 table.
+
+BUNDLES (from Phase 0 reference table):
+A: Spatial-cognitive — enclosure, prospect/refuge, legibility
+B: Temporal-cognitive — change over time, rhythmic features, sequence
+C: Social-cognitive — density, crowding, interpersonal space markers
+D: Affective-cognitive — valence indicators, arousal cues, safety signals
+E: Executive-cognitive — complexity, attention demands, task-facilitating affordances
+
+OUTPUT FORMAT — return ONLY valid JSON:
+{"A": 0|1|2, "B": 0|1|2, "C": 0|1|2, "D": 0|1|2, "E": 0|1|2, "rationale": {"A": "string", "B": "string", "C": "string", "D": "string", "E": "string"}}</div>
+        <div class="ex-why">Specific role. Testable task (parse JSON and check values are 0/1/2). Explicit prohibitions. Context loaded (bundle definitions). Schema defined. This output can be ingested directly.</div>
+      </div>
+    </div>
+
+    <!-- T2 -->
+    <div id="ex-t2" class="ex-panel">
+      <div class="ex-bad">
+        <div class="ex-label">❌ Vague</div>
+        <div class="ex-content">"Generate some search queries for research on noise and cognition for Google Scholar."</div>
+        <div class="ex-why">No specificity on gap target. "Some" is undefined. No format. No instructions on query quality or how to match the KA corpus gaps. Output cannot be logged in the Query Diary schema.</div>
+      </div>
+      <div class="ex-good">
+        <div class="ex-label">✅ Production prompt</div>
+        <div class="ex-content">You are a systematic review search specialist with expertise in building academic database queries for cognitive science research.
+
+TASK: Generate exactly 5 search queries for the gap target below, optimized for Google AI citation search (conversational natural language, not Boolean operators).
+
+GAP TARGET: "acoustic → cognitive performance" — research front with 25 claims, 11 papers, VOI 0.755. Currently missing paradigms: Computational Feature Analysis (CFA), Photo/Video Surrogacy (PVS). Key theories: Neuromodulatory Systems, Arousal Theory, Cognitive Load Theory.
+
+DO NOT generate Boolean operator queries (no AND, OR, NOT).
+DO NOT generate queries so broad they return canonical papers already in most databases.
+DO NOT repeat the same conceptual angle across multiple queries.
+Each query must target a different aspect of the gap: mechanism, context, population, method, or intervention type.
+
+OUTPUT FORMAT — return ONLY valid JSON:
+{"queries": [
+  {"query_text": "string", "angle": "mechanism|context|population|method|intervention", "gap_target_id": "acoustic_cognitive_performance", "rationale": "string (≤30 words)"}
+]}</div>
+        <div class="ex-why">Role is specific. Task is precisely bounded (5 queries, natural language, against a specific gap target). Constraints close the main failure modes. Gap context loaded explicitly. Output schema matches Query Diary format exactly.</div>
+      </div>
+    </div>
+
+    <!-- T4 -->
+    <div id="ex-t4" class="ex-panel">
+      <div class="ex-bad">
+        <div class="ex-label">❌ Vague</div>
+        <div class="ex-content">"Evaluate the KA topics page and tell me what UX problems you see."</div>
+        <div class="ex-why">No user type specified. "UX problems" is undefined. No severity scale. No output format. The response will be impressionistic prose that cannot be compared across pages or tracked over time.</div>
+      </div>
+      <div class="ex-good">
+        <div class="ex-label">✅ Production prompt</div>
+        <div class="ex-content">You are a UX evaluator conducting a structured heuristic walkthrough of the Knowledge Atlas topic browser page, evaluated from the perspective of a Track 2 student (Article Finding Pipeline) in their first week.
+
+USER TYPE — Track 2 first-week student:
+Goal: Identify which research topics have the most knowledge gaps and should be prioritized for article searches.
+Technical level: Moderate — familiar with browser but not with VOI scores or CNFA taxonomy.
+Mental model: Expects something like a content directory; does not yet understand the epistemic framework.
+Time constraint: Must decide on a gap target within a 20-minute session.
+
+TASK: Walk through the ka_topics.html page as this user. For each friction point you identify, record it using the schema below.
+
+DO NOT evaluate the aesthetic design — evaluate functional affordances only.
+DO NOT flag issues that are only problems for experts who understand the KA framework.
+DO NOT assign a severity higher than 2 unless the issue would cause the user to abandon the task.
+
+SEVERITY SCALE: 1=minor inconvenience, 2=slows task, 3=blocks task completion
+
+OUTPUT FORMAT — return ONLY valid JSON:
+{"friction_points": [
+  {
+    "page_element": "string — what the user interacted with",
+    "user_action": "string — what they tried to do",
+    "observed_problem": "string",
+    "severity": 1|2|3,
+    "suggested_fix": "string (≤40 words)",
+    "acceptance_criterion": "string — how we'd know the fix worked"
+  }
+]}</div>
+        <div class="ex-why">Role includes specific user type with goals, technical level, mental model, and time constraint — this is what makes the evaluation ecologically valid rather than hypothetical. Output is structured enough to track fixes over sprints.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DO NOT PATTERN ── -->
+  <div class="doc-section">
+    <div class="section-header">
+      <span class="sec-num">METHOD 2</span>
+      <div>
+        <h2>The "DO NOT" Pattern: five AI failure modes</h2>
+        <div class="sh-sub">Every constraint you omit is a failure mode you accept</div>
+      </div>
+    </div>
+
+    <p>
+      These five failure modes account for the majority of errors in AI-generated output in knowledge-system
+      work. For each task you design a prompt for, ask: which of these apply? Add a "DO NOT" clause for each.
+    </p>
+
+    <div class="failure-grid">
+      <div class="failure-card">
+        <div class="failure-num">F1</div>
+        <div class="failure-name">Confabulation</div>
+        <div class="failure-desc">The AI invents information not present in the source — a citation, an effect size, an author's name — because it sounds plausible. It does not flag the invention.</div>
+        <div class="failure-fix">DO NOT invent information not explicitly present in the source text. If a value is missing, return null.</div>
+      </div>
+      <div class="failure-card">
+        <div class="failure-num">F2</div>
+        <div class="failure-name">Summarizing instead of extracting</div>
+        <div class="failure-desc">When asked to extract, the AI paraphrases instead. This loses precision: effect sizes get rounded, qualifications get dropped, p-values disappear.</div>
+        <div class="failure-fix">DO NOT paraphrase or summarize when asked to extract. Provide verbatim quotes from the source where a string is requested.</div>
+      </div>
+      <div class="failure-card">
+        <div class="failure-num">F3</div>
+        <div class="failure-name">Format drift</div>
+        <div class="failure-desc">The AI returns prose, markdown, or a different JSON structure than specified — often adding "helpful" fields or wrapping the output in explanation text.</div>
+        <div class="failure-fix">DO NOT add any text outside the specified output schema. Return ONLY valid JSON. Do not explain your output.</div>
+      </div>
+      <div class="failure-card">
+        <div class="failure-num">F4</div>
+        <div class="failure-name">Ambiguity averaging</div>
+        <div class="failure-desc">When the source is ambiguous — a result could be classified multiple ways — the AI picks one arbitrarily and presents it as definitive, without flagging the ambiguity.</div>
+        <div class="failure-fix">DO NOT resolve ambiguity silently. Use the UNCLEAR or null values specified in the schema and flag the specific ambiguity in a "notes" field.</div>
+      </div>
+      <div class="failure-card">
+        <div class="failure-num">F5</div>
+        <div class="failure-name">Scope creep</div>
+        <div class="failure-desc">The AI goes beyond the task boundary — adding commentary, additional findings, related topics, or unsolicited recommendations — because it is optimizing for "helpfulness."</div>
+        <div class="failure-fix">DO NOT add commentary, caveats, or information outside the task scope. If you cannot complete a task step, leave that field null.</div>
+      </div>
+      <div class="failure-card" style="background: var(--light);">
+        <div class="failure-num" style="color:var(--green)">+</div>
+        <div class="failure-name">Check your prompt against all five</div>
+        <div class="failure-desc">Before running any prompt in a KA pipeline, review it against F1–F5. If a failure mode could plausibly occur and you have no constraint blocking it, add one.</div>
+        <div class="failure-fix">Template: "DO NOT [failure-mode behaviour]. If [edge case], [safe fallback]."</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CONTRACTS ── -->
+  <div class="doc-section">
+    <div class="section-header">
+      <span class="sec-num">METHOD 3</span>
+      <div>
+        <h2>Contracts and success conditions</h2>
+        <div class="sh-sub">If you cannot write a test for it, it is not a success condition</div>
+      </div>
+    </div>
+
+    <p>
+      A <em>contract</em> is a formal document that specifies a component's inputs, outputs, invariants,
+      and measurable thresholds. A contract turns "the AI should produce good output" into
+      "the AI must return a JSON object containing fields X, Y, Z; X must be a float between 0 and 1;
+      Z must be a non-empty string with fewer than 200 characters; and the result must pass
+      <code>validate_extraction(output)</code> without raising an exception."
+    </p>
+    <p>
+      Every Track 1 and Track 2 deliverable in KA has a contract in <code>contracts/</code>.
+      Before writing a prompt, read the contract for your track's output type. Before opening a PR,
+      run the validation script against your output. If it fails, revise the prompt or the output.
+    </p>
+
+    <div class="contract-block">
+      <div class="contract-header">contracts/ARTICLE_EXTRACTION_CONTRACT.md (example excerpt)</div>
+      <div class="contract-body">
+        <div class="contract-row">
+          <span class="c-key">input</span>
+          <span class="c-val">PDF abstract text (string, 50–500 words)</span>
+        </div>
+        <div class="contract-row">
+          <span class="c-key">output</span>
+          <span class="c-val">JSON object conforming to <code>schemas/finding.json</code></span>
+        </div>
+        <div class="contract-row">
+          <span class="c-key">invariant</span>
+          <span class="c-val"><code>effect_size</code> must be null or a float in [-100, 100]; never a string</span>
+        </div>
+        <div class="contract-row">
+          <span class="c-key">invariant</span>
+          <span class="c-val"><code>verbatim_quote</code> must be a substring of the input abstract (verified by string search)</span>
+        </div>
+        <div class="contract-row">
+          <span class="c-key">threshold</span>
+          <span class="c-val">≥ 90% of findings on a 20-paper human-verified sample must match human annotation on IV, DV, and design type</span>
+        </div>
+        <div class="contract-row">
+          <span class="c-key">failure mode</span>
+          <span class="c-val">If abstract contains no quantitative findings, return <code>{"findings": []}</code> — never fabricate findings</span>
+        </div>
+        <div class="contract-row">
+          <span class="c-key">validation script</span>
+          <span class="c-val"><code>python3 tests/validate_extraction.py --input output.json --schema schemas/finding.json</code></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <strong>"It should work well" is not a success condition.</strong> Success conditions must be:
+      specific (what field, what value), measurable (can be checked by a script), and bounded
+      (has a threshold at which the output is accepted or rejected). If you are writing a sprint
+      deliverable and cannot articulate a testable success condition, ask the instructor before
+      proceeding — the spec is incomplete.
+    </div>
+  </div>
+
+  <!-- ── VERIFICATION ── -->
+  <div class="doc-section">
+    <div class="section-header">
+      <span class="sec-num">METHOD 4</span>
+      <div>
+        <h2>Verification and the Trust Calibration Framework</h2>
+        <div class="sh-sub">How much checking does each task type require?</div>
+      </div>
+    </div>
+
+    <p>
+      Not all AI output requires the same level of verification. Running a script to rename 200 files
+      requires less oversight than extracting a numerical claim that will propagate into a Bayesian
+      network. The trust calibration framework assigns a verification requirement to each task type
+      based on three factors: reversibility, downstream reach, and fabrication risk.
+    </p>
+
+    <ul class="trust-ladder">
+      <li>
+        <span class="trust-level tl-0">L0 · Auto</span>
+        <span class="trust-text">
+          <strong>No human review needed.</strong> The task is fully reversible, has no downstream dependencies,
+          and has no fabrication risk. Example: reformatting a JSON file, renaming variables, adding blank lines.
+          Run automated tests; if they pass, accept.
+        </span>
+      </li>
+      <li>
+        <span class="trust-level tl-1">L1 · Spot</span>
+        <span class="trust-text">
+          <strong>Spot-check 10%.</strong> Low fabrication risk; downstream impact is local. Example: generating
+          search queries from gap targets, writing boilerplate code from a clear spec.
+          Spot-check 10% of outputs manually; check automated test pass rate.
+        </span>
+      </li>
+      <li>
+        <span class="trust-level tl-2">L2 · Sample</span>
+        <span class="trust-text">
+          <strong>Verify a random 20-paper / 20-output sample.</strong> Medium fabrication risk; output will be
+          stored and later read. Example: abstract relevance screening, article metadata extraction, tag assignments.
+          Human verifies 20 random samples against ground truth; report inter-rater agreement.
+        </span>
+      </li>
+      <li>
+        <span class="trust-level tl-3">L3 · Cross-AI</span>
+        <span class="trust-text">
+          <strong>Run the same task on a second AI and compare outputs.</strong> High fabrication risk or high
+          downstream reach. Example: effect size extraction, causal claim extraction, CNFA construct classification.
+          Discrepancies between the two AIs flag items for human review. Only the agreed items proceed.
+        </span>
+      </li>
+      <li>
+        <span class="trust-level tl-4">L4 · Human</span>
+        <span class="trust-text">
+          <strong>Full human review before commit.</strong> Irreversible or high-consequence output.
+          Example: writing new warrant type definitions, modifying credence calibration parameters, any output
+          that changes the schema. All outputs reviewed by the instructor before merging.
+        </span>
+      </li>
+      <li>
+        <span class="trust-level tl-5">L5 · Panel</span>
+        <span class="trust-text">
+          <strong>Expert panel deliberation.</strong> Architectural decisions, epistemic parameter choices,
+          or any change that affects the theoretical foundations. Convene a panel of domain roles, run
+          structured deliberation, document reasoning before committing.
+        </span>
+      </li>
+    </ul>
+
+    <div class="callout callout-info">
+      <strong>Default for most Track 2 work: L2 (20-sample verification).</strong> You are extracting
+      claims from papers and logging them to a database. Run a 20-paper random sample from your output
+      against the source PDFs. Document your inter-rater agreement with yourself (or a partner) in your
+      PR description. This is not optional — it is the acceptance criterion.
+    </div>
+  </div>
+
+  <!-- ── RUTHLESS PROMPTS ── -->
+  <div class="doc-section">
+    <div class="section-header">
+      <span class="sec-num">METHOD 5</span>
+      <div>
+        <h2>Ruthless prompts and the escalation ladder</h2>
+        <div class="sh-sub">What to do when the AI keeps failing</div>
+      </div>
+    </div>
+
+    <p>
+      When an AI consistently violates a constraint — fabricating citations despite an explicit DO NOT,
+      drifting format despite a schema — the default response is to escalate. A ruthless prompt makes
+      the failure explicit, explains why it matters, demands the fix, and forbids the pattern using
+      language that signals the seriousness of the constraint.
+    </p>
+
+    <div class="escalation">
+      <div class="esc-rung">
+        <div class="esc-num">1</div>
+        <div class="esc-text">
+          <strong>Standard constraint</strong>
+          <span>Add a clear DO NOT clause. This handles most failure modes on the first or second run.</span>
+        </div>
+      </div>
+      <div class="esc-rung">
+        <div class="esc-num">2</div>
+        <div class="esc-text">
+          <strong>Named failure + consequence</strong>
+          <span>If violation continues: name the failure pattern explicitly and state what happens if it occurs.
+          <em>"You fabricated the citation 'Smith et al. 2019.' This is the specific failure mode we are preventing.
+          A fabricated citation will corrupt the knowledge base. DO NOT add any citation not present verbatim
+          in the source text."</em></span>
+        </div>
+      </div>
+      <div class="esc-rung">
+        <div class="esc-num">3</div>
+        <div class="esc-text">
+          <strong>Worked negative example</strong>
+          <span>Show the AI exactly the wrong output it produced and explain what is wrong about each element.
+          This forces it to process the failure mode concretely, not abstractly.</span>
+        </div>
+      </div>
+      <div class="esc-rung">
+        <div class="esc-num">4</div>
+        <div class="esc-text">
+          <strong>Cross-AI verification</strong>
+          <span>Run the same prompt on a different AI. If the second AI produces correct output, use that
+          output and document the failure. If both fail, escalate to the instructor — the constraint may
+          be under-specified or the task may exceed current AI capability for this type of content.</span>
+        </div>
+      </div>
+      <div class="esc-rung">
+        <div class="esc-num">5</div>
+        <div class="esc-text">
+          <strong>Task decomposition</strong>
+          <span>Break the task into smaller steps where each step is within reliable AI capability.
+          A task that asks for extraction + classification + verification in one prompt can often be
+          split into three separate prompts each of which is more reliable.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── EXPERT PANEL ── -->
+  <div class="doc-section">
+    <div class="section-header">
+      <span class="sec-num">METHOD 6</span>
+      <div>
+        <h2>The Expert Panel Pattern</h2>
+        <div class="sh-sub">Structured deliberation for decisions that require domain reasoning</div>
+      </div>
+    </div>
+
+    <p>
+      When a decision requires domain expertise — choosing between competing definitions, adjudicating
+      a contested classification, or selecting a threshold — the expert panel pattern assigns the AI
+      multiple named roles and asks each role to deliberate on the question independently before
+      a synthetic conclusion is drawn.
+    </p>
+    <p>
+      The KA system uses expert panels for: warrant type calibration (epistemologists), effect-size
+      threshold setting (statisticians), VR scene ecological validity (cognitive scientists), and
+      GUI evaluation rubric design (UX researchers). The panel pattern prevents the AI from collapsing
+      to the most salient answer and instead forces it to represent genuine epistemic tension.
+    </p>
+
+    <pre><span class="cc"># Panel prompt structure (abbreviated)</span>
+
+ROLES: You will sequentially play three expert panelists:
+- PANEL_STATS: A biostatistician specializing in effect size interpretation
+- PANEL_EPIST: A philosopher of science specializing in evidence and inference
+- PANEL_DOMAIN: A cognitive scientist studying workplace environments
+
+QUESTION: Should we classify a study that reports only p &lt; 0.05 with no effect size
+as EVIDENCE_PRESENT or EVIDENCE_AMBIGUOUS in the KA credence system?
+
+INSTRUCTIONS:
+1. Respond as PANEL_STATS with a 3-5 sentence position and its strongest objection.
+2. Respond as PANEL_EPIST with a different 3-5 sentence position.
+3. Respond as PANEL_DOMAIN with practical implications for the KA knowledge base.
+4. Synthesize: what classification does the panel recommend, and what dissent remains?
+
+DO NOT have panelists agree prematurely. Dissent is informative. Preserve it.</pre>
+
+    <div class="callout callout-warn">
+      <strong>Panel echo chambers.</strong> If all panelists agree immediately, the prompt is not
+      forcing genuine deliberation — the AI is defaulting to the most salient answer and writing
+      three versions of it. Add constraints that require each panelist to identify the strongest
+      objection to their own position. Disagreement is the signal that the panel is working.
+    </div>
+  </div>
+
+</div><!-- /outer -->
+
+<div class="version-badge">KA UI · v0.4</div>
+
+<script>
+// Tab switcher for examples
+document.querySelectorAll('.ex-tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.ex-tab').forEach(function(t) { t.classList.remove('active'); });
+    document.querySelectorAll('.ex-panel').forEach(function(p) { p.classList.remove('active'); });
+    this.classList.add('active');
+    document.getElementById(this.dataset.panel).classList.add('active');
+  });
+});
+</script>
+
+<script>
+window.KA_PAGE_FUNCTION = {
+  pageId: 'ka_ai_methodology',
+  title: 'AI-Directed Development: The KA Methodology',
+  audience: 'All COGS 160 contributors; anyone writing prompts for KA pipeline tasks',
+  purpose: 'The definitive reference for KA\'s AI-directed development methodology: 5-component prompt structure, the 5 failure modes and DO NOT pattern, contracts and success conditions, trust calibration framework, ruthless prompts and the escalation ladder, and the expert panel pattern. Includes track-specific worked examples for Tracks 1, 2, and 4.',
+  workflowPos: 'Read after ka_student_setup.html and before writing any prompts for track-specific tasks. Referenced from all track assignment pages.',
+  notFor: 'General AI usage guidance unrelated to KA pipeline tasks; Python or JavaScript coding tutorials; setup and environment configuration (those are in ka_student_setup.html).',
+  phase: 'Phase 1 — Student onboarding infrastructure',
+  evalQuestions: [
+    'After reading this page, can a Track 2 student write a prompt that produces output matching the Query Log schema without further instruction?',
+    'Is the trust calibration framework specific enough that a student can look up a task type and know which level applies?',
+    'Do the worked examples clearly show the gap between a vague request and a production prompt?',
+    'Is the expert panel section actionable, or does it remain too abstract without a concrete Track 4 worked example?',
+    'Does the page explain when NOT to use AI, or only when to use it?'
+  ]
+};
+</script>
+<script src="ka_page_function.js"></script>
+
+<script>
+window.KA_ABOUT_PAGE = {
+  pageId: 'ka_ai_methodology',
+  objective: "The definitive reference for AI-directed development in KA: 5-component prompt structure, 5 failure modes, contracts, trust calibration, escalation ladder, expert panel pattern, with track-specific worked examples.",
+  users: "All COGS 160 contributors who will write AI prompts as part of their track work",
+  uses: [
+    "Learn the five-component prompt structure before writing any pipeline prompts",
+    "Use the DO NOT pattern to close failure modes specific to your task",
+    "Write a contract with testable success conditions before starting a sprint",
+    "Apply the trust calibration framework to determine how much verification your output requires",
+    "Use the escalation ladder when an AI keeps producing incorrect output"
+  ]
+};
+</script>
+<script src="ka_about_page.js"></script>
+
+</body>
+</html>
