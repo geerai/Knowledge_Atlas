@@ -1,6 +1,6 @@
 # TASKS.md — Knowledge_Atlas
 
-*Last updated: 2026-03-24 (session 2)*
+*Last updated: 2026-03-24 (session 3)*
 *Owner repo: `/Users/davidusa/REPOS/Knowledge_Atlas/`*
 *This file is the canonical task log for all GUI / frontend work.*
 
@@ -29,6 +29,8 @@
 |----|------|-------|---------|
 | KA-T2 | **Build GUI evaluation / design agent (Track 4 tool)** | 2026-03-24 | Autonomous agent that navigates KA pages, runs user scenarios, compares actual vs. AI-optimal path, outputs structured UX report (friction, missing affordances, copy issues). |
 | KA-T7 | **Create GitHub remote and push AE recovery pending changes** | 2026-03-24 | 30 tracked modified files in AE recovery await push to `origin/codex/recovery-cc-migration-artifacts`. Awaiting David's go-ahead. |
+| KA-T9 | **Push 4 new session-3 commits to GitHub** | 2026-03-24 | Run `git push origin master` from Mac terminal (sandbox cannot auth HTTPS). Commits: 831f7cd, 0f5657e, 5afb8b5, f7291a2. |
+| KA-T10 | **Build ka_vr_assignment.html — Track 3 VR Production workbook** | 2026-03-24 | Track 3 currently shows "Assignment coming soon" on homepage. Needs the same milestone-table / phase workbook treatment as T2 (ka_article_finder_assignment). |
 
 ---
 
@@ -61,6 +63,11 @@
 | KA-T4 | Add `howItWorks` paragraphs to all 27 measures in `ka_sensors.html` | 2026-03-24 | Mechanistic explanations covering transduction, neural pathway, and methodological constraints. New expand-section rendered conditionally. Commit 4bd5c0a. |
 | KA-T5 | Verify all 15 QUERY_BANK entries in `ka_demo_v04.html` | 2026-03-24 | Script audit: all 15 topic keys (sleep, replication, attention … exercise) present with all 5 required fields (queryText, title, bodyHTML, evidenceHTML, followups). ✅ All verified. |
 | KA-T6 | Wire `ka_topics.html` into all standalone page navs | 2026-03-24 | Topics link added to 7 pages: ka_article_search, ka_sensors, ka_gaps, ka_question_maker, ka_hypothesis_builder, ka_evidence, ka_dashboard (both top nav + sidebar). Commit 0930943. |
+| KA-S3-1 | Fix `ka_register.html` — inline validation, localStorage, success screen | 2026-03-24 | field-level errors, password strength bar, track-name update, success screen, ka_logged_in set on submit. Commit 831f7cd. |
+| KA-S3-2 | Create `ka_about_page.js` — always-visible About This Page anchor | 2026-03-24 | Injects #about-this-page section (objective, users, uses) + floating badge on all 22 pages. No login required. Links to function spec panel when logged in. Commit 0f5657e. |
+| KA-S3-3 | Add `KA_ABOUT_PAGE` + `KA_PAGE_FUNCTION` to all 22 pages | 2026-03-24 | All 22 pages now have both specs defined. 8 pages that were missing ka_page_function.js now have it too. Commit 0f5657e. |
+| KA-S3-4 | Archive DE pages — `COURSE_DESIGN_ARCHIVE_2026-03-24.html` | 2026-03-24 | Full inventory of 12 pre-4-track DE pages with rationale, carry-forward items, Track 4 eval questions. Plus "Previous pages" footer sections on 7 KA pages. Commit 5afb8b5. |
+| KA-S3-5 | Add Contributor Tracks section to `ka_home.html` | 2026-03-24 | 4 track cards (T1–T4) with colour-coded pills, icons, descriptions, and assignment links. Register CTA bar. Register button in top nav. Commit f7291a2. |
 
 ---
 
@@ -71,6 +78,18 @@ All KA UI files now in `Knowledge_Atlas/`. REPOS root is clean. DE legacy fronte
 
 ### Knowledge_Atlas awaits GitHub remote
 Until David creates `github.com/dkirsh/Knowledge_Atlas` and CW runs `git remote add` + `git push`, all work is local-only. Files exist on Mac disk at `/Users/davidusa/REPOS/Knowledge_Atlas/`.
+
+### Session 3 — 2026-03-24
+
+**Registration flow fixed.** `ka_register.html` now has full inline validation (per-field error spans, password strength meter, duplicate-email check), persists `ka_pending_registrations[]` and `ka_logged_in='1'` to localStorage on submit, and shows a styled success screen in place of the old `alert()`. Setting `ka_logged_in` is what reveals the function spec button on all pages.
+
+**"About this page" system.** `ka_about_page.js` is a new always-visible companion to the login-gated `ka_page_function.js`. It injects a `#about-this-page` section at the bottom of every page with the page's objective, primary users, and primary uses — plus a floating "⊕ About this page" badge. When logged in, the section also shows a "Full function spec →" link that opens the existing slide panel. All 22 KA pages now have both `KA_ABOUT_PAGE` and `KA_PAGE_FUNCTION` defined.
+
+**Course design archive.** The 12 pre-4-track DE pages are documented in `Designing_Experiments/COURSE_DESIGN_ARCHIVE_2026-03-24.html`, with status (superseded/partial/data still active), rationale for the transition, carry-forward items, and Track 4 GUI evaluation questions. "Previous pages" footer links added to 7 KA pages pointing to their DE counterparts.
+
+**4-track homepage integration.** `ka_home.html` now has a Contributor Tracks section (between hero and about) with 4 colour-coded track cards, each linking to the assignment page. A Register button was added to the top nav. Track 3 shows "Assignment coming soon" — the VR workbook (KA-T10) is next on the list.
+
+**Push needed.** 4 commits (831f7cd, 0f5657e, 5afb8b5, f7291a2) are local only. Run `git push origin master` from Mac terminal.
 
 ### GUI agent (KA-T2) — design note
 The planned GUI agent is distinct from `ka_gui_assignment.html` (a student workbook). The agent would: (1) autonomously navigate KA pages using browser tools; (2) run through defined user scenarios; (3) compare its path against the AI-suggested optimal path; (4) output a structured UX report flagging friction points, missing affordances, and copy issues. This is Track 4's analytical deliverable automated.
