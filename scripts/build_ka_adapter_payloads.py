@@ -10,6 +10,7 @@ OUT.mkdir(parents=True, exist_ok=True)
 
 FRONTS_PATH = AE / 'data' / 'rebuild' / 'research_fronts_v5.json'
 CLAIMS_PATH = AE / 'data' / 'rebuild' / 'gold_claims.jsonl'
+REPAIRS_PATH = AE / 'data' / 'rebuild' / 'bibliographic_repairs.json'
 
 INSTRUMENT_PATTERNS = {
     'EEG': [' eeg ', 'electroencephal', 'alpha asymmetry', 'frontal theta', 'erp '],
@@ -49,6 +50,16 @@ def clean_doi(value):
     if not text or text.endswith('.json'):
         return ''
     return text
+
+
+def load_bibliographic_repairs():
+    if not REPAIRS_PATH.exists():
+        return {}
+    try:
+        payload = json.loads(REPAIRS_PATH.read_text())
+        return payload.get('papers', {})
+    except Exception:
+        return {}
 
 
 def warrant_bucket(value):
@@ -169,6 +180,7 @@ def parse_claims():
     evidence = []
     paper_claims = defaultdict(list)
     paper_meta = {}
+    repairs = load_bibliographic_repairs()
     with CLAIMS_PATH.open() as f:
         for line in f:
             if not line.strip():
@@ -181,17 +193,20 @@ def parse_claims():
             ptf = obj.get('paper_theory_frame') or {}
             theories.extend(ptf.get('canonical_theories') or [])
             theories.extend(obj.get('theory_names') or [])
+            repair = repairs.get(pid, {})
             if pid and pid not in paper_meta:
                 paper_meta[pid] = {
                     'paper_id': pid,
-                    'title': obj.get('paper_title') or obj.get('title') or '',
-                    'doi': clean_doi(obj.get('doi')),
-                    'year': None,
-                    'abstract': obj.get('abstract_clean_text') or '',
+                    'title': repair.get('title') or obj.get('paper_title') or obj.get('title') or '',
+                    'doi': clean_doi(repair.get('doi') or obj.get('doi')),
+                    'year': repair.get('year') or obj.get('year'),
+                    'abstract': repair.get('abstract') or obj.get('abstract_clean_text') or '',
                     'theories': theories,
                     'subject_count_total': obj.get('subject_count_total'),
                     'sample_n': obj.get('sample_n'),
                     'article_type': obj.get('article_type') or '',
+                    'authors': repair.get('authors') or [],
+                    'venue': repair.get('venue') or '',
                 }
             if pid:
                 paper_claims[pid].append(obj)
@@ -219,9 +234,9 @@ def parse_claims():
                     'studyType': humanize(obj.get('article_type') or 'Unknown'),
                     'warrant': warrant_label,
                     'credence': round(float(obj.get('severity') or 0.5), 2),
-                    'year': obj.get('year') or '',
+                    'year': repair.get('year') or obj.get('year') or '',
                     'citation': pid,
-                    'abstract': compact_text(obj.get('abstract_clean_text') or 'Abstract not yet recovered from the current rebuild.', 500),
+                    'abstract': compact_text(repair.get('abstract') or obj.get('abstract_clean_text') or 'Abstract not yet recovered from the current rebuild.', 500),
                     'claim': compact_text(statement or fallback_finding or pid, 260),
                     'methodology': methodology_summary,
                     'warrant_chain': result.get('test_statistic') or '',
@@ -254,7 +269,7 @@ def parse_claims():
         top_measures = [humanize(t) for t, _ in measure_counter.most_common(3) if t]
         representative = claims[0] if claims else {}
         representative_result = representative.get('structured_result_row') or {}
-        title = representative.get('paper_title') or representative.get('title')
+        title = meta.get('title') or representative.get('paper_title') or representative.get('title')
         if not title:
             title = compact_text(
                 representative_result.get('comparison')
@@ -277,6 +292,8 @@ def parse_claims():
             'constructs': top_constructs,
             'instruments': top_measures,
             'article_type': meta.get('article_type') or '',
+            'authors': meta.get('authors') or [],
+            'venue': meta.get('venue') or '',
         })
     articles.sort(key=lambda x: (-x['claim_count'], x['paper_id']))
     return evidence, articles[:250]

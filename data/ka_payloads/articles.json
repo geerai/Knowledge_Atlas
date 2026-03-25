@@ -2,9 +2,9 @@
   "articles": [
     {
       "paper_id": "PDF-0354",
-      "title": "animal territoriality research tradition",
-      "doi": "",
-      "year": null,
+      "title": "Human territoriality.",
+      "doi": "10.1037/h0037444",
+      "year": 1974,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 56,
       "sample_n": null,
@@ -17,7 +17,11 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [
+        "Edney, Julian J."
+      ],
+      "venue": "Psychological Bulletin"
     },
     {
       "paper_id": "PDF-0128",
@@ -35,7 +39,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0401",
@@ -50,8 +56,12 @@
         "Environmental Perception Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0825",
@@ -68,8 +78,12 @@
         "Acoustic Privacy Framework"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0371",
@@ -87,13 +101,15 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0442",
-      "title": "Reverberation chamber testing (ASTM C423-17, ISO 354:2019)",
-      "doi": "",
-      "year": null,
+      "title": "Evaluation methods, testing standards, and simulation techniques of sound absorption capabilities of cementitious materials: A review",
+      "doi": "10.1016/j.jobe.2024.110468",
+      "year": 2024,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 45,
       "sample_n": null,
@@ -103,8 +119,17 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [
+        "Moges, Kebede Alemayehu",
+        "Dalila, Nazhiefah",
+        "Plaskota, Przemys\u0142aw",
+        "Pyo, Sukhoon"
+      ],
+      "venue": "Journal of Building Engineering"
     },
     {
       "paper_id": "PDF-0566",
@@ -120,8 +145,12 @@
         "Building Acoustics Transmission Model"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0396",
@@ -140,13 +169,15 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0388",
-      "title": "Natural sound landscape intervention (natural sounds and large natural landscape images)",
-      "doi": "",
-      "year": null,
+      "title": "Sound as a supportive design intervention for improving health care experience in the clinical ecosystem: A qualitative study",
+      "doi": "10.1016/j.ctcp.2017.08.004",
+      "year": 2017,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 42,
       "sample_n": 60,
@@ -157,8 +188,14 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Hrv"
+      ],
+      "article_type": "empirical_research",
+      "authors": [
+        "Iyendo, Timothy Onosahwo"
+      ],
+      "venue": "Complementary Therapies in Clinical Practice"
     },
     {
       "paper_id": "PDF-0946",
@@ -176,14 +213,20 @@
         "Building Acoustics Transmission Model"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Hrv",
+        "Cortisol",
+        "Eeg"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0346",
-      "title": "Neural activity during navigation in complex environments",
-      "doi": "",
-      "year": null,
+      "title": "Navigating Complex Buildings: Cognition, Neuroscience and Architectural Design",
+      "doi": "10.1007/978-94-017-9297-4_1",
+      "year": 2015,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 41,
       "sample_n": null,
@@ -194,8 +237,16 @@
         "Acoustic Privacy Framework"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [
+        "Dalton, R.C.",
+        "H\u00f6lscher, C.",
+        "Spiers, H.J."
+      ],
+      "venue": "Studying Visual and Spatial Reasoning for Design Creativity"
     },
     {
       "paper_id": "PDF-0064",
@@ -212,13 +263,15 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0394",
-      "title": "Acoustic environment perceived in laboratory immersive VR with audio-only condition",
-      "doi": "",
-      "year": null,
+      "title": "Effects of audio-visual interactions on soundscape and landscape perception and their influence on satisfaction with the urban environment",
+      "doi": "10.1016/j.buildenv.2019.106544",
+      "year": 2020,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 40,
       "sample_n": 120,
@@ -228,7 +281,12 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [
+        "Jeon, Jin Yong",
+        "Jo, Hyun In"
+      ],
+      "venue": "Building and Environment"
     },
     {
       "paper_id": "PDF-0438",
@@ -246,14 +304,18 @@
         "Building Acoustics Transmission Model"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0655",
-      "title": "Building collisions with birds (annual mortality)",
-      "doi": "",
-      "year": null,
+      "title": "Buildings as Habitat: Adaptive Investments in Public Health",
+      "doi": "10.1007/978-3-031-95292-0_2",
+      "year": 2026,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 40,
       "sample_n": null,
@@ -265,15 +327,23 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Hrv",
+        "Cortisol",
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [
+        "van Vliet, Helena"
+      ],
+      "venue": "Research for Development"
     },
     {
       "paper_id": "PDF-0048",
-      "title": "Building design considerations",
-      "doi": "",
-      "year": null,
-      "abstract": "Architecture is no stranger to challenges, and the tropical regions have their own share due to",
+      "title": "Biomimicry and Green Architecture: Nature-Inspired Innovations for Sustainable Buildings",
+      "doi": "10.3390/su17167223",
+      "year": 2025,
+      "abstract": "The building sector is a pivotal driver of global resource depletion and environmental deterioration, being responsible for 40% of raw material consumption, 16% of water usage, 25% of timber utilization, and 40% of total energy demand. It also accounts for 30% of worldwide greenhouse gas (GHG) emissions, predominantly CO2. The operational phase of buildings is the most energy-intensive and emission-heavy stage, accounting for 85\u201395% of their total life-cycle energy consumption. This energy is primarily expended on heating, cooling, ventilation, and hot water systems, which are largely dependent on fossil fuels. Furthermore, embodied energy, the cumulative energy expended from the extraction of materials through construction, operation, and eventual demolition, plays a substantial role in a building\u2019s overall environmental footprint. To address these pressing challenges, this study discusses sustainable innovations within green architecture and biomimicry. Our topic supports the 2030 vision Sustainable Development Goals (SDGs), both directly and indirectly (SDGs 7, 9, 11, 12, and 13). This study also explores cutting-edge applications, such as algae- and slime mold-inspired decentralized urban planning, which offer innovative pathways toward energy efficiency and sustainability. Considering the integration of renewable energy sources, passive design methodologies, and eco-friendly materials, this research emphasizes the transformative potential of biomimicry and green architecture in fostering a sustainable built environment, mitigating climate change, and cultivating a regenerative coexistence between human habitats and the natural world.",
       "claim_count": 39,
       "sample_n": null,
       "subject_count_total": null,
@@ -283,15 +353,21 @@
         "Building Acoustics Transmission Model"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [
+        "Metwally, Walaa Mohamed"
+      ],
+      "venue": "Sustainability"
     },
     {
       "paper_id": "PDF-0066",
-      "title": "Sound pressure in human hearing",
-      "doi": "",
-      "year": null,
-      "abstract": "Abstract not yet recovered from the current rebuild.",
+      "title": "Ambulatory Function and Perception of Confidence in Persons with Stroke with a Custom-Made Hinged versus a Standard Ankle Foot Orthosis",
+      "doi": "10.1155/2012/206495",
+      "year": 2012,
+      "abstract": "Objective . The aim was to compare walking with an individually designed dynamic hinged ankle foot orthosis (DAFO) and a standard carbon composite ankle foot orthosis (C-AFO). Methods . Twelve participants, mean age 56 years (range 26\u201372), with hemiparesis due to stroke were included in the study. During the six-minute walk test (6MW), walking velocity, the Physiological Cost Index (PCI), and the degree of experienced exertion were measured with a DAFO and C-AFO, respectively, followed by a Stairs Test velocity and perceived confidence was rated. Results . The mean differences in favor for the DAFO were in 6MW 24.3 m (95% confidence interval [CI] 4.90, 43.76), PCI \u22120.09 beats/m (95% CI \u22120.27, 0.95), velocity 0.04 m/s (95% CI \u22120.01, 0.097), and in the Stairs Test \u221211.8 s (95% CI \u221219.05, \u22124.48). All participants except one perceived the degree of experienced exertion lower and felt more confident when walking with the DAFO. Conclusions . Wearing a DAFO resulted in longer walking distance and faster stair climbing compared to walking with a C-AFO. Eleven of twelve participants felt more confident with the DAFO, which may be more important than speed and distance and the most important reason for prescribing an AFO.",
       "claim_count": 39,
       "sample_n": 412,
       "subject_count_total": 412,
@@ -300,15 +376,23 @@
         "Acoustic Privacy Framework"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [
+        "Slijper, Ang\u00e9lique",
+        "Danielsson, Anna",
+        "Will\u00e9n, Carin"
+      ],
+      "venue": "Rehabilitation Research and Practice"
     },
     {
       "paper_id": "PDF-0116",
-      "title": "Humans see materials with distinct physical and functional properties (soap, velvet, p\u00e2t\u00e9 vs. silk, wool, cotton)",
-      "doi": "",
-      "year": null,
-      "abstract": "Abstract not yet recovered from the current rebuild.",
+      "title": "Visual perception of materials and their properties",
+      "doi": "10.1016/j.visres.2013.11.004",
+      "year": 2014,
+      "abstract": "Misidentifying materials-such as mistaking soap for p\u00e2t\u00e9, or vice versa-could lead to some pretty messy mishaps. Fortunately, we rarely suffer such indignities, thanks largely to our outstanding ability to recognize materials-and identify their properties-by sight. In everyday life, we encounter an enormous variety of materials, which we usually distinguish effortlessly and without error. However, despite its subjective ease, material perception poses the visual system with some unique and significant challenges, because a given material can take on many different appearances depending on the lighting, viewpoint and shape. Here, I use observations from recent research on material perception to outline a general theory of material perception, in which I suggest that the visual system does not actually estimate physical parameters of materials and objects. Instead-I argue-the brain is remarkably adept at building 'statistical generative models' that capture the natural degrees of variation in appearance between samples. For example, when determining perceived glossiness, the brain does not estimate parameters of the BRDF. Instead, it uses a constellation of low- and mid-level image measurements to characterize the extent to which the surface manifests specular reflections. I argue that these 'statistical appearance models' are both more expressive and easier to compute than physical parameters, and therefore represent a powerful middle way between a 'bag of tricks' and 'inverse optics'.",
       "claim_count": 39,
       "sample_n": null,
       "subject_count_total": null,
@@ -317,7 +401,11 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [
+        "Fleming, Roland W."
+      ],
+      "venue": "Vision Research"
     },
     {
       "paper_id": "PDF-0305",
@@ -334,8 +422,12 @@
         "Stress Recovery Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0659",
@@ -353,14 +445,18 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0007",
-      "title": "Transition from Warm Dim to Cool Bright lighting (CB)",
-      "doi": "",
-      "year": null,
+      "title": "Effects of light transitions on measures of alertness, arousal and comfort",
+      "doi": "10.1016/j.physbeh.2020.112999",
+      "year": 2020,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 38,
       "sample_n": 30,
@@ -372,8 +468,19 @@
         "Dynamic Lighting",
         "Warm Lighting"
       ],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Pvt",
+        "Eda",
+        "Hrv"
+      ],
+      "article_type": "empirical_research",
+      "authors": [
+        "Kompier, M.E.",
+        "Smolders, K.C.H.J.",
+        "van Marken Lichtenbelt, W.D.",
+        "de Kort, Y.A.W."
+      ],
+      "venue": "Physiology &amp; Behavior"
     },
     {
       "paper_id": "PDF-0565",
@@ -390,8 +497,12 @@
         "Building Acoustics Transmission Model"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Eda"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-1190",
@@ -408,8 +519,14 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Eda",
+        "Eeg",
+        "Hrv"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0783",
@@ -427,8 +544,14 @@
         "Kaplan Preference Matrix"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "systematic_review"
+      "instruments": [
+        "Eda",
+        "Hrv",
+        "Cortisol"
+      ],
+      "article_type": "systematic_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0555",
@@ -445,8 +568,13 @@
         "Stress Recovery Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report",
+        "Pupil"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0828",
@@ -462,8 +590,12 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0877",
@@ -481,8 +613,14 @@
         "Stress Recovery Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Pupil",
+        "Eeg",
+        "Eda"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0422",
@@ -499,8 +637,14 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report",
+        "Hrv",
+        "Cortisol"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0658",
@@ -515,8 +659,12 @@
         "Environmental Perception Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "theoretical"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0061",
@@ -531,8 +679,12 @@
         "Environmental Perception Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0475",
@@ -548,8 +700,12 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Pupil"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0536",
@@ -567,8 +723,12 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0558",
@@ -587,7 +747,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "theoretical"
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0642",
@@ -605,7 +767,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "theoretical"
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0176",
@@ -621,7 +785,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0288",
@@ -638,8 +804,12 @@
         "Building Acoustics Transmission Model"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0486",
@@ -654,8 +824,12 @@
         "Environmental Perception Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0645",
@@ -672,7 +846,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0763",
@@ -688,8 +864,13 @@
         "Adaptive Thermal Comfort"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Pupil",
+        "Cortisol"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0599",
@@ -707,8 +888,14 @@
         "Circadian Rhythm Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report",
+        "Eeg",
+        "Hrv"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0882",
@@ -724,7 +911,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0101",
@@ -743,7 +932,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0488",
@@ -759,8 +950,14 @@
         "Environmental Perception Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Pvt",
+        "Hrv",
+        "Eda"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0519",
@@ -778,8 +975,13 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Hrv",
+        "Cortisol"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0553",
@@ -796,8 +998,14 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Cortisol",
+        "Hrv",
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0680",
@@ -814,8 +1022,12 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0115",
@@ -831,7 +1043,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0531",
@@ -847,7 +1061,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0547",
@@ -863,8 +1079,12 @@
         "Stress Recovery Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Hrv"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0820",
@@ -880,8 +1100,12 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Eeg"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0829",
@@ -897,8 +1121,13 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report",
+        "Hrv"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0870",
@@ -914,14 +1143,18 @@
         "Environmental Perception Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Eda"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0002",
-      "title": "Long-corridor floor design vs. short-corridor/long-corridor-intervention",
-      "doi": "",
-      "year": null,
+      "title": "Reducing the stress of high-density living: An architectural intervention.",
+      "doi": "10.1037//0022-3514.38.3.471",
+      "year": 1980,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 29,
       "sample_n": 64,
@@ -934,7 +1167,12 @@
         "Perceived Control"
       ],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [
+        "Baum, Andrew",
+        "Davis, Glenn E."
+      ],
+      "venue": "Journal of Personality and Social Psychology"
     },
     {
       "paper_id": "PDF-0090",
@@ -951,8 +1189,12 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0147",
@@ -969,7 +1211,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "systematic_review"
+      "article_type": "systematic_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0286",
@@ -985,8 +1229,12 @@
         "Stress Recovery Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0364",
@@ -1002,8 +1250,12 @@
         "Building Acoustics Transmission Model"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0457",
@@ -1018,8 +1270,12 @@
         "Environmental Perception Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "theoretical"
+      "instruments": [
+        "Hrv"
+      ],
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0528",
@@ -1034,8 +1290,12 @@
         "Environmental Perception Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0836",
@@ -1052,7 +1312,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0878",
@@ -1069,8 +1331,14 @@
         "Building Acoustics Transmission Model"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Cortisol",
+        "Hrv",
+        "Eeg"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0228",
@@ -1085,8 +1353,12 @@
         "Environmental Perception Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0426",
@@ -1105,7 +1377,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "qualitative"
+      "article_type": "qualitative",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0544",
@@ -1122,7 +1396,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0792",
@@ -1139,8 +1415,12 @@
         "Place Attachment Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0873",
@@ -1157,8 +1437,12 @@
         "Building Acoustics Transmission Model"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0093",
@@ -1174,7 +1458,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "systematic_review"
+      "article_type": "systematic_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0337",
@@ -1191,8 +1477,12 @@
         "Building Acoustics Transmission Model"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0091",
@@ -1209,7 +1499,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0502",
@@ -1225,7 +1517,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0771",
@@ -1243,7 +1537,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0978",
@@ -1260,7 +1556,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "theoretical"
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0139",
@@ -1275,8 +1573,13 @@
         "Environmental Perception Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Eeg",
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0199",
@@ -1292,8 +1595,12 @@
         "Stress Recovery Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0304",
@@ -1310,8 +1617,12 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "qualitative"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "qualitative",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0310",
@@ -1328,8 +1639,12 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Eeg"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0329",
@@ -1344,8 +1659,12 @@
         "Environmental Perception Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "theoretical"
+      "instruments": [
+        "Eeg"
+      ],
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0523",
@@ -1361,7 +1680,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0652",
@@ -1379,8 +1700,14 @@
         "Building Acoustics Transmission Model"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Eda",
+        "Hrv",
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0731",
@@ -1398,8 +1725,13 @@
         "Affordance Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Eeg",
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0938",
@@ -1416,7 +1748,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0964",
@@ -1434,8 +1768,12 @@
         "Stress Recovery Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-1033",
@@ -1452,8 +1790,12 @@
         "Stress Recovery Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "theoretical"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0046",
@@ -1470,7 +1812,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0067",
@@ -1485,8 +1829,14 @@
         "Environmental Perception Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Pvt",
+        "Eda",
+        "Hrv"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0166",
@@ -1503,7 +1853,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0187",
@@ -1521,8 +1873,12 @@
         "Building Acoustics Transmission Model"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Cortisol"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0217",
@@ -1541,7 +1897,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0636",
@@ -1557,8 +1915,13 @@
         "Environmental Perception Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Eda",
+        "Hrv"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0677",
@@ -1574,7 +1937,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0988",
@@ -1590,7 +1955,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "theoretical"
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0155",
@@ -1607,7 +1974,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0169",
@@ -1623,8 +1992,14 @@
         "Building Acoustics Transmission Model"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Eda",
+        "Hrv",
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0333",
@@ -1643,7 +2018,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "theoretical"
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0918",
@@ -1661,7 +2038,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0019",
@@ -1680,7 +2059,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "edited_book"
+      "article_type": "edited_book",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0070",
@@ -1699,7 +2080,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0086",
@@ -1716,7 +2099,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0195",
@@ -1732,8 +2117,12 @@
         "Building Acoustics Transmission Model"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0331",
@@ -1748,8 +2137,12 @@
         "Environmental Perception Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0500",
@@ -1766,7 +2159,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0543",
@@ -1784,8 +2179,12 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0024",
@@ -1804,7 +2203,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0352",
@@ -1820,7 +2221,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0392",
@@ -1836,8 +2239,12 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0769",
@@ -1855,8 +2262,12 @@
         "Chronobiology"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0817",
@@ -1873,15 +2284,19 @@
         "Kaplan Preference Matrix"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "theoretical"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0005",
-      "title": "Architectural design processes",
-      "doi": "",
-      "year": null,
-      "abstract": "Abstract not yet recovered from the current rebuild.",
+      "title": "Harmonizing Spaces: Investigating the Intersection of Sound and Architectural Design",
+      "doi": "10.56397/saa.2024.09.09",
+      "year": 2024,
+      "abstract": "The study titled \u201cThe Acoustic Design of Architectural Space: Exploring the Relationship between Sound and Building Design\u201d investigates the intricate interplay between architectural form and acoustic performance. This research highlights the critical role of sound in shaping the functionality, aesthetics, and human experience of built environments. By examining the principles of architectural acoustics, the study delves into how sound interacts with architectural elements such as materials, geometry, and spatial configurations. The research emphasizes the importance of achieving a balance between technical acoustic performance metrics and subjective perceptual qualities, including ambiance and emotional resonance. The study underscores the necessity of interdisciplinary collaboration among architects, acousticians, engineers, and other stakeholders to address complex acoustic challenges and optimize the acoustic environment of architectural spaces. It explores the impact of acoustic design on various types of environments, including educational settings, healthcare facilities, workplaces, and urban areas. The findings reveal that poor acoustics can significantly affect learning outcomes, patient recovery, employee productivity, and overall well-being. Through comprehensive guidelines, standards, and best practices, the study advocates for the integration of acoustic considerations into architectural design and urban planning. It also highlights the potential of sustainable acoustic solutions and community engagement in creating inclusive and culturally sensitive environments. By adopting a user-centred approach and conducting post-occupancy evaluations, designers can continuously refine and enhance the acoustic performance of architectural spaces. This research contributes to the field of architectural acoustics by providing insights into the importance of sound in building design and offering recommendations for future research, practice, and policy development. The study aims to inspire architects and designers to prioritize acoustic comfort and create environments that enrich human experiences.",
       "claim_count": 20,
       "sample_n": null,
       "subject_count_total": null,
@@ -1892,8 +2307,14 @@
         "Acoustic Comfort",
         "Well Being"
       ],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [
+        "Ajiboye, Samson A."
+      ],
+      "venue": "Studies in Art and Architecture"
     },
     {
       "paper_id": "PDF-0097",
@@ -1912,7 +2333,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "theoretical"
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0159",
@@ -1929,7 +2352,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0231",
@@ -1945,8 +2370,12 @@
         "Building Acoustics Transmission Model"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0243",
@@ -1962,8 +2391,12 @@
         "Stress Recovery Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0290",
@@ -1979,8 +2412,12 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Hrv"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0328",
@@ -1998,7 +2435,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0340",
@@ -2015,7 +2454,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0367",
@@ -2032,7 +2473,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0370",
@@ -2049,7 +2492,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "qualitative"
+      "article_type": "qualitative",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0417",
@@ -2067,7 +2512,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0423",
@@ -2084,7 +2531,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0602",
@@ -2101,8 +2550,14 @@
         "Building Acoustics Transmission Model"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Eeg",
+        "Pvt",
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0661",
@@ -2120,7 +2575,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "theoretical"
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0669",
@@ -2137,8 +2594,12 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0671",
@@ -2156,7 +2617,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "qualitative"
+      "article_type": "qualitative",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0713",
@@ -2175,7 +2638,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0864",
@@ -2192,7 +2657,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0955",
@@ -2210,7 +2677,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-1038",
@@ -2227,7 +2696,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-1148",
@@ -2244,7 +2715,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "theoretical"
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0466",
@@ -2260,8 +2733,12 @@
         "Building Acoustics Transmission Model"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0491",
@@ -2279,7 +2756,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0540",
@@ -2294,8 +2773,13 @@
         "Environmental Perception Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Hrv",
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0681",
@@ -2313,8 +2797,12 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0791",
@@ -2332,8 +2820,14 @@
         "Environmental Load Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Eeg",
+        "Hrv",
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0823",
@@ -2349,7 +2843,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0017",
@@ -2367,8 +2863,12 @@
         "BRECVEMA Model of Musical Emotions"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Hrv"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0087",
@@ -2384,7 +2884,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "theoretical"
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0107",
@@ -2400,7 +2902,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0399",
@@ -2418,8 +2922,14 @@
         "Acoustic Privacy Framework"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report",
+        "Hrv",
+        "Eeg"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0453",
@@ -2436,7 +2946,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "theoretical"
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0551",
@@ -2452,7 +2964,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "theoretical"
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0765",
@@ -2471,7 +2985,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0819",
@@ -2487,7 +3003,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0111",
@@ -2504,7 +3022,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0314",
@@ -2520,7 +3040,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0373",
@@ -2536,7 +3058,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0378",
@@ -2554,7 +3078,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0452",
@@ -2570,8 +3096,12 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0589",
@@ -2590,7 +3120,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0649",
@@ -2606,7 +3138,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "theoretical"
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0657",
@@ -2622,8 +3156,12 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0693",
@@ -2642,7 +3180,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0811",
@@ -2658,8 +3198,12 @@
         "Adaptive Thermal Comfort"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-1032",
@@ -2676,7 +3220,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-1341",
@@ -2692,7 +3238,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0021",
@@ -2711,7 +3259,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "systematic_review"
+      "article_type": "systematic_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0033",
@@ -2727,8 +3277,13 @@
         "Environmental Perception Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Hrv",
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0063",
@@ -2744,8 +3299,12 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Pupil"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0073",
@@ -2761,7 +3320,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0321",
@@ -2777,7 +3338,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "theoretical"
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0687",
@@ -2793,8 +3356,13 @@
         "Stress Recovery Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report",
+        "Hrv"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0777",
@@ -2812,7 +3380,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "systematic_review"
+      "article_type": "systematic_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0813",
@@ -2829,8 +3399,12 @@
         "Auditory Scene Analysis"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "theoretical"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0041",
@@ -2849,7 +3423,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0318",
@@ -2867,8 +3443,12 @@
         "Learned Helplessness Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0552",
@@ -2886,8 +3466,14 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Hrv",
+        "Cortisol",
+        "Pupil"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0650",
@@ -2904,8 +3490,13 @@
         "Stress Recovery Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Eeg",
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0709",
@@ -2923,8 +3514,13 @@
         "PAD Model (Pleasure-Arousal-Dominance)"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Hrv",
+        "Eeg"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0760",
@@ -2942,7 +3538,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0780",
@@ -2960,8 +3558,13 @@
         "Kaplan Preference Matrix"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Cortisol",
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0824",
@@ -2977,8 +3580,12 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "qualitative"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "qualitative",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0832",
@@ -2993,8 +3600,14 @@
         "Environmental Perception Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Eeg",
+        "Pupil",
+        "Hrv"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0198",
@@ -3009,8 +3622,12 @@
         "Environmental Perception Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0600",
@@ -3029,7 +3646,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "theoretical"
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0778",
@@ -3047,7 +3666,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0794",
@@ -3065,7 +3686,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0806",
@@ -3084,7 +3707,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0812",
@@ -3103,7 +3728,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0816",
@@ -3120,8 +3747,12 @@
         "Goldilocks Principle of Optimal Stimulation"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0983",
@@ -3137,7 +3768,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "theoretical"
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0020",
@@ -3155,8 +3788,12 @@
         "Circadian Rhythm Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Cortisol"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0044",
@@ -3173,7 +3810,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0143",
@@ -3188,8 +3827,12 @@
         "Environmental Perception Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0593",
@@ -3206,8 +3849,12 @@
         "Auditory Scene Analysis"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Eeg"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0613",
@@ -3226,7 +3873,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0631",
@@ -3243,8 +3892,12 @@
         "Environmental Load Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Hrv"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0770",
@@ -3262,8 +3915,12 @@
         "Circadian Rhythm Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0786",
@@ -3281,8 +3938,12 @@
         "Processing Fluency as Monitoring Node"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Eda"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0793",
@@ -3300,8 +3961,12 @@
         "Embodied Simulation Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Eda"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0800",
@@ -3320,7 +3985,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0200",
@@ -3336,7 +4003,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "theoretical"
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0360",
@@ -3354,8 +4023,12 @@
         "Gestalt Principles of Perception"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Eeg"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0790",
@@ -3373,8 +4046,12 @@
         "Defensible Space / Crime Prevention Through Environmental Design"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0814",
@@ -3392,7 +4069,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0038",
@@ -3410,8 +4089,12 @@
         "Prospect Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "book"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "book",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0092",
@@ -3427,7 +4110,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0113",
@@ -3443,7 +4128,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0617",
@@ -3461,8 +4148,12 @@
         "Environmental Load Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0627",
@@ -3481,7 +4172,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0758",
@@ -3500,7 +4193,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0759",
@@ -3518,8 +4213,12 @@
         "Auditory Scene Analysis"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0764",
@@ -3537,7 +4236,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0766",
@@ -3554,8 +4255,12 @@
         "Adaptive Thermal Comfort"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0774",
@@ -3572,8 +4277,12 @@
         "Predictive Coding of Music"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0775",
@@ -3590,8 +4299,12 @@
         "Biophilia Hypothesis"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0789",
@@ -3609,7 +4322,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0797",
@@ -3626,7 +4341,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0804",
@@ -3643,7 +4360,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "theoretical"
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0805",
@@ -3661,7 +4380,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-1173",
@@ -3679,8 +4400,12 @@
         "Place Attachment Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0362",
@@ -3698,8 +4423,12 @@
         "Environmental Load Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Hrv"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0402",
@@ -3715,7 +4444,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0591",
@@ -3733,8 +4464,12 @@
         "Ecological Valence Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Eeg"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0594",
@@ -3752,8 +4487,12 @@
         "Contour Curvature Preference"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Eeg"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0629",
@@ -3770,8 +4509,12 @@
         "Goldilocks Principle of Optimal Stimulation"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Hrv"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0762",
@@ -3787,8 +4530,12 @@
         "Environmental Load Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0768",
@@ -3806,8 +4553,12 @@
         "Auditory Scene Analysis"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Pvt"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0773",
@@ -3825,7 +4576,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0802",
@@ -3843,7 +4596,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0810",
@@ -3860,8 +4615,12 @@
         "Environmental Load Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "systematic_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "systematic_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0834",
@@ -3878,8 +4637,12 @@
         "Acoustic Privacy Framework"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-1010",
@@ -3894,8 +4657,12 @@
         "Environmental Perception Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Hrv"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-1340",
@@ -3912,13 +4679,15 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "theoretical"
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0004",
-      "title": "Neighborhood population density levels",
-      "doi": "",
-      "year": null,
+      "title": "The density paradox: density, walking, and psychological stress in overcrowded public spaces",
+      "doi": "10.1080/23748834.2024.2391222",
+      "year": 2024,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 9,
       "sample_n": null,
@@ -3931,7 +4700,15 @@
         "Urban Form"
       ],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [
+        "Koohsari, Mohammad Javad",
+        "Yasunaga, Akitomo",
+        "Veitch, Jenny",
+        "Kaczynski, Andrew T.",
+        "Oka, Koichiro"
+      ],
+      "venue": "Cities &amp; Health"
     },
     {
       "paper_id": "PDF-0006",
@@ -3949,8 +4726,12 @@
         "Noise",
         "Music"
       ],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0023",
@@ -3968,8 +4749,12 @@
         "Auditory Scene Analysis"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Cortisol"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0037",
@@ -3985,7 +4770,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0620",
@@ -4004,7 +4791,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0624",
@@ -4023,7 +4812,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0784",
@@ -4040,8 +4831,12 @@
         "Defensible Space / Crime Prevention Through Environmental Design"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0798",
@@ -4057,7 +4852,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0815",
@@ -4076,7 +4873,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0597",
@@ -4095,7 +4894,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0598",
@@ -4112,8 +4913,12 @@
         "Place Attachment Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Eeg"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0601",
@@ -4131,8 +4936,13 @@
         "Chronobiology"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Self-Report",
+        "Pvt"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0630",
@@ -4151,7 +4961,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0782",
@@ -4169,8 +4981,12 @@
         "Stress Recovery Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "narrative_review"
+      "instruments": [
+        "Self-Report"
+      ],
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0787",
@@ -4189,7 +5005,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0796",
@@ -4208,7 +5026,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "theoretical"
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-1297",
@@ -4224,7 +5044,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-1309",
@@ -4241,8 +5063,12 @@
         "Attention Restoration Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "theoretical"
+      "instruments": [
+        "Eeg"
+      ],
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-1319",
@@ -4259,8 +5085,12 @@
         "Stress Recovery Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "theoretical"
+      "instruments": [
+        "Cortisol"
+      ],
+      "article_type": "theoretical",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-1338",
@@ -4279,7 +5109,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0029",
@@ -4297,8 +5129,12 @@
         "Curvilinear Preference Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Pupil"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0032",
@@ -4317,7 +5153,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0767",
@@ -4336,7 +5174,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0772",
@@ -4355,7 +5195,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0776",
@@ -4372,8 +5214,12 @@
         "Environmental Load Theory"
       ],
       "constructs": [],
-      "instruments": [],
-      "article_type": "empirical_research"
+      "instruments": [
+        "Hrv"
+      ],
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0779",
@@ -4391,7 +5237,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0781",
@@ -4410,7 +5258,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "narrative_review"
+      "article_type": "narrative_review",
+      "authors": [],
+      "venue": ""
     },
     {
       "paper_id": "PDF-0795",
@@ -4429,7 +5279,9 @@
       ],
       "constructs": [],
       "instruments": [],
-      "article_type": "empirical_research"
+      "article_type": "empirical_research",
+      "authors": [],
+      "venue": ""
     }
   ]
 }
