@@ -18,7 +18,10 @@ Date: 2026-03-24
 
 ## Remaining blockers
 
-### 1. `Designing_Experiments` has no remote
+There are no longer any repo-level GitHub backup blockers for the active repos.
+The remaining issues are normalization decisions at the workspace root, not missing remotes.
+
+### 1. `Designing_Experiments` remote provisioned
 Path:
 - `/Users/davidusa/REPOS/Designing_Experiments`
 
@@ -26,49 +29,47 @@ Current state:
 - real git repo
 - local commit history exists
 - current local snapshot commit: `8f29cb2`
-- no GitHub remote configured
+- remote configured: `https://github.com/dkirsh/Designing_Experiments.git`
+- pushed branch: `master`
 
 Consequence:
-- local history exists, but there is no off-machine backup for that repo
+- no repo-level backup blocker remains
 
 Required next action:
-- create a GitHub repo and add `origin`
-- then push the current branches
+- none for backup; only normal future maintenance
 
-### 2. `Article_Finder_v3_2_3` has no remote and no curated initial snapshot
+### 2. `Article_Finder_v3_2_3` remote provisioned
 Path:
 - `/Users/davidusa/REPOS/Article_Finder_v3_2_3`
 
 Current state:
 - restored as a standalone local git repo after the root repo archive
 - current local source snapshot commit: `f57d2b6`
-- no remote configured
+- remote configured: `https://github.com/dkirsh/Article_Finder_v3_2_3.git`
+- pushed branch: `main`
 
 Consequence:
-- the repo is structurally fixed and has a curated local source snapshot, but still is not backed up remotely
+- no repo-level backup blocker remains
 
 Required next action:
-- decide the canonical remote repo name
-- add minimal ignore rules if needed
-- make the first curated commit
-- push it
+- none for backup; later work is data/storage policy rather than repo creation
 
-### 3. `theory_guides` is still not versioned as its own repo
+### 3. `theory_guides` remote provisioned
 Path:
 - `/Users/davidusa/REPOS/theory_guides`
 
 Current state:
 - active content corpus
-- no git repo
-- no remote
+- initialized as git repo
+- current local snapshot commit: `22ff7be`
+- remote configured: `https://github.com/dkirsh/theory_guides.git`
+- pushed branch: `main`
 
 Consequence:
-- the guide corpus still depends entirely on the local filesystem
+- no repo-level backup blocker remains
 
 Required next action:
-- decide whether to:
-  - keep it as an auxiliary content directory and absorb it elsewhere
-  - or make it a real repo with its own remote
+- only future integration decisions; backup is already covered
 
 ### 4. A few root-level duplicates and workspace-operational files remain
 Examples:
@@ -96,12 +97,12 @@ Required next action:
 - `Knowledge_Atlas`
 - `Article_Eater_PostQuinean_v1_recovery`
 
-### Canonical but still local-only
+### Canonical and now remotely backed up
 - `Designing_Experiments`
 - `Article_Finder_v3_2_3`
 - `theory_guides`
 
 ## Bottom line
 
-The workspace is no longer structurally confused.
-The remaining work is repo provisioning and final normalization, not emergency cleanup.
+The active repos are now all backed up remotely.
+The remaining work is final normalization of the workspace root and ongoing maintenance, not repo-provisioning.

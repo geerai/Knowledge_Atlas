@@ -59,7 +59,7 @@ Role:
 
 Git status:
 - real git repo
-- no remote yet
+- remote configured: `https://github.com/dkirsh/Designing_Experiments.git`
 
 Owns:
 - experiment-design docs
@@ -75,7 +75,7 @@ Role:
 
 Git status:
 - now re-initialized as a standalone local repo after the accidental root repo was archived
-- no remote yet
+- remote configured: `https://github.com/dkirsh/Article_Finder_v3_2_3.git`
 
 Owns:
 - AF ingestion and search code
@@ -90,8 +90,9 @@ Path:
 
 Role:
 - standalone theory-guide corpus
-- currently not a git repo
-- should be treated as content to integrate, not a canonical operational repo yet
+- now backed up as its own git repo:
+  - `https://github.com/dkirsh/theory_guides.git`
+- should still be treated as content to integrate, not as a primary operational repo
 
 ### `Backups`
 Path:
