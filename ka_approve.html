@@ -71,6 +71,13 @@
             gap: 16px;
             align-items: center;
         }
+        .nav-center {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+        }
 
         .mode-pill {
             background-color: #E8872A;
@@ -80,6 +87,14 @@
             font-size: 11px;
             font-weight: 700;
             letter-spacing: 0.5px;
+        }
+        .mode-select {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(168,200,191,0.35);
+            color: #E6EFE9;
+            border-radius: 18px;
+            padding: 5px 10px;
+            font-size: 12px;
         }
 
         .nav-link {
@@ -693,8 +708,24 @@
                 <div class="ka-wordmark-bottom">Atla<span style="color: #A8C8BF;">s</span></div>
             </div>
         </a>
+        <div class="nav-center">
+            <a href="ka_topics.html" class="nav-link" id="nav-shell-explore">Explore</a>
+            <a href="ka_evidence.html" class="nav-link" id="nav-shell-evidence">Evidence</a>
+            <a href="ka_gaps.html" class="nav-link" id="nav-shell-gaps">Gaps</a>
+            <a href="ka_article_search.html" class="nav-link" id="nav-shell-articles">Articles</a>
+            <a href="ka_dashboard.html" class="nav-link" id="nav-shell-contribute">Contribute</a>
+            <a href="ka_student_setup.html" class="nav-link" id="nav-shell-course">Course</a>
+        </div>
         <div class="nav-right">
-            <div class="mode-pill">ADMIN</div>
+            <select id="approve-mode-select" class="mode-select" aria-label="Choose user mode">
+                <option value="student_explorer">Student explorer</option>
+                <option value="researcher">Researcher</option>
+                <option value="contributor">Contributor</option>
+                <option value="instructor">Instructor</option>
+                <option value="practitioner">Practitioner</option>
+                <option value="theory_mechanism_explorer">Theory + mechanisms</option>
+            </select>
+            <div class="mode-pill" id="approve-mode-pill">INSTRUCTOR</div>
             <a href="ka_login.html" class="nav-link">Log out</a>
         </div>
     </nav>
@@ -705,30 +736,30 @@
         <aside class="sidebar">
             <div class="sidebar-section">
                 <div class="sidebar-title">Requests</div>
-                <a href="#" class="sidebar-link active">
+                <a href="#pending-requests" class="sidebar-link active">
                     Pending Requests
                     <span class="badge">7</span>
                 </a>
-                <a href="#" class="sidebar-link">Approved</a>
-                <a href="#" class="sidebar-link">Rejected</a>
+                <a href="#approved-requests" class="sidebar-link">Approved</a>
+                <a href="#rejected-requests" class="sidebar-link">Rejected</a>
             </div>
 
             <div class="sidebar-section">
                 <div class="sidebar-title">Users</div>
-                <a href="#" class="sidebar-link">All Users</a>
-                <a href="#" class="sidebar-link">Track Roster</a>
+                <a href="#all-users" class="sidebar-link">All Users</a>
+                <a href="#track-roster" class="sidebar-link">Track Roster</a>
             </div>
 
             <div class="sidebar-section">
                 <div class="sidebar-title">Configuration</div>
-                <a href="#" class="sidebar-link">Settings</a>
+                <a href="#approval-settings" class="sidebar-link">Settings</a>
             </div>
         </aside>
 
         <!-- Main content -->
         <main class="main-content">
             <!-- Page header -->
-            <div class="page-header">
+            <div class="page-header" id="pending-requests">
                 <h1>Track Assignment Requests</h1>
                 <p>Review pending registration requests and assign students to tracks.</p>
             </div>
@@ -962,6 +993,46 @@
                     </div>
                 </div>
             </div>
+
+            <div class="capacity-section" id="approved-requests">
+                <div class="capacity-title">Approved Requests</div>
+                <div class="capacity-card">
+                    <div class="capacity-card-title">Function integrated</div>
+                    <div class="capacity-text">Live approved-request listing is not yet wired. This anchor keeps sidebar navigation live during walkthrough.</div>
+                </div>
+            </div>
+
+            <div class="capacity-section" id="rejected-requests">
+                <div class="capacity-title">Rejected Requests</div>
+                <div class="capacity-card">
+                    <div class="capacity-card-title">Spec unknown</div>
+                    <div class="capacity-text">Final rejected-request review surface is not yet defined. Placeholder retained so navigation resolves cleanly.</div>
+                </div>
+            </div>
+
+            <div class="capacity-section" id="all-users">
+                <div class="capacity-title">All Users</div>
+                <div class="capacity-card">
+                    <div class="capacity-card-title">Function integrated</div>
+                    <div class="capacity-text">Full user-management table is not yet wired. Placeholder retained so sidebar navigation resolves cleanly.</div>
+                </div>
+            </div>
+
+            <div class="capacity-section" id="track-roster">
+                <div class="capacity-title">Track Roster</div>
+                <div class="capacity-card">
+                    <div class="capacity-card-title">Function integrated</div>
+                    <div class="capacity-text">Roster-by-track surface is not yet wired. Placeholder retained so sidebar navigation resolves cleanly.</div>
+                </div>
+            </div>
+
+            <div class="capacity-section" id="approval-settings">
+                <div class="capacity-title">Approval Settings</div>
+                <div class="capacity-card">
+                    <div class="capacity-card-title">Spec unknown</div>
+                    <div class="capacity-text">Admin configuration surface is not yet defined. Placeholder retained so navigation resolves cleanly.</div>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -1184,6 +1255,8 @@ window.KA_PAGE_FUNCTION = {
 </script>
 <script src="ka_page_function.js"></script>
 <script src="ka_demo_wiring.js"></script>
+<script src="ka_mode_switch.js"></script>
+<script src="ka_site_shell.js"></script>
 
 <script>
 window.KA_ABOUT_PAGE = {
@@ -1198,6 +1271,14 @@ window.KA_ABOUT_PAGE = {
 };
 </script>
 <script src="ka_about_page.js"></script>
+<script>
+window.KA_SHELL.initShell({
+  navContainerSelector: '.nav-center',
+  modeSelectId: 'approve-mode-select',
+  modePillId: 'approve-mode-pill',
+  defaultMode: 'instructor'
+});
+</script>
 
 </body>
 </html>

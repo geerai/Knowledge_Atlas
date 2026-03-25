@@ -2,11 +2,11 @@
  * ka_page_function.js
  * Knowledge Atlas — Page Function Spec Overlay
  *
- * Injects a discreet "Page function spec" button at the bottom-left of every
- * KA page. Visible only when the user is logged in (checked via localStorage
- * flag 'ka_logged_in' = '1' set by ka_login.html). Clicking opens a structured
- * side-panel overlay showing the page's audience, purpose, workflow position,
- * and what it is / is not for — for use by GUI track evaluators.
+ * Injects a discreet "Function" button near the bottom-right version area on
+ * every KA page. Mouseover or click opens a structured side-panel overlay
+ * showing the page's audience, purpose, workflow position, scenarios, and use
+ * cases. This is part of the KA walkthrough surface, not a hidden evaluator
+ * tool.
  *
  * Usage: include <script src="ka_page_function.js"></script> in every page,
  * with window.KA_PAGE_FUNCTION defined before the script tag (or after — the
@@ -32,8 +32,8 @@
 
   const CSS = `
     #ka-fn-btn {
-      position: fixed; bottom: 16px; left: 20px; z-index: 9990;
-      display: none; /* shown only when logged in */
+      position: fixed; bottom: 18px; right: 104px; z-index: 9990;
+      display: block;
       background: rgba(28,61,58,0.88); color: #A8C8BF;
       font-family: Arial, sans-serif; font-size: 0.67rem; font-weight: 700;
       letter-spacing: 0.1em; text-transform: uppercase;
@@ -132,14 +132,7 @@
     document.head.appendChild(el);
   }
 
-  function isLoggedIn() {
-    return localStorage.getItem('ka_logged_in') === '1' ||
-           sessionStorage.getItem('ka_logged_in') === '1' ||
-           // fallback for demo: show if URL has ?fnspec=1
-           new URLSearchParams(window.location.search).get('fnspec') === '1';
-  }
-
-  function buildPanel(spec) {
+  function buildPanel(spec, aboutSpec) {
     // Overlay backdrop
     const overlay = document.createElement('div');
     overlay.id = 'ka-fn-overlay';
@@ -164,6 +157,12 @@
           <div class="fn-text">${spec.audience || '—'}</div>
         </div>
 
+        ${aboutSpec && aboutSpec.users ? `
+        <div class="fn-section">
+          <div class="fn-label">Primary Users / Scenarios</div>
+          <div class="fn-text">${aboutSpec.users}</div>
+        </div>` : ''}
+
         <div class="fn-section">
           <div class="fn-label">Page Purpose</div>
           <div class="fn-text">${spec.purpose || '—'}</div>
@@ -184,6 +183,14 @@
           <span class="fn-phase-pill">${spec.phase || '—'}</span>
         </div>
 
+        ${aboutSpec && Array.isArray(aboutSpec.uses) && aboutSpec.uses.length ? `
+        <div class="fn-section">
+          <div class="fn-label">Use Cases Served</div>
+          <ul class="fn-eval-list">
+            ${aboutSpec.uses.map(u => `<li>${u}</li>`).join('')}
+          </ul>
+        </div>` : ''}
+
         ${spec.evalQuestions && spec.evalQuestions.length ? `
         <div class="fn-section">
           <div class="fn-label">GUI Track Evaluation Questions</div>
@@ -194,7 +201,7 @@
       </div>
 
       <div id="ka-fn-footer">
-        GUI Track evaluation tool · KA v0.4 · Visible to logged-in users only
+        Knowledge Atlas page function surface · KA v0.4
       </div>
     `;
 
@@ -219,8 +226,9 @@
   function buildButton() {
     const btn = document.createElement('button');
     btn.id = 'ka-fn-btn';
-    btn.textContent = '⊙ Page function spec';
-    btn.title = 'View the function specification for this page (GUI track evaluators only)';
+    btn.textContent = '⊙ Function';
+    btn.title = 'Goal, user scenarios, and use cases served by this page';
+    btn.addEventListener('mouseenter', openPanel);
     btn.addEventListener('click', openPanel);
     document.body.appendChild(btn);
     return btn;
@@ -228,27 +236,18 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     const spec = window.KA_PAGE_FUNCTION;
+    const aboutSpec = window.KA_ABOUT_PAGE || null;
     if (!spec) return; // page hasn't defined a spec — skip silently
 
     injectStyles();
 
-    const btn = buildButton();
-    if (isLoggedIn()) {
-      btn.style.display = 'block';
-    }
+    buildButton();
 
-    buildPanel(spec);
+    buildPanel(spec, aboutSpec);
 
-    // Also listen for login state changes within the session
-    window.addEventListener('storage', function (e) {
-      if (e.key === 'ka_logged_in') {
-        btn.style.display = e.newValue === '1' ? 'block' : 'none';
-      }
-    });
-
-    // Keyboard shortcut: Shift+F (for Function spec) — only when logged in
+    // Keyboard shortcut: Shift+F (for Function spec)
     document.addEventListener('keydown', function (e) {
-      if (e.shiftKey && e.key === 'F' && isLoggedIn()) {
+      if (e.shiftKey && e.key === 'F') {
         const overlay = document.getElementById('ka-fn-overlay');
         if (overlay.style.display === 'block') { closePanel(); } else { openPanel(); }
       }

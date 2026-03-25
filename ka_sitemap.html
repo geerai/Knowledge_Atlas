@@ -15,11 +15,21 @@ nav {
 }
 .wordmark { font-size: 1.25rem; font-weight: 700; color: #F5A623; }
 .wordmark-sub { font-size: 0.62rem; color: #7AACA0; letter-spacing: 1.5px; }
-.nav-tag {
-  margin-left: 20px; background: rgba(232,135,42,0.18); color: #E8872A;
-  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
-  text-transform: uppercase; padding: 4px 12px; border-radius: 20px;
-  border: 1px solid rgba(232,135,42,0.35);
+.nav-center { display:flex; gap:14px; align-items:center; flex:1; justify-content:center; }
+.nav-link { color:#B8CBBF; font-size:0.76rem; letter-spacing:0.06em; text-decoration:none; }
+.nav-link:hover { color:#fff; }
+.nav-right { display:flex; align-items:center; gap:12px; }
+.mode-select {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(168,200,191,0.35);
+  color: #E6EFE9;
+  border-radius: 18px;
+  padding: 5px 10px;
+  font-size: 12px;
+}
+.mode-pill {
+  background: rgba(42,120,104,0.35); color:#A8C8BF; border-radius:18px;
+  padding: 5px 11px; font-size:0.68rem; font-weight:700; letter-spacing:0.08em;
 }
 
 .page-hero {
@@ -211,7 +221,25 @@ nav {
     <div class="wordmark">Knowledge Atlas</div>
     <div class="wordmark-sub">COGS 160</div>
   </div>
-  <span class="nav-tag">Site Map · v0.4</span>
+  <div class="nav-center">
+    <a href="ka_topics.html" class="nav-link" id="nav-shell-explore">Explore</a>
+    <a href="ka_evidence.html" class="nav-link" id="nav-shell-evidence">Evidence</a>
+    <a href="ka_gaps.html" class="nav-link" id="nav-shell-gaps">Gaps</a>
+    <a href="ka_article_search.html" class="nav-link" id="nav-shell-articles">Articles</a>
+    <a href="ka_dashboard.html" class="nav-link" id="nav-shell-contribute">Contribute</a>
+    <a href="ka_student_setup.html" class="nav-link" id="nav-shell-course">Course</a>
+  </div>
+  <div class="nav-right">
+    <select id="sitemap-mode-select" class="mode-select" aria-label="Choose user mode">
+      <option value="student_explorer">Student explorer</option>
+      <option value="researcher">Researcher</option>
+      <option value="contributor">Contributor</option>
+      <option value="instructor">Instructor</option>
+      <option value="practitioner">Practitioner</option>
+      <option value="theory_mechanism_explorer">Theory + mechanisms</option>
+    </select>
+    <span class="mode-pill" id="sitemap-mode-pill">STUDENT EXPLORER</span>
+  </div>
 </nav>
 
 <div class="page-hero">
@@ -977,6 +1005,8 @@ nav {
 <div class="version-badge">KA UI · v0.4 · Site Map</div>
 <script src="ka_page_function.js"></script>
 <script src="ka_demo_wiring.js"></script>
+<script src="ka_mode_switch.js"></script>
+<script src="ka_site_shell.js"></script>
 
 <section id="ka-prev-pages">
   <div class="ka-prev-inner">
@@ -1000,6 +1030,14 @@ window.KA_ABOUT_PAGE = {
 };
 </script>
 <script src="ka_about_page.js"></script>
+<script>
+window.KA_SHELL.initShell({
+  navContainerSelector: '.nav-center',
+  modeSelectId: 'sitemap-mode-select',
+  modePillId: 'sitemap-mode-pill',
+  defaultMode: 'student_explorer'
+});
+</script>
 
 </body>
 </html>

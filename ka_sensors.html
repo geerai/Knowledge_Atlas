@@ -75,6 +75,13 @@
             align-items: center;
             gap: 16px;
         }
+        .nav-center {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+        }
 
         .mode-pill {
             background-color: rgba(42, 120, 104, 0.3);
@@ -85,6 +92,14 @@
             font-size: 0.75rem;
             font-weight: bold;
             letter-spacing: 0.5px;
+        }
+        .mode-select {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(168,200,191,0.35);
+            color: #E6EFE9;
+            border-radius: 18px;
+            padding: 5px 10px;
+            font-size: 12px;
         }
 
         .version-badge {
@@ -457,19 +472,25 @@
                 <div class="wordmark">Knowledge Atlas</div>
                 <div class="wordmark-sub">COGS 160</div>
             </div>
-            <ul>
-                <li><a href="ka_demo_v04.html">Ask</a></li>
-                <li><a href="ka_evidence.html">Evidence</a></li>
-                <li><a href="ka_hypothesis_builder.html">Build</a></li>
-                <li><a href="ka_tagger.html">Tag</a></li>
-                <li><a href="ka_article_search.html">Articles</a></li>
-                <li><a href="ka_datacapture.html">Capture</a></li>
-                <li><a href="ka_gaps.html">Gaps</a></li>
-                <li><a href="ka_topics.html">Topics</a></li>
-            </ul>
+        </div>
+        <div class="nav-center">
+            <a href="ka_topics.html" id="nav-shell-explore">Explore</a>
+            <a href="ka_evidence.html" id="nav-shell-evidence">Evidence</a>
+            <a href="ka_gaps.html" id="nav-shell-gaps">Gaps</a>
+            <a href="ka_article_search.html" id="nav-shell-articles">Articles</a>
+            <a href="ka_dashboard.html" id="nav-shell-contribute">Contribute</a>
+            <a href="ka_student_setup.html" id="nav-shell-course">Course</a>
         </div>
         <div class="nav-right">
-            <div class="mode-pill">CONTRIBUTOR</div>
+            <select id="sensors-mode-select" class="mode-select" aria-label="Choose user mode">
+                <option value="student_explorer">Student explorer</option>
+                <option value="researcher">Researcher</option>
+                <option value="contributor">Contributor</option>
+                <option value="instructor">Instructor</option>
+                <option value="practitioner">Practitioner</option>
+                <option value="theory_mechanism_explorer">Theory + mechanisms</option>
+            </select>
+            <div class="mode-pill" id="sensors-mode-pill">RESEARCHER</div>
         </div>
     </nav>
 
@@ -1229,6 +1250,8 @@ window.KA_PAGE_FUNCTION = {
 </script>
 <script src="ka_page_function.js"></script>
 <script src="ka_demo_wiring.js"></script>
+<script src="ka_mode_switch.js"></script>
+<script src="ka_site_shell.js"></script>
 
 <section id="ka-prev-pages">
   <div class="ka-prev-inner">
@@ -1253,6 +1276,14 @@ window.KA_ABOUT_PAGE = {
 };
 </script>
 <script src="ka_about_page.js"></script>
+<script>
+window.KA_SHELL.initShell({
+  navContainerSelector: '.nav-center',
+  modeSelectId: 'sensors-mode-select',
+  modePillId: 'sensors-mode-pill',
+  defaultMode: 'researcher'
+});
+</script>
 
 </body>
 </html>

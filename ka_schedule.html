@@ -23,10 +23,13 @@
     .nav-wordmark{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.1em;color:#A8C8BF}
     .nav-icon{width:20px;height:20px;background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23A8C8BF" stroke-width="1.5"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><line x1="6" y1="6" x2="12" y2="18"/><line x1="18" y1="6" x2="12" y2="18"/></svg>') no-repeat center/contain}
     .nav-title{color:#fff}.nav-title-accent{color:#F5A623}
-    .nav-center{flex:1;text-align:center;color:#A8C8BF;font-size:13px}
-    .nav-right{display:flex;align-items:center;gap:16px}
+    .nav-center{flex:1;display:flex;justify-content:center;align-items:center;gap:14px}
+    .nav-right{display:flex;align-items:center;gap:12px}
     .nav-link{font-size:12px;color:#A8C8BF;text-decoration:none;font-weight:500}
     .nav-link:hover{color:#fff}
+    .mode-select{background:rgba(255,255,255,.08);border:1px solid rgba(168,200,191,.35);color:#E6EFE9;border-radius:18px;padding:5px 10px;font-size:12px}
+    .mode-pill{background:rgba(42,120,104,.35);color:#A8C8BF;border-radius:18px;padding:5px 11px;font-size:10px;font-weight:700;letter-spacing:.08em}
+    .profile-avatar{width:30px;height:30px;border-radius:50%;background:#E8872A;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
 
     /* PAGE HERO */
     .page-hero{background:linear-gradient(135deg,#1C3D3A 0%,#163230 100%);padding:48px 32px 36px;text-align:center;margin-top:56px}
@@ -130,12 +133,25 @@
     <span class="nav-icon"></span>
     <span class="nav-title">Knowledge <span class="nav-title-accent">Atlas</span></span>
   </div>
-  <div class="nav-center">COGS 160 · Spring 2026</div>
+  <div class="nav-center">
+    <a href="ka_topics.html" class="nav-link" id="nav-shell-explore">Explore</a>
+    <a href="ka_evidence.html" class="nav-link" id="nav-shell-evidence">Evidence</a>
+    <a href="ka_gaps.html" class="nav-link" id="nav-shell-gaps">Gaps</a>
+    <a href="ka_article_search.html" class="nav-link" id="nav-shell-articles">Articles</a>
+    <a href="ka_dashboard.html" class="nav-link" id="nav-shell-contribute">Contribute</a>
+    <a href="ka_student_setup.html" class="nav-link" id="nav-shell-course">Course</a>
+  </div>
   <div class="nav-right">
-    <a href="ka_home.html" class="nav-link">Home</a>
-    <a href="ka_dashboard.html" class="nav-link">Dashboard</a>
-    <a href="ka_student_setup.html" class="nav-link">Getting Started</a>
-    <a href="ka_sitemap.html" class="nav-link">Site Map</a>
+    <select id="schedule-mode-select" class="mode-select" aria-label="Choose user mode">
+      <option value="student_explorer">Student explorer</option>
+      <option value="researcher">Researcher</option>
+      <option value="contributor">Contributor</option>
+      <option value="instructor">Instructor</option>
+      <option value="practitioner">Practitioner</option>
+      <option value="theory_mechanism_explorer">Theory + mechanisms</option>
+    </select>
+    <span class="mode-pill" id="schedule-mode-pill">INSTRUCTOR</span>
+    <span class="profile-avatar" id="schedule-avatar">JL</span>
   </div>
 </nav>
 
@@ -611,6 +627,9 @@ window.KA_PAGE_FUNCTION = {
 };
 </script>
 <script src="ka_page_function.js"></script>
+<script src="ka_mode_switch.js"></script>
+<script src="ka_site_shell.js"></script>
+<script src="ka_shell_user.js"></script>
 
 <script>
 window.KA_ABOUT_PAGE = {
@@ -627,6 +646,18 @@ window.KA_ABOUT_PAGE = {
 };
 </script>
 <script src="ka_about_page.js"></script>
+<script>
+window.KA_SHELL.initShell({
+  navContainerSelector: '.nav-center',
+  modeSelectId: 'schedule-mode-select',
+  modePillId: 'schedule-mode-pill',
+  defaultMode: 'instructor'
+});
+window.KA_SHELL_USER.applyUser({
+  avatarId: 'schedule-avatar',
+  avatarFallback: 'JL'
+});
+</script>
 
 </body>
 </html>

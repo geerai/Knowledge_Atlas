@@ -48,7 +48,11 @@ body { font-family: 'Georgia', serif; background: var(--cream); color: var(--tex
 .nav-links { display: flex; gap: 4px; flex: 1; }
 .nav-link { color: rgba(255,255,255,0.72); font-family: 'Arial', sans-serif; font-size: 0.82rem; text-decoration: none; padding: 6px 12px; border-radius: 6px; letter-spacing: 0.04em; transition: background 0.15s; }
 .nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.12); color: #fff; }
-.mode-pill { margin-left: auto; font-family: 'Arial', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; padding: 5px 12px; border-radius: 20px; border: 1.5px solid; cursor: pointer; background: rgba(90,200,170,0.15); color: #5AC8AA; border-color: rgba(90,200,170,0.4); }
+.nav-right { display:flex; align-items:center; gap:12px; margin-left:auto; }
+.mode-select { font-size: 0.76rem; padding: 6px 10px; border-radius: 16px; border: 1px solid rgba(168, 200, 191, 0.34); background: rgba(255,255,255,0.05); color: #D8EAE4; }
+.mode-select option { color: var(--navy); }
+.mode-pill { font-family: 'Arial', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; padding: 5px 12px; border-radius: 20px; border: 1.5px solid; cursor: pointer; background: rgba(90,200,170,0.15); color: #5AC8AA; border-color: rgba(90,200,170,0.4); }
+.profile-avatar { width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.12); color: #D8EAE4; display:flex; align-items:center; justify-content:center; font-family:'Arial', sans-serif; font-size: 0.78rem; font-weight:700; }
 .version-badge { font-family: 'Arial', sans-serif; font-size: 0.7rem; color: rgba(255,255,255,0.4); letter-spacing: 0.04em; }
 
 /* ── PAGE LAYOUT ────────────────────────────────────────────────────────── */
@@ -537,18 +541,26 @@ input[type="range"] { flex: 1; accent-color: var(--teal); }
 <nav class="topnav">
   <a href="ka_home.html" class="wordmark">Knowledge Atlas<span>COGS 160</span></a>
   <div class="nav-links">
-    <a href="ka_demo_v04.html" class="nav-link">Ask</a>
-    <a href="#" class="nav-link">Evidence</a>
-    <a href="ka_hypothesis_builder.html" class="nav-link active">Build</a>
-    <a href="ka_tagger.html" class="nav-link">Tag</a>
-    <a href="ka_articles.html" class="nav-link">Articles</a>
-    <a href="ka_datacapture.html" class="nav-link">Capture</a>
-    <a href="ka_gaps.html" class="nav-link">Gaps</a>
-    <a href="ka_sensors.html" class="nav-link">Sensors</a>
-    <a href="ka_topics.html" class="nav-link">Topics</a>
+    <a id="nav-shell-explore" href="ka_topics.html" class="nav-link">Explore</a>
+    <a id="nav-shell-evidence" href="ka_evidence.html" class="nav-link">Evidence</a>
+    <a id="nav-shell-gaps" href="ka_gaps.html" class="nav-link">Gaps</a>
+    <a id="nav-shell-articles" href="ka_article_search.html" class="nav-link">Articles</a>
+    <a id="nav-shell-contribute" href="ka_dashboard.html" class="nav-link active">Contribute</a>
+    <a id="nav-shell-course" href="Designing_Experiments/cogs160_spring_2026_site.html" class="nav-link">Course</a>
   </div>
-  <span class="mode-pill">CONTRIBUTOR</span>
-  <span class="version-badge">v0.4</span>
+  <div class="nav-right">
+    <select class="mode-select" id="hypothesis-mode-select" aria-label="Switch user mode">
+      <option value="student_explorer">Student explorer</option>
+      <option value="researcher">Researcher</option>
+      <option value="contributor">Contributor</option>
+      <option value="instructor">Instructor</option>
+      <option value="practitioner">Practitioner</option>
+      <option value="theory_mechanism_explorer">Theory + mechanisms</option>
+    </select>
+    <span class="mode-pill" id="hypothesis-mode-pill">CONTRIBUTOR</span>
+    <span class="profile-avatar" id="hypothesis-avatar">KA</span>
+    <span class="version-badge">v0.4</span>
+  </div>
 </nav>
 
 <div class="page-wrap">
@@ -1480,6 +1492,18 @@ updateRail();
 updateSummary();
 </script>
 <script src="ka_acronyms.js"></script>
+<script src="ka_mode_switch.js"></script>
+<script src="ka_site_shell.js"></script>
+<script src="ka_shell_user.js"></script>
+<script>
+window.KA_SHELL.initShell({
+  navContainerSelector: '.nav-links',
+  modeSelectId: 'hypothesis-mode-select',
+  modePillId: 'hypothesis-mode-pill',
+  defaultMode: 'contributor'
+});
+window.KA_SHELL_USER.applyUser({ avatarId: 'hypothesis-avatar', avatarFallback: 'KA' });
+</script>
 <script>
 window.KA_PAGE_FUNCTION = {
   pageId: 'ka_hypothesis_builder',

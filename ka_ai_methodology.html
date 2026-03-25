@@ -33,6 +33,20 @@
     nav a.nav-link { color: #7AACA0; font-size: 0.8rem; text-decoration: none; transition: color 0.15s; }
     nav a.nav-link:hover { color: #fff; }
     .nav-sep { color: rgba(255,255,255,0.18); }
+    .nav-center { display: flex; gap: 18px; align-items: center; flex: 1; }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .mode-select {
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(168,200,191,0.35);
+      color: #E6EFE9; border-radius: 18px; padding: 5px 10px; font-size: 0.74rem;
+    }
+    .mode-pill {
+      background: rgba(42,120,104,0.35); color: #A8C8BF; border-radius: 18px;
+      padding: 5px 11px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
+    }
+    .profile-avatar {
+      width: 30px; height: 30px; border-radius: 50%; background: #E8872A; color: #fff;
+      display: inline-flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700;
+    }
 
     /* ── Hero ── */
     .page-hero {
@@ -231,10 +245,26 @@
 <nav>
   <a href="ka_home.html" class="nav-brand">Knowledge Atlas</a>
   <span class="nav-sep">|</span>
-  <a href="ka_student_setup.html" class="nav-link">Student Setup</a>
-  <a href="ka_dashboard.html" class="nav-link">Dashboard</a>
-  <a href="ka_topics.html" class="nav-link">Topics</a>
-  <a href="ka_sitemap.html" class="nav-link">Sitemap</a>
+  <div class="nav-center">
+    <a href="ka_topics.html" class="nav-link" id="nav-shell-explore">Explore</a>
+    <a href="ka_evidence.html" class="nav-link" id="nav-shell-evidence">Evidence</a>
+    <a href="ka_gaps.html" class="nav-link" id="nav-shell-gaps">Gaps</a>
+    <a href="ka_article_search.html" class="nav-link" id="nav-shell-articles">Articles</a>
+    <a href="ka_dashboard.html" class="nav-link" id="nav-shell-contribute">Contribute</a>
+    <a href="ka_student_setup.html" class="nav-link" id="nav-shell-course">Course</a>
+  </div>
+  <div class="nav-right">
+    <select id="ai-method-mode-select" class="mode-select" aria-label="Choose user mode">
+      <option value="student_explorer">Student explorer</option>
+      <option value="researcher">Researcher</option>
+      <option value="contributor">Contributor</option>
+      <option value="instructor">Instructor</option>
+      <option value="practitioner">Practitioner</option>
+      <option value="theory_mechanism_explorer">Theory + mechanisms</option>
+    </select>
+    <span class="mode-pill" id="ai-method-mode-pill">CONTRIBUTOR</span>
+    <span class="profile-avatar" id="ai-method-avatar">JL</span>
+  </div>
 </nav>
 
 <div class="page-hero">
@@ -885,6 +915,9 @@ window.KA_PAGE_FUNCTION = {
 };
 </script>
 <script src="ka_page_function.js"></script>
+<script src="ka_mode_switch.js"></script>
+<script src="ka_site_shell.js"></script>
+<script src="ka_shell_user.js"></script>
 
 <script>
 window.KA_ABOUT_PAGE = {
@@ -901,6 +934,18 @@ window.KA_ABOUT_PAGE = {
 };
 </script>
 <script src="ka_about_page.js"></script>
+<script>
+window.KA_SHELL.initShell({
+  navContainerSelector: '.nav-center',
+  modeSelectId: 'ai-method-mode-select',
+  modePillId: 'ai-method-mode-pill',
+  defaultMode: 'contributor'
+});
+window.KA_SHELL_USER.applyUser({
+  avatarId: 'ai-method-avatar',
+  avatarFallback: 'JL'
+});
+</script>
 
 </body>
 </html>

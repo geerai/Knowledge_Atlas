@@ -1,14 +1,14 @@
 {
   "summary": {
     "papers_total": 250,
-    "title_good": 224,
-    "title_provisional": 22,
+    "title_good": 223,
+    "title_provisional": 23,
     "title_missing_or_blocked": 4,
-    "abstract_good": 52,
-    "abstract_provisional": 31,
-    "abstract_missing": 167,
-    "doi_good": 24,
-    "doi_missing": 226,
+    "abstract_good": 60,
+    "abstract_provisional": 32,
+    "abstract_missing": 158,
+    "doi_good": 48,
+    "doi_missing": 202,
     "subject_count_good": 120,
     "subject_count_missing": 130
   },
@@ -231,14 +231,14 @@
     },
     {
       "paper_id": "PDF-0305",
-      "title": "Definition of comfort in literature",
+      "title": "What is NExT? A new conceptual model for comfort, satisfaction, health, and well-being in buildings",
       "claim_count": 39,
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -351,26 +351,26 @@
     },
     {
       "paper_id": "PDF-0658",
-      "title": "Western cultures and their relationship with nature",
+      "title": "Dichotomic reciprocity: The practice of a more intimate biomimicry in architectural design",
       "claim_count": 35,
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
       "paper_id": "PDF-0061",
-      "title": "Participants assigned to four experimental groups (Mouse permanent, Mouse selective, TUI permanent, TUI selective)",
+      "title": "Embodied learning using a tangible user interface: The effects of haptic perception and selective pointing on a spatial learning task",
       "claim_count": 34,
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -399,14 +399,14 @@
     },
     {
       "paper_id": "PDF-0558",
-      "title": "Graspable objects in human immediate vicinity (2-8 cm size range)",
+      "title": "WHY WE NEED TO \u201cGRASP\u201d OUR SURROUNDINGS: OBJECT AFFORDANCE AND PREHENSION IN ARCHITECTURE",
       "claim_count": 34,
       "json_status": {
         "title": "good",
-        "doi": "missing",
-        "abstract": "missing",
+        "doi": "good",
+        "abstract": "good",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -439,10 +439,10 @@
       "claim_count": 33,
       "json_status": {
         "title": "good",
-        "doi": "missing",
-        "abstract": "provisional",
+        "doi": "good",
+        "abstract": "good",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -507,14 +507,14 @@
     },
     {
       "paper_id": "PDF-0101",
-      "title": "Built forms in early anthropological inquiry",
+      "title": "The Built Environment and Spatial Form",
       "claim_count": 31,
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -531,14 +531,14 @@
     },
     {
       "paper_id": "PDF-0519",
-      "title": "Low-frequency noise below 20 Hz",
+      "title": "Sources and effects of low-frequency noise",
       "claim_count": 31,
       "json_status": {
         "title": "good",
-        "doi": "missing",
-        "abstract": "missing",
+        "doi": "good",
+        "abstract": "good",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -567,14 +567,14 @@
     },
     {
       "paper_id": "PDF-0115",
-      "title": "CIE Standard Photopic Observer spectral sensitivity",
+      "title": "Human Factors in Lighting",
       "claim_count": 30,
       "json_status": {
-        "title": "good",
-        "doi": "missing",
-        "abstract": "missing",
+        "title": "provisional",
+        "doi": "good",
+        "abstract": "provisional",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -651,62 +651,62 @@
     },
     {
       "paper_id": "PDF-0090",
-      "title": "Maritime Psychology: Definition, Scope and Conceptualization",
+      "title": "Malcolm MacLachlan (ed.): Maritime psychology: research in organizational &amp; health behavior at sea",
       "claim_count": 29,
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
       "paper_id": "PDF-0147",
-      "title": "Study sample: 80 included articles in systematic review",
+      "title": "Design strategies and elements of building envelope for urban acoustic environment",
       "claim_count": 29,
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
       "paper_id": "PDF-0286",
-      "title": "Self-enhancing, materialistic values (power, achievement, status)",
+      "title": "Meeting the challenges",
       "claim_count": 29,
       "json_status": {
-        "title": "good",
-        "doi": "missing",
+        "title": "provisional",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
       "paper_id": "PDF-0364",
-      "title": "Variations in six lighting arrangements presented to groups entering demonstration room",
+      "title": "Interim Study of Procedures for Investigating the Effect of Light on Impression and Behavior",
       "claim_count": 29,
       "json_status": {
         "title": "good",
-        "doi": "missing",
-        "abstract": "missing",
+        "doi": "good",
+        "abstract": "provisional",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
       "paper_id": "PDF-0457",
-      "title": "Incorporation of equivalent metabolic rate accounting for hue-heat effect",
+      "title": "A novel theoretical method for predicting the effects of lighting colour temperature on physiological responses and indoor thermal perception",
       "claim_count": 29,
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -747,26 +747,26 @@
     },
     {
       "paper_id": "PDF-0228",
-      "title": "Increasing noise level by 7 dB (from dishwasher to vacuum cleaner level) via engine noise in textile training course",
+      "title": "Noise, Cognitive Function, and Worker Productivity",
       "claim_count": 28,
       "json_status": {
         "title": "good",
-        "doi": "missing",
-        "abstract": "missing",
+        "doi": "good",
+        "abstract": "good",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
       "paper_id": "PDF-0426",
-      "title": "Analysis of architect group perceptions",
+      "title": "Comparison between architects and non-architects on perceptions of architectural acoustic environments",
       "claim_count": 28,
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -831,26 +831,26 @@
     },
     {
       "paper_id": "PDF-0091",
-      "title": "Crowding index (composite of four subjective crowding questions)",
+      "title": "The experience of crowding: A two-factor theory.",
       "claim_count": 26,
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
       "paper_id": "PDF-0502",
-      "title": "Affective reactions and evaluations of auditory stimuli (interior aircraft sounds)",
+      "title": "AFFECTIVE EVALUATIONS OF AND REACTIONS TO EXTERIOR AND INTERIOR VEHICLE AUDITORY QUALITY",
       "claim_count": 26,
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -891,14 +891,14 @@
     },
     {
       "paper_id": "PDF-0199",
-      "title": "Urbanization trends and historical development of cities",
+      "title": "The Forest and the City",
       "claim_count": 25,
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -927,14 +927,14 @@
     },
     {
       "paper_id": "PDF-0329",
-      "title": "OrhanUrasKurtulus (2022) study on RGB-based LED and matrix technologies",
+      "title": "Harmonizing Emotions: A Conceptual Framework for an Intelligent Mood Lighting System in Automotive Interior",
       "claim_count": 25,
       "json_status": {
         "title": "good",
-        "doi": "missing",
-        "abstract": "missing",
+        "doi": "good",
+        "abstract": "good",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -1023,50 +1023,50 @@
     },
     {
       "paper_id": "PDF-0067",
-      "title": "Transition from warm dim (WD) to cool bright (CB) lighting",
+      "title": "Effects of light transitions on measures of alertness, arousal and comfort",
       "claim_count": 24,
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
       "paper_id": "PDF-0166",
-      "title": "Linear motion toward fronto-parallel plane with IMO (static background + IMO at foreground)",
+      "title": "Modeling heading and path perception from optic flow in the case of independently moving objects",
       "claim_count": 24,
       "json_status": {
         "title": "good",
-        "doi": "missing",
-        "abstract": "missing",
+        "doi": "good",
+        "abstract": "good",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
       "paper_id": "PDF-0187",
-      "title": "Architectural fluency (spatial and visual alignment with nature, transparent materials, reflection between building and\u2026",
+      "title": "Understanding the Cognitive Immersion of Hospitality Architecture in Culture and Nature: Cultural Psychology and Neuroscience Views",
       "claim_count": 24,
       "json_status": {
         "title": "good",
-        "doi": "missing",
-        "abstract": "missing",
+        "doi": "good",
+        "abstract": "good",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
       "paper_id": "PDF-0217",
-      "title": "Soundscape description approach",
+      "title": "A framework for improving urban soundscapes",
       "claim_count": 24,
       "json_status": {
-        "title": "provisional",
-        "doi": "missing",
+        "title": "good",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -1119,14 +1119,14 @@
     },
     {
       "paper_id": "PDF-0169",
-      "title": "Participants listened to religious recitations in acoustic environments",
+      "title": "The impact of the acoustic environments on the emotional experience of worship spaces",
       "claim_count": 23,
       "json_status": {
         "title": "good",
-        "doi": "missing",
-        "abstract": "missing",
+        "doi": "good",
+        "abstract": "good",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {

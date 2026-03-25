@@ -73,6 +73,19 @@
             gap: 16px;
         }
 
+        .mode-select {
+            font-size: 0.76rem;
+            padding: 6px 10px;
+            border-radius: 16px;
+            border: 1px solid rgba(168, 200, 191, 0.34);
+            background: rgba(255, 255, 255, 0.05);
+            color: #D8EAE4;
+        }
+
+        .mode-select option {
+            color: #1C3D3A;
+        }
+
         .mode-pill {
             background-color: #5AC8AA;
             color: #FFFFFF;
@@ -142,6 +155,8 @@
             cursor: pointer;
             color: #2C2C2C;
             transition: all 0.2s ease;
+            text-decoration: none;
+            display: block;
         }
 
         .sidebar-nav-item:hover {
@@ -935,10 +950,25 @@
             <span>KNOWLEDGE</span>
             <span class="nav-title">/ <span class="nav-title-accent">Atlas</span></span>
         </div>
-        <div class="nav-center">Contributor Workspace</div>
+        <div class="nav-center">
+            <a id="nav-shell-explore" href="ka_topics.html">Explore</a>
+            <a id="nav-shell-evidence" href="ka_evidence.html">Evidence</a>
+            <a id="nav-shell-gaps" href="ka_gaps.html">Gaps</a>
+            <a id="nav-shell-articles" href="ka_article_search.html">Articles</a>
+            <a id="nav-shell-contribute" href="ka_dashboard.html" class="active">Contribute</a>
+            <a id="nav-shell-course" href="Designing_Experiments/cogs160_spring_2026_site.html">Course</a>
+        </div>
         <div class="nav-right">
-            <div class="mode-pill">CONTRIBUTOR</div>
-            <div class="profile-avatar">DK</div>
+            <select class="mode-select" id="tagger-mode-select" aria-label="Switch user mode">
+                <option value="student_explorer">Student explorer</option>
+                <option value="researcher">Researcher</option>
+                <option value="contributor">Contributor</option>
+                <option value="instructor">Instructor</option>
+                <option value="practitioner">Practitioner</option>
+                <option value="theory_mechanism_explorer">Theory + mechanisms</option>
+            </select>
+            <div class="mode-pill" id="tagger-mode-pill">CONTRIBUTOR</div>
+            <div class="profile-avatar" id="tagger-profile-avatar">DK</div>
         </div>
     </div>
 
@@ -949,10 +979,11 @@
             <div class="sidebar-section">
                 <span class="sidebar-label">Contributor Tasks</span>
                 <div class="sidebar-nav">
-                    <div class="sidebar-nav-item active">Tag Images</div>
-                    <div class="sidebar-nav-item">Data Capture</div>
-                    <div class="sidebar-nav-item">Find Articles</div>
-                    <div class="sidebar-nav-item">My Submissions</div>
+                    <a href="ka_dashboard.html" class="sidebar-nav-item">Dashboard</a>
+                    <a href="ka_tagger.html" class="sidebar-nav-item active">Tag Images</a>
+                    <a href="ka_tag_assignment.html" class="sidebar-nav-item">Tag Assignments</a>
+                    <a href="ka_articles.html" class="sidebar-nav-item">Review Articles</a>
+                    <a href="ka_article_propose.html" class="sidebar-nav-item">Suggest Articles</a>
                 </div>
             </div>
 
@@ -1334,6 +1365,18 @@
         });
     </script>
 <script src="ka_acronyms.js"></script>
+<script src="ka_mode_switch.js"></script>
+<script src="ka_site_shell.js"></script>
+<script src="ka_shell_user.js"></script>
+<script>
+window.KA_SHELL.initShell({
+  navContainerSelector: '.nav-center',
+  modeSelectId: 'tagger-mode-select',
+  modePillId: 'tagger-mode-pill',
+  defaultMode: 'contributor'
+});
+window.KA_SHELL_USER.applyUser({ avatarId: 'tagger-profile-avatar', avatarFallback: 'DK' });
+</script>
 <script>
 window.KA_PAGE_FUNCTION = {
   pageId: 'ka_tagger',

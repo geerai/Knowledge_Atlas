@@ -71,6 +71,13 @@
             gap: 16px;
             align-items: center;
         }
+        .nav-center {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+        }
 
         .nav-link {
             color: #A8C8BF;
@@ -84,6 +91,24 @@
         .nav-link:hover {
             color: #F5A623;
             background-color: rgba(232,135,42,0.1);
+        }
+        .mode-select {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(168,200,191,0.35);
+            color: #E6EFE9;
+            border-radius: 18px;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        .mode-pill {
+            background: rgba(42, 120, 104, 0.3);
+            color: #A8C8BF;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            padding: 4px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
         }
 
         /* Main content */
@@ -334,7 +359,24 @@
                 <div class="ka-wordmark-bottom">Atla<span style="color: #A8C8BF;">s</span></div>
             </div>
         </a>
+        <div class="nav-center">
+            <a href="ka_topics.html" class="nav-link" id="nav-shell-explore">Explore</a>
+            <a href="ka_evidence.html" class="nav-link" id="nav-shell-evidence">Evidence</a>
+            <a href="ka_gaps.html" class="nav-link" id="nav-shell-gaps">Gaps</a>
+            <a href="ka_article_search.html" class="nav-link" id="nav-shell-articles">Articles</a>
+            <a href="ka_dashboard.html" class="nav-link" id="nav-shell-contribute">Contribute</a>
+            <a href="ka_student_setup.html" class="nav-link" id="nav-shell-course">Course</a>
+        </div>
         <div class="nav-right">
+            <select id="login-mode-select" class="mode-select" aria-label="Choose user mode">
+                <option value="student_explorer">Student explorer</option>
+                <option value="researcher">Researcher</option>
+                <option value="contributor">Contributor</option>
+                <option value="instructor">Instructor</option>
+                <option value="practitioner">Practitioner</option>
+                <option value="theory_mechanism_explorer">Theory + mechanisms</option>
+            </select>
+            <span class="mode-pill" id="login-mode-pill">STUDENT EXPLORER</span>
             <a href="ka_register.html" class="nav-link">Register</a>
         </div>
     </nav>
@@ -381,7 +423,7 @@
                         <label for="password">Password</label>
                         <input type="password" id="password" name="password" placeholder="••••••••" required>
                         <div class="forgot-password-wrapper">
-                            <a href="#" class="forgot-password">Forgot password?</a>
+                            <a href="ka_register.html" class="forgot-password">Forgot password?</a>
                         </div>
                     </div>
 
@@ -444,6 +486,8 @@ window.KA_PAGE_FUNCTION = {
 </script>
 <script src="ka_page_function.js"></script>
 <script src="ka_demo_wiring.js"></script>
+<script src="ka_mode_switch.js"></script>
+<script src="ka_site_shell.js"></script>
 
 <script>
 window.KA_ABOUT_PAGE = {
@@ -458,6 +502,14 @@ window.KA_ABOUT_PAGE = {
 };
 </script>
 <script src="ka_about_page.js"></script>
+<script>
+window.KA_SHELL.initShell({
+  navContainerSelector: '.nav-center',
+  modeSelectId: 'login-mode-select',
+  modePillId: 'login-mode-pill',
+  defaultMode: 'student_explorer'
+});
+</script>
 
 </body>
 </html>

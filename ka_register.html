@@ -72,6 +72,14 @@
             align-items: center;
         }
 
+        .nav-center {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-left: auto;
+            margin-right: 20px;
+        }
+
         .nav-link {
             color: #A8C8BF;
             text-decoration: none;
@@ -84,6 +92,35 @@
         .nav-link:hover {
             color: #F5A623;
             background-color: rgba(232,135,42,0.1);
+        }
+
+        .nav-link.active {
+            color: #F5A623;
+            background-color: rgba(232,135,42,0.14);
+        }
+
+        .mode-select {
+            font-size: 0.76rem;
+            padding: 6px 10px;
+            border-radius: 16px;
+            border: 1px solid rgba(168, 200, 191, 0.34);
+            background: rgba(255, 255, 255, 0.05);
+            color: #D8EAE4;
+        }
+
+        .mode-select option {
+            color: #1C3D3A;
+        }
+
+        .mode-pill {
+            background-color: rgba(42, 120, 104, 0.3);
+            color: #5AC8AA;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-family: Arial, sans-serif;
+            font-size: 0.75rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
         }
 
         /* Main content */
@@ -521,7 +558,24 @@
                 <div class="ka-wordmark-bottom">Atla<span style="color: #A8C8BF;">s</span></div>
             </div>
         </a>
+        <div class="nav-center">
+            <a id="nav-shell-explore" href="ka_topics.html" class="nav-link">Explore</a>
+            <a id="nav-shell-evidence" href="ka_evidence.html" class="nav-link">Evidence</a>
+            <a id="nav-shell-gaps" href="ka_gaps.html" class="nav-link">Gaps</a>
+            <a id="nav-shell-articles" href="ka_article_search.html" class="nav-link">Articles</a>
+            <a id="nav-shell-contribute" href="ka_dashboard.html" class="nav-link active">Contribute</a>
+            <a id="nav-shell-course" href="Designing_Experiments/cogs160_spring_2026_site.html" class="nav-link">Course</a>
+        </div>
         <div class="nav-right">
+            <select class="mode-select" id="register-mode-select" aria-label="Switch user mode">
+                <option value="student_explorer">Student explorer</option>
+                <option value="researcher">Researcher</option>
+                <option value="contributor">Contributor</option>
+                <option value="instructor">Instructor</option>
+                <option value="practitioner">Practitioner</option>
+                <option value="theory_mechanism_explorer">Theory + mechanisms</option>
+            </select>
+            <div class="mode-pill" id="register-mode-pill">CONTRIBUTOR</div>
             <a href="ka_login.html" class="nav-link">Log in</a>
         </div>
     </nav>
@@ -920,6 +974,37 @@
     })();
     </script>
 
+<script src="ka_mode_switch.js"></script>
+<script src="ka_site_shell.js"></script>
+<script>
+    (function() {
+      function syncRegisterMode(mode) {
+        const userTypeChoice = document.getElementById('userTypeChoice');
+        if (userTypeChoice) {
+          userTypeChoice.value = mode;
+        }
+      }
+
+      window.KA_SHELL.initShell({
+        navContainerSelector: '.nav-center',
+        modeSelectId: 'register-mode-select',
+        modePillId: 'register-mode-pill',
+        defaultMode: 'student_explorer',
+        onModeApplied: syncRegisterMode
+      });
+
+      const userTypeChoice = document.getElementById('userTypeChoice');
+      if (userTypeChoice) {
+        userTypeChoice.addEventListener('change', function() {
+          const shellSelect = document.getElementById('register-mode-select');
+          if (shellSelect) {
+            shellSelect.value = this.value;
+            shellSelect.dispatchEvent(new Event('change'));
+          }
+        });
+      }
+    })();
+</script>
 <script>
 window.KA_PAGE_FUNCTION = {
   pageId: 'ka_register',

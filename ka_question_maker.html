@@ -25,7 +25,9 @@
     .nav-links a{color:#B8D4CE;font-size:0.86rem;text-decoration:none;transition:color .12s}
     .nav-links a:hover,.nav-links a.active{color:#fff}
     .nav-right{display:flex;align-items:center;gap:12px}
+    .mode-select{background:rgba(255,255,255,.08);border:1px solid rgba(168,200,191,.35);color:#E6EFE9;border-radius:18px;padding:5px 10px;font-size:.74rem}
     .mode-pill{background:rgba(42,120,104,.3);color:#7AACA0;font-size:11px;font-weight:700;letter-spacing:.1em;padding:4px 12px;border-radius:20px}
+    .profile-avatar{width:30px;height:30px;border-radius:50%;background:#E8872A;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700}
 
     /* Layout: 3-column */
     .app-layout{display:grid;grid-template-columns:300px 1fr 320px;min-height:calc(100vh - 56px);gap:0}
@@ -158,13 +160,25 @@
 <nav class="top-nav">
   <div class="nav-wordmark"><span class="nav-icon"></span><span class="nav-title">Knowledge <span class="nav-title-accent">Atlas</span></span></div>
   <ul class="nav-links">
-    <li><a href="ka_demo_v04.html">Ask</a></li>
-    <li><a href="ka_gaps.html">Gaps</a></li>
-    <li><a href="ka_article_search.html">Articles</a></li>
-    <li><a href="ka_question_maker.html" class="active">Question Maker</a></li>
-    <li><a href="ka_topics.html">Topics</a></li>
+    <li id="nav-shell-explore"><a href="ka_topics.html">Explore</a></li>
+    <li id="nav-shell-evidence"><a href="ka_evidence.html">Evidence</a></li>
+    <li id="nav-shell-gaps"><a href="ka_gaps.html">Gaps</a></li>
+    <li id="nav-shell-articles"><a href="ka_article_search.html">Articles</a></li>
+    <li id="nav-shell-contribute"><a href="ka_dashboard.html">Contribute</a></li>
+    <li id="nav-shell-course"><a href="ka_student_setup.html">Course</a></li>
   </ul>
-  <div class="nav-right"><span class="mode-pill">CONTRIBUTOR</span></div>
+  <div class="nav-right">
+    <select id="question-maker-mode-select" class="mode-select" aria-label="Choose user mode">
+      <option value="student_explorer">Student explorer</option>
+      <option value="researcher">Researcher</option>
+      <option value="contributor">Contributor</option>
+      <option value="instructor">Instructor</option>
+      <option value="practitioner">Practitioner</option>
+      <option value="theory_mechanism_explorer">Theory + mechanisms</option>
+    </select>
+    <span class="mode-pill" id="question-maker-mode-pill">CONTRIBUTOR</span>
+    <span class="profile-avatar" id="question-maker-avatar">JL</span>
+  </div>
 </nav>
 
 <div class="app-layout">
@@ -686,6 +700,9 @@ renderQueue();
 </script>
 <script src="ka_page_function.js"></script>
 <script src="ka_demo_wiring.js"></script>
+<script src="ka_mode_switch.js"></script>
+<script src="ka_site_shell.js"></script>
+<script src="ka_shell_user.js"></script>
 <script>
 window.KA_ABOUT_PAGE = {
   pageId: 'ka_question_maker',
@@ -700,6 +717,18 @@ window.KA_ABOUT_PAGE = {
 };
 </script>
 <script src="ka_about_page.js"></script>
+<script>
+window.KA_SHELL.initShell({
+  navContainerSelector: '.nav-links',
+  modeSelectId: 'question-maker-mode-select',
+  modePillId: 'question-maker-mode-pill',
+  defaultMode: 'contributor'
+});
+window.KA_SHELL_USER.applyUser({
+  avatarId: 'question-maker-avatar',
+  avatarFallback: 'JL'
+});
+</script>
 
 </body>
 </html>

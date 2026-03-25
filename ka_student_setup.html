@@ -29,16 +29,29 @@
     nav {
       position: sticky; top: 0; z-index: 500;
       background: var(--navy); display: flex; align-items: center;
-      gap: 24px; padding: 0 28px; height: 52px;
+      gap: 24px; padding: 0 28px; min-height: 52px;
       border-bottom: 2px solid var(--amber);
     }
     .nav-brand { color: #A8C8BF; font-size: 0.78rem; font-weight: 700;
       letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; }
     .nav-brand:hover { color: var(--amber); }
+    .nav-center { display:flex; align-items:center; gap:14px; flex:1; }
     nav a.nav-link { color: #7AACA0; font-size: 0.8rem; text-decoration: none;
-      transition: color 0.15s; }
-    nav a.nav-link:hover { color: #fff; }
-    .nav-sep { color: rgba(255,255,255,0.18); }
+      transition: color 0.15s, background 0.15s; padding: 6px 10px; border-radius: 6px; }
+    nav a.nav-link:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    nav a.nav-link.active { color: #F5A623; background: rgba(232,135,42,0.12); }
+    .nav-right { display:flex; align-items:center; gap:12px; }
+    .mode-select {
+      font-size: 0.76rem; padding: 6px 10px; border-radius: 16px;
+      border: 1px solid rgba(168, 200, 191, 0.34); background: rgba(255,255,255,0.05);
+      color: #D8EAE4;
+    }
+    .mode-select option { color: var(--navy); }
+    .mode-pill {
+      background: rgba(42,120,104,0.3); color: #5AC8AA; padding: 4px 12px;
+      border-radius: 20px; font-family: Arial, sans-serif; font-size: 0.75rem;
+      font-weight: 700; letter-spacing: 0.05em;
+    }
 
     /* ── Hero ── */
     .page-hero {
@@ -244,12 +257,25 @@
 
 <nav>
   <a href="ka_home.html" class="nav-brand">Knowledge Atlas</a>
-  <span class="nav-sep">|</span>
-  <a href="ka_dashboard.html" class="nav-link">Dashboard</a>
-  <a href="ka_topics.html" class="nav-link">Topics</a>
-  <a href="ka_ai_methodology.html" class="nav-link">AI Methodology</a>
-  <a href="ka_schedule.html" class="nav-link">Schedule</a>
-    <a href="ka_sitemap.html" class="nav-link">Sitemap</a>
+  <div class="nav-center">
+    <a id="nav-shell-explore" href="ka_topics.html" class="nav-link">Explore</a>
+    <a id="nav-shell-evidence" href="ka_evidence.html" class="nav-link">Evidence</a>
+    <a id="nav-shell-gaps" href="ka_gaps.html" class="nav-link">Gaps</a>
+    <a id="nav-shell-articles" href="ka_article_search.html" class="nav-link">Articles</a>
+    <a id="nav-shell-contribute" href="ka_dashboard.html" class="nav-link">Contribute</a>
+    <a id="nav-shell-course" href="Designing_Experiments/cogs160_spring_2026_site.html" class="nav-link active">Course</a>
+  </div>
+  <div class="nav-right">
+    <select class="mode-select" id="setup-mode-select" aria-label="Switch user mode">
+      <option value="student_explorer">Student explorer</option>
+      <option value="researcher">Researcher</option>
+      <option value="contributor">Contributor</option>
+      <option value="instructor">Instructor</option>
+      <option value="practitioner">Practitioner</option>
+      <option value="theory_mechanism_explorer">Theory + mechanisms</option>
+    </select>
+    <div class="mode-pill" id="setup-mode-pill">STUDENT EXPLORER</div>
+  </div>
 </nav>
 
 <div class="page-hero">
@@ -851,19 +877,18 @@ document.querySelectorAll('.track-setup-body').forEach(function(b) {
   b.classList.add('open');
   b.previousElementSibling.querySelector('.chevron').textContent = '▲';
 });
+</script>
 
-(function() {
-  const MODE_LABELS = {
-    student_explorer: 'Student explorer mode is active. The site will foreground literature exploration and tractable entry points for class work.',
-    researcher: 'Researcher mode is active. The site will foreground evidence, gaps, and article discovery.',
-    contributor: 'Contributor mode is active. The site will foreground intake, review, and progress-tracking pages.',
-    instructor: 'Instructor mode is active. The site will foreground course coordination and setup routes.',
-    practitioner: 'Practitioner mode is active. The site will foreground practical topics and readable evidence summaries.',
-    theory_mechanism_explorer: 'Theory + mechanisms mode is active. The site will foreground theory guides and explanatory routes.'
-  };
-  const currentMode = sessionStorage.getItem('ka_active_mode') || localStorage.getItem('ka_user_type') || 'student_explorer';
-  document.getElementById('setup-mode-summary').textContent = MODE_LABELS[currentMode] || MODE_LABELS.student_explorer;
-})();
+<script src="ka_mode_switch.js"></script>
+<script src="ka_site_shell.js"></script>
+<script>
+window.KA_SHELL.initShell({
+  navContainerSelector: '.nav-center',
+  modeSelectId: 'setup-mode-select',
+  modePillId: 'setup-mode-pill',
+  modeNoteId: 'setup-mode-summary',
+  defaultMode: 'student_explorer'
+});
 </script>
 
 <script>

@@ -571,9 +571,9 @@
     },
     {
       "paper_id": "PDF-0305",
-      "title": "Definition of comfort in literature",
-      "doi": "",
-      "year": null,
+      "title": "What is NExT? A new conceptual model for comfort, satisfaction, health, and well-being in buildings",
+      "doi": "10.1016/j.buildenv.2024.111234",
+      "year": 2024,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 39,
       "sample_n": null,
@@ -588,16 +588,21 @@
         "Self-Report"
       ],
       "article_type": "narrative_review",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "Altomonte, Sergio",
+        "Ka\u00e7el, Seda",
+        "Martinez, Paulina Wegertseder",
+        "Licina, Dusan"
+      ],
+      "venue": "Building and Environment",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -900,9 +905,9 @@
     },
     {
       "paper_id": "PDF-0658",
-      "title": "Western cultures and their relationship with nature",
-      "doi": "",
-      "year": null,
+      "title": "Dichotomic reciprocity: The practice of a more intimate biomimicry in architectural design",
+      "doi": "10.31274/td-20240329-240",
+      "year": 2024,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 35,
       "sample_n": null,
@@ -915,23 +920,25 @@
         "Self-Report"
       ],
       "article_type": "theoretical",
-      "authors": [],
+      "authors": [
+        "Bong, Matthew"
+      ],
       "venue": "",
-      "repair_source": "",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
       "paper_id": "PDF-0061",
-      "title": "Participants assigned to four experimental groups (Mouse permanent, Mouse selective, TUI permanent, TUI selective)",
-      "doi": "",
-      "year": null,
+      "title": "Embodied learning using a tangible user interface: The effects of haptic perception and selective pointing on a spatial learning task",
+      "doi": "10.1016/j.compedu.2015.10.011",
+      "year": 2016,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 34,
       "sample_n": 96,
@@ -944,16 +951,22 @@
         "Self-Report"
       ],
       "article_type": "empirical_research",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "Skulmowski, Alexander",
+        "Pradel, Simon",
+        "K\u00fchnert, Tom",
+        "Brunnett, Guido",
+        "Rey, G\u00fcnter Daniel"
+      ],
+      "venue": "Computers &amp; Education",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -1020,10 +1033,10 @@
     },
     {
       "paper_id": "PDF-0558",
-      "title": "Graspable objects in human immediate vicinity (2-8 cm size range)",
-      "doi": "",
-      "year": null,
-      "abstract": "Abstract not yet recovered from the current rebuild.",
+      "title": "WHY WE NEED TO \u201cGRASP\u201d OUR SURROUNDINGS: OBJECT AFFORDANCE AND PREHENSION IN ARCHITECTURE",
+      "doi": "10.3846/20297955.2017.1376003",
+      "year": 2017,
+      "abstract": "This paper argues for a basic need for graspable \u201chandles\u201d to be physically present, or merely suggested in our immediate environment. Yet two of the most characteristic elements of industrial-modernist architecture, plate-glass curtain walls and minimalist surfaces, fail to match this aspect of our body\u2019s biology. The absence of graspable components from the formal architecture of the 20th Century leads to psychological disconnection on the part of the user, and could possibly be a cause for stress and anxiety. Physical built elements and designs suggestive of grasping arise in traditional and vernacular methods of construction as ubiquitous moldings, ornament, and trim in response to both human psychology and tectonics.",
       "claim_count": 34,
       "sample_n": null,
       "subject_count_total": null,
@@ -1036,16 +1049,18 @@
       "constructs": [],
       "instruments": [],
       "article_type": "theoretical",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "SALINGAROS, Nikos"
+      ],
+      "venue": "JOURNAL OF ARCHITECTURE AND URBANISM",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
         "title": "good",
-        "doi": "missing",
-        "abstract": "missing",
+        "doi": "good",
+        "abstract": "good",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -1107,9 +1122,9 @@
     {
       "paper_id": "PDF-0288",
       "title": "Cells in human brain hippocampus responsible for location",
-      "doi": "",
-      "year": null,
-      "abstract": "Although the WHO (World Health Organization) and psychologists warned architects, some colleagues insist on designing",
+      "doi": "10.1063/5.0111122",
+      "year": 2022,
+      "abstract": "Although the World Health Organization (WHO) and psychologists warned architects, some colleagues insist on designing apartment houses with the traditional space organization. Despite the evident environmental problems, natural air conditioning, in other words thermal comfort and human psychology, are not taken into consideration at all. It is far from sustainable architecture to produce more than necessary and low-cost flats on the land used. Such approaches cannot be called \u201cModern Architecture\u201d or \u201cContemporary Architecture\u201d. One of the most important reasons for this is that if people do not feel a sense of belonging to the house they live in or even the workplace they work in, their psychology deteriorates and this fact has been accepted by the science of psychology. It is natural that people who have psychological problems are likely to have other health problems and also social and societal deteriarotion. WHO is also pointing out this issue. Social and societal life of people is deteriorating, this is the cause of alienation and increase in crime rates. During the Pandemic Process we live in today, people of all ages are not obeying the \u201cstay at home, stay healthy\u201d warnings and other prohibitions imposed by the medical community, this is due to the fact that people do not feel a sense of belonging to the house they live in. The duty of us, modern architects, as psychologists reveal, is to design our projects in order to create more livable environments, and without ignoring the fact that interpersonal relationships are shaped according to the environments they are in, Architects should refer to cognitive sciences, especially psychology to create projects. We should especially pay attention to apartment-type residences where more than one family live in. In this article, two examples, one positive and the other negative, are discussed as field work for a better understanding of Psychological Architecture. The first example is the Pruitt-Igoe site in the city of St. Louis in USA in 1955 without considering human psychology and was demolished only 16 years after its construction and whose destruction was evaluated as \u201cthe day the modern architecture died\u201d by the post-modern architectural historian Charles Jencks. The second comparative example is the Samanbahce houses in Nicosia, the capital of Cyprus, made of adobe brick, a traditional building material for families with insufficient financial means. The gross area of these houses is 85 m2, their net area is 64.90 m2, but the closed area is only 42.90 m2, while the open area is 22.00 m2 courtyard. Considering natural air conditioning, thermal comfort and human psychology, Samanbah\u00e7e houses, whose first stage construction was completed in 1925 and are still in use, were taken as an example.",
       "claim_count": 33,
       "sample_n": null,
       "subject_count_total": null,
@@ -1123,16 +1138,18 @@
         "Self-Report"
       ],
       "article_type": "narrative_review",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "Salihoglu, Turgay"
+      ],
+      "venue": "AIP Conference Proceedings",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
         "title": "good",
-        "doi": "missing",
-        "abstract": "provisional",
+        "doi": "good",
+        "abstract": "good",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -1286,9 +1303,9 @@
     },
     {
       "paper_id": "PDF-0101",
-      "title": "Built forms in early anthropological inquiry",
-      "doi": "",
-      "year": null,
+      "title": "The Built Environment and Spatial Form",
+      "doi": "10.1146/annurev.an.19.100190.002321",
+      "year": 1990,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 31,
       "sample_n": null,
@@ -1302,16 +1319,19 @@
       "constructs": [],
       "instruments": [],
       "article_type": "narrative_review",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "Lawrence, Denise L.",
+        "Low, Setha M."
+      ],
+      "venue": "Annual Review of Anthropology",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -1348,10 +1368,10 @@
     },
     {
       "paper_id": "PDF-0519",
-      "title": "Low-frequency noise below 20 Hz",
-      "doi": "",
-      "year": null,
-      "abstract": "Abstract not yet recovered from the current rebuild.",
+      "title": "Sources and effects of low-frequency noise",
+      "doi": "10.1121/1.414863",
+      "year": 1996,
+      "abstract": "The sources of human exposure to low-frequency noise and its effects are reviewed. Low-frequency noise is common as background noise in urban environments, and as an emission from many artificial sources: road vehicles, aircraft, industrial machinery, artillery and mining explosions, and air movement machinery including wind turbines, compressors, and ventilation or air-conditioning units. The effects of low-frequency noise are of particular concern because of its pervasiveness due to numerous sources, efficient propagation, and reduced efficacy of many structures (dwellings, walls, and hearing protection) in attenuating low-frequency noise compared with other noise. Intense low-frequency noise appears to produce clear symptoms including respiratory impairment and aural pain. Although the effects of lower intensities of low-frequency noise are difficult to establish for methodological reasons, evidence suggests that a number of adverse effects of noise in general arise from exposure to low-frequency noise: Loudness judgments and annoyance reactions are sometimes reported to be greater for low-frequency noise than other noises for equal sound-pressure level; annoyance is exacerbated by rattle or vibration induced by low-frequency noise; speech intelligibility may be reduced more by low-frequency noise than other noises except those in the frequency range of speech itself, because of the upward spread of masking. On the other hand, it is also possible that low-frequency noise provides some protection against the effects of simultaneous higher frequency noise on hearing. Research needs and policy decisions, based on what is currently known, are considered.",
       "claim_count": 31,
       "sample_n": null,
       "subject_count_total": null,
@@ -1367,16 +1387,20 @@
         "Cortisol"
       ],
       "article_type": "narrative_review",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "Berglund, Birgitta",
+        "Hassm\u00e9n, Peter",
+        "Job, R. F. Soames"
+      ],
+      "venue": "The Journal of the Acoustical Society of America",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
         "title": "good",
-        "doi": "missing",
-        "abstract": "missing",
+        "doi": "good",
+        "abstract": "good",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -1445,10 +1469,10 @@
     },
     {
       "paper_id": "PDF-0115",
-      "title": "CIE Standard Photopic Observer spectral sensitivity",
-      "doi": "",
-      "year": null,
-      "abstract": "Abstract not yet recovered from the current rebuild.",
+      "title": "Human Factors in Lighting",
+      "doi": "10.1201/9780203426340",
+      "year": 2003,
+      "abstract": "The availability of electric lighting has changed the lives of people the world over, yet as a major user of electricity it has come under increasing scrutiny in recent years. This scrutiny has focused largely on the environmental consequences, with little consideration of the benefits of lighting. Human Factors in Lighting, Third Edition restores",
       "claim_count": 30,
       "sample_n": 18,
       "subject_count_total": 18,
@@ -1458,16 +1482,18 @@
       "constructs": [],
       "instruments": [],
       "article_type": "narrative_review",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "Boyce, Peter Robert"
+      ],
+      "venue": "TU Digital Collections (Thammasat University)",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
-        "title": "good",
-        "doi": "missing",
-        "abstract": "missing",
+        "title": "provisional",
+        "doi": "good",
+        "abstract": "provisional",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -1653,9 +1679,9 @@
     },
     {
       "paper_id": "PDF-0090",
-      "title": "Maritime Psychology: Definition, Scope and Conceptualization",
-      "doi": "",
-      "year": null,
+      "title": "Malcolm MacLachlan (ed.): Maritime psychology: research in organizational &amp; health behavior at sea",
+      "doi": "10.1007/s13437-021-00244-0",
+      "year": 2021,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 29,
       "sample_n": null,
@@ -1670,23 +1696,25 @@
         "Self-Report"
       ],
       "article_type": "narrative_review",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "Kim, Tae-eun"
+      ],
+      "venue": "WMU Journal of Maritime Affairs",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
       "paper_id": "PDF-0147",
-      "title": "Study sample: 80 included articles in systematic review",
-      "doi": "",
-      "year": null,
+      "title": "Design strategies and elements of building envelope for urban acoustic environment",
+      "doi": "10.1016/j.buildenv.2020.107121",
+      "year": 2020,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 29,
       "sample_n": 80,
@@ -1698,23 +1726,26 @@
       "constructs": [],
       "instruments": [],
       "article_type": "systematic_review",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "Yang, Wonyoung",
+        "Jeon, Jin Yong"
+      ],
+      "venue": "Building and Environment",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
       "paper_id": "PDF-0286",
-      "title": "Self-enhancing, materialistic values (power, achievement, status)",
-      "doi": "",
-      "year": null,
+      "title": "Meeting the challenges",
+      "doi": "10.4324/9780429503849-15",
+      "year": 2019,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 29,
       "sample_n": 9,
@@ -1728,24 +1759,27 @@
         "Self-Report"
       ],
       "article_type": "narrative_review",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "Lewis, Lynne",
+        "Tietenberg, Tom"
+      ],
+      "venue": "Environmental Economics and Policy",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
-        "title": "good",
-        "doi": "missing",
+        "title": "provisional",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
       "paper_id": "PDF-0364",
-      "title": "Variations in six lighting arrangements presented to groups entering demonstration room",
-      "doi": "",
-      "year": null,
-      "abstract": "Abstract not yet recovered from the current rebuild.",
+      "title": "Interim Study of Procedures for Investigating the Effect of Light on Impression and Behavior",
+      "doi": "10.1080/00994480.1973.10732231",
+      "year": 1973,
+      "abstract": "(1973). Interim Study of Procedures for Investigating the Effect of Light on Impression and Behavior. Journal of the Illuminating Engineering Society: Vol. 3, No. 1, pp. 87-94.",
       "claim_count": 29,
       "sample_n": 96,
       "subject_count_total": 96,
@@ -1758,23 +1792,28 @@
         "Self-Report"
       ],
       "article_type": "empirical_research",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "Flynn, John E.",
+        "Spencer, Terry J.",
+        "Martyniuk, Osyp",
+        "Hendrick, Clyde"
+      ],
+      "venue": "Journal of the Illuminating Engineering Society",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
         "title": "good",
-        "doi": "missing",
-        "abstract": "missing",
+        "doi": "good",
+        "abstract": "provisional",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
       "paper_id": "PDF-0457",
-      "title": "Incorporation of equivalent metabolic rate accounting for hue-heat effect",
-      "doi": "",
-      "year": null,
+      "title": "A novel theoretical method for predicting the effects of lighting colour temperature on physiological responses and indoor thermal perception",
+      "doi": "10.1016/j.buildenv.2021.108062",
+      "year": 2021,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 29,
       "sample_n": 25,
@@ -1787,16 +1826,19 @@
         "Hrv"
       ],
       "article_type": "theoretical",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "Omidvar, Amir",
+        "Brambilla, Arianna"
+      ],
+      "venue": "Building and Environment",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -1891,10 +1933,10 @@
     },
     {
       "paper_id": "PDF-0228",
-      "title": "Increasing noise level by 7 dB (from dishwasher to vacuum cleaner level) via engine noise in textile training course",
-      "doi": "",
-      "year": null,
-      "abstract": "Abstract not yet recovered from the current rebuild.",
+      "title": "Noise, Cognitive Function, and Worker Productivity",
+      "doi": "10.1257/app.20220532",
+      "year": 2024,
+      "abstract": "Noisy workplaces common in low- and middle-income countries can impair workers' cognitive functions. However, whether this lowers earnings depends on the importance of these functions for productivity and whether workers understand these effects. I study these questions with two randomized experiments in Nairobi, Kenya. I find a noise increase of 7 dB reduces productivity in a textile training course by 3 percent, impairs cognitive function, but does not affect effort. I also find willingness to pay for quiet working conditions does not depend on whether pay depends on performance, suggesting participants are not aware that quiet would increase their productivity. (JEL D12, J24, J28, J31, J81, O15, Q53)",
       "claim_count": 28,
       "sample_n": 128,
       "subject_count_total": 157,
@@ -1906,23 +1948,25 @@
         "Self-Report"
       ],
       "article_type": "empirical_research",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "Dean, Joshua T."
+      ],
+      "venue": "American Economic Journal: Applied Economics",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
         "title": "good",
-        "doi": "missing",
-        "abstract": "missing",
+        "doi": "good",
+        "abstract": "good",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
       "paper_id": "PDF-0426",
-      "title": "Analysis of architect group perceptions",
-      "doi": "",
-      "year": null,
+      "title": "Comparison between architects and non-architects on perceptions of architectural acoustic environments",
+      "doi": "10.1016/j.apacoust.2021.108313",
+      "year": 2021,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 28,
       "sample_n": 20,
@@ -1936,16 +1980,21 @@
       "constructs": [],
       "instruments": [],
       "article_type": "qualitative",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "Liu, Xuhui",
+        "Kang, Jian",
+        "Ma, Hui",
+        "Wang, Chao"
+      ],
+      "venue": "Applied Acoustics",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -2098,9 +2147,9 @@
     },
     {
       "paper_id": "PDF-0091",
-      "title": "Crowding index (composite of four subjective crowding questions)",
-      "doi": "",
-      "year": null,
+      "title": "The experience of crowding: A two-factor theory.",
+      "doi": "10.1037//0022-3514.34.1.30",
+      "year": 1976,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 26,
       "sample_n": 315,
@@ -2112,23 +2161,26 @@
       "constructs": [],
       "instruments": [],
       "article_type": "empirical_research",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "Worchel, Stephen",
+        "Teddie, Charles"
+      ],
+      "venue": "Journal of Personality and Social Psychology",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
       "paper_id": "PDF-0502",
-      "title": "Affective reactions and evaluations of auditory stimuli (interior aircraft sounds)",
-      "doi": "",
-      "year": null,
+      "title": "AFFECTIVE EVALUATIONS OF AND REACTIONS TO EXTERIOR AND INTERIOR VEHICLE AUDITORY QUALITY",
+      "doi": "10.1006/jsvi.2001.4166",
+      "year": 2002,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 26,
       "sample_n": 20,
@@ -2139,16 +2191,21 @@
       "constructs": [],
       "instruments": [],
       "article_type": "empirical_research",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "V\u00c4STFJ\u00c4LL, D.",
+        "GULBOL, M.-A.",
+        "KLEINER, M.",
+        "G\u00c4RLING, T."
+      ],
+      "venue": "Journal of Sound and Vibration",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -2240,9 +2297,9 @@
     },
     {
       "paper_id": "PDF-0199",
-      "title": "Urbanization trends and historical development of cities",
-      "doi": "",
-      "year": null,
+      "title": "The Forest and the City",
+      "doi": "10.1007/978-3-319-75076-7",
+      "year": 2018,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 25,
       "sample_n": 50,
@@ -2256,16 +2313,18 @@
         "Self-Report"
       ],
       "article_type": "narrative_review",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "Konijnendijk, Cecil C."
+      ],
+      "venue": "Future City",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -2332,10 +2391,10 @@
     },
     {
       "paper_id": "PDF-0329",
-      "title": "OrhanUrasKurtulus (2022) study on RGB-based LED and matrix technologies",
-      "doi": "",
-      "year": null,
-      "abstract": "Abstract not yet recovered from the current rebuild.",
+      "title": "Harmonizing Emotions: A Conceptual Framework for an Intelligent Mood Lighting System in Automotive Interior",
+      "doi": "10.1109/iconstem60960.2024.10568586",
+      "year": 2024,
+      "abstract": "This paper introduces an Intelligent Mood Lighting System designed to revolutionize the in-car experience by seamlessly integrating Real-Time Clock (RTC) time, ambient light, user song choices, and mood detection. The proposed system aims to create a dynamic and emotionally resonant in-car ambiance, adapting to occupants' preferences and moods. Leveraging RTC time and ambient light sensor data, the system dynamically tailors ambient lighting conditions to optimize visibility and comfort across diverse driving scenarios. The inclusion of mood detection algorithms, rooted in user song choices, adds an emotional layer to the in-car ambiance, creating a personalized and engaging driving experience. With a usercentric design philosophy, intuitive interface, and personalized adaptability, the system places user preferences and emotions at the forefront, forging a deeper connection between occupants and their vehicles. Anticipated contributions include a dynamic atmosphere, environmental responsiveness, emotionally engaging lighting, personalized mood detection, and an overall enhanced user experience. The paper also addresses potential challenges and proposes mitigation strategies to ensure the system's resilience. In conclusion, the Intelligent Mood Lighting System holds promise as a disruptor in redefining ambient lighting in the automotive landscape, contributing to the evolution of smart vehicle technologies.",
       "claim_count": 25,
       "sample_n": null,
       "subject_count_total": null,
@@ -2347,16 +2406,20 @@
         "Eeg"
       ],
       "article_type": "theoretical",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "C, Sethusubramanian",
+        "Marshiana, D.",
+        "R, Harikrishnan"
+      ],
+      "venue": "2024 Ninth International Conference on Science Technology Engineering and Mathematics (ICONSTEM)",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
         "title": "good",
-        "doi": "missing",
-        "abstract": "missing",
+        "doi": "good",
+        "abstract": "good",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -2574,9 +2637,9 @@
     },
     {
       "paper_id": "PDF-0067",
-      "title": "Transition from warm dim (WD) to cool bright (CB) lighting",
-      "doi": "",
-      "year": null,
+      "title": "Effects of light transitions on measures of alertness, arousal and comfort",
+      "doi": "10.1016/j.physbeh.2020.112999",
+      "year": 2020,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 24,
       "sample_n": 30,
@@ -2591,24 +2654,29 @@
         "Hrv"
       ],
       "article_type": "empirical_research",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "Kompier, M.E.",
+        "Smolders, K.C.H.J.",
+        "van Marken Lichtenbelt, W.D.",
+        "de Kort, Y.A.W."
+      ],
+      "venue": "Physiology &amp; Behavior",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
         "title": "good",
-        "doi": "missing",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
       "paper_id": "PDF-0166",
-      "title": "Linear motion toward fronto-parallel plane with IMO (static background + IMO at foreground)",
-      "doi": "",
-      "year": null,
-      "abstract": "Abstract not yet recovered from the current rebuild.",
+      "title": "Modeling heading and path perception from optic flow in the case of independently moving objects",
+      "doi": "10.3389/fnbeh.2013.00023",
+      "year": 2013,
+      "abstract": "Humans are usually accurate when estimating heading or path from optic flow, even in the presence of independently moving objects (IMOs) in an otherwise rigid scene. To invoke significant biases in perceived heading, IMOs have to be large and obscure the focus of expansion (FOE) in the image plane, which is the point of approach. For the estimation of path during curvilinear self-motion no significant biases were found in the presence of IMOs. What makes humans robust in their estimation of heading or path using optic flow? We derive analytical models of optic flow for linear and curvilinear self-motion using geometric scene models. Heading biases of a linear least squares method, which builds upon these analytical models, are large, larger than those reported for humans. This motivated us to study segmentation cues that are available from optic flow. We derive models of accretion/deletion, expansion/contraction, acceleration/deceleration, local spatial curvature, and local temporal curvature, to be used as cues to segment an IMO from the background. Integrating these segmentation cues into our method of estimating heading or path now explains human psychophysical data and extends, as well as unifies, previous investigations. Our analysis suggests that various cues available from optic flow help to segment IMOs and, thus, make humans' heading and path perception robust in the presence of such IMOs.",
       "claim_count": 24,
       "sample_n": null,
       "subject_count_total": null,
@@ -2619,24 +2687,27 @@
       "constructs": [],
       "instruments": [],
       "article_type": "empirical_research",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "Raudies, Florian",
+        "Neumann, Heiko"
+      ],
+      "venue": "Frontiers in Behavioral Neuroscience",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
         "title": "good",
-        "doi": "missing",
-        "abstract": "missing",
+        "doi": "good",
+        "abstract": "good",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
       "paper_id": "PDF-0187",
-      "title": "Architectural fluency (spatial and visual alignment with nature, transparent materials, reflection between building and\u2026",
-      "doi": "",
-      "year": null,
-      "abstract": "Abstract not yet recovered from the current rebuild.",
+      "title": "Understanding the Cognitive Immersion of Hospitality Architecture in Culture and Nature: Cultural Psychology and Neuroscience Views",
+      "doi": "10.3389/fpsyg.2022.833819",
+      "year": 2022,
+      "abstract": "Hotel architectural design plays a critical role in the hospitality experiences of consumers, and it is important to consider that people may have different aesthetic cognitions toward the sensory properties of nature (i.e., the architecture of the hotel), such as its color and texture, as well as the landscape. While neuroaesthetics has emerged as a nascent field in hospitality research, few studies have investigated how nature reflects aesthetic experiences in the human brain. Moreover, the neuroaesthetic interpretation of architecture through the aesthetic triad is a novel interdisciplinary field. A field survey conducted at Amanfayun, a hotel in Hangzhou, China, in support of our propositions proves that sensory-motor, knowledge-meaning, and emotion valuation systems play key roles in appreciating architectural aesthetics. This study demonstrates that the evaluation of fluency, complexity, and naturalistic patterns of an architectural masterpiece is achieved through the sensory-motor systems. Our results also prove that familiarity, expectations, context, and cultural background directly affect the aesthetic knowledge of an individual and the meaning of architecture. Moreover, the interaction of sensory-motor and knowledge elements is uniformly moderated by the emotion valuation systems, resulting in a balanced appreciation of aesthetic architecture. Finally, the study reveals the central roles of culture and nature in cognitive rejuvenation.",
       "claim_count": 24,
       "sample_n": 6,
       "subject_count_total": 6,
@@ -2651,23 +2722,28 @@
         "Cortisol"
       ],
       "article_type": "empirical_research",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "Xie, Haihui",
+        "Chen, Qianhu",
+        "Nespoli, Chiara",
+        "Riso, Teresa"
+      ],
+      "venue": "Frontiers in Psychology",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
         "title": "good",
-        "doi": "missing",
-        "abstract": "missing",
+        "doi": "good",
+        "abstract": "good",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
       "paper_id": "PDF-0217",
-      "title": "Soundscape description approach",
-      "doi": "",
-      "year": null,
+      "title": "A framework for improving urban soundscapes",
+      "doi": "10.1016/j.apacoust.2011.12.003",
+      "year": 2013,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 24,
       "sample_n": null,
@@ -2681,16 +2757,19 @@
       "constructs": [],
       "instruments": [],
       "article_type": "empirical_research",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "Jennings, P.",
+        "Cain, R."
+      ],
+      "venue": "Applied Acoustics",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
-        "title": "provisional",
-        "doi": "missing",
+        "title": "good",
+        "doi": "good",
         "abstract": "missing",
         "subject_count_total": "missing",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {
@@ -2808,10 +2887,10 @@
     },
     {
       "paper_id": "PDF-0169",
-      "title": "Participants listened to religious recitations in acoustic environments",
-      "doi": "",
-      "year": null,
-      "abstract": "Abstract not yet recovered from the current rebuild.",
+      "title": "The impact of the acoustic environments on the emotional experience of worship spaces",
+      "doi": "10.1121/1.5137477",
+      "year": 2019,
+      "abstract": "The acoustic properties of a space influence how it is being perceived. However, less is known about the ways in which the acoustic environment elicit different emotional responses. The purpose of this paper is to investigate this question through the study of worship spaces. The Focus on such buildings in this study is due to the essential role of the acoustics in shaping the spiritual experience. Adopting a mixed-method approach, the researchers created virtual experiences of these buildings using 360-deg sound and visual recordings. The recordings were displayed for the subjects through a virtual reality headset. During the experiment, physiological signals of the participants and semantic descriptions of their experience were collected and analyzed to understand the emotional impact of the acoustic environment. The outcome of this study will allow exploring the relationship between acoustic characteristics of worship spaces and the human emotional experience. Therefore, it will provide a further understanding of the impact of the architectural design that determines the acoustic environment, which then contributes to improving the restorative qualities of such spaces and enhancing the spiritual experience.",
       "claim_count": 23,
       "sample_n": 20,
       "subject_count_total": 20,
@@ -2826,16 +2905,19 @@
         "Self-Report"
       ],
       "article_type": "empirical_research",
-      "authors": [],
-      "venue": "",
-      "repair_source": "",
+      "authors": [
+        "Algargoosh, Alaa",
+        "Soleimani, Babak"
+      ],
+      "venue": "The Journal of the Acoustical Society of America",
+      "repair_source": "crossref",
       "abstract_surface_path": "",
       "json_status": {
         "title": "good",
-        "doi": "missing",
-        "abstract": "missing",
+        "doi": "good",
+        "abstract": "good",
         "subject_count_total": "good",
-        "repair_source": "rebuild"
+        "repair_source": "crossref"
       }
     },
     {

@@ -22,8 +22,13 @@
     .nav-wordmark{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.1em;color:#A8C8BF}
     .nav-icon{width:20px;height:20px;background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23A8C8BF" stroke-width="1.5"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><line x1="6" y1="6" x2="12" y2="18"/><line x1="18" y1="6" x2="12" y2="18"/></svg>') no-repeat center/contain}
     .nav-title{color:#fff}.nav-title-accent{color:#F5A623}
-    .nav-center{flex:1;text-align:center;color:#A8C8BF;font-size:13px}
+    .nav-center{flex:1;display:flex;justify-content:center;align-items:center;gap:16px}
+    .nav-center a{color:#B8D4CE;font-size:13px;text-decoration:none}
+    .nav-center a:hover{color:#fff}
+    .nav-center a.active{color:#F5A623}
     .nav-right{display:flex;align-items:center;gap:14px}
+    .mode-select{font-size:.76rem;padding:6px 10px;border-radius:16px;border:1px solid rgba(168,200,191,.34);background:rgba(255,255,255,.05);color:#D8EAE4}
+    .mode-select option{color:var(--navy)}
     .mode-pill{background:var(--green);color:#fff;padding:5px 13px;border-radius:14px;font-size:11px;font-weight:600;letter-spacing:.06em}
     .nav-avatar{width:30px;height:30px;border-radius:50%;background:#3A6B62;color:#A8C8BF;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;cursor:pointer}
 
@@ -172,10 +177,25 @@
     <span class="nav-icon"></span>
     <span class="nav-title">Knowledge <span class="nav-title-accent">Atlas</span></span>
   </div>
-  <div class="nav-center">COGS 160 · Track 3 Assignment</div>
+  <div class="nav-center">
+    <a id="nav-shell-explore" href="ka_topics.html">Explore</a>
+    <a id="nav-shell-evidence" href="ka_evidence.html">Evidence</a>
+    <a id="nav-shell-gaps" href="ka_gaps.html">Gaps</a>
+    <a id="nav-shell-articles" href="ka_article_search.html">Articles</a>
+    <a id="nav-shell-contribute" href="ka_dashboard.html" class="active">Contribute</a>
+    <a id="nav-shell-course" href="Designing_Experiments/cogs160_spring_2026_site.html">Course</a>
+  </div>
   <div class="nav-right">
-    <span class="mode-pill">TRACK 3</span>
-    <div class="nav-avatar" title="Profile">JL</div>
+    <select class="mode-select" id="vr-mode-select" aria-label="Switch user mode">
+      <option value="student_explorer">Student explorer</option>
+      <option value="researcher">Researcher</option>
+      <option value="contributor">Contributor</option>
+      <option value="instructor">Instructor</option>
+      <option value="practitioner">Practitioner</option>
+      <option value="theory_mechanism_explorer">Theory + mechanisms</option>
+    </select>
+    <span class="mode-pill" id="vr-mode-pill">CONTRIBUTOR</span>
+    <div class="nav-avatar" id="vr-avatar" title="Profile">JL</div>
   </div>
 </nav>
 
@@ -1001,6 +1021,19 @@ function updateProgress() {
 document.addEventListener('change', updateProgress);
 document.addEventListener('input', updateProgress);
 updateProgress();
+</script>
+
+<script src="ka_mode_switch.js"></script>
+<script src="ka_site_shell.js"></script>
+<script src="ka_shell_user.js"></script>
+<script>
+window.KA_SHELL.initShell({
+  navContainerSelector: '.nav-center',
+  modeSelectId: 'vr-mode-select',
+  modePillId: 'vr-mode-pill',
+  defaultMode: 'contributor'
+});
+window.KA_SHELL_USER.applyUser({ avatarId: 'vr-avatar', avatarFallback: 'JL' });
 </script>
 
 <script>
