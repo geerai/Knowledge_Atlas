@@ -37,6 +37,11 @@
 | KA-T14 | **Add anonymous user-type mode selection before login** | 2026-03-24 | Let visitors choose a user type before login and adapt nav/featured entry points immediately, with a visible switch-mode control. |
 | KA-T15 | **Wire Track 2 pathway assignment sheet into student setup and article-finder assignment** | 2026-03-24 | Use the first neural-pathway assignment model as part of Track 2 onboarding and collection work. |
 | KA-T16 | **Implement visible mode-switch payoff on core pages** | 2026-03-24 | When a user tries a user type, the navbar, featured actions, and entry emphasis should change immediately so the benefit is obvious. |
+| KA-T17 | **Redesign article intake for PDF-first batch upload with automatic citation extraction** | 2026-03-24 | Current `ka_article_propose.html` is misleading for Track 2 because it prefers DOI/manual APA before PDF upload. Replace with PDF-first and title/DOI-based citation resolution via metadata + API lookup. Duplicate test should be immediate; relevance triage should be asynchronous; rejected staged PDFs should be deleted promptly to save space. |
+| KA-T18 | **Add secure quarantine + validation contract for public PDF uploads** | 2026-03-24 | Public-facing article suggestion means uploaded files are untrusted. Require magic-byte/MIME validation, parser validation, encrypted-file rejection, file hash, quarantine-before-promotion, isolated processing, and prompt deletion of rejected bad files. |
+| KA-T19 | **Split public article suggestion from Track 2 intake steering** | 2026-03-24 | Keep `ka_article_propose.html` outward-facing, but steer COGS 160 Track 2 users toward the full search → screen → acquire → stage workflow from assignment/setup pages. |
+| KA-T20 | **Unify intake modes across public and student users** | 2026-03-24 | Same core intake surface should support batch PDFs, pasted citations, citation files, and optional DOI/title enrichment. Identity affects attribution, quotas, and progress reporting, not the basic intake mechanism. |
+| KA-T21 | **Audit KA pages for single-item / citation-first intake bias** | 2026-03-24 | `ka_datacapture.html` is still single-item and citation-first. Audit other contributor/student pages for the same bias and normalize them toward batch-capable intake. |
 
 ---
 

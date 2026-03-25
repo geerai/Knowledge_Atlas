@@ -28,6 +28,15 @@ nav a.active { color: #F5A623; }
   font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
   padding: 4px 12px; border-radius: 20px;
 }
+.mode-select {
+  font-size: 0.76rem;
+  padding: 6px 10px;
+  border-radius: 16px;
+  border: 1px solid rgba(168,200,191,0.34);
+  background: rgba(255,255,255,0.05);
+  color: #D8EAE4;
+}
+.mode-select option { color: #1C3D3A; }
 
 /* ── HERO ── */
 .hero {
@@ -257,6 +266,15 @@ nav a.active { color: #F5A623; }
     .ka-prev-list .prev-desc {
       font-size: 0.78rem; color: #7A7060; line-height: 1.45; margin-top: 2px;
     }
+    .hero-mode-note {
+      margin-top: 16px;
+      font-size: 0.82rem;
+      color: #C8DDD7;
+      line-height: 1.6;
+      max-width: 620px;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
 </style>
 </head>
@@ -269,17 +287,25 @@ nav a.active { color: #F5A623; }
       <div class="wordmark-sub">COGS 160</div>
     </div>
     <ul>
-      <li><a href="ka_demo_v04.html">Ask</a></li>
-      <li><a href="ka_evidence.html">Evidence</a></li>
-      <li><a href="ka_hypothesis_builder.html">Build</a></li>
-      <li><a href="ka_article_search.html">Articles</a></li>
-      <li><a href="ka_gaps.html">Gaps</a></li>
-      <li><a href="ka_topics.html" class="active">Topics</a></li>
-      <li><a href="ka_question_maker.html">Question Maker</a></li>
+      <li><a id="nav-topics-ask" href="ka_demo_v04.html">Ask</a></li>
+      <li><a id="nav-topics-evidence" href="ka_evidence.html">Evidence</a></li>
+      <li><a id="nav-topics-build" href="ka_hypothesis_builder.html">Build</a></li>
+      <li><a id="nav-topics-articles" href="ka_article_search.html">Articles</a></li>
+      <li><a id="nav-topics-gaps" href="ka_gaps.html">Gaps</a></li>
+      <li><a id="nav-topics-topics" href="ka_topics.html" class="active">Topics</a></li>
+      <li><a id="nav-topics-question-maker" href="ka_question_maker.html">Question Maker</a></li>
     </ul>
   </div>
   <div class="nav-right">
-    <div class="mode-pill">RESEARCHER</div>
+    <div class="mode-pill" id="topics-mode-pill">STUDENT EXPLORER</div>
+    <select class="mode-select" id="topics-mode-select" aria-label="Switch user mode">
+      <option value="student_explorer">Student Explorer</option>
+      <option value="researcher">Researcher</option>
+      <option value="contributor">Contributor</option>
+      <option value="instructor">Instructor</option>
+      <option value="practitioner">Practitioner</option>
+      <option value="theory_mechanism_explorer">Theory + Mechanisms</option>
+    </select>
   </div>
 </nav>
 
@@ -291,6 +317,9 @@ nav a.active { color: #F5A623; }
     Twenty clusters spanning 263+ ingested papers — explore what KA knows,
     where the evidence is strong, and where the most urgent gaps lie.
     VOI scores mark topics where new studies would most shift system credences.
+  </p>
+  <p class="hero-mode-note" id="topics-mode-note">
+    Student mode starts with broad literature exploration and practical entry points.
   </p>
   <div class="hero-stats">
     <div class="hero-stat">
@@ -618,6 +647,85 @@ renderGrid();
 
 <script src="ka_page_function.js"></script>
 <script src="ka_demo_wiring.js"></script>
+<script src="ka_mode_switch.js"></script>
+<script>
+(function() {
+  const TOPICS_MODE_COPY = {
+    student_explorer: {
+      navOrder: ['nav-topics-topics', 'nav-topics-evidence', 'nav-topics-gaps', 'nav-topics-articles', 'nav-topics-build', 'nav-topics-question-maker', 'nav-topics-ask'],
+      pill: 'STUDENT EXPLORER',
+      note: 'Student mode foregrounds topic browsing, evidence, and gaps before design tools.',
+      sort: 'papers',
+      category: 'all'
+    },
+    researcher: {
+      navOrder: ['nav-topics-evidence', 'nav-topics-gaps', 'nav-topics-articles', 'nav-topics-topics', 'nav-topics-ask', 'nav-topics-question-maker', 'nav-topics-build'],
+      pill: 'RESEARCHER',
+      note: 'Researcher mode foregrounds evidence, gaps, article search, and high-VOI topics.',
+      sort: 'voi',
+      category: 'all'
+    },
+    contributor: {
+      navOrder: ['nav-topics-articles', 'nav-topics-topics', 'nav-topics-question-maker', 'nav-topics-gaps', 'nav-topics-evidence', 'nav-topics-build', 'nav-topics-ask'],
+      pill: 'CONTRIBUTOR',
+      note: 'Contributor mode foregrounds article search, topic targeting, and question generation for intake work.',
+      sort: 'voi',
+      category: 'all'
+    },
+    instructor: {
+      navOrder: ['nav-topics-topics', 'nav-topics-question-maker', 'nav-topics-gaps', 'nav-topics-evidence', 'nav-topics-articles', 'nav-topics-build', 'nav-topics-ask'],
+      pill: 'INSTRUCTOR',
+      note: 'Instructor mode foregrounds topic coverage, question-making, and gap oversight.',
+      sort: 'voi',
+      category: 'Methodology'
+    },
+    practitioner: {
+      navOrder: ['nav-topics-topics', 'nav-topics-evidence', 'nav-topics-articles', 'nav-topics-gaps', 'nav-topics-ask', 'nav-topics-build', 'nav-topics-question-maker'],
+      pill: 'PRACTITIONER',
+      note: 'Practitioner mode foregrounds applied topics and readable evidence rather than research tooling.',
+      sort: 'papers',
+      category: 'Environmental'
+    },
+    theory_mechanism_explorer: {
+      navOrder: ['nav-topics-topics', 'nav-topics-evidence', 'nav-topics-gaps', 'nav-topics-ask', 'nav-topics-articles', 'nav-topics-question-maker', 'nav-topics-build'],
+      pill: 'THEORY + MECHANISMS',
+      note: 'Theory + mechanisms mode foregrounds neuroscience-adjacent and high-VOI explanatory territory.',
+      sort: 'voi',
+      category: 'Neuroscience'
+    }
+  };
+
+  function applyTopicsMode(mode) {
+    const cfg = TOPICS_MODE_COPY[mode] || TOPICS_MODE_COPY.student_explorer;
+    const navList = document.querySelector('.nav-left ul');
+    cfg.navOrder.forEach(function(id) {
+      const el = document.getElementById(id);
+      if (el && el.parentElement) navList.appendChild(el.parentElement);
+    });
+
+    document.getElementById('topics-mode-pill').textContent = cfg.pill;
+    document.getElementById('topics-mode-note').textContent = cfg.note;
+
+    const sortSelect = document.querySelector('.sort-select');
+    if (sortSelect) {
+      sortSelect.value = cfg.sort;
+      currentSort = cfg.sort;
+    }
+
+    currentCat = cfg.category;
+    document.querySelectorAll('.filter-tab').forEach(function(btn) {
+      btn.classList.toggle('active', btn.getAttribute('data-cat') === cfg.category);
+    });
+    renderGrid();
+  }
+
+  window.KA_MODE_SWITCH.initModeControls({
+    selectId: 'topics-mode-select',
+    onApply: applyTopicsMode,
+    defaultMode: 'student_explorer'
+  });
+})();
+</script>
 
 <section id="ka-prev-pages">
   <div class="ka-prev-inner">
