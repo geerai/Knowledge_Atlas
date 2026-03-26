@@ -84,7 +84,7 @@
       "claim_count": 50,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 5.0,
+      "effect_size": null,
       "subject_count_total": 73,
       "theories": [
         "Environmental Perception Theory"
@@ -194,7 +194,7 @@
       "claim_count": 45,
       "sample_n": 30,
       "p_value": null,
-      "effect_size": 1.5,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory",
@@ -236,7 +236,7 @@
       "claim_count": 44,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 4.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory",
@@ -258,7 +258,7 @@
         "abstract": "good",
         "sample_n": "review_required",
         "p_value": "review_required",
-        "effect_size": "provisional",
+        "effect_size": "review_required",
         "main_conclusion": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
@@ -308,9 +308,9 @@
       "year": 2017,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 42,
-      "sample_n": 60,
+      "sample_n": 24,
       "p_value": null,
-      "effect_size": 5.0,
+      "effect_size": null,
       "subject_count_total": 60,
       "theories": [
         "Environmental Perception Theory",
@@ -391,7 +391,7 @@
       "claim_count": 41,
       "sample_n": null,
       "p_value": null,
-      "effect_size": null,
+      "effect_size": 2.0,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory",
@@ -418,7 +418,7 @@
         "abstract": "missing",
         "sample_n": "review_required",
         "p_value": "review_required",
-        "effect_size": "review_required",
+        "effect_size": "accepted",
         "main_conclusion": "accepted",
         "subject_count_total": "missing",
         "repair_source": "crossref"
@@ -468,7 +468,7 @@
       "claim_count": 40,
       "sample_n": null,
       "p_value": 0.0,
-      "effect_size": 0.3,
+      "effect_size": null,
       "subject_count_total": 120,
       "theories": [
         "Environmental Perception Theory"
@@ -544,7 +544,7 @@
       "claim_count": 40,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 1.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory",
@@ -572,7 +572,7 @@
         "abstract": "missing",
         "sample_n": "review_required",
         "p_value": "review_required",
-        "effect_size": "provisional",
+        "effect_size": "review_required",
         "main_conclusion": "missing",
         "subject_count_total": "missing",
         "repair_source": "crossref"
@@ -627,7 +627,7 @@
       "claim_count": 39,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 10.0,
+      "effect_size": null,
       "subject_count_total": 412,
       "theories": [
         "Environmental Perception Theory",
@@ -668,7 +668,7 @@
       "claim_count": 39,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 1.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory"
@@ -786,7 +786,7 @@
       "claim_count": 38,
       "sample_n": 38,
       "p_value": 0.01,
-      "effect_size": 2.0,
+      "effect_size": null,
       "subject_count_total": 38,
       "theories": [],
       "constructs": [
@@ -832,7 +832,7 @@
       "claim_count": 38,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 3.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory",
@@ -1068,7 +1068,7 @@
       "claim_count": 35,
       "sample_n": 90,
       "p_value": null,
-      "effect_size": 3.0,
+      "effect_size": null,
       "subject_count_total": 90,
       "theories": [
         "Environmental Perception Theory",
@@ -1144,9 +1144,9 @@
       "year": 2016,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 34,
-      "sample_n": 96,
-      "p_value": 46.0,
-      "effect_size": 2.0,
+      "sample_n": 23,
+      "p_value": 17.0,
+      "effect_size": null,
       "subject_count_total": 96,
       "theories": [
         "Environmental Perception Theory"
@@ -1188,7 +1188,7 @@
       "claim_count": 34,
       "sample_n": 16,
       "p_value": null,
-      "effect_size": 1.0,
+      "effect_size": null,
       "subject_count_total": 16,
       "theories": [
         "Environmental Perception Theory",
@@ -1264,7 +1264,7 @@
       "claim_count": 34,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 1.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory",
@@ -1303,7 +1303,7 @@
       "claim_count": 34,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 1.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory",
@@ -1373,7 +1373,7 @@
       "claim_count": 33,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 0.45,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory",
@@ -1637,7 +1637,7 @@
       "claim_count": 31,
       "sample_n": 28,
       "p_value": 0.05,
-      "effect_size": 4.0,
+      "effect_size": null,
       "subject_count_total": 28,
       "theories": [
         "Attention Restoration Theory",
@@ -1720,7 +1720,7 @@
       "claim_count": 31,
       "sample_n": 5,
       "p_value": 0.059,
-      "effect_size": 1.0,
+      "effect_size": null,
       "subject_count_total": 5,
       "theories": [
         "Environmental Perception Theory",
@@ -1796,9 +1796,9 @@
       "year": 2003,
       "abstract": "The availability of electric lighting has changed the lives of people the world over, yet as a major user of electricity it has come under increasing scrutiny in recent years. This scrutiny has focused largely on the environmental consequences, with little consideration of the benefits of lighting. Human Factors in Lighting, Third Edition restores",
       "claim_count": 30,
-      "sample_n": 207,
-      "p_value": null,
-      "effect_size": 3.0,
+      "sample_n": 153,
+      "p_value": 0.05,
+      "effect_size": null,
       "subject_count_total": 18,
       "theories": [
         "Environmental Perception Theory"
@@ -1817,8 +1817,8 @@
         "title": "provisional",
         "doi": "good",
         "abstract": "provisional",
-        "sample_n": "accepted",
-        "p_value": "review_required",
+        "sample_n": "review_required",
+        "p_value": "accepted",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
         "subject_count_total": "good",
@@ -1868,7 +1868,7 @@
       "claim_count": 30,
       "sample_n": 96,
       "p_value": 0.05,
-      "effect_size": 1.0,
+      "effect_size": null,
       "subject_count_total": 96,
       "theories": [
         "Environmental Perception Theory",
@@ -2016,8 +2016,8 @@
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 29,
       "sample_n": 80,
-      "p_value": 1.0,
-      "effect_size": 7.0,
+      "p_value": 0.05,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [],
       "constructs": [
@@ -2095,9 +2095,9 @@
       "year": 2020,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 29,
-      "sample_n": 1011,
+      "sample_n": 50,
       "p_value": null,
-      "effect_size": 10.0,
+      "effect_size": null,
       "subject_count_total": 1011,
       "theories": [
         "Environmental Perception Theory",
@@ -2118,7 +2118,7 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
-        "sample_n": "provisional",
+        "sample_n": "review_required",
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
@@ -2202,7 +2202,7 @@
         "abstract": "provisional",
         "sample_n": "review_required",
         "p_value": "review_required",
-        "effect_size": "review_required",
+        "effect_size": "provisional",
         "main_conclusion": "accepted",
         "subject_count_total": "good",
         "repair_source": "crossref"
@@ -2217,7 +2217,7 @@
       "claim_count": 29,
       "sample_n": 40,
       "p_value": null,
-      "effect_size": 0.0,
+      "effect_size": null,
       "subject_count_total": 25,
       "theories": [
         "Environmental Perception Theory"
@@ -2241,7 +2241,7 @@
         "abstract": "missing",
         "sample_n": "provisional",
         "p_value": "review_required",
-        "effect_size": "provisional",
+        "effect_size": "review_required",
         "main_conclusion": "missing",
         "subject_count_total": "good",
         "repair_source": "crossref"
@@ -2256,7 +2256,7 @@
       "claim_count": 29,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 2.0,
+      "effect_size": null,
       "subject_count_total": 389,
       "theories": [
         "Environmental Perception Theory"
@@ -2365,9 +2365,9 @@
       "year": 2024,
       "abstract": "Noisy workplaces common in low- and middle-income countries can impair workers' cognitive functions. However, whether this lowers earnings depends on the importance of these functions for productivity and whether workers understand these effects. I study these questions with two randomized experiments in Nairobi, Kenya. I find a noise increase of 7 dB reduces productivity in a textile training course by 3 percent, impairs cognitive function, but does not affect effort. I also find willingness to pay for quiet working conditions does not depend on whether pay depends on performance, suggesting participants are not aware that quiet would increase their productivity. (JEL D12, J24, J28, J31, J81, O15, Q53)",
       "claim_count": 28,
-      "sample_n": 213,
+      "sample_n": 128,
       "p_value": null,
-      "effect_size": 10.0,
+      "effect_size": null,
       "subject_count_total": 157,
       "theories": [
         "Environmental Perception Theory"
@@ -2390,7 +2390,7 @@
         "abstract": "good",
         "sample_n": "review_required",
         "p_value": "review_required",
-        "effect_size": "provisional",
+        "effect_size": "review_required",
         "main_conclusion": "accepted",
         "subject_count_total": "good",
         "repair_source": "crossref"
@@ -2405,7 +2405,7 @@
       "claim_count": 28,
       "sample_n": 20,
       "p_value": null,
-      "effect_size": 10.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory",
@@ -2447,7 +2447,7 @@
       "claim_count": 28,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 5.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory",
@@ -2467,7 +2467,7 @@
         "abstract": "good",
         "sample_n": "review_required",
         "p_value": "review_required",
-        "effect_size": "provisional",
+        "effect_size": "review_required",
         "main_conclusion": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
@@ -2558,7 +2558,7 @@
       "claim_count": 27,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 1.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory"
@@ -2592,7 +2592,7 @@
       "claim_count": 27,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 10.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory",
@@ -2615,7 +2615,7 @@
         "abstract": "good",
         "sample_n": "review_required",
         "p_value": "review_required",
-        "effect_size": "provisional",
+        "effect_size": "review_required",
         "main_conclusion": "accepted",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
@@ -2630,7 +2630,7 @@
       "claim_count": 26,
       "sample_n": 5,
       "p_value": 0.05,
-      "effect_size": 6.0,
+      "effect_size": null,
       "subject_count_total": 8,
       "theories": [
         "Environmental Perception Theory",
@@ -2668,7 +2668,7 @@
       "claim_count": 26,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 0.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory"
@@ -2776,9 +2776,9 @@
       "year": null,
       "abstract": "Urban soundscape design represents a research area still in development, with gaps, such as influences on human response and practical application. Research on natural soundscapes, such as urban parks has demonstrated their benefits to society, however, other soundscape types are less studied. Additionally, the presence of people has been suggested from previous work to contribute to the sense of eventfulness to a place. Given this, a variation of soundscape types and population densities using physiological experiments consist of a reasonable strategy to tackle the research. The aim of this thesis is to investigate the relationships between soundscape perception and emotional state in urban locations (park, plaza, and pedestrian street) that may indicate changes on responses to the sonic environment. Methods involved subjective self-reports and brain activity observations when exposed to real audio-visual soundscape stimuli reproduced in virtual reality (VR) via internet and laboratory experiments. Participants scores confirmed that the perception of eventfulness increased when higher number of people where in the scene. Similarly, the studied park and plaza with children playing on a sunny day were classified as a Vibrant soundscape. Electroencephalogram (EEG) responses showed increases in the Alpha Power when locations were empty. Contributions of this work are based around the concepts of identifying that population density changes perceptual and emotional responses in urban soundscapes, real site VR can be a tool to collect these subjective responses, and EEG could complement these self-reports. EEG responses to soundscapes are still rare among soundscape studies, especially since population density has demonstrated an effect on EEG alpha power readings. Thus, population density and the design of Plazas should be considered in assessing, planning, and designing urban soundscapes towards livelier sounding cities. The benefits from this kind of research impact not only alternative solutions for environmental noise issues, but also improvements in public health, quality of life, and cultural heritage.",
       "claim_count": 25,
-      "sample_n": 20,
-      "p_value": null,
-      "effect_size": 2.0,
+      "sample_n": 11,
+      "p_value": 0.05,
+      "effect_size": null,
       "subject_count_total": 27,
       "theories": [
         "Environmental Perception Theory"
@@ -2799,8 +2799,8 @@
         "doi": "missing",
         "abstract": "good",
         "sample_n": "review_required",
-        "p_value": "review_required",
-        "effect_size": "provisional",
+        "p_value": "accepted",
+        "effect_size": "review_required",
         "main_conclusion": "accepted",
         "subject_count_total": "good",
         "repair_source": "rebuild"
@@ -2854,7 +2854,7 @@
       "claim_count": 25,
       "sample_n": 30,
       "p_value": null,
-      "effect_size": 2.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory",
@@ -2877,7 +2877,7 @@
         "abstract": "good",
         "sample_n": "review_required",
         "p_value": "review_required",
-        "effect_size": "provisional",
+        "effect_size": "review_required",
         "main_conclusion": "accepted",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
@@ -2892,7 +2892,7 @@
       "claim_count": 25,
       "sample_n": 8,
       "p_value": null,
-      "effect_size": 3.0,
+      "effect_size": null,
       "subject_count_total": 8,
       "theories": [
         "Environmental Perception Theory",
@@ -2930,7 +2930,7 @@
       "claim_count": 25,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 1.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory"
@@ -2955,7 +2955,7 @@
         "abstract": "good",
         "sample_n": "review_required",
         "p_value": "review_required",
-        "effect_size": "provisional",
+        "effect_size": "review_required",
         "main_conclusion": "accepted",
         "subject_count_total": "missing",
         "repair_source": "crossref"
@@ -2970,7 +2970,7 @@
       "claim_count": 25,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 1.5,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory"
@@ -3197,7 +3197,7 @@
       "claim_count": 24,
       "sample_n": 30,
       "p_value": null,
-      "effect_size": 5.0,
+      "effect_size": null,
       "subject_count_total": 3273,
       "theories": [
         "Environmental Perception Theory",
@@ -3275,7 +3275,7 @@
       "claim_count": 24,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 2.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory",
@@ -3298,7 +3298,7 @@
         "abstract": "good",
         "sample_n": "review_required",
         "p_value": "review_required",
-        "effect_size": "provisional",
+        "effect_size": "review_required",
         "main_conclusion": "accepted",
         "subject_count_total": "missing",
         "repair_source": "crossref"
@@ -3313,7 +3313,7 @@
       "claim_count": 24,
       "sample_n": 54,
       "p_value": null,
-      "effect_size": 1.0,
+      "effect_size": null,
       "subject_count_total": 6,
       "theories": [
         "Environmental Perception Theory",
@@ -3357,7 +3357,7 @@
       "claim_count": 24,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 10.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory",
@@ -3397,7 +3397,7 @@
       "claim_count": 24,
       "sample_n": 1040,
       "p_value": 0.034,
-      "effect_size": 6.0,
+      "effect_size": null,
       "subject_count_total": 40,
       "theories": [
         "Stress Recovery Theory",
@@ -3503,7 +3503,7 @@
       "claim_count": 23,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 2.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory",
@@ -3537,8 +3537,8 @@
       "abstract": "The acoustic properties of a space influence how it is being perceived. However, less is known about the ways in which the acoustic environment elicit different emotional responses. The purpose of this paper is to investigate this question through the study of worship spaces. The Focus on such buildings in this study is due to the essential role of the acoustics in shaping the spiritual experience. Adopting a mixed-method approach, the researchers created virtual experiences of these buildings using 360-deg sound and visual recordings. The recordings were displayed for the subjects through a virtual reality headset. During the experiment, physiological signals of the participants and semantic descriptions of their experience were collected and analyzed to understand the emotional impact of the acoustic environment. The outcome of this study will allow exploring the relationship between acoustic characteristics of worship spaces and the human emotional experience. Therefore, it will provide a further understanding of the impact of the architectural design that determines the acoustic environment, which then contributes to improving the restorative qualities of such spaces and enhancing the spiritual experience.",
       "claim_count": 23,
       "sample_n": 20,
-      "p_value": null,
-      "effect_size": 1.0,
+      "p_value": 0.01,
+      "effect_size": null,
       "subject_count_total": 20,
       "theories": [
         "Environmental Perception Theory",
@@ -3565,7 +3565,7 @@
         "abstract": "good",
         "sample_n": "accepted",
         "p_value": "review_required",
-        "effect_size": "provisional",
+        "effect_size": "review_required",
         "main_conclusion": "accepted",
         "subject_count_total": "good",
         "repair_source": "crossref"
@@ -3656,8 +3656,8 @@
       "abstract": "Historically health, illness and healing operated through a single medium, or idiom, within relatively culturally encapsulated societies. Our increasingly porous societies now present us with a plethora of cultural explanations for our states of \u2018being\u2019. Health \u2018seekers\u2019 can now turn to a variety of health \u2018providers\u2019. The complexities of this situation are illustrated by reviewing research from Africa on cognitive tolerance. In many western societies the clinician is also faced with the challenge of having to work with a plurality of complex ideas about health and illness, which he or she may be unfamiliar with. The Problem Portrait Technique (PPT) is presented as a means of assisting practitioners (and researchers) to assess the interplay of culture and health. It is argued that health psychology should cultivate pluralism both by acknowledging the influence of culture on health and by embracing the diversity of methodological and conceptual perspectives within itself.",
       "claim_count": 22,
       "sample_n": 139,
-      "p_value": null,
-      "effect_size": 0.2,
+      "p_value": 0.001,
+      "effect_size": null,
       "subject_count_total": 187,
       "theories": [
         "Privacy Regulation Theory",
@@ -3696,7 +3696,7 @@
       "claim_count": 22,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 1.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory",
@@ -3742,7 +3742,7 @@
       "claim_count": 22,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 0.02,
+      "effect_size": 4.0,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory",
@@ -3807,7 +3807,7 @@
         "abstract": "provisional",
         "sample_n": "review_required",
         "p_value": "review_required",
-        "effect_size": "review_required",
+        "effect_size": "provisional",
         "main_conclusion": "accepted",
         "subject_count_total": "good",
         "repair_source": "crossref"
@@ -3822,7 +3822,7 @@
       "claim_count": 22,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 7.2,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory"
@@ -3843,7 +3843,7 @@
         "abstract": "missing",
         "sample_n": "review_required",
         "p_value": "review_required",
-        "effect_size": "accepted",
+        "effect_size": "review_required",
         "main_conclusion": "accepted",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
@@ -3858,7 +3858,7 @@
       "claim_count": 22,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 2.62,
+      "effect_size": null,
       "subject_count_total": 6,
       "theories": [
         "Environmental Perception Theory",
@@ -3932,9 +3932,9 @@
       "year": 1995,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 21,
-      "sample_n": 12,
+      "sample_n": 96,
       "p_value": 0.0,
-      "effect_size": 2.0,
+      "effect_size": null,
       "subject_count_total": 12,
       "theories": [
         "Environmental Appraisal Theory",
@@ -3973,7 +3973,7 @@
       "claim_count": 21,
       "sample_n": 30,
       "p_value": null,
-      "effect_size": 0.05,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory"
@@ -3997,7 +3997,7 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
-        "sample_n": "accepted",
+        "sample_n": "review_required",
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
@@ -4243,9 +4243,9 @@
       "year": null,
       "abstract": "The study of how people's psychological health and well-being can be connected to wood used in appearance applications is a new and relatively unexplored area of inquiry, despite strong theoretical support, intuitive reasoning, and a growing recognition of the importance of healthful living. This research attempted to better understand this phenomenon by mapping out people's perceptions of wood used in interior applications. Specifically, the aim of this exploratory study was to determine what types of environments appearance wood products can create and to gauge whether or not the use of these types of products could have positive impacts on people's emotional states. To that end, a total of 119 respondents from the Greater Vancouver Regional Area were asked to partake in a three-part experimental study, consisting of a q -sort exercise, personal interviews, and a self-administered survey. The findings suggest that people's response to wood is, for the most part, extremely positive, with subjects generally showing a strong preference for rooms containing many wood details. There also appears to be a strong belief that the use of wood can help to create healthful environments, and commonly evoked descriptors for wood rooms include \"warm,\" \"comfortable,\" \"relaxing,\" \"natural,\" and \"inviting.\" The reasons underlying these findings are complex and further exploration rooted in the field of environmental psychology is warranted. However, the results of this study could have potentially far-reaching implications for manufacturers of appearance wood products seeking to differentiate themselves in an increasingly competitive marketplace. Specifically, these findings point to an opportunity to market wood in an entirely new and innovative manner with the inclusion of potential psychological benefits into the total product concept.",
       "claim_count": 20,
-      "sample_n": 119,
+      "sample_n": 40,
       "p_value": null,
-      "effect_size": 3.0,
+      "effect_size": null,
       "subject_count_total": 119,
       "theories": [
         "Environmental Perception Theory",
@@ -4267,7 +4267,7 @@
         "abstract": "good",
         "sample_n": "review_required",
         "p_value": "review_required",
-        "effect_size": "provisional",
+        "effect_size": "review_required",
         "main_conclusion": "accepted",
         "subject_count_total": "good",
         "repair_source": "rebuild"
@@ -4282,7 +4282,7 @@
       "claim_count": 20,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 4.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory",
@@ -4308,7 +4308,7 @@
         "abstract": "missing",
         "sample_n": "review_required",
         "p_value": "review_required",
-        "effect_size": "provisional",
+        "effect_size": "review_required",
         "main_conclusion": "accepted",
         "subject_count_total": "missing",
         "repair_source": "crossref"
@@ -4360,7 +4360,7 @@
       "claim_count": 20,
       "sample_n": 23,
       "p_value": null,
-      "effect_size": 6.0,
+      "effect_size": null,
       "subject_count_total": 23,
       "theories": [
         "Environmental Perception Theory",
@@ -4434,8 +4434,8 @@
       "abstract": "Human spatial behavior and experience cannot be investigated independently from the shape and configuration of environments. Therefore, comparative studies in architectural psychology and spatial cognition would clearly benefit from operationalizations of space that provide a common denominator for capturing its behavioral and psychologically relevant properties. This paper presents theoretical and methodological issues arising from the practical application of isovist-based graphs for the analysis of architectural spaces. Based on recent studies exploring the influence of spatial form and structure on behavior and experience in virtual environments, the following topics are discussed: (1) the derivation and empirical verification of meaningful descriptor variables on the basis of classic qualitative theories of environmental psychology relating behavior and experience to spatial properties; (2) methods to select reference points for the analysis of architectural spaces at a local level; furthermore, based on two experiments exploring the phenomenal conception of the spatial structure of architectural environments, formalized strategies for (3) the selection of reference points at a global level, and for (4), their integration into a sparse yet plausible comprehensive graph structure, are proposed. Taken together, a well formalized and psychologically oriented methodology for the efficient description of spatial properties of environments at the architectural scale level is outlined. This method appears useful for a wide range of applications, ranging from abstract architectural analysis over behavioral experiments to studies on mental representations in cognitive science.",
       "claim_count": 20,
       "sample_n": 8,
-      "p_value": 0.0,
-      "effect_size": 7.0,
+      "p_value": 0.01,
+      "effect_size": 0.65,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory",
@@ -4457,7 +4457,7 @@
         "doi": "good",
         "abstract": "good",
         "sample_n": "accepted",
-        "p_value": "provisional",
+        "p_value": "accepted",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
         "subject_count_total": "missing",
@@ -4473,7 +4473,7 @@
       "claim_count": 20,
       "sample_n": 20,
       "p_value": null,
-      "effect_size": 10.0,
+      "effect_size": null,
       "subject_count_total": 20,
       "theories": [
         "Environmental Perception Theory",
@@ -4548,7 +4548,7 @@
       "claim_count": 20,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 3.2,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory",
@@ -4568,7 +4568,7 @@
         "abstract": "provisional",
         "sample_n": "review_required",
         "p_value": "review_required",
-        "effect_size": "provisional",
+        "effect_size": "review_required",
         "main_conclusion": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
@@ -4583,7 +4583,7 @@
       "claim_count": 20,
       "sample_n": 45,
       "p_value": null,
-      "effect_size": 10.0,
+      "effect_size": null,
       "subject_count_total": 15,
       "theories": [
         "Environmental Perception Theory",
@@ -4959,7 +4959,7 @@
       "claim_count": 19,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 2.5,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory",
@@ -4996,9 +4996,9 @@
       "year": null,
       "abstract": "Studies have indicated that natural environments have the potential to improve the relationship between a stressful life and psychological well-being and physical health. Forest therapy has recently received widespread attention as a novel solution for stress recovery and health promotion. Bamboo is an important forest type in many countries, especially in East and Southeast Asia and in African countries. Bamboo is widespread throughout southwestern China. Empirical field research on the physiological effects of bamboo forest therapy is currently lacking. To explore the benefits of bamboo forest therapy on the physiological responses of university students, 120 university volunteers between the ages of 19 and 24 participated in this study ( 60 males and 60 females) and were randomly divided into four groups of equal size ( 15 males and 15 females in each). Four sites were selected for the experiment, including two natural bamboo forests (YA and YB), a bamboo forest park (DJY), and an urban environment (CS). During the testing period, all participants were asked to view the landscape for 15 min in the morning and then walk in the testing area for 15 min in the afternoon. Blood pressure (BP), heart rate (HR), and peripheral oxygen saturation (SpO2) were measured as the physiological indexes, and the semantic differential method (SDM) questionnaire was completed for the environmental satisfaction evaluation. The SDM for the subjective environmental evaluation differed significantly among the university students; they obtained a better environmental experience, in terms of sensory perception, atmosphere, climate, place, and space, in the bamboo forest sites. The three-day bamboo forest therapy session improved the physiological well-being of university students. First, the blood pressure and heart rate of the university students decreased, and the SpO 2 increased, after the three-day viewing and walking activities of the three-day bamboo forest therapy session. The viewing activities had a more pronounced effect on decreased heart rate in university students. Additionally, three-day bamboo forest therapy had a positive impact on decreased systolic blood pressure and heart rate in the university students, and it was significantly decreased in females, while peripheral oxygen saturation (SpO2) remained relatively low. Finally, compared with the urban site (CS), the bamboo forest sites effectively improved the university students' physiological state of health, decreased their physical pressure, and stabilized their physiological indicators. These findings provide scientific evidence that a three-day bamboo forest therapy session can increase positive physiological responses. The potential for a longer-term effect on human physiological health requires further investigation.",
       "claim_count": 19,
-      "sample_n": 30,
+      "sample_n": 348,
       "p_value": 0.05,
-      "effect_size": 3.0,
+      "effect_size": null,
       "subject_count_total": 120,
       "theories": [
         "Environmental Perception Theory"
@@ -5020,7 +5020,7 @@
         "abstract": "good",
         "sample_n": "review_required",
         "p_value": "accepted",
-        "effect_size": "provisional",
+        "effect_size": "review_required",
         "main_conclusion": "accepted",
         "subject_count_total": "good",
         "repair_source": "rebuild"
@@ -5225,7 +5225,7 @@
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 18,
       "sample_n": null,
-      "p_value": null,
+      "p_value": 0.0,
       "effect_size": 2.0,
       "subject_count_total": null,
       "theories": [
@@ -5248,7 +5248,7 @@
         "abstract": "missing",
         "sample_n": "review_required",
         "p_value": "review_required",
-        "effect_size": "review_required",
+        "effect_size": "accepted",
         "main_conclusion": "accepted",
         "subject_count_total": "missing",
         "repair_source": "crossref"
@@ -5263,7 +5263,7 @@
       "claim_count": 18,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 1.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory",
@@ -5487,7 +5487,7 @@
       "claim_count": 17,
       "sample_n": 7,
       "p_value": null,
-      "effect_size": 3.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory"
@@ -5506,7 +5506,7 @@
         "abstract": "missing",
         "sample_n": "accepted",
         "p_value": "review_required",
-        "effect_size": "provisional",
+        "effect_size": "review_required",
         "main_conclusion": "accepted",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
@@ -5521,7 +5521,7 @@
       "claim_count": 17,
       "sample_n": 150,
       "p_value": 0.0001,
-      "effect_size": 0.895,
+      "effect_size": 0.185,
       "subject_count_total": 311,
       "theories": [
         "Environmental Perception Theory"
@@ -5539,7 +5539,7 @@
         "doi": "missing",
         "abstract": "missing",
         "sample_n": "review_required",
-        "p_value": "provisional",
+        "p_value": "accepted",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
         "subject_count_total": "good",
@@ -5555,7 +5555,7 @@
       "claim_count": 17,
       "sample_n": 28,
       "p_value": null,
-      "effect_size": 8.68,
+      "effect_size": null,
       "subject_count_total": 28,
       "theories": [
         "Environmental Perception Theory",
@@ -5877,9 +5877,9 @@
       "year": null,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 16,
-      "sample_n": 2041,
+      "sample_n": 10,
       "p_value": null,
-      "effect_size": 3.2,
+      "effect_size": null,
       "subject_count_total": 2041,
       "theories": [
         "Theory of Planned Behavior",
@@ -5916,7 +5916,7 @@
       "claim_count": 16,
       "sample_n": 100,
       "p_value": 0.009,
-      "effect_size": 4.3,
+      "effect_size": 1.0,
       "subject_count_total": 100,
       "theories": [
         "Stress Recovery Theory",
@@ -5937,9 +5937,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
-        "sample_n": "accepted",
+        "sample_n": "review_required",
         "p_value": "accepted",
-        "effect_size": "review_required",
+        "effect_size": "provisional",
         "main_conclusion": "accepted",
         "subject_count_total": "good",
         "repair_source": "rebuild"
@@ -6208,7 +6208,7 @@
       "claim_count": 15,
       "sample_n": 342,
       "p_value": null,
-      "effect_size": 8.0,
+      "effect_size": null,
       "subject_count_total": 342,
       "theories": [
         "Stress Recovery Theory",
@@ -6247,7 +6247,7 @@
       "claim_count": 15,
       "sample_n": 112,
       "p_value": null,
-      "effect_size": 1.4,
+      "effect_size": null,
       "subject_count_total": 112,
       "theories": [
         "Stress Recovery Theory",
@@ -6286,9 +6286,9 @@
       "year": null,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 15,
-      "sample_n": 20,
+      "sample_n": 36,
       "p_value": 0.05,
-      "effect_size": 1.0,
+      "effect_size": null,
       "subject_count_total": 36,
       "theories": [
         "Environmental Perception Theory",
@@ -6518,7 +6518,7 @@
       "claim_count": 14,
       "sample_n": 25,
       "p_value": null,
-      "effect_size": 1.0,
+      "effect_size": null,
       "subject_count_total": 25,
       "theories": [
         "Environmental Perception Theory"
@@ -6809,7 +6809,7 @@
       "claim_count": 13,
       "sample_n": 2000,
       "p_value": null,
-      "effect_size": 1.0,
+      "effect_size": null,
       "subject_count_total": 2000,
       "theories": [
         "Privacy Regulation Theory",
@@ -6883,7 +6883,7 @@
       "claim_count": 13,
       "sample_n": 106,
       "p_value": 0.05,
-      "effect_size": 10.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory"
@@ -6919,7 +6919,7 @@
       "claim_count": 13,
       "sample_n": 28,
       "p_value": 1.0,
-      "effect_size": 10.0,
+      "effect_size": null,
       "subject_count_total": 5,
       "theories": [
         "Defensible Space / Crime Prevention Through Environmental Design",
@@ -6957,7 +6957,7 @@
       "claim_count": 13,
       "sample_n": 182,
       "p_value": null,
-      "effect_size": 0.6,
+      "effect_size": null,
       "subject_count_total": 182,
       "theories": [
         "Irrelevant Sound Effect Theory",
@@ -6994,7 +6994,7 @@
       "claim_count": 13,
       "sample_n": 94,
       "p_value": 0.0001,
-      "effect_size": 1.0,
+      "effect_size": null,
       "subject_count_total": 94,
       "theories": [
         "Circadian Rhythm Theory",
@@ -7186,7 +7186,7 @@
       "claim_count": 12,
       "sample_n": 74,
       "p_value": null,
-      "effect_size": 0.8,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory"
@@ -7220,7 +7220,7 @@
       "claim_count": 12,
       "sample_n": 107,
       "p_value": null,
-      "effect_size": 0.0,
+      "effect_size": null,
       "subject_count_total": 107,
       "theories": [
         "Spatial Cognition Theory",
@@ -7244,7 +7244,7 @@
         "abstract": "missing",
         "sample_n": "review_required",
         "p_value": "review_required",
-        "effect_size": "provisional",
+        "effect_size": "review_required",
         "main_conclusion": "accepted",
         "subject_count_total": "good",
         "repair_source": "rebuild"
@@ -7332,7 +7332,7 @@
       "year": null,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 11,
-      "sample_n": null,
+      "sample_n": 6,
       "p_value": null,
       "effect_size": null,
       "subject_count_total": null,
@@ -7356,7 +7356,7 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
-        "sample_n": "review_required",
+        "sample_n": "accepted",
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
@@ -7441,7 +7441,7 @@
       "claim_count": 11,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 2.0,
+      "effect_size": null,
       "subject_count_total": 24,
       "theories": [
         "Embodied Cognition",
@@ -7478,9 +7478,9 @@
       "year": null,
       "abstract": "Anecdotal evidence suggests that the correlated color temperature (CCT) of light can affect thermal comfort. Previous literature mostly investigated this effect over a short duration ( \\(<1 \\) ) and often attributed it to the hueheat hypothesis (color-temperature association), which posits that the visual experience of blue colors (high CCT) results in a cooler temperature sensation than red/yellow colors (low CCT) do. However, with longer duration, non-visual effects of CCT that elicit physiological changes may be at play additionally. Therefore, we contrasted two CCTs with relatively long exposures ( \\(>2 ; 2700 \\) vs. 5700 K with 500 lux illuminance at the eye) in officelike settings during mild cold exposure ( \\(17 ^ \\) ) using a within-subject design ( \\( =16\\) ). The results indicate that CCT did not significantly affect thermal sensation in mild cold, which may be explained by the large interindividual variation in the color-temperature association. Interestingly, 5700 K even improved thermal comfort, decreased perceived shivering, and, after 1-h exposure, increased energy expenditure. Moreover, visual comfort was not significantly moderated by CCT, but 5700 K improved comprehensive cognitive performance. Concurrently, arousal and alertness were higher in 5700 K , potentially indicating greater non-visual effects in 5700 K . Further analysis revealed that thermal comfort significantly correlated with perceived shivering and visual comfort, but not with the color sensation of the light. Together, the results provide no support for the hue-heat hypothesis under mildly cold conditions and suggest that high CCT enhanced thermal comfort, alertness, arousal, and cognitive performance, likely via non-visual mechanisms that built up over longer exposure durations.",
       "claim_count": 11,
-      "sample_n": 2,
+      "sample_n": 16,
       "p_value": 0.001,
-      "effect_size": 1.0,
+      "effect_size": 0.17,
       "subject_count_total": 2,
       "theories": [
         "Hue-Heat Hypothesis",
@@ -7501,8 +7501,8 @@
         "doi": "missing",
         "abstract": "good",
         "sample_n": "review_required",
-        "p_value": "provisional",
-        "effect_size": "review_required",
+        "p_value": "review_required",
+        "effect_size": "accepted",
         "main_conclusion": "accepted",
         "subject_count_total": "good",
         "repair_source": "rebuild"
@@ -7963,7 +7963,7 @@
       "claim_count": 10,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 6.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Environmental Perception Theory"
@@ -7982,7 +7982,7 @@
         "abstract": "good",
         "sample_n": "review_required",
         "p_value": "review_required",
-        "effect_size": "provisional",
+        "effect_size": "review_required",
         "main_conclusion": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
@@ -7996,8 +7996,8 @@
       "abstract": "The spatial characteristics of learning spaces affect students' neurophysiological and psychological responses, highlighting the importance of design elements such as color and proportion. This study investigated the neurophysiological and psychological effects of color and ceiling height in virtual learning environments, aiming to assess their potential to enhance emotional comfort. Using a within-subjects design, forty undergraduate students experienced immersive environments featuring six color schemes (red, green, blue hues \u00d7 high-value low-chroma and low-value high-chroma) and four ceiling heights ( 3 to 6 m ). Neurophysiological responses were measured via electroencephalography (EEG), using relative alpha power (RA) as an indicator of relaxation. Psychological responses were assessed through self-reported spatial perception and satisfaction. Results showed that blue with low-value and high-chroma elicited the highest RA, indicating greater neurophysiological relaxation, while blue with high-value and low-chroma received the most positive psychological ratings. In contrast, red with low-value and high-chroma showed lower RA and reduced psychological comfort. These findings suggest that blue, regardless of value and chroma, supports emotional comfort in learning environments. Regarding ceiling height, RA peaked at 5 m , while psychological responses were highest at 4 m , after which both responses declined. A significant correlation between the two was observed only at 4 m . These findings suggest that a ceiling height of 4 to 5 m may offer a balanced condition for both neural relaxation and emotional comfort, emphasizing the role of spatial proportion and perception. This study provides empirical evidence on how environmental attributes such as color and ceiling height modulate neurophysiological and psychological responses, offering design implications for enhancing learning spaces.",
       "claim_count": 10,
       "sample_n": 28,
-      "p_value": 1.0,
-      "effect_size": 1.34,
+      "p_value": 0.05,
+      "effect_size": -0.015,
       "subject_count_total": 40,
       "theories": [
         "Color Psychology",
@@ -8020,8 +8020,8 @@
         "doi": "missing",
         "abstract": "good",
         "sample_n": "review_required",
-        "p_value": "accepted",
-        "effect_size": "review_required",
+        "p_value": "review_required",
+        "effect_size": "accepted",
         "main_conclusion": "accepted",
         "subject_count_total": "good",
         "repair_source": "rebuild"
@@ -8036,7 +8036,7 @@
       "claim_count": 10,
       "sample_n": 20,
       "p_value": null,
-      "effect_size": 10.0,
+      "effect_size": null,
       "subject_count_total": 20,
       "theories": [
         "Defensible Space / Crime Prevention Through Environmental Design",
@@ -8075,7 +8075,7 @@
       "claim_count": 10,
       "sample_n": 67,
       "p_value": 0.05,
-      "effect_size": 1.0,
+      "effect_size": null,
       "subject_count_total": 67,
       "theories": [
         "Processing Fluency as Monitoring Node",
@@ -8408,7 +8408,7 @@
       "claim_count": 9,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 9.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [],
       "constructs": [
@@ -8449,9 +8449,9 @@
       "year": null,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 9,
-      "sample_n": 6,
-      "p_value": null,
-      "effect_size": 6.0,
+      "sample_n": 244,
+      "p_value": 0.001,
+      "effect_size": 0.1,
       "subject_count_total": 4,
       "theories": [],
       "constructs": [
@@ -8474,8 +8474,8 @@
         "doi": "missing",
         "abstract": "missing",
         "sample_n": "review_required",
-        "p_value": "review_required",
-        "effect_size": "accepted",
+        "p_value": "accepted",
+        "effect_size": "review_required",
         "main_conclusion": "accepted",
         "subject_count_total": "good",
         "repair_source": "rebuild"
@@ -8529,7 +8529,7 @@
       "claim_count": 9,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 2.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Circadian Rhythm Theory"
@@ -8598,7 +8598,7 @@
       "year": null,
       "abstract": "This study aims to investigate the effects of lighting color temperatures on elementary students' performance, and thereby propose a dynamic lighting system for a smart learning environment. Three empirical studies were conducted: First, physiological responses were measured as a potential mediator of performance. Second, cognitive and behavioral responses were observed during academic and recess activities. Lastly, the experiment was carried out in a real-life setting with prolonged exposure. With a comprehensive analysis of the three studies, three lighting presets\\(3500 , 5000 \\), and 6500 K -are suggested for easy, standard, and intensive activity, respectively. The study is expected to act as a good stepping stone for developing dynamic lighting systems to support students' performance in learning environments.",
       "claim_count": 9,
-      "sample_n": 27,
+      "sample_n": 17,
       "p_value": 0.05,
       "effect_size": 0.15,
       "subject_count_total": 27,
@@ -8622,7 +8622,7 @@
         "abstract": "good",
         "sample_n": "review_required",
         "p_value": "review_required",
-        "effect_size": "review_required",
+        "effect_size": "accepted",
         "main_conclusion": "accepted",
         "subject_count_total": "good",
         "repair_source": "rebuild"
@@ -8783,7 +8783,7 @@
       "claim_count": 8,
       "sample_n": null,
       "p_value": null,
-      "effect_size": 3.2,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Gestalt Principles of Perception",
@@ -8821,7 +8821,7 @@
       "claim_count": 8,
       "sample_n": null,
       "p_value": 0.01,
-      "effect_size": 10.0,
+      "effect_size": null,
       "subject_count_total": null,
       "theories": [
         "Circadian Rhythm Theory",
@@ -8861,7 +8861,7 @@
       "claim_count": 8,
       "sample_n": 72,
       "p_value": null,
-      "effect_size": 0.1,
+      "effect_size": null,
       "subject_count_total": 72,
       "theories": [
         "Circadian Rhythm Theory",
@@ -9157,8 +9157,8 @@
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 7,
       "sample_n": 112,
-      "p_value": 4.0,
-      "effect_size": 10.0,
+      "p_value": 0.0001,
+      "effect_size": null,
       "subject_count_total": 112,
       "theories": [
         "Prospect Theory",
@@ -9181,7 +9181,7 @@
         "doi": "missing",
         "abstract": "missing",
         "sample_n": "accepted",
-        "p_value": "provisional",
+        "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
         "subject_count_total": "good",
@@ -9195,9 +9195,9 @@
       "year": null,
       "abstract": "Abstract not yet recovered from the current rebuild.",
       "claim_count": 7,
-      "sample_n": 116,
+      "sample_n": 10,
       "p_value": 0.05,
-      "effect_size": 7.0,
+      "effect_size": null,
       "subject_count_total": 116,
       "theories": [
         "Visual Dominance",
