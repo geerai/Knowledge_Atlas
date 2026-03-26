@@ -9,6 +9,18 @@
     "abstract_missing": 148,
     "doi_good": 69,
     "doi_missing": 181,
+    "sample_n_accepted": 11,
+    "sample_n_provisional": 34,
+    "sample_n_review_required": 106,
+    "sample_n_missing": 99,
+    "p_value_accepted": 2,
+    "p_value_provisional": 9,
+    "p_value_review_required": 140,
+    "p_value_missing": 99,
+    "effect_size_accepted": 0,
+    "effect_size_provisional": 20,
+    "effect_size_review_required": 131,
+    "effect_size_missing": 99,
     "subject_count_good": 120,
     "subject_count_missing": 130
   },
@@ -21,6 +33,9 @@
         "title": "provisional",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -33,6 +48,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -45,6 +63,9 @@
         "title": "provisional",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -57,6 +78,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -69,6 +93,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -81,6 +108,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -93,6 +123,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "provisional",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -105,6 +138,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -117,6 +153,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -129,6 +168,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -141,6 +183,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -153,6 +198,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -165,6 +213,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "provisional",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -177,6 +228,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -189,6 +243,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "provisional",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -201,6 +258,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -213,6 +273,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -225,6 +288,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -237,6 +303,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -249,6 +318,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "page_image_reread"
       }
@@ -261,6 +333,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "provisional",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -273,6 +348,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -285,6 +363,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "page_image_reread"
       }
@@ -297,6 +378,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -309,6 +393,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -321,6 +408,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "page_image_reread"
       }
@@ -333,6 +423,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -345,6 +438,9 @@
         "title": "provisional",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -357,6 +453,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -369,6 +468,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "accepted",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -381,6 +483,9 @@
         "title": "provisional",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -393,6 +498,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -405,6 +513,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -417,6 +528,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -429,6 +543,9 @@
         "title": "blocked",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -441,6 +558,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -453,6 +573,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -465,6 +588,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "page_image_reread"
       }
@@ -477,6 +603,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -489,6 +618,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -501,6 +633,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -513,6 +648,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -525,6 +663,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "accepted",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -537,6 +678,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -549,6 +693,9 @@
         "title": "provisional",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -561,6 +708,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "page_image_reread"
       }
@@ -573,6 +723,9 @@
         "title": "provisional",
         "doi": "good",
         "abstract": "provisional",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -585,6 +738,9 @@
         "title": "blocked",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -597,6 +753,9 @@
         "title": "provisional",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "provisional",
+        "p_value": "provisional",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -609,6 +768,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "page_image_reread"
       }
@@ -621,6 +783,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -633,6 +798,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "page_image_reread"
       }
@@ -645,6 +813,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -657,6 +828,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -669,6 +843,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -681,6 +858,9 @@
         "title": "provisional",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -693,6 +873,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "provisional",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -705,6 +888,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "provisional",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -717,6 +903,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -729,6 +918,9 @@
         "title": "provisional",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "page_image_reread"
       }
@@ -741,6 +933,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -753,6 +948,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "provisional",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -765,6 +963,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -777,6 +978,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "provisional",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -789,6 +993,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -801,6 +1008,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -813,6 +1023,9 @@
         "title": "provisional",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -825,6 +1038,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "provisional",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -837,6 +1053,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -849,6 +1068,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -861,6 +1083,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -873,6 +1098,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "page_image_reread"
       }
@@ -885,6 +1113,9 @@
         "title": "provisional",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "provisional",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -897,6 +1128,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -909,6 +1143,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "accepted",
+        "p_value": "review_required",
+        "effect_size": "provisional",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -921,6 +1158,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "accepted",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -933,6 +1173,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "provisional",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -945,6 +1188,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -957,6 +1203,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "page_image_reread"
       }
@@ -969,6 +1218,9 @@
         "title": "provisional",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "page_image_reread"
       }
@@ -981,6 +1233,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "page_image_reread"
       }
@@ -993,6 +1248,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -1005,6 +1263,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -1017,6 +1278,9 @@
         "title": "provisional",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -1029,6 +1293,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -1041,6 +1308,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -1053,6 +1323,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -1065,6 +1338,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -1077,6 +1353,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -1089,6 +1368,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "page_image_reread"
       }
@@ -1101,6 +1383,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "page_image_reread"
       }
@@ -1113,6 +1398,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1125,6 +1413,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "accepted",
+        "p_value": "review_required",
+        "effect_size": "provisional",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -1137,6 +1428,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -1149,6 +1443,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1161,6 +1458,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -1173,6 +1473,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -1185,6 +1488,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "provisional",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -1197,6 +1503,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "provisional",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -1209,6 +1518,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1221,6 +1533,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -1233,6 +1548,9 @@
         "title": "provisional",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -1245,6 +1563,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "provisional",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -1257,6 +1578,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -1269,6 +1593,9 @@
         "title": "provisional",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -1281,6 +1608,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1293,6 +1623,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -1305,6 +1638,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -1317,6 +1653,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -1329,6 +1668,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1341,6 +1683,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "provisional",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -1353,6 +1698,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "provisional",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -1365,6 +1713,9 @@
         "title": "provisional",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1377,6 +1728,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -1389,6 +1743,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1401,6 +1758,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "provisional",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -1413,6 +1773,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -1425,6 +1788,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1437,6 +1803,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "provisional",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1449,6 +1818,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -1461,6 +1833,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1473,6 +1848,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1485,6 +1863,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1497,6 +1878,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -1509,6 +1893,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1521,6 +1908,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1533,6 +1923,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -1545,6 +1938,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1557,6 +1953,9 @@
         "title": "provisional",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1569,6 +1968,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -1581,6 +1983,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "accepted",
+        "effect_size": "provisional",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -1593,6 +1998,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1605,6 +2013,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -1617,6 +2028,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1629,6 +2043,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -1641,6 +2058,9 @@
         "title": "provisional",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "crossref"
       }
@@ -1653,6 +2073,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -1665,6 +2088,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1677,6 +2103,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -1689,6 +2118,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -1701,6 +2133,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1713,6 +2148,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1725,6 +2163,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -1737,6 +2178,9 @@
         "title": "provisional",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "provisional",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1749,6 +2193,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "provisional",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -1761,6 +2208,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -1773,6 +2223,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1785,6 +2238,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -1797,6 +2253,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1809,6 +2268,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -1821,6 +2283,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -1833,6 +2298,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -1845,6 +2313,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1857,6 +2328,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1869,6 +2343,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -1881,6 +2358,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "provisional",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -1893,6 +2373,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1905,6 +2388,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -1917,6 +2403,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1929,6 +2418,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1941,6 +2433,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1953,6 +2448,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1965,6 +2463,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -1977,6 +2478,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -1989,6 +2493,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2001,6 +2508,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "accepted",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2013,6 +2523,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2025,6 +2538,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2037,6 +2553,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2049,6 +2568,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2061,6 +2583,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2073,6 +2598,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "accepted",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2085,6 +2613,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2097,6 +2628,9 @@
         "title": "provisional",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2109,6 +2643,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2121,6 +2658,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2133,6 +2673,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2145,6 +2688,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2157,6 +2703,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2169,6 +2718,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2181,6 +2733,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2193,6 +2748,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "provisional",
+        "sample_n": "accepted",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2205,6 +2763,9 @@
         "title": "blocked",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "provisional",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2217,6 +2778,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2229,6 +2793,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "provisional",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2241,6 +2808,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2253,6 +2823,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2265,6 +2838,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2277,6 +2853,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2289,6 +2868,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "accepted",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2301,6 +2883,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "provisional",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2313,6 +2898,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2325,6 +2913,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2337,6 +2928,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2349,6 +2943,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2361,6 +2958,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2373,6 +2973,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2385,6 +2988,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "accepted",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2397,6 +3003,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2409,6 +3018,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2421,6 +3033,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2433,6 +3048,9 @@
         "title": "provisional",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2445,6 +3063,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2457,6 +3078,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2469,6 +3093,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2481,6 +3108,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2493,6 +3123,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2505,6 +3138,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2517,6 +3153,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2529,6 +3168,9 @@
         "title": "provisional",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2541,6 +3183,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "provisional",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2553,6 +3198,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "review_required",
+        "p_value": "accepted",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2565,6 +3213,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2577,6 +3228,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "provisional",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2589,6 +3243,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2601,6 +3258,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2613,6 +3273,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2625,6 +3288,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2637,6 +3303,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2649,6 +3318,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2661,6 +3333,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2673,6 +3348,9 @@
         "title": "provisional",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2685,6 +3363,9 @@
         "title": "good",
         "doi": "good",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "crossref"
       }
@@ -2697,6 +3378,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "provisional",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2709,6 +3393,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2721,6 +3408,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2733,6 +3423,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2745,6 +3438,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "accepted",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2757,6 +3453,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2769,6 +3468,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2781,6 +3483,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2793,6 +3498,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2805,6 +3513,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2817,6 +3528,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2829,6 +3543,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2841,6 +3558,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2853,6 +3573,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2865,6 +3588,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2877,6 +3603,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2889,6 +3618,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2901,6 +3633,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "good",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2913,6 +3648,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2925,6 +3663,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "provisional",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2937,6 +3678,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "review_required",
+        "p_value": "review_required",
+        "effect_size": "review_required",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2949,6 +3693,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2961,6 +3708,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2973,6 +3723,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }
@@ -2985,6 +3738,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -2997,6 +3753,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "missing",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "missing",
         "repair_source": "rebuild"
       }
@@ -3009,6 +3768,9 @@
         "title": "good",
         "doi": "missing",
         "abstract": "missing",
+        "sample_n": "good",
+        "p_value": "missing",
+        "effect_size": "missing",
         "subject_count_total": "good",
         "repair_source": "rebuild"
       }

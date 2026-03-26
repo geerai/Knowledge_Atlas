@@ -22,6 +22,7 @@ OUT.mkdir(parents=True, exist_ok=True)
 FRONTS_PATH = AE / 'data' / 'rebuild' / 'research_fronts_v5.json'
 CLAIMS_PATH = AE / 'data' / 'rebuild' / 'gold_claims.jsonl'
 REPAIRS_PATH = AE / 'data' / 'rebuild' / 'bibliographic_repairs.json'
+DEEP_STATS_DIR = AE / 'data' / 'verification_runs' / 'v6_deep_stats_adjudication'
 
 INSTRUMENT_PATTERNS = {
     'EEG': [' eeg ', 'electroencephal', 'alpha asymmetry', 'frontal theta', 'erp '],
@@ -135,6 +136,20 @@ def load_bibliographic_repairs():
         return payload.get('papers', {})
     except Exception:
         return {}
+
+
+def load_deep_stat_adjudications():
+    payload = {}
+    if not DEEP_STATS_DIR.exists():
+        return payload
+    for path in DEEP_STATS_DIR.glob('PDF-*.deep_stats_adjudication.json'):
+        try:
+            obj = json.loads(path.read_text())
+        except Exception:
+            continue
+        paper_id = obj.get('paper_id') or path.name.split('.')[0]
+        payload[paper_id] = obj.get('decisions') or {}
+    return payload
 
 
 def warrant_bucket(value):
@@ -256,6 +271,7 @@ def parse_claims():
     paper_claims = defaultdict(list)
     paper_meta = {}
     repairs = load_bibliographic_repairs()
+    deep_stats = load_deep_stat_adjudications()
     with CLAIMS_PATH.open() as f:
         for line in f:
             if not line.strip():
@@ -270,6 +286,10 @@ def parse_claims():
             theories.extend(obj.get('theory_names') or [])
             repair = repairs.get(pid, {})
             if pid and pid not in paper_meta:
+                stat_decisions = deep_stats.get(pid, {})
+                sample_decision = stat_decisions.get('sample_n') or {}
+                p_value_decision = stat_decisions.get('p_value') or {}
+                effect_decision = stat_decisions.get('effect_size') or {}
                 paper_meta[pid] = {
                     'paper_id': pid,
                     'title': publishable_title(repair.get('title')) or publishable_title(obj.get('paper_title')) or publishable_title(obj.get('title')) or '',
@@ -280,7 +300,12 @@ def parse_claims():
                     'abstract_surface_path': repair.get('abstract_surface_path') or '',
                     'theories': theories,
                     'subject_count_total': obj.get('subject_count_total'),
-                    'sample_n': obj.get('sample_n'),
+                    'sample_n': sample_decision.get('chosen_value', obj.get('sample_n')),
+                    'sample_n_status': sample_decision.get('status') or subject_count_status(obj.get('sample_n')),
+                    'p_value': p_value_decision.get('chosen_value'),
+                    'p_value_status': p_value_decision.get('status') or 'missing',
+                    'effect_size': effect_decision.get('chosen_value'),
+                    'effect_size_status': effect_decision.get('status') or 'missing',
                     'article_type': obj.get('article_type') or '',
                     'authors': repair.get('authors') or [],
                     'venue': repair.get('venue') or '',
@@ -364,6 +389,8 @@ def parse_claims():
             'abstract': sanitize_abstract(meta.get('abstract')) or 'Abstract not yet recovered from the current rebuild.',
             'claim_count': len(claims),
             'sample_n': meta.get('sample_n'),
+            'p_value': meta.get('p_value'),
+            'effect_size': meta.get('effect_size'),
             'subject_count_total': meta.get('subject_count_total'),
             'theories': top_theories,
             'constructs': top_constructs,
@@ -377,6 +404,9 @@ def parse_claims():
                 'title': title_status(title),
                 'doi': doi_status(meta.get('doi')),
                 'abstract': abstract_status(meta.get('abstract')),
+                'sample_n': meta.get('sample_n_status') or 'missing',
+                'p_value': meta.get('p_value_status') or 'missing',
+                'effect_size': meta.get('effect_size_status') or 'missing',
                 'subject_count_total': subject_count_status(meta.get('subject_count_total')),
                 'repair_source': meta.get('repair_source') or 'rebuild',
             },
@@ -396,6 +426,18 @@ def build_json_status(articles):
         'abstract_missing': 0,
         'doi_good': 0,
         'doi_missing': 0,
+        'sample_n_accepted': 0,
+        'sample_n_provisional': 0,
+        'sample_n_review_required': 0,
+        'sample_n_missing': 0,
+        'p_value_accepted': 0,
+        'p_value_provisional': 0,
+        'p_value_review_required': 0,
+        'p_value_missing': 0,
+        'effect_size_accepted': 0,
+        'effect_size_provisional': 0,
+        'effect_size_review_required': 0,
+        'effect_size_missing': 0,
         'subject_count_good': 0,
         'subject_count_missing': 0,
     }
@@ -405,6 +447,9 @@ def build_json_status(articles):
         title_state = status.get('title') or 'missing'
         abstract_state = status.get('abstract') or 'missing'
         doi_state = status.get('doi') or 'missing'
+        sample_state = status.get('sample_n') or 'missing'
+        p_state = status.get('p_value') or 'missing'
+        effect_state = status.get('effect_size') or 'missing'
         subject_state = status.get('subject_count_total') or 'missing'
         if title_state == 'good':
             summary['title_good'] += 1
@@ -422,6 +467,9 @@ def build_json_status(articles):
             summary['doi_good'] += 1
         else:
             summary['doi_missing'] += 1
+        summary[f"sample_n_{sample_state if sample_state in {'accepted', 'provisional', 'review_required'} else 'missing'}"] += 1
+        summary[f"p_value_{p_state if p_state in {'accepted', 'provisional', 'review_required'} else 'missing'}"] += 1
+        summary[f"effect_size_{effect_state if effect_state in {'accepted', 'provisional', 'review_required'} else 'missing'}"] += 1
         if subject_state == 'good':
             summary['subject_count_good'] += 1
         else:
