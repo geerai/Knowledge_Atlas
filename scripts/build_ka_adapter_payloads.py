@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 import json
 import re
+import sqlite3
 from collections import defaultdict, Counter
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 
 CURRENT_YEAR = datetime.now().year
 TITLE_REJECT_PATTERNS = [
@@ -18,6 +19,7 @@ ROOT = Path('/Users/davidusa/REPOS')
 AE = ROOT / 'Article_Eater_PostQuinean_v1_recovery'
 OUT = ROOT / 'Knowledge_Atlas' / 'data' / 'ka_payloads'
 OUT.mkdir(parents=True, exist_ok=True)
+WORKFLOW_DB_PATH = ROOT / 'Knowledge_Atlas' / 'data' / 'ka_workflow.db'
 
 FRONTS_PATH = AE / 'data' / 'rebuild' / 'research_fronts_v5.json'
 CLAIMS_PATH = AE / 'data' / 'rebuild' / 'gold_claims.jsonl'
@@ -31,6 +33,12 @@ INTERPRETATION_SUMMARY_PATH = AE / 'data' / 'interpretation_space' / 'phase4' / 
 FRONTIER_QUESTIONS_PATH = AE / 'data' / 'interpretation_space' / 'phase4' / 'prioritized_frontier_questions.json'
 VALIDATION_COMPLETENESS_PATH = AE / 'data' / 'interpretation_space' / 'phase4' / 'validation_completeness.json'
 BOUNDARY_MAP_PATH = AE / 'data' / 'interpretation_space' / 'phase4' / 'boundary_map.json'
+DEFAULT_TRACK_TARGETS = [
+    ('Track 1 — Image Tagging', 5),
+    ('Track 2 — Article Finding', 5),
+    ('Track 3 — VR Production', 3),
+    ('Track 4 — GUI Evaluation & Experiment Design', 3),
+]
 
 INSTRUMENT_PATTERNS = {
     'EEG': [' eeg ', 'electroencephal', 'alpha asymmetry', 'frontal theta', 'erp '],
@@ -181,6 +189,164 @@ def load_json(path, default):
         return json.loads(path.read_text())
     except Exception:
         return default
+
+
+def ensure_workflow_db():
+    WORKFLOW_DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(WORKFLOW_DB_PATH)
+    cur = conn.cursor()
+    cur.executescript(
+        """
+        CREATE TABLE IF NOT EXISTS registrations (
+            user_id TEXT PRIMARY KEY,
+            first_name TEXT,
+            last_name TEXT,
+            email TEXT,
+            role TEXT,
+            institution TEXT,
+            department TEXT,
+            user_type TEXT,
+            nav_preference TEXT,
+            track_choice1 TEXT,
+            track_choice2 TEXT,
+            status TEXT,
+            approved_track TEXT,
+            rejection_reason TEXT,
+            timestamp TEXT,
+            approved_at TEXT,
+            rejected_at TEXT
+        );
+
+        CREATE TABLE IF NOT EXISTS intake_submissions (
+            submission_id TEXT PRIMARY KEY,
+            user_id TEXT,
+            identity_type TEXT,
+            track TEXT,
+            status TEXT,
+            kind TEXT,
+            title TEXT,
+            citation TEXT,
+            authors TEXT,
+            abstract TEXT,
+            created_at TEXT
+        );
+
+        CREATE TABLE IF NOT EXISTS track_targets (
+            track_label TEXT PRIMARY KEY,
+            target INTEGER NOT NULL
+        );
+        """
+    )
+
+    cur.execute("SELECT COUNT(*) FROM registrations")
+    if cur.fetchone()[0] == 0:
+        cur.executemany(
+            """
+            INSERT INTO registrations (
+                user_id, first_name, last_name, email, role, institution, department,
+                user_type, nav_preference, track_choice1, track_choice2, status,
+                approved_track, rejection_reason, timestamp, approved_at, rejected_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                ('student_alex_chen', 'Alex', 'Chen', 'alex.chen@example.edu', 'undergrad', 'UC San Diego', 'Cognitive Science', 'student_explorer', 'explore_literature', 'Track 2 — Article Finding', 'Track 4 — GUI Evaluation & Experiment Design', 'approved', 'Track 2 — Article Finding', '', '2026-03-20T09:00:00Z', '2026-03-21T18:00:00Z', ''),
+                ('student_jordan_miles', 'Jordan', 'Miles', 'jordan.miles@example.edu', 'undergrad', 'UC San Diego', 'Design Lab', 'contributor', 'contribute', 'Track 1 — Image Tagging', 'Track 2 — Article Finding', 'approved', 'Track 1 — Image Tagging', '', '2026-03-20T11:00:00Z', '2026-03-21T18:10:00Z', ''),
+                ('student_taylor_reed', 'Taylor', 'Reed', 'taylor.reed@example.edu', 'graduate', 'UC San Diego', 'VR Lab', 'contributor', 'contribute', 'Track 3 — VR Production', 'Track 4 — GUI Evaluation & Experiment Design', 'approved', 'Track 3 — VR Production', '', '2026-03-20T12:00:00Z', '2026-03-21T18:20:00Z', ''),
+                ('student_morgan_liu', 'Morgan', 'Liu', 'morgan.liu@example.edu', 'undergrad', 'UC San Diego', 'Human Factors', 'student_explorer', 'explore_literature', 'Track 4 — GUI Evaluation & Experiment Design', 'Track 2 — Article Finding', 'pending', '', '', '2026-03-24T08:30:00Z', '', ''),
+                ('student_priya_nair', 'Priya', 'Nair', 'priya.nair@example.edu', 'undergrad', 'UC San Diego', 'Psychology', 'student_explorer', 'explore_literature', 'Track 2 — Article Finding', 'Track 1 — Image Tagging', 'pending', '', '', '2026-03-24T10:15:00Z', '', ''),
+                ('student_sam_ortiz', 'Sam', 'Ortiz', 'sam.ortiz@example.edu', 'undergrad', 'UC San Diego', 'Cognitive Science', 'contributor', 'contribute', 'Track 1 — Image Tagging', 'Track 4 — GUI Evaluation & Experiment Design', 'rejected', '', 'Track capacity currently full', '2026-03-23T14:05:00Z', '', '2026-03-24T17:30:00Z'),
+            ],
+        )
+
+    cur.execute("SELECT COUNT(*) FROM intake_submissions")
+    if cur.fetchone()[0] == 0:
+        cur.executemany(
+            """
+            INSERT INTO intake_submissions (
+                submission_id, user_id, identity_type, track, status, kind, title,
+                citation, authors, abstract, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                ('KA-PROP-0042', 'student_alex_chen', 'student', 'Track 2 — Article Finding', 'approved', 'citation', 'Impact of windows and daylight exposure on overall health and sleep quality of office workers', 'Boubekri et al. (2014). Impact of windows and daylight exposure on overall health and sleep quality of office workers. Journal of Clinical Sleep Medicine.', 'Boubekri, Cheung, Reid, Wang, Zee', 'Office workers with more daylight exposure slept longer and reported better quality of life indicators than workers in windowless offices.', '2026-03-22T09:10:00Z'),
+                ('KA-PROP-0043', 'student_alex_chen', 'student', 'Track 2 — Article Finding', 'pending', 'pdf', 'Appearance wood products and psychological well-being', 'Rice et al. (2006). Appearance wood products and psychological well-being. Wood and Fiber Science.', 'Rice, Kozak, Meitner, Cohen', 'Exploratory study of whether wood interiors shape emotional responses and perceived well-being.', '2026-03-24T11:30:00Z'),
+                ('KA-PROP-0044', 'student_jordan_miles', 'student', 'Track 1 — Image Tagging', 'approved', 'pdf', 'High-rise window views and stress recovery', '', 'Metadata pending', '', '2026-03-24T12:45:00Z'),
+                ('KA-PROP-0045', 'student_taylor_reed', 'student', 'Track 3 — VR Production', 'pending', 'citation', 'Green-water and green views from high-rise windows', 'Author metadata staged from window-view corpus.', 'Metadata pending', '', '2026-03-24T13:20:00Z'),
+            ],
+        )
+
+    cur.execute("SELECT COUNT(*) FROM track_targets")
+    if cur.fetchone()[0] == 0:
+        cur.executemany("INSERT INTO track_targets (track_label, target) VALUES (?, ?)", DEFAULT_TRACK_TARGETS)
+    conn.commit()
+    conn.close()
+
+
+def build_workflow_payload():
+    ensure_workflow_db()
+    conn = sqlite3.connect(WORKFLOW_DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    registrations = [dict(row) for row in cur.execute("SELECT * FROM registrations ORDER BY timestamp DESC, user_id")]
+    submissions = [dict(row) for row in cur.execute("SELECT * FROM intake_submissions ORDER BY created_at DESC, submission_id DESC")]
+    track_targets = [dict(row) for row in cur.execute("SELECT * FROM track_targets ORDER BY track_label")]
+    conn.close()
+
+    registrations_payload = [
+        {
+            'id': row['user_id'],
+            'firstName': row['first_name'],
+            'lastName': row['last_name'],
+            'email': row['email'],
+            'role': row['role'],
+            'institution': row['institution'],
+            'department': row['department'],
+            'userType': row['user_type'],
+            'navPreference': row['nav_preference'],
+            'trackChoice1': row['track_choice1'],
+            'trackChoice2': row['track_choice2'],
+            'status': row['status'],
+            'approvedTrack': row['approved_track'],
+            'rejectionReason': row['rejection_reason'],
+            'timestamp': row['timestamp'],
+            'approvedAt': row['approved_at'],
+            'rejectedAt': row['rejected_at'],
+        }
+        for row in registrations
+    ]
+    submissions_payload = [
+        {
+            'submissionId': row['submission_id'],
+            'userId': row['user_id'],
+            'identityType': row['identity_type'],
+            'track': row['track'],
+            'status': row['status'],
+            'kind': row['kind'],
+            'title': row['title'],
+            'citation': row['citation'],
+            'authors': row['authors'],
+            'abstract': row['abstract'],
+            'createdAt': row['created_at'],
+        }
+        for row in submissions
+    ]
+    current_user = next((row for row in registrations_payload if row['id'] == 'student_alex_chen'), registrations_payload[0] if registrations_payload else None)
+    return {
+        'current_user': current_user,
+        'registrations': registrations_payload,
+        'intake_submissions': submissions_payload,
+        'track_targets': track_targets,
+        'summary': {
+            'registration_count': len(registrations_payload),
+            'pending_count': sum(1 for row in registrations_payload if row.get('status') == 'pending'),
+            'approved_count': sum(1 for row in registrations_payload if row.get('status') == 'approved'),
+            'rejected_count': sum(1 for row in registrations_payload if row.get('status') == 'rejected'),
+            'submission_count': len(submissions_payload),
+            'pending_submission_count': sum(1 for row in submissions_payload if row.get('status') == 'pending'),
+        },
+        'db_path': str(WORKFLOW_DB_PATH),
+        'generated_at': datetime.now(timezone.utc).isoformat(),
+    }
 
 
 def warrant_bucket(value):
@@ -770,6 +936,7 @@ def build_layers_summary(argumentation, annotations, interpretation):
 
 
 def main():
+    workflow = build_workflow_payload()
     topics, gaps = load_fronts()
     evidence, articles = parse_claims()
     dashboard = build_dashboard(articles, evidence)
@@ -788,6 +955,11 @@ def main():
     (OUT / 'annotations.json').write_text(json.dumps(annotations, indent=2))
     (OUT / 'interpretation.json').write_text(json.dumps(interpretation, indent=2))
     (OUT / 'layers.json').write_text(json.dumps(layers, indent=2))
+    (OUT / 'workflow.json').write_text(json.dumps(workflow, indent=2))
+    (OUT / 'workflow.js').write_text(
+        "window.KA_WORKFLOW_PAYLOAD = " + json.dumps(workflow, indent=2) + ";\n",
+        encoding='utf-8',
+    )
     print('Wrote payloads to', OUT)
 
 if __name__ == '__main__':

@@ -39,7 +39,13 @@ Current layer payloads are non-empty and can drive page content:
 
 ## New workflow hookup in this pass
 
-A shared workflow-state adapter now exists:
+A workflow database and exported workflow payload now exist:
+
+- `/Users/davidusa/REPOS/Knowledge_Atlas/data/ka_workflow.db`
+- `/Users/davidusa/REPOS/Knowledge_Atlas/data/ka_payloads/workflow.json`
+- `/Users/davidusa/REPOS/Knowledge_Atlas/data/ka_payloads/workflow.js`
+
+A shared workflow-state adapter now consumes that DB-backed payload and then layers current-session browser edits on top:
 
 - `/Users/davidusa/REPOS/Knowledge_Atlas/ka_workflow_store.js`
 
@@ -52,6 +58,14 @@ Pages now reading shared contributor/admin state through that adapter instead of
 - `ka_dashboard.html`
 - `ka_approve.html`
 
+Current seeded workflow snapshot:
+
+- `6` registrations
+- `3` approved contributors
+- `2` pending registrations
+- `1` rejected registration
+- `4` staged intake submissions
+
 Most important visible improvement:
 
 - `ka_approve.html` now renders its pending/approved/rejected/roster views from shared registration state instead of fixed demo applicants.
@@ -60,7 +74,7 @@ Most important visible improvement:
 
 Yes, but only for workflow state.
 
-A database is justified for:
+A database is now justified and partially implemented for:
 
 - accounts/auth
 - registrations and approval decisions
@@ -83,9 +97,9 @@ So the correct split is:
 
 These areas still rely on prototype-style persistence or staged logic:
 
-- login/register auth semantics
+- login password/auth semantics
 - contributor assignment claiming
-- durable multi-user course state
+- durable multi-user writes back to the shared DB from the browser
 - instructor settings/configuration
 - article proposal / approval as true multi-user queue writes
 
@@ -104,9 +118,9 @@ A walkthrough should now work for:
 
 The user should not yet expect:
 
-- real multi-user synchronization
+- real multi-user synchronization from browser actions back into the DB
 - a production auth backend
-- durable shared workflow state across machines without exporting/importing local state
+- durable shared workflow writes across machines without a small service layer
 
 ## Current surfaced corpus quality
 

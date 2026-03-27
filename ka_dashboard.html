@@ -1010,6 +1010,7 @@
     <!-- Version Badge -->
     <div class="version-badge">KA UI · v0.4</div>
 
+<script src="data/ka_payloads/workflow.js"></script>
 <script src="ka_workflow_store.js"></script>
 <script>
 window.KA_PAGE_FUNCTION = {
@@ -1131,8 +1132,8 @@ window.KA_PAGE_FUNCTION = {
     if (typeof dashboard.next_due_days !== 'undefined') {
       document.getElementById('dashboard-due-label').innerHTML = `Your next assignment is due in <strong>${dashboard.next_due_days} days</strong>.`;
     }
-    document.getElementById('dashboard-progress-meta').textContent = 'Progress is sourced from the current rebuild payload and will tighten as live assignment tracking is wired.';
-    document.getElementById('dashboard-track-copy').textContent = 'This dashboard is now pointed at rebuild-backed summary data, so progress and leaderboard areas can be replaced incrementally with live course state.';
+      document.getElementById('dashboard-progress-meta').textContent = 'Progress is sourced from rebuild payloads plus the workflow database snapshot, and will tighten further as live assignment tracking is wired.';
+    document.getElementById('dashboard-track-copy').textContent = 'This dashboard is now pointed at rebuild-backed scientific data plus DB-backed workflow state, so progress and leaderboard areas can be replaced incrementally with live course state.';
     document.getElementById('dashboard-deadline-note').textContent = 'Deadline cards remain partly staged until the course tracker is wired to assignment records.';
     if (myRows.length) {
       dashboard.progress = dashboard.progress || {};
@@ -1158,7 +1159,7 @@ window.KA_PAGE_FUNCTION = {
           badge: String(row.status || 'pending').toUpperCase()
         };
       });
-      document.getElementById('dashboard-progress-meta').textContent = 'Progress is now partly sourced from your local contributor state and staged submissions.';
+      document.getElementById('dashboard-progress-meta').textContent = 'Progress is now sourced from the workflow snapshot plus your current-session overlay submissions.';
     }
     document.getElementById('dashboard-json-title-good').textContent = String(jsonSummary.title_good || 0);
     document.getElementById('dashboard-json-title-backlog').textContent = String((jsonSummary.title_provisional || 0) + (jsonSummary.title_missing_or_blocked || 0));

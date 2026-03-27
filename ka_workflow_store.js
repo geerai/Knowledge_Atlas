@@ -1,9 +1,17 @@
 (function () {
+  function clone(value) {
+    return JSON.parse(JSON.stringify(value));
+  }
+
+  function payload() {
+    return window.KA_WORKFLOW_PAYLOAD || {};
+  }
+
   function readJson(key, fallback) {
     try {
       return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback));
     } catch (_err) {
-      return fallback;
+      return clone(fallback);
     }
   }
 
@@ -12,14 +20,26 @@
     return value;
   }
 
+  function removeKey(key) {
+    localStorage.removeItem(key);
+    return null;
+  }
+
+  function bootstrappedRegistrations() {
+    return clone(payload().registrations || []);
+  }
+
+  function bootstrappedSubmissions() {
+    return clone(payload().intake_submissions || []);
+  }
+
   function currentUser() {
-    return readJson('ka_current_user', null);
+    return readJson('ka_current_user', payload().current_user || null);
   }
 
   function setCurrentUser(user) {
     if (!user) {
-      localStorage.removeItem('ka_current_user');
-      return null;
+      return removeKey('ka_current_user');
     }
     localStorage.setItem('ka_current_user', JSON.stringify(user));
     return user;
@@ -32,7 +52,7 @@
   }
 
   function pendingRegistrations() {
-    return readJson('ka_pending_registrations', []);
+    return readJson('ka_pending_registrations', bootstrappedRegistrations());
   }
 
   function savePendingRegistrations(rows) {
@@ -41,7 +61,7 @@
 
   function addPendingRegistration(user) {
     const rows = pendingRegistrations();
-    rows.push(user);
+    rows.unshift(user);
     savePendingRegistrations(rows);
     return user;
   }
@@ -53,12 +73,12 @@
       return Object.assign({}, row, patch || {});
     });
     savePendingRegistrations(next);
-    const user = next.find(function (row) { return row.id === userId; }) || null;
+    const updated = next.find(function (row) { return row.id === userId; }) || null;
     const current = currentUser();
-    if (current && current.id === userId && user) {
-      setCurrentUser(user);
+    if (current && current.id === userId && updated) {
+      setCurrentUser(updated);
     }
-    return user;
+    return updated;
   }
 
   function approveRegistration(userId, trackLabel) {
@@ -78,7 +98,7 @@
   }
 
   function intakeSubmissions() {
-    return readJson('ka_intake_submissions', []);
+    return readJson('ka_intake_submissions', bootstrappedSubmissions());
   }
 
   function saveIntakeSubmissions(rows) {
@@ -106,7 +126,9 @@
   }
 
   function registrationsByStatus(status) {
-    return pendingRegistrations().filter(function (row) { return String(row.status || 'pending') === status; });
+    return pendingRegistrations().filter(function (row) {
+      return String(row.status || 'pending') === status;
+    });
   }
 
   function allUsers() {
@@ -127,24 +149,25 @@
   }
 
   function trackCapacity() {
-    const labels = [
-      'Track 1 — Image Tagging',
-      'Track 2 — Article Finding',
-      'Track 3 — VR Production',
-      'Track 4 — GUI Evaluation & Experiment Design'
-    ];
-    const targets = {
-      'Track 1 — Image Tagging': 5,
-      'Track 2 — Article Finding': 5,
-      'Track 3 — VR Production': 3,
-      'Track 4 — GUI Evaluation & Experiment Design': 3
-    };
+    const targetRows = payload().track_targets || [];
+    const labels = targetRows.length
+      ? targetRows.map(function (row) { return row.track_label; })
+      : [
+          'Track 1 — Image Tagging',
+          'Track 2 — Article Finding',
+          'Track 3 — VR Production',
+          'Track 4 — GUI Evaluation & Experiment Design'
+        ];
+    const targets = {};
+    targetRows.forEach(function (row) {
+      targets[row.track_label] = row.target;
+    });
     const approved = registrationsByStatus('approved');
     return labels.map(function (label) {
       const approvedCount = approved.filter(function (row) {
         return (row.approvedTrack || row.trackChoice1 || '') === label;
       }).length;
-      const target = targets[label] || 0;
+      const target = Number(targets[label] || 0);
       return {
         label: label,
         approved: approvedCount,
@@ -154,7 +177,17 @@
     });
   }
 
+  function resetToBootstrap() {
+    removeKey('ka_pending_registrations');
+    removeKey('ka_intake_submissions');
+    return {
+      registrations: pendingRegistrations(),
+      submissions: intakeSubmissions()
+    };
+  }
+
   window.KA_WORKFLOW_STORE = {
+    payload: payload,
     readJson: readJson,
     writeJson: writeJson,
     currentUser: currentUser,
@@ -173,6 +206,7 @@
     intakeSubmissions: intakeSubmissions,
     saveIntakeSubmissions: saveIntakeSubmissions,
     addIntakeSubmission: addIntakeSubmission,
-    userMetrics: userMetrics
+    userMetrics: userMetrics,
+    resetToBootstrap: resetToBootstrap
   };
 })();

@@ -986,6 +986,7 @@
 <script src="ka_mode_switch.js"></script>
 <script src="ka_site_shell.js"></script>
 <script src="ka_data_adapter.js"></script>
+<script src="data/ka_payloads/workflow.js"></script>
 <script src="ka_workflow_store.js"></script>
 <script src="ka_live_context.js"></script>
 <script>
@@ -1030,7 +1031,7 @@ window.KA_PAGE_FUNCTION = {
   pageId: 'ka_register',
   title: 'Contributor Registration',
   audience: 'New students and researchers seeking to join KA as contributors',
-  purpose: 'Collects account information, academic profile, and track preference. Saves a pending registration record to localStorage (demo) and sets the ka_logged_in flag so the user can immediately access authenticated features. In production this would POST to a backend; an instructor would review via ka_approve.html.',
+  purpose: 'Collects account information, academic profile, and track preference. The walkthrough now starts from a SQLite-backed workflow export and writes in-session changes to a browser overlay. In production this would POST to a live backend; an instructor would review via ka_approve.html.',
   workflowPos: 'Onboarding gate — must be completed before access to any track assignment page. Follows from ka_home.html or any "Join" call-to-action.',
   notFor: 'Returning users (send to ka_login.html), track work itself, browsing KA content without an account.',
   phase: 'Phase 1 — Foundation Infrastructure',

@@ -447,6 +447,7 @@
     <!-- Version badge -->
     <div class="version-badge">KA UI · v0.4</div>
 
+    <script src="data/ka_payloads/workflow.js"></script>
     <script src="ka_workflow_store.js"></script>
     <script>
         // Demo login: set logged-in flag so page function spec button becomes visible on all pages
@@ -481,7 +482,7 @@ window.KA_PAGE_FUNCTION = {
   title: 'Knowledge Atlas — Login',
   audience: 'Returning contributors, students, instructors, and administrators',
   purpose: 'Authenticates returning users and routes them to the appropriate landing page based on role: students go to the dashboard, contributors to the tagger or articles page, instructors to the approval and review queue. Currently a static form; requires JWT authentication backend to function.',
-  workflowPos: 'Gate before any authenticated workflow. Must set ka_logged_in flag in localStorage on success (even in demo mode) so that the Page Function Spec button becomes visible on other pages.',
+  workflowPos: 'Gate before any authenticated workflow. The walkthrough uses a DB-backed workflow snapshot plus a browser login overlay so authenticated page affordances can be exercised without a full auth server.',
   notFor: 'New user registration (link to Register page), password reset (separate flow), or any content browsing.',
   phase: 'Phase 1 — Foundation Infrastructure (P0 — blocks all authenticated features)',
   evalQuestions: [

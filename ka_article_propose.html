@@ -352,6 +352,7 @@
   </div>
 </div>
 
+<script src="data/ka_payloads/workflow.js"></script>
 <script src="ka_workflow_store.js"></script>
 <script>
 const EXISTING_ARTICLES = [
@@ -440,7 +441,7 @@ function syncIdentityCard() {
   document.getElementById('identityCopy').textContent =
     identity.identityType === 'student'
       ? 'Accepted citations and PDFs should count toward student metrics once review decisions are made.'
-      : 'Anonymous/public submissions are allowed, but they do not count toward student track metrics.';
+      : 'Anonymous/public submissions are allowed, but they do not count toward student track metrics in the workflow snapshot.';
 
   const relevant = rows.filter(row => {
     if (identity.userId) return row.userId === identity.userId;
