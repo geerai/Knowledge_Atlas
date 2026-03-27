@@ -87,7 +87,7 @@
       "sample_n": null,
       "p_value": null,
       "effect_size": null,
-      "subject_count_total": 73,
+      "subject_count_total": 12,
       "theories": [
         "Environmental Perception Theory"
       ],
@@ -110,7 +110,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "missing",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
@@ -163,7 +163,7 @@
       "sample_n": 189,
       "p_value": 0.05,
       "effect_size": 0.87,
-      "subject_count_total": 17,
+      "subject_count_total": 21,
       "theories": [
         "Environmental Perception Theory",
         "Acoustic Privacy Framework",
@@ -186,7 +186,7 @@
         "p_value": "review_required",
         "effect_size": "accepted",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "review_required",
         "repair_source": "rebuild"
       }
     },
@@ -200,7 +200,7 @@
       "sample_n": 30,
       "p_value": null,
       "effect_size": null,
-      "subject_count_total": null,
+      "subject_count_total": 30,
       "theories": [
         "Environmental Perception Theory",
         "Attention Restoration Theory"
@@ -229,7 +229,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "missing",
-        "subject_count_total": "missing",
+        "subject_count_total": "provisional",
         "repair_source": "crossref"
       }
     },
@@ -281,7 +281,7 @@
       "sample_n": 119,
       "p_value": null,
       "effect_size": null,
-      "subject_count_total": 120,
+      "subject_count_total": 24,
       "theories": [
         "Environmental Perception Theory",
         "Stress Recovery Theory",
@@ -305,7 +305,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "missing",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
@@ -346,7 +346,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "review_required",
         "repair_source": "crossref"
       }
     },
@@ -519,7 +519,7 @@
       "sample_n": 26,
       "p_value": null,
       "effect_size": null,
-      "subject_count_total": 26,
+      "subject_count_total": 38,
       "theories": [
         "Environmental Perception Theory",
         "Stress Recovery Theory",
@@ -545,7 +545,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "missing",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
@@ -672,7 +672,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "accepted",
         "repair_source": "crossref"
       }
     },
@@ -840,7 +840,7 @@
         "p_value": "accepted",
         "effect_size": "accepted",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "crossref"
       }
     },
@@ -934,7 +934,7 @@
       "sample_n": 3,
       "p_value": null,
       "effect_size": null,
-      "subject_count_total": 5,
+      "subject_count_total": 27,
       "theories": [
         "Attention Restoration Theory",
         "Privacy Regulation Theory",
@@ -962,7 +962,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
@@ -1123,7 +1123,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "accepted",
         "repair_source": "rebuild"
       }
     },
@@ -1205,7 +1205,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "crossref"
       }
     },
@@ -1219,7 +1219,7 @@
       "sample_n": 16,
       "p_value": null,
       "effect_size": null,
-      "subject_count_total": 16,
+      "subject_count_total": 113,
       "theories": [
         "Environmental Perception Theory",
         "Attention Restoration Theory"
@@ -1243,7 +1243,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "missing",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
@@ -1450,7 +1450,7 @@
       "sample_n": 5,
       "p_value": null,
       "effect_size": null,
-      "subject_count_total": 5,
+      "subject_count_total": 3,
       "theories": [
         "Environmental Perception Theory"
       ],
@@ -1473,7 +1473,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "missing",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
@@ -1706,7 +1706,7 @@
         "p_value": "accepted",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
@@ -1845,7 +1845,7 @@
       "sample_n": 153,
       "p_value": 0.05,
       "effect_size": null,
-      "subject_count_total": 18,
+      "subject_count_total": 207,
       "theories": [
         "Environmental Perception Theory"
       ],
@@ -1868,7 +1868,7 @@
         "p_value": "accepted",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "crossref"
       }
     },
@@ -2032,7 +2032,7 @@
       "sample_n": 29,
       "p_value": 0.001,
       "effect_size": 0.741,
-      "subject_count_total": 99,
+      "subject_count_total": 30,
       "theories": [
         "Stress Recovery Theory",
         "Environmental Perception Theory"
@@ -2056,7 +2056,7 @@
         "p_value": "accepted",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "page_image_reread"
       }
     },
@@ -2152,7 +2152,7 @@
       "sample_n": 1011,
       "p_value": null,
       "effect_size": null,
-      "subject_count_total": 1011,
+      "subject_count_total": 3,
       "theories": [
         "Environmental Perception Theory",
         "Building Acoustics Transmission Model"
@@ -2177,7 +2177,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "crossref"
       }
     },
@@ -2191,7 +2191,7 @@
       "sample_n": 800,
       "p_value": null,
       "effect_size": null,
-      "subject_count_total": 9,
+      "subject_count_total": 800,
       "theories": [
         "Environmental Perception Theory",
         "Stress Recovery Theory"
@@ -2218,7 +2218,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "accepted",
         "repair_source": "crossref"
       }
     },
@@ -2232,7 +2232,7 @@
       "sample_n": 20,
       "p_value": null,
       "effect_size": 3.0,
-      "subject_count_total": 96,
+      "subject_count_total": 20,
       "theories": [
         "Environmental Perception Theory",
         "Building Acoustics Transmission Model"
@@ -2261,7 +2261,7 @@
         "p_value": "review_required",
         "effect_size": "accepted",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "review_required",
         "repair_source": "crossref"
       }
     },
@@ -2275,7 +2275,7 @@
       "sample_n": 199,
       "p_value": 19.3,
       "effect_size": 0.0,
-      "subject_count_total": 25,
+      "subject_count_total": 199,
       "theories": [
         "Environmental Perception Theory"
       ],
@@ -2301,7 +2301,7 @@
         "p_value": "review_required",
         "effect_size": "accepted",
         "main_conclusion": "missing",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "crossref"
       }
     },
@@ -2315,7 +2315,7 @@
       "sample_n": 0,
       "p_value": null,
       "effect_size": null,
-      "subject_count_total": 389,
+      "subject_count_total": 27,
       "theories": [
         "Environmental Perception Theory"
       ],
@@ -2338,7 +2338,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "missing",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
@@ -2374,7 +2374,7 @@
         "p_value": "review_required",
         "effect_size": "accepted",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "page_image_reread"
       }
     },
@@ -2429,7 +2429,7 @@
       "sample_n": 128,
       "p_value": null,
       "effect_size": null,
-      "subject_count_total": 157,
+      "subject_count_total": 21,
       "theories": [
         "Environmental Perception Theory"
       ],
@@ -2454,7 +2454,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "review_required",
         "repair_source": "crossref"
       }
     },
@@ -2572,7 +2572,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
@@ -2724,7 +2724,7 @@
         "p_value": "accepted",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "crossref"
       }
     },
@@ -2738,7 +2738,7 @@
       "sample_n": 16,
       "p_value": 0.0,
       "effect_size": null,
-      "subject_count_total": null,
+      "subject_count_total": 16,
       "theories": [
         "Environmental Perception Theory"
       ],
@@ -2764,7 +2764,7 @@
         "p_value": "accepted",
         "effect_size": "review_required",
         "main_conclusion": "missing",
-        "subject_count_total": "missing",
+        "subject_count_total": "provisional",
         "repair_source": "crossref"
       }
     },
@@ -2851,7 +2851,7 @@
       "sample_n": 100,
       "p_value": 0.05,
       "effect_size": null,
-      "subject_count_total": 27,
+      "subject_count_total": 20,
       "theories": [
         "Environmental Perception Theory"
       ],
@@ -2875,7 +2875,7 @@
         "p_value": "accepted",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
@@ -2915,7 +2915,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "accepted",
         "repair_source": "crossref"
       }
     },
@@ -2993,7 +2993,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
@@ -3281,7 +3281,7 @@
       "sample_n": 30,
       "p_value": null,
       "effect_size": null,
-      "subject_count_total": 3273,
+      "subject_count_total": 30,
       "theories": [
         "Environmental Perception Theory",
         "Attention Restoration Theory"
@@ -3303,7 +3303,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "review_required",
         "repair_source": "rebuild"
       }
     },
@@ -3660,7 +3660,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "accepted",
         "repair_source": "crossref"
       }
     },
@@ -3753,7 +3753,7 @@
       "sample_n": 11,
       "p_value": 0.001,
       "effect_size": 0.8,
-      "subject_count_total": 187,
+      "subject_count_total": 541,
       "theories": [
         "Privacy Regulation Theory",
         "Gestalt Principles of Perception",
@@ -3779,7 +3779,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "crossref"
       }
     },
@@ -3879,7 +3879,7 @@
       "sample_n": 20,
       "p_value": null,
       "effect_size": 3.0,
-      "subject_count_total": 142,
+      "subject_count_total": 20,
       "theories": [
         "Environmental Perception Theory",
         "Building Acoustics Transmission Model"
@@ -3908,7 +3908,7 @@
         "p_value": "review_required",
         "effect_size": "accepted",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "review_required",
         "repair_source": "crossref"
       }
     },
@@ -4063,7 +4063,7 @@
         "p_value": "accepted",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "accepted",
         "repair_source": "crossref"
       }
     },
@@ -4143,7 +4143,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "missing",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
@@ -4380,7 +4380,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "accepted",
         "repair_source": "rebuild"
       }
     },
@@ -4501,7 +4501,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "crossref"
       }
     },
@@ -4616,7 +4616,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "accepted",
         "repair_source": "crossref"
       }
     },
@@ -5153,7 +5153,7 @@
         "p_value": "accepted",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "review_required",
         "repair_source": "rebuild"
       }
     },
@@ -5284,7 +5284,7 @@
       "sample_n": 119,
       "p_value": null,
       "effect_size": null,
-      "subject_count_total": 120,
+      "subject_count_total": 24,
       "theories": [
         "Biophilia Hypothesis",
         "Gestalt Principles of Perception",
@@ -5312,7 +5312,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "crossref"
       }
     },
@@ -5349,7 +5349,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "provisional",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "crossref"
       }
     },
@@ -5687,7 +5687,7 @@
         "p_value": "accepted",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "review_required",
         "repair_source": "rebuild"
       }
     },
@@ -5701,7 +5701,7 @@
       "sample_n": 14,
       "p_value": null,
       "effect_size": null,
-      "subject_count_total": 28,
+      "subject_count_total": 14,
       "theories": [
         "Environmental Perception Theory",
         "Building Acoustics Transmission Model",
@@ -5724,7 +5724,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "review_required",
         "repair_source": "rebuild"
       }
     },
@@ -6034,7 +6034,7 @@
       "sample_n": 10,
       "p_value": 0.05,
       "effect_size": null,
-      "subject_count_total": 2041,
+      "subject_count_total": 18,
       "theories": [
         "Theory of Planned Behavior",
         "Prospect Theory",
@@ -6058,7 +6058,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
@@ -6097,7 +6097,7 @@
         "p_value": "accepted",
         "effect_size": "accepted",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
@@ -6398,7 +6398,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "review_required",
         "repair_source": "rebuild"
       }
     },
@@ -6480,7 +6480,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
@@ -6713,7 +6713,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
@@ -7015,7 +7015,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
@@ -7411,7 +7411,7 @@
       "sample_n": 107,
       "p_value": null,
       "effect_size": null,
-      "subject_count_total": 107,
+      "subject_count_total": 343,
       "theories": [
         "Spatial Cognition Theory",
         "Embodied Cognition",
@@ -7437,7 +7437,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
@@ -7702,7 +7702,7 @@
         "p_value": "accepted",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
@@ -8209,7 +8209,7 @@
       "sample_n": 28,
       "p_value": 0.001,
       "effect_size": -0.015,
-      "subject_count_total": 40,
+      "subject_count_total": 28,
       "theories": [
         "Color Psychology",
         "Optimal Stimulation Level Theory",
@@ -8235,7 +8235,7 @@
         "p_value": "accepted",
         "effect_size": "accepted",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "review_required",
         "repair_source": "rebuild"
       }
     },
@@ -8701,7 +8701,7 @@
         "p_value": "accepted",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
@@ -8741,7 +8741,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "review_required",
         "repair_source": "rebuild"
       }
     },
@@ -8852,7 +8852,7 @@
         "p_value": "review_required",
         "effect_size": "accepted",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "review_required",
         "repair_source": "rebuild"
       }
     },
@@ -9427,7 +9427,7 @@
         "p_value": "accepted",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
@@ -9465,7 +9465,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },

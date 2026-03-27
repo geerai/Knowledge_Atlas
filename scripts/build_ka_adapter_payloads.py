@@ -27,6 +27,8 @@ REPAIRS_PATH = AE / 'data' / 'rebuild' / 'bibliographic_repairs.json'
 DEEP_STATS_DIR = AE / 'data' / 'verification_runs' / 'v6_deep_stats_adjudication'
 ABSTRACT_ADJUDICATION_DIR = AE / 'data' / 'verification_runs' / 'v6_abstract_adjudication'
 MAIN_CONCLUSION_DIR = AE / 'data' / 'verification_runs' / 'v6_main_conclusion_adjudication'
+POPULATION_ADJUDICATION_DIR = AE / 'data' / 'verification_runs' / 'v6_population_count_adjudication'
+FIELD_COVERAGE_BY_TYPE_PATH = AE / 'data' / 'verification_runs' / 'field_coverage_by_article_type' / 'field_coverage_by_article_type.json'
 ARG_GRAPH_PATH = AE / 'data' / 'rebuild' / 'argumentation_graph_v5.json'
 CLAIM_ARG_GRAPH_PATH = AE / 'data' / 'rebuild' / 'claim_argument_graph_v1.json'
 ANNOTATIONS_PATH = AE / 'data' / 'rebuild' / 'annotations_regenerated.json'
@@ -154,6 +156,13 @@ def subject_count_status(value):
     return 'good' if value not in (None, '', 0) else 'missing'
 
 
+def normalize_adjudication_state(value):
+    state = str(value or '').strip().lower()
+    if state in {'accepted', 'provisional', 'review_required', 'missing'}:
+        return state
+    return 'missing'
+
+
 def load_bibliographic_repairs():
     if not REPAIRS_PATH.exists():
         return {}
@@ -197,6 +206,20 @@ def load_main_conclusion_adjudications():
     if not MAIN_CONCLUSION_DIR.exists():
         return payload
     for path in MAIN_CONCLUSION_DIR.glob('PDF-*.main_conclusion_adjudication.json'):
+        try:
+            obj = json.loads(path.read_text())
+        except Exception:
+            continue
+        paper_id = obj.get('paper_id') or path.name.split('.')[0]
+        payload[paper_id] = obj.get('decision') or {}
+    return payload
+
+
+def load_population_adjudications():
+    payload = {}
+    if not POPULATION_ADJUDICATION_DIR.exists():
+        return payload
+    for path in POPULATION_ADJUDICATION_DIR.glob('PDF-*.population_count_adjudication.json'):
         try:
             obj = json.loads(path.read_text())
         except Exception:
@@ -495,6 +518,7 @@ def parse_claims():
     deep_stats = load_deep_stat_adjudications()
     abstract_adjudications = load_abstract_adjudications()
     main_conclusions = load_main_conclusion_adjudications()
+    population_adjudications = load_population_adjudications()
     with CLAIMS_PATH.open() as f:
         for line in f:
             if not line.strip():
@@ -523,6 +547,13 @@ def parse_claims():
                 sample_decision = stat_decisions.get('sample_n') or {}
                 p_value_decision = stat_decisions.get('p_value') or {}
                 effect_decision = stat_decisions.get('effect_size') or {}
+                population_decision = population_adjudications.get(pid) or {}
+                raw_subject_total = obj.get('subject_count_total')
+                population_value = population_decision.get('chosen_value')
+                population_state = normalize_adjudication_state(population_decision.get('status')) if population_decision else 'missing'
+                if population_value in (None, '', 0) and raw_subject_total not in (None, '', 0):
+                    population_value = raw_subject_total
+                    population_state = subject_count_status(raw_subject_total)
                 paper_meta[pid] = {
                     'paper_id': pid,
                     'title': publishable_title(repair.get('title')) or publishable_title(obj.get('paper_title')) or publishable_title(obj.get('title')) or '',
@@ -534,7 +565,8 @@ def parse_claims():
                     'repair_source': repair.get('source') or '',
                     'abstract_surface_path': repair.get('abstract_surface_path') or '',
                     'theories': theories,
-                    'subject_count_total': obj.get('subject_count_total'),
+                    'subject_count_total': population_value,
+                    'subject_count_total_status': population_state,
                     'sample_n': sample_decision.get('chosen_value', obj.get('sample_n')),
                     'sample_n_status': sample_decision.get('status') or subject_count_status(obj.get('sample_n')),
                     'p_value': p_value_decision.get('chosen_value'),
@@ -635,22 +667,22 @@ def parse_claims():
             'article_type': meta.get('article_type') or '',
             'authors': meta.get('authors') or [],
             'venue': meta.get('venue') or '',
-            'main_conclusion': meta.get('main_conclusion') or '',
-            'repair_source': meta.get('repair_source') or '',
-            'abstract_source': meta.get('abstract_source') or '',
-            'abstract_surface_path': meta.get('abstract_surface_path') or '',
-            'json_status': {
+                'main_conclusion': meta.get('main_conclusion') or '',
+                'repair_source': meta.get('repair_source') or '',
+                'abstract_source': meta.get('abstract_source') or '',
+                'abstract_surface_path': meta.get('abstract_surface_path') or '',
+                'json_status': {
                 'title': title_status(title),
                 'doi': doi_status(meta.get('doi')),
                 'abstract': meta.get('abstract_status') or abstract_status(meta.get('abstract')),
-                'sample_n': meta.get('sample_n_status') or 'missing',
-                'p_value': meta.get('p_value_status') or 'missing',
-                'effect_size': meta.get('effect_size_status') or 'missing',
-                'main_conclusion': meta.get('main_conclusion_status') or 'missing',
-                'subject_count_total': subject_count_status(meta.get('subject_count_total')),
-                'repair_source': meta.get('repair_source') or 'rebuild',
-            },
-        })
+                    'sample_n': meta.get('sample_n_status') or 'missing',
+                    'p_value': meta.get('p_value_status') or 'missing',
+                    'effect_size': meta.get('effect_size_status') or 'missing',
+                    'main_conclusion': meta.get('main_conclusion_status') or 'missing',
+                    'subject_count_total': meta.get('subject_count_total_status') or subject_count_status(meta.get('subject_count_total')),
+                    'repair_source': meta.get('repair_source') or 'rebuild',
+                },
+            })
     articles.sort(key=lambda x: (-x['claim_count'], x['paper_id']))
     return evidence, articles[:250]
 
@@ -681,6 +713,10 @@ def build_json_status(articles):
         'main_conclusion_accepted': 0,
         'main_conclusion_provisional': 0,
         'main_conclusion_missing': 0,
+        'subject_count_total_accepted': 0,
+        'subject_count_total_provisional': 0,
+        'subject_count_total_review_required': 0,
+        'subject_count_total_missing': 0,
         'subject_count_good': 0,
         'subject_count_missing': 0,
     }
@@ -716,6 +752,13 @@ def build_json_status(articles):
         summary[f"effect_size_{effect_state if effect_state in {'accepted', 'provisional', 'review_required'} else 'missing'}"] += 1
         summary[f"main_conclusion_{conclusion_state if conclusion_state in {'accepted', 'provisional'} else 'missing'}"] += 1
         if subject_state == 'good':
+            normalized_subject_state = 'provisional'
+        elif subject_state in {'accepted', 'provisional', 'review_required'}:
+            normalized_subject_state = subject_state
+        else:
+            normalized_subject_state = 'missing'
+        summary[f"subject_count_total_{normalized_subject_state}"] += 1
+        if subject_state in {'good', 'accepted', 'provisional'}:
             summary['subject_count_good'] += 1
         else:
             summary['subject_count_missing'] += 1
@@ -729,7 +772,7 @@ def build_json_status(articles):
 
 
 def build_dashboard(articles, evidence):
-    return {
+    payload = {
         'student_name': 'Alex Chen',
         'track': 'Track 2',
         'week_label': 'Week 4 of 10',
@@ -750,6 +793,10 @@ def build_dashboard(articles, evidence):
             {'rank': 3, 'name': 'You (Alex Chen)', 'count': 12},
         ]
     }
+    coverage = load_json(FIELD_COVERAGE_BY_TYPE_PATH, {})
+    if coverage:
+        payload['field_coverage_by_article_type'] = coverage
+    return payload
 
 
 def build_argumentation_payload():
