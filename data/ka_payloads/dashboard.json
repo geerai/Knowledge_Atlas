@@ -74,16 +74,16 @@
             "provisional": 17
           },
           "construct_pair": {
-            "good": 25,
-            "missing": 30
+            "good": 34,
+            "missing": 21
           },
           "culture_proxy": {
             "good": 24,
             "missing": 31
           },
           "direction": {
-            "good": 25,
-            "missing": 30
+            "good": 41,
+            "missing": 14
           },
           "effect_size": {
             "accepted": 10,
@@ -99,8 +99,8 @@
             "missing": 49
           },
           "methods_surface": {
-            "good": 37,
-            "missing": 18
+            "good": 53,
+            "missing": 2
           },
           "p_value": {
             "accepted": 12,
@@ -111,22 +111,22 @@
             "review_required": 40
           },
           "stimulus_context": {
-            "good": 41,
-            "missing": 14
+            "good": 46,
+            "missing": 9
           },
           "stimulus_description": {
-            "good": 35,
-            "missing": 20
+            "good": 42,
+            "missing": 13
           },
           "stimulus_images": {
             "good": 30,
             "missing": 25
           },
           "subject_count_total": {
-            "accepted": 4,
+            "accepted": 6,
             "missing": 32,
-            "provisional": 10,
-            "review_required": 9
+            "provisional": 11,
+            "review_required": 6
           }
         },
         "meta_analysis": {
@@ -136,16 +136,16 @@
             "provisional": 2
           },
           "construct_pair": {
-            "good": 6,
-            "missing": 4
+            "good": 7,
+            "missing": 3
           },
           "culture_proxy": {
             "good": 9,
             "missing": 1
           },
           "direction": {
-            "good": 6,
-            "missing": 4
+            "good": 8,
+            "missing": 2
           },
           "effect_size": {
             "review_required": 10
@@ -158,8 +158,7 @@
             "missing": 8
           },
           "methods_surface": {
-            "good": 9,
-            "missing": 1
+            "good": 10
           },
           "p_value": {
             "accepted": 1,
@@ -182,7 +181,8 @@
           },
           "subject_count_total": {
             "missing": 7,
-            "provisional": 3
+            "provisional": 2,
+            "review_required": 1
           }
         },
         "methods": {
@@ -192,16 +192,16 @@
             "provisional": 3
           },
           "construct_pair": {
-            "good": 8,
-            "missing": 8
+            "good": 12,
+            "missing": 4
           },
           "culture_proxy": {
             "good": 12,
             "missing": 4
           },
           "direction": {
-            "good": 8,
-            "missing": 8
+            "good": 13,
+            "missing": 3
           },
           "effect_size": {
             "accepted": 3,
@@ -216,8 +216,7 @@
             "missing": 13
           },
           "methods_surface": {
-            "good": 15,
-            "missing": 1
+            "good": 16
           },
           "p_value": {
             "accepted": 6,
@@ -228,20 +227,19 @@
             "review_required": 13
           },
           "stimulus_context": {
-            "good": 15,
-            "missing": 1
+            "good": 16
           },
           "stimulus_description": {
-            "good": 13,
-            "missing": 3
+            "good": 16
           },
           "stimulus_images": {
             "good": 12,
             "missing": 4
           },
           "subject_count_total": {
+            "accepted": 1,
             "missing": 5,
-            "provisional": 4,
+            "provisional": 3,
             "review_required": 7
           }
         },
@@ -252,16 +250,16 @@
             "provisional": 11
           },
           "construct_pair": {
-            "good": 35,
-            "missing": 17
+            "good": 40,
+            "missing": 12
           },
           "culture_proxy": {
             "good": 34,
             "missing": 18
           },
           "direction": {
-            "good": 35,
-            "missing": 17
+            "good": 45,
+            "missing": 7
           },
           "effect_size": {
             "accepted": 2,
@@ -277,8 +275,7 @@
             "missing": 47
           },
           "methods_surface": {
-            "good": 48,
-            "missing": 4
+            "good": 52
           },
           "p_value": {
             "accepted": 6,
@@ -290,22 +287,21 @@
             "review_required": 47
           },
           "stimulus_context": {
-            "good": 50,
-            "missing": 2
+            "good": 51,
+            "missing": 1
           },
           "stimulus_description": {
-            "good": 43,
-            "missing": 9
+            "good": 49,
+            "missing": 3
           },
           "stimulus_images": {
             "good": 35,
             "missing": 17
           },
           "subject_count_total": {
-            "accepted": 3,
             "missing": 27,
-            "provisional": 11,
-            "review_required": 11
+            "provisional": 18,
+            "review_required": 7
           }
         },
         "qualitative": {
@@ -315,16 +311,16 @@
             "provisional": 9
           },
           "construct_pair": {
-            "good": 24,
-            "missing": 13
+            "good": 27,
+            "missing": 10
           },
           "culture_proxy": {
             "good": 21,
             "missing": 16
           },
           "direction": {
-            "good": 24,
-            "missing": 13
+            "good": 32,
+            "missing": 5
           },
           "effect_size": {
             "accepted": 2,
@@ -340,8 +336,7 @@
             "missing": 33
           },
           "methods_surface": {
-            "good": 32,
-            "missing": 5
+            "good": 37
           },
           "p_value": {
             "accepted": 6,
@@ -352,22 +347,22 @@
             "review_required": 30
           },
           "stimulus_context": {
-            "good": 34,
-            "missing": 3
+            "good": 35,
+            "missing": 2
           },
           "stimulus_description": {
-            "good": 29,
-            "missing": 8
+            "good": 33,
+            "missing": 4
           },
           "stimulus_images": {
             "good": 27,
             "missing": 10
           },
           "subject_count_total": {
-            "accepted": 4,
+            "accepted": 7,
             "missing": 20,
-            "provisional": 10,
-            "review_required": 3
+            "provisional": 8,
+            "review_required": 2
           }
         },
         "systematic_review": {
@@ -377,16 +372,16 @@
             "provisional": 1
           },
           "construct_pair": {
-            "good": 5,
-            "missing": 9
+            "good": 10,
+            "missing": 4
           },
           "culture_proxy": {
             "good": 7,
             "missing": 7
           },
           "direction": {
-            "good": 5,
-            "missing": 9
+            "good": 10,
+            "missing": 4
           },
           "effect_size": {
             "review_required": 14
@@ -412,17 +407,16 @@
             "good": 14
           },
           "stimulus_description": {
-            "good": 11,
-            "missing": 3
+            "good": 13,
+            "missing": 1
           },
           "stimulus_images": {
             "good": 11,
             "missing": 3
           },
           "subject_count_total": {
-            "accepted": 2,
             "missing": 7,
-            "provisional": 2,
+            "provisional": 4,
             "review_required": 3
           }
         },
@@ -433,16 +427,16 @@
             "provisional": 9
           },
           "construct_pair": {
-            "good": 17,
-            "missing": 19
+            "good": 19,
+            "missing": 17
           },
           "culture_proxy": {
             "good": 18,
             "missing": 18
           },
           "direction": {
-            "good": 17,
-            "missing": 19
+            "good": 23,
+            "missing": 13
           },
           "effect_size": {
             "accepted": 6,
@@ -458,8 +452,8 @@
             "missing": 35
           },
           "methods_surface": {
-            "good": 25,
-            "missing": 11
+            "good": 34,
+            "missing": 2
           },
           "p_value": {
             "accepted": 4,
@@ -470,22 +464,21 @@
             "review_required": 31
           },
           "stimulus_context": {
-            "good": 27,
-            "missing": 9
+            "good": 29,
+            "missing": 7
           },
           "stimulus_description": {
-            "good": 24,
-            "missing": 12
+            "good": 28,
+            "missing": 8
           },
           "stimulus_images": {
             "good": 19,
             "missing": 17
           },
           "subject_count_total": {
-            "accepted": 1,
             "missing": 28,
             "provisional": 6,
-            "review_required": 1
+            "review_required": 2
           }
         }
       },
@@ -537,7 +530,7 @@
           "effect_size": "review_required",
           "construct_pair": "good",
           "direction": "good",
-          "methods_surface": "missing",
+          "methods_surface": "good",
           "stimulus_description": "missing",
           "stimulus_context": "missing",
           "stimulus_images": "missing",
@@ -555,7 +548,7 @@
           "effect_size": "review_required",
           "construct_pair": "good",
           "direction": "good",
-          "methods_surface": "missing",
+          "methods_surface": "good",
           "stimulus_description": "missing",
           "stimulus_context": "missing",
           "stimulus_images": "missing",
@@ -585,7 +578,7 @@
           "article_type": "methods",
           "abstract": "good",
           "main_conclusion": "accepted",
-          "subject_count_total": "provisional",
+          "subject_count_total": "accepted",
           "sample_n": "accepted",
           "p_value": "accepted",
           "effect_size": "accepted",
@@ -627,7 +620,7 @@
           "effect_size": "review_required",
           "construct_pair": "missing",
           "direction": "missing",
-          "methods_surface": "missing",
+          "methods_surface": "good",
           "stimulus_description": "missing",
           "stimulus_context": "good",
           "stimulus_images": "missing",
@@ -644,7 +637,7 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -753,7 +746,7 @@
           "effect_size": "review_required",
           "construct_pair": "good",
           "direction": "good",
-          "methods_surface": "missing",
+          "methods_surface": "good",
           "stimulus_description": "missing",
           "stimulus_context": "missing",
           "stimulus_images": "missing",
@@ -772,7 +765,7 @@
           "construct_pair": "good",
           "direction": "good",
           "methods_surface": "good",
-          "stimulus_description": "missing",
+          "stimulus_description": "good",
           "stimulus_context": "good",
           "stimulus_images": "good",
           "mean_age": "missing",
@@ -783,7 +776,7 @@
           "article_type": "narrative_review",
           "abstract": "good",
           "main_conclusion": "accepted",
-          "subject_count_total": "accepted",
+          "subject_count_total": "provisional",
           "sample_n": "accepted",
           "p_value": "accepted",
           "effect_size": "review_required",
@@ -837,7 +830,7 @@
           "article_type": "theoretical",
           "abstract": "good",
           "main_conclusion": "accepted",
-          "subject_count_total": "review_required",
+          "subject_count_total": "provisional",
           "sample_n": "review_required",
           "p_value": "accepted",
           "effect_size": "accepted",
@@ -861,7 +854,7 @@
           "effect_size": "review_required",
           "construct_pair": "missing",
           "direction": "missing",
-          "methods_surface": "missing",
+          "methods_surface": "good",
           "stimulus_description": "missing",
           "stimulus_context": "missing",
           "stimulus_images": "missing",
@@ -879,9 +872,9 @@
           "effect_size": "accepted",
           "construct_pair": "missing",
           "direction": "missing",
-          "methods_surface": "missing",
+          "methods_surface": "good",
           "stimulus_description": "missing",
-          "stimulus_context": "missing",
+          "stimulus_context": "good",
           "stimulus_images": "missing",
           "mean_age": "missing",
           "culture_proxy": "missing"
@@ -897,9 +890,9 @@
           "effect_size": "review_required",
           "construct_pair": "good",
           "direction": "good",
-          "methods_surface": "missing",
-          "stimulus_description": "missing",
-          "stimulus_context": "missing",
+          "methods_surface": "good",
+          "stimulus_description": "good",
+          "stimulus_context": "good",
           "stimulus_images": "missing",
           "mean_age": "missing",
           "culture_proxy": "missing"
@@ -931,7 +924,7 @@
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
-          "construct_pair": "missing",
+          "construct_pair": "good",
           "direction": "missing",
           "methods_surface": "good",
           "stimulus_description": "good",
@@ -970,7 +963,7 @@
           "construct_pair": "missing",
           "direction": "missing",
           "methods_surface": "good",
-          "stimulus_description": "missing",
+          "stimulus_description": "good",
           "stimulus_context": "good",
           "stimulus_images": "good",
           "mean_age": "missing",
@@ -987,7 +980,7 @@
           "effect_size": "review_required",
           "construct_pair": "good",
           "direction": "good",
-          "methods_surface": "missing",
+          "methods_surface": "good",
           "stimulus_description": "missing",
           "stimulus_context": "missing",
           "stimulus_images": "missing",
@@ -1004,7 +997,7 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -1023,8 +1016,8 @@
           "effect_size": "review_required",
           "construct_pair": "good",
           "direction": "good",
-          "methods_surface": "missing",
-          "stimulus_description": "missing",
+          "methods_surface": "good",
+          "stimulus_description": "good",
           "stimulus_context": "good",
           "stimulus_images": "missing",
           "mean_age": "missing",
@@ -1035,12 +1028,12 @@
           "article_type": "empirical_research",
           "abstract": "good",
           "main_conclusion": "accepted",
-          "subject_count_total": "review_required",
+          "subject_count_total": "provisional",
           "sample_n": "accepted",
           "p_value": "accepted",
           "effect_size": "accepted",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -1076,7 +1069,7 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "missing",
           "stimulus_context": "good",
@@ -1107,12 +1100,12 @@
           "article_type": "meta_analysis",
           "abstract": "good",
           "main_conclusion": "accepted",
-          "subject_count_total": "provisional",
+          "subject_count_total": "review_required",
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -1147,8 +1140,8 @@
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
-          "construct_pair": "missing",
-          "direction": "missing",
+          "construct_pair": "good",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -1165,8 +1158,8 @@
           "sample_n": "accepted",
           "p_value": "accepted",
           "effect_size": "review_required",
-          "construct_pair": "missing",
-          "direction": "missing",
+          "construct_pair": "good",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -1179,7 +1172,7 @@
           "article_type": "theoretical",
           "abstract": "good",
           "main_conclusion": "accepted",
-          "subject_count_total": "accepted",
+          "subject_count_total": "provisional",
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
@@ -1204,7 +1197,7 @@
           "construct_pair": "good",
           "direction": "good",
           "methods_surface": "good",
-          "stimulus_description": "missing",
+          "stimulus_description": "good",
           "stimulus_context": "good",
           "stimulus_images": "good",
           "mean_age": "missing",
@@ -1215,7 +1208,7 @@
           "article_type": "qualitative",
           "abstract": "good",
           "main_conclusion": "accepted",
-          "subject_count_total": "provisional",
+          "subject_count_total": "accepted",
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
@@ -1237,8 +1230,8 @@
           "sample_n": "accepted",
           "p_value": "review_required",
           "effect_size": "accepted",
-          "construct_pair": "missing",
-          "direction": "missing",
+          "construct_pair": "good",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -1274,7 +1267,7 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -1287,12 +1280,12 @@
           "article_type": "qualitative",
           "abstract": "provisional",
           "main_conclusion": "accepted",
-          "subject_count_total": "review_required",
+          "subject_count_total": "provisional",
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -1327,9 +1320,9 @@
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
-          "construct_pair": "missing",
-          "direction": "missing",
-          "methods_surface": "missing",
+          "construct_pair": "good",
+          "direction": "good",
+          "methods_surface": "good",
           "stimulus_description": "missing",
           "stimulus_context": "missing",
           "stimulus_images": "missing",
@@ -1346,7 +1339,7 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -1364,7 +1357,7 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -1419,7 +1412,7 @@
           "effect_size": "review_required",
           "construct_pair": "good",
           "direction": "good",
-          "methods_surface": "missing",
+          "methods_surface": "good",
           "stimulus_description": "missing",
           "stimulus_context": "missing",
           "stimulus_images": "missing",
@@ -1437,7 +1430,7 @@
           "effect_size": "review_required",
           "construct_pair": "missing",
           "direction": "missing",
-          "methods_surface": "missing",
+          "methods_surface": "good",
           "stimulus_description": "missing",
           "stimulus_context": "missing",
           "stimulus_images": "missing",
@@ -1455,9 +1448,9 @@
           "effect_size": "review_required",
           "construct_pair": "good",
           "direction": "good",
-          "methods_surface": "missing",
-          "stimulus_description": "missing",
-          "stimulus_context": "missing",
+          "methods_surface": "good",
+          "stimulus_description": "good",
+          "stimulus_context": "good",
           "stimulus_images": "good",
           "mean_age": "missing",
           "culture_proxy": "missing"
@@ -1491,9 +1484,9 @@
           "effect_size": "review_required",
           "construct_pair": "missing",
           "direction": "missing",
-          "methods_surface": "missing",
+          "methods_surface": "good",
           "stimulus_description": "missing",
-          "stimulus_context": "missing",
+          "stimulus_context": "good",
           "stimulus_images": "missing",
           "mean_age": "missing",
           "culture_proxy": "missing"
@@ -1525,10 +1518,10 @@
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
-          "construct_pair": "missing",
+          "construct_pair": "good",
           "direction": "missing",
           "methods_surface": "good",
-          "stimulus_description": "missing",
+          "stimulus_description": "good",
           "stimulus_context": "good",
           "stimulus_images": "good",
           "mean_age": "good",
@@ -1634,7 +1627,7 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -1651,8 +1644,8 @@
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
-          "construct_pair": "missing",
-          "direction": "missing",
+          "construct_pair": "good",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -1688,7 +1681,7 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -1719,7 +1712,7 @@
           "article_type": "narrative_review",
           "abstract": "good",
           "main_conclusion": "accepted",
-          "subject_count_total": "review_required",
+          "subject_count_total": "provisional",
           "sample_n": "review_required",
           "p_value": "accepted",
           "effect_size": "review_required",
@@ -1741,8 +1734,8 @@
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
-          "construct_pair": "missing",
-          "direction": "missing",
+          "construct_pair": "good",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -1831,7 +1824,7 @@
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
-          "construct_pair": "missing",
+          "construct_pair": "good",
           "direction": "missing",
           "methods_surface": "good",
           "stimulus_description": "good",
@@ -1881,7 +1874,7 @@
           "article_type": "qualitative",
           "abstract": "good",
           "main_conclusion": "accepted",
-          "subject_count_total": "provisional",
+          "subject_count_total": "accepted",
           "sample_n": "accepted",
           "p_value": "review_required",
           "effect_size": "review_required",
@@ -1905,7 +1898,7 @@
           "effect_size": "review_required",
           "construct_pair": "missing",
           "direction": "missing",
-          "methods_surface": "missing",
+          "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
           "stimulus_images": "missing",
@@ -1917,11 +1910,11 @@
           "article_type": "narrative_review",
           "abstract": "good",
           "main_conclusion": "accepted",
-          "subject_count_total": "review_required",
+          "subject_count_total": "provisional",
           "sample_n": "review_required",
           "p_value": "accepted",
           "effect_size": "review_required",
-          "construct_pair": "missing",
+          "construct_pair": "good",
           "direction": "missing",
           "methods_surface": "good",
           "stimulus_description": "good",
@@ -1975,10 +1968,10 @@
           "sample_n": "accepted",
           "p_value": "review_required",
           "effect_size": "review_required",
-          "construct_pair": "missing",
+          "construct_pair": "good",
           "direction": "missing",
-          "methods_surface": "missing",
-          "stimulus_description": "missing",
+          "methods_surface": "good",
+          "stimulus_description": "good",
           "stimulus_context": "missing",
           "stimulus_images": "good",
           "mean_age": "missing",
@@ -1994,7 +1987,7 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -2048,7 +2041,7 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -2079,7 +2072,7 @@
           "article_type": "empirical_research",
           "abstract": "provisional",
           "main_conclusion": "accepted",
-          "subject_count_total": "provisional",
+          "subject_count_total": "accepted",
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
@@ -2103,7 +2096,7 @@
           "effect_size": "review_required",
           "construct_pair": "good",
           "direction": "good",
-          "methods_surface": "missing",
+          "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
           "stimulus_images": "good",
@@ -2119,8 +2112,8 @@
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
-          "construct_pair": "missing",
-          "direction": "missing",
+          "construct_pair": "good",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -2137,7 +2130,7 @@
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
-          "construct_pair": "missing",
+          "construct_pair": "good",
           "direction": "missing",
           "methods_surface": "good",
           "stimulus_description": "good",
@@ -2191,8 +2184,8 @@
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
-          "construct_pair": "missing",
-          "direction": "missing",
+          "construct_pair": "good",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -2212,7 +2205,7 @@
           "construct_pair": "good",
           "direction": "good",
           "methods_surface": "good",
-          "stimulus_description": "missing",
+          "stimulus_description": "good",
           "stimulus_context": "good",
           "stimulus_images": "missing",
           "mean_age": "missing",
@@ -2247,7 +2240,7 @@
           "effect_size": "review_required",
           "construct_pair": "missing",
           "direction": "missing",
-          "methods_surface": "missing",
+          "methods_surface": "good",
           "stimulus_description": "missing",
           "stimulus_context": "missing",
           "stimulus_images": "missing",
@@ -2264,10 +2257,10 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
-          "methods_surface": "missing",
-          "stimulus_description": "missing",
-          "stimulus_context": "missing",
+          "direction": "good",
+          "methods_surface": "good",
+          "stimulus_description": "good",
+          "stimulus_context": "good",
           "stimulus_images": "good",
           "mean_age": "missing",
           "culture_proxy": "missing"
@@ -2284,7 +2277,7 @@
           "construct_pair": "good",
           "direction": "good",
           "methods_surface": "good",
-          "stimulus_description": "missing",
+          "stimulus_description": "good",
           "stimulus_context": "good",
           "stimulus_images": "good",
           "mean_age": "missing",
@@ -2318,9 +2311,9 @@
           "p_value": "accepted",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
-          "methods_surface": "missing",
-          "stimulus_description": "missing",
+          "direction": "good",
+          "methods_surface": "good",
+          "stimulus_description": "good",
           "stimulus_context": "missing",
           "stimulus_images": "missing",
           "mean_age": "missing",
@@ -2372,7 +2365,7 @@
           "p_value": "accepted",
           "effect_size": "accepted",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -2390,7 +2383,7 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -2408,7 +2401,7 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -2439,7 +2432,7 @@
           "article_type": "empirical_research",
           "abstract": "missing",
           "main_conclusion": "accepted",
-          "subject_count_total": "provisional",
+          "subject_count_total": "accepted",
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
@@ -2463,9 +2456,9 @@
           "effect_size": "review_required",
           "construct_pair": "good",
           "direction": "good",
-          "methods_surface": "missing",
-          "stimulus_description": "missing",
-          "stimulus_context": "missing",
+          "methods_surface": "good",
+          "stimulus_description": "good",
+          "stimulus_context": "good",
           "stimulus_images": "good",
           "mean_age": "missing",
           "culture_proxy": "missing"
@@ -2481,7 +2474,7 @@
           "effect_size": "review_required",
           "construct_pair": "good",
           "direction": "good",
-          "methods_surface": "missing",
+          "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
           "stimulus_images": "missing",
@@ -2497,8 +2490,8 @@
           "sample_n": "review_required",
           "p_value": "accepted",
           "effect_size": "review_required",
-          "construct_pair": "missing",
-          "direction": "missing",
+          "construct_pair": "good",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -2583,14 +2576,14 @@
           "article_type": "narrative_review",
           "abstract": "good",
           "main_conclusion": "accepted",
-          "subject_count_total": "provisional",
+          "subject_count_total": "review_required",
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "good",
           "direction": "good",
           "methods_surface": "good",
-          "stimulus_description": "missing",
+          "stimulus_description": "good",
           "stimulus_context": "good",
           "stimulus_images": "good",
           "mean_age": "good",
@@ -2607,9 +2600,9 @@
           "effect_size": "review_required",
           "construct_pair": "good",
           "direction": "good",
-          "methods_surface": "missing",
-          "stimulus_description": "missing",
-          "stimulus_context": "missing",
+          "methods_surface": "good",
+          "stimulus_description": "good",
+          "stimulus_context": "good",
           "stimulus_images": "good",
           "mean_age": "missing",
           "culture_proxy": "missing"
@@ -2660,9 +2653,9 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
-          "methods_surface": "missing",
-          "stimulus_description": "missing",
+          "direction": "good",
+          "methods_surface": "good",
+          "stimulus_description": "good",
           "stimulus_context": "missing",
           "stimulus_images": "good",
           "mean_age": "missing",
@@ -2731,8 +2724,8 @@
           "sample_n": "accepted",
           "p_value": "accepted",
           "effect_size": "review_required",
-          "construct_pair": "missing",
-          "direction": "missing",
+          "construct_pair": "good",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -2788,7 +2781,7 @@
           "construct_pair": "good",
           "direction": "good",
           "methods_surface": "good",
-          "stimulus_description": "missing",
+          "stimulus_description": "good",
           "stimulus_context": "good",
           "stimulus_images": "good",
           "mean_age": "missing",
@@ -2835,12 +2828,12 @@
           "article_type": "theoretical",
           "abstract": "good",
           "main_conclusion": "accepted",
-          "subject_count_total": "provisional",
+          "subject_count_total": "review_required",
           "sample_n": "review_required",
           "p_value": "accepted",
           "effect_size": "accepted",
-          "construct_pair": "missing",
-          "direction": "missing",
+          "construct_pair": "good",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -2853,7 +2846,7 @@
           "article_type": "narrative_review",
           "abstract": "good",
           "main_conclusion": "accepted",
-          "subject_count_total": "review_required",
+          "subject_count_total": "provisional",
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
@@ -2878,7 +2871,7 @@
           "construct_pair": "good",
           "direction": "good",
           "methods_surface": "good",
-          "stimulus_description": "missing",
+          "stimulus_description": "good",
           "stimulus_context": "good",
           "stimulus_images": "missing",
           "mean_age": "good",
@@ -2950,7 +2943,7 @@
           "construct_pair": "good",
           "direction": "good",
           "methods_surface": "good",
-          "stimulus_description": "missing",
+          "stimulus_description": "good",
           "stimulus_context": "good",
           "stimulus_images": "good",
           "mean_age": "missing",
@@ -3123,12 +3116,12 @@
           "article_type": "narrative_review",
           "abstract": "good",
           "main_conclusion": "accepted",
-          "subject_count_total": "review_required",
+          "subject_count_total": "provisional",
           "sample_n": "review_required",
           "p_value": "accepted",
           "effect_size": "accepted",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -3159,7 +3152,7 @@
           "article_type": "narrative_review",
           "abstract": "good",
           "main_conclusion": "missing",
-          "subject_count_total": "accepted",
+          "subject_count_total": "provisional",
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
@@ -3200,10 +3193,10 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
-          "methods_surface": "missing",
+          "direction": "good",
+          "methods_surface": "good",
           "stimulus_description": "missing",
-          "stimulus_context": "missing",
+          "stimulus_context": "good",
           "stimulus_images": "missing",
           "mean_age": "missing",
           "culture_proxy": "missing"
@@ -3217,8 +3210,8 @@
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
-          "construct_pair": "missing",
-          "direction": "missing",
+          "construct_pair": "good",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -3236,8 +3229,8 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
-          "methods_surface": "missing",
+          "direction": "good",
+          "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
           "stimulus_images": "missing",
@@ -3273,9 +3266,9 @@
           "effect_size": "review_required",
           "construct_pair": "missing",
           "direction": "missing",
-          "methods_surface": "missing",
+          "methods_surface": "good",
           "stimulus_description": "good",
-          "stimulus_context": "missing",
+          "stimulus_context": "good",
           "stimulus_images": "good",
           "mean_age": "missing",
           "culture_proxy": "missing"
@@ -3285,7 +3278,7 @@
           "article_type": "qualitative",
           "abstract": "good",
           "main_conclusion": "accepted",
-          "subject_count_total": "provisional",
+          "subject_count_total": "accepted",
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
@@ -3375,7 +3368,7 @@
           "article_type": "narrative_review",
           "abstract": "good",
           "main_conclusion": "missing",
-          "subject_count_total": "review_required",
+          "subject_count_total": "provisional",
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
@@ -3447,7 +3440,7 @@
           "article_type": "empirical_research",
           "abstract": "good",
           "main_conclusion": "missing",
-          "subject_count_total": "review_required",
+          "subject_count_total": "provisional",
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "accepted",
@@ -3487,8 +3480,8 @@
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
-          "construct_pair": "missing",
-          "direction": "missing",
+          "construct_pair": "good",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -3506,7 +3499,7 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -3523,10 +3516,10 @@
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
-          "construct_pair": "missing",
+          "construct_pair": "good",
           "direction": "missing",
-          "methods_surface": "missing",
-          "stimulus_description": "missing",
+          "methods_surface": "good",
+          "stimulus_description": "good",
           "stimulus_context": "missing",
           "stimulus_images": "missing",
           "mean_age": "missing",
@@ -3537,7 +3530,7 @@
           "article_type": "empirical_research",
           "abstract": "good",
           "main_conclusion": "missing",
-          "subject_count_total": "review_required",
+          "subject_count_total": "provisional",
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
@@ -3560,7 +3553,7 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -3591,7 +3584,7 @@
           "article_type": "systematic_review",
           "abstract": "provisional",
           "main_conclusion": "missing",
-          "subject_count_total": "accepted",
+          "subject_count_total": "provisional",
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
@@ -3652,7 +3645,7 @@
           "construct_pair": "good",
           "direction": "good",
           "methods_surface": "good",
-          "stimulus_description": "missing",
+          "stimulus_description": "good",
           "stimulus_context": "good",
           "stimulus_images": "good",
           "mean_age": "missing",
@@ -3739,7 +3732,7 @@
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
-          "construct_pair": "missing",
+          "construct_pair": "good",
           "direction": "missing",
           "methods_surface": "good",
           "stimulus_description": "good",
@@ -3753,7 +3746,7 @@
           "article_type": "narrative_review",
           "abstract": "good",
           "main_conclusion": "missing",
-          "subject_count_total": "accepted",
+          "subject_count_total": "provisional",
           "sample_n": "accepted",
           "p_value": "review_required",
           "effect_size": "review_required",
@@ -3778,7 +3771,7 @@
           "construct_pair": "good",
           "direction": "good",
           "methods_surface": "missing",
-          "stimulus_description": "missing",
+          "stimulus_description": "good",
           "stimulus_context": "missing",
           "stimulus_images": "good",
           "mean_age": "missing",
@@ -3794,8 +3787,8 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
-          "methods_surface": "missing",
+          "direction": "good",
+          "methods_surface": "good",
           "stimulus_description": "missing",
           "stimulus_context": "good",
           "stimulus_images": "missing",
@@ -3829,9 +3822,9 @@
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
-          "construct_pair": "missing",
+          "construct_pair": "good",
           "direction": "missing",
-          "methods_surface": "missing",
+          "methods_surface": "good",
           "stimulus_description": "missing",
           "stimulus_context": "missing",
           "stimulus_images": "missing",
@@ -3866,7 +3859,7 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -3885,7 +3878,7 @@
           "effect_size": "review_required",
           "construct_pair": "missing",
           "direction": "missing",
-          "methods_surface": "missing",
+          "methods_surface": "good",
           "stimulus_description": "missing",
           "stimulus_context": "missing",
           "stimulus_images": "missing",
@@ -3903,8 +3896,8 @@
           "effect_size": "review_required",
           "construct_pair": "missing",
           "direction": "missing",
-          "methods_surface": "missing",
-          "stimulus_description": "missing",
+          "methods_surface": "good",
+          "stimulus_description": "good",
           "stimulus_context": "missing",
           "stimulus_images": "good",
           "mean_age": "missing",
@@ -3937,7 +3930,7 @@
           "sample_n": "review_required",
           "p_value": "accepted",
           "effect_size": "review_required",
-          "construct_pair": "missing",
+          "construct_pair": "good",
           "direction": "missing",
           "methods_surface": "good",
           "stimulus_description": "good",
@@ -3956,7 +3949,7 @@
           "p_value": "accepted",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -3974,7 +3967,7 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -3991,10 +3984,10 @@
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
-          "construct_pair": "missing",
-          "direction": "missing",
+          "construct_pair": "good",
+          "direction": "good",
           "methods_surface": "good",
-          "stimulus_description": "missing",
+          "stimulus_description": "good",
           "stimulus_context": "good",
           "stimulus_images": "good",
           "mean_age": "missing",
@@ -4027,8 +4020,8 @@
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
-          "construct_pair": "missing",
-          "direction": "missing",
+          "construct_pair": "good",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -4046,7 +4039,7 @@
           "p_value": "accepted",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -4059,15 +4052,15 @@
           "article_type": "theoretical",
           "abstract": "good",
           "main_conclusion": "accepted",
-          "subject_count_total": "provisional",
+          "subject_count_total": "review_required",
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "accepted",
           "construct_pair": "good",
           "direction": "good",
-          "methods_surface": "missing",
-          "stimulus_description": "missing",
-          "stimulus_context": "missing",
+          "methods_surface": "good",
+          "stimulus_description": "good",
+          "stimulus_context": "good",
           "stimulus_images": "good",
           "mean_age": "missing",
           "culture_proxy": "missing"
@@ -4077,7 +4070,7 @@
           "article_type": "systematic_review",
           "abstract": "good",
           "main_conclusion": "accepted",
-          "subject_count_total": "accepted",
+          "subject_count_total": "provisional",
           "sample_n": "review_required",
           "p_value": "accepted",
           "effect_size": "review_required",
@@ -4099,8 +4092,8 @@
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
-          "construct_pair": "missing",
-          "direction": "missing",
+          "construct_pair": "good",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -4117,8 +4110,8 @@
           "sample_n": "review_required",
           "p_value": "accepted",
           "effect_size": "accepted",
-          "construct_pair": "missing",
-          "direction": "missing",
+          "construct_pair": "good",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -4136,7 +4129,7 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -4173,7 +4166,7 @@
           "effect_size": "review_required",
           "construct_pair": "good",
           "direction": "good",
-          "methods_surface": "missing",
+          "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
           "stimulus_images": "good",
@@ -4189,8 +4182,8 @@
           "sample_n": "review_required",
           "p_value": "review_required",
           "effect_size": "review_required",
-          "construct_pair": "missing",
-          "direction": "missing",
+          "construct_pair": "good",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -4227,7 +4220,7 @@
           "effect_size": "review_required",
           "construct_pair": "good",
           "direction": "good",
-          "methods_surface": "missing",
+          "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
           "stimulus_images": "good",
@@ -4334,8 +4327,8 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
-          "methods_surface": "missing",
+          "direction": "good",
+          "methods_surface": "good",
           "stimulus_description": "missing",
           "stimulus_context": "good",
           "stimulus_images": "missing",
@@ -4370,7 +4363,7 @@
           "p_value": "accepted",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -4388,7 +4381,7 @@
           "p_value": "review_required",
           "effect_size": "review_required",
           "construct_pair": "missing",
-          "direction": "missing",
+          "direction": "good",
           "methods_surface": "good",
           "stimulus_description": "good",
           "stimulus_context": "good",
@@ -4441,10 +4434,10 @@
           "sample_n": "accepted",
           "p_value": "accepted",
           "effect_size": "review_required",
-          "construct_pair": "missing",
-          "direction": "missing",
+          "construct_pair": "good",
+          "direction": "good",
           "methods_surface": "good",
-          "stimulus_description": "missing",
+          "stimulus_description": "good",
           "stimulus_context": "good",
           "stimulus_images": "good",
           "mean_age": "missing",

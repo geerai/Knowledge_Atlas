@@ -481,7 +481,7 @@
       "sample_n": null,
       "p_value": 0.0,
       "effect_size": null,
-      "subject_count_total": 120,
+      "subject_count_total": 11,
       "theories": [
         "Environmental Perception Theory"
       ],
@@ -505,7 +505,7 @@
         "p_value": "accepted",
         "effect_size": "review_required",
         "main_conclusion": "missing",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "crossref"
       }
     },
@@ -840,7 +840,7 @@
         "p_value": "accepted",
         "effect_size": "accepted",
         "main_conclusion": "accepted",
-        "subject_count_total": "provisional",
+        "subject_count_total": "accepted",
         "repair_source": "crossref"
       }
     },
@@ -1219,7 +1219,7 @@
       "sample_n": 16,
       "p_value": null,
       "effect_size": null,
-      "subject_count_total": 113,
+      "subject_count_total": 24,
       "theories": [
         "Environmental Perception Theory",
         "Attention Restoration Theory"
@@ -1243,7 +1243,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "missing",
-        "subject_count_total": "provisional",
+        "subject_count_total": "review_required",
         "repair_source": "rebuild"
       }
     },
@@ -1845,7 +1845,7 @@
       "sample_n": 153,
       "p_value": 0.05,
       "effect_size": null,
-      "subject_count_total": 207,
+      "subject_count_total": 153,
       "theories": [
         "Environmental Perception Theory"
       ],
@@ -1868,7 +1868,7 @@
         "p_value": "accepted",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "provisional",
+        "subject_count_total": "review_required",
         "repair_source": "crossref"
       }
     },
@@ -2429,7 +2429,7 @@
       "sample_n": 128,
       "p_value": null,
       "effect_size": null,
-      "subject_count_total": 21,
+      "subject_count_total": 138,
       "theories": [
         "Environmental Perception Theory"
       ],
@@ -2851,7 +2851,7 @@
       "sample_n": 100,
       "p_value": 0.05,
       "effect_size": null,
-      "subject_count_total": 20,
+      "subject_count_total": 11,
       "theories": [
         "Environmental Perception Theory"
       ],
@@ -3959,7 +3959,7 @@
       "sample_n": 1012,
       "p_value": 0.0001,
       "effect_size": -0.17,
-      "subject_count_total": 6,
+      "subject_count_total": 114,
       "theories": [
         "Environmental Perception Theory",
         "Acoustic Privacy Framework"
@@ -3981,7 +3981,7 @@
         "p_value": "accepted",
         "effect_size": "accepted",
         "main_conclusion": "missing",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
@@ -6034,7 +6034,7 @@
       "sample_n": 10,
       "p_value": 0.05,
       "effect_size": null,
-      "subject_count_total": 18,
+      "subject_count_total": 2041,
       "theories": [
         "Theory of Planned Behavior",
         "Prospect Theory",

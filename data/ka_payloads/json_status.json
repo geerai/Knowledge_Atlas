@@ -24,12 +24,12 @@
     "main_conclusion_accepted": 93,
     "main_conclusion_provisional": 2,
     "main_conclusion_missing": 155,
-    "subject_count_total_accepted": 8,
-    "subject_count_total_provisional": 101,
-    "subject_count_total_review_required": 13,
+    "subject_count_total_accepted": 9,
+    "subject_count_total_provisional": 98,
+    "subject_count_total_review_required": 15,
     "subject_count_total_missing": 128,
-    "subject_count_good": 109,
-    "subject_count_missing": 141
+    "subject_count_good": 107,
+    "subject_count_missing": 143
   },
   "papers": [
     {
@@ -236,7 +236,7 @@
         "p_value": "accepted",
         "effect_size": "review_required",
         "main_conclusion": "missing",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "crossref"
       }
     },
@@ -364,7 +364,7 @@
         "p_value": "accepted",
         "effect_size": "accepted",
         "main_conclusion": "accepted",
-        "subject_count_total": "provisional",
+        "subject_count_total": "accepted",
         "repair_source": "crossref"
       }
     },
@@ -524,7 +524,7 @@
         "p_value": "review_required",
         "effect_size": "review_required",
         "main_conclusion": "missing",
-        "subject_count_total": "provisional",
+        "subject_count_total": "review_required",
         "repair_source": "rebuild"
       }
     },
@@ -780,7 +780,7 @@
         "p_value": "accepted",
         "effect_size": "review_required",
         "main_conclusion": "accepted",
-        "subject_count_total": "provisional",
+        "subject_count_total": "review_required",
         "repair_source": "crossref"
       }
     },
@@ -1644,7 +1644,7 @@
         "p_value": "accepted",
         "effect_size": "accepted",
         "main_conclusion": "missing",
-        "subject_count_total": "good",
+        "subject_count_total": "provisional",
         "repair_source": "rebuild"
       }
     },
