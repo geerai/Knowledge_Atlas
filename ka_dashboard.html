@@ -794,6 +794,33 @@
                 </div>
             </div>
 
+            <div class="card">
+                <h2>Field Coverage By Article Type</h2>
+                <p class="json-status-copy">This panel separates the article families before counting fields, so reviews and theoretical papers do not distort what we expect from empirical papers.</p>
+                <div style="overflow-x:auto;">
+                    <table class="progress-table" id="dashboard-field-coverage-table">
+                        <thead>
+                            <tr>
+                                <th>Article type</th>
+                                <th>Papers</th>
+                                <th>Abstract</th>
+                                <th>Main conclusion</th>
+                                <th>Subject count</th>
+                                <th>Sample N</th>
+                                <th>P value</th>
+                                <th>Effect size</th>
+                                <th>Direction</th>
+                                <th>Stimulus</th>
+                                <th>Methods</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="11" style="padding:14px 16px;color:#666;">Coverage report loading…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <!-- Assignment Progress Card -->
             <div class="card">
                 <h2>Assignment Progress</h2>
@@ -1089,6 +1116,52 @@ window.KA_PAGE_FUNCTION = {
     }).join('');
   }
 
+  function coverageGoodish(fieldName, counter) {
+    if (!counter) return 0;
+    if (fieldName === 'abstract') {
+      return Number(counter.good || 0) + Number(counter.provisional || 0);
+    }
+    if (['subject_count_total', 'sample_n', 'p_value', 'effect_size', 'main_conclusion'].includes(fieldName)) {
+      return Number(counter.accepted || 0) + Number(counter.provisional || 0);
+    }
+    return Number(counter.good || 0);
+  }
+
+  function renderFieldCoverage(coverage) {
+    const table = document.getElementById('dashboard-field-coverage-table');
+    if (!table || !coverage || !coverage.article_type_counts) return;
+    const tbody = table.querySelector('tbody');
+    if (!tbody) return;
+    const byType = coverage.by_article_type || {};
+    const rows = Object.entries(coverage.article_type_counts)
+      .sort(function(a, b) { return b[1] - a[1]; })
+      .map(function(entry) {
+        const articleType = entry[0];
+        const total = Number(entry[1] || 0);
+        const counters = byType[articleType] || {};
+        function cell(fieldName) {
+          const value = coverageGoodish(fieldName, counters[fieldName]);
+          return `${value}/${total}`;
+        }
+        return `
+          <tr>
+            <td class="progress-label">${articleType.replace(/_/g, ' ')}</td>
+            <td class="progress-text">${total}</td>
+            <td class="progress-text">${cell('abstract')}</td>
+            <td class="progress-text">${cell('main_conclusion')}</td>
+            <td class="progress-text">${cell('subject_count_total')}</td>
+            <td class="progress-text">${cell('sample_n')}</td>
+            <td class="progress-text">${cell('p_value')}</td>
+            <td class="progress-text">${cell('effect_size')}</td>
+            <td class="progress-text">${cell('direction')}</td>
+            <td class="progress-text">${cell('stimulus_description')}</td>
+            <td class="progress-text">${cell('methods_surface')}</td>
+          </tr>
+        `;
+      });
+    tbody.innerHTML = rows.join('');
+  }
+
   async function initializeDashboardPage() {
     const payload = await window.KA_PAYLOADS.loadWithFallback('data/ka_payloads/dashboard.json', {});
     const jsonStatusPayload = await window.KA_PAYLOADS.loadWithFallback('data/ka_payloads/json_status.json', {});
@@ -1176,6 +1249,7 @@ window.KA_PAGE_FUNCTION = {
     if (jsonSummary.papers_total) {
       document.getElementById('dashboard-json-status-copy').textContent = `Current payload coverage across ${jsonSummary.papers_total} papers. Provisional and missing fields stay visible here so we can keep repairing the JSONs while the site is already reviewable.`;
     }
+    renderFieldCoverage(dashboard.field_coverage_by_article_type);
     renderProgress(dashboard.progress);
     renderActivity(dashboard.recent_activity);
     renderLeaderboard(dashboard.leaderboard);
