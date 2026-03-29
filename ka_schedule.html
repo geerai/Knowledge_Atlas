@@ -480,7 +480,7 @@
     <div>
       <div class="phase-banner-title">Phase 3 — Weeks 8–10 · Debugging the Fall COGS 160 site</div>
       <div class="phase-banner-desc">
-        The last three weeks shift from building to testing. The Fall 2026 COGS 160 course — an experiment-making course — is in early development. Each team is assigned a fraction of that site to test and debug, write success conditions for the code functions, and simulate the experience of a Fall student moving from the start of the course to the end. Some students will additionally work on sensor integration for stress measurement and on building adaptive psychological instruments (Q-sort, IAT, adaptive preference tests). Deliverables and grading for this phase will be posted before Week 8.
+        The last three weeks shift from building to testing. Each team is assigned a section of the <strong>Designing_Experiments</strong> repository — the Fall COGS 160 experiment-making site being developed in parallel. Teams fork the repo, audit their section by simulating a naïve student walkthrough, fix every resolvable issue, write formal success conditions for each page function, and open a Pull Request with a hand-off report. The goal is a site that a new cohort of Fall students can actually use without instructor hand-holding. Sensor integration and adaptive psych instrument work (Q-sort, IAT) are available as alternatives for interested students.
       </div>
     </div>
   </div>
@@ -513,8 +513,14 @@
         <div class="day-label">Thursday<span>Day 16</span></div>
         <div class="day-content">
           <div class="session-title">First Student Simulation Walkthrough</div>
-          <div class="session-desc"><p>Each person simulates the experience of a Fall student: start at the beginning of the course site and attempt to progress as far as possible without outside help. Log every point of confusion, every broken link, every missing instruction.</p></div>
-          <div class="tbd-box"><p>Specific deliverable format for the walkthrough log will be posted before Week 8.</p></div>
+          <div class="session-desc"><p>Each person simulates the experience of a Fall student: start at the track overview page for your assigned section of Designing_Experiments and attempt to complete every stated task without outside help. Log every broken link, missing file, unclear instruction, and non-functional interactive element using the structured observation format.</p></div>
+          <ul class="task-list blue">
+            <li>Create your audit folder: <code>docs/phase3_audit/section_X/</code> — commit to your Phase 3 branch</li>
+            <li>Run the end-to-end walkthrough; log at minimum 10 observations with severity ratings</li>
+            <li>Write a one-paragraph README.md for your section</li>
+            <li><strong>Due by end of class:</strong> push <code>walkthrough_log.md</code> and <code>README.md</code> to your branch</li>
+          </ul>
+          <div class="page-links"><a href="../Designing_Experiments/docs/student_tracks/phase3_wk08.html" style="color:var(--blue,#2A5FA0);font-weight:600">→ Full Week 8 assignment page (Designing_Experiments)</a></div>
         </div>
       </div>
     </div>
@@ -542,8 +548,14 @@
             <li>Optional: work with the instructor on sensor hookup for physiological stress measurement</li>
             <li>Optional: help design or implement adaptive preference tests, Q-sort instruments, or IATs for the Fall site</li>
           </ul>
+          <ul class="task-list blue">
+            <li>Triage your walkthrough log: mark each issue as RESOLVED, OPEN (with GitHub issue link), NOT-IN-SCOPE, or NEEDS-DECISION</li>
+            <li>Fix all BLOCKING and MAJOR issues within your competence; commit each fix with a clear message</li>
+            <li>Write at least one success condition per page in your section in <code>success_conditions.md</code></li>
+            <li><strong>Due by end of Thursday:</strong> fixes committed, <code>success_conditions.md</code> and updated <code>walkthrough_log.md</code> pushed</li>
+          </ul>
           <div class="info-box"><p><strong>Sensor and psych test track</strong> — students interested in the sensor hookup (wearable physiological measurement) or in building adaptive psychological instruments (Q-sort, implicit association tests, adaptive preference surveys) should speak with David in Week 8 to confirm participation. This is an alternative to the site-debugging work, not additional to it.</p></div>
-          <div class="tbd-box"><p>Specific deliverables and grading criteria for Week 9 will be posted before the week begins.</p></div>
+          <div class="page-links"><a href="../Designing_Experiments/docs/student_tracks/phase3_wk09.html" style="color:var(--blue,#2A5FA0);font-weight:600">→ Full Week 9 assignment page (Designing_Experiments)</a></div>
         </div>
       </div>
     </div>
@@ -578,7 +590,12 @@
         <div class="day-content">
           <div class="session-title">Final Presentations and Hand-Off</div>
           <div class="session-desc"><p>Each team presents their section to the class (5–8 minutes): what was assigned, what they found, what they fixed, what remains open, and their success conditions. The goal is a hand-off document that the Fall instructor can use to continue development over the summer.</p></div>
-          <div class="tbd-box"><p>Final deliverable format and grading rubric will be posted before Week 10.</p></div>
+          <ul class="task-list blue">
+            <li>Re-run the simulation; produce <code>re_walkthrough_log.md</code> with a W8-vs-W10 comparison table</li>
+            <li>Write <code>HANDOFF_REPORT.md</code>: section overview, state table, fixes made, open issues, success conditions, recommendations</li>
+            <li>Open a Pull Request to Tag-UCSD/Designing_Experiments with your full audit folder and any fixed pages</li>
+          </ul>
+          <div class="page-links"><a href="../Designing_Experiments/docs/student_tracks/phase3_wk10.html" style="color:var(--blue,#2A5FA0);font-weight:600">→ Full Week 10 assignment page (Designing_Experiments)</a></div>
         </div>
       </div>
     </div>

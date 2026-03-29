@@ -3,3 +3,5 @@
 __pycache__/
 *.pyc
 .env
+data/ka_auth.db
+data/ka_auth_secret.txt
