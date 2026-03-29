@@ -423,7 +423,7 @@
                         <label for="password">Password</label>
                         <input type="password" id="password" name="password" placeholder="••••••••" required>
                         <div class="forgot-password-wrapper">
-                            <a href="ka_register.html" class="forgot-password">Forgot password?</a>
+                            <a href="ka_forgot_password.html" class="forgot-password">Forgot password?</a>
                         </div>
                     </div>
 
@@ -450,30 +450,89 @@
     <script src="data/ka_payloads/workflow.js"></script>
     <script src="ka_workflow_store.js"></script>
     <script>
-        // Demo login: set logged-in flag so page function spec button becomes visible on all pages
-        document.querySelectorAll('button[type=submit], .btn-login, .demo-login').forEach(btn => {
-          btn.addEventListener('click', function() {
-            if (window.KA_WORKFLOW_STORE) {
-              window.KA_WORKFLOW_STORE.setLoggedIn(true);
-            } else {
-              localStorage.setItem('ka_logged_in', '1');
-              sessionStorage.setItem('ka_logged_in', '1');
-            }
-          });
-        });
-        // Also handle any form submit
-        document.querySelectorAll('form').forEach(form => {
-          form.addEventListener('submit', function() {
-            if (window.KA_WORKFLOW_STORE) {
-              window.KA_WORKFLOW_STORE.setLoggedIn(true);
-            } else {
-              localStorage.setItem('ka_logged_in', '1');
-              sessionStorage.setItem('ka_logged_in', '1');
-            }
-          });
-        });
+    // ── Real JWT auth (requires ka_auth_server.py running on port 8765)
+    const KA_AUTH_API = 'http://localhost:8765';
 
-        // Login routing handled by ka_demo_wiring.js wireLogin()
+    // Show an error banner under the form
+    function showLoginError(msg) {
+      let el = document.getElementById('ka-login-error');
+      if (!el) {
+        el = document.createElement('div');
+        el.id = 'ka-login-error';
+        el.style.cssText = 'background:#FEE2E2;border:1px solid #FCA5A5;color:#7F1D1D;' +
+          'border-radius:6px;padding:11px 14px;font-size:.85rem;margin-top:12px;line-height:1.5';
+        document.querySelector('#loginForm button[type=submit]').after(el);
+      }
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+    function clearLoginError() {
+      const el = document.getElementById('ka-login-error');
+      if (el) el.style.display = 'none';
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      clearLoginError();
+      const email    = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const btn      = this.querySelector('button[type=submit]');
+      btn.disabled   = true;
+      btn.textContent = 'Signing in…';
+
+      try {
+        const res = await fetch(`${KA_AUTH_API}/auth/login`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({email, password})
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          showLoginError(data.detail || 'Login failed. Check your email and password.');
+          btn.disabled = false;
+          btn.textContent = 'Sign In';
+          return;
+        }
+
+        // Store tokens and user info in localStorage
+        localStorage.setItem('ka_access_token',  data.access_token);
+        localStorage.setItem('ka_refresh_token', data.refresh_token);
+        localStorage.setItem('ka_current_user',  JSON.stringify(data.user));
+        localStorage.setItem('ka_logged_in', '1');
+        sessionStorage.setItem('ka_logged_in', '1');
+
+        // Backward-compat: keep workflow store in sync
+        if (window.KA_WORKFLOW_STORE) window.KA_WORKFLOW_STORE.setLoggedIn(true);
+
+        // Route by role
+        const role = data.user.role || 'student';
+        if (role === 'instructor' || role === 'admin') {
+          window.location.href = 'ka_approve.html';
+        } else {
+          window.location.href = 'ka_dashboard.html';
+        }
+
+      } catch(ex) {
+        // Auth server unreachable — fall back to demo mode
+        console.warn('[KA] Auth server not reachable, using demo mode:', ex);
+        showLoginError(
+          'Auth server not reachable (is ka_auth_server.py running?). ' +
+          'Falling back to demo mode — click Sign In again to continue.'
+        );
+        // Second click: proceed with demo mode
+        btn.textContent = 'Continue in demo mode →';
+        btn.disabled = false;
+        btn.onclick = function() {
+          localStorage.setItem('ka_logged_in', '1');
+          sessionStorage.setItem('ka_logged_in', '1');
+          if (window.KA_WORKFLOW_STORE) window.KA_WORKFLOW_STORE.setLoggedIn(true);
+          const dest = email.includes('instructor') || email.includes('prof')
+            ? 'ka_approve.html' : 'ka_dashboard.html';
+          window.location.href = dest;
+        };
+      }
+    });
     </script>
 
 <script>
