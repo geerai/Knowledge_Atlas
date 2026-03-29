@@ -238,7 +238,143 @@
       font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
       padding: 3px 10px; border-radius: 8px;
     }
-  </style>
+  
+    /* ── PAGINATION SYSTEM ── */
+    .doc-section {
+      display: none;
+    }
+    .doc-section.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Step tabs/breadcrumbs */
+    .step-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid var(--border);
+      align-items: center;
+    }
+    .step-tab {
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-radius: 4px;
+      cursor: pointer;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      transition: all 0.15s;
+    }
+    .step-tab:hover {
+      border-color: var(--navy);
+      color: var(--navy);
+    }
+    .step-tab.active {
+      background: var(--navy);
+      color: #fff;
+      border-color: var(--navy);
+    }
+    .step-tab.completed {
+      background: var(--green);
+      color: #fff;
+      border-color: var(--green);
+    }
+
+    /* Navigation controls */
+    .pagination-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      max-width: 900px;
+      margin: 50px auto 0;
+      padding: 28px 32px;
+      border-top: 2px solid var(--border);
+    }
+    .nav-button {
+      padding: 10px 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+    .nav-button.prev {
+      border: 2px solid var(--green);
+      color: var(--green);
+      background: transparent;
+    }
+    .nav-button.prev:hover:not(:disabled) {
+      background: var(--green);
+      color: #fff;
+    }
+    .nav-button.prev:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      border-color: #ccc;
+      color: #999;
+    }
+    .nav-button.next {
+      background: var(--amber);
+      color: #fff;
+      border: none;
+    }
+    .nav-button.next:hover {
+      background: #D97420;
+    }
+    .nav-button.next.home-link {
+      background: var(--navy);
+    }
+    .nav-button.next.home-link:hover {
+      background: #152E2B;
+    }
+
+    .pagination-footer {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-size: 0.8rem;
+    }
+    .pagination-footer a {
+      color: var(--navy);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .pagination-footer a:hover {
+      color: var(--amber);
+    }
+
+    @media (max-width: 640px) {
+      .pagination-nav {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+      .nav-button {
+        width: 100%;
+      }
+      .step-tabs {
+        justify-content: center;
+      }
+    }
+
+
+    </style>
 </head>
 <body>
 
@@ -1134,6 +1270,143 @@ window.KA_SHELL_USER.applyUser({
   avatarId: 'ai-method-avatar',
   avatarFallback: 'JL'
 });
+</script>
+
+
+  <!-- ── PAGINATION NAVIGATION ── -->
+  <div class="pagination-nav">
+    <button id="nav-prev" class="nav-button prev" onclick="prevStep()">← Previous</button>
+    <div style="text-align:center;font-size:0.8rem;color:var(--muted);font-weight:700;">
+      <span id="step-counter">1</span> / <span id="step-total">9</span>
+    </div>
+    <button id="nav-next" class="nav-button next" onclick="nextStep()">Next →</button>
+  </div>
+
+  <div style="text-align:center;padding:20px 32px;background:var(--cream);border-top:1px solid var(--border);">
+    <div class="pagination-footer">
+      <a href="ka_user_home.html">← Back to Student Home</a>
+      <span style="color:var(--border);">|</span>
+      <a href="ka_student_setup.html">Back to Course Setup →</a>
+    </div>
+  </div>
+
+
+  
+<script>
+  const TOTAL_STEPS = 9;
+  const STEP_NAMES = [
+    'CORE: Chatbot vs. Directed Instrument',
+    'METHOD 1: Five Components',
+    'EXAMPLES: Track-Specific Prompts',
+    'METHOD 2: The DO NOT Pattern',
+    'METHOD 3: Contracts & Success',
+    'METHOD 4: Verification & Trust',
+    'METHOD 5: Ruthless Prompts',
+    'METHOD 6: Expert Panel Pattern',
+    'METHOD 7: Cross-Check Second AI'
+  ];
+
+  let currentStep = parseInt(localStorage.getItem('ka-methodology-step') || '0');
+
+  function initPagination() {
+    const sections = document.querySelectorAll('.doc-section');
+    sections.forEach((section, index) => {
+      section.setAttribute('data-step', index);
+    });
+
+    // Build step tabs
+    const tabsContainer = document.createElement('div');
+    tabsContainer.className = 'step-tabs';
+    
+    STEP_NAMES.forEach((name, i) => {
+      const tab = document.createElement('button');
+      tab.className = 'step-tab';
+      tab.textContent = name.split(':')[0];
+      tab.setAttribute('data-step', i);
+      if (i < currentStep) tab.classList.add('completed');
+      if (i === currentStep) tab.classList.add('active');
+      tab.addEventListener('click', () => goToStep(i));
+      tabsContainer.appendChild(tab);
+    });
+
+    const outer = document.querySelector('.outer');
+    if (outer && outer.firstChild) {
+      outer.insertBefore(tabsContainer, outer.firstChild);
+    }
+
+    // Update counter display
+    const counter = document.getElementById('step-counter');
+    const total = document.getElementById('step-total');
+    if (counter) counter.textContent = currentStep + 1;
+    if (total) total.textContent = TOTAL_STEPS;
+
+    showStep(currentStep);
+  }
+
+  function showStep(stepIndex) {
+    currentStep = Math.max(0, Math.min(stepIndex, TOTAL_STEPS - 1));
+    localStorage.setItem('ka-methodology-step', currentStep);
+
+    // Update section visibility
+    document.querySelectorAll('.doc-section').forEach((section, i) => {
+      section.classList.toggle('active', i === currentStep);
+    });
+
+    // Update tabs
+    document.querySelectorAll('.step-tab').forEach((tab, i) => {
+      tab.classList.remove('active', 'completed');
+      if (i < currentStep) tab.classList.add('completed');
+      if (i === currentStep) tab.classList.add('active');
+    });
+
+    // Update navigation buttons
+    const prevBtn = document.getElementById('nav-prev');
+    const nextBtn = document.getElementById('nav-next');
+    
+    if (prevBtn) {
+      prevBtn.disabled = currentStep === 0;
+    }
+
+    if (nextBtn) {
+      const isLastStep = currentStep === TOTAL_STEPS - 1;
+      if (isLastStep) {
+        nextBtn.textContent = 'Back to Student Home →';
+        nextBtn.classList.add('home-link');
+        nextBtn.onclick = () => {
+          window.location.href = 'ka_user_home.html';
+        };
+      } else {
+        nextBtn.textContent = 'Next →';
+        nextBtn.classList.remove('home-link');
+        nextBtn.onclick = nextStep;
+      }
+    }
+
+    // Update counter
+    const counter = document.getElementById('step-counter');
+    if (counter) counter.textContent = currentStep + 1;
+
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function goToStep(stepIndex) {
+    showStep(stepIndex);
+  }
+
+  function nextStep() {
+    if (currentStep < TOTAL_STEPS - 1) {
+      goToStep(currentStep + 1);
+    }
+  }
+
+  function prevStep() {
+    if (currentStep > 0) {
+      goToStep(currentStep - 1);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', initPagination);
 </script>
 
 </body>
