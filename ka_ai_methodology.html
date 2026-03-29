@@ -880,6 +880,137 @@ DO NOT have panelists agree prematurely. Dissent is informative. Preserve it.</p
     </div>
   </div>
 
+  <!-- ── SECTION 7: NEVER TRUST A SINGLE AI ── -->
+  <div class="doc-section">
+    <div class="section-header">
+      <span class="sec-num">METHOD 7</span>
+      <div>
+        <h2>Never trust a single AI — cross-check with a second</h2>
+        <div class="sh-sub">On overconfidence, blind spots, and what one AI cannot see in its own work</div>
+      </div>
+    </div>
+
+    <p>
+      One of the most consistent findings in working with large language models at scale is that a single
+      AI system has systematic blind spots with respect to its own output. When you ask a model to critique
+      something it has just produced, it will find errors — but it tends to find the same category of
+      errors it was already alert to, and miss the structural or conceptual failures it was not primed to
+      look for. This is not a failure of honesty; it is an architectural feature. The model that generated
+      the output and the model that critiques it are, in many important respects, the same instrument
+      running in the same direction.
+    </p>
+    <p>
+      There is also an overconfidence problem that long sessions compound. After a model has worked through
+      an extended reasoning chain — especially one it generated itself — it becomes increasingly anchored to
+      the conclusions embedded in that chain. Asking it to critique its own work at the end of a long session
+      tends to produce mild, partial critique that misses the most important failures. The model defends what
+      it built. A different model, starting fresh, without the accumulated context of the session, will
+      reliably surface different and often far more serious problems. This is not a hypothesis — it is the
+      consistent experience of anyone who has used both Claude and Gemini on the same artifact, or GPT-4
+      and Claude on the same argument.
+    </p>
+
+    <div class="callout callout-warn">
+      <strong>The practical rule:</strong> Any output that will be committed to the KA system, published,
+      or used as the basis for a consequential decision should be independently evaluated by a second AI
+      system before you accept it. This is especially true for: classification schemes, threshold values,
+      evidence quality ratings, statistical interpretations, and any argument whose conclusion is not
+      independently verifiable from the sources cited.
+    </div>
+
+    <h3 style="font-family:Georgia,serif;font-size:1.0rem;font-weight:600;color:var(--navy);margin:28px 0 12px;">
+      When single-AI critique most reliably fails
+    </h3>
+
+    <div class="failure-grid">
+      <div class="failure-card">
+        <div class="failure-num">✗</div>
+        <div class="failure-name">Long-session anchoring</div>
+        <div class="failure-desc">
+          After 30+ turns of iterative development, the model is deeply invested in the architecture it helped build. Its self-critique will protect the core structure and surface only peripheral issues.
+        </div>
+        <div class="failure-fix"><strong>Fix:</strong> Start a fresh session with the second AI. Give it only the artifact — no session history, no context about how it was built.</div>
+      </div>
+      <div class="failure-card">
+        <div class="failure-num">✗</div>
+        <div class="failure-name">Category blindness</div>
+        <div class="failure-desc">
+          The model that wrote a classification scheme will critique it using the same categorical assumptions embedded in the scheme. It cannot easily see what its own categories exclude.
+        </div>
+        <div class="failure-fix"><strong>Fix:</strong> Ask the second AI to propose an alternative taxonomy before showing it yours. Compare the two structures.</div>
+      </div>
+      <div class="failure-card">
+        <div class="failure-num">✗</div>
+        <div class="failure-name">Statistical overconfidence</div>
+        <div class="failure-desc">
+          Models are inconsistently trained on statistical reasoning. One model may accept a confused interpretation of a confidence interval that a second model immediately recognizes as wrong.
+        </div>
+        <div class="failure-fix"><strong>Fix:</strong> Send the bare claim to a second AI with no framing: <em>"Is this statistically correct?"</em> No context, no explanation.</div>
+      </div>
+      <div class="failure-card">
+        <div class="failure-num">✗</div>
+        <div class="failure-name">Prompt-absorbed assumptions</div>
+        <div class="failure-desc">
+          If your original prompt contained an implicit assumption, the model absorbed it as fact. Its critique will not challenge that assumption because it was part of the framing it was given.
+        </div>
+        <div class="failure-fix"><strong>Fix:</strong> Ask the second AI: <em>"What assumptions does this output appear to be making? Which of them are most questionable?"</em></div>
+      </div>
+    </div>
+
+    <h3 style="font-family:Georgia,serif;font-size:1.0rem;font-weight:600;color:var(--navy);margin:28px 0 12px;">
+      The five-step cross-check protocol
+    </h3>
+
+    <div class="escalation">
+      <div class="esc-step">
+        <div class="esc-num">1</div>
+        <div>
+          <div class="esc-title">Produce with your primary AI in your working session</div>
+          <div class="esc-body">Use your full context, your session history, your ruthless prompt — the methods in the preceding sections. Produce the strongest version of the artifact you can. Do not shortcut this step; the cross-check is not a substitute for rigorous primary production, it is a check on it.</div>
+        </div>
+      </div>
+      <div class="esc-step">
+        <div class="esc-num">2</div>
+        <div>
+          <div class="esc-title">Open a fresh session with a different AI — no context transfer</div>
+          <div class="esc-body">Do not carry over the session history. Give the second AI only the artifact and the evaluation task. Use a different model family when possible — Claude → Gemini, or GPT-4 → Claude — because different training regimes produce different blind spots. The freshness matters as much as the model switch.</div>
+        </div>
+      </div>
+      <div class="esc-step">
+        <div class="esc-num">3</div>
+        <div>
+          <div class="esc-title">Ask for structural critique, not polish</div>
+          <div class="esc-body">Do not ask "is this good?" Ask: <em>"What are the most serious conceptual or structural problems with this? What is this missing that it should have? What assumptions is it making that you would challenge?"</em> Explicitly forbid praise. Ask it to state its single most damaging objection before providing anything else. Do not let it hedge with "overall this is quite strong."</div>
+        </div>
+      </div>
+      <div class="esc-step">
+        <div class="esc-num">4</div>
+        <div>
+          <div class="esc-title">Do not explain or defend — record the objections</div>
+          <div class="esc-body">When the second AI raises a problem, the instinct is to explain why it is not actually a problem. Resist this entirely. Note the objection and move on. Your explanations are rationalizations for your investment in the artifact. Collect all the objections first, then decide which require action — not during the cross-check session.</div>
+        </div>
+      </div>
+      <div class="esc-step">
+        <div class="esc-num">5</div>
+        <div>
+          <div class="esc-title">Return to the primary AI with the strongest objections</div>
+          <div class="esc-body">Bring the most serious objections back to your working session: <em>"A second AI raised the following three objections about this output. Please assess whether each is valid, and if so, revise accordingly."</em> This closes the loop while preserving the accumulated context from your primary session. Document what changed and why.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-info" style="margin-top: 28px;">
+      <strong>In practice for this course.</strong> You will use Claude as your primary instrument.
+      For cross-checks, use Gemini via Google AI Studio (free with any Google account). For any
+      deliverable that goes into the KA system — a tagged claim, a scored article, a GUI evaluation
+      report — paste the output into Gemini and ask: <em>"What are the most serious errors or
+      questionable assumptions in this output? State your strongest objection first."</em> Before you
+      submit, note what the cross-check found. Your submission should include a one-paragraph
+      cross-check note: what Gemini flagged, whether you agreed, and what you changed.
+    </div>
+
+  </div>
+
 </div><!-- /outer -->
 
 <div class="version-badge">KA UI · v0.4</div>
@@ -901,7 +1032,7 @@ window.KA_PAGE_FUNCTION = {
   pageId: 'ka_ai_methodology',
   title: 'AI-Directed Development: The KA Methodology',
   audience: 'All COGS 160 contributors; anyone writing prompts for KA pipeline tasks',
-  purpose: 'The definitive reference for KA\'s AI-directed development methodology: 5-component prompt structure, the 5 failure modes and DO NOT pattern, contracts and success conditions, trust calibration framework, ruthless prompts and the escalation ladder, and the expert panel pattern. Includes track-specific worked examples for Tracks 1, 2, and 4.',
+  purpose: 'The definitive reference for KA\'s AI-directed development methodology: 5-component prompt structure, the 5 failure modes and DO NOT pattern, contracts and success conditions, trust calibration framework, ruthless prompts and the escalation ladder, the expert panel pattern, and the cross-check protocol (never trust a single AI). Includes track-specific worked examples for Tracks 1, 2, and 4.',
   workflowPos: 'Read after ka_student_setup.html and before writing any prompts for track-specific tasks. Referenced from all track assignment pages.',
   notFor: 'General AI usage guidance unrelated to KA pipeline tasks; Python or JavaScript coding tutorials; setup and environment configuration (those are in ka_student_setup.html).',
   phase: 'Phase 1 — Student onboarding infrastructure',
