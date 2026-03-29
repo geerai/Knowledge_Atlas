@@ -214,6 +214,61 @@
     }
     .student-resource-bar a.res-link:hover { background: #E4DDD3; }
 
+    /* ── STEP 0: Environment Setup ── */
+    .step0-section {
+      background: var(--white); border: 1px solid var(--border); border-radius: 10px;
+      margin-bottom: 28px; overflow: hidden;
+    }
+    .step0-toggle {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--navy); color: #fff; padding: 14px 20px; cursor: pointer;
+      user-select: none; transition: background .15s;
+    }
+    .step0-toggle:hover { background: #0f2a28; }
+    .step0-toggle-text { display: flex; align-items: center; gap: 10px; font-size: 0.95rem; font-weight: 600; }
+    .step0-toggle-arrow { font-size: 1.2rem; transition: transform .2s; }
+    .step0-content {
+      display: none; padding: 20px; background: var(--cream);
+    }
+    .step0-content.open { display: block; }
+    .step0-subsection { margin-bottom: 20px; }
+    .step0-subsection h4 { font-family: Georgia, serif; font-size: 0.95rem; color: var(--navy); margin-bottom: 10px; font-weight: 600; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+    .step0-code-block {
+      background: #1a2a28; color: #a8e8d0; font-family: monospace; font-size: 0.78rem;
+      padding: 12px 14px; border-radius: 6px; overflow-x: auto; line-height: 1.5;
+      margin: 8px 0;
+    }
+    .step0-note { background: var(--amber-lt); border-left: 3px solid var(--amber); padding: 10px 12px; border-radius: 4px; font-size: 0.82rem; color: var(--amber-dk); margin: 10px 0; }
+
+    /* ── AI Help / FAQ Panel ── */
+    .ai-help-section {
+      background: #F0F8FF; border: 2px solid #5AC8AA; border-radius: 10px;
+      padding: 24px; margin-top: 40px; margin-bottom: 24px;
+    }
+    .ai-help-header {
+      font-family: Georgia, serif; font-size: 1.1rem; color: var(--navy);
+      margin-bottom: 14px; font-weight: 600;
+    }
+    .ai-help-intro {
+      font-size: 0.88rem; color: var(--ink); line-height: 1.6; margin-bottom: 16px;
+    }
+    .ai-help-callout {
+      background: var(--white); border: 1px solid var(--teal); border-radius: 8px;
+      padding: 14px 16px; margin-bottom: 16px;
+    }
+    .ai-help-callout-title { font-weight: 600; color: var(--teal); font-size: 0.88rem; margin-bottom: 6px; }
+    .ai-help-callout-text { font-size: 0.84rem; color: var(--ink); line-height: 1.55; }
+    .ai-help-faq { margin-top: 16px; }
+    .ai-help-faq summary {
+      font-weight: 600; color: var(--navy); font-size: 0.88rem; cursor: pointer;
+      padding: 8px 0; user-select: none;
+    }
+    .ai-help-faq summary:hover { color: var(--teal); }
+    .ai-help-faq-answer {
+      padding: 8px 0 12px 14px; font-size: 0.83rem; color: var(--ink);
+      line-height: 1.6; border-left: 2px solid var(--teal-lt);
+    }
+
 </style>
 </head>
 <body>
@@ -257,6 +312,58 @@
 
     <h1>Claim a Computational Tag Assignment</h1>
     <p>Each assignment bundle defines five image-analysis computations you will implement as code, run over a batch of workspace images, and submit for review. Select one or more bundles, then click <strong>Submit Claim</strong>. You will receive a confirmation email and the assignment will appear in your contributor profile.</p>
+  </div>
+
+  <!-- STEP 0: Environment Setup -->
+  <div class="step0-section">
+    <div class="step0-toggle" onclick="toggleStep0()">
+      <div class="step0-toggle-text">
+        <span class="step0-toggle-arrow">▸</span>
+        <span>STEP 0: Environment Setup</span>
+        <span style="font-size: 0.85rem; color: #B8D4CE;">(expand if this is your first time)</span>
+      </div>
+    </div>
+    <div class="step0-content" id="step0Content">
+      <div class="step0-subsection">
+        <h4>1. Prerequisites</h4>
+        <p style="font-size: 0.84rem; color: var(--muted); margin-bottom: 8px;">You'll need these tools installed:</p>
+        <div class="step0-code-block">Python 3.12 · git · VS Code</div>
+        <p style="font-size: 0.84rem; color: var(--muted); margin-top: 8px;"><strong>macOS:</strong></p>
+        <div class="step0-code-block">brew install python@3.12 git && brew install --cask visual-studio-code</div>
+        <p style="font-size: 0.84rem; color: var(--muted); margin-top: 8px;"><strong>Windows:</strong></p>
+        <div class="step0-code-block">winget install Python.Python.3.12 Git.Git Microsoft.VisualStudioCode</div>
+      </div>
+
+      <div class="step0-subsection">
+        <h4>2. Clone & Create Your Branch</h4>
+        <p style="font-size: 0.84rem; color: var(--muted); margin-bottom: 8px;">Run these commands in your terminal:</p>
+        <div class="step0-code-block">git clone https://github.com/dkirsh/Knowledge_Atlas.git
+cd Knowledge_Atlas
+git checkout track/1-staging
+git checkout -b track/1-staging/your-ucsd-username
+git push -u origin track/1-staging/your-ucsd-username</div>
+        <p style="font-size: 0.84rem; color: var(--muted); margin-top: 8px;">Replace <code style="background: #F0EBE3; padding: 2px 4px; border-radius: 3px;">your-ucsd-username</code> with your UCSD username (e.g., <code style="background: #F0EBE3; padding: 2px 4px; border-radius: 3px;">jdoe</code>).</p>
+      </div>
+
+      <div class="step0-subsection">
+        <h4>3. Student Database</h4>
+        <div class="step0-note">
+          <strong>Important:</strong> The student database copy is at <code>data/student/web_persistence_v5_student_copy.db</code><br>
+          NEVER write to <code>data/web_persistence_v5.db</code> (the production database).<br>
+          If you accidentally do: STOP and message the instructor immediately.
+        </div>
+      </div>
+
+      <div class="step0-subsection">
+        <h4>4. Submit Your Work</h4>
+        <p style="font-size: 0.84rem; color: var(--muted); margin-bottom: 8px;">When you're ready:</p>
+        <ol style="font-size: 0.84rem; color: var(--muted); margin-left: 18px; line-height: 1.6;">
+          <li>Commit your changes: <code style="background: #F0EBE3; padding: 2px 4px; border-radius: 3px;">git commit -m "[T1 Week X] Brief description"</code></li>
+          <li>Push to your branch: <code style="background: #F0EBE3; padding: 2px 4px; border-radius: 3px;">git push</code></li>
+          <li>Open a Pull Request with base: <code style="background: #F0EBE3; padding: 2px 4px; border-radius: 3px;">track/1-staging</code>, compare: your branch</li>
+        </ol>
+      </div>
+    </div>
   </div>
 
   <!-- Success banner (shown after submit) -->
@@ -338,6 +445,53 @@
     </table>
   </div>
 
+  <!-- AI Help / FAQ Panel -->
+  <div class="ai-help-section">
+    <div class="ai-help-header">Stuck? Take a screenshot and ask AI.</div>
+    <div class="ai-help-intro">At any point, if you hit a wall:</div>
+    <div class="ai-help-callout">
+      <div class="ai-help-callout-title">How to get help from ChatGPT, Claude, or Gemini:</div>
+      <div class="ai-help-callout-text">
+        <ol style="margin-left: 18px; line-height: 1.6;">
+          <li>Take a screenshot of what you see</li>
+          <li>Open ChatGPT, Claude, or Gemini</li>
+          <li>Say: <em>"I'm a COGS 160 student on Track 1 (Image Tagging). I see this screenshot. What should I do next to succeed at claiming my tag bundles?"</em></li>
+        </ol>
+        <p style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #D8D0C5; color: var(--teal); font-weight: 600;">This is the methodology — AI as a directed instrument, not a chatbot.</p>
+      </div>
+    </div>
+
+    <div class="ai-help-faq">
+      <details>
+        <summary>How do I know if my tags are correct?</summary>
+        <div class="ai-help-faq-answer">
+          Check against the Phase 0 reference table and aim for inter-rater agreement ≥ 0.75 with a partner. Ambiguous cases should be documented in your rationale.
+        </div>
+      </details>
+
+      <details>
+        <summary>What if an image doesn't fit any bundle?</summary>
+        <div class="ai-help-faq-answer">
+          Flag it in your rationale document. Ambiguous images are valuable data, not errors — they help us understand edge cases in the protocol.
+        </div>
+      </details>
+
+      <details>
+        <summary>Where do I submit?</summary>
+        <div class="ai-help-faq-answer">
+          Commit to your branch, push, and open a Pull Request to <code style="background: #F0EBE3; padding: 2px 4px; border-radius: 3px;">track/1-staging</code>. See STEP 0 above for details.
+        </div>
+      </details>
+
+      <details>
+        <summary>What if I make a mistake on a submitted assignment?</summary>
+        <div class="ai-help-faq-answer">
+          Open a new commit on your branch with the fixes. Instructors will review the latest commit; you can iterate until sign-off.
+        </div>
+      </details>
+    </div>
+  </div>
+
 </div><!-- /page-wrap -->
 
 <!-- Submit strip -->
@@ -405,6 +559,16 @@
 
 
 <script>
+// ─────────────────────────────────────────────────────────────────────────────
+// STEP 0 Toggle
+// ─────────────────────────────────────────────────────────────────────────────
+function toggleStep0() {
+  const content = document.getElementById('step0Content');
+  const arrow = document.querySelector('.step0-toggle-arrow');
+  content.classList.toggle('open');
+  arrow.style.transform = content.classList.contains('open') ? 'rotate(90deg)' : 'rotate(0deg)';
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Bundle data — 5 computational tags each
 // ─────────────────────────────────────────────────────────────────────────────

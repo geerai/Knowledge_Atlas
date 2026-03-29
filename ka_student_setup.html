@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Getting Started — Knowledge Atlas Contributor Setup</title>
+  <title>Student Orientation — Knowledge Atlas</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -98,15 +98,13 @@
     .t4 { background: #FDE8F4; color: #7A1A5C; }
 
     /* ── Layout ── */
-    .outer { max-width: 900px; margin: 0 auto; padding: 0 32px 72px; }
+    .outer { max-width: 1000px; margin: 0 auto; padding: 0 32px 72px; }
 
     /* ── Section ── */
-    .setup-section {
-      margin-top: 52px;
-    }
+    .setup-section { margin-top: 48px; }
     .section-header {
       display: flex; align-items: flex-start; gap: 16px;
-      margin-bottom: 22px;
+      margin-bottom: 28px;
       padding-bottom: 14px;
       border-bottom: 2px solid var(--border);
     }
@@ -117,7 +115,7 @@
       margin-top: 4px;
     }
     .section-header h2 {
-      font-family: Georgia, serif; font-size: 1.3rem; font-weight: 400;
+      font-family: Georgia, serif; font-size: 1.4rem; font-weight: 400;
       color: var(--navy); line-height: 1.3;
     }
     .section-header .sh-sub {
@@ -125,124 +123,131 @@
     }
 
     /* ── Prose ── */
-    p { margin-bottom: 12px; font-size: 0.92rem; }
+    p { margin-bottom: 14px; font-size: 0.95rem; line-height: 1.7; }
     p:last-child { margin-bottom: 0; }
 
-    /* ── Cards ── */
-    .card {
-      background: #fff; border: 1px solid var(--border); border-radius: 10px;
-      padding: 22px 24px; margin-bottom: 16px;
+    /* ── Track grid ── */
+    .track-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 28px;
     }
-    .card h3 {
-      font-family: Georgia, serif; font-size: 1.0rem; font-weight: 600;
-      color: var(--navy); margin-bottom: 10px;
+    .track-card {
+      border-radius: 12px; padding: 32px 28px;
+      display: flex; flex-direction: column; gap: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none; color: inherit;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
+    .track-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    .track-card h3 {
+      font-family: Georgia, serif; font-size: 1.2rem; font-weight: 600;
+      margin: 0; line-height: 1.3;
+    }
+    .track-card p {
+      margin: 0; font-size: 0.92rem; line-height: 1.6; opacity: 0.95;
+    }
+    .track-card .tagline {
+      margin-top: auto; font-size: 0.88rem; opacity: 0.85; font-style: italic;
+      padding-top: 8px;
+    }
+    .track-card .cta-button {
+      margin-top: 16px; padding: 12px 16px;
+      border-radius: 8px;
+      font-weight: 700; font-size: 0.88rem;
+      text-align: center;
+      display: inline-block;
+      transition: opacity 0.15s;
+      text-decoration: none;
+    }
+    .track-card:hover .cta-button { opacity: 0.95; }
 
-    /* ── Code blocks ── */
-    pre {
-      background: #1A2E2C; color: #A8C8BF;
-      font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
-      font-size: 0.82rem; line-height: 1.7;
-      padding: 16px 20px; border-radius: 8px;
-      overflow-x: auto; margin: 12px 0;
+    /* ── Accordion ── */
+    .accordion {
+      border: 1px solid var(--border); border-radius: 10px;
+      overflow: hidden; margin-top: 20px;
     }
-    code {
-      background: #EDE8E0; color: #1C3D3A;
-      font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
-      font-size: 0.83em; padding: 1px 5px; border-radius: 3px;
+    .accordion-header {
+      display: flex; align-items: center; gap: 14px;
+      padding: 18px 20px; background: #fff; cursor: pointer;
+      user-select: none; font-weight: 700; font-size: 0.95rem;
+      color: var(--navy);
     }
-    pre code { background: none; color: inherit; padding: 0; font-size: 1em; }
-    .cmd-comment { color: #5AC8AA; }
+    .accordion-header:hover { background: var(--light); }
+    .accordion-body {
+      display: none; padding: 22px 20px; background: var(--light);
+      border-top: 1px solid var(--border);
+      font-size: 0.92rem; line-height: 1.7;
+    }
+    .accordion-body.open { display: block; }
+    .accordion-header .chevron { margin-left: auto; font-size: 0.85rem; color: var(--muted); }
 
-    /* ── Steps ── */
-    .steps { list-style: none; padding: 0; counter-reset: step; }
-    .steps > li {
-      counter-increment: step;
-      display: flex; gap: 14px;
-      padding: 14px 0; border-bottom: 1px solid var(--border);
-    }
-    .steps > li:last-child { border-bottom: none; }
-    .steps > li::before {
-      content: counter(step);
-      background: var(--amber); color: #fff;
-      font-size: 0.72rem; font-weight: 800;
-      width: 22px; height: 22px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; margin-top: 2px;
-    }
-    .step-body { flex: 1; }
-    .step-body strong { color: var(--navy); font-size: 0.92rem; }
-    .step-body p { font-size: 0.88rem; color: var(--muted); margin-top: 4px; }
-
-    /* ── Checklist ── */
-    .checklist { list-style: none; padding: 0; }
-    .checklist li {
-      display: flex; gap: 10px; align-items: flex-start;
-      padding: 7px 0; border-bottom: 1px dashed var(--border);
-      font-size: 0.88rem;
-    }
-    .checklist li:last-child { border-bottom: none; }
-    .checklist li::before {
-      content: "□"; font-size: 1rem; color: var(--amber); flex-shrink: 0; line-height: 1.4;
-    }
-
-    /* ── Warning / Info boxes ── */
+    /* ── Callout ── */
     .callout {
-      border-radius: 8px; padding: 14px 18px;
-      margin: 16px 0; font-size: 0.88rem; line-height: 1.6;
-    }
-    .callout-warn {
-      background: #FFF8E8; border-left: 4px solid var(--amber);
-      color: #5A3010;
+      border-radius: 8px; padding: 18px 20px;
+      margin: 20px 0; font-size: 0.92rem; line-height: 1.7;
     }
     .callout-info {
       background: #E6F5F0; border-left: 4px solid var(--green);
       color: #1a4a3f;
     }
-    .callout strong { color: #2D1800; }
-    .callout-info strong { color: #1a4a3f; }
+    .callout strong { color: #1a4a3f; }
 
-    /* ── Track accordion ── */
-    .track-setup { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 12px; }
-    .track-setup-header {
-      display: flex; align-items: center; gap: 14px;
-      padding: 14px 20px; background: #fff; cursor: pointer;
-      user-select: none; font-weight: 700; font-size: 0.9rem;
-      color: var(--navy);
+    /* ── FAQ ── */
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 22px;
     }
-    .track-setup-header:hover { background: var(--light); }
-    .track-setup-body {
-      display: none; padding: 18px 20px; background: var(--light);
-      border-top: 1px solid var(--border);
+    .faq-item {
+      background: #fff; border: 1px solid var(--border); border-radius: 8px;
+      padding: 16px;
     }
-    .track-setup-body.open { display: block; }
-    .track-setup-header .chevron { margin-left: auto; font-size: 0.75rem; color: var(--muted); }
+    .faq-q {
+      font-weight: 700; font-size: 0.88rem; color: var(--navy); margin-bottom: 8px;
+    }
+    .faq-a {
+      font-size: 0.85rem; color: var(--muted); line-height: 1.6;
+    }
 
-    /* ── Table ── */
-    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 12px 0; }
-    th {
-      background: var(--light); color: var(--text);
-      font-weight: 700; padding: 9px 12px; text-align: left;
-      font-size: 0.73rem; text-transform: uppercase; letter-spacing: 0.06em;
-      border-bottom: 2px solid var(--border);
+    /* ── Code ── */
+    code {
+      background: #EDE8E0; color: #1C3D3A;
+      font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+      font-size: 0.83em; padding: 1px 5px; border-radius: 3px;
     }
-    td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: #FAF7F2; }
+    pre {
+      background: #1A2E2C; color: #A8C8BF;
+      font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+      font-size: 0.82rem; line-height: 1.7;
+      padding: 14px 16px; border-radius: 6px;
+      overflow-x: auto; margin: 12px 0;
+    }
+    pre code { background: none; color: inherit; padding: 0; font-size: 1em; }
+    .cmd-comment { color: #5AC8AA; }
 
-    /* ── Link to methodology ── */
-    .method-cta {
-      background: linear-gradient(135deg, var(--navy) 0%, #163230 100%);
-      border-radius: 10px; padding: 28px 28px;
-      display: flex; align-items: center; gap: 22px;
-      margin-top: 32px; text-decoration: none; color: inherit;
-      transition: opacity 0.15s;
+    /* ── Tab styles ── */
+    .tabs {
+      display: flex; gap: 8px; margin-bottom: 12px;
+      border-bottom: 1px solid var(--border);
     }
-    .method-cta:hover { opacity: 0.93; }
-    .method-cta-icon { font-size: 2.2rem; flex-shrink: 0; }
-    .method-cta-text h3 { color: #fff; font-family: Georgia, serif; font-size: 1.1rem; font-weight: 400; margin-bottom: 6px; }
-    .method-cta-text p { color: #A8C8BF; font-size: 0.85rem; line-height: 1.55; margin: 0; }
-    .method-cta-arrow { margin-left: auto; color: var(--amber); font-size: 1.4rem; flex-shrink: 0; }
+    .tab-button {
+      padding: 10px 16px; background: transparent;
+      border: none; cursor: pointer; color: var(--muted);
+      font-size: 0.88rem; font-weight: 600;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .tab-button.active {
+      color: var(--navy); border-bottom-color: var(--amber);
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
 
     /* ── Version badge ── */
     .version-badge {
@@ -250,6 +255,12 @@
       background: rgba(28,61,58,0.7); color: #7AACA0;
       font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
       padding: 3px 10px; border-radius: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .track-grid { grid-template-columns: 1fr; }
+      .faq-grid { grid-template-columns: 1fr; }
+      .section-header { flex-direction: column; }
     }
   </style>
 </head>
@@ -279,589 +290,198 @@
 </nav>
 
 <div class="page-hero">
-  <div class="eyebrow">COGS 160 · Student Onboarding</div>
-  <h1>Getting Started as a KA Contributor</h1>
+  <div class="eyebrow">COGS 160 · Student Orientation</div>
+  <h1>Welcome to Knowledge Atlas</h1>
   <p>
-    This page tells you everything you need to set up your environment,
-    claim your track, get your files, and make your first contribution —
-    from a blank laptop to a working development setup.
+    Knowledge Atlas is a live, versioned research system built by students and faculty.
+    Pick your track below, and we'll send you to the assignment page where setup instructions,
+    milestones, and acceptance criteria all live in one place.
   </p>
   <div class="track-pills">
-    <span class="track-pill t1">Track 1 · Image Tagging</span>
-    <span class="track-pill t2">Track 2 · Article Finding</span>
-    <span class="track-pill t3">Track 3 · VR Production</span>
-    <span class="track-pill t4">Track 4 · GUI Evaluation</span>
+    <span class="track-pill t1">Track 1</span>
+    <span class="track-pill t2">Track 2</span>
+    <span class="track-pill t3">Track 3</span>
+    <span class="track-pill t4">Track 4</span>
   </div>
   <div class="mode-summary">
     <div class="mode-summary-label">Current orientation mode</div>
-    <div class="mode-summary-copy" id="setup-mode-summary">Student explorer mode is active unless you change it on the home page, topics page, dashboard, or during registration.</div>
+    <div class="mode-summary-copy" id="setup-mode-summary">Student explorer mode is active. Change it from the home page, topics page, dashboard, or registration.</div>
   </div>
 </div>
 
 <div class="outer">
 
-  <!-- ── SECTION 0: Overview ── -->
+  <!-- ── SECTION 1: Pick Your Track ── -->
   <div class="setup-section">
     <div class="section-header">
-      <span class="section-num">OVERVIEW</span>
+      <span class="section-num">1</span>
       <div>
-        <h2>What you are joining</h2>
-        <div class="sh-sub">A production knowledge system you will extend, not a toy project</div>
+        <h2>Pick Your Track</h2>
+        <div class="sh-sub">Your assignment page has everything you need — setup, milestones, evaluation criteria</div>
       </div>
     </div>
 
-    <p>
-      Knowledge Atlas (KA) is a live, versioned software system. It has a git history, a database, automated
-      tests, and a formal extraction pipeline. Your work this quarter will be committed to a real repository,
-      reviewed against defined acceptance criteria, and — if it passes — merged into the main system.
-    </p>
-    <p>
-      This means the setup steps below are not optional formalities. A misconfigured Python environment
-      will silently corrupt data. Working on the wrong branch will overwrite your teammates' code.
-      Running the wrong script against the production database will corrupt records that took months to build.
-      Follow the instructions in order.
-    </p>
+    <div class="track-grid">
+      <!-- Track 1 -->
+      <a href="ka_tag_assignment.html" class="track-card t1">
+        <h3>Track 1: Image Tagging &amp; CNFA Annotation</h3>
+        <p>
+          Develop a Python annotation tool that labels images with Evidence-Based Tags and aligns them with Coherence-NF Authority propositions. Learn data verification and pipeline architecture.
+        </p>
+        <div class="tagline">Your setup guide, assignments, and milestones are all on one page.</div>
+        <div class="cta-button">Go to Track 1 →</div>
+      </a>
 
-    <div class="callout callout-warn">
-      <strong>One rule above all others:</strong> Never run any script that writes to the database
-      unless you have confirmed you are pointing at the <em>student copy</em>
-      (<code>web_persistence_v5_student_copy.db</code>), not the operational database.
-      Check the connection string before every session. This is the single most common
-      first-week mistake.
+      <!-- Track 2 -->
+      <a href="ka_article_finder_assignment.html" class="track-card t2">
+        <h3>Track 2: Article Finder Pipeline</h3>
+        <p>
+          Build a query engine and batch retrieval system to find relevant papers from open-access databases. Implement deduplication, schema validation, and database integrity checks.
+        </p>
+        <div class="tagline">Your setup guide, assignments, and milestones are all on one page.</div>
+        <div class="cta-button">Go to Track 2 →</div>
+      </a>
+
+      <!-- Track 3 -->
+      <a href="ka_vr_assignment.html" class="track-card t3">
+        <h3>Track 3: VR Environment Production</h3>
+        <p>
+          Design 3D scenarios in Unreal Engine that visualize epistemological concepts and warrant structures. Create interactive demonstrations of coherence and evidence dynamics.
+        </p>
+        <div class="tagline">Your setup guide, assignments, and milestones are all on one page.</div>
+        <div class="cta-button">Go to Track 3 →</div>
+      </a>
+
+      <!-- Track 4 -->
+      <a href="ka_gui_assignment.html" class="track-card t4">
+        <h3>Track 4: GUI &amp; Use-Case Evaluation</h3>
+        <p>
+          Build web interfaces for researchers to explore the KA evidence graph and evaluate the system's performance on real use cases. Test against acceptance criteria and document usability findings.
+        </p>
+        <div class="tagline">Your setup guide, assignments, and milestones are all on one page.</div>
+        <div class="cta-button">Go to Track 4 →</div>
+      </a>
     </div>
   </div>
 
-  <!-- ── SECTION 1: Install ── -->
+  <!-- ── SECTION 2: Before You Start ── -->
   <div class="setup-section">
     <div class="section-header">
-      <span class="section-num">STEP 1</span>
+      <span class="section-num">2</span>
       <div>
-        <h2>Install your environment</h2>
-        <div class="sh-sub">Python 3.12 · git · VS Code · browser dev tools</div>
+        <h2>Before You Start</h2>
+        <div class="sh-sub">Environment setup — your track page has track-specific git commands</div>
       </div>
     </div>
 
-    <p>All four tools are required. If you already have them, verify the versions below and move on.</p>
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <span>Install Python 3.12, git, and VS Code</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="accordion-body">
+        <div class="tabs">
+          <button class="tab-button active" onclick="switchTab(event, 'mac-tab')">macOS</button>
+          <button class="tab-button" onclick="switchTab(event, 'windows-tab')">Windows</button>
+        </div>
 
-    <div class="card">
-      <h3>macOS</h3>
-      <pre><span class="cmd-comment"># Install Homebrew if you don't have it</span>
+        <div id="mac-tab" class="tab-content active">
+          <pre><span class="cmd-comment"># Install Homebrew if needed</span>
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-<span class="cmd-comment"># Install Python 3.12 and git</span>
+<span class="cmd-comment"># Install Python 3.12, git, VS Code</span>
 brew install python@3.12 git
+brew install --cask visual-studio-code
 
 <span class="cmd-comment"># Verify</span>
-python3 --version   <span class="cmd-comment"># should print Python 3.12.x</span>
-git --version       <span class="cmd-comment"># should print git version 2.x</span>
+python3 --version   <span class="cmd-comment"># should be 3.12.x</span>
+git --version</pre>
+        </div>
 
-<span class="cmd-comment"># Install VS Code (if not already installed)</span>
-brew install --cask visual-studio-code</pre>
-    </div>
-
-    <div class="card">
-      <h3>Windows 11</h3>
-      <pre><span class="cmd-comment"># In PowerShell (run as Administrator)</span>
+        <div id="windows-tab" class="tab-content">
+          <pre><span class="cmd-comment"># In PowerShell (run as Administrator)</span>
 winget install Python.Python.3.12
 winget install Git.Git
 winget install Microsoft.VisualStudioCode
 
-<span class="cmd-comment"># Restart your terminal, then verify</span>
+<span class="cmd-comment"># Restart terminal, then verify</span>
 python --version
 git --version</pre>
-    </div>
-
-    <div class="card">
-      <h3>Required Python packages (all tracks)</h3>
-      <pre><span class="cmd-comment"># After cloning the repo (Step 2), run from the repo root</span>
-pip3 install -r requirements.txt --break-system-packages
-
-<span class="cmd-comment"># If requirements.txt is not yet present, install the core set manually</span>
-pip3 install sqlite3 requests pandas beautifulsoup4 \
-             pytest black ruff --break-system-packages</pre>
+        </div>
+      </div>
     </div>
 
     <div class="callout callout-info">
-      <strong>Browser dev tools.</strong> All track 4 students (and any student who will test or evaluate
-      KA pages) need to know how to open Chrome DevTools (⌘⌥I on Mac, F12 on Windows), inspect the
-      DOM, read the Console tab, and monitor Network requests. There is a 10-minute walkthrough at the
-      start of the Track 4 assignment page.
+      <strong>Track-specific setup:</strong> Each track page has clone and branch commands tailored to your work.
+      Read the "Getting Started" section on your track page before your first sprint.
+    </div>
+
+    <div class="callout callout-info" style="margin-top: 14px;">
+      <strong>Next step:</strong> <a href="ka_ai_methodology.html" style="color: #1a4a3f; font-weight: 700; text-decoration: underline;">Read the AI Methodology guide</a>
+      before your first sprint. This is how COGS 160 development works.
     </div>
   </div>
 
-  <!-- ── SECTION 2: Clone & Branch ── -->
+  <!-- ── SECTION 3: Getting Help ── -->
   <div class="setup-section">
     <div class="section-header">
-      <span class="section-num">STEP 2</span>
+      <span class="section-num">3</span>
       <div>
-        <h2>Clone the repository and get on your track branch</h2>
-        <div class="sh-sub">One repo, one branch per track, one personal branch per student</div>
+        <h2>Getting Help</h2>
+        <div class="sh-sub">Stuck? Use AI as a tool, not a shortcut</div>
       </div>
     </div>
 
-    <p>
-      The KA repository lives at <code>github.com/dkirsh/Knowledge_Atlas</code>.
-      You will work on a personal branch that is based on your track's staging branch.
-      Your work accumulates there until the instructor reviews and merges it upstream.
-    </p>
-
-    <ol class="steps">
-      <li>
-        <div class="step-body">
-          <strong>Clone the repo</strong>
-          <p>Run this once. You will do all subsequent work inside this directory.</p>
-          <pre>git clone https://github.com/dkirsh/Knowledge_Atlas.git
-cd Knowledge_Atlas</pre>
-        </div>
-      </li>
-      <li>
-        <div class="step-body">
-          <strong>Configure your identity</strong>
-          <p>Git requires your name and email before you can commit. Use your UCSD email.</p>
-          <pre>git config user.name "Your Name"
-git config user.email "you@ucsd.edu"</pre>
-        </div>
-      </li>
-      <li>
-        <div class="step-body">
-          <strong>Create your personal branch off your track staging branch</strong>
-          <p>Replace <code>track-N</code> with your assigned track number (1–4) and <code>yourname</code>
-          with your UCSD username.</p>
-          <pre><span class="cmd-comment"># Fetch the latest staging branches</span>
-git fetch origin
-
-<span class="cmd-comment"># Switch to your track staging branch</span>
-git checkout track/N-staging       <span class="cmd-comment"># e.g., track/2-staging</span>
-
-<span class="cmd-comment"># Create your personal branch from it</span>
-git checkout -b track/N-staging/yourname   <span class="cmd-comment"># e.g., track/2-staging/dkirsh</span></pre>
-        </div>
-      </li>
-      <li>
-        <div class="step-body">
-          <strong>Push your personal branch to the remote immediately</strong>
-          <p>This registers your branch on GitHub so the instructor can see it from Day 1.</p>
-          <pre>git push -u origin track/N-staging/yourname</pre>
-        </div>
-      </li>
-      <li>
-        <div class="step-body">
-          <strong>Never commit directly to <code>master</code> or to your track staging branch</strong>
-          <p>All your commits go on your personal branch.
-          When a sprint is complete, you open a Pull Request from your personal branch
-          into the track staging branch. The instructor reviews and merges. That is the
-          only path work takes into the shared system.</p>
-        </div>
-      </li>
-    </ol>
-
-    <div class="callout callout-info">
-      <strong>Branch naming convention.</strong> The pattern <code>track/N-staging/username</code>
-      is intentional: it groups all track-2 branches together in the GitHub branch list, making
-      it easy for the instructor to see everyone's work at a glance.
+    <div class="callout" style="background: #FFF3E0; border-left: 4px solid var(--amber); color: #5A3010;">
+      <strong style="color: #2D1800; font-size: 0.98rem;">Stuck? Take a screenshot and ask AI.</strong>
+      <p style="margin-top: 10px; margin-bottom: 0; font-size: 0.9rem;">
+        At any point during setup or track work, if you hit a wall:
+      </p>
+      <ol style="margin: 12px 0 0 20px; font-size: 0.9rem;">
+        <li>Take a screenshot of exactly what you see (error message, confusing output, broken page)</li>
+        <li>Open <strong>ChatGPT, Claude, or Gemini</strong></li>
+        <li>Upload the screenshot and ask: <em>"I'm a COGS 160 student working on [your track]. I see this. What should I do next to succeed at [your task]?"</em></li>
+      </ol>
+      <p style="margin: 12px 0 0 0; font-size: 0.9rem;">
+        This is not cheating — it's the methodology. AI-directed development means using AI as a tool, not pretending it doesn't exist.
+        Your job is to <strong>verify the answer against your track's acceptance criteria</strong>.
+      </p>
     </div>
 
-    <!-- Per-track copy-paste block -->
-    <div style="margin-top:20px">
-      <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9A8870;margin-bottom:12px">
-        Quick reference — find your track and copy all three commands
+    <p style="margin-top: 24px; font-weight: 700; color: var(--navy); font-size: 0.95rem;">Common Questions</p>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <div class="faq-q">Where do I find my track assignments?</div>
+        <div class="faq-a">On your track page above. Click your track card to open it.</div>
       </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-
-        <div style="background:#1a2a28;border-radius:8px;overflow:hidden">
-          <div style="background:#0f1a18;padding:8px 14px;font-size:10px;font-weight:700;letter-spacing:.1em;color:#5AC8AA;text-transform:uppercase">Track 1 — Image Tagging</div>
-          <pre style="margin:0;padding:12px 14px;font-size:0.78rem;line-height:1.7;color:#a8e8d0;overflow-x:auto"><span style="color:#5a8878"># Clone (skip if already done)</span>
-git clone https://github.com/dkirsh/Knowledge_Atlas.git
-cd Knowledge_Atlas
-
-git checkout track/1-staging
-git checkout -b track/1-staging/<span style="color:#E8872A">your-ucsd-username</span>
-git push -u origin track/1-staging/<span style="color:#E8872A">your-ucsd-username</span></pre>
-        </div>
-
-        <div style="background:#1a2a28;border-radius:8px;overflow:hidden">
-          <div style="background:#0f1a18;padding:8px 14px;font-size:10px;font-weight:700;letter-spacing:.1em;color:#5AC8AA;text-transform:uppercase">Track 2 — Article Finder</div>
-          <pre style="margin:0;padding:12px 14px;font-size:0.78rem;line-height:1.7;color:#a8e8d0;overflow-x:auto"><span style="color:#5a8878"># Clone (skip if already done)</span>
-git clone https://github.com/dkirsh/Knowledge_Atlas.git
-cd Knowledge_Atlas
-
-git checkout track/2-staging
-git checkout -b track/2-staging/<span style="color:#E8872A">your-ucsd-username</span>
-git push -u origin track/2-staging/<span style="color:#E8872A">your-ucsd-username</span></pre>
-        </div>
-
-        <div style="background:#1a2a28;border-radius:8px;overflow:hidden">
-          <div style="background:#0f1a18;padding:8px 14px;font-size:10px;font-weight:700;letter-spacing:.1em;color:#5AC8AA;text-transform:uppercase">Track 3 — VR Production</div>
-          <pre style="margin:0;padding:12px 14px;font-size:0.78rem;line-height:1.7;color:#a8e8d0;overflow-x:auto"><span style="color:#5a8878"># Clone (skip if already done)</span>
-git clone https://github.com/dkirsh/Knowledge_Atlas.git
-cd Knowledge_Atlas
-
-git checkout track/3-staging
-git checkout -b track/3-staging/<span style="color:#E8872A">your-ucsd-username</span>
-git push -u origin track/3-staging/<span style="color:#E8872A">your-ucsd-username</span></pre>
-        </div>
-
-        <div style="background:#1a2a28;border-radius:8px;overflow:hidden">
-          <div style="background:#0f1a18;padding:8px 14px;font-size:10px;font-weight:700;letter-spacing:.1em;color:#5AC8AA;text-transform:uppercase">Track 4 — GUI Evaluation</div>
-          <pre style="margin:0;padding:12px 14px;font-size:0.78rem;line-height:1.7;color:#a8e8d0;overflow-x:auto"><span style="color:#5a8878"># Clone (skip if already done)</span>
-git clone https://github.com/dkirsh/Knowledge_Atlas.git
-cd Knowledge_Atlas
-
-git checkout track/4-staging
-git checkout -b track/4-staging/<span style="color:#E8872A">your-ucsd-username</span>
-git push -u origin track/4-staging/<span style="color:#E8872A">your-ucsd-username</span></pre>
-        </div>
-
+      <div class="faq-item">
+        <div class="faq-q">What if my environment won't install?</div>
+        <div class="faq-a">Screenshot the error, ask AI (see above), or post in your track's Slack channel.</div>
       </div>
-
-      <div style="margin-top:10px;padding:10px 14px;background:#FFF3E0;border:1px solid #f0c888;border-radius:6px;font-size:0.82rem;color:#9a5010">
-        <strong>Track 2 only:</strong> run Article Finder commands through the AF repo virtualenv, not bare <code>python3</code>.
-        The scorer and search-client dependencies may only be installed in the venv, and using the system interpreter
-        produces false pipeline failures. See your track assignment for the activation command.
+      <div class="faq-item">
+        <div class="faq-q">Can I switch tracks?</div>
+        <div class="faq-a">Yes — talk to the instructor by end of Week 1.</div>
       </div>
-      <div style="margin-top:8px;padding:10px 14px;background:#E6F5F0;border:1px solid #a8d8d0;border-radius:6px;font-size:0.82rem;color:#1a4a3f">
-        <strong>All tracks:</strong> personal branches are not pre-created on GitHub — you create your own with the commands above.
-        The four staging branches (<code>track/1-staging</code> through <code>track/4-staging</code>) already exist
-        on the remote and are the base for all personal branches. Do not branch off <code>master</code>.
+      <div class="faq-item">
+        <div class="faq-q">Where do I submit work?</div>
+        <div class="faq-a">Your track page has the PR workflow. Short: commit → push → PR → await review.</div>
       </div>
     </div>
-
-  </div>
-
-  <!-- ── SECTION 3: Student Database ── -->
-  <div class="setup-section">
-    <div class="section-header">
-      <span class="section-num">STEP 3</span>
-      <div>
-        <h2>Get your student database copy</h2>
-        <div class="sh-sub">Read from production — write to your copy only</div>
-      </div>
-    </div>
-
-    <p>
-      The KA system's state lives in <code>web_persistence_v5.db</code>. You will never write to this
-      file. The student copy, <code>web_persistence_v5_student_copy.db</code>, is a snapshot made at the
-      start of the quarter. It is safe to modify, break, and rebuild.
-    </p>
-
-    <pre><span class="cmd-comment"># The student DB copy is in data/student/ — confirm it exists</span>
-ls data/student/web_persistence_v5_student_copy.db
-
-<span class="cmd-comment"># If it's missing, ask the instructor to regenerate it before proceeding</span></pre>
-
-    <p>
-      Every Python script you run must use the student DB path. The canonical way to confirm this
-      in any script is to check the connection string at the top of the file:
-    </p>
-
-    <pre><span class="cmd-comment"># Correct — student copy</span>
-DB_PATH = "data/student/web_persistence_v5_student_copy.db"
-
-<span class="cmd-comment"># WRONG — never use this path in your work</span>
-DB_PATH = "data/web_persistence_v5.db"</pre>
-
-    <div class="callout callout-warn">
-      <strong>If you accidentally write to the production DB:</strong> Stop immediately, do not run
-      any more scripts, and message the instructor. Do not attempt to undo or repair the damage
-      yourself. The instructor has backup snapshots.
-    </div>
-  </div>
-
-  <!-- ── SECTION 4: Track-specific first steps ── -->
-  <div class="setup-section">
-    <div class="section-header">
-      <span class="section-num">STEP 4</span>
-      <div>
-        <h2>Your track's Day 1 checklist</h2>
-        <div class="sh-sub">What to do before your first sprint session</div>
-      </div>
-    </div>
-
-    <p>Open the accordion for your assigned track.</p>
-
-    <!-- Track 1 -->
-    <div class="track-setup">
-      <div class="track-setup-header" onclick="toggleTrack(this)">
-        <span class="track-pill t1" style="margin-right:4px">Track 1</span>
-        Image Tagging &amp; CNFA Annotation
-        <span class="chevron">▼</span>
-      </div>
-      <div class="track-setup-body">
-        <p style="margin-bottom:14px">Your job: annotate research images with CNFA construct tags using the 5-algorithm-bundle protocol.
-        Your code will read from the KA image registry and write tag assignments back to the student DB.</p>
-        <ul class="checklist">
-          <li>Read <code>ka_tag_assignment.html</code> in full — the 5 algorithm bundles (A–E) and Phase 0 table are your specification.</li>
-          <li>Open <code>image_tag_service.py</code> — skim its 41 attributes and 5 domain scores (spatial, material, lighting, social, nature).</li>
-          <li>Run the existing tag pipeline on a test image and confirm output: <code>python3 scripts/tag_image_test.py</code></li>
-          <li>Read <code>contracts/IMAGE_TAGGING_CONTRACT.md</code> — this defines what an accepted tag assignment looks like.</li>
-          <li>Find a sample image in <code>data/images/</code> and manually apply bundles A–E using the Phase 0 reference table. Write down your reasoning. This is your warm-up before the first sprint.</li>
-          <li>Post your personal branch URL in the Track 1 Slack/Teams channel.</li>
-        </ul>
-        <table style="margin-top:14px">
-          <tr><th>Week</th><th>Deliverable</th><th>Acceptance criterion</th></tr>
-          <tr><td>Week 1</td><td>10 images annotated with all 5 bundle scores</td><td>Scores in DB; inter-rater agreement ≥ 0.75 with TA check on 2 images</td></tr>
-          <tr><td>Week 3</td><td>50 images + bundle-selection rationale doc</td><td>Rationale doc ≥ 5 entries; bundle disagreements flagged</td></tr>
-          <tr><td>Week 6</td><td>150 images; regional heatmap prototype</td><td>Heatmap renders in browser; at least 2 domain scores shown</td></tr>
-          <tr><td>Week 10</td><td>Final: 300+ images, validated, merged to staging</td><td>PR accepted; TA verified ≥ 20 random-sample annotations</td></tr>
-        </table>
-      </div>
-    </div>
-
-    <!-- Track 2 -->
-    <div class="track-setup">
-      <div class="track-setup-header" onclick="toggleTrack(this)">
-        <span class="track-pill t2" style="margin-right:4px">Track 2</span>
-        Article Finding Pipeline
-        <span class="chevron">▼</span>
-      </div>
-      <div class="track-setup-body">
-        <p style="margin-bottom:14px">Your job: grow the KA article corpus. You will build search queries, run literature searches,
-        screen articles, acquire PDFs, and ingest them through the extraction pipeline.
-        Hard minimum: 150 citation records, 50 PDFs, by Week 8.</p>
-        <div class="callout callout-info">
-          <strong>One explicit Track 2 front:</strong> help build the future <em>Neural Underpinnings</em> layer.
-          Some article-finder teams will be assigned pathway families such as Predictive Processing, Salience Networks,
-          Interoceptive / Constructionist Affect, Neuromodulatory Systems, Chronobiological Regulation, or Multisensory Integration.
-          For that pathway, your job is to collect classic anchors, recent reviews, direct-measurement papers, and environment-relevant papers,
-          while marking clearly what is directly measured versus only inferred.
-        </div>
-        <ul class="checklist">
-          <li>Read <code>ka_article_finder_assignment.html</code> in full — the 5-phase pipeline and milestone table are your spec.</li>
-          <li>Open <code>data/student/research_queue_state.json</code> — these are your gap targets. You own a slice of this list (assigned in Week 1).</li>
-          <li>Run the duplicate check on one test DOI: <code>python3 scripts/check_duplicate.py --doi=10.xxxx/xxxx</code></li>
-          <li>Configure your local AF API settings before heavy search work: use a valid email for OpenAlex / Crossref / Unpaywall polite-pool access, and follow the current class guidance on when the OpenAlex trial key may be used.</li>
-          <li>Run AF commands through the repo virtualenv, not bare <code>python3</code>, or you may miss installed scorer/search dependencies and get false failures.</li>
-          <li>Read the Google AI Query Guide in <code>docs/GOOGLE_AI_QUERY_GUIDE.md</code> before writing any queries.</li>
-          <li>Set up your Query Diary: create <code>data/student/query_log_yourname.json</code> using the schema in <code>contracts/QUERY_LOG_SCHEMA.md</code>.</li>
-          <li>Run one test query on Google AI or Semantic Scholar. Record it in your Query Diary. This is your Week 3 starting point.</li>
-          <li>If assigned a neural pathway family, start with 3–8 classic anchor papers before expanding to reviews and direct-measurement papers.</li>
-          <li>Post your personal branch URL in the Track 2 Slack/Teams channel.</li>
-        </ul>
-        <table style="margin-top:14px">
-          <tr><th>Week</th><th>Deliverable</th><th>Acceptance criterion</th></tr>
-          <tr><td>Week 3</td><td>15 queries in Query Diary (≥4 search tools)</td><td>Log JSON valid; queries cover ≥3 gap targets</td></tr>
-          <tr><td>Week 4</td><td>20 research questions assessed for relevance</td><td>Relevance scores in DB; rationale for ≥5 inclusions</td></tr>
-          <tr><td>Week 7</td><td>150 citation records; 50 PDFs acquired</td><td>Dedup check passed; domain classifier acceptance ≥ 80%</td></tr>
-          <tr><td>Week 8</td><td>Citation report with quality ratings</td><td>Report follows template; ≥3 tiers of quality evidence</td></tr>
-        </table>
-      </div>
-    </div>
-
-    <!-- Track 3 -->
-    <div class="track-setup">
-      <div class="track-setup-header" onclick="toggleTrack(this)">
-        <span class="track-pill t3" style="margin-right:4px">Track 3</span>
-        VR Environment Production
-        <span class="chevron">▼</span>
-      </div>
-      <div class="track-setup-body">
-        <p style="margin-bottom:14px">Your job: design and produce VR research environments for CNFA experiments.
-        Each environment operationalises a specific independent variable (ceiling height, luminance,
-        biophilic density, etc.) that the KA research fronts have identified as under-studied via VR.</p>
-        <ul class="checklist">
-          <li>Install Unity Hub and Unity 6 LTS (or the version specified in <code>docs/UNITY_VERSION.md</code>). Accept academic license.</li>
-          <li>Install the XR Interaction Toolkit and OpenXR plugin (links in <code>docs/UNITY_SETUP.md</code>).</li>
-          <li>Read <code>data/student/research_queue_state.json</code> — filter for <code>"vr_friendly": true</code>. These are your candidate environments.</li>
-          <li>Read the paradigm profile for your assigned research front in the Knowledge Navigator archive — look for "missing paradigms: VR-friendly" to see which designs need environments.</li>
-          <li>Open the Scene Template in <code>unity/KA_SceneTemplate/</code> — this is your starting point for every scene. Do not build from scratch.</li>
-          <li>Read <code>contracts/VR_ENVIRONMENT_CONTRACT.md</code> — defines required scene components, IV manipulation range, data logging hooks.</li>
-          <li>Build and run the template scene. Confirm VR preview works (or flat-screen fallback). Screenshot your first working render and attach to your Day 1 stand-up post.</li>
-        </ul>
-        <table style="margin-top:14px">
-          <tr><th>Week</th><th>Deliverable</th><th>Acceptance criterion</th></tr>
-          <tr><td>Week 2</td><td>Assigned research front + paradigm analysis</td><td>1-page doc: gap, missing paradigm, IV, DV, scene proposal</td></tr>
-          <tr><td>Week 4</td><td>First scene: grey-box with IV manipulation working</td><td>IV range covers at least 3 levels; data hook logs to CSV</td></tr>
-          <tr><td>Week 7</td><td>Textured scene, lighting calibrated, pilot-ready</td><td>Pilot run with 2 teammates; no crashes; outcome measure recorded</td></tr>
-          <tr><td>Week 10</td><td>Final: packaged scene + documentation</td><td>Scene runs from clean clone; IV/DV documented; merged to staging</td></tr>
-        </table>
-      </div>
-    </div>
-
-    <!-- Track 4 -->
-    <div class="track-setup">
-      <div class="track-setup-header" onclick="toggleTrack(this)">
-        <span class="track-pill t4" style="margin-right:4px">Track 4</span>
-        GUI Evaluation &amp; Experiment Design
-        <span class="chevron">▼</span>
-      </div>
-      <div class="track-setup-body">
-        <p style="margin-bottom:14px">Your job: evaluate the Knowledge Atlas interface against real user scenarios,
-        document friction and missing affordances, and propose experiment designs to test your findings.
-        You do not write backend code — you write specifications, scenarios, and evaluation reports
-        that tell the other tracks what to fix and how to verify the fix.</p>
-        <ul class="checklist">
-          <li>Read <code>ka_gui_assignment.html</code> in full — the 4-phase workbook is your spec.</li>
-          <li>Read <code>ka_ai_methodology.html</code> — you will write structured prompts as part of your evaluation toolkit.</li>
-          <li>Open Chrome DevTools on <code>ka_home.html</code>. Find the Console and Network tabs. Run the page with DevTools open and note any errors.</li>
-          <li>Register a KA account at <code>ka_register.html</code> using your UCSD email. Confirm you can log in and see the "⊙ Page function spec" button on any page.</li>
-          <li>Write your first user scenario (you are the user): pick one task (e.g., "I want to find articles related to noise and concentration") and trace the optimal path through the current KA pages. Note every click and every moment of uncertainty. This is your Day 1 deliverable.</li>
-          <li>Read the Page Function Spec (⊙ button) for 3 pages and note where the stated objective does not match your experience.</li>
-          <li>Post your personal branch URL + Day 1 scenario note in the Track 4 Slack/Teams channel.</li>
-        </ul>
-        <table style="margin-top:14px">
-          <tr><th>Week</th><th>Deliverable</th><th>Acceptance criterion</th></tr>
-          <tr><td>Week 2</td><td>User type analysis (3 primary types, 2 edge cases)</td><td>Type doc follows template; each type has goals, constraints, failure modes</td></tr>
-          <tr><td>Week 4</td><td>5 detailed user scenarios with path traces</td><td>Each scenario has: task, optimal path, actual path, friction points, severity</td></tr>
-          <tr><td>Week 7</td><td>Full site walkthrough report (all 22 pages)</td><td>Every page has: function spec check, copy audit, affordance gaps</td></tr>
-          <tr><td>Week 10</td><td>Experiment design proposal for top 3 friction findings</td><td>Each proposal: IV, DV, pre-registration outline, acceptance criterion for fix</td></tr>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── SECTION 5: Submitting work ── -->
-  <div class="setup-section">
-    <div class="section-header">
-      <span class="section-num">STEP 5</span>
-      <div>
-        <h2>How to submit work — the Pull Request workflow</h2>
-        <div class="sh-sub">Commit → push → open PR → await review</div>
-      </div>
-    </div>
-
-    <p>
-      Every piece of work travels the same path: your personal branch → track staging branch → (after
-      instructor review) → master. You do not merge your own PRs. You open them, describe what you did
-      and what the acceptance criteria are, and wait for review.
-    </p>
-
-    <pre><span class="cmd-comment"># 1. Stage your changes (list files explicitly, not git add -A)</span>
-git add data/student/query_log_dkirsh.json
-
-<span class="cmd-comment"># 2. Write a descriptive commit message</span>
-git commit -m "T2 Week 3: 15 queries across 4 tools, 3 gap targets (acoustic/spacing/light)"
-
-<span class="cmd-comment"># 3. Push to your remote branch</span>
-git push
-
-<span class="cmd-comment"># 4. Go to github.com/dkirsh/Knowledge_Atlas → Pull Requests → New PR</span>
-<span class="cmd-comment">#    Base: track/2-staging   Compare: track/2-staging/yourname</span>
-<span class="cmd-comment">#    Title: [T2 Week 3] 15 queries, 3 gap targets</span>
-<span class="cmd-comment">#    Body: list what you did and paste the acceptance criteria from the assignment</span></pre>
-
-    <div class="callout callout-info">
-      <strong>Good commit messages</strong> include your track, the week, and a brief description of
-      what changed and why. Bad commit messages ("updates", "fix", "wip") make it impossible for
-      the instructor to review your work efficiently. Treat the commit message as the subject line
-      of an email to a careful reader.
-    </div>
-
-    <h3 style="font-family:Georgia,serif; font-size:1.0rem; font-weight:600; color:var(--navy); margin: 24px 0 10px;">
-      What the instructor checks when reviewing your PR
-    </h3>
-    <ul class="checklist">
-      <li>Does the code / data match the stated acceptance criteria for this sprint milestone?</li>
-      <li>Is the student DB path correct? (No writes to production path.)</li>
-      <li>Are tests passing? (<code>pytest tests/track_N/</code> must pass before requesting review.)</li>
-      <li>Is the commit message descriptive enough to reconstruct what was done without reading the diff?</li>
-      <li>Is the change self-contained — i.e., would reverting this PR leave the codebase in a clean state?</li>
-    </ul>
-  </div>
-
-  <!-- ── SECTION 6: AI assistance ── -->
-  <div class="setup-section">
-    <div class="section-header">
-      <span class="section-num">STEP 6</span>
-      <div>
-        <h2>Using AI assistance correctly</h2>
-        <div class="sh-sub">AI is a directed instrument in your pipeline — not a chatbot</div>
-      </div>
-    </div>
-
-    <p>
-      This course teaches a specific methodology for AI-assisted development. The goal is not to
-      "get good output" — it is to produce output that meets a formal specification, passes defined
-      tests, and integrates correctly with the larger system. That requires a different approach
-      than asking a chatbot for help.
-    </p>
-    <p>
-      The methodology has five components: role assignment, task definition, constraints and
-      prohibitions, context loading, and output format specification. These are covered in full
-      — with worked examples for each track — in the AI Methodology guide.
-    </p>
-
-    <a href="ka_ai_methodology.html" class="method-cta">
-      <div class="method-cta-icon">🤖</div>
-      <div class="method-cta-text">
-        <h3>AI-Directed Development: The KA Methodology</h3>
-        <p>Five-component prompt structure · The "DO NOT" pattern · Contract-to-test pipeline ·
-        Cross-AI verification · Track-specific worked examples</p>
-      </div>
-      <div class="method-cta-arrow">→</div>
-    </a>
-  </div>
-
-  <!-- ── SECTION 7: Quick reference ── -->
-  <div class="setup-section">
-    <div class="section-header">
-      <span class="section-num">QUICK REF</span>
-      <div>
-        <h2>Files and directories every student needs to know</h2>
-        <div class="sh-sub">Read these before you touch anything</div>
-      </div>
-    </div>
-
-    <table>
-      <thead>
-        <tr><th>Path</th><th>What it is</th><th>Who uses it</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><code>data/student/web_persistence_v5_student_copy.db</code></td>
-          <td>Your safe-to-write database copy. This is your sandbox.</td>
-          <td>All tracks</td>
-        </tr>
-        <tr>
-          <td><code>data/student/research_queue_state.json</code></td>
-          <td>38 research gap targets with VOI scores and VR-readiness flags</td>
-          <td>T2, T3</td>
-        </tr>
-        <tr>
-          <td><code>data/student/query_log_{yourname}.json</code></td>
-          <td>Your personal query diary (schema in contracts/)</td>
-          <td>T2</td>
-        </tr>
-        <tr>
-          <td><code>contracts/</code></td>
-          <td>Formal input/output specifications and acceptance criteria for each track</td>
-          <td>All tracks</td>
-        </tr>
-        <tr>
-          <td><code>tests/track_N/</code></td>
-          <td>Automated tests for your track. Must pass before opening any PR.</td>
-          <td>All tracks</td>
-        </tr>
-        <tr>
-          <td><code>scripts/</code></td>
-          <td>Utility scripts: duplicate checker, ingest wrapper, PDF cascade, tag pipeline</td>
-          <td>T1, T2</td>
-        </tr>
-        <tr>
-          <td><code>unity/KA_SceneTemplate/</code></td>
-          <td>Starting Unity scene for VR environment work — do not build from scratch</td>
-          <td>T3</td>
-        </tr>
-        <tr>
-          <td><code>docs/</code></td>
-          <td>Architecture docs, sprint completion reports, design decisions log</td>
-          <td>All tracks (read)</td>
-        </tr>
-        <tr>
-          <td><code>TASKS.md</code></td>
-          <td>Canonical task log — the instructor updates this; check it each sprint</td>
-          <td>All tracks</td>
-        </tr>
-      </tbody>
-    </table>
   </div>
 
 </div><!-- /outer -->
 
-<div class="version-badge">KA UI · v0.4</div>
+<footer class="ka-page-footer" style="background:#1C3D3A; padding:28px 32px; margin-top:40px; display:flex; justify-content:space-between; align-items:center; border-radius:8px 8px 0 0;">
+  <a href="ka_home.html" style="color:#A8C8BF; font-size:0.85rem; text-decoration:none;">← Back to Home</a>
+  <div style="display:flex; gap:12px;">
+    <a href="ka_ai_methodology.html" style="background:#2A7868; color:#F7F4EF; padding:8px 18px; border-radius:6px; text-decoration:none; font-size:0.85rem; font-weight:600;">Read AI Methodology →</a>
+  </div>
+</footer>
+
+<div class="version-badge">KA UI · v0.5</div>
 
 <script>
-function toggleTrack(header) {
+function toggleAccordion(header) {
   var body = header.nextElementSibling;
   var chevron = header.querySelector('.chevron');
   if (body.classList.contains('open')) {
@@ -872,20 +492,21 @@ function toggleTrack(header) {
     chevron.textContent = '▲';
   }
 }
-// Auto-open all tracks by default
-document.querySelectorAll('.track-setup-body').forEach(function(b) {
-  b.classList.add('open');
-  b.previousElementSibling.querySelector('.chevron').textContent = '▲';
-});
-</script>
 
-<footer class="ka-page-footer" style="background:#1C3D3A; padding:28px 32px; margin-top:40px; display:flex; justify-content:space-between; align-items:center; border-radius:8px 8px 0 0;">
-  <a href="ka_home.html" style="color:#A8C8BF; font-size:0.85rem; text-decoration:none;">← Back to Home</a>
-  <div style="display:flex; gap:12px;">
-    <a href="ka_dashboard.html" style="background:#2A7868; color:#F7F4EF; padding:8px 18px; border-radius:6px; text-decoration:none; font-size:0.85rem; font-weight:600;">Go to My Dashboard →</a>
-    <a href="ka_ai_methodology.html" style="background:#2A7868; color:#F7F4EF; padding:8px 18px; border-radius:6px; text-decoration:none; font-size:0.85rem; font-weight:600;">Read AI Methodology →</a>
-  </div>
-</footer>
+function switchTab(event, tabId) {
+  // Hide all tab content
+  var contents = event.target.parentElement.parentElement.querySelectorAll('.tab-content');
+  contents.forEach(function(c) { c.classList.remove('active'); });
+
+  // Remove active class from all buttons
+  var buttons = event.target.parentElement.querySelectorAll('.tab-button');
+  buttons.forEach(function(b) { b.classList.remove('active'); });
+
+  // Show selected tab and mark button active
+  document.getElementById(tabId).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
 
 <script src="ka_mode_switch.js"></script>
 <script src="ka_site_shell.js"></script>
@@ -912,18 +533,17 @@ window.KA_LIVE_CONTEXT_CONFIG = {
 <script>
 window.KA_PAGE_FUNCTION = {
   pageId: 'ka_student_setup',
-  title: 'Getting Started — Contributor Setup',
-  audience: 'New COGS 160 students on their first day; any contributor who needs to (re)configure their environment',
-  purpose: 'Single-source-of-truth for environment setup, git workflow, track-specific Day 1 checklists, student database safety, the PR submission process, and pointers to the AI methodology. Eliminates the need for emailed instructions or verbal onboarding.',
-  workflowPos: 'Before any track work — must be completed before a student opens their first sprint. Links forward to the AI methodology page.',
-  notFor: 'Track-specific assignment details (those live on each track assignment page), database schema documentation, or advanced git operations.',
+  title: 'Student Orientation Hub',
+  audience: 'New COGS 160 students on their first day; any contributor starting a new track',
+  purpose: 'A fast, discoverable orientation hub that explains what Knowledge Atlas is, directs students to their track assignment page, covers bare-minimum environment setup, and teaches the AI-directed development methodology. Eliminates the need for verbal onboarding or email instructions.',
+  workflowPos: 'First landing page for students. Should send them to their track page within 1–2 minutes.',
+  notFor: 'Track-specific assignment details, database schema docs, or advanced git operations (those are on track pages).',
   phase: 'Phase 1 — Student onboarding infrastructure',
   evalQuestions: [
-    'Can a student with no prior git experience complete Steps 1–3 without asking the instructor for help?',
-    'Is the student database safety warning prominent enough? Would a distracted reader miss it?',
-    'Are the per-track Day 1 checklists specific enough to be actionable on Day 1, or do they leave gaps?',
-    'Does the PR workflow section make the instructor review criteria clear enough that students know what "done" looks like?',
-    'Is anything missing that caused a student to come to office hours in the first week?'
+    'Can a student pick their track and navigate to the right assignment page in under 1 minute?',
+    'Is the "ask AI" guidance clear enough that a stuck student will actually use it?',
+    'Does the page feel short and inviting, or overwhelming?',
+    'Are the track descriptions compelling enough to help students decide?'
   ]
 };
 </script>
@@ -932,14 +552,14 @@ window.KA_PAGE_FUNCTION = {
 <script>
 window.KA_ABOUT_PAGE = {
   pageId: 'ka_student_setup',
-  objective: "A complete Day 1 onboarding guide covering environment setup, git workflow, student database safety, track-specific checklists, the PR submission process, and the AI methodology.",
-  users: "New COGS 160 students; any contributor reconfiguring after a gap",
+  objective: 'A concise orientation hub where students land on Day 1, pick their track in a visual grid, and navigate to their assignment page. Covers minimal environment setup (deferred to track pages) and teaches the AI-directed development methodology.',
+  users: 'New COGS 160 students; any contributor joining a track for the first time',
   uses: [
-    "Install Python 3.12, git, and VS Code using the OS-specific commands",
-    "Clone the repo, configure git identity, and create a personal track branch",
-    "Understand the student database copy and how to avoid writing to production",
-    "Complete the Day 1 checklist for your assigned track",
-    "Learn the PR submission workflow before your first sprint ends"
+    'Understand what Knowledge Atlas is and what the four tracks do',
+    'Pick your track and navigate to the assignment page',
+    'Install Python 3.12, git, and VS Code (with OS-specific tabs)',
+    'Learn to use AI as a development tool, not a shortcut',
+    'Find quick answers to common first-day questions'
   ]
 };
 </script>
