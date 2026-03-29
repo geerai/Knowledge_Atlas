@@ -325,7 +325,7 @@
     <div class="callout callout-warn">
       <strong>One rule above all others:</strong> Never run any script that writes to the database
       unless you have confirmed you are pointing at the <em>student copy</em>
-      (<code>web_persistence_v5_student.db</code>), not the operational database.
+      (<code>web_persistence_v5_student_copy.db</code>), not the operational database.
       Check the connection string before every session. This is the single most common
       first-week mistake.
     </div>
@@ -541,12 +541,12 @@ git push -u origin track/4-staging/<span style="color:#E8872A">your-ucsd-usernam
 
     <p>
       The KA system's state lives in <code>web_persistence_v5.db</code>. You will never write to this
-      file. The student copy, <code>web_persistence_v5_student.db</code>, is a snapshot made at the
+      file. The student copy, <code>web_persistence_v5_student_copy.db</code>, is a snapshot made at the
       start of the quarter. It is safe to modify, break, and rebuild.
     </p>
 
     <pre><span class="cmd-comment"># The student DB copy is in data/student/ — confirm it exists</span>
-ls data/student/web_persistence_v5_student.db
+ls data/student/web_persistence_v5_student_copy.db
 
 <span class="cmd-comment"># If it's missing, ask the instructor to regenerate it before proceeding</span></pre>
 
@@ -556,7 +556,7 @@ ls data/student/web_persistence_v5_student.db
     </p>
 
     <pre><span class="cmd-comment"># Correct — student copy</span>
-DB_PATH = "data/student/web_persistence_v5_student.db"
+DB_PATH = "data/student/web_persistence_v5_student_copy.db"
 
 <span class="cmd-comment"># WRONG — never use this path in your work</span>
 DB_PATH = "data/web_persistence_v5.db"</pre>
@@ -808,7 +808,7 @@ git push
       </thead>
       <tbody>
         <tr>
-          <td><code>data/student/web_persistence_v5_student.db</code></td>
+          <td><code>data/student/web_persistence_v5_student_copy.db</code></td>
           <td>Your safe-to-write database copy. This is your sandbox.</td>
           <td>All tracks</td>
         </tr>
@@ -878,6 +878,14 @@ document.querySelectorAll('.track-setup-body').forEach(function(b) {
   b.previousElementSibling.querySelector('.chevron').textContent = '▲';
 });
 </script>
+
+<footer class="ka-page-footer" style="background:#1C3D3A; padding:28px 32px; margin-top:40px; display:flex; justify-content:space-between; align-items:center; border-radius:8px 8px 0 0;">
+  <a href="ka_home.html" style="color:#A8C8BF; font-size:0.85rem; text-decoration:none;">← Back to Home</a>
+  <div style="display:flex; gap:12px;">
+    <a href="ka_dashboard.html" style="background:#2A7868; color:#F7F4EF; padding:8px 18px; border-radius:6px; text-decoration:none; font-size:0.85rem; font-weight:600;">Go to My Dashboard →</a>
+    <a href="ka_ai_methodology.html" style="background:#2A7868; color:#F7F4EF; padding:8px 18px; border-radius:6px; text-decoration:none; font-size:0.85rem; font-weight:600;">Read AI Methodology →</a>
+  </div>
+</footer>
 
 <script src="ka_mode_switch.js"></script>
 <script src="ka_site_shell.js"></script>
