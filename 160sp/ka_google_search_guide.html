@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Writing Google AI Citation Queries — K-ATLAS · COGS 160</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1C3D3A;
+      --gold: #E8872A;
+      --gold-light: #fde8d0;
+      --blue-mid: #2a4a80;
+      --text: #1a1a2e;
+      --muted: #556;
+      --bg: #f4f6fa;
+      --card: #ffffff;
+      --border: #dde3eb;
+      --green: #1a7a4a;
+      --green-bg: #eaf7ef;
+      --red: #c0392b;
+      --red-bg: #fdf0ef;
+      --amber: #7a3800;
+      --amber-bg: #fff5ed;
+      --code-bg: #1e2a3a;
+      --code-text: #e8f0fe;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* Header */
+    .site-header {
+      background: var(--navy);
+      color: #fff;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+    .header-brand { display: flex; align-items: center; gap: 0.8rem; }
+    .header-logo { font-size: 1.25rem; font-weight: 900; color: #fff; }
+    .header-logo span { color: var(--gold); }
+    .header-tag { font-size: 0.72rem; color: #7a9bbf; text-transform: uppercase; letter-spacing: 0.1em; }
+    .header-nav { display: flex; gap: 0.5rem; }
+    .header-nav a {
+      color: #cfd8e8; text-decoration: none; font-size: 0.82rem; font-weight: 500;
+      padding: 0.3rem 0.7rem; border-radius: 6px; transition: background 0.15s;
+    }
+    .header-nav a:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+    /* Layout */
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      max-width: 1280px;
+      margin: 0 auto;
+      min-height: calc(100vh - 56px);
+    }
+
+    /* Sidebar TOC */
+    .sidebar {
+      position: sticky;
+      top: 56px;
+      height: calc(100vh - 56px);
+      overflow-y: auto;
+      padding: 2rem 1.2rem 2rem 1.5rem;
+      border-right: 1px solid var(--border);
+      background: #fff;
+    }
+    .toc-title {
+      font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.12em; color: var(--muted); margin-bottom: 1rem;
+    }
+    .toc-list { list-style: none; }
+    .toc-list li { margin-bottom: 0.1rem; }
+    .toc-list a {
+      display: block; padding: 0.3rem 0.6rem; border-radius: 6px;
+      font-size: 0.82rem; color: var(--navy); text-decoration: none;
+      transition: background 0.12s, color 0.12s;
+      border-left: 3px solid transparent;
+    }
+    .toc-list a:hover { background: var(--bg); color: var(--gold); }
+    .toc-list a.active { border-left-color: var(--gold); background: var(--gold-light); color: var(--navy); font-weight: 600; }
+    .toc-section { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin: 1.2rem 0.6rem 0.4rem; }
+
+    /* Main content */
+    .main { padding: 3rem 3.5rem; max-width: 820px; }
+
+    .page-eyebrow {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.12em; color: var(--gold); margin-bottom: 0.5rem;
+    }
+    .page-title {
+      font-size: 2.1rem; font-weight: 900; color: var(--navy);
+      line-height: 1.2; margin-bottom: 0.7rem;
+    }
+    .page-subtitle {
+      font-size: 1rem; color: var(--muted); margin-bottom: 2.5rem;
+      border-bottom: 2px solid var(--border); padding-bottom: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.45rem; font-weight: 800; color: var(--navy);
+      margin: 3rem 0 1rem; padding-top: 0.5rem;
+      border-top: 2px solid var(--border);
+    }
+    h2:first-of-type { margin-top: 1.5rem; border-top: none; }
+    h3 { font-size: 1.1rem; font-weight: 700; color: var(--blue-mid); margin: 2rem 0 0.7rem; }
+    h4 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin: 1.5rem 0 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    p { margin-bottom: 1rem; }
+    ul, ol { margin: 0.5rem 0 1rem 1.4rem; }
+    li { margin-bottom: 0.4rem; }
+
+    /* Callout boxes */
+    .callout {
+      border-radius: 10px; padding: 1.1rem 1.3rem;
+      margin: 1.5rem 0; border-left: 4px solid;
+    }
+    .callout-title { font-weight: 700; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.4rem; }
+    .callout.good { background: var(--green-bg); border-color: var(--green); }
+    .callout.good .callout-title { color: var(--green); }
+    .callout.good p, .callout.good li { color: #1d3a2a; }
+    .callout.bad { background: var(--red-bg); border-color: var(--red); }
+    .callout.bad .callout-title { color: var(--red); }
+    .callout.bad p, .callout.bad li { color: #4a1a14; }
+    .callout.tip { background: var(--amber-bg); border-color: var(--gold); }
+    .callout.tip .callout-title { color: var(--amber); }
+    .callout.tip p, .callout.tip li { color: #4a3800; }
+    .callout.info { background: #eef4ff; border-color: var(--blue-mid); }
+    .callout.info .callout-title { color: var(--blue-mid); }
+    .callout.info p, .callout.info li { color: #1a2a4a; }
+
+    /* Query blocks */
+    .query-block {
+      background: var(--code-bg); color: var(--code-text);
+      border-radius: 10px; padding: 1.1rem 1.4rem;
+      font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+      font-size: 0.88rem; line-height: 1.6;
+      margin: 0.8rem 0 1.2rem;
+      position: relative;
+    }
+    .query-block .qb-label {
+      position: absolute; top: -10px; left: 12px;
+      font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; padding: 2px 8px; border-radius: 4px;
+      font-family: -apple-system, sans-serif;
+    }
+    .query-block.good-q .qb-label { background: var(--green); color: #fff; }
+    .query-block.bad-q .qb-label { background: var(--red); color: #fff; }
+    .query-block.neutral-q .qb-label { background: #4a5568; color: #fff; }
+
+    /* Anatomy diagram */
+    .anatomy-wrap {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.8rem;
+      margin: 1.5rem 0;
+    }
+    .anatomy-query {
+      font-family: "SF Mono", "Fira Code", monospace;
+      font-size: 0.92rem;
+      line-height: 2.6;
+      color: var(--text);
+    }
+    .anatomy-span {
+      display: inline;
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+    .s1 { background: #dbeafe; color: #1e40af; }
+    .s2 { background: #dcfce7; color: #166534; }
+    .s3 { background: #fef3c7; color: #92400e; }
+    .s4 { background: #fce7f3; color: #9d174d; }
+    .s5 { background: #ede9fe; color: #5b21b6; }
+    .s6 { background: #ffedd5; color: #9a3412; }
+
+    .anatomy-legend {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+      margin-top: 1rem; padding-top: 0.8rem;
+      border-top: 1px solid var(--border);
+    }
+    .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; }
+    .legend-dot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+
+    /* Before/After comparison */
+    .compare-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1rem; margin: 1.2rem 0;
+    }
+    .compare-col { border-radius: 10px; padding: 1rem 1.1rem; }
+    .compare-col.before { background: var(--red-bg); border: 1.5px solid #f5c6cb; }
+    .compare-col.after  { background: var(--green-bg); border: 1.5px solid #c3e6cb; }
+    .compare-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+    .compare-col.before .compare-label { color: var(--red); }
+    .compare-col.after  .compare-label { color: var(--green); }
+    .compare-text { font-family: "SF Mono", monospace; font-size: 0.82rem; line-height: 1.5; }
+    .compare-col.before .compare-text { color: #4a1a14; }
+    .compare-col.after  .compare-text { color: #1d3a2a; }
+
+    /* Component table */
+    .component-table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: 0.88rem; }
+    .component-table th {
+      background: var(--navy); color: #fff; text-align: left;
+      padding: 0.7rem 1rem; font-size: 0.78rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .component-table td { padding: 0.65rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .component-table tr:last-child td { border-bottom: none; }
+    .component-table tr:nth-child(even) td { background: var(--bg); }
+    .comp-badge {
+      display: inline-block; padding: 2px 8px; border-radius: 4px;
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .comp-req { background: #dbeafe; color: #1e40af; }
+    .comp-opt { background: #f3f4f6; color: #6b7280; }
+
+    /* Examples table */
+    .examples-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.83rem; }
+    .examples-table th { background: var(--navy); color: #fff; padding: 0.6rem 0.8rem; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; }
+    .examples-table td { padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .examples-table tr:nth-child(even) td { background: var(--bg); }
+    .badge-topic {
+      display: inline-block; padding: 2px 7px; border-radius: 4px;
+      font-size: 0.7rem; font-weight: 600; white-space: nowrap;
+      background: var(--gold-light); color: var(--amber);
+    }
+
+    /* Step cards */
+    .steps { display: flex; flex-direction: column; gap: 1rem; margin: 1.2rem 0; }
+    .step-card {
+      display: flex; gap: 1rem; align-items: flex-start;
+      background: #fff; border: 1.5px solid var(--border);
+      border-radius: 10px; padding: 1rem 1.2rem;
+    }
+    .step-num {
+      flex-shrink: 0; width: 32px; height: 32px;
+      background: var(--navy); color: var(--gold);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 0.95rem;
+    }
+    .step-body h4 { margin: 0 0 0.3rem; font-size: 0.95rem; color: var(--navy); text-transform: none; letter-spacing: 0; }
+    .step-body p { margin: 0; font-size: 0.88rem; color: var(--muted); }
+
+    /* Checklist */
+    .checklist { list-style: none; margin: 0.8rem 0; }
+    .checklist li {
+      display: flex; align-items: flex-start; gap: 0.6rem;
+      padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 0.88rem;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .check-icon { flex-shrink: 0; width: 20px; height: 20px; margin-top: 1px; }
+
+    /* Rubric table */
+    .rubric-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.85rem; }
+    .rubric-table th { background: var(--navy); color: #fff; padding: 0.6rem 0.8rem; text-align: left; }
+    .rubric-table td { padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--border); }
+    .rubric-table tr:nth-child(even) td { background: var(--bg); }
+    .score-pill {
+      display: inline-block; padding: 2px 10px; border-radius: 12px;
+      font-size: 0.78rem; font-weight: 700;
+    }
+    .s-full { background: var(--green-bg); color: var(--green); }
+    .s-part { background: var(--amber-bg); color: var(--amber); }
+
+    footer {
+      background: var(--navy); color: #7a9bbf;
+      text-align: center; padding: 1.5rem;
+      font-size: 0.78rem; margin-top: 4rem;
+    }
+
+    code { background: #e8edf5; padding: 1px 5px; border-radius: 3px; font-size: 0.88em; font-family: "SF Mono", monospace; }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .main { padding: 2rem 1.5rem; }
+      .compare-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-brand">
+    <div>
+      <div class="header-logo">K-<span>ATLAS</span></div>
+      <div class="header-tag">UC San Diego · Cognitive Science</div>
+    </div>
+  </div>
+  <nav class="header-nav">
+    <a href="../ka_home.html">Home</a>
+    <a href="ka_collect_articles.html">A0 Assignment</a>
+    <a href="ka_student_setup.html">Setup</a>
+    <a href="ka_schedule.html">Schedule</a>
+  </nav>
+</header>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <p class="toc-title">On This Page</p>
+    <ul class="toc-list">
+      <li><a href="#why-gai">Why Google AI Citation?</a></li>
+      <span class="toc-section">Core Method</span>
+      <li><a href="#how-it-works">How AI Citation works</a></li>
+      <li><a href="#anatomy">Query anatomy</a></li>
+      <li><a href="#five-components">The five components</a></li>
+      <span class="toc-section">Writing Queries</span>
+      <li><a href="#before-after">Boolean vs. AI Citation</a></li>
+      <li><a href="#patterns">Sentence patterns</a></li>
+      <li><a href="#framing">Evidential framing</a></li>
+      <li><a href="#harder">Advanced: mechanism queries</a></li>
+      <span class="toc-section">Practice</span>
+      <li><a href="#worked">Worked examples</a></li>
+      <li><a href="#mistakes">Common mistakes</a></li>
+      <li><a href="#qbank">From K-ATLAS question bank</a></li>
+      <span class="toc-section">Submission</span>
+      <li><a href="#workflow">Search workflow</a></li>
+      <li><a href="#evaluate">Evaluating results</a></li>
+      <li><a href="#csv-format">CSV format</a></li>
+      <li><a href="#checklist">Pre-submit checklist</a></li>
+    </ul>
+  </aside>
+
+  <main class="main">
+    <div class="page-eyebrow">K-ATLAS Student Module</div>
+    <h1 class="page-title">Writing Google AI Citation Queries</h1>
+    <p class="page-subtitle">
+      A complete guide to formulating natural-language search queries that retrieve
+      peer-reviewed evidence about environment–behavior relationships —
+      the foundation of your K-ATLAS article submission.
+    </p>
+
+    <!-- WHY -->
+    <section id="why-gai">
+      <h2>Why Google AI Citation?</h2>
+      <p>
+        Academic search has changed fundamentally. Traditional Boolean keyword search —
+        stringing together terms with AND, OR, and quotation marks — was designed for
+        index-based retrieval systems that matched exact strings. Google AI Citation
+        (the AI Overview with source citations that appears at the top of Google results)
+        works differently: it reads your query as a natural-language question, reasons
+        about what you are asking, and returns papers whose arguments and findings answer
+        that question, even when the papers use different terminology than you do.
+      </p>
+      <p>
+        For environmental psychology research — a field where the same phenomenon might
+        be called "restorative experience," "psychological restoration," "cognitive
+        recovery," or "directed attention fatigue relief" in different labs —
+        this semantic understanding is transformative. A well-formed natural-language
+        query finds papers across terminological traditions. A keyword query finds only
+        papers using your exact phrasing.
+      </p>
+      <div class="callout tip">
+        <div class="callout-title">Key Insight</div>
+        <p>Google AI Citation treats your query as a <strong>research question</strong>,
+        not a vocabulary list. The better your question is as a scientific question —
+        specifying mechanism, outcome, population, and theoretical frame —
+        the more precisely it retrieves. Your goal is to write something a careful
+        researcher would actually ask.</p>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works">
+      <h2>How Google AI Citation Works</h2>
+      <p>
+        When you type a query into Google and the AI Overview box appears at the top,
+        Google has used a large language model to synthesize an answer from multiple
+        sources and, crucially, to link those sources with numbered citations. Each
+        cited source is a real paper or article that the model judged relevant to your
+        specific question.
+      </p>
+      <p>
+        The model is not doing keyword matching. It performs <em>semantic retrieval</em>:
+        it encodes your question and each candidate paper into a shared semantic space
+        and returns papers whose meaning is closest to yours. The practical implications
+        are as follows. Synonyms are handled automatically: "stress recovery" and
+        "physiological restoration" and "autonomic recovery" are understood as related
+        concepts. Implicit relationships are caught: asking about "why green spaces
+        reduce cortisol" retrieves papers about HPA axis regulation and nature exposure
+        even if they never use the word "cortisol" in their titles. Specificity is
+        rewarded: vague queries return generic results, while a precise, well-framed
+        question about a specific mechanism, population, and outcome returns targeted,
+        high-quality papers. Full sentences consistently outperform fragments: "restorative
+        environments attention" is a fragment, whereas "What evidence shows that exposure
+        to natural environments restores directed-attention capacity in adults with high
+        cognitive load?" is a research question — and it retrieves better papers.
+      </p>
+
+      <div class="callout info">
+        <div class="callout-title">Complementary Tools</div>
+        <p>Google AI Citation works best for initial discovery. Once you have candidate
+        papers, use <strong>Elicit</strong> (elicit.org) to extract structured data
+        from PDFs, <strong>Consensus</strong> (consensus.app) for evidence summaries
+        across many papers, and <strong>Connected Papers</strong>
+        (connectedpapers.com) to trace citation networks. This module focuses on
+        Google AI Citation because it is the primary discovery tool in K-ATLAS.</p>
+      </div>
+    </section>
+
+    <!-- ANATOMY -->
+    <section id="anatomy">
+      <h2>Query Anatomy</h2>
+      <p>
+        The most effective Google AI Citation queries follow a consistent sentence
+        architecture. Every component contributes to precision. Below is a fully
+        annotated example drawn from the K-ATLAS question bank (SQ-037):
+      </p>
+
+      <div class="anatomy-wrap">
+        <div class="anatomy-query">
+          <span class="anatomy-span s1">What do neuroimaging studies using fMRI</span>
+          <span class="anatomy-span s2"> reveal about amygdala reactivity</span>
+          <span class="anatomy-span s3"> when healthy adults</span>
+          <span class="anatomy-span s4"> view natural landscapes versus urban scenes,</span>
+          <span class="anatomy-span s5"> and does reduced amygdala activation</span>
+          <span class="anatomy-span s6"> explain the stress-buffering effect of nature exposure?</span>
+        </div>
+        <div class="anatomy-legend">
+          <div class="legend-item"><div class="legend-dot s1"></div><span><strong>Method signal</strong> — specifies the evidence type (fMRI, RCT, survey…)</span></div>
+          <div class="legend-item"><div class="legend-dot s2"></div><span><strong>Neural / physiological target</strong> — the specific mechanism or measure</span></div>
+          <div class="legend-item"><div class="legend-dot s3"></div><span><strong>Population</strong> — who the participants are</span></div>
+          <div class="legend-item"><div class="legend-dot s4"></div><span><strong>Experimental contrast</strong> — the comparison that drives the effect</span></div>
+          <div class="legend-item"><div class="legend-dot s5"></div><span><strong>Explanatory bridge</strong> — the mechanism to be explained</span></div>
+          <div class="legend-item"><div class="legend-dot s6"></div><span><strong>Theoretical anchor</strong> — the broader outcome or theory</span></div>
+        </div>
+      </div>
+
+      <p>
+        Not every query needs all six elements. The minimum viable query contains
+        a specific outcome and a theoretical or empirical anchor. Adding method
+        signals, population specifiers, and mechanistic bridges progressively
+        sharpens precision.
+      </p>
+    </section>
+
+    <!-- FIVE COMPONENTS -->
+    <section id="five-components">
+      <h2>The Five Components of a Strong Query</h2>
+      <p>
+        Here is a systematic framework for constructing any K-ATLAS query.
+        You do not need all five every time, but knowing them allows you to
+        diagnose why a weak query is weak.
+      </p>
+
+      <table class="component-table">
+        <thead>
+          <tr>
+            <th>Component</th>
+            <th>Status</th>
+            <th>What it specifies</th>
+            <th>Example phrase</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1. Evidence type</strong></td>
+            <td><span class="comp-badge comp-opt">Optional but powerful</span></td>
+            <td>The method or study design you want. Signals to the AI that you want empirical papers, not reviews or opinion pieces.</td>
+            <td><em>"What do peer-reviewed studies show…" / "What experimental evidence demonstrates…" / "What do RCT findings indicate…"</em></td>
+          </tr>
+          <tr>
+            <td><strong>2. Mechanism or measure</strong></td>
+            <td><span class="comp-badge comp-req">Required</span></td>
+            <td>The specific neural, physiological, cognitive, or behavioral process you want explained. This is the heart of the query.</td>
+            <td><em>"…about cortisol reduction…" / "…about directed attention restoration…" / "…amygdala reactivity…"</em></td>
+          </tr>
+          <tr>
+            <td><strong>3. Environmental condition</strong></td>
+            <td><span class="comp-badge comp-req">Required</span></td>
+            <td>The built or natural environment feature being manipulated or measured. Specific is better than general.</td>
+            <td><em>"…when exposed to green roofs…" / "…in response to ceiling height variation…" / "…viewing fractal patterns at D=1.3–1.5…"</em></td>
+          </tr>
+          <tr>
+            <td><strong>4. Population or context</strong></td>
+            <td><span class="comp-badge comp-opt">Optional but sharpening</span></td>
+            <td>Who the study population is, or in what setting. Prevents retrieval of irrelevant subfields such as animal studies when you want human data.</td>
+            <td><em>"…in healthy adults…" / "…among office workers…" / "…in children with ADHD…" / "…in post-surgical patients…"</em></td>
+          </tr>
+          <tr>
+            <td><strong>5. Theoretical anchor</strong></td>
+            <td><span class="comp-badge comp-req">Required</span></td>
+            <td>The theory, outcome, or explanatory goal that frames the query. This anchors retrieval to papers that matter to K-ATLAS's knowledge base.</td>
+            <td><em>"…consistent with Attention Restoration Theory?" / "…as predicted by Stress Recovery Theory?" / "…to explain biophilic design benefits?"</em></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- BEFORE/AFTER -->
+    <section id="before-after">
+      <h2>Boolean vs. Google AI Citation: Side-by-Side</h2>
+      <p>
+        The most common student mistake is writing Boolean-style fragments and
+        pasting them into Google. The comparisons below show why this produces
+        poor results — and what the correct version looks like.
+      </p>
+
+      <h3>Example 1: Attention Restoration Theory</h3>
+      <div class="compare-grid">
+        <div class="compare-col before">
+          <div class="compare-label">Wrong — Boolean</div>
+          <div class="compare-text">"attention restoration" AND "built environment" AND (nature OR green) -review</div>
+        </div>
+        <div class="compare-col after">
+          <div class="compare-label">Correct — Google AI Citation</div>
+          <div class="compare-text">What peer-reviewed evidence shows that exposure to natural elements in built environments — such as indoor plants, water features, or views of greenery — restores directed attention and reduces mental fatigue in office workers?</div>
+        </div>
+      </div>
+
+      <h3>Example 2: Biophilic design and stress</h3>
+      <div class="compare-grid">
+        <div class="compare-col before">
+          <div class="compare-label">Wrong — Boolean</div>
+          <div class="compare-text">biophilic design stress cortisol reduction workplace</div>
+        </div>
+        <div class="compare-col after">
+          <div class="compare-label">Correct — Google AI Citation</div>
+          <div class="compare-text">What experimental studies using cortisol measurement or skin conductance have found that biophilic design features — natural light, living walls, or natural materials — reduce physiological stress responses in workplace settings?</div>
+        </div>
+      </div>
+
+      <h3>Example 3: Neural mechanisms of nature exposure</h3>
+      <div class="compare-grid">
+        <div class="compare-col before">
+          <div class="compare-label">Wrong — Boolean</div>
+          <div class="compare-text">fMRI nature urban amygdala activation difference brain</div>
+        </div>
+        <div class="compare-col after">
+          <div class="compare-label">Correct — Google AI Citation</div>
+          <div class="compare-text">What do neuroimaging studies reveal about differences in amygdala and prefrontal cortex activation when participants view natural landscapes versus urban environments, and do these neural differences explain the well-being benefits attributed to nature exposure?</div>
+        </div>
+      </div>
+
+      <h3>Example 4: Social interaction in built environments</h3>
+      <div class="compare-grid">
+        <div class="compare-col before">
+          <div class="compare-label">Wrong — Boolean</div>
+          <div class="compare-text">common space design social interaction residential buildings</div>
+        </div>
+        <div class="compare-col after">
+          <div class="compare-label">Correct — Google AI Citation</div>
+          <div class="compare-text">What evidence shows that the design of common spaces — courtyards, shared kitchens, lobby seating — in residential buildings increases the frequency and quality of social interactions among residents, and does this effect depend on spatial enclosure or biophilic elements?</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SENTENCE PATTERNS -->
+    <section id="patterns">
+      <h2>Sentence Patterns That Work</h2>
+      <p>
+        The following sentence starters are strongly associated with high-quality
+        AI Citation retrieval because they signal to the model that you want
+        empirical evidence rather than background essays.
+      </p>
+
+      <h4>Evidence-seeking starters (highest retrieval precision)</h4>
+      <div class="query-block neutral-q">
+        <div class="qb-label">Pattern A</div>
+        What peer-reviewed evidence shows that [environmental feature] [affects / improves / reduces] [outcome] in [population]?
+      </div>
+      <div class="query-block neutral-q">
+        <div class="qb-label">Pattern B</div>
+        What do experimental studies measuring [physiological / cognitive measure] find when [population] is exposed to [environmental condition] compared to [control condition]?
+      </div>
+      <div class="query-block neutral-q">
+        <div class="qb-label">Pattern C</div>
+        What neuroimaging / EEG / physiological evidence supports the claim that [theory's central mechanism] is responsible for [outcome] in [built environment context]?
+      </div>
+
+      <h4>Mechanism-explanation starters (for IC→DC queries)</h4>
+      <div class="query-block neutral-q">
+        <div class="qb-label">Pattern D</div>
+        How does [mechanism — e.g., amygdala down-regulation / HPA axis suppression / default mode network engagement] explain why [environmental feature] produces [benefit] in [population]?
+      </div>
+      <div class="query-block neutral-q">
+        <div class="qb-label">Pattern E</div>
+        Through what neural or physiological pathway does [environmental stimulus] reduce [negative outcome — stress / fatigue / anxiety] according to [theory name] predictions?
+      </div>
+
+      <h4>Comparative and critical starters (for theory-testing queries)</h4>
+      <div class="query-block neutral-q">
+        <div class="qb-label">Pattern F</div>
+        When ART and SRT make conflicting predictions about [specific phenomenon], which theory is better supported by [type of evidence]?
+      </div>
+      <div class="query-block neutral-q">
+        <div class="qb-label">Pattern G</div>
+        What studies have attempted to replicate [specific finding about environmental feature and outcome], and do the replication results support or undermine the original claim?
+      </div>
+    </section>
+
+    <!-- EVIDENTIAL FRAMING -->
+    <section id="framing">
+      <h2>Evidential Framing: Signaling the Evidence Type You Need</h2>
+      <p>
+        Google AI Citation responds to explicit signals about evidence type.
+        By specifying the methodology you are looking for, you narrow retrieval
+        to papers that provide that kind of evidence — not merely papers that
+        discuss the topic in general.
+      </p>
+
+      <h3>Signals for experimental studies</h3>
+      <p>
+        Use phrases like <em>"experimental studies," "randomized controlled trial,"
+        "controlled lab experiment," "within-subjects design,"</em> or <em>"quasi-experimental
+        field study"</em> when you want studies that manipulated the environment and measured outcomes.
+      </p>
+      <div class="query-block good-q">
+        <div class="qb-label">Strong example</div>
+        What do controlled experimental studies using skin conductance measurement find about the acute stress-buffering effects of brief nature walks compared to urban walks in adults with elevated baseline stress?
+      </div>
+
+      <h3>Signals for neuroimaging and physiological studies</h3>
+      <p>
+        Use <em>"fMRI studies," "EEG studies," "neuroimaging evidence," "cortisol measurement,"
+        "heart rate variability," "salivary alpha-amylase,"</em> etc. when you need papers that
+        measured biological or neural responses.
+      </p>
+      <div class="query-block good-q">
+        <div class="qb-label">Strong example</div>
+        What do fMRI and EEG studies reveal about default mode network activation and alpha-wave synchrony during passive exposure to natural landscape images versus urban architectural images, and are these neural signatures consistent with Attention Restoration Theory's "soft fascination" construct?
+      </div>
+
+      <h3>Signals for observational and survey studies</h3>
+      <p>
+        Use <em>"post-occupancy evaluation," "occupant survey," "longitudinal study,"
+        "cross-sectional survey," "self-reported wellbeing"</em> when you want field
+        studies conducted in real buildings.
+      </p>
+      <div class="query-block good-q">
+        <div class="qb-label">Strong example</div>
+        What do post-occupancy evaluation studies of LEED-certified office buildings find about self-reported cognitive performance, mood, and absenteeism among occupants, and do biophilic design features independently predict positive outcomes?
+      </div>
+
+      <h3>Signals for systematic reviews and meta-analyses</h3>
+      <p>
+        When you want aggregated evidence, use <em>"systematic review," "meta-analysis,"
+        "pooled effect sizes," "evidence synthesis."</em> These are especially useful
+        for core relationships where you need to show the weight of evidence, not
+        just one paper.
+      </p>
+      <div class="query-block good-q">
+        <div class="qb-label">Strong example</div>
+        What do systematic reviews and meta-analyses of the restorative effects of natural environments conclude about effect sizes, moderating variables, and the relative strength of Attention Restoration Theory versus Stress Recovery Theory as explanatory frameworks?
+      </div>
+    </section>
+
+    <!-- MECHANISM QUERIES -->
+    <section id="harder">
+      <h2>Advanced: Neural Mechanism Queries (IC to DC)</h2>
+      <p>
+        K-ATLAS uses a Quinean coherentist epistemology in which beliefs are assigned
+        initial credence values (IC) that are revised upward to default credences (DC)
+        when converging evidence strengthens them. <strong>Neural mechanism queries</strong>
+        are particularly valuable because they target the explanatory layer: not just
+        <em>that</em> an effect occurs, but <em>why</em> it occurs at the level of
+        neural or physiological process. Papers that identify specific neural pathways
+        provide the strongest IC-to-DC transitions in the system.
+      </p>
+      <p>
+        Mechanism queries require two additional components beyond the standard five:
+        explicit reference to a neural or physiological pathway, and an explanatory
+        framing that asks <em>how</em> or <em>through what mechanism</em>.
+      </p>
+
+      <div class="callout tip">
+        <div class="callout-title">Why Mechanism Queries Matter for K-ATLAS</div>
+        <p>When K-ATLAS ingests a paper that shows "nature reduces amygdala activation,
+        and this explains stress reduction," it can link that claim to the warrant
+        supporting SRT's safety-signalling mechanism. This raises DC from approximately
+        0.62 to 0.78 — a significant update. Papers that only report "nature reduces
+        stress" without a mechanism provide weaker warrant support and produce
+        smaller DC updates.</p>
+      </div>
+
+      <h3>The mechanism query template</h3>
+      <div class="query-block neutral-q">
+        <div class="qb-label">Template</div>
+        Through what [specific neural / physiological / cognitive] mechanism does [environmental feature] produce [outcome], and what [method — fMRI / EEG / physiological measure] evidence supports this mechanistic account as predicted by [theory]?
+      </div>
+
+      <h3>Worked mechanism queries from the K-ATLAS question bank</h3>
+
+      <p><strong>Amygdala and safety-signalling (SRT) — SQ-037</strong></p>
+      <div class="query-block good-q">
+        <div class="qb-label">SQ-037</div>
+        What do neuroimaging studies using fMRI reveal about amygdala reactivity when healthy adults view natural landscapes versus urban scenes, and does reduced amygdala activation explain the stress-buffering effect of nature exposure?
+      </div>
+
+      <p><strong>Default mode network and soft fascination (ART) — SQ-038</strong></p>
+      <div class="query-block good-q">
+        <div class="qb-label">SQ-038</div>
+        What evidence from fMRI and resting-state connectivity studies links default mode network engagement to the restorative state described in Attention Restoration Theory, and does soft fascination with natural stimuli reliably activate this network compared to urban stimuli?
+      </div>
+
+      <p><strong>HPA axis and biophilic design — SQ-044</strong></p>
+      <div class="query-block good-q">
+        <div class="qb-label">SQ-044</div>
+        What evidence from salivary cortisol studies links HPA axis dysregulation to chronic urban crowding and noise exposure, and do biophilic design interventions attenuate cortisol levels in office workers?
+      </div>
+
+      <p><strong>Fractal patterns and reward circuits — SQ-043</strong></p>
+      <div class="query-block good-q">
+        <div class="qb-label">SQ-043</div>
+        What neuroimaging or psychophysiological evidence supports the hypothesis that visual fractal patterns at D=1.3–1.5 activate reward-related brain regions and reduce physiological arousal, and does this explain the aesthetic preference for natural over Euclidean environments?
+      </div>
+
+      <p><strong>EEG alpha waves and restorative environments — SQ-041</strong></p>
+      <div class="query-block good-q">
+        <div class="qb-label">SQ-041</div>
+        What EEG studies have measured alpha-wave power during exposure to restorative natural environments versus urban environments, and does increased alpha synchrony in frontal regions provide neural evidence for the attentional disengagement mechanism proposed by Attention Restoration Theory?
+      </div>
+    </section>
+
+    <!-- WORKED EXAMPLES -->
+    <section id="worked">
+      <h2>Three Fully Worked Examples</h2>
+      <p>
+        The following examples take a research topic from initial idea to polished
+        query, showing each step of the reasoning process.
+      </p>
+
+      <h3>Worked Example 1: Ceiling height and cognition</h3>
+      <div class="steps">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>Start with the phenomenon</h4>
+            <p>I want to know whether high ceilings make people think more abstractly.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>Identify mechanism and measure</h4>
+            <p>The mechanism is embodied cognition or spatial-conceptual metaphor. The measure would be performance on abstract versus concrete cognitive tasks.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h4>Specify the environmental contrast</h4>
+            <p>High ceilings versus low ceilings, or variations in ceiling height within the same room.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h4>Add the theoretical anchor</h4>
+            <p>This is relevant to embodied cognition theories and the "cathedral effect" literature.</p>
+          </div>
+        </div>
+      </div>
+      <div class="query-block good-q">
+        <div class="qb-label">Final Query</div>
+        What experimental studies have measured the effect of ceiling height variation on abstract versus concrete cognitive task performance in human participants, and do higher ceilings reliably promote abstract thinking consistent with the embodied cognition account of the "cathedral effect"?
+      </div>
+
+      <h3>Worked Example 2: Acoustic environment and healthcare</h3>
+      <div class="steps">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>Start with the phenomenon</h4>
+            <p>Hospital noise seems to harm patient recovery. I want papers about this.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>Identify outcomes and mechanism</h4>
+            <p>Outcomes: length of stay, pain medication use, sleep quality, cortisol. Mechanism: sleep disruption and HPA axis activation from noise.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h4>Add evidence type and population</h4>
+            <p>Clinical studies in hospital settings, post-surgical patients.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h4>Anchor in theory</h4>
+            <p>SRT and evidence-based design literature predict that noise-free environments should accelerate physiological recovery.</p>
+          </div>
+        </div>
+      </div>
+      <div class="query-block good-q">
+        <div class="qb-label">Final Query</div>
+        What clinical studies measuring sleep quality, cortisol levels, and length of hospital stay have found that reducing ambient noise in post-surgical wards improves patient recovery, and do these findings support the Stress Recovery Theory prediction that physiologically safe environments accelerate healing?
+      </div>
+
+      <h3>Worked Example 3: Writing your own question</h3>
+      <p>
+        If you choose to propose your own question to K-ATLAS rather than claiming
+        one from the bank, it must meet the same standards. Use this checklist
+        before finalizing your custom query:
+      </p>
+      <ul>
+        <li>Is it a complete question sentence with subject, verb, and object?</li>
+        <li>Does it specify at least one environmental feature?</li>
+        <li>Does it specify at least one measurable outcome — behavioral, physiological, or neural?</li>
+        <li>Does it have a theoretical anchor — a named theory or named phenomenon?</li>
+        <li>Could a cognitive scientist evaluate whether a paper answers it with a clear yes or no?</li>
+        <li>Is it not already answered by a commonly cited textbook or review — that is, is there genuine empirical uncertainty?</li>
+      </ul>
+    </section>
+
+    <!-- COMMON MISTAKES -->
+    <section id="mistakes">
+      <h2>Common Mistakes and How to Fix Them</h2>
+
+      <h3>Mistake 1: Using Boolean operators</h3>
+      <div class="compare-grid">
+        <div class="compare-col before">
+          <div class="compare-label">Wrong</div>
+          <div class="compare-text">"biophilic design" AND stress AND (office OR workplace) -animal</div>
+        </div>
+        <div class="compare-col after">
+          <div class="compare-label">Fix: Write a complete sentence</div>
+          <div class="compare-text">What evidence shows that biophilic design features in workplace settings reduce self-reported stress and improve mood among office workers?</div>
+        </div>
+      </div>
+
+      <h3>Mistake 2: Too vague — no mechanism or measure</h3>
+      <div class="compare-grid">
+        <div class="compare-col before">
+          <div class="compare-label">Too vague</div>
+          <div class="compare-text">Does nature help people feel better in buildings?</div>
+        </div>
+        <div class="compare-col after">
+          <div class="compare-label">Fix: Specify mechanism and measure</div>
+          <div class="compare-text">What peer-reviewed studies measuring heart rate variability or cortisol find that incorporating natural elements — plants, water features, natural light — into building interiors reduces physiological stress responses in occupants?</div>
+        </div>
+      </div>
+
+      <h3>Mistake 3: Asking for information, not evidence</h3>
+      <div class="compare-grid">
+        <div class="compare-col before">
+          <div class="compare-label">Information-seeking</div>
+          <div class="compare-text">What is Stress Recovery Theory and who developed it?</div>
+        </div>
+        <div class="compare-col after">
+          <div class="compare-label">Fix: Ask for evidence</div>
+          <div class="compare-text">What experimental studies testing Ulrich's Stress Recovery Theory have measured autonomic nervous system recovery — using heart rate, blood pressure, or skin conductance — and found faster physiological restoration in natural versus urban visual environments?</div>
+        </div>
+      </div>
+
+      <h3>Mistake 4: Missing the theoretical anchor</h3>
+      <div class="compare-grid">
+        <div class="compare-col before">
+          <div class="compare-label">No anchor</div>
+          <div class="compare-text">Do plants in offices help workers concentrate better?</div>
+        </div>
+        <div class="compare-col after">
+          <div class="compare-label">Fix: Add theoretical anchor</div>
+          <div class="compare-text">What experimental evidence supports the claim that the presence of indoor plants in office environments improves sustained attention and working memory performance, consistent with Attention Restoration Theory's prediction that involuntary fascination with natural elements replenishes directed attention?</div>
+        </div>
+      </div>
+
+      <h3>Mistake 5: Too narrowly historical</h3>
+      <div class="compare-grid">
+        <div class="compare-col before">
+          <div class="compare-label">Too narrow</div>
+          <div class="compare-text">What did the 2019 Kaplan study find about attention restoration in Chicago parks?</div>
+        </div>
+        <div class="compare-col after">
+          <div class="compare-label">Fix: Make it generalisable</div>
+          <div class="compare-text">What do post-occupancy studies of urban parks find about directed attention restoration in city dwellers, and do these findings replicate Kaplan and Kaplan's ART predictions across different cultural contexts?</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUESTION BANK SAMPLES -->
+    <section id="qbank">
+      <h2>Sample Questions from the K-ATLAS Bank</h2>
+      <p>
+        All 130 questions in the K-ATLAS student question bank are written in
+        Google AI Citation format. The cross-section below shows the range of
+        topics, difficulty levels, and query styles. These serve as models
+        when writing your own query.
+      </p>
+
+      <table class="examples-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Topic</th>
+            <th>Difficulty</th>
+            <th>Query (abbreviated)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>SQ-001</td>
+            <td><span class="badge-topic">ART</span></td>
+            <td>Medium</td>
+            <td>What peer-reviewed evidence supports the claim that involuntary attention to natural elements in built environments restores directed attention capacity…</td>
+          </tr>
+          <tr>
+            <td>SQ-008</td>
+            <td><span class="badge-topic">Biophilia</span></td>
+            <td>Medium</td>
+            <td>What experimental evidence supports the biophilia hypothesis by showing that humans across cultures display consistent aesthetic preferences for natural over artificial environments…</td>
+          </tr>
+          <tr>
+            <td>SQ-031</td>
+            <td><span class="badge-topic">Social</span></td>
+            <td>Medium</td>
+            <td>What evidence shows that the design and placement of common spaces — lobbies, courtyards, shared kitchens — in residential and office buildings increases casual social interactions…</td>
+          </tr>
+          <tr>
+            <td>SQ-037</td>
+            <td><span class="badge-topic">Neural</span></td>
+            <td>Hard</td>
+            <td>What do neuroimaging studies using fMRI reveal about amygdala reactivity when healthy adults view natural landscapes versus urban scenes, and does reduced amygdala activation explain…</td>
+          </tr>
+          <tr>
+            <td>SQ-038</td>
+            <td><span class="badge-topic">Neural</span></td>
+            <td>Hard</td>
+            <td>What evidence from fMRI and resting-state connectivity studies links default mode network engagement to the restorative state described in Attention Restoration Theory…</td>
+          </tr>
+          <tr>
+            <td>SQ-053</td>
+            <td><span class="badge-topic">Healthcare</span></td>
+            <td>Medium</td>
+            <td>What clinical evidence from hospital settings shows that access to nature views or daylight reduces patients' reliance on pain medication and shortens length of stay…</td>
+          </tr>
+          <tr>
+            <td>SQ-067</td>
+            <td><span class="badge-topic">Educational</span></td>
+            <td>Medium</td>
+            <td>What do studies of classroom acoustic conditions and daylight quality find about student reading comprehension and mathematics performance, and do these effects persist after controlling for socioeconomic variables?</td>
+          </tr>
+          <tr>
+            <td>SQ-089</td>
+            <td><span class="badge-topic">Methods</span></td>
+            <td>Hard</td>
+            <td>What methodological limitations — small samples, lab-based stimuli, self-report bias — are most commonly cited in systematic reviews of environment-behavior research, and what study designs best address them?</td>
+          </tr>
+          <tr>
+            <td>SQ-095</td>
+            <td><span class="badge-topic">Justice</span></td>
+            <td>Hard</td>
+            <td>What evidence shows that access to high-quality biophilic built environments — parks, green buildings, daylit schools — is unequally distributed by income or race, and what design interventions address this inequity?</td>
+          </tr>
+          <tr>
+            <td>SQ-100</td>
+            <td><span class="badge-topic">Theory</span></td>
+            <td>Hard</td>
+            <td>Across the major theoretical frameworks in environmental psychology — ART, SRT, biophilia, place attachment — what single claim about the built environment has the strongest convergent empirical support…</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- WORKFLOW -->
+    <section id="workflow">
+      <h2>The Search Workflow</h2>
+      <p>
+        Once you have claimed your K-ATLAS question, follow these steps to find
+        ten qualifying articles.
+      </p>
+
+      <div class="steps">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>Copy your assigned query exactly</h4>
+            <p>From your student assignment page, copy the question text. Do not paraphrase it — the query was written to maximise AI Citation retrieval precision.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>Paste into Google and look for the AI Overview box</h4>
+            <p>The AI Overview box appears at the top of results for research questions. It shows a synthesised answer with numbered citations. Each citation is a potential article.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h4>Expand citations — click "Show all sources"</h4>
+            <p>Google shows 3–5 citations initially. Clicking the citation numbers or "Show all sources" reveals the full list. Aim for 8–12 candidate papers.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h4>Verify each paper against the K-ATLAS corpus</h4>
+            <p>Before logging a paper, search its DOI in K-ATLAS (use the duplicate-check step in your assignment page). Papers already in K-ATLAS do not count toward your ten.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <h4>Cross-check with Elicit for structured data</h4>
+            <p>For each candidate paper, use Elicit (elicit.org) to extract sample size, methods, key findings, and limitations. This data strengthens your CSV submission.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">6</div>
+          <div class="step-body">
+            <h4>Run variant queries for remaining slots</h4>
+            <p>If Google AI Citation returns fewer than ten new papers, vary your query: try a different sentence pattern, add a method signal, or change the population specifier. Each variant probes a different corner of the literature.</p>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">7</div>
+          <div class="step-body">
+            <h4>Compile your CSV and upload PDFs</h4>
+            <p>Fill in all required CSV fields (see format below) and locate PDFs via Google Scholar, Semantic Scholar, or your library proxy. Upload both to complete your submission.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EVALUATING RESULTS -->
+    <section id="evaluate">
+      <h2>Evaluating Search Results</h2>
+      <p>
+        Not every paper returned by Google AI Citation qualifies for K-ATLAS.
+        Apply these criteria before logging a paper to your CSV.
+      </p>
+
+      <table class="rubric-table">
+        <thead>
+          <tr>
+            <th>Criterion</th>
+            <th>What counts</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Peer-reviewed</strong> — published in a journal with editorial review, or a conference with blind review</td>
+            <td>Journal article, conference paper, or book chapter in academic press</td>
+            <td><span class="score-pill s-full">Required</span></td>
+          </tr>
+          <tr>
+            <td><strong>Empirical</strong> — reports original data collection and analysis</td>
+            <td>Study with participants, measurements, and statistical results. Systematic reviews and meta-analyses also qualify.</td>
+            <td><span class="score-pill s-full">Required</span></td>
+          </tr>
+          <tr>
+            <td><strong>Addresses the query's mechanism or outcome</strong> — not just tangentially related</td>
+            <td>Abstract explicitly mentions the key outcome the query specifies</td>
+            <td><span class="score-pill s-full">Required</span></td>
+          </tr>
+          <tr>
+            <td><strong>Not already in K-ATLAS corpus</strong> — confirmed by DOI check</td>
+            <td>DOI search returns no match in K-ATLAS</td>
+            <td><span class="score-pill s-full">Required</span></td>
+          </tr>
+          <tr>
+            <td><strong>Published 1999 or later</strong> unless the paper is canonical</td>
+            <td>Year ≥ 1999, or paper is a landmark (e.g., Ulrich 1984, Kaplan &amp; Kaplan 1989)</td>
+            <td><span class="score-pill s-part">Preferred</span></td>
+          </tr>
+          <tr>
+            <td><strong>Full text accessible</strong> — PDF retrievable for upload</td>
+            <td>Available via library proxy, Unpaywall, or author's personal page</td>
+            <td><span class="score-pill s-part">Required for PDF upload</span></td>
+          </tr>
+          <tr>
+            <td><strong>DOI available</strong> — permanent identifier present</td>
+            <td>doi.org prefix or CrossRef record</td>
+            <td><span class="score-pill s-part">Strongly preferred</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout tip">
+        <div class="callout-title">When AI Citation returns reviews and meta-analyses</div>
+        <p>Systematic reviews and meta-analyses count as qualifying papers if they synthesise
+        empirical data and report effect sizes or pooled estimates. Do include them. Do not
+        include narrative review articles that discuss findings without reporting original data
+        or statistical synthesis.</p>
+      </div>
+    </section>
+
+    <!-- CSV FORMAT -->
+    <section id="csv-format">
+      <h2>CSV Submission Format</h2>
+      <p>
+        Your article list must be submitted as a CSV with the following columns.
+        Field names are case-sensitive. Use the template download button in your
+        assignment page to get a correctly formatted starter file.
+      </p>
+
+      <table class="component-table">
+        <thead>
+          <tr>
+            <th>Column</th>
+            <th>Status</th>
+            <th>Format / Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>title</code></td>
+            <td><span class="comp-badge comp-req">Required</span></td>
+            <td>Full paper title, no truncation</td>
+          </tr>
+          <tr>
+            <td><code>authors</code></td>
+            <td><span class="comp-badge comp-req">Required</span></td>
+            <td>Surname, Initials format; multiple authors separated by " ; "</td>
+          </tr>
+          <tr>
+            <td><code>year</code></td>
+            <td><span class="comp-badge comp-req">Required</span></td>
+            <td>Four-digit year of publication</td>
+          </tr>
+          <tr>
+            <td><code>doi</code></td>
+            <td><span class="comp-badge comp-req">Required</span></td>
+            <td>Full DOI URL, e.g. <code>https://doi.org/10.xxxx/xxx</code></td>
+          </tr>
+          <tr>
+            <td><code>abstract</code></td>
+            <td><span class="comp-badge comp-req">Required</span></td>
+            <td>Full abstract text, copied from the paper or database</td>
+          </tr>
+          <tr>
+            <td><code>source</code></td>
+            <td><span class="comp-badge comp-req">Required</span></td>
+            <td>Journal name or conference name</td>
+          </tr>
+          <tr>
+            <td><code>notes</code></td>
+            <td><span class="comp-badge comp-opt">Optional</span></td>
+            <td>One sentence explaining the paper's relevance to your search question</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout info">
+        <div class="callout-title">Avoiding CSV Formatting Errors</div>
+        <p>Abstracts frequently contain commas. Wrap every abstract field in double quotes.
+        If the abstract itself contains double quotes, escape them as two consecutive double
+        quotes. The CSV template downloaded from K-ATLAS handles this automatically when you
+        use spreadsheet software such as Excel or Google Sheets.</p>
+      </div>
+    </section>
+
+    <!-- CHECKLIST -->
+    <section id="checklist">
+      <h2>Pre-Submission Checklist</h2>
+      <p>Confirm every item before submitting.</p>
+
+      <ul class="checklist">
+        <li>
+          <svg class="check-icon" viewBox="0 0 20 20" fill="none"><rect width="20" height="20" rx="4" fill="#182B49"/><path d="M5 10l4 4 6-8" stroke="#C69214" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>My assigned query (or my custom query) is written as a complete natural-language question in Google AI Citation format — not Boolean keywords.</span>
+        </li>
+        <li>
+          <svg class="check-icon" viewBox="0 0 20 20" fill="none"><rect width="20" height="20" rx="4" fill="#182B49"/><path d="M5 10l4 4 6-8" stroke="#C69214" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>I have found at least ten peer-reviewed, empirical articles that address the query's mechanism or outcome.</span>
+        </li>
+        <li>
+          <svg class="check-icon" viewBox="0 0 20 20" fill="none"><rect width="20" height="20" rx="4" fill="#182B49"/><path d="M5 10l4 4 6-8" stroke="#C69214" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>I have checked every DOI against the K-ATLAS corpus and none of my ten papers are already in the database.</span>
+        </li>
+        <li>
+          <svg class="check-icon" viewBox="0 0 20 20" fill="none"><rect width="20" height="20" rx="4" fill="#182B49"/><path d="M5 10l4 4 6-8" stroke="#C69214" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>My CSV has all six required columns — title, authors, year, doi, abstract, source — with no empty required cells.</span>
+        </li>
+        <li>
+          <svg class="check-icon" viewBox="0 0 20 20" fill="none"><rect width="20" height="20" rx="4" fill="#182B49"/><path d="M5 10l4 4 6-8" stroke="#C69214" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>I have uploaded PDFs for all ten papers, or noted which are behind paywalls and provided full abstracts instead.</span>
+        </li>
+        <li>
+          <svg class="check-icon" viewBox="0 0 20 20" fill="none"><rect width="20" height="20" rx="4" fill="#182B49"/><path d="M5 10l4 4 6-8" stroke="#C69214" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Each paper's abstract explicitly addresses the key outcome or mechanism specified in the query — not merely the general topic area.</span>
+        </li>
+        <li>
+          <svg class="check-icon" viewBox="0 0 20 20" fill="none"><rect width="20" height="20" rx="4" fill="#182B49"/><path d="M5 10l4 4 6-8" stroke="#C69214" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>I understand that K-ATLAS will use my submitted papers to update credence values in the Web of Belief engine — papers that address neural or physiological mechanisms carry higher evidential weight than those reporting only behavioral outcomes.</span>
+        </li>
+      </ul>
+
+      <div class="callout info">
+        <div class="callout-title">Questions?</div>
+        <p>Post to the COGS 160 discussion board or email
+        <strong>dkirsh@ucsd.edu</strong> with subject line
+        <em>[K-ATLAS] [your search question ID]</em>.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  K-ATLAS · UC San Diego Department of Cognitive Science · Prof. David Kirsh ·
+  Environmental Psychology Research Platform
+</footer>
+
+<script>
+// Active TOC highlighting
+const sections = document.querySelectorAll('section[id]');
+const tocLinks = document.querySelectorAll('.toc-list a');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      tocLinks.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-10% 0px -80% 0px' });
+
+sections.forEach(s => observer.observe(s));
+
+// Smooth scroll
+tocLinks.forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>

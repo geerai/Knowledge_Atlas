@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Understanding the System — K-ATLAS</title>
+  <!-- Original AE css/main.css removed — all styles are inline -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+  <style>
+    :root {
+      --ka-navy:  #1C3D3A;
+      --ka-teal:  #2A7868;
+      --ka-amber: #B06020;
+      --ka-lilac-bg: #F3E5F5;
+      --ka-lilac-accent: #6A1B9A;
+      --ka-eg-bg: #F5F5F5;
+      --ka-warn-bg: #FFF8E1;
+      --ka-warn-accent: #E65100;
+    }
+
+    /* ── Layout ────────────────────────────────── */
+    .page-shell {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .left-nav {
+      width: 260px;
+      min-width: 260px;
+      background: var(--ka-navy);
+      color: #e8f5e9;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      padding: 0;
+    }
+    .left-nav-header {
+      padding: 1.4rem 1.2rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+    .left-nav-header .site-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #C69214;
+      text-decoration: none;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    .left-nav-header .page-title {
+      font-size: 0.78rem;
+      color: #b2dfdb;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .chapter-list {
+      list-style: none;
+      padding: 0.6rem 0;
+      flex: 1;
+    }
+    .chapter-list li a {
+      display: block;
+      padding: 0.55rem 1.2rem 0.55rem 1.4rem;
+      color: #cfd8dc;
+      text-decoration: none;
+      font-size: 0.85rem;
+      line-height: 1.35;
+      border-left: 3px solid transparent;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .chapter-list li a:hover {
+      background: rgba(255,255,255,0.07);
+      color: #fff;
+      border-left-color: #C69214;
+    }
+    .chapter-list li a.active {
+      background: rgba(198,146,20,0.15);
+      color: #FFD54F;
+      border-left-color: #C69214;
+      font-weight: 600;
+    }
+    .chapter-list li a .ch-num {
+      display: inline-block;
+      width: 1.6rem;
+      font-size: 0.72rem;
+      color: #80cbc4;
+      font-weight: 700;
+    }
+    .nav-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+      margin: 0.5rem 1rem;
+    }
+    .nav-back-link {
+      padding: 0.9rem 1.2rem;
+      border-top: 1px solid rgba(255,255,255,0.12);
+    }
+    .nav-back-link a {
+      color: #80cbc4;
+      text-decoration: none;
+      font-size: 0.82rem;
+    }
+    .nav-back-link a:hover { color: #fff; }
+
+    /* ── Main area ─────────────────────────────── */
+    .doc-main {
+      flex: 1;
+      overflow-y: auto;
+      background: #fff;
+    }
+    .doc-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #fff;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 0.75rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .doc-topbar input[type=search] {
+      flex: 1;
+      max-width: 340px;
+      border: 1px solid #d0d0d0;
+      border-radius: 6px;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.875rem;
+      outline: none;
+    }
+    .doc-topbar input[type=search]:focus { border-color: var(--ka-teal); }
+    .docx-link {
+      margin-left: auto;
+      font-size: 0.8rem;
+      color: var(--ka-teal);
+      text-decoration: none;
+      border: 1px solid var(--ka-teal);
+      padding: 0.3rem 0.75rem;
+      border-radius: 5px;
+    }
+    .docx-link:hover { background: var(--ka-teal); color: #fff; }
+
+    .doc-body {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2.5rem 2.5rem 5rem;
+    }
+
+    /* ── Chapter sections ──────────────────────── */
+    .chapter-section {
+      margin-bottom: 4rem;
+      scroll-margin-top: 64px;
+    }
+    .chapter-section.hidden { display: none; }
+
+    .chapter-header {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--ka-teal);
+    }
+    .chapter-num {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--ka-teal);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .chapter-title {
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: var(--ka-navy);
+      line-height: 1.25;
+    }
+
+    h3.section-h { font-size: 1.15rem; font-weight: 700; color: var(--ka-navy); margin: 2rem 0 0.75rem; }
+    h4.section-h4 { font-size: 1rem; font-weight: 700; color: var(--ka-teal); margin: 1.5rem 0 0.5rem; }
+    p { line-height: 1.75; color: #333; margin-bottom: 1rem; }
+
+    /* ── Tables ─────────────────────────────────── */
+    .ka-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.875rem; }
+    .ka-table th { background: var(--ka-navy); color: #fff; padding: 0.6rem 0.9rem; text-align: left; font-weight: 600; }
+    .ka-table td { padding: 0.55rem 0.9rem; border-bottom: 1px solid #e8e8e8; vertical-align: top; }
+    .ka-table tr:nth-child(even) td { background: #f8faf8; }
+    .ka-table tr:hover td { background: #edf6f5; }
+    .mono { font-family: 'SF Mono', 'Cascadia Code', Consolas, monospace; font-size: 0.85em; color: #5d4037; }
+
+    /* ── Callout boxes ───────────────────────────── */
+    .callout {
+      border-radius: 6px;
+      margin: 1.5rem 0;
+      overflow: hidden;
+      border-left: 4px solid;
+    }
+    .callout-head {
+      padding: 0.45rem 1rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+    .callout-body { padding: 1rem 1.2rem; font-size: 0.9rem; line-height: 1.7; }
+    .callout-body p { margin-bottom: 0.5rem; }
+    .callout-body p:last-child { margin-bottom: 0; }
+
+    .callout-eg   { border-color: #757575; }
+    .callout-eg   .callout-head { background: #eeeeee; color: #424242; }
+    .callout-eg   .callout-body { background: var(--ka-eg-bg); }
+
+    .callout-diagram { border-color: var(--ka-lilac-accent); }
+    .callout-diagram .callout-head { background: #ce93d8; color: #4a0072; }
+    .callout-diagram .callout-body { background: var(--ka-lilac-bg); }
+
+    .callout-warn  { border-color: var(--ka-warn-accent); }
+    .callout-warn  .callout-head { background: #FFE0B2; color: #E65100; }
+    .callout-warn  .callout-body { background: var(--ka-warn-bg); }
+
+    .callout-note { border-color: var(--ka-teal); }
+    .callout-note .callout-head { background: #b2dfdb; color: var(--ka-navy); }
+    .callout-note .callout-body { background: #e8f5e9; }
+
+    /* ── Formula display ─────────────────────────── */
+    .formula-block {
+      background: #1a237e;
+      color: #e8eaf6;
+      border-radius: 6px;
+      padding: 1rem 1.4rem;
+      margin: 1.25rem 0;
+      font-family: 'SF Mono', 'Cascadia Code', Consolas, monospace;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+
+    /* ── Badge chips ─────────────────────────────── */
+    .badge { display: inline-block; padding: 0.18rem 0.55rem; border-radius: 10px; font-size: 0.78rem; font-weight: 600; }
+    .badge-teal   { background: #b2dfdb; color: var(--ka-navy); }
+    .badge-amber  { background: #ffe0b2; color: #7f3000; }
+    .badge-purple { background: #e1bee7; color: #4a148c; }
+    .badge-red    { background: #ffcdd2; color: #b71c1c; }
+    .badge-gray   { background: #eceff1; color: #455a64; }
+
+    /* ── Mermaid diagram container ───────────────── */
+    .mermaid-wrap {
+      background: var(--ka-lilac-bg);
+      border: 1px solid #ce93d8;
+      border-radius: 6px;
+      padding: 1rem;
+      margin: 1.25rem 0;
+      overflow-x: auto;
+    }
+    .mermaid-wrap .mermaid { text-align: center; }
+
+    /* ── Search highlight ────────────────────────── */
+    mark { background: #FFF176; border-radius: 2px; }
+
+    /* ── Source links footer ─────────────────────── */
+    .source-links {
+      margin-top: 2.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e0e0e0;
+      font-size: 0.8rem;
+      color: #888;
+    }
+    .source-links strong { color: #555; font-weight: 700; }
+    .source-links a { color: var(--ka-teal); text-decoration: none; margin-right: 0.75rem; }
+    .source-links a:hover { text-decoration: underline; }
+
+    /* ── Credential bar (top of doc) ─────────────── */
+    .doc-credential {
+      background: var(--ka-navy);
+      color: #b2dfdb;
+      font-size: 0.78rem;
+      padding: 0.45rem 2rem;
+      display: flex;
+      gap: 2rem;
+    }
+    .doc-credential span { color: #80cbc4; }
+
+    /* ── Open Questions / How We Use It / Contested Views ─────────────── */
+    .open-q {
+      background: #EEF2FF; border-left: 4px solid #3949AB;
+      padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px;
+    }
+    .open-q-head {
+      font-weight: 700; color: #283593; margin-bottom: 0.55rem;
+      font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .how-we-use {
+      background: #F1F8E9; border-left: 4px solid #558B2F;
+      padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px;
+    }
+    .how-we-use-head {
+      font-weight: 700; color: #33691E; margin-bottom: 0.55rem;
+      font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .contested {
+      background: #FFF3E0; border-left: 4px solid #E65100;
+      padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 4px;
+    }
+    .contested-head {
+      font-weight: 700; color: #BF360C; margin-bottom: 0.55rem;
+      font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .open-q p, .how-we-use p, .contested p { margin: 0.4rem 0; }
+  </style>
+</head>
+<body>
+<div class="page-shell">
+
+  <!-- ── Left chapter navigation ──────────────── -->
+  <nav class="left-nav" id="leftNav">
+    <div class="left-nav-header">
+      <a href="ka_home.html" class="site-title">K-ATLAS</a>
+      <div class="page-title">Understanding the System</div>
+    </div>
+    <ul class="chapter-list" id="chapterList">
+      <li><a href="#ch1" class="active" onclick="showChapter('ch1',this)"><span class="ch-num">1</span>What K-ATLAS Is</a></li>
+      <li><a href="#ch2" onclick="showChapter('ch2',this)"><span class="ch-num">2</span>The Evidence Network</a></li>
+      <li><a href="#ch3" onclick="showChapter('ch3',this)"><span class="ch-num">3</span>The Warrant System</a></li>
+      <li><a href="#ch4" onclick="showChapter('ch4',this)"><span class="ch-num">4</span>Theory Tiers</a></li>
+      <li><a href="#ch5" onclick="showChapter('ch5',this)"><span class="ch-num">5</span>Bayesian Network &amp; Projection</a></li>
+      <li><a href="#ch6" onclick="showChapter('ch6',this)"><span class="ch-num">6</span>The QA System</a></li>
+      <li><a href="#ch7" onclick="showChapter('ch7',this)"><span class="ch-num">7</span>Architecture &amp; Contracts</a></li>
+      <li><a href="#ch8" onclick="showChapter('ch8',this)"><span class="ch-num">8</span>Governance &amp; Agents</a></li>
+      <li><a href="#ch9" onclick="showChapter('ch9',this)"><span class="ch-num">9</span>What's Missing</a></li>
+      <li><a href="#ch10" onclick="showChapter('ch10',this)"><span class="ch-num">10</span>The Four Service Layers</a></li>
+      <div class="nav-divider"></div>
+      <li><a href="#" onclick="showAll();return false;" style="color:#80cbc4;font-size:0.8rem;padding-left:1.4rem;">Show all chapters</a></li>
+    </ul>
+    <div class="nav-back-link">
+      <a href="ka_home.html">← Back to K-ATLAS Home</a><br>
+      <a href="ka_topics.html" style="margin-top:0.4rem;display:block;">Topics</a>
+      <a href="ka_evidence.html" style="margin-top:0.3rem;display:block;">Evidence</a>
+      <a href="ka_demo_v04.html" style="margin-top:0.3rem;display:block;">Ask</a>
+    </div>
+  </nav>
+
+  <!-- ── Main document area ────────────────────── -->
+  <div class="doc-main" id="docMain">
+    <div class="doc-credential">
+      <span>Author: K-ATLAS Science-Writing Agent</span>
+      <span>Date: 2026-03-27</span>
+      <span>Version: Living Document — update as system evolves</span>
+    </div>
+    <div class="doc-topbar">
+      <input type="search" id="searchBox" placeholder="Search chapters…" oninput="doSearch(this.value)">
+      <a class="docx-link" href="KATLAS_Explaining_the_System_2026-03-26.docx">⬇ Download .docx</a>
+    </div>
+
+    <div class="doc-body" id="docBody">
+
+      <!-- ═══════════════════════════════════════
+           CHAPTER 1 — What K-ATLAS Is
+      ════════════════════════════════════════ -->
+      <section class="chapter-section" id="ch1">
+        <div class="chapter-header">
+          <span class="chapter-num">Chapter 1</span>
+          <h1 class="chapter-title">What K-ATLAS Is</h1>
+        </div>
+
+        <p>K-ATLAS — the <em>Knowledge Architecture for Translating Life-science and Affective-environment Science</em> — is a reasoning machine built around a single conviction: that a scientific claim is only as strong as the evidence and argumentation that support it. Where a conventional database stores facts, K-ATLAS stores <em>structured credences</em>: beliefs tagged with how well-supported they are, where the support comes from, and why the system holds each belief with the confidence it does.</p>
+
+        <p>The closest popular analogy is Google's PageRank. PageRank scores web pages not by counting how many links point to them, but by weighing the authority of those linking pages, recursively. K-ATLAS does something analogous for scientific beliefs: a claim is not simply "in the literature" — it receives a credence value that reflects the strength, independence, and theoretical warrant of the evidence behind it. When new evidence arrives, credences propagate through the network, and the whole system re-equilibrates, much as PageRank scores shift when new pages are indexed.</p>
+
+        <div class="callout callout-eg">
+          <div class="callout-head">Example — PageRank Analogy</div>
+          <div class="callout-body">
+            <p>Suppose three independent studies show that forest environments reduce cortisol. Each study is a "link" pointing to the belief <em>Forest exposure lowers cortisol</em>. K-ATLAS asks: Are these studies truly independent? Does a theoretical framework (Stress Recovery Theory, say) provide additional warrant? How well-replicated is the effect across populations? The credence assigned to the belief is the answer to all three questions simultaneously — not a simple vote count.</p>
+          </div>
+        </div>
+
+        <h3 class="section-h">The Five-Layer Architecture</h3>
+        <p>K-ATLAS is built in five layers, each serving a distinct function. Reading from the bottom up, each layer is the computational precondition for the one above it.</p>
+
+        <div class="mermaid-wrap">
+          <div class="mermaid">
+graph TD
+  L1["L1 · Data Models<br/>ClaimV2, EdgeV2, CardRecord"]
+  L2["L2 · Epistemic Infrastructure<br/>Web of Belief, Credence Engine, Entrenchment"]
+  L3["L3 · Core Services<br/>Warrant Assignment, BN Projection, QA Handler"]
+  L4["L4 · Extraction Pipeline<br/>PDF Ingest → LLM Extraction → Template Match"]
+  L5["L5 · Application<br/>Streamlit GUI, Evidence Explorer, Card System"]
+  L4 --> L1
+  L1 --> L2
+  L2 --> L3
+  L3 --> L5
+  style L1 fill:#1C3D3A,color:#e0f2f1
+  style L2 fill:#2A7868,color:#e0f2f1
+  style L3 fill:#00796B,color:#fff
+  style L4 fill:#37474F,color:#eceff1
+  style L5 fill:#C69214,color:#fff
+          </div>
+        </div>
+
+        <table class="ka-table">
+          <thead><tr><th>Layer</th><th>What it does</th><th>What questions it answers</th></tr></thead>
+          <tbody>
+            <tr><td><strong>L1 Data Models</strong></td><td>Defines the atoms: ClaimV2 (a belief), EdgeV2 (a typed warrant connecting two beliefs), CardRecord (a summary card for a concept or mechanism)</td><td>"What is the minimal unit of knowledge in this system?"</td></tr>
+            <tr><td><strong>L2 Epistemic Infrastructure</strong></td><td>Assembles beliefs into the Evidence Network (EN); computes credence equilibrium; tracks entrenchment</td><td>"How confident should we be in a given belief, given everything we know?"</td></tr>
+            <tr><td><strong>L3 Core Services</strong></td><td>Warrant assignment, Bayesian Network projection, QA routing and answer enrichment</td><td>"What does the literature say, and how certain is that answer?"</td></tr>
+            <tr><td><strong>L4 Extraction Pipeline</strong></td><td>Ingests PDFs, runs seven-stage LLM extraction, matches to templates, instantiates ClaimV2 records</td><td>"How does a paper enter the system and contribute to the network?"</td></tr>
+            <tr><td><strong>L5 Application</strong></td><td>GUI pages, Evidence Explorer, Card Browser, QA interface</td><td>"How does a researcher or student interact with what the system knows?"</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+        
+        <div class="open-q"><div class="open-q-head">Open Questions</div><p>Three design questions remain open. First, would a sixth layer — a dedicated <em>explanation layer</em> whose job is to generate natural-language accounts of the system's own reasoning — improve the architecture, or should that function remain embedded in QA? The current L5 Application layer is a thin wrapper; a principled argument for or against a sixth layer has not been made. Second, should the PageRank analogy be pressed further? PageRank uses the iterative power method; the EN uses Noisy-OR propagation. A formal comparison of convergence properties might reveal whether Noisy-OR produces the right fixed-point for heterogeneous evidence networks. Third, how well does the five-layer architecture generalise beyond built environments? The three-tier theory structure is probably general; the specific warrant vocabulary and the δ population-transfer function are domain-specific and would need renegotiation for clinical decision support, nutritional epidemiology, or educational psychology.</p></div>
+
+        <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>Chapter 1 is the entry point for every new student and collaborator. Read it before any other chapter to understand why each component exists. The five-layer diagram is the most concise single-image summary of K-ATLAS; the PageRank analogy has proven effective with students who have no formal Bayesian background — it conveys that authority propagates rather than merely vote-counts, without requiring probabilistic notation. When explaining the system to a research collaborator, this diagram and that analogy are the right starting point.</p></div>
+        <div class="source-links"><strong>Source files:</strong>
+          <a href="../ARCHITECTURE.md">ARCHITECTURE.md</a>
+          <a href="../docs/ATLAS_THEORETICAL_FOUNDATIONS_MASTER_DOC.md">Master Doc</a>
+          <a href="../src/epistemic/contracts/claim_v2.py">claim_v2.py</a>
+          <a href="../src/epistemic/contracts/edge_v2.py">edge_v2.py</a>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════
+           CHAPTER 2 — The Evidence Network
+      ════════════════════════════════════════ -->
+      <section class="chapter-section hidden" id="ch2">
+        <div class="chapter-header">
+          <span class="chapter-num">Chapter 2</span>
+          <h1 class="chapter-title">The Evidence Network</h1>
+        </div>
+
+        <p>The Evidence Network (EN) — also called the Web of Belief — is K-ATLAS's central epistemic object. Every belief in the system is a node; every piece of support or opposition between beliefs is a typed, weighted edge. The EN is a <em>foundherentist</em> structure in the tradition of Susan Haack (1993): it is neither purely foundationalist (no claim is certain by definition) nor purely coherentist (empirical connections to evidence matter). Support flows through the network; nothing is assumed without a warrant chain reaching back to observations.</p>
+
+        <h3 class="section-h">Quine's Web of Belief: The Intellectual Ancestor</h3>
+        <p>The name "Web of Belief" is not incidental. It acknowledges an explicit intellectual debt to W. V. O. Quine's account of scientific knowledge, developed first in "Two Dogmas of Empiricism" (1951) and worked out in detail — with J.S. Ullian — in the 1970 book of the same name. Quine's web of belief is one of the most consequential ideas in twentieth-century epistemology, and understanding it is essential to understanding why K-ATLAS is structured as it is.</p>
+
+        <p>Quine's central argument against the then-dominant logical empiricist picture was that individual statements — even scientific hypotheses — cannot be tested in isolation against experience. They face experience only in groups, as a corporate body. The beliefs we hold form a network, and what impinges on us from the world impinges on the network as a whole. The same sensory experience could, in principle, be accommodated by revising any of a large number of beliefs in the web, not just the directly implicated ones. This is the thesis of confirmation holism.</p>
+
+        <p>Three features of Quine's web are structurally significant for K-ATLAS:</p>
+
+        <p><strong>Centrality and revision cost.</strong> Beliefs at the centre of the web — those with the most connections to other beliefs — are more costly to revise, because revising them requires revising many other things. Beliefs at the periphery — close to the "sensory" surface, with fewer internal connections — can be revised with minimal ripple effects. Quine called this the <em>conservatism principle</em> of rational belief revision: when experience forces revision, we revise minimally, choosing the path of least disturbance. K-ATLAS's entrenchment score T_ent is a direct computational implementation of Quine's notion of centrality. A T1 framework like Circadian Biology carries T_ent = 0.93 not because it is foundationally certain, but because it is so densely connected to the rest of the web that revising it would require revising an enormous amount else.</p>
+
+        <p><strong>No immunity from revision.</strong> Quine insisted — controversially — that no belief is immune from revision, not even logical truths. If experience were strange enough, we might even revise the law of excluded middle. This anti-foundationalist commitment is built into K-ATLAS: no belief has credence 1.0. The T1 frameworks have the highest entrenchment scores, but even Circadian Biology (T_ent = 0.93) is in principle revisable; it merely has an extremely high revision cost. The system refuses to treat any claim as certain.</p>
+
+        <p><strong>Holism and coherence.</strong> Quine's web is held together by coherence — the mutual support of connected beliefs. A new belief that coheres well with the existing web is easier to accept; one that requires extensive revision elsewhere is harder. K-ATLAS implements this through coherence warrant scaling: a belief gains a credence bonus when multiple independent lines of evidence converge on it, and loses credence when contesting beliefs are present. The coherence formula (base 0.55 + 0.05√n_coherent − 0.05√n_contradicting) is a quantitative version of Quinean coherentism.</p>
+
+        <div class="callout callout-eg">
+          <div class="callout-head">Quine vs. Haack: Why K-ATLAS is foundherentist, not purely Quinean</div>
+          <div class="callout-body">
+            <p>Quine's web is flat: beliefs differ only in how centrally connected they are, not in <em>kind</em>. There is no principled distinction between observational and theoretical beliefs — both are simply nodes in the web, distinguished only by their number of connections.</p>
+            <p>Susan Haack's foundherentism (1993) introduces a distinction Quine resists: between the experiential dimension of justification (how directly a belief is anchored to observation) and the coherential dimension (how well it fits with other beliefs). Both dimensions matter, and neither suffices alone. This is the K-ATLAS architecture: T2 empirical claims are warranted partly by direct observational support from studies (Haack's experiential dimension, implemented as CONSTITUTIVE and EMPIRICAL_ASSOCIATION warrants with high d values) and partly by their coherence with T1 theoretical frameworks (Haack's coherential dimension, implemented as THEORY_DERIVED and MECHANISM warrants). The two dimensions trade off: a well-replicated T2 claim can survive even if its theoretical backing is thin; a theoretically central claim can survive even limited direct evidence, but not indefinitely. This is what the warrant type taxonomy and the Noisy-OR combination rule together implement.</p>
+          </div>
+        </div>
+
+        <h3 class="section-h">The Belief: ClaimV2</h3>
+        <p>Each node in the EN is a <span class="mono">ClaimV2</span> record with five required fields and several optional enrichment fields.</p>
+
+        <div class="callout callout-eg">
+          <div class="callout-head">Example — A Real ClaimV2 Node</div>
+          <div class="callout-body">
+            <p><strong>claim_text:</strong> "Forest bathing (shinrin-yoku) reduces salivary cortisol within 60 minutes of exposure."</p>
+            <p><strong>credence:</strong> 0.78</p>
+            <p><strong>credence_interval:</strong> [0.65, 0.88]</p>
+            <p><strong>t_ent (entrenchment):</strong> 0.54 — this claim is reasonably entrenched but not canonical</p>
+            <p><strong>population_scope:</strong> "Healthy adults, predominantly East Asian samples, ages 20–65"</p>
+            <p><strong>supporting_theory:</strong> Stress Recovery Theory (Ulrich 1983) [T1.5, reduces to Stress/Neuromodulation T1]</p>
+          </div>
+        </div>
+
+        <h3 class="section-h">Warrant Types and Discount Factors</h3>
+        <p>Edges in the EN are not all equal. Each edge carries a <em>warrant type</em> — a formal category indicating the logical relationship between the source evidence and the target belief — together with a <em>discount factor d</em> that controls how much credence flows across that edge. The discount factors are not arbitrary: they reflect the epistemic distance between the type of evidence and the type of claim.</p>
+
+        <table class="ka-table">
+          <thead><tr><th>Warrant Type</th><th>d (discount factor)</th><th>Meaning</th><th>Typical source</th></tr></thead>
+          <tbody>
+            <tr><td>CONSTITUTIVE</td><td class="mono">1.00</td><td>The evidence defines the claim; no inferential gap</td><td>Direct operationalization (e.g., RCT measuring the exact variable)</td></tr>
+            <tr><td>MECHANISM</td><td class="mono">0.80</td><td>Mechanistic pathway is known and documented</td><td>Pathway tracing studies, lab isolation of mechanism</td></tr>
+            <tr><td>EMPIRICAL_ASSOCIATION</td><td class="mono">0.80</td><td>Statistically robust association across studies</td><td>Meta-analyses, systematic reviews</td></tr>
+            <tr><td>FUNCTIONAL</td><td class="mono">0.65</td><td>Functional analogy holds across conditions</td><td>Cross-condition or cross-population replications</td></tr>
+            <tr><td>CAPACITY</td><td class="mono">0.55</td><td>Demonstrates capacity but not regular deployment</td><td>Lab demonstrations, existence proofs</td></tr>
+            <tr><td>ANALOGICAL</td><td class="mono">0.40</td><td>Analogy from a related domain</td><td>Cross-species, cross-domain transfer</td></tr>
+            <tr><td>THEORY_DERIVED</td><td class="mono">0.25</td><td>Derived from theoretical prediction only, no direct test</td><td>Model predictions, simulation outputs</td></tr>
+          </tbody>
+        </table>
+
+        <h3 class="section-h">Credence Combination: The Noisy-OR Rule</h3>
+        <p>When multiple independent pieces of evidence support the same belief, K-ATLAS combines them using the <em>Noisy-OR</em> operator — not simple averaging. Noisy-OR rewards the accumulation of independent evidence; two independent studies each with credence 0.70 together produce a combined credence of 0.91, not 0.70.</p>
+
+        <div class="formula-block">
+P(belief) = 1 − ∏ᵢ (1 − credenceᵢ)
+
+Example (3 independent studies: 0.70, 0.65, 0.60):
+P = 1 − (1−0.70)(1−0.65)(1−0.60)
+  = 1 − (0.30)(0.35)(0.40)
+  = 1 − 0.042
+  = 0.958
+        </div>
+
+        <h3 class="section-h">Entrenchment (T_ent)</h3>
+        <p>Entrenchment is a Quinean concept: some beliefs are more central to our theoretical web and therefore harder to revise. K-ATLAS tracks entrenchment as a continuous score from 0 to 1. High-entrenchment beliefs sit at the core of well-confirmed theoretical frameworks. Low-entrenchment beliefs are peripheral, speculative, or sparsely supported.</p>
+
+        <table class="ka-table">
+          <thead><tr><th>Belief / Framework</th><th>T_ent</th><th>Interpretation</th></tr></thead>
+          <tbody>
+            <tr><td>Circadian Biology (CB)</td><td class="mono">0.93</td><td>Canonical; extreme revision cost</td></tr>
+            <tr><td>Predictive Processing (PP)</td><td class="mono">0.89</td><td>Core framework; very high entrenchment</td></tr>
+            <tr><td>Stress / Neuromodulation (SN)</td><td class="mono">0.85</td><td>Well-confirmed; HPA axis link</td></tr>
+            <tr><td>Attention Restoration Theory (ART)</td><td class="mono">0.54</td><td>Robust but contested; evidence heterogeneous</td></tr>
+            <tr><td>Biophilia Hypothesis</td><td class="mono">0.43</td><td>Influential but evidence sparse for strong claims</td></tr>
+            <tr><td>Prospect-Refuge Theory</td><td class="mono">0.38</td><td>Plausible, limited direct tests</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+        
+        <div class="open-q"><div class="open-q-head">Open Questions</div><p>Three questions about the EN's core design remain active. First, is Noisy-OR the right combination rule? Its independence assumption — that evidence pieces are conditionally independent given the hypothesis — is violated when studies share methods, populations, or theoretical frameworks. A learned combination function might do better, but the corpus is too small and too heterogeneous for reliable learning. Second, should warrant confidence decay over time as theoretical frameworks evolve? A belief warranted by a 1990 study under a framework that has since been substantially revised arguably deserves reduced credence, but no temporal-decay mechanism is yet specified. Third, should entrenchment scores be computed algorithmically from graph-topological properties of the EN, or remain assigned by expert judgment? Both approaches have formal precedent — Spohn's (2012) ranking functions on one side, Quine's (1951) web-of-belief metaphor on the other — and comparing the two computationally might be illuminating.</p></div>
+
+        <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>When a QA answer cites a credence value, the EN is what produced it. Understanding ClaimV2 structure and warrant types allows you to interpret any answer intelligently: a credence of 0.63 with interval [0.45, 0.78] tells a very different story than 0.78 with interval [0.71, 0.84], even though both represent moderate confidence. The warrant-type table is the most pedagogically valuable single table in the system — it makes the implicit hierarchy of evidence quality explicit and quantitative, and is worth a full class session.</p></div>
+        <div class="source-links"><strong>Source files:</strong>
+          <a href="../src/epistemic/web_of_belief.py">web_of_belief.py</a>
+          <a href="../src/epistemic/warrant_scaling.py">warrant_scaling.py</a>
+          <a href="../src/epistemic/contracts/claim_v2.py">claim_v2.py</a>
+          <a href="../src/epistemic/contracts/edge_v2.py">edge_v2.py</a>
+          <a href="../docs/EPISTEMIC_PRINCIPLES.md">EPISTEMIC_PRINCIPLES.md</a>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════
+           CHAPTER 3 — The Warrant System
+      ════════════════════════════════════════ -->
+      <section class="chapter-section hidden" id="ch3">
+        <div class="chapter-header">
+          <span class="chapter-num">Chapter 3</span>
+          <h1 class="chapter-title">The Warrant System</h1>
+        </div>
+
+        <p>Warrants are the logical connective tissue of the Evidence Network. A warrant is not simply a reference — it is a specification of <em>why</em> one piece of evidence should raise or lower confidence in a claim. K-ATLAS distinguishes between three families of warrant: <em>bridge warrants</em> (connecting lab findings to population-level claims), <em>evidence evaluation warrants</em> (assessing quality, coherence, and contest), and the internal credence propagation produced by those warrants.</p>
+
+        <h3 class="section-h">Bridge Warrants</h3>
+        <p>The most mathematically precise warrant in the system is the bridge warrant — a formal rule for translating evidence from one context to another. Its core formula is:</p>
+
+        <div class="formula-block">
+logit(p_target) = d(τ) · ω · δ(pop, pop_target) · logit(p_lab)
+
+where:
+  d(τ)              = discount factor for warrant type τ  (Table, Ch.2)
+  ω                 = baseline weight (default 1.0)
+  δ(pop, pop_target)= population similarity scalar (0–1)
+  p_lab             = observed probability in source study
+  p_target          = inferred probability in target context
+        </div>
+
+        <div class="callout callout-eg">
+          <div class="callout-head">Example — Worked Bridge Warrant</div>
+          <div class="callout-body">
+            <p><strong>Source finding:</strong> In a Japanese cohort (n=280, healthy adults), shinrin-yoku reduced salivary cortisol by 23% (p&lt;0.001). Estimated p_lab = 0.85.</p>
+            <p><strong>Target claim:</strong> Does urban green-space access reduce cortisol in US adults?</p>
+            <p><strong>Warrant type:</strong> FUNCTIONAL (d = 0.65) — functional analogy between forest bathing and green-space access.</p>
+            <p><strong>Population similarity:</strong> δ = 0.72 (healthy adults, similar age range; different cultural context, different green-space format).</p>
+            <p><strong>Calculation:</strong> logit(p_target) = 0.65 × 1.0 × 0.72 × logit(0.85) = 0.65 × 0.72 × 1.735 ≈ 0.812</p>
+            <p><strong>Result:</strong> p_target ≈ 0.693 — moderate-to-good support for the target claim, substantially discounted from the source.</p>
+          </div>
+        </div>
+
+        <h3 class="section-h">Coherence Warrant Scaling</h3>
+        <p>When multiple independent lines of evidence converge on the same belief from different directions, K-ATLAS adds a coherence bonus. The scaling is sub-linear (square-root) to prevent artificial inflation from redundant citations.</p>
+
+        <div class="formula-block">
+coherence_warrant = base(0.55) + 0.05 × √(n_coherent_links)
+                    − 0.05 × √(n_contradicting_links)
+ceiling: 0.75
+
+Example: 9 coherent links, 1 contradiction:
+  = 0.55 + 0.05 × 3 − 0.05 × 1
+  = 0.55 + 0.15 − 0.05 = 0.65
+        </div>
+
+        <h3 class="section-h">Evidence Evaluation Warrants</h3>
+        <p>Three further warrant types assess evidence quality rather than evidence content. They modify the credence that flows through the associated edges.</p>
+
+        <table class="ka-table">
+          <thead><tr><th>Warrant</th><th>Function</th></tr></thead>
+          <tbody>
+            <tr><td>METHODOLOGICAL_QUALITY</td><td>Adjusts for study design (RCT > quasi-experimental > observational)</td></tr>
+            <tr><td>REPLICATION</td><td>Boosts credence when independent replication exists; penalizes replication failures</td></tr>
+            <tr><td>CONTEST</td><td>Introduces a countervailing pressure: a contested edge reduces the credence of the target belief, but also flags it as requiring explicit justification in QA answers</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+        
+        <div class="open-q"><div class="open-q-head">Open Questions</div><p>Three unresolved problems lie within the bridge warrant formula. First, the δ(pop, pop_target) population-similarity scalar is a lookup table with five binary dimensions — operationally useful but theoretically unsatisfying. A principled derivation, perhaps from information-theoretic distributional distance or Bayesian model comparison, would put the bridge warrant on more rigorous ground. Second, the threshold for promoting an ANALOGICAL warrant to a FUNCTIONAL warrant is not formally specified — when does cross-context replication become strong enough to move up the type hierarchy? This is currently assessed by expert judgment at sprint boundaries. Third, the coherence warrant base value (0.55) and ceiling (0.75) were set by expert elicitation; a formal calibration study using held-out corpus subsets as ground truth would either validate or force revision of these values.</p></div>
+
+        <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>Bridge warrants are the primary mechanism for translating Japanese forest-bathing studies into design guidance for offices in San Diego. Every design recommendation that crosses a population or context boundary relies on a bridge warrant, and the formula makes that translation auditable rather than implicit. In the course, Chapters 3 and 5 work together: Chapter 3 explains how evidence is translated across contexts; Chapter 5 explains how translated credences enter the projection model. A student who understands both can trace a design recommendation from the original study all the way to the final probability projection.</p></div>
+        <div class="source-links"><strong>Source files:</strong>
+          <a href="../src/services/bridge_warrants.py">bridge_warrants.py</a>
+          <a href="../src/epistemic/warrant_scaling.py">warrant_scaling.py</a>
+          <a href="../contracts/vocab/argument_schemes.json">argument_schemes.json</a>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════
+           CHAPTER 4 — Theory Tiers
+      ════════════════════════════════════════ -->
+      <section class="chapter-section hidden" id="ch4">
+        <div class="chapter-header">
+          <span class="chapter-num">Chapter 4</span>
+          <h1 class="chapter-title">Theory Tiers: T1, T1.5, and T2</h1>
+        </div>
+
+        <p>K-ATLAS distinguishes three epistemic tiers for theoretical content. The distinction matters because theories at different tiers warrant different kinds of inference, carry different entrenchment values, and play different roles in answer generation.</p>
+
+        <h3 class="section-h">T1 — Core Neural Frameworks</h3>
+        <p>T1 frameworks are well-confirmed neuroscientific and psychological frameworks with canonical experimental paradigms, established neural substrates, and high entrenchment. T1 status is reserved for frameworks with direct mechanistic accounts at the neural or physiological level. A T1 framework distributes theoretical warrants downward to empirical claims.</p>
+
+        <table class="ka-table">
+          <thead><tr><th>ID</th><th>Framework</th><th>T_ent</th><th>Neural / physiological grounding</th></tr></thead>
+          <tbody>
+            <tr><td>PP</td><td>Predictive Processing</td><td class="mono">0.89</td><td>Hierarchical precision-weighting; free energy minimization</td></tr>
+            <tr><td>SN</td><td>Stress / Neuromodulation</td><td class="mono">0.85</td><td>HPA axis, cortisol, SNS activation</td></tr>
+            <tr><td>DP</td><td>Default-Mode &amp; Positive Construction</td><td class="mono">0.82</td><td>DMN; mind-wandering; constructive cognition</td></tr>
+            <tr><td>DT</td><td>Directed-Attention / Inhibitory Fatigue</td><td class="mono">0.80</td><td>Prefrontal cortex, top-down attention, fatigue accumulation</td></tr>
+            <tr><td>NM</td><td>Neuromodulatory Dynamics</td><td class="mono">0.83</td><td>Dopamine, serotonin, noradrenaline; arousal regulation</td></tr>
+            <tr><td>IC</td><td>Interoceptive Coding</td><td class="mono">0.78</td><td>Insular cortex; interoceptive prediction; body-state tracking</td></tr>
+            <tr><td>MS</td><td>Motor &amp; Sensorimotor Simulation</td><td class="mono">0.76</td><td>Mirror systems; efference copy; affordance computation</td></tr>
+            <tr><td>EC</td><td>Embodied Cognition</td><td class="mono">0.72</td><td>Body-environment coupling; action-perception loops</td></tr>
+            <tr><td>CB</td><td>Circadian Biology</td><td class="mono">0.93</td><td>SCN; melatonin; chronotype genetics</td></tr>
+            <tr><td>MSI</td><td>Multisensory Integration</td><td class="mono">0.79</td><td>Bayesian integration across modalities; temporal binding</td></tr>
+          </tbody>
+        </table>
+
+        <h3 class="section-h">T1.5 — Domain Theories That Reduce to T1</h3>
+        <p>T1.5 frameworks are domain-level theories — typically from environmental psychology — whose explanatory claims can be formally traced to one or more T1 mechanisms. They are less entrenched than T1 frameworks because their specific claims (e.g., "fascination" in Attention Restoration Theory) have not been fully operationalized at the neural level. Their warrant value derives partly from their reduction to T1.</p>
+
+        <table class="ka-table">
+          <thead><tr><th>T1.5 Framework</th><th>Reduces to T1(s)</th><th>T_ent</th></tr></thead>
+          <tbody>
+            <tr><td>Attention Restoration Theory (ART)</td><td>DT (directed-attention fatigue), PP (soft fascination as precision modulation)</td><td class="mono">0.54</td></tr>
+            <tr><td>Stress Recovery Theory (SRT)</td><td>SN (HPA cortisol), IC (autonomic interoception)</td><td class="mono">0.61</td></tr>
+            <tr><td>Biophilia Hypothesis</td><td>PP (evolutionary priors), EC (affordance landscape)</td><td class="mono">0.43</td></tr>
+            <tr><td>Prospect-Refuge Theory</td><td>EC (spatial affordance), SN (threat-detection baseline)</td><td class="mono">0.38</td></tr>
+          </tbody>
+        </table>
+
+        <h3 class="section-h">T2 — Empirical Claims</h3>
+        <p>T2 claims are the working claims of the EN: specific, testable propositions about observable phenomena that are supported by (or in tension with) empirical evidence. Every T2 claim has a credence, a credence interval, a population scope, and at minimum one warrant chain reaching to evidence. T2 claims may be SUPPORTED, CONTESTED, or UNKNOWN.</p>
+
+        <div class="callout callout-eg">
+          <div class="callout-head">Example — T2 Claim with CONTESTED Edge</div>
+          <div class="callout-body">
+            <p><strong>Claim (T2):</strong> "Exposure to fractal patterns (D ≈ 1.3–1.5) reduces physiological stress markers."</p>
+            <p><strong>Credence:</strong> 0.63 | <strong>Interval:</strong> [0.48, 0.76]</p>
+            <p><strong>Support:</strong> Taylor et al. (2006) — MECHANISM warrant (d=0.80); Hägerhäll et al. (2008) — EMPIRICAL_ASSOCIATION (d=0.80).</p>
+            <p><strong>Contest:</strong> Spehar et al. (2016) — CONTEST edge — stimulus confound concern. This contest reduces credence by 0.07 and flags the claim for explicit uncertainty disclosure in QA answers.</p>
+          </div>
+        </div>
+      </section>
+
+        
+        <div class="open-q"><div class="open-q-head">Open Questions</div><p>Two deep questions about the tier architecture have not been answered. First, what is the principled basis for the T1 → T1.5 reduction relation? The system requires that T1.5 constructs be traceable to T1 mechanisms, but the reduction relation is assessed by expert judgment rather than formalised. A more precise account, drawing on Nagel's (1961) bridge-law model of theory reduction or on mechanistic explanation (Machamer, Darden, &amp; Craver, 2000), is needed before the tier architecture can be presented as more than a useful heuristic. Second, what happens when a T1 framework is itself contested? Predictive processing (PP) — the highest-entrenchment T1 framework in K-ATLAS — has been challenged on empirical testability grounds (Colombo &amp; Seriès, 2012). If PP's entrenchment should be revised downward, the revision propagates through all T1.5 theories that reduce to PP, potentially requiring a system-wide credence recalculation.</p></div>
+
+        <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>Every extraction assigns each claim to a tier, and this assignment determines which warrant types are permissible and how credences propagate. In practice, the tier table is the first reference when reading an unfamiliar paper: it tells you how much theoretical weight to give a paper's claims and what kind of warrant connects its findings to K-ATLAS beliefs. For course purposes, the T1.5 table — which lists domain theories with their reductions to T1 mechanisms — is the most useful teaching tool: it shows students that concepts like "fascination" in Attention Restoration Theory are not theoretical primitives but derived constructs that inherit their credence from predictive-processing and directed-attention research.</p></div>
+        <div class="source-links"><strong>Source files:</strong>
+          <a href="../docs/02-14_07_Theory_Tier_Architecture_V1.0.md">Theory Tier Architecture V1.0.md</a>
+          <a href="../src/epistemic/entrenchment/entrenchment_index.py">entrenchment_index.py</a>
+          <a href="../ARCHITECTURE.md">ARCHITECTURE.md §Theory Tiers</a>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════
+           CHAPTER 5 — BN and Projection Calculus
+      ════════════════════════════════════════ -->
+      <section class="chapter-section hidden" id="ch5">
+        <div class="chapter-header">
+          <span class="chapter-num">Chapter 5</span>
+          <h1 class="chapter-title">Bayesian Network &amp; Projection Calculus</h1>
+        </div>
+
+        <p>The Evidence Network answers questions about what the literature says. The Bayesian Network (BN) answers a different class of question: given what we know about an environment or an intervention, what outcomes should we expect for a particular person? The BN is a Pearl-compliant Directed Acyclic Graph whose nodes represent measurable or latent variables and whose edges represent conditional dependencies calibrated from the EN's credence values.</p>
+
+        <h3 class="section-h">Four Node Types in the BN</h3>
+        <table class="ka-table">
+          <thead><tr><th>Node Type</th><th>Examples</th><th>Role</th></tr></thead>
+          <tbody>
+            <tr><td>Observable (T3)</td><td>Fractal dimension D, mEDI (lux), cortisol level</td><td>Direct measurement inputs</td></tr>
+            <tr><td>Latent Mechanism</td><td>Directed-attention fatigue, HPA activation</td><td>Unobserved mediating variable; informed by T1 literature</td></tr>
+            <tr><td>Outcome</td><td>Stress recovery, attentional restoration</td><td>Target quantity for projection</td></tr>
+            <tr><td>Moderator</td><td>Chronotype, prior stress load, age</td><td>Individual-difference conditioning variable</td></tr>
+          </tbody>
+        </table>
+
+        <h3 class="section-h">The Epistemic Causal Bridge (ECB)</h3>
+        <p>The connection between the EN and the BN is mediated by the <em>Epistemic Causal Bridge</em> (ECB) — a π function that translates EN credence values into BN conditional probability table entries. A high-credence EN claim maps to a tight conditional probability distribution in the BN; a low-credence or contested claim maps to a diffuse distribution with high variance.</p>
+
+        <div class="callout callout-eg">
+          <div class="callout-head">Example — Projection Calculus: Hospital Oncology Unit</div>
+          <div class="callout-body">
+            <p><strong>Intervention query:</strong> "We are fitting a dayroom with biophilic elements: mEDI 250 lux at 9am–11am, fractal art (D=1.4), nature soundscape. Patient: F/52, high prior stress (SAM-9), morning chronotype. What is the projected stress-recovery probability?"</p>
+            <p><strong>Step 1 — Observable inputs (T3):</strong> mEDI=250, D=1.4, soundscape complexity=moderate.</p>
+            <p><strong>Step 2 — Activate BN paths:</strong> mEDI → Circadian alignment (CB, T_ent=0.93) → stress reduction. D → fractal response (T2, credence=0.63) → attention restoration (DT). Soundscape → autonomic regulation (IC, T_ent=0.78).</p>
+            <p><strong>Step 3 — Apply moderators:</strong> High prior stress load increases SN pathway sensitivity (+0.12). Morning chronotype aligns with mEDI timing (+0.08).</p>
+            <p><strong>Step 4 — Projection result:</strong> P(stress recovery within 40 min) = 0.74 [0.61, 0.84]. Dominant pathway: CB→SN (49% contribution). Contested pathway: fractal response flagged.</p>
+          </div>
+        </div>
+
+        <h3 class="section-h">Dual-BN Diagnostic</h3>
+        <p>K-ATLAS maintains two parallel BN configurations for every projection query. The <em>empirically-grounded BN</em> uses only conditional probabilities calibrated from actual study data. The <em>theory-scaffolded BN</em> supplements data with theoretical priors from T1 frameworks where direct evidence is sparse. Answers report both and flag the divergence when it exceeds a threshold — signalling to the user that theoretical inference is carrying significant weight in the projection.</p>
+      </section>
+
+        
+        <div class="open-q"><div class="open-q-head">Open Questions</div><p>Three questions about the BN design remain active. First, structure learning versus expert elicitation: the current BN topology was specified by expert judgment, not inferred from data. Structure learning algorithms (PC, GES) could in principle infer the DAG from the corpus, but they are sensitive to unobserved confounders and require sample sizes the corpus cannot yet supply; expert elicitation is probably correct for Phase α. Second, CPT calibration: conditional probability tables are currently populated via the π function from EN credence values, which is a rough approximation. Bayesian elicitation studies — eliciting CPT entries from domain experts and checking against observed co-occurrence frequencies — would strengthen the BN considerably. Third, when the dual-BN diagnostic reveals high divergence between the empirical and theory-scaffolded configurations, which should the QA answer trust? A principled divergence-resolution policy is needed.</p></div>
+
+        <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>The BN answers "what-if" design questions that the EN cannot. While the EN tells you what the literature says about forest exposure and cortisol, the BN tells you what outcome to expect for a specific person in a specific room with specific design parameters. For the VR stimulus design work, this is the key projection tool: the BN predicts which parameter combinations — fractal dimension, mEDI, soundscape complexity — should produce the largest stress-recovery effect for a given patient population. The dual-BN diagnostic is worth inspecting whenever a projection seems surprising: high divergence signals that theoretical inference is doing most of the work.</p></div>
+        <div class="source-links"><strong>Source files:</strong>
+          <a href="../src/epistemic/bn_nodes.py">bn_nodes.py</a>
+          <a href="../src/epistemic/bn_edges.py">bn_edges.py</a>
+          <a href="../src/services/t3_belief_engine.py">t3_belief_engine.py</a>
+          <a href="../src/services/t3_integration.py">t3_integration.py</a>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════
+           CHAPTER 6 — QA System
+      ════════════════════════════════════════ -->
+      <section class="chapter-section hidden" id="ch6">
+        <div class="chapter-header">
+          <span class="chapter-num">Chapter 6</span>
+          <h1 class="chapter-title">The QA System</h1>
+        </div>
+
+        <p>The QA layer is the user-facing entry point to everything K-ATLAS knows. A user's natural-language question is classified into one of 23 question types across five families, routed to the appropriate handler, and enriched through a nine-step pipeline before it is returned as an answer. The enrichment pipeline is where K-ATLAS distinguishes itself from a simple retrieval system: every answer is annotated with its epistemic status, its warrant chain, its population qualifications, and its genuine uncertainties.</p>
+
+        <h3 class="section-h">23 Question Types Across 5 Families</h3>
+        <table class="ka-table">
+          <thead><tr><th>Family</th><th>Example Question Types</th></tr></thead>
+          <tbody>
+            <tr><td>Evidence</td><td>Direct evidence query, meta-analytic summary, replication status, effect-size distribution</td></tr>
+            <tr><td>Mechanism</td><td>Mechanistic pathway, neural substrate query, pathway completeness check</td></tr>
+            <tr><td>Gap</td><td>Research gap identification, missing evidence map, open question census</td></tr>
+            <tr><td>Projection</td><td>Intervention projection (BN), population transfer, design recommendation</td></tr>
+            <tr><td>Comparison</td><td>Theory comparison, warrant strength comparison, head-to-head evidence review</td></tr>
+          </tbody>
+        </table>
+
+        <h3 class="section-h">The 9-Step Answer Enrichment Pipeline</h3>
+        <p>Raw QA handler output passes through nine enrichment stages before reaching the user. Each stage adds a layer of epistemic transparency that is absent from conventional search or RAG systems.</p>
+
+        <table class="ka-table">
+          <thead><tr><th>Step</th><th>Stage</th><th>What it adds</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Credence Framing</td><td>Attaches the numeric credence and interval to the primary claim</td></tr>
+            <tr><td>2</td><td>Warrant Disclosure</td><td>Names the warrant type(s) and discount factors that produced this credence</td></tr>
+            <tr><td>3</td><td>Source Trail</td><td>Lists the specific papers contributing to the credence, with their individual weights</td></tr>
+            <tr><td>4</td><td>Population Qualifier</td><td>Specifies the population scope and flags any transfer risk</td></tr>
+            <tr><td>5</td><td>Mechanism Chain</td><td>If a mechanistic pathway is available, it is surfaced with its own credence</td></tr>
+            <tr><td>6</td><td>Dual-BN Diagnostic</td><td>Reports empirical vs. theory-scaffolded BN divergence where relevant</td></tr>
+            <tr><td>7</td><td>Gap Disclosure</td><td>Flags known evidence gaps adjacent to the answer</td></tr>
+            <tr><td>8</td><td>Alternative Explanations</td><td>Names competing explanations if contested edges exist</td></tr>
+            <tr><td>9</td><td>Related Questions</td><td>Generates 2–3 follow-up questions the user may not have known to ask</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout-note">
+          <div class="callout-head">The Evidence / Interpretation / Prediction Distinction</div>
+          <div class="callout-body">
+            <p>K-ATLAS enforces a strict three-way distinction in every answer. <strong>Evidence</strong> statements report what studies found. <strong>Interpretation</strong> statements report what K-ATLAS infers from that evidence using its warrant chains. <strong>Prediction</strong> statements report BN projections for specific contexts. These are never blurred — each is labelled explicitly in the answer surface, so the user always knows whether they are reading a finding, an inference, or a forecast.</p>
+          </div>
+        </div>
+      </section>
+
+        
+        <div class="open-q"><div class="open-q-head">Open Questions</div><p>Three questions about the QA design remain. First, which question types are missing from the 23 classified types? The current five-family structure covers research questions well, but design-practice questions — "How do I achieve a target cortisol-reduction effect within a given cost envelope?" — do not map cleanly to any existing family; a sixth Design Specification family may be needed. Second, how should the system handle genuinely contradictory warrant chains, where MECHANISM warrants and ANALOGICAL warrants support opposite conclusions? The current system falls back to net credence, but an adversarial presentation of competing chains would be more informative. Third, should the QA cache be indexed by question text, by belief cluster, or by warrant chain? Text-based indexing misses semantically equivalent questions; cluster-based indexing may invalidate too aggressively.</p></div>
+
+        <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>The QA system is where K-ATLAS becomes a research tool rather than a database. For students in the spring course, QA sessions are the primary interaction mode. The most important habit is to read the Population Qualifier (enrichment step 4) and the Gap Disclosure (step 7) before using any answer in a design argument — these are where the system tells you what it does not know and why. The Related Questions panel (step 9), generated by the Interpretation Space, often surfaces the question the student should have asked but did not know to ask.</p></div>
+        <div class="source-links"><strong>Source files:</strong>
+          <a href="../src/services/arbitrary_qa_handler.py">arbitrary_qa_handler.py</a>
+          <a href="../src/qa/qa_cache_manager.py">qa_cache_manager.py</a>
+          <a href="../contracts/QA_ANSWER_NORMS.md">QA_ANSWER_NORMS.md</a>
+          <a href="../src/services/pipeline_qa_integration.py">pipeline_qa_integration.py</a>
+          <a href="../src/services/cva_qa_enricher.py">cva_qa_enricher.py</a>
+          <a href="../docs/EPISTEMIC_PRINCIPLES.md">EPISTEMIC_PRINCIPLES.md</a>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════
+           CHAPTER 7 — Architecture and Contracts
+      ════════════════════════════════════════ -->
+      <section class="chapter-section hidden" id="ch7">
+        <div class="chapter-header">
+          <span class="chapter-num">Chapter 7</span>
+          <h1 class="chapter-title">Architecture &amp; Contracts</h1>
+        </div>
+
+        <p>K-ATLAS's architecture is specified through a contract system — a set of formal schema and interface definitions that every component must honour. Contracts are the authoritative specification of data structure and service behaviour. They are checked at runtime and enforced in tests. When code and contracts diverge, the contract wins.</p>
+
+        <h3 class="section-h">The Four Key Contracts</h3>
+        <table class="ka-table">
+          <thead><tr><th>Contract</th><th>File</th><th>What it governs</th></tr></thead>
+          <tbody>
+            <tr><td>ClaimV2</td><td><span class="mono">src/epistemic/contracts/claim_v2.py</span></td><td>Schema for belief nodes: required fields, credence bounds, population scope format, T-tier assignment</td></tr>
+            <tr><td>EdgeV2</td><td><span class="mono">src/epistemic/contracts/edge_v2.py</span></td><td>Schema for warrant edges: type enum, discount factor range, source citation, directionality rules</td></tr>
+            <tr><td>Service Contracts</td><td><span class="mono">contracts/</span></td><td>Input/output specifications for each service (QA, BN, Warrant Assignment, Annotation)</td></tr>
+            <tr><td>API Contract V1.0</td><td><span class="mono">contracts/api_contract_v1.py</span></td><td>External API surface: endpoint schemas, versioning, error codes</td></tr>
+          </tbody>
+        </table>
+
+        <h3 class="section-h">The 14-Step Paper Integration Cascade</h3>
+        <p>When a new paper enters the system, it moves through a 14-step cascade. Each step has a success condition defined in <span class="mono">contracts/success_conditions.json</span>. The cascade is designed to be idempotent: re-running a step that has already succeeded leaves the system unchanged.</p>
+
+        <table class="ka-table">
+          <thead><tr><th>Step</th><th>Stage</th><th>Component</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>PDF Ingest</td><td>Extraction pipeline / PDF parser</td></tr>
+            <tr><td>2</td><td>Triage</td><td>Relevance classifier (domain filter + topic match)</td></tr>
+            <tr><td>3–9</td><td>LLM Extraction (7 stages)</td><td>Hypothesis, Methods, Results, Stats, Mechanism, Population, Quality extraction</td></tr>
+            <tr><td>10</td><td>Template Matching</td><td>Match extracted content to ClaimV2 templates</td></tr>
+            <tr><td>11</td><td>Claim Instantiation</td><td>Create ClaimV2 records in the EN</td></tr>
+            <tr><td>12</td><td>Warrant Assignment</td><td>Bridge warrant service assigns EdgeV2 records</td></tr>
+            <tr><td>13</td><td>Credence Computation</td><td>Noisy-OR propagation; coherence warrant update</td></tr>
+            <tr><td>14</td><td>Overseer Post-Integration Check</td><td>19 invariants verified; QA cache invalidated</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+        
+        <div class="open-q"><div class="open-q-head">Open Questions</div><p>Two contract questions remain unresolved. First, how should preprints be handled? SSRN and bioRxiv papers may enter the system months before peer review; the current cascade assigns the same extraction treatment to preprints as to published papers. A lower starting credence, or a separate triage category with explicit peer-review-pending flags, would more accurately represent the epistemic status of non-peer-reviewed claims. Second, the idempotency guarantee — each cascade step can be re-run without damage — is asserted but not formally verified for Steps 3–9 (LLM extraction stages), which produce non-deterministic output. A rigorous idempotency specification, possibly using event sourcing rather than state mutation, would be needed for the cascade to be truly replay-safe in production.</p></div>
+
+        <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>For student teams in the spring course, Chapter 7 is the map of what happens between "I found a paper" and "the paper is in K-ATLAS." The 14-step cascade table is the debugging reference for integration failures: if a paper does not appear in QA answers, walk through the steps in order to locate where the cascade stopped. Contract files — especially <span class="mono">claim_v2.py</span> and <span class="mono">edge_v2.py</span> — are the authoritative schema documentation; they are the right place to look when a field name is ambiguous or its permissible values are unclear.</p></div>
+        <div class="source-links"><strong>Source files:</strong>
+          <a href="../src/epistemic/contracts/claim_v2.py">claim_v2.py</a>
+          <a href="../src/epistemic/contracts/edge_v2.py">edge_v2.py</a>
+          <a href="../contracts/">contracts/ directory</a>
+          <a href="../ARCHITECTURE.md">ARCHITECTURE.md</a>
+          <a href="../contracts/success_conditions.json">success_conditions.json</a>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════
+           CHAPTER 8 — Governance and Agents
+      ════════════════════════════════════════ -->
+      <section class="chapter-section hidden" id="ch8">
+        <div class="chapter-header">
+          <span class="chapter-num">Chapter 8</span>
+          <h1 class="chapter-title">Governance, Tests &amp; Agents</h1>
+        </div>
+
+        <p>K-ATLAS maintains epistemic integrity through three interlocking systems: a governance layer (the Overseer), a test suite that enforces contracts and success conditions, and a self-repair capability triggered automatically when the Overseer detects violations. Together these make the system not merely a passive store of knowledge but an actively self-maintaining epistemic agent.</p>
+
+        <h3 class="section-h">The Overseer: 6-Component Governance</h3>
+        <table class="ka-table">
+          <thead><tr><th>Component</th><th>Function</th></tr></thead>
+          <tbody>
+            <tr><td>HealthMonitor</td><td>Checks pipeline service availability, response latency, and dependency health</td></tr>
+            <tr><td>IntegrityChecker</td><td>Verifies 19 structural invariants against the EN and BN on every trigger</td></tr>
+            <tr><td>CompletenessAuditor</td><td>Measures coverage gaps: unlabelled claims, unwarranted high-credence beliefs, cards without sources</td></tr>
+            <tr><td>MaintenanceEngine</td><td>Executes automated remediation playbooks when invariant violations are detected</td></tr>
+            <tr><td>Scheduler</td><td>Manages four trigger types: POST_INTEGRATION (5 sec), PERIODIC (nightly), ALERT, ON_DEMAND</td></tr>
+            <tr><td>OverseerReporter</td><td>Generates structured health reports; updates the AESHI score (Aggregate Epistemic System Health Index, 0–100)</td></tr>
+          </tbody>
+        </table>
+
+        <h3 class="section-h">Self-Repair Principle</h3>
+        <p>The governing principle for self-repair is: <em>a system that knows what it believes should also know when those beliefs are inconsistent — and should fix that inconsistency without waiting for human intervention.</em> When the IntegrityChecker detects a violation (e.g., a high-credence belief with no warrant chain, or a population scope mismatch), the MaintenanceEngine selects the appropriate remediation playbook and executes it. The repair is logged to <span class="mono">docs/overseer_reports/</span> for human review.</p>
+
+        <h3 class="section-h">Tests and Success Conditions</h3>
+        <p>Every pipeline has formal success conditions defined in <span class="mono">contracts/success_conditions.json</span>. The test suite enforces these conditions and the invariants. The test coverage breakdown at last audit was: QA Handler 142/142 passing; Card Generation 142/142; Credence/CI 80+ passing; Annotation 8/8; Warrant and Argumentation services passing (with missing orchestrator-level tests noted as a gap).</p>
+
+        <h3 class="section-h">The Agent Fleet</h3>
+        <table class="ka-table">
+          <thead><tr><th>Agent</th><th>Role</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Science-Writing Agent</td><td>Produces page copy, microcopy, explanatory text for the GUI; maintains epistemic honesty norms</td><td>Active — run before GUI Agent</td></tr>
+            <tr><td>GUI Agent</td><td>Designs interaction layouts around Science-Writing Agent copy packs</td><td>Active</td></tr>
+            <tr><td>K-ATLAS Usability Agent</td><td>Runs 5-pass audit: function links, link checking, above-fold copy, persona dropdown, journey verification</td><td>Active</td></tr>
+            <tr><td>Extraction Agent</td><td>Executes the 14-step paper integration cascade; reports to Overseer</td><td>Active</td></tr>
+            <tr><td>Overseer Agent</td><td>Monitors health, fires remediations, generates AESHI reports</td><td>Active</td></tr>
+            <tr><td>Panel Agent</td><td>Solicits domain-expert review of design decisions; tracks open questions</td><td>Active (invoked at sprint boundaries)</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+        
+        <div class="open-q"><div class="open-q-head">Open Questions</div><p>Three governance questions remain. First, the threshold between Severity-HIGH (triggers human alert) and Severity-MEDIUM (triggers automated repair) is not formally specified; it has been adjusted empirically. A calibration study examining the distribution of violation types and repair outcomes over time would put this threshold on more defensible ground. Second, what should the AESHI target be? The current score is 91.18 (GREEN), but the right threshold depends on downstream use: a clinical decision-support application would warrant a higher target than a research exploration tool. Third, how should the Overseer handle invariants that are permanently unsatisfiable because the corpus lacks necessary data (e.g., no papers on acoustic environments in clinical populations)? An invariant flagging such a gap is technically a violation but not a remediable one — it is an evidence gap, not a system error, and may warrant a distinct epistemic-gap category.</p></div>
+
+        <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>The Overseer is the system's conscience. Its nightly report — the AESHI score and invariant status table — is the morning briefing: which beliefs have degraded, which pipelines are slow, and what each remediation playbook recommends. For student teams, the Overseer dashboard is the clearest indicator of whether the work done yesterday actually landed in the system correctly. Checking the Overseer after submitting any significant batch of papers is the equivalent of running a test suite: it tells you whether the integration introduced inconsistencies that need to be resolved before the next session.</p></div>
+        <div class="source-links"><strong>Source files:</strong>
+          <a href="../src/services/overseer.py">overseer.py</a>
+          <a href="../governance/">governance/ directory</a>
+          <a href="../agents/SCIENCE_WRITER_AGENT.md">SCIENCE_WRITER_AGENT.md</a>
+          <a href="../AGENTS.md">AGENTS.md</a>
+          <a href="../tests/">tests/ directory</a>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════
+           CHAPTER 9 — What's Missing
+      ════════════════════════════════════════ -->
+      <section class="chapter-section hidden" id="ch9">
+        <div class="chapter-header">
+          <span class="chapter-num">Chapter 9</span>
+          <h1 class="chapter-title">What's Missing</h1>
+        </div>
+
+        <p>No honest description of K-ATLAS ends without an account of its gaps. What follows is a frank inventory of the intellectual capital that does not yet exist in systematic form, the components that are specified but not yet built, and the empirical coverage that the system still lacks. This chapter exists to be acted on: each gap listed here is an invitation to work.</p>
+
+        <h3 class="section-h">Intellectual Capital Gaps</h3>
+
+        <div class="callout callout-warn">
+          <div class="callout-head">Missing: Defense of the Five Evaluative Criteria</div>
+          <div class="callout-body"><p>The five criteria used to evaluate evidence quality (mechanistic integration, replication, population specificity, measurement precision, theoretical grounding) exist as heuristics in the codebase but have never been formally argued for. A dedicated document making the philosophical case — with references to Haack, Pollock, and contemporary philosophy of science — is needed before these criteria can be presented as principled rather than pragmatic.</p></div>
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-head">Missing: T1/T1.5/T2 Stratification Argument</div>
+          <div class="callout-body"><p>The three-tier stratification is used throughout the codebase but nowhere fully argued for as an epistemological framework. Why are these the right tiers? What is the principled basis for the T1 → T1.5 reduction relation? What happens when a T1 framework is itself contested? A 15–20 page argument needs to be written, drawing on Nagel's (1961) account of theoretical reduction and more recent accounts of mechanistic explanation.</p></div>
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-head">Missing: ACh/NE to Architectural Pre-information Note</div>
+          <div class="callout-body"><p>There is a strong theoretical connection between neuromodulator dynamics (acetylcholine and noradrenaline in particular) and what David Kirsh has called "architectural pre-information" — the way environments prime cognitive states before task engagement. This connection appears in scattered working notes but has never been assembled into a focused argument. A 3–5 page theoretical note would add significant depth to both the IC and NM framework entries.</p></div>
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-head">Missing: δ Function First-Principles Account</div>
+          <div class="callout-body"><p>The population similarity scalar δ(pop, pop_target) in the bridge warrant formula is currently implemented as a lookup table with five binary dimensions (age match, health status, cultural context, measurement context, species). This is adequate for operational use but theoretically unsatisfying. A first-principles derivation — perhaps from Bayesian model comparison or from information-theoretic measures of distributional distance — would put the bridge warrant formula on more rigorous ground.</p></div>
+        </div>
+
+        <h3 class="section-h">Unbuilt Components</h3>
+        <table class="ka-table">
+          <thead><tr><th>Component</th><th>Status</th><th>What's needed</th></tr></thead>
+          <tbody>
+            <tr><td>Warrant Orchestrator</td><td><span class="badge badge-red">PARTIAL</span></td><td>Warrants exist as service objects but are not auto-assigned; no persistent storage; no Overseer coverage metric</td></tr>
+            <tr><td>Argumentation Pipeline</td><td><span class="badge badge-red">PARTIAL</span></td><td>Graph exists in-memory but is not persisted; Walton scheme implementation missing; no debate clustering</td></tr>
+            <tr><td>Interpretation Space Engine</td><td><span class="badge badge-red">NOT BUILT</span></td><td>Registered in Overseer but zero code; no question generation, no taxonomy operators, no data source</td></tr>
+            <tr><td>Card Backfill</td><td><span class="badge badge-amber">IN PROGRESS</span></td><td>~40 of 4,002 planned cards generated; infrastructure ready but backlog large</td></tr>
+            <tr><td>Stimulus/Sources Tab</td><td><span class="badge badge-amber">IN PROGRESS</span></td><td>Sources tab coded; stimulus backfill not yet run on corpus</td></tr>
+          </tbody>
+        </table>
+
+        <h3 class="section-h">Empirical Coverage Gaps</h3>
+        <table class="ka-table">
+          <thead><tr><th>Domain</th><th>Coverage level</th><th>Priority</th></tr></thead>
+          <tbody>
+            <tr><td>Acoustic environments (natural soundscapes, noise)</td><td>Sparse — &lt;15 papers processed</td><td>High — directly relevant to VR stimulus design</td></tr>
+            <tr><td>Olfactory environment effects</td><td>Very sparse — &lt;5 papers</td><td>Medium — relevant to multisensory integration</td></tr>
+            <tr><td>Thermal comfort and cognition</td><td>Near-zero</td><td>Medium — IC framework connection</td></tr>
+            <tr><td>Paediatric and ageing populations</td><td>Sparse — adult-biased corpus</td><td>High — population transfer risk currently unquantified</td></tr>
+            <tr><td>Non-WEIRD populations</td><td>Very sparse</td><td>High — δ function unreliable without this data</td></tr>
+          </tbody>
+        </table>
+
+        
+        <div class="open-q"><div class="open-q-head">Open Questions</div><p>Among the gaps listed in this chapter, three are most consequential for the spring course. First, the T1/T1.5/T2 stratification argument: without a formal defence of the tier architecture, students must accept the system's theory structure as axiomatic — pedagogically unsatisfying and intellectually dishonest. Writing this argument, drawing on Nagel (1961) and Machamer, Darden, and Craver (2000), is the highest-priority intellectual gap for the spring term. Second, the δ function's first-principles account: the lookup-table implementation will produce unreliable answers for novel population combinations not represented in the table. Students working on cross-population design questions need to understand this limitation before using bridge-warrant outputs. Third, the acoustic and olfactory coverage gaps matter directly for the VR stimulus design team: both modalities are salient in immersive environments but nearly absent from the corpus.</p></div>
+
+        <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>Chapter 9 is not a failure inventory — it is a prioritised research agenda. Before starting any implementation sprint, read it to check whether the gap you are about to fill is listed, and if so, what additional context is available. The Unbuilt Components table is the operational go-live checklist; the Intellectual Capital Gaps section is the list of arguments that need to be written before K-ATLAS can be fully published. For the Panel Agent, Chapter 9 is the primary source of open questions for each expert panel convened at a sprint boundary.</p></div>
+        <div class="source-links"><strong>Source files:</strong>
+          <a href="../STUBS_AND_BLOCKING_FACTORS.md">STUBS_AND_BLOCKING_FACTORS.md</a>
+          <a href="../RUTHLESS_V8_AUDIT_REPORT.md">RUTHLESS_V8_AUDIT_REPORT.md</a>
+          <a href="../docs/ATLAS_THEORETICAL_FOUNDATIONS_MASTER_DOC.md">Master Doc</a>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════
+           CHAPTER 10 — The Four Service Layers
+      ════════════════════════════════════════ -->
+      <section class="chapter-section hidden" id="ch10">
+        <div class="chapter-header">
+          <span class="chapter-num">Chapter 10</span>
+          <h1 class="chapter-title">The Four Service Layers</h1>
+        </div>
+
+        <p>Layer 3 of the K-ATLAS architecture — Core Services — contains four subsystems that together provide the reasoning, interpretation, question-answering, and knowledge-annotation capabilities of the system. Each subsystem is architecturally distinct: it has its own contract, its own data models, and its own relationship to the Evidence Network. Understanding each layer separately is essential for understanding both what K-ATLAS can do and where it is currently incomplete.</p>
+
+        <!-- ── Argumentation ── -->
+        <h3 class="section-h">1 — The Argumentation Layer</h3>
+        <p>The Argumentation Layer sits between the raw evidence network and the QA system. Its function is to structure the <em>logical relationships</em> between claims, papers, and findings — not merely to note that evidence exists, but to represent how pieces of evidence support, critique, contest, or hierarchically organise one another. Where the Evidence Network asks "What do we believe and how strongly?", the Argumentation Layer asks "Why should we believe it, and what are the strongest objections?"</p>
+
+        <div class="mermaid-wrap">
+          <div class="mermaid">
+graph LR
+  subgraph ArgEngine["ArgumentationEngine (facade)"]
+    CA["CritiqueAggregator\ncritiques + vulnerability reports"]
+    HA["HierarchyAggregator\nhierarchy evidence + pairwise comparisons"]
+    MA["MetaAnalyticAggregator\npooled effects, I², publication bias"]
+    PR["PaperRelation\ninter-paper argument relations"]
+    QH["ArgumentQueryHandler\nrouting + formatting"]
+  end
+  EN["Evidence Network\n(ClaimV2 / EdgeV2)"] --> ArgEngine
+  ArgEngine --> QA["QA Layer"]
+  style ArgEngine fill:#2A7868,color:#fff
+  style EN fill:#1C3D3A,color:#e0f2f1
+  style QA fill:#B06020,color:#fff
+          </div>
+        </div>
+
+        <h4 class="section-h4">Four Components</h4>
+        <table class="ka-table">
+          <thead><tr><th>Component</th><th>File</th><th>Function</th></tr></thead>
+          <tbody>
+            <tr><td>CritiqueAggregator</td><td><span class="mono">src/argument/critique_aggregator.py</span></td><td>Collects methodological critiques, replication failures, and contested claims for any paper or topic. Produces vulnerability reports — structured inventories of known weaknesses in the evidence base.</td></tr>
+            <tr><td>HierarchyAggregator</td><td><span class="mono">src/argument/hierarchy_evidence.py</span></td><td>Assesses the strength of evidence for theoretical hierarchies (e.g., "Is ART better supported than Biophilia as an account of stress recovery?"). Produces pairwise comparison tables.</td></tr>
+            <tr><td>MetaAnalyticAggregator</td><td><span class="mono">src/argument/meta_analytic.py</span></td><td>Computes pooled effect sizes, I² heterogeneity statistics, and publication bias indicators from study-level extraction data. Not a substitute for a formal meta-analysis — a structured approximation from what is in the corpus.</td></tr>
+            <tr><td>PaperRelation</td><td><span class="mono">src/argument/paper_relations.py</span></td><td>Tracks inter-paper logical relations: replication, direct contradiction, methodological extension, theoretical commentary. Typed using <span class="mono">PaperRelationType</span> enum.</td></tr>
+          </tbody>
+        </table>
+
+        <h4 class="section-h4">Walton Argument Schemes</h4>
+        <p>The vocabulary of argument types used in the Argumentation Layer draws on Douglas Walton's taxonomy of argumentation schemes — a systematic classification of the logical patterns that appear in natural-language reasoning. K-ATLAS uses a subset of Walton's schemes adapted for scientific reasoning, stored in <span class="mono">contracts/vocab/argument_schemes.json</span>. The most frequently occurring schemes in the biophilic environment literature are: argument from analogy (cross-species transfer), argument from expert opinion (theoretical authority), argument from sign (biomarker as indicator), and argument from consequences (design implications of a finding).</p>
+
+        <div class="callout callout-eg">
+          <div class="callout-head">Example — Vulnerability Report</div>
+          <div class="callout-body">
+            <p><strong>Query:</strong> <span class="mono">engine.vulnerability_report("biophilia")</span></p>
+            <p><strong>Output structure:</strong></p>
+            <p>• <strong>Critiques identified:</strong> 7 (3 methodological, 2 replication, 2 theoretical)</p>
+            <p>• <strong>Dominant vulnerability:</strong> "WEIRD sampling bias — 6 of 8 primary studies use North American or Western European urban populations." Severity: HIGH.</p>
+            <p>• <strong>Replication status:</strong> "Core cortisol reduction claim replicated in 4 independent labs; fractal dimension stress-reduction claim not yet independently replicated."</p>
+            <p>• <strong>Recommended contests:</strong> 2 papers with direct challenges; 1 null result study.</p>
+          </div>
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-head">Current Status: Partial</div>
+          <div class="callout-body"><p>The ArgumentationEngine is built and tested. However, argument graphs are currently in-memory only (not persisted to the database), so they must be rebuilt on every session. The full Walton scheme implementation is incomplete: only 8 of the 25 planned schemes are classified. Orchestrator-level tests are missing. See Chapter 9 for the full gap analysis.</p></div>
+        </div>
+
+        
+        <div class="contested"><div class="contested-head">Contested Views</div><p>The argumentation schemes approach adopted in K-ATLAS derives primarily from Douglas Walton and colleagues (Walton, Reed, &amp; Macagno, 2008; Walton, 1996). Walton's contribution was to systematise the informal logic tradition into a taxonomy of roughly 25 canonical presumptive argument patterns, each with associated <em>critical questions</em> that defeat the argument when unanswered — the scheme approach. This is the framework implemented in <span class="mono">contracts/vocab/argument_schemes.json</span>.</p>
+          <p>The competing research tradition is <em>pragma-dialectics</em>, developed by Frans van Eemeren and Rob Grootendorst in their 1992 book <em>Argumentation, Communication, and Fallacies</em>. Where Walton focuses on classifying individual argument moves and their defeating conditions, van Eemeren and Grootendorst focus on the <em>dialectical procedure</em> for rationally resolving a dispute — an idealised "critical discussion" governed by ten procedural rules (the freedom rule, the burden-of-proof rule, the standpoint rule, the relevance rule, and so on). On the pragma-dialectical account, a fallacy is not a misused scheme but a violation of procedural rules for rational discussion.</p>
+          <p>The practical difference for K-ATLAS is significant. Walton's scheme approach is computationally tractable: you tag argument types and check critical questions. Van Eemeren's dialectical approach requires modelling the full dialogue structure — confrontation, opening, argumentation, and concluding stages — which is much harder to implement for a static literature corpus. However, the pragma-dialectical framework is arguably better suited to explaining <em>why</em> a scientific disagreement exists and what conditions would resolve it — which matters for the Dialectical (R₄) operator in the Interpretation Space. The two frameworks are not necessarily in conflict: Walton's schemes could be used to classify individual argument moves within a pragma-dialectical dispute structure, combining the tractability of the one with the diagnostic power of the other.</p></div>
+
+        <div class="open-q"><div class="open-q-head">Open Questions</div><p>Three questions are unresolved. First, should argument scheme classification be automatic (ML-based, applied during extraction) or manual (expert review at sprint boundaries)? Automatic classification would scale, but requires training data and may produce false positives for domain-specific schemes not in Walton's canonical list. Second, argument graphs are currently in-memory only — they must be rebuilt each session. A JSON graph file (fast to write, inspectable) and a SQLite adjacency table (queryable, harder to visualise) are both viable persistence options; the choice has implications for how the Overseer monitors graph health. Third, should the Argumentation Layer classify the global argument pattern of an entire paper — "this paper makes a convergent argument from three independent lines of evidence" — or only classify local moves between individual claims? Global classification would be more informative for systematic review but is substantially harder to automate.</p></div>
+
+        <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>The Argumentation Engine is currently invoked primarily through <span class="mono">engine.vulnerability_report()</span>, which surfaces in QA answers as the "Alternative Explanations" enrichment step (step 8). For a student asking "Is biophilia well-supported?", the vulnerability report is the most informative output — it tells them not just that the credence is 0.43 but specifically why: WEIRD sampling bias, an unreplicated fractal-dimension claim, and two direct theoretical challenges. The PaperRelation component is most useful for students doing systematic review work — it identifies which papers in the corpus replicate, extend, or directly contest any other paper, saving manual cross-referencing time.</p></div>
+        <div class="source-links" style="margin-top:1.5rem"><strong>Source files:</strong>
+          <a href="../src/argument/engine.py">engine.py</a>
+          <a href="../src/argument/critique_aggregator.py">critique_aggregator.py</a>
+          <a href="../src/argument/hierarchy_evidence.py">hierarchy_evidence.py</a>
+          <a href="../src/argument/meta_analytic.py">meta_analytic.py</a>
+          <a href="../src/argument/paper_relations.py">paper_relations.py</a>
+          <a href="../contracts/vocab/argument_schemes.json">argument_schemes.json</a>
+          <a href="../tests/test_argument_packets.py">test_argument_packets.py</a>
+          <a href="../tests/test_claim_argument_graph.py">test_claim_argument_graph.py</a>
+        </div>
+
+        <!-- ── Interpretation Space ── -->
+        <h3 class="section-h">2 — The Interpretation Space Layer</h3>
+        <p>The Interpretation Space is the most philosophically distinctive component of K-ATLAS. Its purpose is to make explicit the <em>conceptual space of possible questions</em> that a given body of evidence opens up — not just to answer questions that users ask, but to generate the questions that users might not know to ask. It is, in this sense, a question-generation engine rather than a question-answering engine.</p>
+
+        <p>The theoretical basis for the Interpretation Space is the concept of <em>closure operators</em> — mathematical operations on a set that produce, from any element, all of the elements that can be derived from it by a fixed rule. K-ATLAS defines four closure operators, R₁ through R₄, that generate four types of question from any T2 mechanism template:</p>
+
+        <table class="ka-table">
+          <thead><tr><th>Operator</th><th>Question type</th><th>Example (Attention Restoration)</th></tr></thead>
+          <tbody>
+            <tr><td><strong>R₁</strong></td><td>Definitional</td><td>"What exactly is directed-attention fatigue? How is it operationalised in the laboratory?"</td></tr>
+            <tr><td><strong>R₂</strong></td><td>Evidential</td><td>"What is the warrant chain behind the claim that natural environments restore directed attention? How strong is each link?"</td></tr>
+            <tr><td><strong>R₃</strong></td><td>Applied</td><td>"What are the design implications of the directed-attention restoration mechanism for workplace environments?"</td></tr>
+            <tr><td><strong>R₄</strong></td><td>Dialectical</td><td>"What are the strongest objections to ART as the primary account of nature's restorative effect? How does ART compare with Stress Recovery Theory?"</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout-eg">
+          <div class="callout-head">Example — Interpretation Space in Operation</div>
+          <div class="callout-body">
+            <p>A graduate student uses K-ATLAS to research biophilic design. She asks about "fractal patterns." The QA system returns an evidence summary. The Interpretation Space Engine simultaneously generates 16 questions from the fractal-dimension template (4 × R₁–R₄). Three of these questions appear in the "You might also want to know" panel at the bottom of the QA answer:</p>
+            <p><em>R₂:</em> "How strong is the evidence that the fractal stress-reduction effect generalises beyond laboratory settings?"</p>
+            <p><em>R₃:</em> "Which architectural surfaces are most amenable to fractal content at the stress-reducing D range (1.3–1.5)?"</p>
+            <p><em>R₄:</em> "Does the fractal dimension effect compete with or complement the colour and luminance effects identified in the same paradigm?"</p>
+            <p>These are questions the student would not have thought to ask, but each opens a substantive direction of inquiry. This is the Interpretation Space doing its job.</p>
+          </div>
+        </div>
+
+        <h4 class="section-h4">Question Storage</h4>
+        <p>Generated questions are stored in <span class="mono">data/interpretation_space/questions.json</span> as a searchable registry of <span class="mono">QuestionRecord</span> objects. Each record carries: a unique ID (<span class="mono">template_id::question_type::index</span>), the question text, the operator type (definitional/evidential/applied/dialectical), the source template, the mechanism name, and a confidence score (0–1). The registry is regenerated when templates change.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-head">Current Status: Partially Built</div>
+          <div class="callout-body"><p>The <span class="mono">InterpretationSpaceEngine</span> is implemented and generates questions from templates. The <span class="mono">InterpretationSpaceSuggestionsManager</span> tracks which suggestions have been acted on. However, the live wiring to the QA answer surface (Step 9 of the enrichment pipeline) is not yet complete — generated questions are stored but not yet reliably surfaced in QA answers. The suggestion-tracking loop (monitoring whether generated questions lead to article discovery) is registered in the Overseer but not yet fully operational.</p></div>
+        </div>
+
+        
+        <div class="open-q"><div class="open-q-head">Open Questions</div><p>Three questions about the Interpretation Space remain active. First, is the four-operator (R₁–R₄) taxonomy complete? A fifth operator (R₅) that generates questions about future experiments — "What study would most efficiently fill the largest credence gap adjacent to this mechanism?" — is arguably missing; generating it requires value-of-information analysis rather than template closure. Second, should generated questions be ranked by epistemic value, i.e., by the expected credence gain if the question were answered? This would require a VOI calculation for each question using the BN — feasible but computationally expensive at scale. Third, the suggestion-tracking loop — does a generated question eventually lead to article discovery? — is registered in the Overseer but not yet operational. Without this feedback signal, it is impossible to evaluate whether the Interpretation Space is generating useful questions or merely plausible-sounding ones.</p></div>
+
+        <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>The Interpretation Space currently feeds the "Related Questions" panel (QA enrichment step 9), though this wiring is not yet complete. In the intended design, every QA answer surfaces three to five generated questions from the relevant mechanism templates: the R₁ (definitional) question for students new to the topic, the R₂ (evidential) question for those who want to interrogate the evidence base, and the R₄ (dialectical) question for those who want to understand the contested terrain. For the fall course, the Interpretation Space is the most promising tool for guided independent research: rather than assigning a reading list, the course could assign three R₄ questions per topic and ask students to find papers that answer them — turning the Interpretation Space into a research curriculum generator.</p></div>
+        <div class="source-links" style="margin-top:1.5rem"><strong>Source files:</strong>
+          <a href="../src/services/interpretation_space_engine.py">interpretation_space_engine.py</a>
+          <a href="../src/services/interpretation_space_suggestions.py">interpretation_space_suggestions.py</a>
+          <a href="../src/services/interpretive_intelligence.py">interpretive_intelligence.py</a>
+          <a href="../tests/test_interpretation_space_suggestions.py">test_interpretation_space_suggestions.py</a>
+          <a href="../tests/test_interpretive_intelligence.py">test_interpretive_intelligence.py</a>
+          <a href="../tests/test_interpretation_zone_classification.py">test_interpretation_zone_classification.py</a>
+          <a href="../data/interpretation_space/">data/interpretation_space/</a>
+        </div>
+
+        <!-- ── QA Layer ── -->
+        <h3 class="section-h">3 — The QA Layer</h3>
+        <p>Chapter 6 describes the QA system from the perspective of its output — what answers look like and how they are structured. This section describes the QA layer from the perspective of its <em>internal architecture</em>: how questions are routed, how the enrichment pipeline is orchestrated, and what epistemic norms govern the output.</p>
+
+        <h4 class="section-h4">QA Architecture</h4>
+
+        <div class="mermaid-wrap">
+          <div class="mermaid">
+graph TD
+  Q["User Question"] --> CLASS["Question Classifier\n23 types × 5 families"]
+  CLASS --> ROUTE["Query Router"]
+  ROUTE --> ARB["ArbitraryQAHandler\n(general questions)"]
+  ROUTE --> ARG["Argument QA Handler\n(evidence structure queries)"]
+  ROUTE --> CVA["CVA QA Enricher\n(theory-specific)"]
+  ROUTE --> CIR["Circuit QA Service\n(neural circuit queries)"]
+  ARB & ARG & CVA & CIR --> ENRICH["9-Step Enrichment Pipeline"]
+  ENRICH --> CACHE["QA Cache Manager"]
+  CACHE --> OUT["Formatted Answer\n(Evidence / Interpretation / Prediction)"]
+  style Q fill:#1C3D3A,color:#fff
+  style OUT fill:#C69214,color:#fff
+  style ENRICH fill:#2A7868,color:#fff
+          </div>
+        </div>
+
+        <h4 class="section-h4">The QA Answer Norms Contract</h4>
+        <p>The QA layer is governed by a formal norms contract (<span class="mono">contracts/QA_ANSWER_NORMS.md</span>) that specifies how the nine enrichment outputs are translated into prose. The norms synthesize the science communication practices of eight scholars whose work bears directly on how epistemic uncertainty should be communicated to different audiences: Daniel Kahneman (confidence calibration), Philip Tetlock (probabilistic forecasting communication), Naomi Oreskes (communicating scientific consensus and disagreement), Steven Pinker (curse of knowledge), Carl Sagan (honest uncertainty), Andrew Gelman (statistical communication), Brian Nosek (reproducibility and publication bias), and Deborah Mayo (severe testing).</p>
+
+        <p>Three norms from this contract are worth highlighting because they are most frequently violated in conventional research synthesis:</p>
+
+        <table class="ka-table">
+          <thead><tr><th>Norm</th><th>Source</th><th>What it requires in K-ATLAS answers</th></tr></thead>
+          <tbody>
+            <tr><td>Calibrated confidence</td><td>Tetlock (2005, 2015)</td><td>Express credence as a numerical range (e.g., 0.65–0.75), not as verbal hedges ("the evidence suggests"). Numerical expressions are more honest and more useful to decision-makers.</td></tr>
+            <tr><td>Publication bias disclosure</td><td>Nosek et al. (2012, 2022)</td><td>All QA answers involving positive findings must flag that the K-ATLAS corpus is biased toward published positive results. Null results are systematically underrepresented.</td></tr>
+            <tr><td>Evidence / interpretation / prediction labelling</td><td>Sagan (1996); Mayo (1996)</td><td>Every sentence in a QA answer is labelled as a finding (what studies observed), an inference (what K-ATLAS concludes from the evidence using warrants), or a projection (a BN-derived prediction for a specific context). These are never mixed.</td></tr>
+          </tbody>
+        </table>
+
+        <h4 class="section-h4">QA Caching</h4>
+        <p>Answers are cached by the <span class="mono">QACacheManager</span> to avoid redundant enrichment computation. The cache is invalidated on every new paper integration (Step 14 of the cascade) — because any new paper might change the credence of a belief that an existing answer depends on. Cache invalidation is tracked by the Overseer as an invariant: a stale cache is an integrity violation.</p>
+
+        
+        <div class="open-q"><div class="open-q-head">Open Questions</div><p>Three norms-contract questions remain. First, should the contract be extended to cover domain-specific communication conventions? An architect's question ("What D-value should I specify for my fractal façade?") calls for a different answer format than a neuroscientist's question ("What is the neural pathway from fractal perception to stress reduction?"). Domain-specific templates would improve usability but require user profiling. Second, the three-way evidence / interpretation / prediction labelling is the hardest norm to enforce automatically, because the boundary between inference and projection is context-sensitive. A formal decision procedure specifying when a sentence should be labelled INFERENCE versus PROJECTION is needed before this labelling can be automated reliably. Third, should the QA cache be indexed by question text, by belief cluster, or by warrant chain? Text-based indexing misses semantically equivalent questions; cluster-based indexing may invalidate too aggressively when a new paper touches a large belief cluster.</p></div>
+
+        <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>The QA system is the point where K-ATLAS becomes a research tool rather than an infrastructure layer. For students in the spring course, QA sessions are the primary interaction mode, and the most important reading habit is to check the Population Qualifier (step 4) and Gap Disclosure (step 7) before using any answer in a design argument. The evidence / interpretation / prediction labelling (step 2) is worth examining in class: it makes explicit the epistemic status of each sentence in an answer, practising a form of epistemic vigilance that students rarely develop from reading papers alone.</p></div>
+        <div class="source-links" style="margin-top:1.5rem"><strong>Source files:</strong>
+          <a href="../src/services/arbitrary_qa_handler.py">arbitrary_qa_handler.py</a>
+          <a href="../src/services/cva_qa_enricher.py">cva_qa_enricher.py</a>
+          <a href="../src/services/circuit_qa_service.py">circuit_qa_service.py</a>
+          <a href="../src/argument/qa_handlers.py">argument/qa_handlers.py</a>
+          <a href="../src/qa/qa_cache_manager.py">qa_cache_manager.py</a>
+          <a href="../src/services/pipeline_qa_integration.py">pipeline_qa_integration.py</a>
+          <a href="../contracts/QA_ANSWER_NORMS.md">QA_ANSWER_NORMS.md</a>
+          <a href="../docs/EPISTEMIC_PRINCIPLES.md">EPISTEMIC_PRINCIPLES.md</a>
+        </div>
+
+        <!-- ── Annotation Layer ── -->
+        <h3 class="section-h">4 — The Annotation Layer</h3>
+        <p>The Annotation Layer is the system's memory for <em>metadata that is not extractable from papers themselves</em>. Every belief in the Evidence Network has a fixed factual content — the claim that was extracted from a source study. The Annotation Layer allows the system (and named human experts) to attach additional structured knowledge to any belief, edge, or card, without modifying the source record. Annotations are append-only and immutable after creation; they are superseded, not overwritten, when they become outdated.</p>
+
+        <h4 class="section-h4">The Eight Annotation Layers and 29 Types</h4>
+
+        <table class="ka-table">
+          <thead><tr><th>Layer</th><th>Types</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td><strong>L1 Evidence</strong></td><td>CALIBRATION_NOTE, SENSITIVITY_FLAG, EVIDENCE_OVERRIDE, PROVENANCE_PATCH</td><td>Correct or flag problems with extracted evidence — measurement calibration issues, sensitivity to assumptions, provenance gaps.</td></tr>
+            <tr><td><strong>L2 Relational</strong></td><td>CROSS_REFERENCE, MOLECULE_LINK, CLINICAL_CAUTION</td><td>Connect beliefs to related claims across the corpus; link to molecular-level mechanisms (Molecule IDs); flag clinical safety considerations.</td></tr>
+            <tr><td><strong>L3 QA/User</strong></td><td>OPEN_QUESTION, SEARCH_PROMPT, USER_FEEDBACK</td><td>Track unresolved questions arising from QA sessions; generate search prompts for gap-filling; record user feedback on answer quality.</td></tr>
+            <tr><td><strong>L4 CVA</strong></td><td>MEASUREMENT_MODALITY, STIMULUS_DESCRIPTION, MOLECULE_T15_LINK</td><td>Attach measurement context (how a variable was operationalised) and stimulus specifications for experimental claims.</td></tr>
+            <tr><td><strong>L5 Extended</strong></td><td>SURPRISE_FLAG, DESIGN_IMPLICATION, DISPUTE, ANALOGICAL_BRIDGE, REPLICATION_STATUS, EFFECT_MAGNITUDE, CROSS_DOMAIN, HISTORICAL_CONTEXT, NARRATIVE_HOOK, UNANSWERED_QUESTION</td><td>Rich semantic enrichment: flag surprising findings, capture design implications, mark disputes, bridge across domains, and contextualise historically.</td></tr>
+            <tr><td><strong>L6 Circuits</strong></td><td>CIRCUIT_ASSOCIATION, ARCHETYPE_TAG</td><td>Link beliefs to neural circuit archetypes and functional categories.</td></tr>
+            <tr><td><strong>L7 Aesthetic</strong></td><td>APPRAISAL_HUB, GOLDILOCKS_ZONE</td><td>Classify claims related to aesthetic appraisal and to optimal-range phenomena (the "Goldilocks zone" of a biophilic parameter like fractal dimension).</td></tr>
+            <tr><td><strong>L8 Demographic</strong></td><td>POPULATION_SCOPE, CULTURE_MODERATOR</td><td>Attach population specificity and cultural context flags to claims whose generalisability is in question.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout-eg">
+          <div class="callout-head">Example — Annotation in Practice</div>
+          <div class="callout-body">
+            <p><strong>Claim:</strong> "Forest bathing reduces salivary cortisol within 60 minutes." Credence: 0.78.</p>
+            <p><strong>L1 annotation (SENSITIVITY_FLAG):</strong> "Credence sensitive to exclusion of Morita et al. (2017) outlier. Without this study, pooled credence drops to 0.71." Added by: System, 2026-02-15.</p>
+            <p><strong>L3 annotation (OPEN_QUESTION):</strong> "Does the cortisol reduction persist beyond 24 hours? No study in corpus measures beyond same-day return." Added by: QA Handler on query "How long does the cortisol effect last?"</p>
+            <p><strong>L5 annotation (DESIGN_IMPLICATION):</strong> "60-minute exposure threshold suggests minimum recommended nature-access session length for stress-reduction protocols in workplace health programmes." Added by: David Kirsh, 2026-03-10.</p>
+            <p><strong>L8 annotation (POPULATION_SCOPE):</strong> "Healthy Japanese adults, aged 20–65. Transfer risk HIGH for clinical populations (no data)."</p>
+          </div>
+        </div>
+
+        <h4 class="section-h4">Authorship and Lifecycle</h4>
+        <p>Annotations are authored by either the system (automated annotation from QA and Overseer processes) or named human experts. The authorship model is flat: David Kirsh's annotations have the same data structure as system-generated annotations, but are distinguishable by the <span class="mono">author</span> field. No crowdsourcing is planned in Phase α. All annotations are stored in SQLite (a separate table from the L2 JSON templates) and are applied at query time rather than baked into the belief record — ensuring that the raw extraction data is never contaminated by annotation metadata.</p>
+
+        
+        <div class="open-q"><div class="open-q-head">Open Questions</div><p>Three design questions remain. First, should annotations be crowd-sourced beyond the current single-expert model? Adding multiple annotators would increase coverage but introduces inter-annotator agreement as a new data-quality problem. A trust-weighted model — where expert annotations carry higher weight in QA answers than student annotations — is a natural solution, but specifying trust weights is itself an expert judgment problem that has not been solved. Second, four new annotation types have been proposed but not yet implemented: <strong>HISTORICAL_PRIORITY</strong> (flags claims where priority of discovery is contested), <strong>REPLICATION_DIVERGENCE</strong> (marks cases where replication produced a significantly different effect size), <strong>THEORETICAL_COMMITMENT</strong> (marks claims that presuppose a contested theoretical framework), and <strong>DESIGN_THRESHOLD</strong> (annotates the specific parameter value at which a design implication becomes actionable). Third, the append-only immutability constraint means incorrect annotations accumulate — they can be superseded but not removed. A formal supersession policy, specifying when and how superseded annotations affect credence computation, is needed.</p></div>
+
+        <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>The Annotation Layer is the primary channel for injecting domain expertise into K-ATLAS without modifying the source extraction data. A new annotation requires three fields — the belief ID, the annotation type, and the content — added through <span class="mono">annotation_service.add_annotation()</span>. In practice, the most common annotation types are DESIGN_IMPLICATION (attaching an architectural recommendation to a belief) and OPEN_QUESTION (flagging an unresolved question from a QA session). For the fall course, a student team with annotation privileges could collectively annotate the corpus over the semester, building a structured layer of expert commentary on top of the extracted evidence — a form of peer learning that would benefit subsequent cohorts.</p></div>
+        <div class="source-links" style="margin-top:1.5rem"><strong>Source files:</strong>
+          <a href="../src/services/annotation_service.py">annotation_service.py</a>
+          <a href="../src/models/cva_annotations.py">cva_annotations.py</a>
+          <a href="../src/models/extended_annotations.py">extended_annotations.py</a>
+          <a href="../migrations/024_annotation_system.sql">024_annotation_system.sql</a>
+          <a href="../tests/test_annotation_service.py">test_annotation_service.py</a>
+          <a href="../tests/test_annotation_card_integration.py">test_annotation_card_integration.py</a>
+          <a href="../tests/test_annotation_authority_contract.py">test_annotation_authority_contract.py</a>
+        </div>
+
+      </section>
+      <!-- end doc-body -->
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Mermaid init ─────────────────────────────
+  mermaid.initialize({ startOnLoad: true, theme: 'base',
+    themeVariables: { primaryColor:'#1C3D3A', primaryTextColor:'#e0f2f1',
+                      lineColor:'#C69214', edgeLabelBackground:'#fff' } });
+
+  // ── Chapter navigation ────────────────────────
+  function showChapter(id, link) {
+    // show/hide
+    document.querySelectorAll('.chapter-section').forEach(s => s.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+    // active link
+    document.querySelectorAll('#chapterList a').forEach(a => a.classList.remove('active'));
+    if (link) link.classList.add('active');
+    // scroll top
+    document.getElementById('docMain').scrollTo({ top: 0, behavior: 'smooth' });
+    return false;
+  }
+
+  function showAll() {
+    document.querySelectorAll('.chapter-section').forEach(s => s.classList.remove('hidden'));
+    document.querySelectorAll('#chapterList a').forEach(a => a.classList.remove('active'));
+  }
+
+  // ── Search ────────────────────────────────────
+  let lastQuery = '';
+  function doSearch(q) {
+    q = q.trim().toLowerCase();
+    if (q === lastQuery) return;
+    lastQuery = q;
+    // clear old marks
+    document.querySelectorAll('.doc-body mark').forEach(m => {
+      m.replaceWith(m.textContent);
+    });
+    if (!q) return;
+    // show all chapters for search
+    if (q.length >= 2) showAll();
+    // mark matches in text nodes
+    const walk = (node) => {
+      if (node.nodeType === 3) {
+        const idx = node.textContent.toLowerCase().indexOf(q);
+        if (idx >= 0) {
+          const span = document.createElement('mark');
+          const after = node.splitText(idx);
+          after.splitText(q.length);
+          span.appendChild(after.cloneNode());
+          after.parentNode.replaceChild(span, after);
+        }
+      } else if (node.nodeType === 1 && !['SCRIPT','STYLE','INPUT'].includes(node.tagName)) {
+        [...node.childNodes].forEach(walk);
+      }
+    };
+    walk(document.getElementById('docBody'));
+  }
+</script>
+</body>
+</html>
