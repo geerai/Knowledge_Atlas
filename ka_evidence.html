@@ -818,6 +818,24 @@
         </div>
     </nav>
 
+    <!-- PAGE HEADER — orientation for all users -->
+    <div style="max-width:1400px; margin:0 auto; padding:1.8rem 1.5rem 0.8rem;">
+      <h1 class="page-title">Evidence Table</h1>
+      <p class="page-subtitle" id="evidence-intro-researcher" style="max-width:860px;">
+        The full inventory of empirical findings extracted from the Knowledge Atlas corpus (~760 papers, ~1,900 evidence items).
+        Each row links a finding to its psychological construct, measurement signal, bridge warrant type, and credence score.
+        Use the filters at left to narrow by construct, signal, study type, or warrant. Click any row to expand its methodology,
+        citation, and warrant chain. Rows can be added to your answer or exported.
+      </p>
+      <p class="page-subtitle" id="evidence-intro-student" style="max-width:860px; display:none;">
+        This table shows what the research literature actually says — one finding per row, drawn from hundreds of published studies.
+        Each finding is tagged with a <strong>construct</strong> (the psychological thing being measured, like working memory or stress),
+        a <strong>signal</strong> (how it was measured, like EEG or heart rate), a <strong>bridge warrant</strong> (the type of reasoning
+        connecting signal to construct), and a <strong>credence score</strong> (how confident Knowledge Atlas is in that finding, from 0 to 1).
+        Use the filters on the left to explore. Click any row to see the full study details.
+      </p>
+    </div>
+
     <!-- MAIN CONTAINER -->
     <div class="container">
         <!-- LEFT SIDEBAR -->
@@ -1547,7 +1565,7 @@
 
                 // Search filter
                 if (searchQuery) {
-                    const searchable = `${item.finding} ${item.construct} ${item.citation}`.toLowerCase();
+                    const searchable = `${item.finding} ${item.construct} ${item.citation} ${item.paper_title || ''} ${item.primary_topic || ''} ${(item.fronts || []).join(' ')} ${item.sensor_summary || ''}`.toLowerCase();
                     if (!searchable.includes(searchQuery)) {
                         matches = false;
                     }
@@ -1655,6 +1673,17 @@
                                     <div class="detail-content">${item.methodology}</div>
                                 </div>
                                 <div class="detail-section">
+                                    <div class="detail-label">Topic Surface</div>
+                                    <div class="detail-content">${item.primary_topic || item.primary_front || 'Topic not yet assigned'}</div>
+                                    ${(item.fronts || []).length ? `<div class="detail-content">Research fronts: ${(item.fronts || []).join(', ')}</div>` : ''}
+                                </div>
+                                ${item.sensor_summary ? `
+                                <div class="detail-section">
+                                    <div class="detail-label">Sensors / Methods</div>
+                                    <div class="detail-content">${item.sensor_summary}</div>
+                                </div>
+                                ` : ''}
+                                <div class="detail-section">
                                     <div class="detail-label">Warrant Chain</div>
                                     <div class="warrant-chain">${item.warrant_chain}</div>
                                 </div>
@@ -1662,6 +1691,12 @@
                                     <div class="detail-label">Warrant Semantics</div>
                                     <div class="detail-content">Bridge-layer type: ${item.warrant}${typeof item.warrant_discount === 'number' ? ` (d=${item.warrant_discount.toFixed(2)})` : ''}</div>
                                     <div class="detail-content">Extraction-layer class: ${item.extraction_warrant_type || 'Not exposed in fallback payload'}</div>
+                                </div>
+                                <div class="detail-section">
+                                    <div class="detail-label">Argumentation Status</div>
+                                    <div class="detail-content">Support ${item.support_count || 0} · Attack ${item.attack_count || 0} · Qualifier ${item.qualifier || 'unqualified'}${item.warrant_status ? ` · Warrant ${item.warrant_status}` : ''}${item.defeat_type ? ` · Defeat ${item.defeat_type}` : ''}</div>
+                                    ${item.review_urgency ? `<div class="detail-content">Review urgency: ${item.review_urgency}</div>` : ''}
+                                    ${item.resolution_question ? `<div class="detail-content">Resolution question: ${item.resolution_question}</div>` : ''}
                                 </div>
                             </div>
                         </div>
@@ -1757,6 +1792,14 @@
             sortBy = sortTarget;
             if (evidenceData.length) {
                 filterAndRender();
+            }
+            /* Toggle intro paragraph by mode */
+            const researcherIntro = document.getElementById('evidence-intro-researcher');
+            const studentIntro = document.getElementById('evidence-intro-student');
+            if (researcherIntro && studentIntro) {
+                const isStudent = mode === 'student_explorer';
+                researcherIntro.style.display = isStudent ? 'none' : 'block';
+                studentIntro.style.display = isStudent ? 'block' : 'none';
             }
         }
     </script>
