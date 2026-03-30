@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choose Your Track · COGS 160</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #1C3D3A; --teal: #2A7868; --teal-lt: #5AC8AA; --teal-bg: #E6F5F0;
+  --amber: #E8872A; --amber-lt: #FFF3E0; --amber-dk: #9a5010;
+  --cream: #F7F4EF; --ink: #2C2C2C; --muted: #6B6B6B; --border: #D8D0C5;
+  --white: #FFFFFF; --rose: #A84F6B; --blue: #3A6EA8; --green: #1A7A50;
+}
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--cream); color: var(--ink); line-height: 1.65; }
+
+/* ── Top nav ── */
+.top-nav { background: var(--navy); padding: 0 1.5rem; display: flex; align-items: center; height: 52px; gap: 1.2rem; font-size: 0.85rem; position: sticky; top: 0; z-index: 100; }
+.nav-brand { color: var(--amber); font-weight: 800; font-size: 1.05rem; text-decoration: none; }
+.nav-sep { color: rgba(255,255,255,0.2); }
+.nav-link { color: #b2dfdb; text-decoration: none; padding: 4px 10px; border-radius: 5px; transition: background 0.15s; }
+.nav-link:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.nav-link.active { background: rgba(255,255,255,0.15); color: #fff; font-weight: 600; }
+.nav-right { margin-left: auto; color: rgba(255,255,255,0.4); font-size: 0.75rem; }
+
+/* ── Hero ── */
+.hero { background: linear-gradient(135deg, var(--navy) 0%, #152e2b 100%); color: #fff; padding: 3rem 2rem 2.5rem; text-align: center; }
+.hero-eyebrow { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber); font-weight: 600; margin-bottom: 0.5rem; }
+.hero h1 { font-family: Georgia, serif; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; line-height: 1.15; margin-bottom: 0.5rem; }
+.hero-sub { font-size: 1rem; color: rgba(255,255,255,0.7); max-width: 680px; margin: 0 auto 1.2rem; }
+
+/* ── Layout ── */
+.page-wrap { max-width: 920px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+
+/* ── Content section ── */
+.section { background: var(--white); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.section h2 { font-family: Georgia, serif; font-size: 1.35rem; font-weight: 700; color: var(--navy); margin-bottom: 0.8rem; }
+.section p { font-size: 0.95rem; margin-bottom: 0.9rem; }
+.section p:last-child { margin-bottom: 0; }
+
+/* ── Comparison table ── */
+.comparison-table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; font-size: 0.88rem; }
+.comparison-table th { background: var(--navy); color: #fff; padding: 0.9rem; text-align: left; font-weight: 700; }
+.comparison-table td { padding: 0.9rem; border-bottom: 1px solid var(--border); }
+.comparison-table tr:hover { background: #fafaf8; }
+.comparison-table strong { color: var(--navy); }
+
+/* ── Track cards ── */
+.track-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin: 1.5rem 0; }
+.track-card { border: 1.5px solid var(--border); border-radius: 10px; padding: 1.5rem; background: var(--white); }
+.track-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+.track-card.track1 h3 { color: var(--teal); }
+.track-card.track2 h3 { color: var(--amber); }
+.track-card.track3 h3 { color: var(--blue); }
+.track-card.track4 h3 { color: var(--rose); }
+.track-card > p { font-size: 0.9rem; margin-bottom: 0.6rem; }
+.track-desc { font-size: 0.85rem; color: var(--muted); margin: 0.8rem 0 1rem 0; line-height: 1.6; }
+
+/* ── Week-by-week ── */
+.week-by-week { font-size: 0.82rem; color: #555; margin: 1rem 0; }
+.week-by-week strong { color: var(--navy); }
+
+/* ── Card links ── */
+.card-links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+.card-link { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.4rem 0.85rem; border-radius: 5px; text-decoration: none; font-size: 0.8rem; font-weight: 600; transition: all 0.15s; }
+.card-link-primary { background: var(--navy); color: #fff; }
+.card-link-primary:hover { background: var(--teal); }
+
+/* ── Callout boxes ── */
+.callout { border-left: 4px solid; border-radius: 0 8px 8px 0; padding: 1rem 1.2rem; margin: 1.2rem 0; font-size: 0.9rem; }
+.callout-teal { border-color: var(--teal); background: var(--teal-bg); }
+.callout-label { font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.35rem; }
+.callout-teal .callout-label { color: var(--teal); }
+
+/* ── Signup section ── */
+#signup { margin-top: 2rem; }
+.form-group { margin-bottom: 1.2rem; }
+.form-group label { display: block; font-size: 0.9rem; font-weight: 600; color: var(--navy); margin-bottom: 0.4rem; }
+.form-group input,
+.form-group select,
+.form-group textarea { width: 100%; padding: 0.6rem; border: 1.5px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 0.9rem; }
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px var(--teal-bg); }
+.form-group textarea { resize: vertical; min-height: 80px; }
+
+.form-button { background: var(--navy); color: #fff; padding: 0.7rem 1.5rem; border: none; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: background 0.15s; }
+.form-button:hover:not(:disabled) { background: var(--teal); }
+.form-button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.signup-note { font-size: 0.82rem; color: var(--muted); font-style: italic; margin-top: 0.6rem; }
+
+/* ── FAQ ── */
+.faq-item { border-bottom: 1px solid var(--border); padding: 1rem 0; }
+.faq-item:first-child { padding-top: 0; }
+.faq-item:last-child { border-bottom: none; }
+.faq-q { font-weight: 700; color: var(--navy); margin-bottom: 0.5rem; }
+.faq-a { font-size: 0.9rem; color: #555; }
+
+/* ── Navigation links ── */
+.nav-links { display: flex; gap: 0.8rem; margin: 2rem 0; flex-wrap: wrap; }
+.nav-links a { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: all 0.15s; }
+.nav-back { background: var(--teal-bg); color: var(--navy); border: 1.5px solid var(--teal); }
+.nav-back:hover { background: var(--teal); color: #fff; }
+
+@media (max-width: 640px) {
+  .track-cards { grid-template-columns: 1fr; }
+  .comparison-table { font-size: 0.8rem; }
+  .comparison-table th, .comparison-table td { padding: 0.6rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav class="top-nav">
+  <a href="../ka_home.html" class="nav-brand">K-ATLAS</a>
+  <span class="nav-sep">|</span>
+  <a href="ka_schedule.html" class="nav-link">Schedule</a>
+  <a href="ka_student_setup.html" class="nav-link">Setup</a>
+  <a href="../ka_topics.html" class="nav-link">Topics</a>
+  <a href="../ka_evidence.html" class="nav-link">Evidence</a>
+  <a href="../ka_demo_v04.html" class="nav-link">Ask</a>
+  <span class="nav-right">COGS 160 · Spring 2026</span>
+</nav>
+
+<!-- ── Hero ── -->
+<header class="hero">
+  <p class="hero-eyebrow">COGS 160 · Spring 2026</p>
+  <h1>Choose Your Track</h1>
+  <p class="hero-sub">Four tracks, four capability gaps, one shared system. Each track produces real components that integrate into Knowledge Atlas. Browse the details below, then sign up.</p>
+</header>
+
+<div class="page-wrap">
+
+  <!-- ── How Tracks Work ── -->
+  <div class="section">
+    <h2>How Tracks Work</h2>
+    <p>Weeks 4–7 are track-specific sprints. Each track has its own syllabus, deliverables, and support. You work in teams of three to four students. Each sprint produces a real, tested component that connects to the Knowledge Atlas infrastructure. Your methodology log documents the process: the decisions you made, the obstacles you overcame, and the evidence that justified your choices.</p>
+    <p>Choosing a track is a serious commitment, but the choice reflects your interests and strengths. You have had two weeks to explore. If you have not decided by Week 3, this page and the track assignment pages will help you choose. The track signup process is straightforward: select a track, identify your teammates or indicate that you are willing to be grouped, and wait for formal team assignment. You can change tracks until the end of Week 3.</p>
+  </div>
+
+  <!-- ── Comparison Table ── -->
+  <div class="section">
+    <h2>Track Comparison</h2>
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Track</th>
+          <th>Focus Area</th>
+          <th>Tools You'll Use</th>
+          <th>Key Deliverables</th>
+          <th>Skills Developed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Track 1:<br/>Image Tagger</strong></td>
+          <td>Evidence-based image annotation</td>
+          <td>Python, JSON schemas, K-ATLAS API</td>
+          <td>Annotation tool, tagged image dataset, validation report</td>
+          <td>Data verification, pipeline architecture, schema design</td>
+        </tr>
+        <tr>
+          <td><strong>Track 2:<br/>Article Finder</strong></td>
+          <td>Literature retrieval pipeline</td>
+          <td>Python, Google Scholar API, PubMed, SQL</td>
+          <td>Query engine, deduplication system, 150+ citations</td>
+          <td>Search methodology, database design, batch processing</td>
+        </tr>
+        <tr>
+          <td><strong>Track 3:<br/>VR Production</strong></td>
+          <td>3D environment design</td>
+          <td>Unreal Engine / A-Frame, 3D modeling</td>
+          <td>VR prototype, sensor logging, design specs</td>
+          <td>3D design, experimental paradigm implementation, instrumentation</td>
+        </tr>
+        <tr>
+          <td><strong>Track 4:<br/>GUI Evaluation</strong></td>
+          <td>Interface design and testing</td>
+          <td>HTML/CSS/JS, user testing frameworks</td>
+          <td>Web interface, usability report, spec wall</td>
+          <td>Frontend development, user research, acceptance testing</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── Detailed Track Cards ── -->
+  <div class="section">
+    <h2>Detailed Track Descriptions</h2>
+
+    <div class="track-cards">
+      <!-- Track 1 -->
+      <div class="track-card track1">
+        <h3>Track 1: Image Tagger</h3>
+        <p><strong>What you'll build:</strong> A tool and workflow for annotating architectural photographs with evidence-backed psychological constructs. Your system will verify that each tag is supported by the K-ATLAS evidence base — no invention, only evidence-driven classification.</p>
+        <div class="track-desc">
+          <strong>Week-by-week:</strong><br/>
+          Week 4: Design annotation schema and tag hierarchy. Build prototype tool.<br/>
+          Week 5: Pilot annotation on 200 images. Refine schema based on results.<br/>
+          Week 6: Full annotation run on 1,000 images. Validation and quality control.<br/>
+          Week 7: Final deliverables, usability feedback, integration testing.
+        </div>
+        <div class="card-links">
+          <a href="ka_tag_assignment.html" class="card-link card-link-primary">Full Assignment →</a>
+        </div>
+      </div>
+
+      <!-- Track 2 -->
+      <div class="track-card track2">
+        <h3>Track 2: Article Finder</h3>
+        <p><strong>What you'll build:</strong> A query engine and batch retrieval system that finds relevant peer-reviewed articles for K-ATLAS research questions. Your system will handle deduplication, verify schema compliance, and maintain database integrity under real-world search conditions.</p>
+        <div class="track-desc">
+          <strong>Week-by-week:</strong><br/>
+          Week 4: Design query protocol. Build API connectors to Google Scholar and PubMed.<br/>
+          Week 5: Implement deduplication and schema validation. Test on 50 example queries.<br/>
+          Week 6: Scale to 130 K-ATLAS questions. Handle edge cases and failure modes.<br/>
+          Week 7: Final retrieval of 150+ curated citations. Integration with main system.
+        </div>
+        <div class="card-links">
+          <a href="ka_article_finder_assignment.html" class="card-link card-link-primary">Full Assignment →</a>
+        </div>
+      </div>
+
+      <!-- Track 3 -->
+      <div class="track-card track3">
+        <h3>Track 3: VR Production</h3>
+        <p><strong>What you'll build:</strong> Interactive 3D environments that visualize epistemological concepts and warrant structures. Your prototypes will run in Unreal Engine or A-Frame and include sensor logging so users can see how their exploration affects the evidence graph.</p>
+        <div class="track-desc">
+          <strong>Week-by-week:</strong><br/>
+          Week 4: Learn engine, design environment spec, create initial 3D models.<br/>
+          Week 5: Implement interactive warrant visualization and user navigation.<br/>
+          Week 6: Add sensor logging and state persistence. Test interaction paradigm.<br/>
+          Week 7: Polish, documentation, final demo, transition to fall continuity.
+        </div>
+        <div class="card-links">
+          <a href="ka_vr_assignment.html" class="card-link card-link-primary">Full Assignment →</a>
+        </div>
+      </div>
+
+      <!-- Track 4 -->
+      <div class="track-card track4">
+        <h3>Track 4: GUI Evaluation</h3>
+        <p><strong>What you'll build:</strong> A web interface for researchers to explore the K-ATLAS evidence graph. Your interface will be tested against acceptance criteria you write, documented in a usability report, and accompanied by a spec wall showing the decision history.</p>
+        <div class="track-desc">
+          <strong>Week-by-week:</strong><br/>
+          Week 4: Design acceptance criteria and user personas. Create wireframes and interaction spec.<br/>
+          Week 5: Build prototype interface. Implement core search and navigation features.<br/>
+          Week 6: User testing with 10–12 researchers. Document findings and iterate.<br/>
+          Week 7: Final interface, usability report, spec wall, integration testing.
+        </div>
+        <div class="card-links">
+          <a href="ka_gui_assignment.html" class="card-link card-link-primary">Full Assignment →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Signup Section ── -->
+  <div class="section" id="signup">
+    <h2>Sign Up for Your Track</h2>
+
+    <div class="callout callout-teal">
+      <div class="callout-label">Form Status</div>
+      <p>The signup form will be activated during Thursday's seminar (Week 3, Day 5). You can browse all track details and prepare your choice now. Return here after the presentations to complete signup.</p>
+    </div>
+
+    <form style="margin-top: 1.5rem;">
+      <div class="form-group">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" name="name" placeholder="First and Last Name" disabled>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="your.email@ucsd.edu" disabled>
+      </div>
+
+      <div class="form-group">
+        <label for="track">Choose Your Track</label>
+        <select id="track" name="track" disabled>
+          <option value="">-- Select a track --</option>
+          <option value="tagger">Track 1: Image Tagger</option>
+          <option value="finder">Track 2: Article Finder</option>
+          <option value="vr">Track 3: VR Production</option>
+          <option value="gui">Track 4: GUI Evaluation</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="reason">Why this track? (Optional)</label>
+        <textarea id="reason" name="reason" placeholder="Tell us what draws you to this track..." disabled></textarea>
+      </div>
+
+      <button type="submit" class="form-button" disabled>Submit Signup</button>
+      <p class="signup-note">Form will be enabled during Week 3 seminar.</p>
+    </form>
+
+    <p style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--muted);">You can change tracks until the end of Week 3. After that, your team depends on you to stay committed.</p>
+  </div>
+
+  <!-- ── FAQ ── -->
+  <div class="section">
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I switch tracks after signup?</div>
+      <div class="faq-a">Yes, through the end of Week 3 (by Thursday of Week 3). After teams form and team contracts are finalized, switching is no longer possible because your teammates depend on you. If you are uncertain about your choice, use this week to explore thoroughly.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What if I have no coding experience?</div>
+      <div class="faq-a">Every track involves coding, but the specific skills vary. Track 1 (Image Tagger) and Track 2 (Article Finder) are Python-heavy. Track 3 (VR Production) focuses on 3D design and visual programming. Track 4 (GUI Evaluation) emphasizes frontend development and user testing. Choose based on which skill set interests you most and which gap you think is most important. Your teammates will likely have complementary strengths.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Do I need VR hardware for Track 3?</div>
+      <div class="faq-a">No. You will develop using Unreal Engine or A-Frame, both of which run on standard laptops and can be tested in desktop mode. VR headset support is a bonus feature for Week 8 and the fall continuation, not a requirement for this quarter's deliverables.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What's the time commitment?</div>
+      <div class="faq-a">Weeks 4–7 are intensive. Expect 12–15 hours per week during sprint weeks, with roughly 8 hours in class and 4–7 hours outside class for your track's work. The actual load depends on how efficiently your team coordinates. Teams that plan well and divide labor clearly tend to run lean. Teams that improvise spend more time debugging.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What if I want to work alone?</div>
+      <div class="faq-a">Tracks are team-based. The minimum team size is three students. If you do not have teammates in mind, indicate that on the signup form and you will be matched with other unmatched students from your chosen track.</div>
+    </div>
+  </div>
+
+  <!-- ── Navigation ── -->
+  <div class="nav-links">
+    <a href="ka_schedule.html" class="nav-back">← Back to Schedule</a>
+    <a href="ka_student_setup.html" class="nav-back">Student Setup</a>
+  </div>
+
+</div>
+</body>
+</html>

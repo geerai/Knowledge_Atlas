@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 5 — Sprint 1 Demo · COGS 160</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #1C3D3A; --teal: #2A7868; --teal-lt: #5AC8AA; --teal-bg: #E6F5F0;
+  --amber: #E8872A; --amber-lt: #FFF3E0; --amber-dk: #9a5010;
+  --cream: #F7F4EF; --ink: #2C2C2C; --muted: #6B6B6B; --border: #D8D0C5;
+  --white: #FFFFFF; --rose: #A84F6B; --blue: #3A6EA8; --green: #1A7A50;
+}
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--cream); color: var(--ink); line-height: 1.65; }
+
+/* ── Top nav ── */
+.top-nav { background: var(--navy); padding: 0 1.5rem; display: flex; align-items: center; height: 52px; gap: 1.2rem; font-size: 0.85rem; position: sticky; top: 0; z-index: 100; }
+.nav-brand { color: var(--amber); font-weight: 800; font-size: 1.05rem; text-decoration: none; }
+.nav-sep { color: rgba(255,255,255,0.2); }
+.nav-link { color: #b2dfdb; text-decoration: none; padding: 4px 10px; border-radius: 5px; transition: background 0.15s; }
+.nav-link:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.nav-link.active { background: rgba(255,255,255,0.15); color: #fff; font-weight: 600; }
+.nav-right { margin-left: auto; color: rgba(255,255,255,0.4); font-size: 0.75rem; }
+
+/* ── Hero ── */
+.hero { background: linear-gradient(135deg, var(--navy) 0%, #152e2b 100%); color: #fff; padding: 3rem 2rem 2.5rem; text-align: center; }
+.hero-eyebrow { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber); font-weight: 600; margin-bottom: 0.5rem; }
+.hero h1 { font-family: Georgia, serif; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; line-height: 1.15; margin-bottom: 0.5rem; }
+.hero-sub { font-size: 1rem; color: rgba(255,255,255,0.7); max-width: 680px; margin: 0 auto 1.2rem; }
+.hero-pills { display: flex; justify-content: center; gap: 0.6rem; flex-wrap: wrap; }
+.hero-pill { display: inline-block; padding: 0.28rem 0.85rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.pill-teal { background: var(--teal); color: #fff; }
+.pill-amber { background: var(--amber); color: #fff; }
+.pill-outline { background: transparent; border: 1.5px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.8); }
+
+/* ── Layout ── */
+.page-wrap { max-width: 920px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+
+/* ── Day blocks ── */
+.day-block { background: var(--white); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.day-label { display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 3px 10px; border-radius: 4px; margin-bottom: 0.75rem; }
+.day-label-tue { background: var(--teal-bg); color: var(--teal); }
+.day-label-thu { background: var(--amber-lt); color: var(--amber-dk); }
+.day-title { font-family: Georgia, serif; font-size: 1.35rem; font-weight: 700; color: var(--navy); margin-bottom: 0.6rem; }
+.day-block p { margin-bottom: 0.9rem; font-size: 0.95rem; }
+.day-block p:last-child { margin-bottom: 0; }
+
+/* ── Agenda items ── */
+.agenda-item { display: flex; gap: 1rem; margin: 1.2rem 0; align-items: flex-start; }
+.agenda-num { width: 2rem; height: 2rem; border-radius: 50%; background: var(--navy); color: var(--amber); font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 0.15rem; }
+.agenda-body { flex: 1; }
+.agenda-body h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 0.3rem; }
+.agenda-body p { font-size: 0.92rem; color: #444; }
+
+/* ── Callout boxes ── */
+.callout { border-left: 4px solid; border-radius: 0 8px 8px 0; padding: 1rem 1.2rem; margin: 1.2rem 0; font-size: 0.9rem; }
+.callout-teal { border-color: var(--teal); background: var(--teal-bg); }
+.callout-amber { border-color: var(--amber); background: var(--amber-lt); }
+.callout-rose { border-color: var(--rose); background: #fdf0ef; }
+.callout-label { font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.35rem; }
+.callout-teal .callout-label { color: var(--teal); }
+.callout-amber .callout-label { color: var(--amber-dk); }
+.callout-rose .callout-label { color: var(--rose); }
+
+/* ── Link buttons ── */
+.page-links { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1.2rem 0; }
+.page-link { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: all 0.15s; }
+.link-primary { background: var(--navy); color: #fff; }
+.link-primary:hover { background: var(--teal); }
+.link-secondary { background: var(--teal-bg); color: var(--navy); border: 1.5px solid var(--teal); }
+.link-secondary:hover { background: var(--teal); color: #fff; }
+
+/* ── Deliverable box ── */
+.deliverable { background: var(--amber-lt); border: 1.5px solid var(--amber); border-radius: 8px; padding: 1rem 1.2rem; margin: 1.2rem 0; }
+.deliverable-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber-dk); margin-bottom: 0.3rem; }
+.deliverable p { font-size: 0.88rem; color: #5a3800; margin: 0; }
+
+/* ── Week nav ── */
+.week-nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 0; margin-top: 1rem; border-top: 2px solid var(--border); }
+.week-nav a { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.2rem; border-radius: 6px; text-decoration: none; font-size: 0.88rem; font-weight: 600; transition: all 0.15s; }
+.week-nav .prev { background: var(--white); color: var(--navy); border: 1.5px solid var(--border); }
+.week-nav .prev:hover { border-color: var(--navy); }
+.week-nav .next { background: var(--navy); color: #fff; }
+.week-nav .next:hover { background: var(--teal); }
+.week-nav .disabled { opacity: 0.3; pointer-events: none; }
+
+@media (max-width: 640px) {
+  .page-links { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav class="top-nav">
+  <a href="../ka_home.html" class="nav-brand">K-ATLAS</a>
+  <span class="nav-sep">|</span>
+  <a href="ka_schedule.html" class="nav-link">Schedule</a>
+  <a href="ka_student_setup.html" class="nav-link">Setup</a>
+  <a href="../ka_topics.html" class="nav-link">Topics</a>
+  <a href="../ka_evidence.html" class="nav-link">Evidence</a>
+  <a href="../ka_demo_v04.html" class="nav-link">Ask</a>
+  <span class="nav-right">COGS 160 · Spring 2026</span>
+</nav>
+
+<!-- ── Hero ── -->
+<header class="hero">
+  <p class="hero-eyebrow">COGS 160 · Spring 2026 · Week 5 of 8</p>
+  <h1>Sprint 1 Demo</h1>
+  <p class="hero-sub">Present what you built. Test each other's work. Learn from failures.</p>
+  <div class="hero-pills">
+    <span class="hero-pill pill-teal">Tuesday: Cross-track Testing</span>
+    <span class="hero-pill pill-amber">Thursday: Sprint 1 Demos</span>
+    <span class="hero-pill pill-outline">Methodology Log #3</span>
+  </div>
+</header>
+
+<div class="page-wrap">
+
+  <!-- ════════════════════════════════════════════
+       TUESDAY — Day 9
+  ════════════════════════════════════════════ -->
+  <div class="day-block">
+    <span class="day-label day-label-tue">Tuesday · Day 9 · Cross-track Testing</span>
+    <h2 class="day-title">Cross-Track Testing</h2>
+
+    <p>You have spent the last week building. Now you encounter a fundamental principle of verification: testing your own work finds some bugs, but having someone else test your work finds the bugs your familiarity blinds you to. This is why Step 6 of the workflow exists as a separate step — and why someone other than the implementer should perform it. Today you will swap your deliverable with another team and test their work against their acceptance criteria. You will discover failures that the original team could not see.</p>
+
+    <div class="agenda-item">
+      <div class="agenda-num">1</div>
+      <div class="agenda-body">
+        <h3>Swap Components with Another Team</h3>
+        <p>You will be paired with another team — either on the same track or a different track. Each team passes their Sprint 1 deliverable to the other team. You receive the acceptance criteria from the other team so you know exactly what you should be testing. Take their deliverable and run it through their contract. For each acceptance criterion, test whether their implementation passes or fails.</p>
+      </div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="agenda-num">2</div>
+      <div class="agenda-body">
+        <h3>Write Up Test Results</h3>
+        <p>Document what passes and what fails. For each failure, record what you expected to happen, what actually happened, and the exact steps to reproduce the failure. Do not assume the failure is a code bug — it might be a misunderstanding about what the acceptance criterion meant. It might be that the original team built exactly what they promised, but what they promised does not match what the system needs. Either way, the discrepancy matters and needs to be reported.</p>
+      </div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="agenda-num">3</div>
+      <div class="agenda-body">
+        <h3>Return Results and Discuss</h3>
+        <p>Return your test results to the original team. Discuss: where did their AI produce output that looked right but failed testing? Which failure modes from Week 1 appeared in their work — hallucination, drift, consensus fabrication, premature abstraction? What would they do differently if they had another sprint? This conversation is where learning happens. The failures are not embarrassing — they are the evidence that the methodology works.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-amber">
+      <div class="callout-label">This is verification</div>
+      <p>Testing your own work finds some bugs. Having someone else test your work finds the bugs that your familiarity blinds you to. This is why Step 6 (Verify) exists as a separate step — and why someone other than the implementer should do it. You are not trying to embarrass the other team. You are trying to surface failure modes that matter for production.</p>
+    </div>
+
+    <div class="deliverable">
+      <div class="deliverable-label">Due: End of Tuesday</div>
+      <p>Test results for another team's Sprint 1 deliverable: all acceptance criteria tested, results documented, failures reported with reproduction steps.</p>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       THURSDAY — Day 10
+  ════════════════════════════════════════════ -->
+  <div class="day-block">
+    <span class="day-label day-label-thu">Thursday · Day 10 · Sprint 1 Demos</span>
+    <h2 class="day-title">Sprint 1 Demos and Retrospective</h2>
+
+    <p>This is the first major checkpoint of the quarter. Each team presents their Sprint 1 deliverable to the class. You will show what you built, what the acceptance criteria were, what passed, what failed, and what you learned. The class will see four tracks' worth of work — image tagging, article search, VR production, GUI evaluation — all built under the same methodology and all encountering the same families of failure modes.</p>
+
+    <div class="agenda-item">
+      <div class="agenda-num">1</div>
+      <div class="agenda-body">
+        <h3>Each Team Presents (5 minutes per team)</h3>
+        <p>Show: the specific deliverable you built, the acceptance criteria from your contract, which tests passed and which failed, what you learned about directing AI systems, and what surprised you. Do not hide the failures — they are the most interesting part. If your AI hallucinated data, show what it hallucinated and how you caught it. If it drifted to the wrong problem, show the drift. If it solved the problem but produced output in the wrong format, show the format mismatch. The demo is not a victory lap. It is a report on what actually happened.</p>
+      </div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="agenda-num">2</div>
+      <div class="agenda-body">
+        <h3>Class Retrospective (15 minutes)</h3>
+        <p>After all demos, we step back and look for patterns. What methodology patterns worked? Where did multiple teams struggle on the same problem? What techniques were most effective for directing AI? What would you do differently if you could do Sprint 1 again? This conversation will inform the improvements you make in Sprint 2.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-teal">
+      <div class="callout-label">Methodology is iterative</div>
+      <p>Sprint 1 is a proof of concept. You learned what works and what does not. Sprint 2 is where you apply those lessons. The retrospective this week will directly shape how you approach Sprint 2.</p>
+    </div>
+
+    <div class="deliverable">
+      <div class="deliverable-label">Due: End of Week 5</div>
+      <p>Sprint 1 complete: full deliverable with source code, methodology log entries #1–#3, demo slides or recording, cross-track test results. Sprint 2 contracts due by Monday end of class.</p>
+    </div>
+  </div>
+
+  <!-- ── Week Navigation ── -->
+  <div class="week-nav">
+    <a href="week4_agenda.html" class="prev">← Week 4: Sprint 1 Begins</a>
+    <a href="week6_agenda.html" class="next">Week 6: Sprint 2 →</a>
+  </div>
+
+</div>
+</body>
+</html>

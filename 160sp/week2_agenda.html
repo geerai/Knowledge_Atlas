@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 2 — AI Demo &amp; Your First Task · COGS 160</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #1C3D3A; --teal: #2A7868; --teal-lt: #5AC8AA; --teal-bg: #E6F5F0;
+  --amber: #E8872A; --amber-lt: #FFF3E0; --amber-dk: #9a5010;
+  --cream: #F7F4EF; --ink: #2C2C2C; --muted: #6B6B6B; --border: #D8D0C5;
+  --white: #FFFFFF; --rose: #A84F6B; --blue: #3A6EA8; --green: #1A7A50;
+}
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--cream); color: var(--ink); line-height: 1.65; }
+
+/* ── Top nav ── */
+.top-nav { background: var(--navy); padding: 0 1.5rem; display: flex; align-items: center; height: 52px; gap: 1.2rem; font-size: 0.85rem; position: sticky; top: 0; z-index: 100; }
+.nav-brand { color: var(--amber); font-weight: 800; font-size: 1.05rem; text-decoration: none; }
+.nav-sep { color: rgba(255,255,255,0.2); }
+.nav-link { color: #b2dfdb; text-decoration: none; padding: 4px 10px; border-radius: 5px; transition: background 0.15s; }
+.nav-link:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.nav-link.active { background: rgba(255,255,255,0.15); color: #fff; font-weight: 600; }
+.nav-right { margin-left: auto; color: rgba(255,255,255,0.4); font-size: 0.75rem; }
+
+/* ── Hero ── */
+.hero { background: linear-gradient(135deg, var(--navy) 0%, #152e2b 100%); color: #fff; padding: 3rem 2rem 2.5rem; text-align: center; }
+.hero-eyebrow { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber); font-weight: 600; margin-bottom: 0.5rem; }
+.hero h1 { font-family: Georgia, serif; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; line-height: 1.15; margin-bottom: 0.5rem; }
+.hero-sub { font-size: 1rem; color: rgba(255,255,255,0.7); max-width: 680px; margin: 0 auto 1.2rem; }
+.hero-pills { display: flex; justify-content: center; gap: 0.6rem; flex-wrap: wrap; }
+.hero-pill { display: inline-block; padding: 0.28rem 0.85rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.pill-teal { background: var(--teal); color: #fff; }
+.pill-amber { background: var(--amber); color: #fff; }
+.pill-outline { background: transparent; border: 1.5px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.8); }
+
+/* ── Layout ── */
+.page-wrap { max-width: 920px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+
+/* ── Day blocks ── */
+.day-block { background: var(--white); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.day-label { display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 3px 10px; border-radius: 4px; margin-bottom: 0.75rem; }
+.day-label-tue { background: var(--teal-bg); color: var(--teal); }
+.day-label-thu { background: var(--amber-lt); color: var(--amber-dk); }
+.day-title { font-family: Georgia, serif; font-size: 1.35rem; font-weight: 700; color: var(--navy); margin-bottom: 0.6rem; }
+.day-block p { margin-bottom: 0.9rem; font-size: 0.95rem; }
+.day-block p:last-child { margin-bottom: 0; }
+
+/* ── Agenda items ── */
+.agenda-item { display: flex; gap: 1rem; margin: 1.2rem 0; align-items: flex-start; }
+.agenda-num { width: 2rem; height: 2rem; border-radius: 50%; background: var(--navy); color: var(--amber); font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 0.15rem; }
+.agenda-body { flex: 1; }
+.agenda-body h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 0.3rem; }
+.agenda-body p { font-size: 0.92rem; color: #444; }
+
+/* ── Callout boxes ── */
+.callout { border-left: 4px solid; border-radius: 0 8px 8px 0; padding: 1rem 1.2rem; margin: 1.2rem 0; font-size: 0.9rem; }
+.callout-teal { border-color: var(--teal); background: var(--teal-bg); }
+.callout-amber { border-color: var(--amber); background: var(--amber-lt); }
+.callout-rose { border-color: var(--rose); background: #fdf0ef; }
+.callout-label { font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.35rem; }
+.callout-teal .callout-label { color: var(--teal); }
+.callout-amber .callout-label { color: var(--amber-dk); }
+.callout-rose .callout-label { color: var(--rose); }
+
+/* ── Failure mode cards ── */
+.failure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin: 1.2rem 0; }
+.fail-card { border: 1.5px solid var(--border); border-radius: 8px; padding: 0.9rem 1rem; background: var(--white); }
+.fail-card h4 { font-size: 0.85rem; font-weight: 700; color: var(--navy); margin-bottom: 0.25rem; }
+.fail-card p { font-size: 0.82rem; color: var(--muted); margin: 0; }
+.fail-card.slow { border-top: 3px solid var(--amber); }
+
+/* ── Resource cards ── */
+.resource-row { display: flex; gap: 0.8rem; margin: 1rem 0; flex-wrap: wrap; }
+.resource-card { flex: 1; min-width: 200px; border: 1.5px solid var(--border); border-radius: 8px; padding: 1rem; background: var(--white); }
+.resource-card h4 { font-size: 0.88rem; font-weight: 700; color: var(--navy); margin-bottom: 0.3rem; }
+.resource-card p { font-size: 0.82rem; color: var(--muted); margin: 0; }
+.resource-card .rec { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; padding: 2px 6px; border-radius: 3px; background: var(--teal-bg); color: var(--teal); margin-top: 0.4rem; }
+
+/* ── Link buttons ── */
+.page-links { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1.2rem 0; }
+.page-link { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: all 0.15s; }
+.link-primary { background: var(--navy); color: #fff; }
+.link-primary:hover { background: var(--teal); }
+.link-secondary { background: var(--teal-bg); color: var(--navy); border: 1.5px solid var(--teal); }
+.link-secondary:hover { background: var(--teal); color: #fff; }
+
+/* ── Deliverable box ── */
+.deliverable { background: var(--amber-lt); border: 1.5px solid var(--amber); border-radius: 8px; padding: 1rem 1.2rem; margin: 1.2rem 0; }
+.deliverable-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber-dk); margin-bottom: 0.3rem; }
+.deliverable p { font-size: 0.88rem; color: #5a3800; margin: 0; }
+
+/* ── Week nav ── */
+.week-nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 0; margin-top: 1rem; border-top: 2px solid var(--border); }
+.week-nav a { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.2rem; border-radius: 6px; text-decoration: none; font-size: 0.88rem; font-weight: 600; transition: all 0.15s; }
+.week-nav .prev { background: var(--white); color: var(--navy); border: 1.5px solid var(--border); }
+.week-nav .prev:hover { border-color: var(--navy); }
+.week-nav .next { background: var(--navy); color: #fff; }
+.week-nav .next:hover { background: var(--teal); }
+.week-nav .disabled { opacity: 0.3; pointer-events: none; }
+
+/* ── Signup banner ── */
+.signup-banner { background: linear-gradient(135deg, var(--teal-bg) 0%, #d4ede6 100%); border: 1.5px solid var(--teal); border-radius: 10px; padding: 1.2rem 1.5rem; margin: 1.5rem 0; display: flex; align-items: center; gap: 1rem; }
+.signup-banner p { font-size: 0.9rem; color: var(--navy); flex: 1; margin: 0; }
+.signup-banner a { padding: 0.5rem 1.2rem; background: var(--teal); color: #fff; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.85rem; white-space: nowrap; }
+
+/* ── Prompt list ── */
+.prompt-list { margin: 0.6rem 0 0 0; }
+.prompt-list p { font-size: 0.88rem; color: #444; margin: 0.35rem 0 0 1.2rem; }
+.prompt-item { display: flex; gap: 0.5rem; margin: 0.4rem 0 0 1.2rem; font-size: 0.88rem; }
+.prompt-label { font-weight: 600; color: var(--navy); white-space: nowrap; }
+.prompt-text { color: #444; }
+
+@media (max-width: 640px) {
+  .failure-grid { grid-template-columns: 1fr; }
+  .resource-row { flex-direction: column; }
+  .signup-banner { flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav class="top-nav">
+  <a href="../ka_home.html" class="nav-brand">K-ATLAS</a>
+  <span class="nav-sep">|</span>
+  <a href="ka_schedule.html" class="nav-link">Schedule</a>
+  <a href="ka_student_setup.html" class="nav-link">Setup</a>
+  <a href="../ka_topics.html" class="nav-link">Topics</a>
+  <a href="../ka_evidence.html" class="nav-link">Evidence</a>
+  <a href="../ka_demo_v04.html" class="nav-link">Ask</a>
+  <span class="nav-right">COGS 160 · Spring 2026</span>
+</nav>
+
+<!-- ── Hero ── -->
+<header class="hero">
+  <p class="hero-eyebrow">COGS 160 · Spring 2026 · Week 2 of 8</p>
+  <h1>AI Demo &amp; Your First Task</h1>
+  <p class="hero-sub">Watch an AI-directed task done live. Then try one yourself — with a prepared context file so the AI thinks right from the start.</p>
+  <div class="hero-pills">
+    <span class="hero-pill pill-teal">Tuesday: Seminar</span>
+    <span class="hero-pill pill-amber">Thursday: Lab</span>
+    <span class="hero-pill pill-outline">A0 Continues</span>
+  </div>
+</header>
+
+<div class="page-wrap">
+
+  <!-- ════════════════════════════════════════════
+       TUESDAY — Day 3
+  ════════════════════════════════════════════ -->
+  <div class="day-block">
+    <span class="day-label day-label-tue">Tuesday · Day 3 · Seminar</span>
+    <h2 class="day-title">Live Demo: Directing an AI Through a Real Task</h2>
+
+    <div class="agenda-item">
+      <div class="agenda-num">1</div>
+      <div class="agenda-body">
+        <h3>A0 Check-In</h3>
+        <p>A quick status review: how many articles have you found so far? What problems have you encountered? Are certain topics harder to find papers for than others? This check-in helps identify common roadblocks and reminds you that the article collection phase is live through the end of Week 2.</p>
+      </div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="agenda-num">2</div>
+      <div class="agenda-body">
+        <h3>Live AI Demo</h3>
+        <p>David demonstrates the seven-step methodology in real time. He takes a genuine K-ATLAS task — building a PDF relevance filter that determines whether a submitted paper actually addresses its assigned question — and works through it using AI in front of the class. The first prompt is pre-loaded. Subsequent prompts depend on what the AI produces. You will observe how to set up the AI's role and context, write a ruthless specification before implementation, catch failure modes in real time, and verify output against a test set.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-teal">
+      <div class="callout-label">The Demo Task: PDF Relevance Filter</div>
+      <p>Given a K-ATLAS question and a submitted PDF, determine whether the paper provides evidence relevant to that question. This is the foundation of quality control for the entire corpus — if irrelevant papers enter the system, every downstream analysis is contaminated. The task requires understanding what "relevant" means in the context of each specific question's evidence type, population, and environmental variable.</p>
+    </div>
+
+    <div class="callout callout-amber">
+      <div class="callout-label">Prompts Prepared for the Demo</div>
+      <div class="prompt-list">
+        <div class="prompt-item">
+          <span class="prompt-label">Prompt 1 (Ready):</span>
+          <span class="prompt-text">Role setup + context loading + spec definition. "You are a bibliometrician who specializes in systematic review methodology..."</span>
+        </div>
+        <div class="prompt-item">
+          <span class="prompt-label">Prompt 2 (Named):</span>
+          <span class="prompt-text">Implementation — build the filter against the spec</span>
+        </div>
+        <div class="prompt-item">
+          <span class="prompt-label">Prompt 3 (Named):</span>
+          <span class="prompt-text">Verification — test against labeled examples</span>
+        </div>
+        <div class="prompt-item">
+          <span class="prompt-label">Prompt 4 (Named):</span>
+          <span class="prompt-text">Edge cases — papers that are adjacent but not relevant</span>
+        </div>
+        <p style="margin-top: 0.6rem; font-style: italic;">Prompts 2–4 are named but not pre-written. What David prompts depends on what the AI produces. This is how real AI-directed development works — you cannot script the whole session.</p>
+      </div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="agenda-num">3</div>
+      <div class="agenda-body">
+        <h3>Students Begin Their Task</h3>
+        <p>Each student receives a prepared task from the K-ATLAS task bank. The task comes with a context file — a document that gives the AI the specific information it needs about the relevant part of the K-ATLAS system. You will work in pairs. Your goal: complete step 1 (role setup and context loading) and step 2 (specification) of the seven-step workflow before class ends.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-rose">
+      <div class="callout-label">Why Context Files Matter</div>
+      <p>An AI without context is an AI that hallucinates. The context file gives your AI the vocabulary, the data structures, the acceptance criteria, and the constraints it needs to produce work that actually fits the system. Without it, the AI will produce plausible-looking output that uses the wrong field names, misunderstands the data model, and fails every integration test.</p>
+    </div>
+
+    <div class="page-links">
+      <a href="ka_thursday_tasks.html" class="page-link link-primary">View Available Tasks →</a>
+      <a href="context/index.html" class="page-link link-secondary">AI Context Files</a>
+    </div>
+
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       THURSDAY — Day 4
+  ════════════════════════════════════════════ -->
+  <div class="day-block">
+    <span class="day-label day-label-thu">Thursday · Day 4 · Lab</span>
+    <h2 class="day-title">Continue Your Task and Submit</h2>
+
+    <div class="agenda-item">
+      <div class="agenda-num">1</div>
+      <div class="agenda-body">
+        <h3>Resume Your Task</h3>
+        <p>Pick up where you left off on Tuesday. You should have a role setup and specification from Day 3. Now move to implementation (step 5) and verification (step 6). Use the context file. Check your output against the acceptance criteria in the spec.</p>
+      </div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="agenda-num">2</div>
+      <div class="agenda-body">
+        <h3>Peer Review</h3>
+        <p>In the last 20 minutes of class, swap methodology logs with your partner. Review their work: Did they define the spec before implementing? Did they verify against test cases? Did you spot any of the seven failure modes in their AI's output?</p>
+      </div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="agenda-num">3</div>
+      <div class="agenda-body">
+        <h3>Submit</h3>
+        <p>Upload your methodology log and any code or output to the submission portal. Include: the prompts you used (all of them, including failures), the AI's output at each step, your verification results, and a two-paragraph reflection on what worked and what did not.</p>
+      </div>
+    </div>
+
+    <div class="deliverable">
+      <div class="deliverable-label">Due: End of Thursday</div>
+      <p>Methodology Log #1 + task output uploaded to submission portal. Include all prompts (successes and failures), verification results, and reflection.</p>
+    </div>
+
+    <div class="deliverable">
+      <div class="deliverable-label">Due: End of Week 2</div>
+      <p>A0 Due: 20 articles total (10 per question) with PDFs, APA citations, DOIs, and abstracts. Upload through the contribute page.</p>
+    </div>
+
+  </div>
+
+  <!-- ── Week Navigation ── -->
+  <div class="week-nav">
+    <a href="week1_agenda.html" class="prev">← Week 1: Orientation</a>
+    <a href="week3_agenda.html" class="next">Week 3: Choose Your Track →</a>
+  </div>
+
+</div>
+</body>
+</html>

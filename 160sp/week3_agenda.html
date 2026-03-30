@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 3 — Choose Your Track · COGS 160</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #1C3D3A; --teal: #2A7868; --teal-lt: #5AC8AA; --teal-bg: #E6F5F0;
+  --amber: #E8872A; --amber-lt: #FFF3E0; --amber-dk: #9a5010;
+  --cream: #F7F4EF; --ink: #2C2C2C; --muted: #6B6B6B; --border: #D8D0C5;
+  --white: #FFFFFF; --rose: #A84F6B; --blue: #3A6EA8; --green: #1A7A50;
+}
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--cream); color: var(--ink); line-height: 1.65; }
+
+/* ── Top nav ── */
+.top-nav { background: var(--navy); padding: 0 1.5rem; display: flex; align-items: center; height: 52px; gap: 1.2rem; font-size: 0.85rem; position: sticky; top: 0; z-index: 100; }
+.nav-brand { color: var(--amber); font-weight: 800; font-size: 1.05rem; text-decoration: none; }
+.nav-sep { color: rgba(255,255,255,0.2); }
+.nav-link { color: #b2dfdb; text-decoration: none; padding: 4px 10px; border-radius: 5px; transition: background 0.15s; }
+.nav-link:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.nav-link.active { background: rgba(255,255,255,0.15); color: #fff; font-weight: 600; }
+.nav-right { margin-left: auto; color: rgba(255,255,255,0.4); font-size: 0.75rem; }
+
+/* ── Hero ── */
+.hero { background: linear-gradient(135deg, var(--navy) 0%, #152e2b 100%); color: #fff; padding: 3rem 2rem 2.5rem; text-align: center; }
+.hero-eyebrow { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber); font-weight: 600; margin-bottom: 0.5rem; }
+.hero h1 { font-family: Georgia, serif; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; line-height: 1.15; margin-bottom: 0.5rem; }
+.hero-sub { font-size: 1rem; color: rgba(255,255,255,0.7); max-width: 680px; margin: 0 auto 1.2rem; }
+.hero-pills { display: flex; justify-content: center; gap: 0.6rem; flex-wrap: wrap; }
+.hero-pill { display: inline-block; padding: 0.28rem 0.85rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.pill-teal { background: var(--teal); color: #fff; }
+.pill-amber { background: var(--amber); color: #fff; }
+.pill-outline { background: transparent; border: 1.5px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.8); }
+
+/* ── Layout ── */
+.page-wrap { max-width: 920px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+
+/* ── Day blocks ── */
+.day-block { background: var(--white); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.day-label { display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 3px 10px; border-radius: 4px; margin-bottom: 0.75rem; }
+.day-label-tue { background: var(--teal-bg); color: var(--teal); }
+.day-label-thu { background: var(--amber-lt); color: var(--amber-dk); }
+.day-title { font-family: Georgia, serif; font-size: 1.35rem; font-weight: 700; color: var(--navy); margin-bottom: 0.6rem; }
+.day-block p { margin-bottom: 0.9rem; font-size: 0.95rem; }
+.day-block p:last-child { margin-bottom: 0; }
+
+/* ── Agenda items ── */
+.agenda-item { display: flex; gap: 1rem; margin: 1.2rem 0; align-items: flex-start; }
+.agenda-num { width: 2rem; height: 2rem; border-radius: 50%; background: var(--navy); color: var(--amber); font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 0.15rem; }
+.agenda-body { flex: 1; }
+.agenda-body h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 0.3rem; }
+.agenda-body p { font-size: 0.92rem; color: #444; }
+
+/* ── Track mini-grid ── */
+.track-mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.2rem 0; }
+.track-card { border-left: 4px solid; border-radius: 0 8px 8px 0; padding: 1rem 1.2rem; background: var(--white); border: 1px solid var(--border); }
+.track-card h4 { font-size: 0.9rem; font-weight: 700; color: var(--navy); margin-bottom: 0.4rem; }
+.track-card p { font-size: 0.82rem; color: var(--muted); margin: 0; line-height: 1.5; }
+.track-card.teal { border-left-color: var(--teal); }
+.track-card.amber { border-left-color: var(--amber); }
+.track-card.blue { border-left-color: var(--blue); }
+.track-card.rose { border-left-color: var(--rose); }
+
+/* ── Callout boxes ── */
+.callout { border-left: 4px solid; border-radius: 0 8px 8px 0; padding: 1rem 1.2rem; margin: 1.2rem 0; font-size: 0.9rem; }
+.callout-teal { border-color: var(--teal); background: var(--teal-bg); }
+.callout-amber { border-color: var(--amber); background: var(--amber-lt); }
+.callout-rose { border-color: var(--rose); background: #fdf0ef; }
+.callout-label { font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.35rem; }
+.callout-teal .callout-label { color: var(--teal); }
+.callout-amber .callout-label { color: var(--amber-dk); }
+.callout-rose .callout-label { color: var(--rose); }
+
+/* ── Link buttons ── */
+.page-links { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1.2rem 0; }
+.page-link { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: all 0.15s; }
+.link-primary { background: var(--navy); color: #fff; }
+.link-primary:hover { background: var(--teal); }
+.link-secondary { background: var(--teal-bg); color: var(--navy); border: 1.5px solid var(--teal); }
+.link-secondary:hover { background: var(--teal); color: #fff; }
+
+/* ── Deliverable box ── */
+.deliverable { background: var(--amber-lt); border: 1.5px solid var(--amber); border-radius: 8px; padding: 1rem 1.2rem; margin: 1.2rem 0; }
+.deliverable-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber-dk); margin-bottom: 0.3rem; }
+.deliverable p { font-size: 0.88rem; color: #5a3800; margin: 0; }
+
+/* ── Week nav ── */
+.week-nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 0; margin-top: 1rem; border-top: 2px solid var(--border); }
+.week-nav a { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.2rem; border-radius: 6px; text-decoration: none; font-size: 0.88rem; font-weight: 600; transition: all 0.15s; }
+.week-nav .prev { background: var(--white); color: var(--navy); border: 1.5px solid var(--border); }
+.week-nav .prev:hover { border-color: var(--navy); }
+.week-nav .next { background: var(--navy); color: #fff; }
+.week-nav .next:hover { background: var(--teal); }
+.week-nav .disabled { opacity: 0.3; pointer-events: none; }
+
+@media (max-width: 640px) {
+  .track-mini-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav class="top-nav">
+  <a href="../ka_home.html" class="nav-brand">K-ATLAS</a>
+  <span class="nav-sep">|</span>
+  <a href="ka_schedule.html" class="nav-link">Schedule</a>
+  <a href="ka_student_setup.html" class="nav-link">Setup</a>
+  <a href="../ka_topics.html" class="nav-link">Topics</a>
+  <a href="../ka_evidence.html" class="nav-link">Evidence</a>
+  <a href="../ka_demo_v04.html" class="nav-link">Ask</a>
+  <span class="nav-right">COGS 160 · Spring 2026</span>
+</nav>
+
+<!-- ── Hero ── -->
+<header class="hero">
+  <p class="hero-eyebrow">COGS 160 · Spring 2026 · Week 3 of 8</p>
+  <h1>Choose Your Track</h1>
+  <p class="hero-sub">Finalize your track choice. Meet your team. Review your track syllabus and the chain of deliverables for Weeks 4–7.</p>
+  <div class="hero-pills">
+    <span class="hero-pill pill-teal">Tuesday: Track Selection</span>
+    <span class="hero-pill pill-amber">Thursday: Sprint Planning</span>
+    <span class="hero-pill pill-outline">Teams Form</span>
+  </div>
+</header>
+
+<div class="page-wrap">
+
+  <!-- ════════════════════════════════════════════
+       TUESDAY — Day 5
+  ════════════════════════════════════════════ -->
+  <div class="day-block">
+    <span class="day-label day-label-tue">Tuesday · Day 5 · Seminar</span>
+    <h2 class="day-title">Track Presentations and Final Sign-Up</h2>
+
+    <div class="agenda-item">
+      <div class="agenda-num">1</div>
+      <div class="agenda-body">
+        <h3>Track Overview</h3>
+        <p>Brief presentation of each track's goals, tools, deliverables, and the skills you will develop. Each track addresses a different Knowledge Atlas capability gap. Below are the four tracks with descriptions of what you will build and learn.</p>
+      </div>
+    </div>
+
+    <div class="track-mini-grid">
+      <div class="track-card teal">
+        <h4>Track 1: Image Tagger</h4>
+        <p>Tag architectural images with psychological constructs from the K-ATLAS evidence base. Build annotation tools. Learn data verification and pipeline architecture.</p>
+      </div>
+      <div class="track-card amber">
+        <h4>Track 2: Article Finder</h4>
+        <p>Build a query engine and batch retrieval system to find relevant papers. Implement deduplication, schema validation, and database integrity.</p>
+      </div>
+      <div class="track-card blue">
+        <h4>Track 3: VR Production</h4>
+        <p>Design 3D environments in Unreal Engine that visualize epistemological concepts and warrant structures. Create interactive demonstrations.</p>
+      </div>
+      <div class="track-card rose">
+        <h4>Track 4: GUI Evaluation</h4>
+        <p>Build web interfaces for researchers to explore the evidence graph. Test against acceptance criteria and document usability findings.</p>
+      </div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="agenda-num">2</div>
+      <div class="agenda-body">
+        <h3>Sign Up</h3>
+        <p>Finalize your track choice. You have had two weeks to browse the track descriptions. If you have not decided yet, today is the day. Teams of three to four students per track. Sign up on the track signup page to indicate your preference and to be matched with teammates.</p>
+      </div>
+    </div>
+
+    <div class="page-links">
+      <a href="ka_track_signup.html" class="page-link link-primary">Sign Up for a Track →</a>
+      <a href="ka_student_setup.html" class="page-link link-secondary">Browse Track Assignments</a>
+    </div>
+
+    <div class="agenda-item">
+      <div class="agenda-num">3</div>
+      <div class="agenda-body">
+        <h3>Meet Your Team</h3>
+        <p>Once teams form, introduce yourselves. Exchange contact information. Decide on a communication channel — Slack, Discord, group chat, or email. Review your track's assignment page together. This is your chance to understand the scope of work ahead and to establish working norms with your teammates before the sprint begins.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       THURSDAY — Day 6
+  ════════════════════════════════════════════ -->
+  <div class="day-block">
+    <span class="day-label day-label-thu">Thursday · Day 6 · Lab</span>
+    <h2 class="day-title">Sprint 1 Planning: Contracts and Specifications</h2>
+
+    <div class="agenda-item">
+      <div class="agenda-num">1</div>
+      <div class="agenda-body">
+        <h3>Read Your Track Assignment</h3>
+        <p>Go through the full assignment page for your track. Identify the first sprint's deliverables and acceptance criteria. What does "done" look like? This reading is the foundation for everything that follows. If your track assignment is unclear, ask for clarification now before planning begins.</p>
+      </div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="agenda-num">2</div>
+      <div class="agenda-body">
+        <h3>Write Your Sprint 1 Contract</h3>
+        <p>A contract is a one-page document that specifies what you will build, what inputs it requires, what outputs it produces, how you will test it, and what "done" means. This is step 3 (Spec) of the seven-step workflow, applied to your first sprint. A clear contract prevents misunderstandings mid-sprint and gives you a concrete way to know when you are finished.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-teal">
+      <div class="callout-label">What a contract looks like</div>
+      <p><strong>Title:</strong> [Sprint 1 deliverable name]. <strong>Input:</strong> [what data or files the component receives]. <strong>Output:</strong> [what it produces]. <strong>Acceptance test:</strong> [3–5 concrete conditions that must be true for the deliverable to pass]. <strong>Dependencies:</strong> [what other components or data this relies on]. <strong>Estimated time:</strong> [hours].</p>
+    </div>
+
+    <div class="agenda-item">
+      <div class="agenda-num">3</div>
+      <div class="agenda-body">
+        <h3>Peer Review of Contracts</h3>
+        <p>Swap contracts with another team. Check: Are the acceptance criteria testable and concrete? Are the inputs and outputs clearly specified? Could you verify this deliverable without reading the code? Use peer feedback to strengthen your contract before submitting it for approval.</p>
+      </div>
+    </div>
+
+    <div class="deliverable">
+      <div class="deliverable-label">Due: End of Thursday</div>
+      <p>Sprint 1 contract reviewed and approved by David. Posted to your team's methodology log. If not approved, revise and resubmit by Monday.</p>
+    </div>
+  </div>
+
+  <!-- ── Week Navigation ── -->
+  <div class="week-nav">
+    <a href="week2_agenda.html" class="prev">← Week 2: AI Demo</a>
+    <a href="week4_agenda.html" class="next">Week 4: Sprint 1 Begins →</a>
+  </div>
+
+</div>
+</body>
+</html>
