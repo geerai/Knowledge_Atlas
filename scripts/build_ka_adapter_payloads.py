@@ -25,12 +25,14 @@ VISUALS_OUT = OUT / 'article_visuals'
 VISUALS_OUT.mkdir(parents=True, exist_ok=True)
 WORKFLOW_DB_PATH = ROOT / 'Knowledge_Atlas' / 'data' / 'ka_workflow.db'
 REBUILD_DB_PATH = AE / 'data' / 'rebuild' / 'web_persistence_v5.db'
+REGISTRY_DB_PATH = AE / 'data' / 'verification_runs' / 'v7_gold_extraction_registry.db'
 
 if str(AE) not in sys.path:
     sys.path.insert(0, str(AE))
 
 FRONTS_PATH = AE / 'data' / 'rebuild' / 'research_fronts_v5.json'
 CLAIMS_PATH = AE / 'data' / 'rebuild' / 'gold_claims_v7.jsonl'
+IV_DV_CLASSIFICATIONS_PATH = AE / 'data' / 'exports' / 'ae_bundle' / 'supplementary' / 'iv_dv_classifications.json'
 REPAIRS_PATH = AE / 'data' / 'rebuild' / 'bibliographic_repairs.json'
 AG_PDF_PACKAGE_REPAIRS_PATH = AE / 'data' / 'rebuild' / 'ag_pdf_package_repairs.json'
 DEEP_STATS_DIR = AE / 'data' / 'verification_runs' / 'v6_deep_stats_adjudication'
@@ -43,6 +45,7 @@ STIMULUS_IMAGE_DIR = AE / 'data' / 'gold_standard' / 'stimulus_images'
 FIELD_COVERAGE_BY_TYPE_PATH = AE / 'data' / 'verification_runs' / 'field_coverage_by_article_type' / 'field_coverage_by_article_type.json'
 ARG_GRAPH_PATH = AE / 'data' / 'rebuild' / 'argumentation_graph_v5.json'
 CLAIM_ARG_GRAPH_PATH = AE / 'data' / 'rebuild' / 'claim_argument_graph_v1.json'
+CLAIM_ARG_TARGETS_PATH = AE / 'data' / 'rebuild' / 'claim_argument_search_targets_v1.json'
 ANNOTATIONS_PATH = AE / 'data' / 'rebuild' / 'annotations_regenerated.json'
 INTERPRETATION_SUMMARY_PATH = AE / 'data' / 'interpretation_space' / 'phase4' / 'phase4_summary.json'
 FRONTIER_QUESTIONS_PATH = AE / 'data' / 'interpretation_space' / 'phase4' / 'prioritized_frontier_questions.json'
@@ -153,6 +156,161 @@ INSTRUMENT_PATTERNS = {
     'Self-report': ['self report', 'questionnaire', 'survey', 'rating scale', 'stai', 'panas'],
 }
 
+IV_ROOT_LABELS = {
+    'spatial': 'Spatial Form',
+    'sensory': 'Sensory Conditions',
+    'acoustic': 'Acoustic Conditions',
+    'luminous': 'Lighting Conditions',
+    'natural': 'Natural and Biophilic Conditions',
+    'material': 'Material and Surface Conditions',
+    'thermal': 'Thermal and Air Conditions',
+    'config': 'Configuration and Wayfinding',
+    'aesthetic': 'Aesthetic Conditions',
+    'person_state': 'Participant State and Expertise',
+    'social_spatial': 'Social-Spatial Conditions',
+    'cultural': 'Cultural Framing',
+    'olfactory': 'Olfactory Conditions',
+    'temporal_env': 'Temporal Conditions',
+    'unspecified': 'Unspecified Environment',
+}
+
+IV_ROOT_DESCRIPTIONS = {
+    'spatial': 'Geometric, volumetric, and layout properties of space.',
+    'sensory': 'Ambient sensory conditions other than explicit light-spectrum families.',
+    'acoustic': 'Noise, soundscape, speech, reverberation, and other sound conditions.',
+    'luminous': 'Illuminance, daylight, spectrum, and color-temperature manipulations.',
+    'natural': 'Biophilic, vegetation, water, and nature-exposure conditions.',
+    'material': 'Materials, finishes, and surface treatments.',
+    'thermal': 'Temperature, ventilation, humidity, and thermal comfort conditions.',
+    'config': 'Wayfinding, connectivity, privacy, and configurational structure.',
+    'aesthetic': 'Order, complexity, visual style, and appearance.',
+    'person_state': 'Participant expertise, prior state, and person-level moderation.',
+    'social_spatial': 'Social occupancy, territory, and interpersonal spatial conditions.',
+    'cultural': 'Cultural framing and interpretive context.',
+    'olfactory': 'Smell, scent, and olfactory conditions.',
+    'temporal_env': 'Temporal sequencing or time-of-exposure conditions.',
+    'unspecified': 'Papers whose current export does not yet provide a stable IV assignment.',
+}
+
+DV_ROOT_LABELS = {
+    'affect': 'Affect and Stress',
+    'cog': 'Cognition and Performance',
+    'behav': 'Behavior',
+    'health': 'Health and Wellbeing',
+    'physio': 'Physiology',
+    'neural': 'Neural Activity',
+    'performance': 'Performance',
+    'person_state': 'Perceived State',
+    'spatial': 'Spatial Experience',
+    'natural': 'Nature-Related Response',
+    'thermal': 'Thermal Response',
+    'luminous': 'Lighting-Related Response',
+    'acoustic': 'Acoustic Response',
+    'social_spatial': 'Social-Spatial Response',
+    'mechanism_or_pathway': 'Mechanism or Pathway',
+    'study_validity_or_manipulation_check': 'Manipulation Check',
+    'unspecified': 'Unspecified Outcome',
+}
+
+TAXONOMY_SEGMENT_RE = re.compile(r'[^a-z0-9_]+')
+MEASUREMENT_LEAF_TOKENS = {
+    'hr', 'hrv', 'heart_rate', 'cortisol', 'eda', 'eda_sc', 'eeg', 'fmri',
+    'temperature', 'humidity', 'accuracy', 'reaction_time', 'task', 'self_report',
+    'pulseox_physio', 'skin_temp', 'respiration', 'blood_pressure',
+}
+DV_FOCUS_TOKENS = {
+    'stress', 'restorativeness', 'preference', 'wellbeing', 'comfort', 'memory',
+    'attention', 'learning', 'navigation', 'wayfinding', 'productivity',
+    'soundscape', 'cognitive_load', 'perceived_control', 'place_attachment',
+    'health', 'awe', 'fascination', 'restoration', 'mood', 'arousal', 'pain',
+}
+LOW_INFO_DV_FOCI = {
+    'unspecified.outcome',
+    'study_validity_or_manipulation_check',
+}
+LOW_CONFIDENCE_DV_RAW_MARKERS = (
+    'study validity or manipulation check',
+    'self-report rating',
+    'condition or group comparison',
+    'between groups',
+    'qualitative perception or theme',
+)
+IV_TEXT_HINTS = [
+    ('spatial', ('building', 'buildings', 'architectural', 'architecture', 'urban', 'interior', 'workspace', 'workplace', 'office', 'home', 'restaurant', 'public space', 'spatial', 'space ')),
+    ('material', ('material', 'materials', 'surface', 'surfaces', 'haptic', 'touch', 'tactile', 'rough', 'smooth')),
+    ('sensory', ('multisensory', 'multi sensory', 'sensory')),
+    ('acoustic.reverberation', ('reverberation', 'echo', 'sound absorption')),
+    ('acoustic.soundscape', ('soundscape', 'background sound', 'spring water sound', 'birdsong', 'natural sounds')),
+    ('acoustic.noise', ('noise', 'white noise', 'pink noise', 'office noise', 'traffic noise', 'speech noise')),
+    ('sensory.acoustics', ('acoustic', 'auditory environment', 'sound propagation')),
+    ('luminous.color_temp', ('color temperature', 'colour temperature', 'warm light', 'cool light')),
+    ('luminous.daylight', ('daylight', 'sunlight', 'natural light', 'daylit')),
+    ('sensory.lighting', ('lighting', 'illumination', 'light level', 'illuminance', 'luminance')),
+    ('sensory.darkness', ('darkness', 'dim light', 'low light')),
+    ('natural.biophilia', ('biophilic', 'biophilia', 'nature imagery', 'natural indoor', 'restorative environment', 'nature exposure')),
+    ('natural.vegetation', ('plants', 'plant', 'greenery', 'forest', 'trees', 'bamboo')),
+    ('natural.water', ('water', 'coastal', 'river', 'rainfall', 'fountain', 'spring water')),
+    ('material.wood', ('wood', 'timber')),
+    ('spatial.density', ('crowding', 'density', 'occupancy', 'occupant density')),
+    ('spatial.openness', ('open-plan', 'open plan', 'openness', 'enclosure', 'enclosed space')),
+    ('spatial.height', ('larger space', 'smaller space', 'ceiling height', 'room height')),
+    ('spatial.layout', ('layout', 'floor design', 'floorplan', 'corridor', 'room configuration')),
+    ('config.wayfinding', ('wayfinding', 'navigation', 'legibility', 'signage')),
+    ('sensory.thermal', ('temperature', 'thermal', 'humidity')),
+    ('thermal.ventilation', ('ventilation', 'air quality', 'co2', 'fresh air')),
+    ('olfactory', ('odor', 'odour', 'smell', 'scent', 'olfactory')),
+    ('aesthetic.order', ('symmetry', 'order', 'ordered')),
+    ('aesthetic.complexity', ('visual complexity', 'complexity', 'ornamentation')),
+]
+DV_TEXT_HINTS = [
+    ('affect.negative.stress', ('stress', 'anxiety', 'stai', 'stress scale', 'allostatic', 'arousal')),
+    ('affect.restoration', ('restoration', 'restorative', 'recovery')),
+    ('person_state.restorativeness', ('restorativeness', 'restorative quality')),
+    ('affect.wellbeing', ('well-being', 'wellbeing', 'mental health')),
+    ('affect.wellbeing', ('emotion', 'emotions', 'emotional')),
+    ('cog.attention', ('attention', 'attentional', 'focus', 'alertness', 'vigilance')),
+    ('person_state.cognitive_load', ('cognitive load', 'mental workload', 'workload', 'distractibility')),
+    ('performance', ('performance', 'task performance', 'decision-making')),
+    ('cog.performance', ('accuracy', 'reaction time', 'response time')),
+    ('cog.memory', ('memory', 'recall', 'digit span')),
+    ('cog.learning', ('learning', 'learning task')),
+    ('cog.creativity.divergent', ('divergent thinking', 'creativity')),
+    ('cog.creativity.remote_assoc', ('convergent thinking',)),
+    ('cog.spatial.navigation', ('wayfinding', 'navigation')),
+    ('affect.preference', ('preference', 'liking')),
+    ('affect.satisfaction', ('satisfaction',)),
+    ('affect.comfort', ('comfort', 'thermal comfort', 'visual comfort', 'acoustic comfort')),
+    ('affect.soundscape', ('soundscape experience', 'emotional experience')),
+    ('spatial_behavior.place_attachment', ('place attachment',)),
+    ('neural', ('eeg', 'fmri', 'bold', 'ern', 'alpha', 'theta', 'oscillation', 'functional connectivity', 'brain entropy')),
+    ('cog.physiology', ('electrodermal', 'eda', 'pulse oximeter', 'heart rate variability', 'hrv', 'heart rate')),
+]
+THEORETICAL_ARTICLE_TYPES = {'theoretical', 'review_article', 'book'}
+THEORY_OVERLAY_MARKERS = (
+    'overview', 'review', 'theory', 'framework', 'conceptual', 'approach',
+    'introduction', 'seeking common ground', 'way of knowing', 'design',
+)
+SAFE_TOPIC_EXCLUSION_RE = re.compile(
+    r'heisenberg|medical images|psychopathology|fukushima|u\(1\)|developable surface|habit-formation|not for distribution|metamaterials',
+    re.I,
+)
+
+try:
+    from src.services.environment_taxonomy import ENVIRONMENT_HIERARCHY, get_related
+except Exception:
+    ENVIRONMENT_HIERARCHY = {}
+
+    def get_related(_env_id):
+        return []
+
+try:
+    from src.services.dv_generalization import DVAccessLevel, get_dv_node
+except Exception:
+    DVAccessLevel = None
+
+    def get_dv_node(_node_id):
+        return None
+
 
 def slugify(text: str) -> str:
     return ''.join(ch.lower() if ch.isalnum() else '_' for ch in text).strip('_')[:80]
@@ -166,12 +324,306 @@ def humanize(text):
     return str(text).replace('theory_', '').replace('_', ' ').replace('.', ' ').strip().title()
 
 
+def clean_topic_candidate(value):
+    text = ' '.join(str(value or '').split()).strip()
+    if not text:
+        return ''
+    lowered = text.lower()
+    if lowered in {'unknown', 'claim'}:
+        return ''
+    if len(text) > 96:
+        return ''
+    if text.count(' ') > 10 and not any(marker in lowered for marker in ['theory', 'framework', 'model']):
+        return ''
+    if text.startswith('theory_') or '_' in text:
+        text = text.replace('theory_', '').replace('_', ' ')
+    return text.strip()
+
+
 def canonical_warrant_display(value):
     token = str(value or '').strip().lower()
     if not token:
         return 'Unknown'
     label = humanize(token)
     return label.replace('Theory Derived', 'Theory-Derived')
+
+
+def split_csvish(text):
+    return [part.strip() for part in str(text or '').split(',') if part.strip()]
+
+
+def normalize_taxonomy_id(value):
+    raw = str(value or '').strip()
+    if not raw:
+        return ''
+    lowered = raw.lower()
+    if lowered in {'n/a', 'na', 'none', 'unknown', 'null'}:
+        return ''
+    parts = []
+    for segment in raw.split('.'):
+        token = TAXONOMY_SEGMENT_RE.sub('_', segment.lower()).strip('_')
+        if not token or len(token) > 32:
+            return ''
+        parts.append(token)
+    if not parts or len(parts) > 5:
+        return ''
+    return '.'.join(parts)
+
+
+def iv_root_label(root_id):
+    return IV_ROOT_LABELS.get(root_id, humanize(root_id or 'Unspecified'))
+
+
+def iv_root_description(root_id):
+    if root_id in IV_ROOT_DESCRIPTIONS:
+        return IV_ROOT_DESCRIPTIONS[root_id]
+    if root_id in ENVIRONMENT_HIERARCHY:
+        return ENVIRONMENT_HIERARCHY.get(root_id, {}).get('_description') or ''
+    return ''
+
+
+def dv_root_label(root_id):
+    return DV_ROOT_LABELS.get(root_id, humanize(root_id or 'Unspecified'))
+
+
+def iv_node_label(node_id):
+    node = str(node_id or '').strip()
+    if not node:
+        return 'Unspecified Environment'
+    if node == 'unspecified.environment':
+        return 'Unspecified Environment'
+    parts = node.split('.')
+    if len(parts) == 1:
+        return iv_root_label(parts[0])
+    return humanize(parts[-1])
+
+
+def dv_focus_label(node_id):
+    node = str(node_id or '').strip()
+    if not node:
+        return 'Unspecified Outcome'
+    if node == 'unspecified.outcome':
+        return 'Unspecified Outcome'
+    dv_node = get_dv_node(node)
+    if dv_node and getattr(dv_node, 'label', None):
+        return dv_node.label
+    return humanize(node.split('.')[-1])
+
+
+def canonical_iv_node(raw_value):
+    node_id = normalize_taxonomy_id(raw_value)
+    if not node_id:
+        return 'unspecified.environment'
+    return node_id
+
+
+def canonical_iv_root(node_id):
+    value = str(node_id or 'unspecified.environment').strip()
+    if not value:
+        return 'unspecified'
+    return value.split('.')[0]
+
+
+def canonical_dv_node(raw_value):
+    node_id = normalize_taxonomy_id(raw_value)
+    if not node_id:
+        return 'unspecified.outcome'
+    return node_id
+
+
+def canonical_dv_focus(raw_value):
+    node_id = canonical_dv_node(raw_value)
+    if node_id == 'unspecified.outcome':
+        return node_id
+
+    dv_node = get_dv_node(node_id)
+    if dv_node and DVAccessLevel is not None:
+        access_level = getattr(dv_node, 'access_level', None)
+        parent_id = getattr(dv_node, 'parent_id', None)
+        if access_level != DVAccessLevel.UNSPECIFIED and parent_id:
+            return parent_id
+        return node_id
+
+    parts = node_id.split('.')
+    for index, segment in enumerate(parts):
+        if segment in DV_FOCUS_TOKENS:
+            return '.'.join(parts[:index + 1])
+    if parts[-1] in MEASUREMENT_LEAF_TOKENS and len(parts) > 1:
+        return '.'.join(parts[:-1])
+    if len(parts) >= 4:
+        return '.'.join(parts[:3])
+    return node_id
+
+
+def canonical_dv_root(node_id):
+    value = str(node_id or 'unspecified.outcome').strip()
+    if not value:
+        return 'unspecified'
+    return value.split('.')[0]
+
+
+def topic_display_label(iv_node, dv_focus):
+    return f"{iv_node_label(iv_node)} -> {dv_focus_label(dv_focus)}"
+
+
+def topic_iv_focus(node_id):
+    node = canonical_iv_node(node_id)
+    if node == 'unspecified.environment':
+        return node
+    parts = node.split('.')
+    if len(parts) >= 2:
+        return '.'.join(parts[:2])
+    return node
+
+
+def topic_text_blob(article):
+    return ' '.join(
+        str(part or '')
+        for part in [
+            article.get('title'),
+            article.get('abstract'),
+            article.get('main_conclusion'),
+            article.get('primary_topic'),
+            ' '.join(article.get('theories') or []),
+            ' '.join(article.get('constructs') or []),
+            ' '.join(article.get('instruments') or []),
+            article.get('sensor_summary'),
+        ]
+    ).lower()
+
+
+def infer_nodes_from_text(text, patterns, weight=1.0):
+    out = Counter()
+    haystack = str(text or '').lower()
+    if not haystack:
+        return out
+    for node_id, hints in patterns:
+        for hint in hints:
+            if hint in haystack:
+                out[node_id] += weight
+    return out
+
+
+def row_iv_scores(row, article):
+    scores = Counter()
+    node_id = topic_iv_focus(row.get('iv_node_id'))
+    if node_id != 'unspecified.environment':
+        scores[node_id] += 1.25 + (0.1 * node_id.count('.'))
+    scores.update(infer_nodes_from_text(row.get('iv_raw') or '', IV_TEXT_HINTS, 1.6))
+    if not scores:
+        scores.update(infer_nodes_from_text(article.get('title') or '', IV_TEXT_HINTS, 0.9))
+    return scores
+
+
+def row_dv_scores(row, article):
+    scores = Counter()
+    raw_value = str(row.get('dv_raw') or '').lower()
+    focus = canonical_dv_focus(row.get('dv_node_id'))
+    if focus not in LOW_INFO_DV_FOCI and not any(marker in raw_value for marker in LOW_CONFIDENCE_DV_RAW_MARKERS):
+        scores[focus] += 1.2 + (0.1 * focus.count('.'))
+    scores.update(infer_nodes_from_text(raw_value, DV_TEXT_HINTS, 1.6))
+    if not scores:
+        scores.update(infer_nodes_from_text(article.get('title') or '', DV_TEXT_HINTS, 0.9))
+    return scores
+
+
+def article_iv_scores(article):
+    scores = Counter()
+    scores.update(infer_nodes_from_text(article.get('title') or '', IV_TEXT_HINTS, 1.0))
+    scores.update(infer_nodes_from_text(article.get('abstract') or '', IV_TEXT_HINTS, 0.6))
+    scores.update(infer_nodes_from_text(article.get('main_conclusion') or '', IV_TEXT_HINTS, 0.5))
+    return Counter({topic_iv_focus(node): score for node, score in scores.items() if topic_iv_focus(node) != 'unspecified.environment'})
+
+
+def article_dv_scores(article):
+    scores = Counter()
+    scores.update(infer_nodes_from_text(article.get('title') or '', DV_TEXT_HINTS, 1.0))
+    scores.update(infer_nodes_from_text(article.get('abstract') or '', DV_TEXT_HINTS, 0.6))
+    scores.update(infer_nodes_from_text(article.get('main_conclusion') or '', DV_TEXT_HINTS, 0.5))
+    sensor_text = str(article.get('sensor_summary') or '').lower()
+    if 'eeg' in sensor_text or 'fmri' in sensor_text:
+        scores['neural'] += 0.8
+    if any(token in sensor_text for token in ('heart rate', 'hrv', 'electrodermal', 'eda', 'cortisol')):
+        scores['affect.negative.stress'] += 0.6
+    return Counter({node: score for node, score in scores.items() if node not in LOW_INFO_DV_FOCI})
+
+
+def choose_topic_pairs_for_article(article, rows_for_paper):
+    iv_scores = Counter()
+    dv_scores = Counter()
+    pair_scores = Counter()
+
+    for row in rows_for_paper:
+        iv_row = row_iv_scores(row, article)
+        dv_row = row_dv_scores(row, article)
+        iv_scores.update(iv_row)
+        dv_scores.update(dv_row)
+        if iv_row and dv_row:
+            best_iv, best_iv_score = iv_row.most_common(1)[0]
+            best_dv, best_dv_score = dv_row.most_common(1)[0]
+            if best_iv != 'unspecified.environment' and best_dv not in LOW_INFO_DV_FOCI:
+                pair_scores[(best_iv, best_dv)] += min(best_iv_score, best_dv_score)
+
+    iv_scores.update(article_iv_scores(article))
+    dv_scores.update(article_dv_scores(article))
+
+    overlay_text = topic_text_blob(article)
+    if not any(node not in LOW_INFO_DV_FOCI for node in dv_scores):
+        if any(marker in overlay_text for marker in THEORY_OVERLAY_MARKERS):
+            dv_scores['mechanism_or_pathway'] += 1.1
+
+    if not pair_scores:
+        best_ivs = [node for node, _ in iv_scores.most_common(2) if node != 'unspecified.environment']
+        best_dvs = [node for node, _ in dv_scores.most_common(3) if node not in LOW_INFO_DV_FOCI]
+        for iv_node in best_ivs[:2]:
+            for dv_node in best_dvs[:2]:
+                pair_scores[(iv_node, dv_node)] += 0.75 + 0.1 * iv_scores[iv_node] + 0.1 * dv_scores[dv_node]
+
+    ranked_pairs = []
+    for (iv_node, dv_node), pair_score in pair_scores.items():
+        if iv_node == 'unspecified.environment' or dv_node in LOW_INFO_DV_FOCI:
+            continue
+        quality = pair_score + (0.15 * iv_scores.get(iv_node, 0)) + (0.15 * dv_scores.get(dv_node, 0))
+        ranked_pairs.append((iv_node, dv_node, quality))
+
+    ranked_pairs.sort(key=lambda row: (-row[2], row[0], row[1]))
+
+    memberships = []
+    if ranked_pairs:
+        top_score = ranked_pairs[0][2]
+        for iv_node, dv_node, score in ranked_pairs:
+            if len(memberships) >= 3:
+                break
+            if score < max(0.9, top_score * 0.55):
+                continue
+            memberships.append((iv_node, dv_node, score))
+
+    visible = bool(memberships)
+    missing_iv = not any(node != 'unspecified.environment' for node in iv_scores)
+    missing_dv = not any(node not in LOW_INFO_DV_FOCI for node in dv_scores)
+    if not visible:
+        missing_iv = True if not iv_scores else missing_iv
+        missing_dv = True if not dv_scores else missing_dv
+
+    return {
+        'memberships': memberships,
+        'iv_scores': iv_scores,
+        'dv_scores': dv_scores,
+        'missing_iv': missing_iv,
+        'missing_dv': missing_dv,
+    }
+
+
+def should_exclude_from_topic_view(article, missing_iv, missing_dv):
+    if not (missing_iv and missing_dv):
+        return False
+    title = str(article.get('title') or '')
+    if SAFE_TOPIC_EXCLUSION_RE.search(title):
+        return True
+    article_type = str(article.get('article_type') or '').strip().lower()
+    if article_type == 'not_applicable' and int(article.get('claim_count') or 0) <= 1:
+        return True
+    return False
 
 
 def _primary_bridge_type(article_type):
@@ -931,38 +1383,61 @@ def classify_front(front):
     return 'Environmental'
 
 
+def load_front_records():
+    return load_json(FRONTS_PATH, {}).get('fronts') or []
+
+
+def summarize_front(front):
+    label = front.get('label') or front.get('front_id') or 'Unlabeled front'
+    cat = classify_front(front)
+    size = int(front.get('size') or len(front.get('papers') or []))
+    voi = round(float(front.get('mean_omega') or 0.0), 3)
+    papers = [str(paper_id).strip() for paper_id in (front.get('papers') or []) if str(paper_id).strip()]
+    shared_theories = [
+        token.replace('theory_', '').replace('_', ' ')
+        for token in (front.get('shared_theories') or [])
+        if str(token).strip()
+    ]
+    shared_constructs = [
+        token.replace('.', ' ').replace('_', ' ')
+        for token in (front.get('shared_constructs') or [])
+        if str(token).strip()
+    ]
+    desc_bits = []
+    if shared_theories:
+        desc_bits.append('Theories: ' + ', '.join(shared_theories[:3]))
+    if shared_constructs:
+        desc_bits.append('Constructs: ' + ', '.join(shared_constructs[:4]))
+    desc_bits.append(f"Maturity: {front.get('maturity', 'unknown')}.")
+    desc = ' '.join(desc_bits) if desc_bits else 'Research front from the current rebuild.'
+    return {
+        'id': front.get('front_id') or slugify(label),
+        'cat': cat,
+        'n': size,
+        'voi': voi,
+        'name': label,
+        'desc': desc,
+        'maturity': front.get('maturity', 'unknown'),
+        'shared_theories': shared_theories,
+        'shared_constructs': shared_constructs,
+        'contradictions': int(front.get('n_contradictions') or 0),
+        'replications': int(front.get('n_replications') or 0),
+        'paper_ids': papers,
+    }
+
+
 def load_fronts():
-    obj = json.loads(FRONTS_PATH.read_text())
-    fronts = obj.get('fronts', [])
+    fronts = load_front_records()
     topic_payload = []
     gap_payload = []
+    unique_papers = set()
     for front in fronts:
-        label = front.get('label') or front.get('front_id') or 'Unlabeled front'
-        cat = classify_front(front)
-        size = int(front.get('size') or len(front.get('papers') or []))
-        voi = round(float(front.get('mean_omega') or 0.0), 2)
-        desc_bits = []
-        theories = front.get('shared_theories') or []
-        constructs = front.get('shared_constructs') or []
-        if theories:
-            desc_bits.append('Theories: ' + ', '.join(t.replace('theory_', '').replace('_', ' ') for t in theories[:3]))
-        if constructs:
-            desc_bits.append('Constructs: ' + ', '.join(c.replace('_', ' ') for c in constructs[:4]))
-        desc_bits.append(f"Maturity: {front.get('maturity', 'unknown')}.")
-        desc = ' '.join(desc_bits) if desc_bits else 'Research front from the current rebuild.'
-        topic_payload.append({
-            'id': front.get('front_id') or slugify(label),
-            'cat': cat,
-            'n': size,
-            'voi': voi,
-            'name': label,
-            'desc': desc,
-            'maturity': front.get('maturity', 'unknown'),
-            'shared_theories': theories,
-            'shared_constructs': constructs,
-            'contradictions': int(front.get('n_contradictions') or 0),
-            'replications': int(front.get('n_replications') or 0),
-        })
+        topic = summarize_front(front)
+        label = topic['name']
+        size = topic['n']
+        voi = round(float(topic.get('voi') or 0.0), 2)
+        unique_papers.update(topic.get('paper_ids') or [])
+        topic_payload.append(topic)
         if size <= 8 or front.get('maturity') != 'established' or int(front.get('n_contradictions') or 0) > 0:
             if voi >= 0.7:
                 voi_label = 'high'
@@ -972,11 +1447,11 @@ def load_fronts():
                 voi_label = 'low'
             gap_type = 'untested' if size <= 8 else 'conflict' if int(front.get('n_contradictions') or 0) > 0 else 'credence'
             gap_payload.append({
-                'id': front.get('front_id') or slugify(label),
+                'id': topic['id'],
                 'type': gap_type,
                 'title': label,
-                'description': desc,
-                'construct': slugify((constructs[0] if constructs else cat).replace('.', ' ')),
+                'description': topic['desc'],
+                'construct': slugify(((topic.get('shared_constructs') or [topic['cat']])[0]).replace('.', ' ')),
                 'context': 'multiple',
                 'voi': voi_label,
                 'credence': voi,
@@ -986,7 +1461,301 @@ def load_fronts():
             })
     topic_payload.sort(key=lambda x: (-x['voi'], -x['n'], x['name']))
     gap_payload.sort(key=lambda x: ({'high':0,'medium':1,'low':2}[x['voi']], x['title']))
-    return topic_payload, gap_payload
+    return topic_payload, gap_payload, {
+        'front_count': len(topic_payload),
+        'unique_paper_count': len(unique_papers),
+    }
+
+
+def build_front_membership(fronts):
+    paper_to_fronts = defaultdict(list)
+    for front in fronts:
+        summary = summarize_front(front)
+        article_front = {
+            'id': summary['id'],
+            'name': summary['name'],
+            'cat': summary['cat'],
+            'voi': summary['voi'],
+            'n': summary['n'],
+            'maturity': summary['maturity'],
+            'contradictions': summary['contradictions'],
+            'replications': summary['replications'],
+            'shared_theories': list(summary.get('shared_theories') or [])[:6],
+            'shared_constructs': list(summary.get('shared_constructs') or [])[:6],
+        }
+        for paper_id in summary.get('paper_ids') or []:
+            paper_to_fronts[paper_id].append(article_front)
+    for fronts_for_paper in paper_to_fronts.values():
+        fronts_for_paper.sort(key=lambda row: (-(row.get('voi') or 0), -(row.get('n') or 0), row.get('name') or ''))
+    return dict(paper_to_fronts)
+
+
+def load_registry_lookup():
+    lookup = {}
+    if not REGISTRY_DB_PATH.exists():
+        return lookup
+    conn = sqlite3.connect(REGISTRY_DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+    for row in cur.execute(
+        """
+        SELECT
+            paper_id,
+            has_figures,
+            has_tables,
+            has_stimuli,
+            has_experimental_context_images,
+            has_sensor_data,
+            sensor_summary,
+            crop_needed,
+            crop_status,
+            package_root,
+            package_json_path,
+            pdf_path,
+            ocr_path,
+            mathpix_path,
+            pageimages_200_path
+        FROM gold_papers
+        WHERE accepted_for_rebuild = 1
+        """
+    ):
+        paper_id = str(row['paper_id'] or '').strip()
+        if not paper_id:
+            continue
+        lookup[paper_id] = {
+            'has_sensor_data': bool(row['has_sensor_data']),
+            'sensor_summary': compact_text(row['sensor_summary'] or '', 220),
+            'asset_profile': {
+                'has_figures': bool(row['has_figures']),
+                'has_tables': bool(row['has_tables']),
+                'has_stimuli': bool(row['has_stimuli']),
+                'has_experimental_context_images': bool(row['has_experimental_context_images']),
+                'crop_needed': bool(row['crop_needed']),
+                'crop_status': row['crop_status'] or '',
+            },
+            'source_bundle': {
+                'package_root': row['package_root'] or '',
+                'package_json_path': row['package_json_path'] or '',
+                'pdf_path': row['pdf_path'] or '',
+                'ocr_path': row['ocr_path'] or '',
+                'mathpix_path': row['mathpix_path'] or '',
+                'pageimages_200_path': row['pageimages_200_path'] or '',
+            },
+        }
+    conn.close()
+    return lookup
+
+
+def _argumentation_paper_summary():
+    return {
+        'claim_count': 0,
+        'direct_support_edges': 0,
+        'direct_attack_edges': 0,
+        'incoming_support_total': 0,
+        'incoming_attack_total': 0,
+        'contested_claim_count': 0,
+        'defeated_claim_count': 0,
+        'dominant_stance': '',
+        'theories': [],
+        'top_attack_schemes': [],
+        'search_target_count': 0,
+        'top_search_targets': [],
+    }
+
+
+def load_argumentation_indexes():
+    paper_graph = load_json(ARG_GRAPH_PATH, {})
+    claim_graph = load_json(CLAIM_ARG_GRAPH_PATH, {})
+    targets_payload = load_json(CLAIM_ARG_TARGETS_PATH, {})
+
+    paper_nodes_raw = paper_graph.get('nodes') or {}
+    paper_nodes = list(paper_nodes_raw.values()) if isinstance(paper_nodes_raw, dict) else list(paper_nodes_raw)
+    claim_nodes_raw = claim_graph.get('nodes') or {}
+    claim_nodes = list(claim_nodes_raw.values()) if isinstance(claim_nodes_raw, dict) else list(claim_nodes_raw)
+
+    paper_index = {}
+    belief_index = {}
+    claim_node_by_id = {}
+    paper_targets = defaultdict(list)
+    belief_targets = {}
+    belief_attacks = defaultdict(list)
+    belief_supports = defaultdict(list)
+    attack_scheme_counts = Counter()
+
+    for node in paper_nodes:
+        paper_id = str(node.get('paper_id') or node.get('belief_id') or '').strip()
+        if not paper_id:
+            continue
+        paper_index[paper_id] = {
+            **_argumentation_paper_summary(),
+            'claim_count': int(node.get('claim_count') or 0),
+            'dominant_stance': node.get('dominant_stance') or '',
+            'theories': list(node.get('theories') or [])[:8],
+        }
+
+    for node in claim_nodes:
+        belief_id = str(node.get('belief_id') or '').strip()
+        paper_id = str(node.get('paper_id') or '').strip()
+        if not belief_id or not paper_id:
+            continue
+        claim_node_by_id[belief_id] = node
+        summary = paper_index.setdefault(paper_id, _argumentation_paper_summary())
+        support_count = int(node.get('incoming_support_count') or 0)
+        attack_count = int(node.get('incoming_attack_count') or 0)
+        summary['incoming_support_total'] += support_count
+        summary['incoming_attack_total'] += attack_count
+        if attack_count > 0:
+            summary['contested_claim_count'] += 1
+        if str(node.get('warrant_status') or '').upper() == 'DEFEATED':
+            summary['defeated_claim_count'] += 1
+        belief_index[belief_id] = {
+            'belief_id': belief_id,
+            'paper_id': paper_id,
+            'content_preview': compact_text(node.get('content_preview') or node.get('content') or '', 220),
+            'incoming_support_count': support_count,
+            'incoming_attack_count': attack_count,
+            'qualifier': node.get('qualifier') or node.get('node_qualifier') or '',
+            'warrant_status': node.get('warrant_status') or '',
+            'defeat_type': node.get('defeat_type') or '',
+            'claim_type': node.get('claim_type') or '',
+            'article_family': node.get('article_family') or '',
+            'direction_of_effect': node.get('direction_of_effect') or '',
+        }
+
+    for target in targets_payload.get('targets') or []:
+        belief_id = str(target.get('belief_id') or '').strip()
+        paper_id = str(target.get('paper_id') or '').strip()
+        if not belief_id or not paper_id:
+            continue
+        target_row = {
+            'belief_id': belief_id,
+            'paper_id': paper_id,
+            'warrant_status': target.get('warrant_status') or '',
+            'target_kind': target.get('target_kind') or '',
+            'priority_score': float(target.get('priority_score') or 0.0),
+            'review_urgency': target.get('review_urgency') or '',
+            'conflict_count': int(target.get('conflict_count') or 0),
+            'support_count': int(target.get('support_count') or 0),
+            'defeat_types': list(target.get('defeat_types') or []),
+            'attack_scheme_hints': list(target.get('attack_scheme_hints') or []),
+            'resolution_question': compact_text(target.get('resolution_question') or '', 240),
+            'search_query': compact_text(target.get('search_query') or '', 240),
+            'reason': compact_text(target.get('reason') or '', 180),
+        }
+        belief_targets[belief_id] = target_row
+        paper_targets[paper_id].append(target_row)
+
+    attack_examples = []
+    for edge in claim_graph.get('edges') or []:
+        target_id = str(edge.get('target') or '').strip()
+        source_id = str(edge.get('source') or '').strip()
+        relation = str(edge.get('relation') or '').strip().lower()
+        target_node = claim_node_by_id.get(target_id, {})
+        source_node = claim_node_by_id.get(source_id, {})
+        target_paper_id = str(target_node.get('paper_id') or '').strip()
+        if target_paper_id:
+            paper_index.setdefault(target_paper_id, _argumentation_paper_summary())
+            if relation == 'attack':
+                paper_index[target_paper_id]['direct_attack_edges'] += 1
+            elif relation == 'support':
+                paper_index[target_paper_id]['direct_support_edges'] += 1
+        example = {
+            'source': source_id,
+            'target': target_id,
+            'source_paper_id': str(source_node.get('paper_id') or '').strip(),
+            'target_paper_id': target_paper_id,
+            'source_preview': compact_text(source_node.get('content_preview') or source_node.get('content') or '', 160),
+            'target_preview': compact_text(target_node.get('content_preview') or target_node.get('content') or '', 160),
+            'scheme_hint': edge.get('scheme_hint') or '',
+            'qualifier': edge.get('qualifier') or '',
+            'defeat_type': edge.get('defeat_type') or '',
+            'strength': round(float(edge.get('strength') or 0.0), 3),
+            'critical_question_hints': list(edge.get('critical_question_hints') or [])[:3],
+        }
+        if relation == 'attack':
+            attack_scheme_counts[example['scheme_hint'] or 'unspecified_attack'] += 1
+            attack_examples.append(example)
+            belief_attacks[target_id].append(example)
+        elif relation == 'support':
+            belief_supports[target_id].append(example)
+
+    for paper_id, targets in paper_targets.items():
+        targets.sort(key=lambda row: (-(row.get('priority_score') or 0), row.get('belief_id') or ''))
+        scheme_counter = Counter()
+        for row in targets:
+            for hint in row.get('attack_scheme_hints') or []:
+                scheme_counter[hint] += 1
+        summary = paper_index.setdefault(paper_id, _argumentation_paper_summary())
+        summary['search_target_count'] = len(targets)
+        summary['top_search_targets'] = targets[:3]
+        summary['top_attack_schemes'] = [name for name, _ in scheme_counter.most_common(3)]
+
+    attack_examples.sort(key=lambda row: (-row['strength'], row['target']))
+    return {
+        'paper_graph': paper_graph,
+        'claim_graph': claim_graph,
+        'paper_nodes': paper_nodes,
+        'claim_nodes': claim_nodes,
+        'paper_index': paper_index,
+        'belief_index': belief_index,
+        'belief_targets': belief_targets,
+        'paper_targets': dict(paper_targets),
+        'belief_attacks': dict(belief_attacks),
+        'belief_supports': dict(belief_supports),
+        'attack_scheme_counts': attack_scheme_counts,
+        'attack_examples': attack_examples,
+    }
+
+
+def build_related_papers(articles):
+    for article in articles:
+        primary_front = (article.get('primary_front') or {}).get('id')
+        front_ids = {front.get('id') for front in (article.get('fronts') or []) if front.get('id')}
+        theories = {str(value).lower() for value in (article.get('theories') or []) if str(value).strip()}
+        constructs = {str(value).lower() for value in (article.get('constructs') or []) if str(value).strip()}
+        instruments = {str(value).lower() for value in (article.get('instruments') or []) if str(value).strip()}
+        candidates = []
+        for other in articles:
+            if other.get('paper_id') == article.get('paper_id'):
+                continue
+            score = 0
+            reasons = []
+            other_primary_front = (other.get('primary_front') or {}).get('id')
+            other_front_ids = {front.get('id') for front in (other.get('fronts') or []) if front.get('id')}
+            shared_fronts = front_ids & other_front_ids
+            if primary_front and other_primary_front and primary_front == other_primary_front:
+                score += 4
+                reasons.append((article.get('primary_front') or {}).get('name') or 'shared front')
+            elif shared_fronts:
+                score += 2 * len(shared_fronts)
+                reasons.append('shared research front')
+            shared_theories = theories & {str(value).lower() for value in (other.get('theories') or []) if str(value).strip()}
+            if shared_theories:
+                score += min(2, len(shared_theories))
+                reasons.append('shared theory')
+            shared_constructs = constructs & {str(value).lower() for value in (other.get('constructs') or []) if str(value).strip()}
+            if shared_constructs:
+                score += min(2, len(shared_constructs))
+                reasons.append('shared construct')
+            shared_instruments = instruments & {str(value).lower() for value in (other.get('instruments') or []) if str(value).strip()}
+            if shared_instruments:
+                score += 1
+                reasons.append('shared instrument')
+            if article.get('has_sensor_data') and other.get('has_sensor_data'):
+                score += 1
+                reasons.append('sensor-rich method family')
+            if score <= 0:
+                continue
+            candidates.append({
+                'paper_id': other.get('paper_id'),
+                'title': other.get('title'),
+                'score': score,
+                'reason': ', '.join(dict.fromkeys(reasons)),
+                'primary_front': (other.get('primary_front') or {}).get('name') or '',
+            })
+        candidates.sort(key=lambda row: (-row['score'], row['paper_id']))
+        article['related_papers'] = candidates[:4]
+    return articles
 
 
 def parse_claims():
@@ -994,6 +1763,9 @@ def parse_claims():
     paper_claims = defaultdict(list)
     paper_meta = {}
     belief_lookup = load_rebuild_belief_lookup()
+    front_membership = build_front_membership(load_front_records())
+    registry_lookup = load_registry_lookup()
+    argumentation = load_argumentation_indexes()
     repairs = load_bibliographic_repairs()
     deep_stats = load_deep_stat_adjudications()
     abstract_adjudications = load_abstract_adjudications()
@@ -1074,55 +1846,83 @@ def parse_claims():
                 }
             if pid:
                 paper_claims[pid].append(obj)
-            if len(evidence) < 200:
-                result_sentence = result.get('result_sentence') or ''
-                fallback_finding = result_sentence or ' -> '.join(
-                    x for x in [result.get('comparison'), result.get('outcome')] if x
-                )
-                outcome_tags = obj.get('outcome_tags') or []
-                construct_label = ''
-                if outcome_tags:
-                    construct_label = humanize(outcome_tags[0].get('canonical'))
-                if not construct_label:
-                    construct_label = compact_text(result.get('outcome') or obj.get('dv') or 'Unknown', 80)
-                raw_warrant_type = (
-                    (obj.get('evidence_profile') or {}).get('warrant_type')
-                    or obj.get('warrant_type')
-                    or ''
-                )
-                canonical_warrant_type = (
-                    ((belief_state.get('omega_json') or {}).get('bridge_type'))
-                    or derive_canonical_bridge_type(obj)
-                )
-                warrant_label = canonical_warrant_display(canonical_warrant_type)
-                methodology_summary = summarize_methodology(obj.get('method_profile_excerpt'), obj.get('article_type'))
-                evidence.append({
-                    'id': len(evidence) + 1,
-                    'finding': compact_text(statement or fallback_finding or pid, 220),
-                    'construct': construct_label,
-                    'signal': humanize(obj.get('evidence_strength_class') or obj.get('claim_type') or 'Claim'),
-                    'studyType': humanize(obj.get('article_type') or 'Unknown'),
-                    'warrant': warrant_label,
-                    'warrant_class': canonical_warrant_type,
-                    'warrant_discount': BRIDGE_DISCOUNT_BY_VALUE.get(canonical_warrant_type),
-                    'extraction_warrant_type': raw_warrant_type,
-                    'article_type_warrant_family': _primary_bridge_type(obj.get('article_type')),
-                    'claim_role': obj.get('claim_role') or '',
-                    'credence': round(float(belief_state.get('credence_value', obj.get('severity') or 0.5)), 2),
-                    'year': sanitize_year(repair.get('year') or obj.get('year')) or '',
-                    'citation': pid,
-                    'abstract': compact_text(paper_meta[pid]['abstract'] or 'Abstract not yet recovered from the current rebuild.', 500),
-                    'claim': compact_text(statement or fallback_finding or pid, 260),
-                    'methodology': methodology_summary,
-                    'warrant_chain': compose_warrant_chain(
-                        canonical_warrant_type,
-                        raw_warrant_type,
-                        result,
-                        obj.get('claim_role'),
-                    ),
-                    'paper_id': pid,
-                    'front_id': obj.get('topic_label') or obj.get('finding_id') or '',
-                })
+            result_sentence = result.get('result_sentence') or ''
+            fallback_finding = result_sentence or ' -> '.join(
+                x for x in [result.get('comparison'), result.get('outcome')] if x
+            )
+            outcome_tags = obj.get('outcome_tags') or []
+            construct_label = ''
+            if outcome_tags:
+                construct_label = humanize(outcome_tags[0].get('canonical'))
+            if not construct_label:
+                construct_label = compact_text(result.get('outcome') or obj.get('dv') or 'Unknown', 80)
+            raw_warrant_type = (
+                (obj.get('evidence_profile') or {}).get('warrant_type')
+                or obj.get('warrant_type')
+                or ''
+            )
+            canonical_warrant_type = (
+                ((belief_state.get('omega_json') or {}).get('bridge_type'))
+                or derive_canonical_bridge_type(obj)
+            )
+            warrant_label = canonical_warrant_display(canonical_warrant_type)
+            methodology_summary = summarize_methodology(obj.get('method_profile_excerpt'), obj.get('article_type'))
+            paper_fronts = front_membership.get(pid) or []
+            primary_front = paper_fronts[0] if paper_fronts else {}
+            registry_row = registry_lookup.get(pid, {})
+            belief_arg = argumentation['belief_index'].get(belief_id, {})
+            target_row = argumentation['belief_targets'].get(belief_id, {})
+            primary_topic = (
+                primary_front.get('name')
+                or clean_topic_candidate(construct_label)
+                or clean_topic_candidate((paper_meta[pid].get('theories') or [''])[0])
+                or humanize(obj.get('article_type') or 'Paper')
+            )
+            evidence.append({
+                'id': len(evidence) + 1,
+                'finding': compact_text(statement or fallback_finding or pid, 220),
+                'construct': construct_label,
+                'signal': humanize(obj.get('evidence_strength_class') or obj.get('claim_type') or 'Claim'),
+                'studyType': humanize(obj.get('article_type') or 'Unknown'),
+                'warrant': warrant_label,
+                'warrant_class': canonical_warrant_type,
+                'warrant_discount': BRIDGE_DISCOUNT_BY_VALUE.get(canonical_warrant_type),
+                'extraction_warrant_type': raw_warrant_type,
+                'article_type_warrant_family': _primary_bridge_type(obj.get('article_type')),
+                'claim_role': obj.get('claim_role') or '',
+                'credence': round(float(belief_state.get('credence_value', obj.get('severity') or 0.5)), 2),
+                'year': sanitize_year(repair.get('year') or obj.get('year')) or '',
+                'citation': (
+                    paper_meta[pid].get('apa_citation')
+                    or format_apa_citation(paper_meta[pid].get('authors'), paper_meta[pid].get('year'), paper_meta[pid].get('title'), paper_meta[pid].get('doi'))
+                    or pid
+                ),
+                'paper_title': paper_meta[pid].get('title') or pid,
+                'abstract': compact_text(paper_meta[pid]['abstract'] or 'Abstract not yet recovered from the current rebuild.', 500),
+                'claim': compact_text(statement or fallback_finding or pid, 260),
+                'methodology': methodology_summary,
+                'warrant_chain': compose_warrant_chain(
+                    canonical_warrant_type,
+                    raw_warrant_type,
+                    result,
+                    obj.get('claim_role'),
+                ),
+                'paper_id': pid,
+                'front_id': primary_front.get('id') or '',
+                'primary_front': primary_front.get('name') or '',
+                'primary_topic': primary_topic,
+                'fronts': [front.get('name') for front in paper_fronts[:3]],
+                'has_sensor_data': bool(registry_row.get('has_sensor_data')),
+                'sensor_summary': registry_row.get('sensor_summary') or '',
+                'support_count': int(belief_arg.get('incoming_support_count') or 0),
+                'attack_count': int(belief_arg.get('incoming_attack_count') or 0),
+                'qualifier': belief_arg.get('qualifier') or '',
+                'warrant_status': belief_arg.get('warrant_status') or '',
+                'defeat_type': belief_arg.get('defeat_type') or '',
+                'resolution_question': target_row.get('resolution_question') or '',
+                'review_urgency': target_row.get('review_urgency') or '',
+                'search_query': target_row.get('search_query') or '',
+            })
     articles = []
     for pid, claims in paper_claims.items():
         meta = paper_meta.get(pid, {'paper_id': pid, 'title': pid, 'doi': '', 'abstract': '', 'theories': []})
@@ -1144,11 +1944,25 @@ def parse_claims():
                 measure_counter[m] += 1
             for label in detect_instruments(c):
                 measure_counter[label] += 1
-        top_theories = [t.replace('theory_', '').replace('_', ' ') for t, _ in theory_counter.most_common(4)]
+        top_theories = [
+            clean_topic_candidate(t)
+            for t, _ in theory_counter.most_common(6)
+            if clean_topic_candidate(t)
+        ][:4]
         top_constructs = [humanize(t) for t, _ in construct_counter.most_common(4) if t]
         top_measures = [humanize(t) for t, _ in measure_counter.most_common(3) if t]
         representative = claims[0] if claims else {}
         representative_result = representative.get('structured_result_row') or {}
+        paper_fronts = front_membership.get(pid) or []
+        primary_front = paper_fronts[0] if paper_fronts else {}
+        registry_row = registry_lookup.get(pid, {})
+        paper_arg = dict(argumentation['paper_index'].get(pid, _argumentation_paper_summary()))
+        paper_arg['claim_count'] = len(claims)
+        paper_arg['theories'] = [
+            value.replace('theory_', '').replace('_', ' ')
+            for value in (paper_arg.get('theories') or [])
+            if str(value).strip()
+        ][:6]
         visual_support_gallery, technical_results_table = build_visual_support_for_paper(
             pid,
             meta.get('article_type') or representative.get('article_type') or '',
@@ -1164,6 +1978,7 @@ def parse_claims():
                 or pid,
                 120,
             )
+        primary_topic = primary_front.get('name') or (top_constructs[0] if top_constructs else (top_theories[0] if top_theories else humanize(meta.get('article_type') or 'Paper')))
         articles.append({
             'paper_id': pid,
             'title': title,
@@ -1184,28 +1999,39 @@ def parse_claims():
             'article_type': meta.get('article_type') or '',
             'authors': normalize_authors(meta.get('authors')),
             'venue': meta.get('venue') or '',
-                'main_conclusion': meta.get('main_conclusion') or '',
-                'repair_source': meta.get('repair_source') or '',
+            'main_conclusion': meta.get('main_conclusion') or '',
+            'repair_source': meta.get('repair_source') or '',
             'abstract_source': meta.get('abstract_source') or '',
             'abstract_surface_path': meta.get('abstract_surface_path') or '',
+            'fronts': paper_fronts[:4],
+            'primary_front': primary_front,
+            'primary_topic': primary_topic,
+            'has_sensor_data': bool(registry_row.get('has_sensor_data')),
+            'sensor_summary': registry_row.get('sensor_summary') or '',
+            'asset_profile': registry_row.get('asset_profile') or {},
+            'source_bundle': registry_row.get('source_bundle') or {},
+            'argumentation_summary': paper_arg,
+            'search_targets': list(paper_arg.get('top_search_targets') or []),
+            'related_papers': [],
             'visual_support_gallery': visual_support_gallery,
             'technical_results_table': technical_results_table,
-                'json_status': {
+            'json_status': {
                 'title': title_status(title),
                 'doi': doi_status(meta.get('doi')),
                 'abstract': meta.get('abstract_status') or abstract_status(meta.get('abstract')),
-                    'sample_n': meta.get('sample_n_status') or 'missing',
-                    'p_value': meta.get('p_value_status') or 'missing',
-                    'effect_size': meta.get('effect_size_status') or 'missing',
-                    'main_conclusion': meta.get('main_conclusion_status') or 'missing',
-                    'subject_count_total': meta.get('subject_count_total_status') or subject_count_status(meta.get('subject_count_total')),
-                    'construct_pair': meta.get('construct_pair_status') or 'missing',
-                    'direction': meta.get('direction_status') or 'missing',
-                    'repair_source': meta.get('repair_source') or 'rebuild',
-                },
+                'sample_n': meta.get('sample_n_status') or 'missing',
+                'p_value': meta.get('p_value_status') or 'missing',
+                'effect_size': meta.get('effect_size_status') or 'missing',
+                'main_conclusion': meta.get('main_conclusion_status') or 'missing',
+                'subject_count_total': meta.get('subject_count_total_status') or subject_count_status(meta.get('subject_count_total')),
+                'construct_pair': meta.get('construct_pair_status') or 'missing',
+                'direction': meta.get('direction_status') or 'missing',
+                'repair_source': meta.get('repair_source') or 'rebuild',
+            },
             })
     articles.sort(key=lambda x: (-x['claim_count'], x['paper_id']))
-    return evidence, articles[:250]
+    articles = build_related_papers(articles)
+    return evidence, articles
 
 
 def build_json_status(articles):
@@ -1300,6 +2126,335 @@ def build_json_status(articles):
     return {'summary': summary, 'papers': rows}
 
 
+def load_iv_dv_classifications():
+    payload = load_json(IV_DV_CLASSIFICATIONS_PATH, [])
+    if isinstance(payload, list):
+        return payload
+    if isinstance(payload, dict):
+        return payload.get('classifications') or payload.get('rows') or payload.get('items') or []
+    return []
+
+
+def build_topic_hierarchy_payload(articles, topic_summary):
+    rows = load_iv_dv_classifications()
+    article_lookup = {article.get('paper_id'): article for article in articles}
+    rows_by_paper = defaultdict(list)
+    for row in rows:
+        paper_id = str(row.get('paper_id') or '').strip()
+        if paper_id:
+            rows_by_paper[paper_id].append(row)
+
+    topic_groups = {}
+    root_groups = {}
+    repair_queue = []
+    exclusion_queue = []
+    fallback_iv_count = 0
+    fallback_dv_count = 0
+
+    for article in articles:
+        paper_id = article.get('paper_id')
+        assignment = choose_topic_pairs_for_article(article, rows_by_paper.get(paper_id) or [])
+        memberships = assignment['memberships']
+        missing_iv = assignment['missing_iv']
+        missing_dv = assignment['missing_dv']
+        hidden_from_view = not memberships
+        if missing_iv:
+            fallback_iv_count += 1
+        if missing_dv:
+            fallback_dv_count += 1
+        if hidden_from_view:
+            if should_exclude_from_topic_view(article, missing_iv, missing_dv):
+                exclusion_queue.append(
+                    {
+                        'paper_id': paper_id,
+                        'title': article.get('title') or paper_id,
+                        'year': article.get('year'),
+                        'claim_count': int(article.get('claim_count') or 0),
+                        'article_type': article.get('article_type') or '',
+                        'exclusion_reason': 'safe non-topic or contamination candidate',
+                    }
+                )
+                continue
+            repair_queue.append(
+                {
+                    'paper_id': paper_id,
+                    'title': article.get('title') or paper_id,
+                    'year': article.get('year'),
+                    'claim_count': int(article.get('claim_count') or 0),
+                    'primary_front': (article.get('primary_front') or {}).get('name') or '',
+                    'primary_topic': article.get('primary_topic') or '',
+                    'sensor_summary': article.get('sensor_summary') or '',
+                    'theories': list(article.get('theories') or [])[:4],
+                    'missing_iv': missing_iv,
+                    'missing_dv': missing_dv,
+                    'repair_reason': (
+                        'missing dominant IV and DV'
+                        if missing_iv and missing_dv
+                        else 'missing dominant IV'
+                        if missing_iv
+                        else 'missing dominant DV'
+                    ),
+                }
+            )
+        if hidden_from_view:
+            continue
+
+        for primary_iv, primary_dv, membership_score in memberships:
+            iv_root = canonical_iv_root(primary_iv)
+            dv_root = canonical_dv_root(primary_dv)
+            topic_id = slugify(f"{primary_iv}__{primary_dv}")
+            topic = topic_groups.setdefault(
+                topic_id,
+                {
+                    'id': topic_id,
+                    'label': topic_display_label(primary_iv, primary_dv),
+                    'iv_root': iv_root,
+                    'iv_root_label': iv_root_label(iv_root),
+                    'iv_root_description': iv_root_description(iv_root),
+                    'iv_node': primary_iv,
+                    'iv_label': iv_node_label(primary_iv),
+                    'dv_root': dv_root,
+                    'dv_root_label': dv_root_label(dv_root),
+                    'dv_focus': primary_dv,
+                    'dv_focus_label': dv_focus_label(primary_dv),
+                    'hidden_from_view': False,
+                    'paper_ids': set(),
+                    'paper_preview': [],
+                    'theory_counter': Counter(),
+                    'sensor_counter': Counter(),
+                    'front_counter': Counter(),
+                },
+            )
+            topic['paper_ids'].add(paper_id)
+            topic['paper_preview'].append(
+                {
+                    'paper_id': paper_id,
+                    'title': article.get('title') or paper_id,
+                    'year': article.get('year'),
+                    'claim_count': int(article.get('claim_count') or 0),
+                    'primary_front': (article.get('primary_front') or {}).get('name') or '',
+                    'sensor_summary': article.get('sensor_summary') or '',
+                    'has_sensor_data': bool(article.get('has_sensor_data')),
+                    'membership_score': round(float(membership_score), 3),
+                }
+            )
+            for theory in article.get('theories') or []:
+                label = clean_topic_candidate(theory)
+                if label:
+                    topic['theory_counter'][label] += 1
+            for sensor in split_csvish(article.get('sensor_summary') or ''):
+                topic['sensor_counter'][sensor] += 1
+            for front in article.get('fronts') or []:
+                name = str(front.get('name') or '').strip()
+                if name:
+                    topic['front_counter'][name] += 1
+
+            root = root_groups.setdefault(
+                iv_root,
+                {
+                    'id': iv_root,
+                    'label': iv_root_label(iv_root),
+                    'description': iv_root_description(iv_root),
+                    'paper_ids': set(),
+                    'visible_paper_ids': set(),
+                    'children': {},
+                },
+            )
+            root['paper_ids'].add(paper_id)
+            root['visible_paper_ids'].add(paper_id)
+            child = root['children'].setdefault(
+                primary_iv,
+                {
+                    'id': primary_iv,
+                    'label': iv_node_label(primary_iv),
+                    'paper_ids': set(),
+                    'visible_paper_ids': set(),
+                    'topics': [],
+                },
+            )
+            child['paper_ids'].add(paper_id)
+            child['visible_paper_ids'].add(paper_id)
+            child['topics'].append(topic_id)
+
+    topic_list = []
+    topic_lookup = {}
+    for topic in topic_groups.values():
+        paper_ids = sorted(topic['paper_ids'])
+        paper_preview = sorted(
+            topic['paper_preview'],
+            key=lambda row: (-(row.get('claim_count') or 0), row.get('paper_id') or ''),
+        )[:14]
+        item = {
+            'id': topic['id'],
+            'label': topic['label'],
+            'iv_root': topic['iv_root'],
+            'iv_root_label': topic['iv_root_label'],
+            'iv_root_description': topic['iv_root_description'],
+            'iv_node': topic['iv_node'],
+            'iv_label': topic['iv_label'],
+            'dv_root': topic['dv_root'],
+            'dv_root_label': topic['dv_root_label'],
+            'dv_focus': topic['dv_focus'],
+            'dv_focus_label': topic['dv_focus_label'],
+            'paper_count': len(paper_ids),
+            'paper_ids': paper_ids,
+            'paper_preview': paper_preview,
+            'theories': [name for name, _ in topic['theory_counter'].most_common(6)],
+            'sensors': [name for name, _ in topic['sensor_counter'].most_common(6)],
+            'fronts': [name for name, _ in topic['front_counter'].most_common(4)],
+            'hidden_from_view': topic['hidden_from_view'],
+            'cross_relations': [],
+        }
+        topic_lookup[item['id']] = item
+        topic_list.append(item)
+
+    def topic_sort_key(row):
+        return (
+            row['iv_root'] == 'unspecified',
+            row['dv_focus'] == 'unspecified.outcome',
+            -row['paper_count'],
+            row['label'],
+        )
+
+    for root in root_groups.values():
+        for child in root['children'].values():
+            unique_topic_ids = sorted(set(child['topics']))
+            child['topics'] = [
+                {
+                    'id': topic_id,
+                    'label': topic_lookup[topic_id]['label'],
+                    'paper_count': topic_lookup[topic_id]['paper_count'],
+                    'dv_focus': topic_lookup[topic_id]['dv_focus'],
+                    'dv_focus_label': topic_lookup[topic_id]['dv_focus_label'],
+                }
+                for topic_id in unique_topic_ids
+                if not topic_lookup[topic_id]['hidden_from_view']
+            ]
+            child['topics'].sort(
+                key=lambda row: (
+                    row['id'].startswith('unspecified_environment'),
+                    row['dv_focus'] == 'unspecified.outcome',
+                    -row['paper_count'],
+                    row['label'],
+                )
+            )
+            child['paper_count'] = len(child['visible_paper_ids'])
+            del child['paper_ids']
+            del child['visible_paper_ids']
+
+    topic_list.sort(key=topic_sort_key)
+    visible_topic_list = [topic for topic in topic_list if not topic['hidden_from_view']]
+
+    for topic in visible_topic_list:
+        related_nodes = set(get_related(topic['iv_node']) or [])
+        theory_set = set(topic['theories'])
+        sensor_set = set(topic['sensors'])
+        candidates = []
+        for other in visible_topic_list:
+            if other['id'] == topic['id']:
+                continue
+            score = 0
+            reasons = []
+            shared_theories = theory_set & set(other['theories'])
+            shared_sensors = sensor_set & set(other['sensors'])
+
+            if other['dv_focus'] == topic['dv_focus'] and other['iv_node'] != topic['iv_node']:
+                score += 4
+                reasons.append(f"measures {topic['dv_focus_label'].lower()} too")
+            if other['iv_root'] == topic['iv_root'] and other['iv_node'] != topic['iv_node']:
+                score += 2
+                reasons.append(f"same {topic['iv_root_label'].lower()} family")
+            if other['iv_node'] in related_nodes:
+                score += 2
+                reasons.append('adjacent environment branch')
+            if shared_theories:
+                score += 1
+                reasons.append('shared theory')
+            if shared_sensors:
+                score += 1
+                reasons.append('shared sensors')
+            if score <= 0:
+                continue
+
+            relation_kind = 'same_dv_focus' if other['dv_focus'] == topic['dv_focus'] else 'same_iv_root'
+            candidates.append(
+                {
+                    'target_id': other['id'],
+                    'target_label': other['label'],
+                    'kind': relation_kind,
+                    'label': '; '.join(reasons[:2]),
+                    'score': score,
+                    'paper_count': other['paper_count'],
+                    'shared_theories': sorted(shared_theories)[:2],
+                    'shared_sensors': sorted(shared_sensors)[:2],
+                }
+            )
+        candidates.sort(key=lambda row: (-row['score'], -row['paper_count'], row['target_label']))
+        topic['cross_relations'] = candidates[:8]
+
+    root_payload = []
+    for root in root_groups.values():
+        children = [child for child in root['children'].values() if child.get('topics')]
+        children.sort(
+            key=lambda row: (
+                row['id'] == 'unspecified.environment',
+                -row['paper_count'],
+                row['label'],
+            )
+        )
+        if not children:
+            continue
+        root_payload.append(
+            {
+                'id': root['id'],
+                'label': root['label'],
+                'description': root['description'],
+                'paper_count': len(root['visible_paper_ids']),
+                'child_count': len(children),
+                'children': children,
+            }
+        )
+    root_payload.sort(
+        key=lambda row: (
+            row['id'] == 'unspecified',
+            -row['paper_count'],
+            row['label'],
+        )
+    )
+
+    return {
+        'summary': {
+            'article_count': len(articles),
+            'visible_article_count': len(articles) - len(repair_queue) - len(exclusion_queue),
+            'hidden_article_count': len(repair_queue),
+            'excluded_article_count': len(exclusion_queue),
+            'front_covered_paper_count': int(topic_summary.get('front_covered_paper_count', 0)),
+            'root_count': len(root_payload),
+            'topic_count': len(visible_topic_list),
+            'hidden_topic_count': len(topic_list) - len(visible_topic_list),
+            'cross_relation_count': sum(len(topic['cross_relations']) for topic in visible_topic_list),
+            'fallback_iv_paper_count': fallback_iv_count,
+            'fallback_dv_paper_count': fallback_dv_count,
+        },
+        'notes': [
+            'Each paper is assigned to a dominant IV branch and a dominant DV focus for this prototype viewer.',
+            'Research fronts are included as supporting metadata, not as the sole topic authority.',
+            'Cross-relations highlight papers that measure the same high-level outcome or sit nearby in the IV hierarchy.',
+            'Topics with unresolved dominant IV or DV assignments are hidden from the viewer and moved into a repair queue.',
+            'Obvious non-topic contaminants are separated into an exclusion queue rather than left in the repair queue.',
+        ],
+        'roots': root_payload,
+        'topics': visible_topic_list,
+        'repair_queue': sorted(repair_queue, key=lambda row: (not row['missing_dv'], not row['missing_iv'], -(row['claim_count'] or 0), row['paper_id'])),
+        'exclusion_queue': sorted(exclusion_queue, key=lambda row: (-(row['claim_count'] or 0), row['paper_id'])),
+        'source_files': {
+            'iv_dv_classifications': str(IV_DV_CLASSIFICATIONS_PATH.relative_to(ROOT)),
+            'articles': str((OUT / 'articles.json').relative_to(ROOT)),
+            'topics': str((OUT / 'topics.json').relative_to(ROOT)),
+        },
+    }
+
+
 def build_dashboard(articles, evidence):
     payload = {
         'student_name': 'Alex Chen',
@@ -1329,20 +2484,14 @@ def build_dashboard(articles, evidence):
 
 
 def build_argumentation_payload():
-    paper_graph = load_json(ARG_GRAPH_PATH, {})
-    claim_graph = load_json(CLAIM_ARG_GRAPH_PATH, {})
-
-    paper_nodes_raw = paper_graph.get('nodes') or {}
-    if isinstance(paper_nodes_raw, dict):
-        paper_nodes = list(paper_nodes_raw.values())
-    else:
-        paper_nodes = list(paper_nodes_raw)
-
-    claim_nodes_raw = claim_graph.get('nodes') or {}
-    if isinstance(claim_nodes_raw, dict):
-        claim_nodes = list(claim_nodes_raw.values())
-    else:
-        claim_nodes = list(claim_nodes_raw)
+    index = load_argumentation_indexes()
+    paper_graph = index['paper_graph']
+    claim_graph = index['claim_graph']
+    paper_nodes = list(index['paper_nodes'])
+    claim_nodes = list(index['claim_nodes'])
+    belief_targets = index['belief_targets']
+    belief_attacks = index['belief_attacks']
+    belief_supports = index['belief_supports']
 
     clusters = []
     for cluster in paper_graph.get('debate_clusters') or []:
@@ -1352,8 +2501,8 @@ def build_argumentation_payload():
             'cluster_id': cluster.get('cluster_id'),
             'paper_count': len(papers),
             'theory_count': len(theories),
-            'papers': papers[:12],
-            'theories': theories[:10],
+            'papers': papers[:16],
+            'theories': theories[:12],
         })
     clusters.sort(key=lambda item: (-item['paper_count'], item['cluster_id'] or ''))
 
@@ -1387,17 +2536,24 @@ def build_argumentation_payload():
             'stance_coverage_rate': coverage.get('stance_coverage_rate', 0),
             'unique_theories': coverage.get('unique_theories', 0),
             'critical_question_payload_present': bool(claim_metadata.get('critical_question_payload_present')),
+            'support_edge_count': claim_metadata.get('support_edge_count', 0),
+            'attack_edge_count': claim_metadata.get('attack_edge_count', 0),
+            'search_target_count': claim_metadata.get('target_count', 0),
         },
         'coverage_report': coverage,
-        'debate_clusters': clusters[:12],
+        'debate_clusters': clusters,
         'paper_nodes': [
             {
                 'paper_id': node.get('paper_id') or node.get('belief_id'),
                 'content_preview': compact_text(node.get('content_preview') or node.get('content') or '', 180),
                 'contradiction_count': node.get('contradiction_count') or 0,
                 'node_qualifier': node.get('node_qualifier') or node.get('qualifier') or '',
+                'claim_count': node.get('claim_count') or 0,
+                'dominant_stance': node.get('dominant_stance') or '',
+                'theories': list(node.get('theories') or [])[:8],
+                'search_target_count': int((index['paper_index'].get(node.get('paper_id')) or {}).get('search_target_count') or 0),
             }
-            for node in paper_nodes[:24]
+            for node in paper_nodes
         ],
         'claim_nodes': [
             {
@@ -1407,12 +2563,29 @@ def build_argumentation_payload():
                 'incoming_support_count': node.get('incoming_support_count') or 0,
                 'incoming_attack_count': node.get('incoming_attack_count') or 0,
                 'qualifier': node.get('qualifier') or node.get('node_qualifier') or '',
+                'warrant_status': node.get('warrant_status') or '',
+                'defeat_type': node.get('defeat_type') or '',
+                'resolution_question': (belief_targets.get(node.get('belief_id')) or {}).get('resolution_question') or '',
+                'review_urgency': (belief_targets.get(node.get('belief_id')) or {}).get('review_urgency') or '',
+                'attack_scheme_hints': (belief_targets.get(node.get('belief_id')) or {}).get('attack_scheme_hints') or [],
+                'top_attacks': (belief_attacks.get(node.get('belief_id')) or [])[:3],
+                'top_supports': (belief_supports.get(node.get('belief_id')) or [])[:3],
             }
-            for node in claim_nodes[:24]
+            for node in claim_nodes
         ],
+        'search_targets': sorted(
+            [row for row in belief_targets.values()],
+            key=lambda row: (-(row.get('priority_score') or 0), row.get('belief_id') or ''),
+        ),
+        'attack_scheme_counts': [
+            {'scheme': name, 'count': count}
+            for name, count in sorted(index['attack_scheme_counts'].items(), key=lambda item: (-item[1], item[0]))
+        ],
+        'attack_examples': index['attack_examples'][:36],
         'source_files': {
             'paper_graph': str(ARG_GRAPH_PATH.relative_to(ROOT)),
             'claim_graph': str(CLAIM_ARG_GRAPH_PATH.relative_to(ROOT)),
+            'search_targets': str(CLAIM_ARG_TARGETS_PATH.relative_to(ROOT)),
         },
     }
 
@@ -1444,7 +2617,7 @@ def build_annotations_payload():
                 'confidence': row.get('confidence'),
                 'status': row.get('status') or '',
             }
-            for row in annotation_rows[:40]
+            for row in annotation_rows
         ],
         'source_file': str(ANNOTATIONS_PATH.relative_to(ROOT)),
     }
@@ -1552,15 +2725,18 @@ def build_layers_summary(argumentation, annotations, interpretation):
 def main():
     generated_at = datetime.now(timezone.utc).isoformat()
     workflow = build_workflow_payload()
-    topics, gaps = load_fronts()
+    topics, gaps, topic_summary = load_fronts()
     evidence, articles = parse_claims()
+    topic_summary['front_covered_paper_count'] = topic_summary.get('unique_paper_count', 0)
+    topic_summary['article_count'] = len(articles)
+    topic_hierarchy = build_topic_hierarchy_payload(articles, topic_summary)
     dashboard = build_dashboard(articles, evidence)
     json_status = build_json_status(articles)
     argumentation = build_argumentation_payload()
     annotations = build_annotations_payload()
     interpretation = build_interpretation_payload()
     layers = build_layers_summary(argumentation, annotations, interpretation)
-    (OUT / 'topics.json').write_text(json.dumps({'topics': topics}, indent=2))
+    (OUT / 'topics.json').write_text(json.dumps({'topics': topics, 'summary': topic_summary}, indent=2))
     (OUT / 'gaps.json').write_text(json.dumps({'gaps': gaps}, indent=2))
     (OUT / 'evidence.json').write_text(
         json.dumps(
@@ -1582,6 +2758,9 @@ def main():
     (OUT / 'articles.json').write_text(json.dumps({'articles': articles}, indent=2))
     (OUT / 'dashboard.json').write_text(json.dumps({'dashboard': dashboard}, indent=2))
     (OUT / 'json_status.json').write_text(json.dumps(json_status, indent=2))
+    (OUT / 'topic_hierarchy.json').write_text(json.dumps(topic_hierarchy, indent=2))
+    (OUT / 'topic_repair_queue.json').write_text(json.dumps({'repair_queue': topic_hierarchy.get('repair_queue') or []}, indent=2))
+    (OUT / 'topic_exclusion_queue.json').write_text(json.dumps({'exclusion_queue': topic_hierarchy.get('exclusion_queue') or []}, indent=2))
     (OUT / 'argumentation.json').write_text(json.dumps(argumentation, indent=2))
     (OUT / 'annotations.json').write_text(json.dumps(annotations, indent=2))
     (OUT / 'interpretation.json').write_text(json.dumps(interpretation, indent=2))

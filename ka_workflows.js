@@ -517,7 +517,7 @@ window.KA_WORKFLOWS = {
         {
           id: 's1',
           title: 'Review Pending Registrations',
-          pageLink: 'ka_approve.html',
+          pageLink: '160sp/ka_approve.html',
           pageName: 'Approve Students',
           description: 'Open the approval queue. For each pending student, review their track preference and skills statement. A student who has chosen a track that does not match their stated skills is a mismatch to flag — they should be redirected before, not after, they have spent a week on the wrong track.',
           lookFor: ['Which tracks are oversubscribed? Which need more students?', 'Are skills statements specific (good) or generic ("I know programming")?', 'Any students who have not submitted a skills statement at all?'],
@@ -527,7 +527,7 @@ window.KA_WORKFLOWS = {
         {
           id: 's2',
           title: 'Balance Track Assignments',
-          pageLink: 'ka_approve.html',
+          pageLink: '160sp/ka_approve.html',
           pageName: 'Approve Students',
           description: 'Assign each student to a track, balancing across the four tracks where possible. If a student\'s preference is reasonable, honour it. If the track is full, redirect to their second choice and note the reason. The target is 4-6 students per track for a class of 20.',
           lookFor: ['Are any tracks empty? That creates a problem for Phase 3 cross-audits.', 'Have you documented the rationale for any overrides?'],
@@ -537,7 +537,7 @@ window.KA_WORKFLOWS = {
         {
           id: 's3',
           title: 'Assign Research Questions',
-          pageLink: 'ka_approve.html',
+          pageLink: '160sp/ka_approve.html',
           pageName: 'Approve Students',
           description: 'Assign each student one of the eight research questions (Q01–Q08). Avoid giving students on the same track the same question — their track work will be more valuable if they are covering different evidence domains. If possible, match the research question to the student\'s stated topic interests.',
           lookFor: ['Are all 8 questions represented across your cohort?', 'Do any questions map particularly well to specific track work?'],
@@ -547,7 +547,7 @@ window.KA_WORKFLOWS = {
         {
           id: 's4',
           title: 'Confirm and Monitor',
-          pageLink: 'ka_dashboard.html',
+          pageLink: '160sp/ka_dashboard.html',
           pageName: 'Dashboard',
           description: 'After approving all students, check the main dashboard to confirm the assignments are reflected in the system. Note any students who have not yet logged in after receiving their approval — they may need a follow-up email.',
           lookFor: ['Have all approved students logged in?', 'Are any students stuck on setup (no articles submitted after one week)?', 'Is the article submission rate roughly on track for the class?'],

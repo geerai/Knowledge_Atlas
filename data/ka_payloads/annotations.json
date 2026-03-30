@@ -392,6 +392,195 @@
       "content": "No cross-paper replication detected \u2014 finding may be isolated",
       "confidence": 0.7,
       "status": "active"
+    },
+    {
+      "id": "annot_000041",
+      "type": "REPLICATION_STATUS",
+      "target_type": "belief",
+      "target_id": "b_aux_30",
+      "content": "No cross-paper replication detected \u2014 finding may be isolated",
+      "confidence": 0.7,
+      "status": "active"
+    },
+    {
+      "id": "annot_000042",
+      "type": "REPLICATION_STATUS",
+      "target_type": "belief",
+      "target_id": "b_aux_31",
+      "content": "No cross-paper replication detected \u2014 finding may be isolated",
+      "confidence": 0.7,
+      "status": "active"
+    },
+    {
+      "id": "annot_000043",
+      "type": "REPLICATION_STATUS",
+      "target_type": "belief",
+      "target_id": "b_aux_32",
+      "content": "No cross-paper replication detected \u2014 finding may be isolated",
+      "confidence": 0.7,
+      "status": "active"
+    },
+    {
+      "id": "annot_000044",
+      "type": "REPLICATION_STATUS",
+      "target_type": "belief",
+      "target_id": "b_aux_33",
+      "content": "No cross-paper replication detected \u2014 finding may be isolated",
+      "confidence": 0.7,
+      "status": "active"
+    },
+    {
+      "id": "annot_000045",
+      "type": "REPLICATION_STATUS",
+      "target_type": "belief",
+      "target_id": "b_aux_34",
+      "content": "No cross-paper replication detected \u2014 finding may be isolated",
+      "confidence": 0.7,
+      "status": "active"
+    },
+    {
+      "id": "annot_000046",
+      "type": "REPLICATION_STATUS",
+      "target_type": "belief",
+      "target_id": "b_aux_35",
+      "content": "No cross-paper replication detected \u2014 finding may be isolated",
+      "confidence": 0.7,
+      "status": "active"
+    },
+    {
+      "id": "annot_000047",
+      "type": "REPLICATION_STATUS",
+      "target_type": "belief",
+      "target_id": "b_aux_36",
+      "content": "No cross-paper replication detected \u2014 finding may be isolated",
+      "confidence": 0.7,
+      "status": "active"
+    },
+    {
+      "id": "annot_000048",
+      "type": "REPLICATION_STATUS",
+      "target_type": "belief",
+      "target_id": "b_aux_37",
+      "content": "No cross-paper replication detected \u2014 finding may be isolated",
+      "confidence": 0.7,
+      "status": "active"
+    },
+    {
+      "id": "annot_000049",
+      "type": "REPLICATION_STATUS",
+      "target_type": "belief",
+      "target_id": "b_aux_38",
+      "content": "No cross-paper replication detected \u2014 finding may be isolated",
+      "confidence": 0.7,
+      "status": "active"
+    },
+    {
+      "id": "annot_000050",
+      "type": "REPLICATION_STATUS",
+      "target_type": "belief",
+      "target_id": "b_aux_39",
+      "content": "No cross-paper replication detected \u2014 finding may be isolated",
+      "confidence": 0.7,
+      "status": "active"
+    },
+    {
+      "id": "annot_000051",
+      "type": "REPLICATION_STATUS",
+      "target_type": "belief",
+      "target_id": "b_aux_40",
+      "content": "No cross-paper replication detected \u2014 finding may be isolated",
+      "confidence": 0.7,
+      "status": "active"
+    },
+    {
+      "id": "annot_000052",
+      "type": "REPLICATION_STATUS",
+      "target_type": "belief",
+      "target_id": "b_aux_41",
+      "content": "No cross-paper replication detected \u2014 finding may be isolated",
+      "confidence": 0.7,
+      "status": "active"
+    },
+    {
+      "id": "annot_000053",
+      "type": "REPLICATION_STATUS",
+      "target_type": "belief",
+      "target_id": "b_aux_42",
+      "content": "No cross-paper replication detected \u2014 finding may be isolated",
+      "confidence": 0.7,
+      "status": "active"
+    },
+    {
+      "id": "annot_000054",
+      "type": "REPLICATION_STATUS",
+      "target_type": "belief",
+      "target_id": "b_aux_43",
+      "content": "No cross-paper replication detected \u2014 finding may be isolated",
+      "confidence": 0.7,
+      "status": "active"
+    },
+    {
+      "id": "annot_000055",
+      "type": "REPLICATION_STATUS",
+      "target_type": "belief",
+      "target_id": "b_aux_44",
+      "content": "No cross-paper replication detected \u2014 finding may be isolated",
+      "confidence": 0.7,
+      "status": "active"
+    },
+    {
+      "id": "annot_000056",
+      "type": "REPLICATION_STATUS",
+      "target_type": "belief",
+      "target_id": "b_aux_45",
+      "content": "No cross-paper replication detected \u2014 finding may be isolated",
+      "confidence": 0.7,
+      "status": "active"
+    },
+    {
+      "id": "annot_000057",
+      "type": "REPLICATION_STATUS",
+      "target_type": "belief",
+      "target_id": "b_aux_46",
+      "content": "No cross-paper replication detected \u2014 finding may be isolated",
+      "confidence": 0.7,
+      "status": "active"
+    },
+    {
+      "id": "annot_000058",
+      "type": "REPLICATION_STATUS",
+      "target_type": "belief",
+      "target_id": "b_aux_47",
+      "content": "No cross-paper replication detected \u2014 finding may be isolated",
+      "confidence": 0.7,
+      "status": "active"
+    },
+    {
+      "id": "annot_000059",
+      "type": "REPLICATION_STATUS",
+      "target_type": "belief",
+      "target_id": "b_aux_48",
+      "content": "No cross-paper replication detected \u2014 finding may be isolated",
+      "confidence": 0.7,
+      "status": "active"
+    },
+    {
+      "id": "annot_000060",
+      "type": "REPLICATION_STATUS",
+      "target_type": "belief",
+      "target_id": "b_aux_49",
+      "content": "No cross-paper replication detected \u2014 finding may be isolated",
+      "confidence": 0.7,
+      "status": "active"
+    },
+    {
+      "id": "annot_000061",
+      "type": "REPLICATION_STATUS",
+      "target_type": "belief",
+      "target_id": "b_aux_50",
+      "content": "No cross-paper replication detected \u2014 finding may be isolated",
+      "confidence": 0.7,
+      "status": "active"
     }
   ],
   "source_file": "Article_Eater_PostQuinean_v1_recovery/data/rebuild/annotations_regenerated.json"

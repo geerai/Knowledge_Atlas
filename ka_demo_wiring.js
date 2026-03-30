@@ -230,9 +230,9 @@
       localStorage.setItem('ka_logged_in', '1');
       sessionStorage.setItem('ka_logged_in', '1');
       // Pick landing based on email hints
-      let dest = 'ka_dashboard.html';
-      if (email.includes('admin') || email.includes('approve')) dest = 'ka_approve.html';
-      else if (email.includes('instructor') || email.includes('prof')) dest = 'ka_approve.html';
+      let dest = '160sp/ka_dashboard.html';
+      if (email.includes('admin') || email.includes('approve')) dest = '160sp/ka_approve.html';
+      else if (email.includes('instructor') || email.includes('prof')) dest = '160sp/ka_approve.html';
       else if (email.includes('researcher') || email.includes('research')) dest = 'ka_demo_v04.html';
       showBanner(`<strong>Demo login</strong> — signing in as ${email} → redirecting…`);
       setTimeout(() => { window.location.href = dest; }, 900);
@@ -394,14 +394,14 @@
         phase:  'Phase 3 — User Management + Phase 2 instrument data' },
 
       // ── CONTRIBUTOR nav ──
-      'my overview':         'ka_dashboard.html',
+      'my overview':         '160sp/ka_dashboard.html',
       'open queue':          'ka_tagger.html',
-      'tag bundles':         'ka_tag_assignment.html',
+      'tag bundles':         '160sp/ka_tag_assignment.html',
       'run search':          'ka_article_search.html',
       'question maker':      'ka_question_maker.html',
       'propose article':     'ka_article_propose.html',
-      'article finder':      'ka_article_finder_assignment.html',
-      'gui assignment':      'ka_gui_assignment.html',
+      'article finder':      '160sp/ka_article_finder_assignment.html',
+      'gui assignment':      '160sp/ka_gui_assignment.html',
       'new capture':         'ka_datacapture.html',
 
       // ── PROFILE DROPDOWN ──

@@ -28,12 +28,12 @@
     },
     "recent_activity": [
       {
-        "type": "Evidence rows loaded: 200",
+        "type": "Evidence rows loaded: 1900",
         "date": "Current rebuild",
         "badge": "SYNCED"
       },
       {
-        "type": "Article payload size: 250 papers",
+        "type": "Article payload size: 760 papers",
         "date": "Current rebuild",
         "badge": "READY"
       }

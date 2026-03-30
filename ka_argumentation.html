@@ -854,9 +854,10 @@ nav a.active, nav a:hover {
 
 <div class="version-badge">KA · v0.5 · Argumentation</div>
 
+<script src="ka_data_adapter.js"></script>
 <script>
 // Embedded data payloads
-const ARGUMENTATION_DATA = {
+let ARGUMENTATION_DATA = {
   "summary": {
     "paper_node_count": 714,
     "paper_edge_count": 2029,
@@ -1162,7 +1163,7 @@ const ARGUMENTATION_DATA = {
   ]
 };
 
-const ANNOTATIONS_DATA = {
+let ANNOTATIONS_DATA = {
   "annotations": [
     {
       "id": "annot_000001",
@@ -1201,24 +1202,46 @@ let claimsData = [];
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
+  initializeArgumentationPage();
+});
+
+async function initializeArgumentationPage() {
+  const [argumentationPayload, annotationPayload] = await Promise.all([
+    window.KA_PAYLOADS
+      ? window.KA_PAYLOADS.loadWithFallback('data/ka_payloads/argumentation.json', ARGUMENTATION_DATA)
+      : Promise.resolve(ARGUMENTATION_DATA),
+    window.KA_PAYLOADS
+      ? window.KA_PAYLOADS.loadWithFallback('data/ka_payloads/annotations.json', ANNOTATIONS_DATA)
+      : Promise.resolve(ANNOTATIONS_DATA),
+  ]);
+  if (argumentationPayload && argumentationPayload.claim_nodes) {
+    ARGUMENTATION_DATA = argumentationPayload;
+  }
+  if (annotationPayload && annotationPayload.annotations) {
+    ANNOTATIONS_DATA = annotationPayload;
+  }
   populateStats();
   populateClusters();
   populateClaims(ARGUMENTATION_DATA.claim_nodes);
   populateConfounds();
   setupEventListeners();
   populateCTATargets();
-});
+}
 
 function populateStats() {
-  document.getElementById('stat-papers').textContent = ARGUMENTATION_DATA.coverage_report.total_papers.toLocaleString();
-  document.getElementById('stat-claims').textContent = ARGUMENTATION_DATA.coverage_report.total_claims.toLocaleString();
-  document.getElementById('stat-support').textContent = ARGUMENTATION_DATA.coverage_report.alignment_edges.toLocaleString();
-  document.getElementById('stat-contest').textContent = ARGUMENTATION_DATA.coverage_report.contestation_edges.toLocaleString();
-  document.getElementById('stat-align').textContent = (ARGUMENTATION_DATA.coverage_report.alignment_edges).toLocaleString();
+  const coverage = ARGUMENTATION_DATA.coverage_report || {};
+  const summary = ARGUMENTATION_DATA.summary || {};
+  document.getElementById('cluster-count-heading').textContent = `${(summary.cluster_count || (ARGUMENTATION_DATA.debate_clusters || []).length || 0).toLocaleString()} Debate Clusters`;
+  document.getElementById('stat-papers').textContent = Number(coverage.total_papers || summary.paper_node_count || 0).toLocaleString();
+  document.getElementById('stat-claims').textContent = Number(coverage.total_claims || summary.claim_node_count || 0).toLocaleString();
+  document.getElementById('stat-support').textContent = Number(summary.support_edge_count || coverage.alignment_edges || 0).toLocaleString();
+  document.getElementById('stat-contest').textContent = Number(summary.attack_edge_count || coverage.contestation_edges || 0).toLocaleString();
+  document.getElementById('stat-align').textContent = Number(coverage.alignment_edges || 0).toLocaleString();
 }
 
 function populateClusters() {
   const browser = document.getElementById('cluster-browser');
+  browser.innerHTML = '';
   const clusters = ARGUMENTATION_DATA.debate_clusters.sort((a, b) => b.paper_count - a.paper_count);
 
   clusters.forEach((cluster) => {
@@ -1267,7 +1290,10 @@ function renderClaimList() {
     sorted = sorted.filter(c =>
       c.belief_id.toLowerCase().includes(searchTerm) ||
       c.content_preview.toLowerCase().includes(searchTerm) ||
-      c.paper_id.toLowerCase().includes(searchTerm)
+      c.paper_id.toLowerCase().includes(searchTerm) ||
+      (c.warrant_status || '').toLowerCase().includes(searchTerm) ||
+      (c.resolution_question || '').toLowerCase().includes(searchTerm) ||
+      (c.attack_scheme_hints || []).join(' ').toLowerCase().includes(searchTerm)
     );
   }
 
@@ -1290,17 +1316,21 @@ function renderClaimList() {
     row.onclick = () => selectClaim(claim);
 
     const qualifierClass = claim.qualifier === 'stable' ? 'qualifier-stable' : 'qualifier-contested';
+    const qualifierLabel = [claim.qualifier || 'unqualified', claim.warrant_status || '', claim.review_urgency || '']
+      .filter(Boolean)
+      .join(' · ');
 
     row.innerHTML = `
       <div class="claim-id">${claim.belief_id}</div>
       <div class="claim-header">
         <span class="claim-paper">${claim.paper_id}</span>
-        <span class="claim-qualifier ${qualifierClass}">${claim.qualifier || 'unqualified'}</span>
+        <span class="claim-qualifier ${qualifierClass}">${qualifierLabel}</span>
       </div>
       <div class="claim-preview">${claim.content_preview}</div>
       <div class="claim-badges">
         <span class="badge badge-support">Support ${claim.incoming_support_count}</span>
         <span class="badge badge-attack">Attack ${claim.incoming_attack_count}</span>
+        ${claim.attack_scheme_hints && claim.attack_scheme_hints.length ? `<span class="badge">Scheme ${claim.attack_scheme_hints[0]}</span>` : ''}
       </div>
     `;
 
@@ -1340,8 +1370,8 @@ function updateInspector(claim) {
 
   // Populate annotations
   const annotDiv = document.getElementById('insp-annotations');
-  const relevantAnnotations = ANNOTATIONS_DATA.annotations.filter(a =>
-    a.target_id === claim.belief_id || a.target_id === 'b_anchor'
+  const relevantAnnotations = (ANNOTATIONS_DATA.annotations || []).filter(a =>
+    a.target_id === claim.belief_id
   );
 
   if (relevantAnnotations.length > 0) {
@@ -1351,17 +1381,26 @@ function updateInspector(claim) {
       </div>
     `).join('');
   } else {
-    annotDiv.innerHTML = '<div class="element-item">No annotations for this claim.</div>';
+    annotDiv.innerHTML = '<div class="element-item">No explicit annotations for this claim in the current payload.</div>';
   }
 
   // Populate disputes
   const disputeDiv = document.getElementById('insp-disputes');
-  const disputes = ANNOTATIONS_DATA.annotations.filter(a => a.type === 'DISPUTE');
+  const disputes = claim.top_attacks || [];
 
-  if (disputes.length > 0) {
-    disputeDiv.innerHTML = disputes.map(d => `
-      <div class="element-item">${d.content}</div>
+  if (disputes.length > 0 || claim.resolution_question) {
+    const attackHtml = disputes.map(d => `
+      <div class="element-item">
+        <span class="element-label">${d.scheme_hint || d.defeat_type || 'attack'}:</span>
+        ${d.source} → ${d.target} (strength ${Number(d.strength || 0).toFixed(2)})
+      </div>
     `).join('');
+    const targetHtml = claim.resolution_question ? `
+      <div class="element-item">
+        <span class="element-label">Resolution question:</span> ${claim.resolution_question}
+      </div>
+    ` : '';
+    disputeDiv.innerHTML = attackHtml + targetHtml;
   } else {
     disputeDiv.innerHTML = '<div class="element-item">No disputes recorded for this claim.</div>';
   }
@@ -1369,6 +1408,7 @@ function updateInspector(claim) {
 
 function populateConfounds() {
   const list = document.getElementById('confound-list');
+  list.innerHTML = '';
 
   // Filter clusters with high theory count (confound risk)
   const highConfounds = ARGUMENTATION_DATA.debate_clusters
@@ -1424,6 +1464,7 @@ let currentCTAMode = null;
 
 function populateCTATargets() {
   const sel = document.getElementById('cta-target-select');
+  sel.innerHTML = '<option value="">— select a claim —</option>';
   ARGUMENTATION_DATA.claim_nodes.forEach(c => {
     const opt = document.createElement('option');
     opt.value = c.belief_id;
@@ -1496,7 +1537,7 @@ function renderCritiquePanel(claim, container) {
       '<div class="cta-col-title">Has Been Critiqued</div>' +
       (hasBeen.length
         ? hasBeen.map(item => ctaItem(item)).join('')
-        : '<div class="cta-item"><div class="cta-item-text" style="font-style:italic;color:#8A745F;">No recorded attacks or disputes found for this claim in the current payload. Full edge list requires the live API.</div></div>'
+        : '<div class="cta-item"><div class="cta-item-text" style="font-style:italic;color:#8A745F;">No recorded attacks or disputes found for this claim in the current payload.</div></div>'
       ) +
     '</div>' +
     '<div class="cta-col could-be">' +
@@ -1535,13 +1576,18 @@ function buildHasBeenCritiqued(claim) {
   if (claim.incoming_attack_count > 0) {
     items.push({
       type: 'Direct Attack Edges',
-      text: claim.incoming_attack_count + ' incoming attack edge(s) recorded in the epistemic network. Full edge traversal requires /api/argumentation/belief/' + claim.belief_id + '.'
+      text: claim.incoming_attack_count + ' incoming attack edge(s) recorded in the epistemic network.'
     });
   }
 
-  ANNOTATIONS_DATA.annotations
+  (ANNOTATIONS_DATA.annotations || [])
     .filter(a => a.type === 'DISPUTE' && a.target_id === claim.belief_id)
     .forEach(d => items.push({ type: 'Recorded Dispute', text: d.content }));
+
+  (claim.top_attacks || []).forEach(edge => items.push({
+    type: edge.scheme_hint || edge.defeat_type || 'Attack edge',
+    text: `${edge.source} challenges this claim with strength ${Number(edge.strength || 0).toFixed(2)}.`
+  }));
 
   if (claim.qualifier === 'contested') {
     items.push({
@@ -1557,6 +1603,13 @@ function buildHasBeenCritiqued(claim) {
     items.push({
       type: 'Confound Critique — Cluster ' + highConfoundCluster.cluster_id,
       text: 'Paper ' + claim.paper_id + ' is co-located with ' + (highConfoundCluster.paper_count - 1) + ' other papers across ' + highConfoundCluster.theory_count + ' theories (' + highConfoundCluster.theories.slice(0, 4).join(', ') + '…). Critics argue that multi-theory overlap makes it impossible to isolate the causally active feature.'
+    });
+  }
+
+  if (claim.resolution_question) {
+    items.push({
+      type: 'Targeted Search Prompt',
+      text: claim.resolution_question
     });
   }
 
@@ -1629,11 +1682,18 @@ function buildDoesSupport(claim) {
   if (claim.incoming_support_count > 0) {
     items.push({
       type: 'Network Support Edges',
-      text: claim.incoming_support_count + ' incoming support edges recorded — convergent evidence from other claims across the epistemic network. Full edge list available via /api/argumentation/belief/' + claim.belief_id + '.'
+      text: claim.incoming_support_count + ' incoming support edges recorded — convergent evidence from other claims across the epistemic network.'
     });
   }
 
-  ANNOTATIONS_DATA.annotations
+  (claim.top_supports || []).forEach(edge => {
+    items.push({
+      type: edge.scheme_hint || 'Support edge',
+      text: `${edge.source} supports this claim with strength ${Number(edge.strength || 0).toFixed(2)}.`
+    });
+  });
+
+  (ANNOTATIONS_DATA.annotations || [])
     .filter(a => a.target_id === claim.belief_id)
     .forEach(a => {
       if (a.type === 'REPLICATION_STATUS' && a.content.toLowerCase().includes('well-repl')) {

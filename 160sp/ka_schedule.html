@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Schedule · COGS 160 Spring 2026</title>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --navy:#1C3D3A; --teal:#2A7868; --teal-lt:#5AC8AA; --teal-bg:#E6F5F0;
+      --amber:#E8872A; --amber-lt:#FFF3E0; --amber-dk:#9a5010;
+      --cream:#F7F4EF; --ink:#2C2C2C; --muted:#6B6B6B; --border:#D8D0C5;
+      --white:#FFFFFF; --rose:#A84F6B; --rose-lt:#F8EBF0;
+      --blue:#3A6EA8; --blue-lt:#EBF2F8;
+      --green:#1A7A50; --green-lt:#E3F4EC; --green-dk:#0F4A2E;
+    }
+    body{font-family:Arial,sans-serif;background:var(--cream);color:var(--ink)}
+
+    /* NAV */
+    .top-nav{position:fixed;top:0;left:0;right:0;height:56px;background:var(--navy);
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 24px;z-index:1000;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+    .nav-wordmark{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.1em;color:#A8C8BF}
+    .nav-icon{width:20px;height:20px;background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23A8C8BF" stroke-width="1.5"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><line x1="6" y1="6" x2="12" y2="18"/><line x1="18" y1="6" x2="12" y2="18"/></svg>') no-repeat center/contain}
+    .nav-title{color:#fff}.nav-title-accent{color:#F5A623}
+    .nav-center{flex:1;display:flex;justify-content:center;align-items:center;gap:14px}
+    .nav-right{display:flex;align-items:center;gap:12px}
+    .nav-link{font-size:12px;color:#A8C8BF;text-decoration:none;font-weight:500}
+    .nav-link:hover{color:#fff}
+    .mode-select{background:rgba(255,255,255,.08);border:1px solid rgba(168,200,191,.35);color:#E6EFE9;border-radius:18px;padding:5px 10px;font-size:12px}
+    .mode-pill{background:rgba(42,120,104,.35);color:#A8C8BF;border-radius:18px;padding:5px 11px;font-size:10px;font-weight:700;letter-spacing:.08em}
+    .profile-avatar{width:30px;height:30px;border-radius:50%;background:#E8872A;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+
+    /* PAGE HERO */
+    .page-hero{background:linear-gradient(135deg,#1C3D3A 0%,#163230 100%);padding:48px 32px 36px;text-align:center;margin-top:56px}
+    .hero-eyebrow{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--teal-lt);font-weight:600;margin-bottom:10px}
+    .hero-title{font-family:Georgia,serif;font-size:2rem;color:#fff;font-weight:400;margin-bottom:8px}
+    .hero-sub{font-size:0.9rem;color:#9ABFB8;max-width:580px;margin:0 auto 20px;line-height:1.6}
+    .hero-pills{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+    .hero-pill{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);
+      color:#d0ece8;font-size:11px;padding:5px 14px;border-radius:20px}
+
+    /* LAYOUT */
+    .container{max-width:1020px;margin:0 auto;padding:36px 24px 100px}
+
+    /* PHASE BANNER */
+    .phase-banner{border-radius:8px;padding:14px 20px;margin-bottom:28px;display:flex;align-items:flex-start;gap:14px}
+    .phase-banner-icon{font-size:22px;flex-shrink:0;margin-top:2px}
+    .phase-banner-title{font-family:Georgia,serif;font-size:1rem;font-weight:400;color:var(--navy);margin-bottom:3px}
+    .phase-banner-desc{font-size:0.82rem;color:var(--muted);line-height:1.55}
+    .phase-all{background:var(--teal-bg);border:1px solid #b8dfd8}
+    .phase-track{background:var(--amber-lt);border:1px solid #f0c888}
+    .phase-debug{background:var(--blue-lt);border:1px solid #b8cce8}
+
+    /* WEEK CARD */
+    .week-card{background:var(--white);border:1px solid var(--border);border-radius:12px;
+      margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+    .week-card.phase-all-card{border-left:4px solid var(--teal)}
+    .week-card.phase-track-card{border-left:4px solid var(--amber)}
+    .week-card.phase-debug-card{border-left:4px solid var(--blue)}
+    .week-card.phase-tbd-card{border-left:4px solid #C8B8A8}
+
+    .week-header{display:flex;align-items:center;gap:0;cursor:pointer;padding:0}
+    .week-num{width:72px;background:var(--navy);color:#fff;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;padding:18px 10px;flex-shrink:0;min-height:80px}
+    .week-num-label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#7AACA0;margin-bottom:2px}
+    .week-num-value{font-family:Georgia,serif;font-size:1.6rem;color:#fff;line-height:1}
+    .week-summary{flex:1;padding:16px 20px}
+    .week-title{font-family:Georgia,serif;font-size:1.0rem;color:var(--navy);margin-bottom:4px}
+    .week-tagline{font-size:0.81rem;color:var(--muted);line-height:1.5}
+    .week-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .badge{font-size:10px;font-weight:600;letter-spacing:.05em;padding:3px 9px;border-radius:10px}
+    .badge-teal{background:var(--teal-bg);color:#1a4a3f;border:1px solid #a8d8d0}
+    .badge-amber{background:var(--amber-lt);color:var(--amber-dk);border:1px solid #f0c080}
+    .badge-blue{background:var(--blue-lt);color:#1a3a6a;border:1px solid #b0c8e8}
+    .badge-green{background:var(--green-lt);color:var(--green-dk);border:1px solid #a0d8b8}
+    .badge-gray{background:#F0EBE3;color:#6B6060;border:1px solid #D8D0C4}
+    .week-expand{width:44px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:18px;cursor:pointer;flex-shrink:0}
+
+    /* WEEK BODY */
+    .week-body{display:none;border-top:1px solid var(--border)}
+    .week-body.open{display:block}
+    .day-row{display:grid;grid-template-columns:120px 1fr;gap:0}
+    .day-row + .day-row{border-top:1px solid #F0EBE3}
+    .day-label{padding:18px 16px;background:#FAFAF7;border-right:1px solid var(--border);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;flex-direction:column;gap:3px;justify-content:flex-start}
+    .day-label span{font-size:13px;font-weight:400;font-style:italic;text-transform:none;letter-spacing:0;color:var(--ink)}
+    .day-content{padding:18px 22px}
+
+    .session-title{font-family:Georgia,serif;font-size:0.95rem;color:var(--navy);margin-bottom:6px}
+    .session-desc{font-size:0.83rem;color:var(--muted);line-height:1.6;margin-bottom:10px}
+    .session-desc p + p{margin-top:6px}
+
+    .task-list{list-style:none;margin:0 0 10px}
+    .task-list li{font-size:0.82rem;color:var(--ink);padding:4px 0;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+    .task-list li::before{content:'→';color:var(--teal);font-weight:700;flex-shrink:0;margin-top:1px}
+    .task-list.amber li::before{color:var(--amber)}
+    .task-list.blue li::before{color:var(--blue)}
+
+    .deliverable-box{background:var(--amber-lt);border:1px solid #f0c888;border-radius:6px;padding:11px 14px;margin-top:10px}
+    .deliverable-box-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--amber-dk);margin-bottom:4px}
+    .deliverable-box p{font-size:0.82rem;color:var(--amber-dk);line-height:1.5}
+
+    .tbd-box{background:#F5F0E8;border:1px dashed #C8B8A8;border-radius:6px;padding:11px 14px;margin-top:10px}
+    .tbd-box p{font-size:0.82rem;color:var(--muted);line-height:1.5;font-style:italic}
+
+    .info-box{background:var(--teal-bg);border:1px solid #b8dfd8;border-radius:6px;padding:11px 14px;margin-top:10px}
+    .info-box p{font-size:0.82rem;color:#1a4a3f;line-height:1.5}
+
+    .page-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .page-link{font-size:11px;font-weight:600;color:var(--teal);text-decoration:none;padding:4px 11px;
+      background:#F0EBE3;border:1px solid #D8D0C4;border-radius:12px}
+    .page-link:hover{background:#E4DDD3}
+    .page-link.amber{color:var(--amber-dk);background:var(--amber-lt);border-color:#f0c888}
+    .page-link.blue{color:#1a3a6a;background:var(--blue-lt);border-color:#b0c8e8}
+
+    /* SECTION DIVIDER */
+    .section-divider{display:flex;align-items:center;gap:14px;margin:32px 0 16px}
+    .divider-line{flex:1;height:1px;background:var(--border)}
+    .divider-text{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#B0A090;white-space:nowrap}
+
+    /* GRADING NOTICE */
+    .grading-notice{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-top:32px}
+    .grading-notice h3{font-family:Georgia,serif;font-size:1rem;color:var(--navy);font-weight:400;margin-bottom:8px}
+    .grading-notice p{font-size:0.84rem;color:var(--muted);line-height:1.65}
+
+    .version-badge{position:fixed;bottom:70px;left:16px;background:var(--navy);color:#A8C8BF;font-size:10px;padding:3px 8px;border-radius:4px;opacity:.6;z-index:50}
+  </style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="nav-wordmark">
+    <span class="nav-icon"></span>
+    <span class="nav-title">Knowledge <span class="nav-title-accent">Atlas</span></span>
+  </div>
+  <div class="nav-center">
+    <a href="../ka_topics.html" class="nav-link" id="nav-shell-explore">Explore</a>
+    <a href="../ka_evidence.html" class="nav-link" id="nav-shell-evidence">Evidence</a>
+    <a href="../ka_gaps.html" class="nav-link" id="nav-shell-gaps">Gaps</a>
+    <a href="../ka_article_search.html" class="nav-link" id="nav-shell-articles">Articles</a>
+    <a href="../ka_contribute.html" class="nav-link" id="nav-shell-contribute">Contribute</a>
+    <a href="ka_student_setup.html" class="nav-link" id="nav-shell-course">Course</a>
+  </div>
+  <div class="nav-right">
+    <select id="schedule-mode-select" class="mode-select" aria-label="Choose user mode">
+      <option value="student_explorer">Student explorer</option>
+      <option value="researcher">Researcher</option>
+      <option value="contributor">Contributor</option>
+      <option value="instructor">Instructor</option>
+      <option value="practitioner">Practitioner</option>
+      <option value="theory_mechanism_explorer">Theory + mechanisms</option>
+    </select>
+    <span class="mode-pill" id="schedule-mode-pill">INSTRUCTOR</span>
+    <span class="profile-avatar" id="schedule-avatar">JL</span>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="hero-eyebrow">COGS 160 · Spring 2026 · 10 Weeks</div>
+  <h1 class="hero-title">Course Schedule</h1>
+  <p class="hero-sub">What happens each week, what is due by Thursday, and which pages on this site you need to use. Click any week to expand it.</p>
+  <div class="hero-pills">
+    <span class="hero-pill">Weeks 1–2 · Everyone builds the archive</span>
+    <span class="hero-pill">Weeks 3–7 · Track work</span>
+    <span class="hero-pill">Weeks 8–10 · Debugging the Fall site</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ── PHASE 1 BANNER ── -->
+  <div class="phase-banner phase-all">
+    <div class="phase-banner-icon">📚</div>
+    <div>
+      <div class="phase-banner-title">Phase 1 — Weeks 1–2 · Whole class, same task</div>
+      <div class="phase-banner-desc">
+        Before any track work begins, every student does the same thing: explore the Knowledge Atlas site, learn how to find and evaluate scientific articles using AI-assisted search, and submit PDFs to the shared archive. This builds the raw material all four tracks will draw on. You also begin noticing usability issues with the site — that observation work is already Track 4 territory and counts.
+      </div>
+    </div>
+  </div>
+
+  <!-- WEEK 1 -->
+  <div class="week-card phase-all-card">
+    <div class="week-header" onclick="toggleWeek('w1')">
+      <div class="week-num">
+        <div class="week-num-label">Week</div>
+        <div class="week-num-value">1</div>
+      </div>
+      <div class="week-summary">
+        <div class="week-title">Orientation · Meeting the system · First articles</div>
+        <div class="week-tagline">Day 1: Get registered and oriented. Day 2: Find 10 articles using AI search tools.</div>
+        <div class="week-badges">
+          <span class="badge badge-teal">All tracks</span>
+          <span class="badge badge-amber">Due Thu: 10 PDFs submitted</span>
+        </div>
+      </div>
+      <div class="week-expand" id="w1-arrow">＋</div>
+    </div>
+    <div class="week-body" id="w1">
+
+      <div class="day-row">
+        <div class="day-label">Tuesday<span>Day 1</span></div>
+        <div class="day-content">
+          <div class="session-title">Orientation — What is Knowledge Atlas and why are we building it?</div>
+          <div class="session-desc">
+            <p>David introduces the course, the Knowledge Atlas system, and the four contributor tracks. The session is primarily explanatory — you are not expected to have done anything before arriving.</p>
+          </div>
+          <ul class="task-list">
+            <li>Register on the site if you have not already — use the Register button on the homepage</li>
+            <li>Look around the site: homepage, topics, evidence, sensors, sitemap</li>
+            <li>Identify which of the four tracks you want to join — you declared a preference at registration, but this week you can still change your mind</li>
+            <li>Read the short "About this page" section (bottom-right badge) on any page you visit to understand what it does</li>
+          </ul>
+          <div class="page-links">
+            <a href="../ka_home.html" class="page-link">Home</a>
+            <a href="../ka_register.html" class="page-link">Register</a>
+            <a href="../ka_topics.html" class="page-link">Topics</a>
+            <a href="../ka_sitemap.html" class="page-link">Site Map</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-row">
+        <div class="day-label">Thursday<span>Day 2</span></div>
+        <div class="day-content">
+          <div class="session-title">AI-Assisted Article Finding — Lab session</div>
+          <div class="session-desc">
+            <p>David is away. A lab member will be present to assist. The goal is hands-on: find and submit at least 10 PDFs of relevant scientific articles before the end of the session. Use a mix of search tools — do not rely on a single one.</p>
+            <p>Start by visiting the Topics page to identify which research area you want to search in. Then use the Question Maker to turn a topic into search-ready queries (the point is to move beyond simple Boolean strings toward richer, semantically-grounded queries).</p>
+          </div>
+          <ul class="task-list">
+            <li>Visit Topics — pick one or two research areas that interest you</li>
+            <li>Use the Question Maker to generate search queries that go beyond keyword Boolean logic</li>
+            <li>Search using at least three of: <strong>Google Scholar AI</strong>, <strong>Elicit</strong>, <strong>OpenAlex</strong>, <strong>Consensus</strong>, <strong>Scholar GPT</strong> (ChatGPT plugin)</li>
+            <li>Download PDFs for any article that looks relevant and well-cited</li>
+            <li>Submit 10 PDFs to the article archive before end of session</li>
+            <li>Start a plain-text note of any site friction you encountered — confusing labels, missing links, anything that slowed you down</li>
+          </ul>
+          <div class="deliverable-box">
+            <div class="deliverable-box-label">Due by end of Thursday</div>
+            <p>10 PDFs submitted to the Knowledge Atlas article archive via the Article Propose page. These contribute directly to the shared evidence base all tracks will use.</p>
+          </div>
+          <div class="page-links">
+            <a href="../ka_topics.html" class="page-link">Topics</a>
+            <a href="../ka_question_maker.html" class="page-link">Question Maker</a>
+            <a href="../ka_article_search.html" class="page-link">Article Search</a>
+            <a href="../ka_article_propose.html" class="page-link">Submit Articles</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /week 1 -->
+
+  <!-- WEEK 2 -->
+  <div class="week-card phase-all-card">
+    <div class="week-header" onclick="toggleWeek('w2')">
+      <div class="week-num">
+        <div class="week-num-label">Week</div>
+        <div class="week-num-value">2</div>
+      </div>
+      <div class="week-summary">
+        <div class="week-title">Explore your track · More articles · Note usability issues</div>
+        <div class="week-tagline">Begin reading your track assignment. Keep building the archive. Observe the site as a future tester.</div>
+        <div class="week-badges">
+          <span class="badge badge-teal">All tracks</span>
+          <span class="badge badge-amber">Due Thu: more PDFs + usability notes</span>
+        </div>
+      </div>
+      <div class="week-expand" id="w2-arrow">＋</div>
+    </div>
+    <div class="week-body" id="w2">
+
+      <div class="day-row">
+        <div class="day-label">Tuesday<span>Day 3</span></div>
+        <div class="day-content">
+          <div class="session-title">Track Introduction — What will you build this quarter?</div>
+          <div class="session-desc">
+            <p>David walks through the four tracks and what each team will produce. You will then spend the remaining class time reading your track assignment page and finding the support materials (Getting Started guide, AI Methodology reference).</p>
+          </div>
+          <ul class="task-list">
+            <li>Read your track assignment page fully — all phases, all milestones</li>
+            <li>Read the Getting Started guide if you have not yet set up your environment</li>
+            <li>Read the AI Methodology reference — understanding how to direct AI is central to all four tracks</li>
+            <li>Understand the course's larger goal: the last three weeks (8–10) are devoted to debugging the Fall COGS 160 experiment-making site, which is in early development. All track work feeds that final phase.</li>
+          </ul>
+          <div class="page-links">
+            <a href="ka_tag_assignment.html" class="page-link">Track 1 Assignment</a>
+            <a href="ka_article_finder_assignment.html" class="page-link">Track 2 Assignment</a>
+            <a href="ka_vr_assignment.html" class="page-link">Track 3 Assignment</a>
+            <a href="ka_gui_assignment.html" class="page-link">Track 4 Assignment</a>
+            <a href="ka_student_setup.html" class="page-link">Getting Started</a>
+            <a href="../ka_ai_methodology.html" class="page-link">AI Methodology</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="day-row">
+        <div class="day-label">Thursday<span>Day 4</span></div>
+        <div class="day-content">
+          <div class="session-title">ATLAS Exploration Session — Seven Self-Guided Tasks</div>
+          <div class="session-desc">
+            <p>Today's lab is structured differently from Week 1. Rather than open-ended article finding, you will work through seven guided tasks designed to take you deeper into the ATLAS system — as a curious newcomer, a design practitioner, a methodological sceptic, and other roles. Each task involves navigating real ATLAS pages, posing questions, and noting observations.</p>
+            <p>The goal is not to complete every task in full but to become genuinely familiar with the system's evidence base, limitations, and interface — knowledge you will apply during the site-audit phase in Weeks 8–10.</p>
+          </div>
+          <ul class="task-list">
+            <li>Work through the seven tasks in order — each takes 10–15 minutes</li>
+            <li>Record your most interesting observation from each task in a markdown file: <code>notes/atlas_exploration_week2.md</code></li>
+            <li>Note any friction, gaps, or surprising findings — these are exactly the observations the Phase 3 audit will formalise</li>
+            <li>If you are on Track 4, pay particular attention to tasks 1, 2, and 5 — they directly inform the GUI assignment</li>
+          </ul>
+          <div class="deliverable-box">
+            <div class="deliverable-box-label">Due by end of Thursday</div>
+            <p>Push <code>notes/atlas_exploration_week2.md</code> to your personal branch with at least one observation per task. Continue article submissions if time permits — aim for 20 total across weeks 1 and 2.</p>
+          </div>
+          <div class="page-links">
+            <a href="ka_thursday_tasks.html" class="page-link" style="background:#2A7868;color:#fff;font-weight:700">Seven Tasks →</a>
+            <a href="../ka_article_propose.html" class="page-link">Submit Articles</a>
+            <a href="../ka_question_maker.html" class="page-link">Question Maker</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /week 2 -->
+
+  <!-- ── PHASE 2 BANNER ── -->
+  <div class="section-divider">
+    <div class="divider-line"></div>
+    <div class="divider-text">Phase 2 — Track Work</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="phase-banner phase-track">
+    <div class="phase-banner-icon">🔧</div>
+    <div>
+      <div class="phase-banner-title">Phase 2 — Weeks 3–7 · Track-specific production work</div>
+      <div class="phase-banner-desc">
+        In Week 3 each team decides how they will divide labor and collaborate. From Week 3 through Week 7, work is track-specific: Track 1 builds the image-tagging pipeline, Track 2 scales the article archive and evaluates the intake pipeline, Track 3 produces VR research environments, and Track 4 conducts systematic GUI evaluation. Detailed deliverables and grading criteria for each week will be posted here as the quarter progresses.
+      </div>
+    </div>
+  </div>
+
+  <!-- WEEK 3 -->
+  <div class="week-card phase-track-card">
+    <div class="week-header" onclick="toggleWeek('w3')">
+      <div class="week-num">
+        <div class="week-num-label">Week</div>
+        <div class="week-num-value">3</div>
+      </div>
+      <div class="week-summary">
+        <div class="week-title">Team self-organization · Roles, collaboration structure, first track deliverables</div>
+        <div class="week-tagline">Teams decide who does what and how they coordinate. Track work begins in earnest.</div>
+        <div class="week-badges">
+          <span class="badge badge-amber">Track-specific</span>
+          <span class="badge badge-gray">Deliverables to be posted</span>
+        </div>
+      </div>
+      <div class="week-expand" id="w3-arrow">＋</div>
+    </div>
+    <div class="week-body" id="w3">
+      <div class="day-row">
+        <div class="day-label">Tuesday<span>Day 5</span></div>
+        <div class="day-content">
+          <div class="session-title">Team Organization</div>
+          <div class="session-desc">
+            <p>Within each track team, decide: who owns which sub-tasks, how you will review each other's work, and what your internal communication channel is. Each person must have their personal branch set up and have committed at least one file before end of Tuesday.</p>
+          </div>
+          <ul class="task-list">
+            <li>Personal branch created and pushed: <code>track/N-staging/[your-username]</code></li>
+            <li>Team roles agreed and written into a shared <code>TEAM.md</code> on your track's staging branch</li>
+            <li>Each person confirms their local environment works (git, Python, student DB copy)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Thursday<span>Day 6</span></div>
+        <div class="day-content">
+          <div class="session-title">First Track Work Session</div>
+          <div class="tbd-box"><p>Specific deliverables and targets for Week 3 Thursday will be posted here. Check back — the instructor will update this page as the quarter develops.</p></div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /week 3 -->
+
+  <!-- WEEKS 4–7 (present but collapsed by default) -->
+  <div class="week-card phase-track-card">
+    <div class="week-header" onclick="toggleWeek('w4')">
+      <div class="week-num"><div class="week-num-label">Week</div><div class="week-num-value">4</div></div>
+      <div class="week-summary">
+        <div class="week-title">Track production — mid-quarter checkpoint</div>
+        <div class="week-tagline">Track-specific work. Deliverables to be posted.</div>
+        <div class="week-badges"><span class="badge badge-amber">Track-specific</span><span class="badge badge-gray">Deliverables to be posted</span></div>
+      </div>
+      <div class="week-expand" id="w4-arrow">＋</div>
+    </div>
+    <div class="week-body" id="w4">
+      <div class="day-row">
+        <div class="day-label">Both days</div>
+        <div class="day-content">
+          <div class="tbd-box"><p>Detailed schedule and deliverables for Week 4 will be added here as the quarter progresses. Track workbooks (linked below) show the expected phase for each track in Week 4.</p></div>
+          <div class="page-links">
+            <a href="ka_tag_assignment.html" class="page-link">T1 Workbook</a>
+            <a href="ka_article_finder_assignment.html" class="page-link">T2 Workbook</a>
+            <a href="ka_vr_assignment.html" class="page-link">T3 Workbook</a>
+            <a href="ka_gui_assignment.html" class="page-link">T4 Workbook</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="week-card phase-track-card">
+    <div class="week-header" onclick="toggleWeek('w5')">
+      <div class="week-num"><div class="week-num-label">Week</div><div class="week-num-value">5</div></div>
+      <div class="week-summary">
+        <div class="week-title">Track production continues</div>
+        <div class="week-tagline">Track-specific work. Deliverables to be posted.</div>
+        <div class="week-badges"><span class="badge badge-amber">Track-specific</span><span class="badge badge-gray">Deliverables to be posted</span></div>
+      </div>
+      <div class="week-expand" id="w5-arrow">＋</div>
+    </div>
+    <div class="week-body" id="w5">
+      <div class="day-row">
+        <div class="day-label">Both days</div>
+        <div class="day-content"><div class="tbd-box"><p>Detailed schedule for Week 5 will be posted here.</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="week-card phase-track-card">
+    <div class="week-header" onclick="toggleWeek('w6')">
+      <div class="week-num"><div class="week-num-label">Week</div><div class="week-num-value">6</div></div>
+      <div class="week-summary">
+        <div class="week-title">Track production · Peer review of scenes and drafts</div>
+        <div class="week-tagline">Track 3 peer scene review. Other tracks: mid-phase checkpoint.</div>
+        <div class="week-badges"><span class="badge badge-amber">Track-specific</span><span class="badge badge-gray">Deliverables to be posted</span></div>
+      </div>
+      <div class="week-expand" id="w6-arrow">＋</div>
+    </div>
+    <div class="week-body" id="w6">
+      <div class="day-row">
+        <div class="day-label">Both days</div>
+        <div class="day-content"><div class="tbd-box"><p>Detailed schedule for Week 6 will be posted. Note: Track 3 VR scenes are due end of Week 6 for peer review in class.</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="week-card phase-track-card">
+    <div class="week-header" onclick="toggleWeek('w7')">
+      <div class="week-num"><div class="week-num-label">Week</div><div class="week-num-value">7</div></div>
+      <div class="week-summary">
+        <div class="week-title">Final track deliverables · PR submission week</div>
+        <div class="week-tagline">All track PRs submitted and reviewed. Handoff brief for weeks 8–10.</div>
+        <div class="week-badges"><span class="badge badge-amber">All tracks</span><span class="badge badge-amber">Track PRs due</span></div>
+      </div>
+      <div class="week-expand" id="w7-arrow">＋</div>
+    </div>
+    <div class="week-body" id="w7">
+      <div class="day-row">
+        <div class="day-label">Both days</div>
+        <div class="day-content">
+          <div class="session-desc"><p>Final week of track-specific production. All track PRs must be open against the staging branch by end of Week 7. In class Thursday, each team gives a brief (5-minute) handoff explaining what they built and what issues remain — this sets up the context for weeks 8–10.</p></div>
+          <div class="deliverable-box">
+            <div class="deliverable-box-label">Due end of Week 7</div>
+            <p>PR open against <code>track/N-staging</code> with all workbook deliverables (memo, spec, scene or report, validation evidence). Team handoff brief ready for Thursday class.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /week 7 -->
+
+  <!-- ── PHASE 3 BANNER ── -->
+  <div class="section-divider">
+    <div class="divider-line"></div>
+    <div class="divider-text">Phase 3 — Fall Site Debugging</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="phase-banner phase-debug">
+    <div class="phase-banner-icon">🔬</div>
+    <div>
+      <div class="phase-banner-title">Phase 3 — Weeks 8–10 · Debugging the Fall COGS 160 site</div>
+      <div class="phase-banner-desc">
+        The last three weeks shift from building to testing. Each team is assigned a section of the <strong>Designing_Experiments</strong> repository — the Fall COGS 160 experiment-making site being developed in parallel. Teams fork the repo, audit their section by simulating a naïve student walkthrough, fix every resolvable issue, write formal success conditions for each page function, and open a Pull Request with a hand-off report. The goal is a site that a new cohort of Fall students can actually use without instructor hand-holding. Sensor integration and adaptive psych instrument work (Q-sort, IAT) are available as alternatives for interested students.
+      </div>
+    </div>
+  </div>
+
+  <!-- WEEK 8 -->
+  <div class="week-card phase-debug-card">
+    <div class="week-header" onclick="toggleWeek('w8')">
+      <div class="week-num"><div class="week-num-label">Week</div><div class="week-num-value">8</div></div>
+      <div class="week-summary">
+        <div class="week-title">Site assignment · Begin student simulation walkthroughs</div>
+        <div class="week-tagline">Each team receives a section of the Fall site. Begin simulating a student's first day.</div>
+        <div class="week-badges"><span class="badge badge-blue">All teams</span><span class="badge badge-gray">Deliverables to be posted</span></div>
+      </div>
+      <div class="week-expand" id="w8-arrow">＋</div>
+    </div>
+    <div class="week-body" id="w8">
+      <div class="day-row">
+        <div class="day-label">Tuesday<span>Day 15</span></div>
+        <div class="day-content">
+          <div class="session-title">Site Assignment and Kickoff</div>
+          <div class="session-desc"><p>Each team is assigned a section of the Fall COGS 160 experiment-making site. The instructor explains the overall architecture of that site and what it is supposed to do when finished.</p></div>
+          <ul class="task-list blue">
+            <li>Receive your team's site section assignment</li>
+            <li>Read the existing code and identify what each page is intended to do</li>
+            <li>Draft a list of the functions in your section that need success conditions written</li>
+          </ul>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Thursday<span>Day 16</span></div>
+        <div class="day-content">
+          <div class="session-title">First Student Simulation Walkthrough</div>
+          <div class="session-desc"><p>Each person simulates the experience of a Fall student: start at the track overview page for your assigned section of Designing_Experiments and attempt to complete every stated task without outside help. Log every broken link, missing file, unclear instruction, and non-functional interactive element using the structured observation format.</p></div>
+          <ul class="task-list blue">
+            <li>Create your audit folder: <code>docs/phase3_audit/section_X/</code> — commit to your Phase 3 branch</li>
+            <li>Run the end-to-end walkthrough; log at minimum 10 observations with severity ratings</li>
+            <li>Write a one-paragraph README.md for your section</li>
+            <li><strong>Due by end of class:</strong> push <code>walkthrough_log.md</code> and <code>README.md</code> to your branch</li>
+          </ul>
+          <div class="page-links"><a href="../Designing_Experiments/docs/student_tracks/phase3_wk08.html" style="color:var(--blue,#2A5FA0);font-weight:600">→ Full Week 8 assignment page (Designing_Experiments)</a></div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /week 8 -->
+
+  <!-- WEEK 9 -->
+  <div class="week-card phase-debug-card">
+    <div class="week-header" onclick="toggleWeek('w9')">
+      <div class="week-num"><div class="week-num-label">Week</div><div class="week-num-value">9</div></div>
+      <div class="week-summary">
+        <div class="week-title">Bug fixing · Success conditions · Sensor and psych test work</div>
+        <div class="week-tagline">Fix the bugs you found. Write success conditions. Optional: sensor hookup and psych instrument work.</div>
+        <div class="week-badges"><span class="badge badge-blue">All teams</span><span class="badge badge-gray">Deliverables to be posted</span></div>
+      </div>
+      <div class="week-expand" id="w9-arrow">＋</div>
+    </div>
+    <div class="week-body" id="w9">
+      <div class="day-row">
+        <div class="day-label">Both days</div>
+        <div class="day-content">
+          <div class="session-desc"><p>Primary work: fix the issues found in Week 8 walkthroughs and write formal success conditions for each function in your assigned section. A success condition is a precise statement of what the function must do, what constitutes a correct output, and what a failure looks like.</p></div>
+          <ul class="task-list blue">
+            <li>Fix bugs identified in Week 8 walkthroughs — commit fixes to a debugging branch</li>
+            <li>Write success conditions for each code function in your section (<code>success_conditions.md</code>)</li>
+            <li>Optional: work with the instructor on sensor hookup for physiological stress measurement</li>
+            <li>Optional: help design or implement adaptive preference tests, Q-sort instruments, or IATs for the Fall site</li>
+          </ul>
+          <ul class="task-list blue">
+            <li>Triage your walkthrough log: mark each issue as RESOLVED, OPEN (with GitHub issue link), NOT-IN-SCOPE, or NEEDS-DECISION</li>
+            <li>Fix all BLOCKING and MAJOR issues within your competence; commit each fix with a clear message</li>
+            <li>Write at least one success condition per page in your section in <code>success_conditions.md</code></li>
+            <li><strong>Due by end of Thursday:</strong> fixes committed, <code>success_conditions.md</code> and updated <code>walkthrough_log.md</code> pushed</li>
+          </ul>
+          <div class="info-box"><p><strong>Sensor and psych test track</strong> — students interested in the sensor hookup (wearable physiological measurement) or in building adaptive psychological instruments (Q-sort, implicit association tests, adaptive preference surveys) should speak with David in Week 8 to confirm participation. This is an alternative to the site-debugging work, not additional to it.</p></div>
+          <div class="page-links"><a href="../Designing_Experiments/docs/student_tracks/phase3_wk09.html" style="color:var(--blue,#2A5FA0);font-weight:600">→ Full Week 9 assignment page (Designing_Experiments)</a></div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /week 9 -->
+
+  <!-- WEEK 10 -->
+  <div class="week-card phase-debug-card">
+    <div class="week-header" onclick="toggleWeek('w10')">
+      <div class="week-num"><div class="week-num-label">Week</div><div class="week-num-value">10</div></div>
+      <div class="week-summary">
+        <div class="week-title">Final walkthroughs · Hand-off report · Quarter review</div>
+        <div class="week-tagline">Each team produces a final site-section report and presents findings.</div>
+        <div class="week-badges"><span class="badge badge-blue">All teams</span><span class="badge badge-gray">Final deliverables to be posted</span></div>
+      </div>
+      <div class="week-expand" id="w10-arrow">＋</div>
+    </div>
+    <div class="week-body" id="w10">
+      <div class="day-row">
+        <div class="day-label">Tuesday<span>Day 19</span></div>
+        <div class="day-content">
+          <div class="session-title">Second Student Simulation Walkthrough</div>
+          <div class="session-desc"><p>Repeat the Week 8 simulation on the now-partially-debugged site. How far does a naïve student get this time? What is still broken? This comparison — Week 8 state vs. Week 10 state — is part of the final deliverable.</p></div>
+          <ul class="task-list blue">
+            <li>Complete the end-to-end student simulation walkthrough on your section</li>
+            <li>Document progress: what works now that did not in Week 8?</li>
+            <li>List remaining open issues with severity ratings (blocking / major / minor)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Thursday<span>Day 20</span></div>
+        <div class="day-content">
+          <div class="session-title">Final Presentations and Hand-Off</div>
+          <div class="session-desc"><p>Each team presents their section to the class (5–8 minutes): what was assigned, what they found, what they fixed, what remains open, and their success conditions. The goal is a hand-off document that the Fall instructor can use to continue development over the summer.</p></div>
+          <ul class="task-list blue">
+            <li>Re-run the simulation; produce <code>re_walkthrough_log.md</code> with a W8-vs-W10 comparison table</li>
+            <li>Write <code>HANDOFF_REPORT.md</code>: section overview, state table, fixes made, open issues, success conditions, recommendations</li>
+            <li>Open a Pull Request to Tag-UCSD/Designing_Experiments with your full audit folder and any fixed pages</li>
+          </ul>
+          <div class="page-links"><a href="../Designing_Experiments/docs/student_tracks/phase3_wk10.html" style="color:var(--blue,#2A5FA0);font-weight:600">→ Full Week 10 assignment page (Designing_Experiments)</a></div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /week 10 -->
+
+  <!-- GRADING NOTICE -->
+  <div class="grading-notice">
+    <h3>Grading</h3>
+    <p>
+      Detailed grading rubrics for the track work (Weeks 3–7) and the Fall site debugging (Weeks 8–10) will be posted on this page before those phases begin. The Week 1–2 article-finding work is assessed on completion (10 PDFs submitted by end of Week 1 Thursday; continued submissions through Week 2). Usability notes are assessed on specificity — a generic comment such as "the site was confusing" does not count; a note such as "the Article Propose page does not explain whether uploaded PDFs replace a DOI entry or supplement it" does.
+    </p>
+  </div>
+
+</div><!-- /container -->
+
+<div class="version-badge">KA v0.4</div>
+
+<script>
+function toggleWeek(id) {
+  const body = document.getElementById(id);
+  const arrow = document.getElementById(id + '-arrow');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  arrow.textContent = isOpen ? '＋' : '－';
+}
+
+// Open week 1 by default
+toggleWeek('w1');
+</script>
+
+<footer class="ka-page-footer" style="background:#1C3D3A; padding:28px 32px; margin-top:40px; display:flex; justify-content:space-between; align-items:center; border-radius:8px 8px 0 0;">
+  <a href="../ka_user_home.html" style="color:#A8C8BF; font-size:0.85rem; text-decoration:none;">← Back to My ATLAS</a>
+  <div style="display:flex; gap:12px;">
+    <a href="ka_dashboard.html" style="background:#2A7868; color:#F7F4EF; padding:8px 18px; border-radius:6px; text-decoration:none; font-size:0.85rem; font-weight:600;">View Dashboard →</a>
+  </div>
+</footer>
+
+<script>
+window.KA_PAGE_FUNCTION = {
+  pageId: 'ka_schedule',
+  title: 'Course Schedule — COGS 160 Spring 2026',
+  audience: 'All COGS 160 students and instructors',
+  purpose: 'Central weekly schedule for the 10-week course. Weeks 1–2: whole-class article-finding and site orientation. Weeks 3–7: track-specific production work. Weeks 8–10: testing and debugging the Fall COGS 160 experiment-making site. Includes day-by-day breakdown, deliverables, and links to relevant KA pages.',
+  workflowPos: 'Primary course navigation artifact — students should consult this page at the start of each week.',
+  notFor: 'General Atlas visitors not enrolled in COGS 160.',
+  phase: 'course-structure',
+  evalQuestions: [
+    'Is the three-phase arc (archive building / track work / fall-site debugging) clear to a student reading this for the first time?',
+    'Do the Week 1 and 2 panels give enough detail for a student to complete the session without the instructor present?',
+    'Does the TBD pattern for Weeks 3–10 signal clearly that content is coming rather than reading as an error or an incomplete page?',
+    'Are the page-link pills pointing to the correct KA pages for each session?'
+  ]
+};
+</script>
+<script src="../ka_page_function.js"></script>
+<script src="../ka_mode_switch.js"></script>
+<script src="../ka_site_shell.js"></script>
+<script src="../ka_shell_user.js"></script>
+
+<script>
+window.KA_ABOUT_PAGE = {
+  pageId: 'ka_schedule',
+  objective: 'Provide enrolled COGS 160 students with a clear week-by-week account of what is expected, what is due, and which Knowledge Atlas pages to use each session.',
+  users: 'Enrolled COGS 160 Spring 2026 students and the instructor',
+  uses: [
+    'Orient to the three-phase course arc: archive building, track production, Fall site debugging',
+    'Find out what is due by Thursday of the current week',
+    'Navigate to the correct KA pages and resources for each session',
+    'Track the transition from individual track work to shared site-debugging work in Weeks 8–10',
+    'Reference the grading notice and check when rubrics will be posted'
+  ]
+};
+</script>
+<script src="../ka_about_page.js"></script>
+<script>
+window.KA_SHELL.initShell({
+  navContainerSelector: '.nav-center',
+  modeSelectId: 'schedule-mode-select',
+  modePillId: 'schedule-mode-pill',
+  defaultMode: 'instructor'
+});
+window.KA_SHELL_USER.applyUser({
+  avatarId: 'schedule-avatar',
+  avatarFallback: 'JL'
+});
+</script>
+
+</body>
+</html>

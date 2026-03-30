@@ -272,7 +272,7 @@ nav a.active { color: #F5A623; }
       <li><a id="nav-shell-gaps" href="ka_gaps.html">Gaps</a></li>
       <li><a id="nav-shell-articles" href="ka_article_search.html" class="active">Articles</a></li>
       <li><a id="nav-shell-contribute" href="ka_contribute.html">Contribute</a></li>
-      <li><a id="nav-shell-course" href="ka_student_setup.html">Course</a></li>
+      <li><a id="nav-shell-course" href="160sp/ka_student_setup.html">Course</a></li>
     </ul>
   </div>
   <div class="nav-right">
@@ -294,7 +294,7 @@ nav a.active { color: #F5A623; }
   <h1>Article Search</h1>
   <p class="page-header-sub">
     Find published studies by the cognitive or affective construct they investigate,
-    by the measuring instrument <span style="font-size:0.88em;opacity:0.8;">[signal / measuring instrument]</span> they use, or by both together.
+    by the measuring instrument or sensor family <span style="font-size:0.88em;opacity:0.8;">[signal / measuring instrument]</span> they use, or by both together.
   </p>
 </div>
 
@@ -309,8 +309,8 @@ nav a.active { color: #F5A623; }
     </button>
     <button class="mode-tab" data-mode="instrument" onclick="setMode('instrument', this)">
       <span class="mode-tab-icon">📡</span>
-      <span class="mode-tab-label">Measuring Instrument</span>
-      <span class="mode-tab-sub">EDA, EEG, NASA-TLX, PVT…</span>
+      <span class="mode-tab-label">Instrument or Sensor</span>
+      <span class="mode-tab-sub">EDA, EEG, NASA-TLX, HRV, PVT…</span>
     </button>
     <button class="mode-tab" data-mode="both" onclick="setMode('both', this)">
       <span class="mode-tab-icon">🔍</span>
@@ -369,7 +369,7 @@ nav a.active { color: #F5A623; }
     <div id="panel-instrument" style="display:none;">
       <div class="search-box-row">
         <div class="search-field">
-          <div class="search-field-label">Measuring Instrument <span style="font-size:0.86em;color:#B0A090;font-weight:400;">[Signal]</span></div>
+          <div class="search-field-label">Instrument or Sensor <span style="font-size:0.86em;color:#B0A090;font-weight:400;">[Signal]</span></div>
           <select id="sel-instrument" onchange="updateSearchI()">
             <option value="">— Select an instrument —</option>
             <optgroup label="Physiological">
@@ -406,12 +406,12 @@ nav a.active { color: #F5A623; }
               <option>DSSQ [Dundee Stress State Questionnaire]</option>
             </optgroup>
           </select>
-          <div class="search-field-hint">Finds all articles in the corpus that use this instrument as a primary or auxiliary measure. Click the arrow next to an instrument name on the Signal Catalogue page to jump here directly.</div>
+          <div class="search-field-hint">Finds all articles in the corpus that use this instrument or sensor family as a primary or auxiliary measure. Click the arrow next to an instrument name on the Signal Catalogue page to jump here directly.</div>
         </div>
         <button class="btn-search-primary" id="btn-search-i" onclick="runSearch()" disabled>Search →</button>
       </div>
       <div class="chips-section">
-        <div class="chips-label">Common instruments</div>
+        <div class="chips-label">Common instruments and sensors</div>
         <div class="chips" id="chips-instrument">
           <span class="chip" onclick="quickSelectInstrument(this)">EDA</span>
           <span class="chip" onclick="quickSelectInstrument(this)">HR / HRV</span>
@@ -500,7 +500,7 @@ nav a.active { color: #F5A623; }
     <div class="search-prompt-icon">📄</div>
     <p>Select a construct, measuring instrument, or both above,<br>then click <strong>Search</strong> to find relevant articles in the KA corpus.</p>
     <p style="font-size:0.8rem;color:#C0B0A0;margin-top:10px;">
-      <em>Note (demo mode): Results shown are representative examples. Live search requires the article corpus database — see the Critical Path document for Phase 2 data-seeding details.</em>
+      <em>Results now come from the current rebuild-backed article payload. Topic labels are front-backed when available and construct-backed otherwise.</em>
     </p>
   </div>
   <div id="results-container" style="display:none;">
@@ -690,7 +690,7 @@ function runSearch() {
     const cNeedle = (construct || '').toLowerCase();
     const iNeedle = (instrument || '').toLowerCase();
     const cMatch = !construct || a.constructs.some(c => c.toLowerCase().includes(cNeedle));
-    const iMatch = !instrument || a.instruments.some(i => i.toLowerCase().includes(iNeedle));
+    const iMatch = !instrument || (a.searchTerms || a.instruments).some(i => i.toLowerCase().includes(iNeedle));
     return cMatch && iMatch;
   });
 
@@ -712,30 +712,78 @@ function renderResults(articles, construct, instrument) {
 
   prompt.style.display = 'none';
   container.style.display = 'block';
-  countEl.innerHTML = `<strong>${articles.length}</strong> article${articles.length !== 1 ? 's' : ''} found${construct ? ' — construct: <em>' + construct + '</em>' : ''}${instrument ? ' — instrument: <em>' + instrument.split('[')[0].trim() + '</em>' : ''}`;
+  countEl.innerHTML = `<strong>${articles.length}</strong> article${articles.length !== 1 ? 's' : ''} found${construct ? ' — construct: <em>' + construct + '</em>' : ''}${instrument ? ' — instrument/sensor: <em>' + instrument.split('[')[0].trim() + '</em>' : ''}`;
 
   listEl.innerHTML = articles.map(a => `
     <div class="result-card" onclick="this.querySelector('.result-abstract').style['-webkit-line-clamp'] = this.querySelector('.result-abstract').style['-webkit-line-clamp'] === 'none' ? '3' : 'none'">
       <div class="result-title">${a.title}</div>
-      <div class="result-authors">${a.authors} (${a.year}) · <em>${a.journal}</em></div>
+      <div class="result-authors">${a.authors} (${a.year}) · <em>${a.journal}</em> · ${a.paperId}</div>
       <div class="result-abstract">${a.abstract}</div>
       <div class="result-meta">
         ${a.constructs.map(c => `<span class="result-tag">${c}</span>`).join('')}
         ${a.instruments.map(i => `<span class="result-tag instrument">${i.split('[')[0].trim()}</span>`).join('')}
+        ${a.sensorTerms.map(s => `<span class="result-tag instrument" title="${a.sensorSummary || s}">Sensor: ${s}</span>`).join('')}
         <span class="result-tag year">${a.year}</span>
         <span class="result-tag rct">${a.studyType}</span>
+        ${a.primaryTopic ? `<span class="result-tag" style="background:#EEF3ED;color:#1C3D3A;">Topic: ${a.primaryTopic}</span>` : ''}
+        ${a.sensorSummary ? `<span class="result-tag instrument" title="${a.sensorSummary}">Sensor profile</span>` : ''}
+        ${typeof a.attackCount === 'number' ? `<span class="result-tag" style="background:#FCE8E6;color:#8B2C2C;">Attacks ${a.attackCount}</span>` : ''}
+        ${typeof a.supportCount === 'number' ? `<span class="result-tag" style="background:#E7F5EC;color:#245B3A;">Supports ${a.supportCount}</span>` : ''}
         ${a.doi ? `<span class="result-tag" style="background:#F0EDEA;color:#2A7868;cursor:pointer;" onclick="window.open('https://doi.org/${a.doi}','_blank')">DOI ↗</span>` : ''}
       </div>
     </div>
   `).join('');
 }
 
+function dedupeCaseInsensitive(values) {
+  const seen = new Set();
+  const out = [];
+  values.forEach(function(value) {
+    const clean = String(value || '').trim();
+    if (!clean) return;
+    const key = clean.toLowerCase();
+    if (seen.has(key)) return;
+    seen.add(key);
+    out.push(clean);
+  });
+  return out;
+}
+
+function parseSensorTerms(summary) {
+  const canonical = {
+    'eeg': 'EEG',
+    'ecg': 'ECG',
+    'ekg': 'EKG',
+    'emg': 'EMG',
+    'gsr': 'GSR',
+    'hrv': 'HRV',
+    'fmri': 'fMRI',
+    'fnirs': 'fNIRS',
+    'ppg': 'PPG',
+    'heart rate': 'Heart Rate',
+    'skin conductance': 'Skin Conductance',
+    'eye tracking': 'Eye Tracking',
+    'eye-tracking': 'Eye Tracking',
+    'eye movement': 'Eye Movement',
+    'electrodermal': 'Electrodermal',
+  };
+  return dedupeCaseInsensitive(String(summary || '')
+    .split(/[;,]/)
+    .map(function(part) {
+      const clean = part.trim();
+      if (!clean) return '';
+      const key = clean.toLowerCase();
+      return canonical[key] || clean;
+    })
+    .filter(Boolean));
+}
+
 function hideResults() {
   document.getElementById('search-prompt').style.display = 'block';
   document.getElementById('search-prompt').innerHTML = `
     <div class="search-prompt-icon">📄</div>
-    <p>Select a construct, measuring instrument, or both above,<br>then click <strong>Search</strong> to find relevant articles in the KA corpus.</p>
-    <p style="font-size:0.8rem;color:#C0B0A0;margin-top:10px;"><em>Note (demo mode): Results shown are representative examples. Live search requires the article corpus database.</em></p>
+    <p>Select a construct, instrument or sensor family, or both above,<br>then click <strong>Search</strong> to find relevant articles in the KA corpus.</p>
+    <p style="font-size:0.8rem;color:#C0B0A0;margin-top:10px;"><em>Results come from the current rebuild-backed article payload. Topic labels are front-backed when available and construct-backed otherwise.</em></p>
   `;
   document.getElementById('results-container').style.display = 'none';
 }
@@ -772,17 +820,30 @@ function sortResults(val) {
       : (article.theories || []).length
         ? article.theories
         : [(article.article_type || 'Article').replace(/_/g, ' ')];
+    const sensorTerms = parseSensorTerms(article.sensor_summary || '');
+    const instruments = dedupeCaseInsensitive((article.instruments || []).length
+      ? article.instruments
+      : [article.sample_n ? `Sample N ${article.sample_n}` : 'Corpus record']);
+    const searchTerms = dedupeCaseInsensitive(instruments.concat(sensorTerms));
     const abstract = article.abstract || 'Current rebuild article record. Abstract coverage will improve as ingestion and extraction tighten.';
+    const arg = article.argumentation_summary || {};
     return {
       title: article.title || article.paper_id,
-      authors: article.paper_id || 'Corpus record',
+      authors: Array.isArray(article.authors) && article.authors.length ? article.authors.join(', ') : (article.paper_id || 'Corpus record'),
       year: article.year || '',
-      journal: (article.article_type || 'Rebuild record').replace(/_/g, ' '),
+      journal: article.venue || (article.article_type || 'Rebuild record').replace(/_/g, ' '),
       abstract: abstract,
       constructs: constructs,
-      instruments: (article.instruments || []).length ? article.instruments : [article.sample_n ? `Sample N ${article.sample_n}` : 'Corpus record'],
+      instruments: instruments,
+      sensorTerms: sensorTerms,
+      searchTerms: searchTerms,
       studyType: (article.article_type || 'Unknown').replace(/_/g, ' '),
-      doi: article.doi || ''
+      doi: article.doi || '',
+      paperId: article.paper_id || '',
+      primaryTopic: article.primary_topic || ((article.primary_front || {}).name) || '',
+      sensorSummary: article.sensor_summary || '',
+      attackCount: arg.direct_attack_edges || 0,
+      supportCount: arg.direct_support_edges || 0,
     };
   }
 
@@ -790,22 +851,28 @@ function sortResults(val) {
     const payload = await window.KA_PAYLOADS.loadWithFallback('data/ka_payloads/articles.json', { articles: [] });
     if (payload.articles && payload.articles.length) {
       ARTICLE_SEARCH_DATA = payload.articles.map(mapArticle);
-      const constructs = Array.from(new Set(ARTICLE_SEARCH_DATA.flatMap(function(article) { return article.constructs || []; }).filter(Boolean))).sort();
-      const instruments = Array.from(new Set(ARTICLE_SEARCH_DATA.flatMap(function(article) { return article.instruments || []; }).filter(Boolean))).sort();
+      const constructs = dedupeCaseInsensitive(ARTICLE_SEARCH_DATA.flatMap(function(article) { return article.constructs || []; }).filter(Boolean)).sort();
+      const instruments = dedupeCaseInsensitive(ARTICLE_SEARCH_DATA.flatMap(function(article) { return article.searchTerms || article.instruments || []; }).filter(Boolean)).sort();
       if (constructs.length) {
         setOptions('sel-construct', constructs, '— Select a construct —');
         setOptions('sel-both-construct', constructs, '— Select a construct —');
         setChipGroup('chips-construct', constructs, 'construct');
       }
       if (instruments.length) {
-        setOptions('sel-instrument', instruments, '— Select an instrument —');
-        setOptions('sel-both-instrument', instruments, '— Select an instrument —');
+        setOptions('sel-instrument', instruments, '— Select an instrument or sensor —');
+        setOptions('sel-both-instrument', instruments, '— Select an instrument or sensor —');
         setChipGroup('chips-instrument', instruments, 'instrument');
       }
       document.getElementById('search-prompt').innerHTML = `
         <div class="search-prompt-icon">📄</div>
-        <p>Select a construct, measuring instrument, or both above,<br>then click <strong>Search</strong> to find relevant articles in the KA corpus.</p>
-        <p style="font-size:0.8rem;color:#C0B0A0;margin-top:10px;"><em>Results now default to the current rebuild payload. Instrument surfaces are heuristic and should be treated as provisional until extraction improves.</em></p>
+        <p>Select a construct, instrument or sensor family, or both above,<br>then click <strong>Search</strong> to find relevant articles in the KA corpus.</p>
+        <p style="font-size:0.8rem;color:#C0B0A0;margin-top:10px;"><em>Results now default to the current rebuild payload. Sensor families are derived from the gold registry and merged into the instrument search surface.</em></p>
+      `;
+    } else if (window.location.protocol === 'file:') {
+      document.getElementById('search-prompt').innerHTML = `
+        <div class="search-prompt-icon">⚠️</div>
+        <p>This page is open in local-file mode, so the browser may block the JSON payload fetches that power live article search.</p>
+        <p style="font-size:0.8rem;color:#C0B0A0;margin-top:10px;"><em>Serve the Knowledge Atlas directory over HTTP if you want the live 760-paper search surface rather than the empty local-file fallback.</em></p>
       `;
     }
   }

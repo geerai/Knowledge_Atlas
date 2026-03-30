@@ -1057,7 +1057,7 @@
             <a id="nav-shell-gaps" href="ka_gaps.html">Gaps</a>
             <a id="nav-shell-articles" href="ka_article_search.html">Articles</a>
             <a id="nav-shell-contribute" href="ka_contribute.html" class="active">Contribute</a>
-            <a id="nav-shell-course" href="ka_student_setup.html">Course</a>
+            <a id="nav-shell-course" href="160sp/ka_student_setup.html">Course</a>
         </div>
         <div class="nav-right">
             <select class="mode-select" id="articles-mode-select" aria-label="Switch user mode">
@@ -1418,6 +1418,8 @@
             list.innerHTML = filteredContributorArticles.slice(0, 8).map(article => {
                 const isActive = selectedContributorArticle && selectedContributorArticle.paper_id === article.paper_id;
                 const abstract = (article.abstract || 'Abstract not yet recovered from the current rebuild.').slice(0, 180);
+                const arg = article.argumentation_summary || {};
+                const primaryTopic = article.primary_topic || ((article.primary_front || {}).name) || '';
                 return `
                     <div class="result-card ${isActive ? 'active' : ''}" data-paper-id="${article.paper_id}">
                         <div class="result-title">${article.title}</div>
@@ -1426,8 +1428,11 @@
                         <div class="result-badges">
                             <span class="badge">${(article.article_type || 'Unknown').replace(/_/g, ' ')}</span>
                             <span class="badge">${article.claim_count} claims</span>
+                            ${primaryTopic ? `<span class="badge">Topic: ${primaryTopic}</span>` : ''}
                             ${article.sample_n ? `<span class="badge">N=${article.sample_n}</span>` : ''}
                             ${article.direction ? `<span class="badge">Direction: ${String(article.direction).replace(/_/g, ' ')}</span>` : ''}
+                            ${article.sensor_summary ? `<span class="badge">Sensors</span>` : ''}
+                            ${arg.direct_attack_edges ? `<span class="badge">Attacks ${arg.direct_attack_edges}</span>` : ''}
                         </div>
                         <div class="result-actions">
                             <button class="button-small button-evaluate" onclick="event.stopPropagation();selectContributorArticle('${article.paper_id}')">Evaluate →</button>
@@ -1539,6 +1544,32 @@
             const repairSource = jsonStatus.repair_source || article.repair_source || 'rebuild';
             const encodedPaperId = encodeURIComponent(article.paper_id);
             const encodedTitle = encodeURIComponent(article.title || article.paper_id);
+            const primaryTopic = article.primary_topic || ((article.primary_front || {}).name) || 'Topic not yet assigned';
+            const frontList = (article.fronts || []).map(front => front.name).filter(Boolean);
+            const frontHtml = `
+                <div style="margin-top: 10px; padding: 10px 12px; background: #F3F6F2; border-left: 3px solid #6E8B63; color: #3E4239; line-height: 1.6;">
+                    <strong>Topic:</strong> ${primaryTopic}
+                    ${frontList.length ? `<div style="margin-top:6px;"><strong>Research fronts:</strong> ${frontList.join(', ')}</div>` : ''}
+                </div>
+            `;
+            const sensorHtml = article.sensor_summary ? `
+                <div style="margin-top: 10px; padding: 10px 12px; background: #EEF4F7; border-left: 3px solid #4D7A8A; color: #30464E; line-height: 1.6;">
+                    <strong>Sensor / method signal:</strong> ${article.sensor_summary}
+                </div>
+            ` : '';
+            const arg = article.argumentation_summary || {};
+            const argHtml = `
+                <div style="margin-top: 10px; padding: 10px 12px; background: #F8F2EC; border-left: 3px solid #A46C3A; color: #4E453C; line-height: 1.6;">
+                    <strong>Argumentation summary:</strong> ${arg.direct_support_edges || 0} support edges, ${arg.direct_attack_edges || 0} attack edges, ${arg.contested_claim_count || 0} contested claims, ${arg.search_target_count || 0} active search targets.
+                    ${(arg.top_attack_schemes || []).length ? `<div style="margin-top:6px;"><strong>Top attack schemes:</strong> ${(arg.top_attack_schemes || []).join(', ')}</div>` : ''}
+                </div>
+            `;
+            const relatedHtml = (article.related_papers || []).length ? `
+                <div style="margin-top: 10px; padding: 10px 12px; background: #F4F0E8; border-left: 3px solid #7A5C3E; color: #4E453C; line-height: 1.6;">
+                    <strong>Related papers:</strong>
+                    <div style="margin-top:6px;">${article.related_papers.slice(0, 4).map(item => `${item.paper_id} — ${item.title} (${item.reason})`).join('<br>')}</div>
+                </div>
+            ` : '';
             reference.innerHTML = `
                 <strong>${article.paper_id}</strong>. ${article.title}. <em>${(article.article_type || 'Unknown').replace(/_/g, ' ')}</em>
                 <div style="margin-top: 8px;">DOI: ${article.doi ? `<a class="reference-doi" href="https://doi.org/${article.doi}" target="_blank" rel="noopener noreferrer">${article.doi}</a>` : 'Not yet recovered'}</div>
@@ -1546,6 +1577,10 @@
                 ${mainConclusion}
                 ${constructPairHtml}
                 ${directionHtml}
+                ${frontHtml}
+                ${sensorHtml}
+                ${argHtml}
+                ${relatedHtml}
                 <div class="layer-link-row">
                     <a class="layer-link" href="ka_argumentation.html?paper_id=${encodedPaperId}&title=${encodedTitle}">Argumentation view</a>
                     <a class="layer-link" href="ka_annotations.html?paper_id=${encodedPaperId}&title=${encodedTitle}">Annotation view</a>
@@ -1604,9 +1639,12 @@
                     article.title,
                     article.paper_id,
                     article.article_type,
+                    article.primary_topic,
                     ...(article.constructs || []),
                     ...(article.theories || []),
                     ...(article.instruments || []),
+                    ...(article.fronts || []).map(front => front.name || ''),
+                    article.sensor_summary || '',
                 ].join(' ').toLowerCase();
                 return blob.includes(query);
             });

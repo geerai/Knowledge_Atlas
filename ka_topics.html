@@ -76,6 +76,30 @@ nav a.active { color: #F5A623; }
   margin-left: auto;
   margin-right: auto;
 }
+.hero-actions {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.hero-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(168,200,191,0.34);
+  background: rgba(255,255,255,0.06);
+  color: #E7F0ED;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.hero-btn:hover {
+  border-color: #F5A623;
+  color: #fff;
+}
 
 /* ── TABS ── */
 .tabs-container {
@@ -411,11 +435,12 @@ nav a.active { color: #F5A623; }
     </div>
     <ul>
       <li><a id="nav-shell-explore" href="ka_topics.html" class="active">Explore</a></li>
+      <li><a id="nav-shell-topic-map" href="ka_topic_hierarchy.html">Topic Map</a></li>
       <li><a id="nav-shell-evidence" href="ka_evidence.html">Evidence</a></li>
       <li><a id="nav-shell-gaps" href="ka_gaps.html">Gaps</a></li>
       <li><a id="nav-shell-articles" href="ka_article_search.html">Articles</a></li>
       <li><a id="nav-shell-contribute" href="ka_contribute.html">Contribute</a></li>
-      <li><a id="nav-shell-course" href="ka_student_setup.html">Course</a></li>
+      <li><a id="nav-shell-course" href="160sp/ka_student_setup.html">Course</a></li>
     </ul>
   </div>
   <div class="nav-right">
@@ -455,6 +480,9 @@ nav a.active { color: #F5A623; }
       <div class="hero-stat-num" id="stat-categories">5</div>
       <div class="hero-stat-label">Research categories</div>
     </div>
+  </div>
+  <div class="hero-actions">
+    <a class="hero-btn" href="ka_topic_hierarchy.html">Open Topic Hierarchy Prototype</a>
   </div>
 </div>
 
@@ -551,9 +579,9 @@ nav a.active { color: #F5A623; }
     Four browsing modes (All, Emerging, Most Active, Research Priorities) provide different entry points
     depending on the user's interests and goals. Clicking a card opens a detail panel showing full metadata,
     theories, constructs, and metrics.
-    In the live system, cluster metadata (n, VOI, top constructs) is computed nightly from
-    the <code>finding_clusters</code> database table; in this demo it is seeded from the
-    <code>CLUSTERS</code> data array shared with the Question Maker page.
+    In the live system, these topic cards are generated from the current rebuild's
+    <code>research_fronts_v5.json</code> artifact. They are live fronts, not a seeded demo array,
+    though front coverage is still narrower than full paper coverage.
   </p>
 </div>
 
@@ -962,7 +990,8 @@ async function initializeTopicsPage() {
   CLUSTERS = payload.topics && payload.topics.length ? payload.topics : FALLBACK_CLUSTERS;
 
   // Update hero stats
-  const totalPapers = CLUSTERS.reduce((sum, item) => sum + (item.n || 0), 0);
+  const totalPapers = (payload.summary && payload.summary.article_count) || CLUSTERS.reduce((sum, item) => sum + (item.n || 0), 0);
+  const frontCoveredPapers = (payload.summary && payload.summary.front_covered_paper_count) || CLUSTERS.reduce((sum, item) => sum + (item.n || 0), 0);
   const totalTopics = CLUSTERS.length;
   const categories = new Set(CLUSTERS.map(c => c.cat)).size;
 
@@ -971,6 +1000,11 @@ async function initializeTopicsPage() {
   document.getElementById('stat-papers').textContent = totalPapers;
   document.getElementById('stat-topics').textContent = totalTopics;
   document.getElementById('stat-categories').textContent = categories;
+  if (window.location.protocol === 'file:' && !(payload.summary && payload.summary.article_count)) {
+    document.getElementById('topics-mode-note').textContent = `This page is running in local-file fallback mode. The ${totalPapers} papers shown here come from the built-in demo front set; serve the Atlas over HTTP to load the live 760-paper corpus.`;
+  } else {
+    document.getElementById('topics-mode-note').textContent = `Current live fronts cover ${frontCoveredPapers} of ${totalPapers} papers; the rest still surface through fallback per-paper topics elsewhere in the Atlas.`;
+  }
 
   renderAllGrids();
 }

@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topic Hierarchy Prototype · Knowledge Atlas</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #F7F4EF; color: #2D2D2D; }
+a { color: inherit; }
+button { font: inherit; }
+
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: #1C3D3A; height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.14);
+}
+.nav-left { display: flex; align-items: center; gap: 28px; }
+.wordmark { font-size: 1.24rem; font-weight: 700; color: #F5A623; }
+.wordmark-sub { font-size: 0.62rem; color: #7AACA0; letter-spacing: 0.15em; text-transform: uppercase; }
+nav ul { display: flex; gap: 20px; list-style: none; }
+nav a { color: #B8D4CE; font-size: 0.88rem; text-decoration: none; }
+nav a.active { color: #F5A623; }
+
+.hero {
+  background: linear-gradient(135deg, #1C3D3A 0%, #183532 100%);
+  padding: 42px 24px 28px;
+}
+.hero-inner { max-width: 1280px; margin: 0 auto; }
+.hero-tag {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; color: #7AACA0; margin-bottom: 12px;
+}
+.hero h1 {
+  font-family: Georgia, serif; font-size: 2.2rem; color: #fff;
+  font-weight: 600; line-height: 1.15; margin-bottom: 14px;
+}
+.hero-sub {
+  max-width: 820px; color: #C9DDD8; font-size: 0.96rem; line-height: 1.65;
+  margin-bottom: 20px;
+}
+.hero-stats {
+  display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 18px;
+}
+.hero-stat {
+  min-width: 132px;
+  padding: 12px 14px;
+  border: 1px solid rgba(168,200,191,0.22);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+}
+.hero-stat-num {
+  font-family: Georgia, serif; font-size: 1.7rem; color: #F5A623; font-weight: 700;
+}
+.hero-stat-label {
+  font-size: 0.7rem; color: #9ABFB8; text-transform: uppercase; letter-spacing: 0.08em;
+}
+.hero-notes {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;
+}
+.hero-note {
+  padding: 12px 14px; border-radius: 10px; background: rgba(255,255,255,0.06);
+  color: #D6E5E0; font-size: 0.82rem; line-height: 1.55;
+}
+
+.warning {
+  max-width: 1280px; margin: 18px auto 0; padding: 0 24px;
+}
+.warning-card {
+  display: none;
+  background: #FFF4E4; color: #6E4A12; border: 1px solid #E9C983;
+  border-radius: 12px; padding: 14px 16px; font-size: 0.86rem; line-height: 1.6;
+}
+.warning-card.show { display: block; }
+
+.page-shell {
+  max-width: 1280px; margin: 22px auto 60px; padding: 0 24px;
+  display: grid; gap: 18px;
+}
+
+.panel {
+  background: #fff; border: 1px solid #E0D8CC; border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+}
+
+.hierarchy-panel {
+  padding: 16px 18px 14px;
+}
+.hierarchy-head {
+  display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.hierarchy-title {
+  font-family: Georgia, serif; font-size: 1.14rem; color: #1C3D3A; font-weight: 700;
+}
+.hierarchy-sub {
+  font-size: 0.82rem; color: #6B655D; line-height: 1.55; max-width: 720px;
+}
+.search-row {
+  display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+}
+.search-input {
+  min-width: 320px; max-width: 520px; width: 100%;
+  padding: 10px 12px; border: 1px solid #D7CFBF; border-radius: 8px;
+  background: #FCFBF8;
+}
+.tree-wrap {
+  max-height: 30vh; overflow: auto; padding-right: 6px;
+  border-top: 1px solid #EFE8DD; padding-top: 10px;
+}
+.tree-root {
+  border-bottom: 1px solid #F0E9DE; padding: 8px 0 10px;
+}
+.tree-root:last-child { border-bottom: none; }
+.tree-root > details > summary,
+.tree-child > details > summary {
+  cursor: pointer;
+  list-style: none;
+}
+.tree-root > details > summary::-webkit-details-marker,
+.tree-child > details > summary::-webkit-details-marker { display: none; }
+.tree-summary {
+  display: flex; align-items: baseline; gap: 10px; justify-content: space-between;
+}
+.tree-label {
+  font-size: 0.88rem; font-weight: 700; color: #1C3D3A;
+}
+.tree-meta {
+  font-size: 0.74rem; color: #8A8177; letter-spacing: 0.02em;
+}
+.tree-desc {
+  font-size: 0.78rem; color: #6B655D; margin-top: 5px; line-height: 1.55;
+}
+.tree-children { margin-top: 10px; padding-left: 14px; display: grid; gap: 8px; }
+.tree-child {
+  padding: 8px 10px; border-radius: 10px; background: #FAF7F2; border: 1px solid #ECE3D6;
+}
+.topic-list {
+  margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px;
+}
+.topic-btn {
+  border: 1px solid #D9CFC0; background: #fff; color: #274A45;
+  border-radius: 999px; padding: 6px 10px; font-size: 0.74rem;
+  cursor: pointer; line-height: 1.35;
+}
+.topic-btn.active {
+  background: #1C3D3A; border-color: #1C3D3A; color: #fff;
+}
+
+.viewer-grid {
+  display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(360px, 0.9fr); gap: 18px;
+}
+@media (max-width: 1080px) {
+  .viewer-grid { grid-template-columns: 1fr; }
+  .hero-notes { grid-template-columns: 1fr; }
+}
+
+.graph-panel { padding: 16px 18px 14px; }
+.panel-title {
+  font-family: Georgia, serif; font-size: 1.12rem; color: #1C3D3A; font-weight: 700;
+  margin-bottom: 8px;
+}
+.panel-sub {
+  font-size: 0.83rem; color: #6B655D; line-height: 1.55; margin-bottom: 14px;
+}
+.graph-wrap {
+  border: 1px solid #ECE3D6; border-radius: 12px; background: linear-gradient(180deg, #FCFAF6 0%, #F7F2EB 100%);
+  min-height: 460px; overflow: hidden;
+}
+#topic-graph { width: 100%; height: 460px; display: block; }
+.relation-strip {
+  margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px;
+}
+.relation-chip {
+  border: 1px solid #DCCFBE; background: #FBF8F3; border-radius: 999px;
+  padding: 7px 11px; font-size: 0.76rem; color: #4D4740;
+}
+
+.detail-panel { padding: 16px 18px 16px; display: grid; gap: 14px; }
+.detail-card {
+  border: 1px solid #ECE3D6; border-radius: 12px; padding: 14px; background: #FCFAF6;
+}
+.topic-name {
+  font-family: Georgia, serif; font-size: 1.24rem; color: #1C3D3A; line-height: 1.25; margin-bottom: 10px;
+}
+.topic-badges {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;
+}
+.topic-badge {
+  padding: 6px 10px; border-radius: 999px; background: #EAF3F0; color: #27534E;
+  font-size: 0.75rem; font-weight: 700;
+}
+.meta-grid {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;
+}
+.meta-box {
+  background: #fff; border: 1px solid #E7DDCF; border-radius: 10px; padding: 10px;
+}
+.meta-label {
+  font-size: 0.68rem; letter-spacing: 0.09em; text-transform: uppercase; color: #8A8177; margin-bottom: 6px;
+}
+.meta-value {
+  font-size: 0.86rem; color: #2F2A24; line-height: 1.45;
+}
+.list-block { display: grid; gap: 10px; }
+.list-title {
+  font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: #8A8177;
+}
+.tag-row {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.mini-tag {
+  padding: 5px 9px; border-radius: 999px; font-size: 0.74rem;
+  background: #fff; border: 1px solid #DCCFBE; color: #514A42;
+}
+.paper-list {
+  display: grid; gap: 10px; max-height: 420px; overflow: auto;
+}
+.paper-item {
+  background: #fff; border: 1px solid #E6DDCF; border-radius: 10px; padding: 10px 11px;
+}
+.paper-title {
+  font-size: 0.84rem; font-weight: 700; color: #1E433F; line-height: 1.45; margin-bottom: 4px;
+}
+.paper-meta {
+  font-size: 0.74rem; color: #6B655D; line-height: 1.5;
+}
+.cross-list {
+  display: grid; gap: 8px;
+}
+.cross-item {
+  display: flex; justify-content: space-between; gap: 12px; align-items: center;
+  padding: 10px; border: 1px solid #E6DDCF; border-radius: 10px; background: #fff;
+}
+.cross-main {
+  display: grid; gap: 4px;
+}
+.cross-title {
+  font-size: 0.82rem; font-weight: 700; color: #1E433F; cursor: pointer;
+  background: none; border: none; text-align: left; padding: 0;
+}
+.cross-title:hover { text-decoration: underline; }
+.cross-reason {
+  font-size: 0.74rem; color: #6B655D; line-height: 1.45;
+}
+.cross-score {
+  font-size: 0.72rem; color: #8A8177; white-space: nowrap;
+}
+.empty-state {
+  color: #6B655D; font-size: 0.86rem; line-height: 1.6;
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <div>
+      <div class="wordmark">Knowledge Atlas</div>
+      <div class="wordmark-sub">Topic Hierarchy Prototype</div>
+    </div>
+    <ul>
+      <li><a href="ka_home.html">Home</a></li>
+      <li><a href="ka_topics.html">Topics</a></li>
+      <li><a href="ka_topic_hierarchy.html" class="active">Topic Map</a></li>
+      <li><a href="ka_evidence.html">Evidence</a></li>
+      <li><a href="ka_article_search.html">Articles</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">Knowledge Atlas · Prototype Viewer</div>
+    <h1>Topic hierarchy by dominant IV branch and dominant DV focus</h1>
+    <p class="hero-sub">
+      This is a first approximation, not a final ontology. The upper strip gives a compact hierarchy.
+      Selecting a topic below reveals its local graph: parent branches, nearby topics, shared outcome families,
+      and the papers that presently justify the grouping.
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="stat-articles">0</div>
+        <div class="hero-stat-label">Articles assigned</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="stat-roots">0</div>
+        <div class="hero-stat-label">IV root families</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="stat-topics">0</div>
+        <div class="hero-stat-label">Topic nodes</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="stat-fallback">0</div>
+        <div class="hero-stat-label">Fallback IV papers</div>
+      </div>
+    </div>
+    <div class="hero-notes" id="hero-notes"></div>
+  </div>
+</section>
+
+<div class="warning">
+  <div class="warning-card" id="protocol-warning">
+    This page is meant to read live JSON payloads. If you open it as <code>file://</code> rather than <code>http://</code>,
+    the browser may refuse those fetches and the page will not represent the live corpus.
+  </div>
+</div>
+
+<main class="page-shell">
+  <section class="panel hierarchy-panel">
+    <div class="hierarchy-head">
+      <div>
+        <div class="hierarchy-title">Hierarchy Strip</div>
+        <div class="hierarchy-sub">
+          The hierarchy is intentionally compact. Root families open into IV branches, and those open into topic nodes.
+          The point is to let one see the classification first, and only then inspect the graph and paper evidence.
+        </div>
+      </div>
+      <div class="search-row">
+        <input id="tree-search" class="search-input" type="search" placeholder="Filter by IV branch, DV focus, theory, or sensor">
+      </div>
+    </div>
+    <div class="tree-wrap" id="hierarchy-tree"></div>
+  </section>
+
+  <section class="viewer-grid">
+    <section class="panel graph-panel">
+      <div class="panel-title">Selected topic graph</div>
+      <div class="panel-sub" id="graph-subtitle">
+        Click a topic in the hierarchy to see its parent branches and the cross-relations that make it close to other topics.
+      </div>
+      <div class="graph-wrap">
+        <svg id="topic-graph" viewBox="0 0 900 460" aria-label="Topic relation graph"></svg>
+      </div>
+      <div class="relation-strip" id="relation-strip"></div>
+    </section>
+
+    <aside class="panel detail-panel">
+      <section class="detail-card" id="topic-summary"></section>
+      <section class="detail-card">
+        <div class="list-title">Nearby topics</div>
+        <div class="cross-list" id="cross-relations"></div>
+      </section>
+      <section class="detail-card">
+        <div class="list-title">Papers in this topic</div>
+        <div class="paper-list" id="paper-list"></div>
+      </section>
+    </aside>
+  </section>
+</main>
+
+<script>
+let topicPayload = null;
+let selectedTopicId = null;
+let currentQuery = '';
+
+function h(text) {
+  return String(text || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function showProtocolWarning() {
+  if (window.location.protocol === 'file:') {
+    document.getElementById('protocol-warning').classList.add('show');
+  }
+}
+
+async function loadPayload() {
+  const response = await fetch('data/ka_payloads/topic_hierarchy.json');
+  if (!response.ok) {
+    throw new Error('Failed to load topic hierarchy payload');
+  }
+  return response.json();
+}
+
+function renderHero(summary, notes) {
+  document.getElementById('stat-articles').textContent = summary.visible_article_count || summary.article_count || 0;
+  document.getElementById('stat-roots').textContent = summary.root_count || 0;
+  document.getElementById('stat-topics').textContent = summary.topic_count || 0;
+  document.getElementById('stat-fallback').textContent = summary.fallback_iv_paper_count || 0;
+  const noteHost = document.getElementById('hero-notes');
+  const decoratedNotes = [...(notes || [])];
+  if (summary.hidden_article_count) {
+    decoratedNotes.unshift(`${summary.hidden_article_count} papers are hidden from this viewer until their dominant IV or DV assignment is repaired.`);
+  }
+  noteHost.innerHTML = decoratedNotes.map((note) => `<div class="hero-note">${h(note)}</div>`).join('');
+}
+
+function topicMatchesQuery(topic, query) {
+  if (!query) return true;
+  const haystack = [
+    topic.label,
+    topic.iv_label,
+    topic.iv_root_label,
+    topic.dv_focus_label,
+    topic.dv_root_label,
+    ...(topic.theories || []),
+    ...(topic.sensors || []),
+    ...(topic.fronts || []),
+  ].join(' ').toLowerCase();
+  return haystack.includes(query);
+}
+
+function renderTree() {
+  const host = document.getElementById('hierarchy-tree');
+  const query = currentQuery.trim().toLowerCase();
+  const roots = (topicPayload.roots || []).map((root) => {
+    const children = (root.children || []).map((child) => {
+      const matchingTopics = (child.topics || []).filter((topicRef) => {
+        const fullTopic = topicPayload.topics.find((row) => row.id === topicRef.id);
+        return fullTopic && topicMatchesQuery(fullTopic, query);
+      });
+      return {
+        ...child,
+        topics: matchingTopics,
+      };
+    }).filter((child) => child.topics.length > 0 || !query);
+    const rootMatches = query && [root.label, root.description].join(' ').toLowerCase().includes(query);
+    if (!rootMatches && query && children.length === 0) return null;
+    return { ...root, children };
+  }).filter(Boolean);
+
+  host.innerHTML = roots.map((root, rootIndex) => `
+    <div class="tree-root">
+      <details ${rootIndex < 2 ? 'open' : ''}>
+        <summary>
+          <div class="tree-summary">
+            <div class="tree-label">${h(root.label)}</div>
+            <div class="tree-meta">${root.paper_count} papers · ${root.child_count} branches</div>
+          </div>
+          <div class="tree-desc">${h(root.description || 'No description yet.')}</div>
+        </summary>
+        <div class="tree-children">
+          ${(root.children || []).map((child, childIndex) => `
+            <div class="tree-child">
+              <details ${rootIndex === 0 && childIndex < 2 ? 'open' : ''}>
+                <summary>
+                  <div class="tree-summary">
+                    <div class="tree-label">${h(child.label)}</div>
+                    <div class="tree-meta">${child.paper_count} papers · ${(child.topics || []).length} topic nodes</div>
+                  </div>
+                </summary>
+                <div class="topic-list">
+                  ${(child.topics || []).map((topicRef) => `
+                    <button class="topic-btn ${topicRef.id === selectedTopicId ? 'active' : ''}" data-topic-id="${h(topicRef.id)}">
+                      ${h(topicRef.label)} (${topicRef.paper_count})
+                    </button>
+                  `).join('')}
+                </div>
+              </details>
+            </div>
+          `).join('')}
+        </div>
+      </details>
+    </div>
+  `).join('');
+
+  host.querySelectorAll('.topic-btn').forEach((button) => {
+    button.addEventListener('click', () => {
+      selectTopic(button.dataset.topicId);
+    });
+  });
+}
+
+function renderTopicSummary(topic) {
+  const host = document.getElementById('topic-summary');
+  if (!topic) {
+    host.innerHTML = '<div class="empty-state">No topic selected yet.</div>';
+    return;
+  }
+
+  host.innerHTML = `
+    <div class="topic-name">${h(topic.label)}</div>
+    <div class="topic-badges">
+      <div class="topic-badge">${topic.paper_count} papers</div>
+      <div class="topic-badge">${h(topic.iv_root_label)}</div>
+      <div class="topic-badge">${h(topic.dv_focus_label)}</div>
+    </div>
+    <div class="meta-grid">
+      <div class="meta-box">
+        <div class="meta-label">IV Branch</div>
+        <div class="meta-value">${h(topic.iv_label)}<br><span style="color:#7A7065">${h(topic.iv_node)}</span></div>
+      </div>
+      <div class="meta-box">
+        <div class="meta-label">DV Focus</div>
+        <div class="meta-value">${h(topic.dv_focus_label)}<br><span style="color:#7A7065">${h(topic.dv_focus)}</span></div>
+      </div>
+      <div class="meta-box">
+        <div class="meta-label">IV Family</div>
+        <div class="meta-value">${h(topic.iv_root_label)}<br><span style="color:#7A7065">${h(topic.iv_root_description || '')}</span></div>
+      </div>
+      <div class="meta-box">
+        <div class="meta-label">DV Family</div>
+        <div class="meta-value">${h(topic.dv_root_label)}<br><span style="color:#7A7065">${h(topic.dv_root)}</span></div>
+      </div>
+    </div>
+    <div class="list-block">
+      <div class="list-title">Theories</div>
+      <div class="tag-row">${(topic.theories || []).length ? topic.theories.map((value) => `<span class="mini-tag">${h(value)}</span>`).join('') : '<span class="empty-state">No stable theory labels yet.</span>'}</div>
+    </div>
+    <div class="list-block">
+      <div class="list-title">Sensors</div>
+      <div class="tag-row">${(topic.sensors || []).length ? topic.sensors.map((value) => `<span class="mini-tag">${h(value)}</span>`).join('') : '<span class="empty-state">No sensor-rich papers in this topic.</span>'}</div>
+    </div>
+    <div class="list-block">
+      <div class="list-title">Research Fronts</div>
+      <div class="tag-row">${(topic.fronts || []).length ? topic.fronts.map((value) => `<span class="mini-tag">${h(value)}</span>`).join('') : '<span class="empty-state">This topic currently sits outside the formal front inventory.</span>'}</div>
+    </div>
+  `;
+}
+
+function renderCrossRelations(topic) {
+  const host = document.getElementById('cross-relations');
+  const strip = document.getElementById('relation-strip');
+  if (!topic || !(topic.cross_relations || []).length) {
+    host.innerHTML = '<div class="empty-state">No nearby topics are currently registered for this node.</div>';
+    strip.innerHTML = '';
+    return;
+  }
+
+  host.innerHTML = topic.cross_relations.map((relation) => `
+    <div class="cross-item">
+      <div class="cross-main">
+        <button class="cross-title" data-topic-id="${h(relation.target_id)}">${h(relation.target_label)}</button>
+        <div class="cross-reason">${h(relation.label)}</div>
+      </div>
+      <div class="cross-score">score ${relation.score}</div>
+    </div>
+  `).join('');
+  host.querySelectorAll('.cross-title').forEach((button) => {
+    button.addEventListener('click', () => selectTopic(button.dataset.topicId));
+  });
+
+  strip.innerHTML = topic.cross_relations.slice(0, 4).map((relation) => `
+    <div class="relation-chip">${h(relation.label)}</div>
+  `).join('');
+}
+
+function renderPaperList(topic) {
+  const host = document.getElementById('paper-list');
+  if (!topic || !(topic.paper_preview || []).length) {
+    host.innerHTML = '<div class="empty-state">No papers are available for this topic.</div>';
+    return;
+  }
+  host.innerHTML = topic.paper_preview.map((paper) => `
+    <div class="paper-item">
+      <div class="paper-title">${h(paper.title)}</div>
+      <div class="paper-meta">
+        ${h(paper.paper_id)}${paper.year ? ` · ${h(paper.year)}` : ''} · ${paper.claim_count} claims
+        ${paper.primary_front ? `<br>front: ${h(paper.primary_front)}` : ''}
+        ${paper.sensor_summary ? `<br>sensors: ${h(paper.sensor_summary)}` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function drawNode(svg, x, y, label, kind, isCenter) {
+  const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  const fillMap = {
+    center: '#1C3D3A',
+    iv_root: '#F5A623',
+    iv: '#D6EADF',
+    dv_root: '#EFD7AA',
+    dv: '#DDE8F8',
+    theory: '#F3E5F6',
+    sensor: '#E7F0EA',
+    relation: '#F4EEE6',
+  };
+  circle.setAttribute('cx', x);
+  circle.setAttribute('cy', y);
+  circle.setAttribute('r', isCenter ? 38 : 28);
+  circle.setAttribute('fill', fillMap[kind] || fillMap.relation);
+  circle.setAttribute('stroke', '#CBBCA8');
+  circle.setAttribute('stroke-width', '1.2');
+  text.setAttribute('x', x);
+  text.setAttribute('y', y - (isCenter ? 6 : 4));
+  text.setAttribute('text-anchor', 'middle');
+  text.setAttribute('font-size', isCenter ? '12' : '10');
+  text.setAttribute('font-weight', isCenter ? '700' : '600');
+  text.setAttribute('fill', isCenter ? '#FFFFFF' : '#2D2D2D');
+  const lines = String(label || '').split(' ').reduce((acc, word) => {
+    if (!acc.length) return [word];
+    const current = acc[acc.length - 1];
+    if ((current + ' ' + word).length <= 16) {
+      acc[acc.length - 1] = current + ' ' + word;
+    } else if (acc.length < 3) {
+      acc.push(word);
+    }
+    return acc;
+  }, []);
+  lines.slice(0, 3).forEach((line, index) => {
+    const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+    tspan.setAttribute('x', x);
+    tspan.setAttribute('dy', index === 0 ? '0' : '12');
+    tspan.textContent = line;
+    text.appendChild(tspan);
+  });
+  group.appendChild(circle);
+  group.appendChild(text);
+  svg.appendChild(group);
+}
+
+function drawEdge(svg, x1, y1, x2, y2, label) {
+  const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  line.setAttribute('x1', x1);
+  line.setAttribute('y1', y1);
+  line.setAttribute('x2', x2);
+  line.setAttribute('y2', y2);
+  line.setAttribute('stroke', '#D5C8B7');
+  line.setAttribute('stroke-width', '1.4');
+  svg.appendChild(line);
+
+  if (label) {
+    text.setAttribute('x', (x1 + x2) / 2);
+    text.setAttribute('y', (y1 + y2) / 2 - 6);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('font-size', '10');
+    text.setAttribute('fill', '#7A7065');
+    text.textContent = label;
+    svg.appendChild(text);
+  }
+}
+
+function renderGraph(topic) {
+  const svg = document.getElementById('topic-graph');
+  svg.innerHTML = '';
+  if (!topic) return;
+
+  const center = { x: 450, y: 210, label: topic.label, kind: 'center' };
+  const satellites = [
+    { label: topic.iv_root_label, kind: 'iv_root', edge: 'IV family' },
+    { label: topic.iv_label, kind: 'iv', edge: 'branch' },
+    { label: topic.dv_root_label, kind: 'dv_root', edge: 'DV family' },
+    { label: topic.dv_focus_label, kind: 'dv', edge: 'focus' },
+    ...(topic.theories || []).slice(0, 2).map((label) => ({ label, kind: 'theory', edge: 'theory' })),
+    ...(topic.sensors || []).slice(0, 2).map((label) => ({ label, kind: 'sensor', edge: 'sensor' })),
+    ...(topic.cross_relations || []).slice(0, 4).map((row) => ({ label: row.target_label, kind: 'relation', edge: row.label })),
+  ].slice(0, 10);
+
+  const radius = 154;
+  const angleStep = (Math.PI * 2) / Math.max(satellites.length, 1);
+  drawNode(svg, center.x, center.y, center.label, center.kind, true);
+  satellites.forEach((node, index) => {
+    const angle = -Math.PI / 2 + angleStep * index;
+    const x = center.x + Math.cos(angle) * radius;
+    const y = center.y + Math.sin(angle) * radius;
+    drawEdge(svg, center.x, center.y, x, y, node.edge);
+    drawNode(svg, x, y, node.label, node.kind, false);
+  });
+}
+
+function selectTopic(topicId) {
+  selectedTopicId = topicId;
+  const topic = (topicPayload.topics || []).find((row) => row.id === topicId);
+  renderTree();
+  renderTopicSummary(topic);
+  renderCrossRelations(topic);
+  renderPaperList(topic);
+  renderGraph(topic);
+  document.getElementById('graph-subtitle').textContent = topic
+    ? `Selected topic: ${topic.label}. The graph shows parent branches, supporting fronts and theories, and nearby topics that share outcomes or IV families.`
+    : 'Click a topic in the hierarchy to see its parent branches and the cross-relations that make it close to other topics.';
+}
+
+async function init() {
+  showProtocolWarning();
+  try {
+    topicPayload = await loadPayload();
+  } catch (error) {
+    document.getElementById('hierarchy-tree').innerHTML = `
+      <div class="empty-state">
+        The topic hierarchy payload could not be loaded. If you opened this page as <code>file://</code>,
+        that is the most likely cause.
+      </div>
+    `;
+    document.getElementById('topic-summary').innerHTML = `<div class="empty-state">${h(error.message)}</div>`;
+    return;
+  }
+
+  renderHero(topicPayload.summary || {}, topicPayload.notes || []);
+  const firstTopic = (topicPayload.topics || [])[0];
+  if (firstTopic) selectedTopicId = firstTopic.id;
+  renderTree();
+  if (firstTopic) selectTopic(firstTopic.id);
+
+  document.getElementById('tree-search').addEventListener('input', (event) => {
+    currentQuery = event.target.value || '';
+    renderTree();
+  });
+}
+
+init();
+</script>
+</body>
+</html>

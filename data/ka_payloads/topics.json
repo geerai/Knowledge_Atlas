@@ -4,59 +4,74 @@
       "id": "RF_008",
       "cat": "Neuroscience",
       "n": 3,
-      "voi": 0.86,
+      "voi": 0.857,
       "name": "Neuroaesthetics \u00d7 Contour \u00d7 Beauty",
-      "desc": "Theories: neuroaesthetics Constructs: spatial.contour, affect.aesthetic.beauty, spatial.shape.circular Maturity: emerging.",
+      "desc": "Theories: neuroaesthetics Constructs: spatial contour, affect aesthetic beauty, spatial shape circular Maturity: emerging.",
       "maturity": "emerging",
       "shared_theories": [
-        "theory_neuroaesthetics"
+        "neuroaesthetics"
       ],
       "shared_constructs": [
-        "spatial.contour",
-        "affect.aesthetic.beauty",
-        "spatial.shape.circular"
+        "spatial contour",
+        "affect aesthetic beauty",
+        "spatial shape circular"
       ],
       "contradictions": 0,
-      "replications": 0
+      "replications": 0,
+      "paper_ids": [
+        "PDF-0274",
+        "PDF-0707",
+        "PDF-0905"
+      ]
     },
     {
       "id": "RF_009",
       "cat": "Neuroscience",
       "n": 3,
-      "voi": 0.83,
+      "voi": 0.827,
       "name": "Attention Restoration Theory \u00d7 Natural \u00d7 Eye Movement Patterns (Fixation, Saccade Activity)",
-      "desc": "Theories: attention restoration theory Constructs: natural, Eye movement patterns (fixation, saccade activity), neural.eeg.alpha asymmetry, affect.arousal affect Maturity: emerging.",
+      "desc": "Theories: attention restoration theory Constructs: natural, Eye movement patterns (fixation, saccade activity), neural eeg alpha asymmetry, affect arousal affect Maturity: emerging.",
       "maturity": "emerging",
       "shared_theories": [
-        "theory_attention_restoration_theory"
+        "attention restoration theory"
       ],
       "shared_constructs": [
         "natural",
         "Eye movement patterns (fixation, saccade activity)",
-        "neural.eeg.alpha_asymmetry",
-        "affect.arousal_affect"
+        "neural eeg alpha asymmetry",
+        "affect arousal affect"
       ],
       "contradictions": 0,
-      "replications": 0
+      "replications": 0,
+      "paper_ids": [
+        "PDF-0345",
+        "PDF-0465",
+        "PDF-0725"
+      ]
     },
     {
       "id": "RF_010",
       "cat": "Physiological",
       "n": 3,
-      "voi": 0.83,
+      "voi": 0.827,
       "name": "Stress Recovery Theory \u00d7 Window \u00d7 Hrv",
-      "desc": "Theories: stress recovery theory Constructs: spatial.view.window, cog.physiology.hrv, Postoperative recovery: length of stay, analgesic use, nurse evaluations Maturity: emerging.",
+      "desc": "Theories: stress recovery theory Constructs: spatial view window, cog physiology hrv, Postoperative recovery: length of stay, analgesic use, nurse evaluations Maturity: emerging.",
       "maturity": "emerging",
       "shared_theories": [
-        "theory_stress_recovery_theory"
+        "stress recovery theory"
       ],
       "shared_constructs": [
-        "spatial.view.window",
-        "cog.physiology.hrv",
+        "spatial view window",
+        "cog physiology hrv",
         "Postoperative recovery: length of stay, analgesic use, nurse evaluations"
       ],
       "contradictions": 0,
-      "replications": 0
+      "replications": 0,
+      "paper_ids": [
+        "PDF-0355",
+        "PDF-0356",
+        "PDF-0901"
+      ]
     },
     {
       "id": "RF_007",
@@ -64,56 +79,78 @@
       "n": 3,
       "voi": 0.82,
       "name": "Circadian Lighting \u00d7 Color Temp \u00d7 Eeg",
-      "desc": "Theories: circadian lighting, circadian photobiology Constructs: luminous.color temp, neural.eeg, cog.performance.task Maturity: emerging.",
+      "desc": "Theories: circadian lighting, circadian photobiology Constructs: luminous color temp, neural eeg, cog performance task Maturity: emerging.",
       "maturity": "emerging",
       "shared_theories": [
-        "theory_circadian_lighting",
-        "theory_circadian_photobiology"
+        "circadian lighting",
+        "circadian photobiology"
       ],
       "shared_constructs": [
-        "luminous.color_temp",
-        "neural.eeg",
-        "cog.performance.task"
+        "luminous color temp",
+        "neural eeg",
+        "cog performance task"
       ],
       "contradictions": 0,
-      "replications": 0
+      "replications": 0,
+      "paper_ids": [
+        "PDF-0183",
+        "PDF-0858",
+        "PDF-0896"
+      ]
     },
     {
       "id": "RF_003",
       "cat": "Methodology",
       "n": 10,
-      "voi": 0.72,
+      "voi": 0.716,
       "name": "Biophilia \u00d7 Wood",
-      "desc": "Theories: biophilia Constructs: material.wood Maturity: developing.",
+      "desc": "Theories: biophilia Constructs: material wood Maturity: developing.",
       "maturity": "developing",
       "shared_theories": [
-        "theory_biophilia"
+        "biophilia"
       ],
       "shared_constructs": [
-        "material.wood"
+        "material wood"
       ],
       "contradictions": 0,
-      "replications": 0
+      "replications": 0,
+      "paper_ids": [
+        "PDF-0546",
+        "PDF-0633",
+        "PDF-0634",
+        "PDF-0637",
+        "PDF-0797",
+        "PDF-0852",
+        "PDF-0853",
+        "PDF-0855",
+        "PDF-0872",
+        "PDF-0874"
+      ]
     },
     {
       "id": "RF_011",
       "cat": "Neuroscience",
       "n": 3,
-      "voi": 0.67,
+      "voi": 0.667,
       "name": "Circadian Lighting \u00d7 Exposure Duration \u00d7 Sleep Quality",
-      "desc": "Theories: circadian lighting Constructs: temporal env.exposure duration, physio.sleep quality, luminous.artificial, luminous.illuminance.high Maturity: emerging.",
+      "desc": "Theories: circadian lighting Constructs: temporal env exposure duration, physio sleep quality, luminous artificial, luminous illuminance high Maturity: emerging.",
       "maturity": "emerging",
       "shared_theories": [
-        "theory_circadian_lighting"
+        "circadian lighting"
       ],
       "shared_constructs": [
-        "temporal_env.exposure_duration",
-        "physio.sleep_quality",
-        "luminous.artificial",
-        "luminous.illuminance.high"
+        "temporal env exposure duration",
+        "physio sleep quality",
+        "luminous artificial",
+        "luminous illuminance high"
       ],
       "contradictions": 0,
-      "replications": 0
+      "replications": 0,
+      "paper_ids": [
+        "PDF-0752",
+        "PDF-0856",
+        "PDF-0883"
+      ]
     },
     {
       "id": "RF_001",
@@ -126,63 +163,179 @@
       "shared_theories": [],
       "shared_constructs": [],
       "contradictions": 0,
-      "replications": 0
+      "replications": 0,
+      "paper_ids": [
+        "PDF-0012",
+        "PDF-0045",
+        "PDF-0049",
+        "PDF-0071",
+        "PDF-0103",
+        "PDF-0109",
+        "PDF-0121",
+        "PDF-0126",
+        "PDF-0181",
+        "PDF-0186",
+        "PDF-0201",
+        "PDF-0202",
+        "PDF-0206",
+        "PDF-0232",
+        "PDF-0235",
+        "PDF-0247",
+        "PDF-0253",
+        "PDF-0283",
+        "PDF-0285",
+        "PDF-0287",
+        "PDF-0293",
+        "PDF-0297",
+        "PDF-0298",
+        "PDF-0316",
+        "PDF-0322",
+        "PDF-0342",
+        "PDF-0358",
+        "PDF-0389",
+        "PDF-0390",
+        "PDF-0404",
+        "PDF-0448",
+        "PDF-0464",
+        "PDF-0471",
+        "PDF-0532",
+        "PDF-0537",
+        "PDF-0585",
+        "PDF-0622",
+        "PDF-0632",
+        "PDF-0635",
+        "PDF-0654",
+        "PDF-0682",
+        "PDF-0685",
+        "PDF-0686",
+        "PDF-0688",
+        "PDF-0689",
+        "PDF-0690",
+        "PDF-0691",
+        "PDF-0694",
+        "PDF-0695",
+        "PDF-0696",
+        "PDF-0697",
+        "PDF-0698",
+        "PDF-0699",
+        "PDF-0702",
+        "PDF-0705",
+        "PDF-0723",
+        "PDF-0726",
+        "PDF-0729",
+        "PDF-0781",
+        "PDF-0821",
+        "PDF-0830",
+        "PDF-0833",
+        "PDF-0835",
+        "PDF-0837",
+        "PDF-0839",
+        "PDF-0840",
+        "PDF-0861",
+        "PDF-0863",
+        "PDF-0867",
+        "PDF-0869",
+        "PDF-0875",
+        "PDF-0879",
+        "PDF-0885",
+        "PDF-0887",
+        "PDF-0892",
+        "PDF-0893",
+        "PDF-0894",
+        "PDF-0970",
+        "PDF-1262"
+      ]
     },
     {
       "id": "RF_002",
       "cat": "Methodology",
       "n": 21,
-      "voi": 0.5,
+      "voi": 0.498,
       "name": "Place Attachment Theory \u00d7 Territory",
-      "desc": "Theories: place attachment theory Constructs: social spatial.territory Maturity: established.",
+      "desc": "Theories: place attachment theory Constructs: social spatial territory Maturity: established.",
       "maturity": "established",
       "shared_theories": [
-        "theory_place_attachment_theory"
+        "place attachment theory"
       ],
       "shared_constructs": [
-        "social_spatial.territory"
+        "social spatial territory"
       ],
       "contradictions": 0,
-      "replications": 0
+      "replications": 0,
+      "paper_ids": [
+        "PDF-0054",
+        "PDF-0062",
+        "PDF-0074",
+        "PDF-0075",
+        "PDF-0082",
+        "PDF-0158",
+        "PDF-0174",
+        "PDF-0197",
+        "PDF-0222",
+        "PDF-0339",
+        "PDF-0435",
+        "PDF-0476",
+        "PDF-0508",
+        "PDF-0666",
+        "PDF-0670",
+        "PDF-0674",
+        "PDF-0728",
+        "PDF-0730",
+        "PDF-0733",
+        "PDF-0742",
+        "PDF-0747"
+      ]
     },
     {
       "id": "RF_004",
       "cat": "Neuroscience",
       "n": 5,
-      "voi": 0.47,
+      "voi": 0.468,
       "name": "Cognitive Map Theory \u00d7 Layout \u00d7 Navigation",
-      "desc": "Theories: cognitive map theory Constructs: spatial.layout, cog.spatial.navigation, spatial.navigation Maturity: developing.",
+      "desc": "Theories: cognitive map theory Constructs: spatial layout, cog spatial navigation, spatial navigation Maturity: developing.",
       "maturity": "developing",
       "shared_theories": [
-        "theory_cognitive_map_theory"
+        "cognitive map theory"
       ],
       "shared_constructs": [
-        "spatial.layout",
-        "cog.spatial.navigation",
-        "spatial.navigation"
+        "spatial layout",
+        "cog spatial navigation",
+        "spatial navigation"
       ],
       "contradictions": 0,
-      "replications": 0
+      "replications": 0,
+      "paper_ids": [
+        "PDF-0175",
+        "PDF-0718",
+        "PDF-0720",
+        "PDF-0736",
+        "PDF-0997"
+      ]
     },
     {
       "id": "RF_006",
       "cat": "Neuroscience",
       "n": 3,
-      "voi": 0.43,
+      "voi": 0.433,
       "name": "Circadian Photobiology \u00d7 Daylight \u00d7 Non-Visual Effects (Circadian Rhythm, Mood, Behaviour, Vitamin D, Uv Effects)",
-      "desc": "Theories: circadian photobiology Constructs: luminous.daylight, Non-visual effects (circadian rhythm, mood, behaviour, Vitamin D, UV effects), affect.wellbeing, affect.health Maturity: emerging.",
+      "desc": "Theories: circadian photobiology Constructs: luminous daylight, Non-visual effects (circadian rhythm, mood, behaviour, Vitamin D, UV effects), affect wellbeing, affect health Maturity: emerging.",
       "maturity": "emerging",
       "shared_theories": [
-        "theory_circadian_photobiology"
+        "circadian photobiology"
       ],
       "shared_constructs": [
-        "luminous.daylight",
+        "luminous daylight",
         "Non-visual effects (circadian rhythm, mood, behaviour, Vitamin D, UV effects)",
-        "affect.wellbeing",
-        "affect.health"
+        "affect wellbeing",
+        "affect health"
       ],
       "contradictions": 0,
-      "replications": 0
+      "replications": 0,
+      "paper_ids": [
+        "PDF-0011",
+        "PDF-0221",
+        "PDF-0518"
+      ]
     },
     {
       "id": "RF_005",
@@ -190,17 +343,30 @@
       "n": 5,
       "voi": 0.4,
       "name": "Wayfinding Theory \u00d7 Navigation \u00d7 Wayfinding",
-      "desc": "Theories: wayfinding theory Constructs: spatial.navigation, cog.spatial.wayfinding Maturity: developing.",
+      "desc": "Theories: wayfinding theory Constructs: spatial navigation, cog spatial wayfinding Maturity: developing.",
       "maturity": "developing",
       "shared_theories": [
-        "theory_wayfinding_theory"
+        "wayfinding theory"
       ],
       "shared_constructs": [
-        "spatial.navigation",
-        "cog.spatial.wayfinding"
+        "spatial navigation",
+        "cog spatial wayfinding"
       ],
       "contradictions": 0,
-      "replications": 0
+      "replications": 0,
+      "paper_ids": [
+        "PDF-0348",
+        "PDF-0385",
+        "PDF-0734",
+        "PDF-0739",
+        "PDF-0911"
+      ]
     }
-  ]
+  ],
+  "summary": {
+    "front_count": 11,
+    "unique_paper_count": 138,
+    "front_covered_paper_count": 138,
+    "article_count": 760
+  }
 }
