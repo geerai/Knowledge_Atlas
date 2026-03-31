@@ -511,7 +511,7 @@
         if (role === 'instructor' || role === 'admin') {
           window.location.href = 'ka_approve.html';
         } else {
-          window.location.href = 'ka_dashboard.html';
+          window.location.href = 'ka_user_home.html';
         }
 
       } catch(ex) {
@@ -529,7 +529,7 @@
           sessionStorage.setItem('ka_logged_in', '1');
           if (window.KA_WORKFLOW_STORE) window.KA_WORKFLOW_STORE.setLoggedIn(true);
           const dest = email.includes('instructor') || email.includes('prof')
-            ? 'ka_approve.html' : 'ka_dashboard.html';
+            ? 'ka_approve.html' : 'ka_user_home.html';
           window.location.href = dest;
         };
       }
@@ -582,6 +582,7 @@ window.KA_ABOUT_PAGE = {
 };
 </script>
 <script src="ka_about_page.js"></script>
+<script src="ka_ui_fixes.js"></script>
 <script>
 window.KA_SHELL.initShell({
   navContainerSelector: '.nav-center',

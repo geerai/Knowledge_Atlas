@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Articles — K-ATLAS COGS 160</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f4f6f8; color: #1a1a1a; font-size: 15px; line-height: 1.6;
+    }
+
+    /* ── Top bar ─────────────────────────────────────────── */
+    .topbar {
+      background: #182B49; color: #fff; display: flex; align-items: center;
+      justify-content: space-between; padding: 0.75rem 1.5rem;
+      position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .topbar-logo {
+      font-weight: 900; font-size: 1.15rem; color: #C69214; letter-spacing: 0.04em;
+    }
+    .topbar-logo span { color: #fff; font-weight: 400; font-size: 0.85rem; margin-left: 0.5rem; }
+    .topbar-user { display: flex; align-items: center; gap: 1rem; font-size: 0.85rem; }
+    .topbar-user .username { color: #C69214; font-weight: 700; }
+    .topbar-user .logout {
+      color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.8rem;
+    }
+    .topbar-user .logout:hover { color: #fff; }
+
+    /* ── Student hero ─────────────────────────────────────── */
+    .student-hero {
+      background: linear-gradient(135deg, #1a3a60, #182B49);
+      padding: 1.5rem 2rem; color: #fff; border-bottom: 3px solid #C69214;
+    }
+    .student-hero h1 { font-size: 1.4rem; font-weight: 800; margin-bottom: 0.2rem; }
+    .student-hero h1 span { color: #C69214; }
+    .student-hero p { font-size: 0.85rem; color: rgba(255,255,255,0.65); }
+
+    /* ── Progress overview ───────────────────────────────── */
+    .progress-overview {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+      padding: 1.2rem 2rem; background: #fff; border-bottom: 1px solid #e0e4ec;
+    }
+    .prog-card { border-radius: 10px; padding: 1rem 1.2rem; border: 2px solid; }
+    .prog-card-exp { border-color: #e67e22; background: #fffbf7; }
+    .prog-card-mixed { border-color: #27ae60; background: #f7fffb; }
+    .prog-card-brownie { border-color: #C69214; background: #fffdf0; grid-column: 1/-1; display: none; }
+    .prog-card-brownie.visible { display: block; }
+    .prog-label {
+      font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em;
+      padding: 0.2rem 0.6rem; border-radius: 20px; display: inline-block; margin-bottom: 0.6rem;
+    }
+    .prog-card-exp .prog-label { background: #e67e22; color: #fff; }
+    .prog-card-mixed .prog-label { background: #27ae60; color: #fff; }
+    .prog-card-brownie .prog-label { background: #C69214; color: #fff; }
+    .prog-q-id { font-size: 0.8rem; color: #777; margin-bottom: 0.25rem; }
+    .prog-q-text {
+      font-size: 0.85rem; color: #1a1a1a; font-style: italic;
+      border-left: 3px solid #ddd; padding-left: 0.6rem; margin-bottom: 0.75rem;
+      max-height: 3.2rem; overflow: hidden;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    }
+    .prog-bar-wrap { background: #e8e8e8; border-radius: 20px; height: 12px; overflow: hidden; margin-bottom: 0.4rem; }
+    .prog-bar { height: 100%; border-radius: 20px; transition: width 0.5s ease; }
+    .prog-card-exp .prog-bar { background: #e67e22; }
+    .prog-card-mixed .prog-bar { background: #27ae60; }
+    .prog-card-brownie .prog-bar { background: #C69214; }
+    .prog-count { font-size: 0.8rem; font-weight: 700; }
+    .prog-card-exp .prog-count { color: #e67e22; }
+    .prog-card-mixed .prog-count { color: #27ae60; }
+    .prog-card-brownie .prog-count { color: #996e00; }
+    .prog-note { font-size: 0.75rem; color: #888; margin-top: 0.2rem; }
+    .complete-badge {
+      display: inline-block; background: #27ae60; color: #fff;
+      padding: 0.15rem 0.5rem; border-radius: 20px; font-size: 0.72rem; font-weight: 700;
+      margin-left: 0.4rem;
+    }
+
+    /* ── Tabs ─────────────────────────────────────────────── */
+    .tabs-wrap { padding: 1rem 2rem 0; background: #fff; border-bottom: 2px solid #e0e4ec; }
+    .tabs { display: flex; gap: 0; }
+    .tab {
+      padding: 0.65rem 1.4rem; border: none; background: transparent; cursor: pointer;
+      font-size: 0.88rem; font-weight: 600; color: #666; border-bottom: 3px solid transparent;
+      transition: all 0.15s; margin-bottom: -2px;
+    }
+    .tab:hover { color: #182B49; }
+    .tab.active { color: #182B49; border-bottom-color: #C69214; }
+    .tab.locked { color: #bbb; cursor: not-allowed; }
+    .tab-badge {
+      display: inline-block; font-size: 0.68rem; padding: 0.1rem 0.4rem; border-radius: 20px;
+      margin-left: 0.35rem; font-weight: 800;
+    }
+    .tab-badge-exp { background: #fff3ec; color: #e67e22; }
+    .tab-badge-mixed { background: #f0fff4; color: #27ae60; }
+    .tab-badge-brownie { background: #fffdf0; color: #C69214; }
+
+    /* ── Tab content panels ───────────────────────────────── */
+    .main-content { padding: 1.5rem 2rem; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Upload zone ─────────────────────────────────────── */
+    .upload-zone {
+      border: 2px dashed #b0bece; border-radius: 12px; padding: 2rem;
+      text-align: center; cursor: pointer; transition: all 0.2s; background: #fafbfd;
+      margin-bottom: 1.2rem;
+    }
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: #C69214; background: #fffdf0;
+    }
+    .upload-zone .upload-icon { font-size: 2.5rem; margin-bottom: 0.5rem; opacity: 0.5; }
+    .upload-zone p { font-size: 0.88rem; color: #666; }
+    .upload-zone strong { color: #182B49; }
+    .upload-zone input[type="file"] { display: none; }
+
+    /* ── Papers form ─────────────────────────────────────── */
+    .papers-form { margin-bottom: 1.2rem; }
+    .paper-row {
+      border: 1px solid #dde4f0; border-radius: 8px; padding: 0.9rem 1rem;
+      margin-bottom: 0.75rem; background: #fff;
+    }
+    .paper-row-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem; }
+    .paper-filename { font-size: 0.82rem; font-weight: 700; color: #182B49; flex: 1; }
+    .paper-remove {
+      background: none; border: none; color: #c0392b; cursor: pointer;
+      font-size: 0.8rem; padding: 0.2rem 0.4rem; border-radius: 4px;
+    }
+    .paper-remove:hover { background: #fff0f0; }
+    .paper-fields { display: grid; grid-template-columns: 1fr 200px; gap: 0.5rem; }
+    .field-group label {
+      display: block; font-size: 0.72rem; font-weight: 700; color: #555;
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.25rem;
+    }
+    .field-group input, .field-group textarea {
+      width: 100%; border: 1px solid #d0d8e4; border-radius: 6px;
+      padding: 0.4rem 0.6rem; font-size: 0.85rem; color: #1a1a1a;
+      font-family: inherit; transition: border-color 0.15s;
+    }
+    .field-group input:focus, .field-group textarea:focus {
+      outline: none; border-color: #C69214;
+    }
+    .field-group textarea { resize: vertical; min-height: 4rem; }
+
+    /* ── Fetch button ─────────────────────────────────────── */
+    .fetch-bar { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+    .btn-fetch {
+      background: #182B49; color: #C69214; border: none; padding: 0.7rem 1.8rem;
+      border-radius: 8px; font-size: 0.92rem; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; gap: 0.5rem; transition: background 0.15s;
+    }
+    .btn-fetch:hover { background: #0d1e35; }
+    .btn-fetch:disabled { opacity: 0.5; cursor: not-allowed; }
+    .fetch-note { font-size: 0.8rem; color: #888; }
+
+    /* ── Spinner ──────────────────────────────────────────── */
+    .spinner {
+      display: none; width: 18px; height: 18px; border: 2px solid rgba(198,146,20,0.3);
+      border-top-color: #C69214; border-radius: 50%; animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Results table ────────────────────────────────────── */
+    .results-wrap { overflow-x: auto; margin-bottom: 1.5rem; }
+    .results-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; min-width: 700px; }
+    .results-table th {
+      background: #182B49; color: #C69214; text-align: left;
+      padding: 0.55rem 0.75rem; font-size: 0.75rem; text-transform: uppercase;
+      font-weight: 700; white-space: nowrap;
+    }
+    .results-table td {
+      padding: 0.5rem 0.75rem; border-bottom: 1px solid #eee; vertical-align: top;
+    }
+    .results-table tr:hover td { background: #f7f9ff; }
+    .results-table .col-title { max-width: 220px; }
+    .results-table .col-abstract { max-width: 250px; font-size: 0.78rem; color: #555; }
+    .type-pill {
+      display: inline-block; padding: 0.15rem 0.55rem; border-radius: 20px;
+      font-size: 0.72rem; font-weight: 700; white-space: nowrap;
+    }
+    .type-exp { background: #fff3ec; color: #e67e22; }
+    .type-review { background: #f0f4ff; color: #2c5fcb; }
+    .type-theory { background: #f9f0ff; color: #7b2cbf; }
+    .type-other { background: #f0f0f0; color: #555; }
+    .status-yes { color: #27ae60; font-weight: 700; }
+    .status-no { color: #c0392b; font-weight: 700; }
+    .status-corpus { color: #888; font-size: 0.78rem; }
+    .qualifies-yes { color: #27ae60; font-weight: 700; }
+    .qualifies-no { color: #999; font-size: 0.78rem; }
+
+    /* ── Brownie offer ────────────────────────────────────── */
+    .brownie-offer {
+      display: none; background: linear-gradient(135deg, #fffbf0, #fff3cc);
+      border: 2px solid #C69214; border-radius: 12px; padding: 1.5rem;
+      margin-bottom: 1.5rem; text-align: center;
+    }
+    .brownie-offer.visible { display: block; }
+    .brownie-offer h3 { font-size: 1.15rem; font-weight: 800; color: #182B49; margin-bottom: 0.5rem; }
+    .brownie-offer p { font-size: 0.9rem; color: #555; margin-bottom: 1rem; }
+    .btn-brownie {
+      background: #C69214; color: #fff; border: none; padding: 0.75rem 2rem;
+      border-radius: 8px; font-size: 0.95rem; font-weight: 700; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-brownie:hover { background: #a67c10; }
+
+    /* ── Empty state ──────────────────────────────────────── */
+    .empty-state { text-align: center; padding: 2rem; color: #aaa; font-size: 0.9rem; }
+    .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+
+    /* ── Alert ────────────────────────────────────────────── */
+    .alert {
+      border-radius: 8px; padding: 0.8rem 1rem; margin-bottom: 1rem;
+      font-size: 0.88rem; display: none;
+    }
+    .alert.visible { display: block; }
+    .alert-info { background: #f0f4ff; color: #182B49; border-left: 4px solid #182B49; }
+    .alert-warn { background: #fff8f0; color: #8a4000; border-left: 4px solid #e67e22; }
+
+    /* ── Login overlay ────────────────────────────────────── */
+    #login-overlay {
+      position: fixed; inset: 0; background: rgba(10,18,35,0.92);
+      display: flex; align-items: center; justify-content: center; z-index: 999;
+    }
+    .login-box {
+      background: #fff; border-radius: 14px; padding: 2.5rem; width: 340px;
+      text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    .login-box h2 { font-size: 1.4rem; font-weight: 800; color: #182B49; margin-bottom: 0.4rem; }
+    .login-box .login-sub { font-size: 0.85rem; color: #888; margin-bottom: 1.5rem; }
+    .login-field { margin-bottom: 0.9rem; text-align: left; }
+    .login-field label {
+      display: block; font-size: 0.72rem; font-weight: 700; color: #555;
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.3rem;
+    }
+    .login-field input {
+      width: 100%; border: 1px solid #d0d8e4; border-radius: 6px;
+      padding: 0.55rem 0.75rem; font-size: 0.9rem;
+    }
+    .login-field input:focus { outline: none; border-color: #C69214; }
+    .btn-sign-in {
+      width: 100%; background: #182B49; color: #C69214; border: none;
+      padding: 0.75rem; border-radius: 8px; font-size: 0.95rem; font-weight: 800;
+      cursor: pointer; transition: background 0.15s; margin-top: 0.5rem;
+    }
+    .btn-sign-in:hover { background: #0d1e35; }
+    .login-back { margin-top: 1rem; }
+    .login-back a { font-size: 0.82rem; color: #888; text-decoration: none; }
+    .login-back a:hover { color: #182B49; }
+    .login-error { color: #c0392b; font-size: 0.82rem; margin-top: 0.4rem; display: none; }
+
+    /* ── Manifest upload ──────────────────────────────── */
+    .manifest-toggle {
+      background: none; border: none; color: #182B49; font-size: 0.88rem;
+      font-weight: 600; cursor: pointer; padding: 0.4rem 0; margin-bottom: 0.75rem;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .manifest-toggle:hover { color: #C69214; }
+    .manifest-toggle-icon { display: inline-block; transition: transform 0.2s; }
+    .manifest-toggle.collapsed .manifest-toggle-icon { transform: rotate(-90deg); }
+    .manifest-upload-area {
+      display: none; background: #f9f8f6; border: 1px solid #e0d5c7;
+      border-radius: 8px; padding: 1rem; margin-bottom: 1rem;
+    }
+    .manifest-upload-area.open { display: block; }
+    .manifest-instructions {
+      background: #fff; border-left: 3px solid #C69214; padding: 0.75rem;
+      margin-bottom: 0.75rem; border-radius: 4px; font-size: 0.8rem; color: #555;
+    }
+    .manifest-instructions code {
+      display: block; background: #f5f4f2; padding: 0.5rem; margin: 0.25rem 0;
+      border-radius: 3px; font-size: 0.75rem; overflow-x: auto;
+    }
+    .manifest-input-group {
+      margin-bottom: 0.75rem;
+    }
+    .manifest-input-group label {
+      display: block; font-size: 0.72rem; font-weight: 700; color: #555;
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.25rem;
+    }
+    .manifest-input-group input[type="file"] {
+      width: 100%; padding: 0.4rem 0.6rem; border: 1px solid #d0d8e4;
+      border-radius: 6px; font-size: 0.85rem;
+    }
+    .manifest-status {
+      font-size: 0.8rem; color: #27ae60; font-weight: 600;
+    }
+
+    /* ── Title-only section ────────────────────────────── */
+    .title-only-section {
+      border-top: 2px solid #e8e8e8; margin-top: 1.5rem; padding-top: 1.5rem;
+    }
+    .title-only-toggle {
+      background: none; border: none; color: #182B49; font-size: 0.88rem;
+      font-weight: 600; cursor: pointer; padding: 0.4rem 0; margin-bottom: 0.75rem;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .title-only-toggle:hover { color: #C69214; }
+    .title-only-toggle-icon { display: inline-block; transition: transform 0.2s; }
+    .title-only-toggle.collapsed .title-only-toggle-icon { transform: rotate(-90deg); }
+    .title-only-form {
+      display: none; background: #fffdf0; border: 1px solid #e8dcc8;
+      border-radius: 8px; padding: 1rem;
+    }
+    .title-only-form.open { display: block; }
+    .title-only-entry {
+      border: 1px solid #dde4f0; border-radius: 8px; padding: 0.9rem;
+      margin-bottom: 0.75rem; background: #fff;
+    }
+    .title-only-fields {
+      display: grid; grid-template-columns: 1fr 200px; gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .title-only-remove {
+      background: none; border: none; color: #c0392b; cursor: pointer;
+      font-size: 0.8rem; padding: 0.2rem 0.4rem; border-radius: 4px;
+      align-self: flex-start;
+    }
+    .title-only-remove:hover { background: #fff0f0; }
+    .title-only-add-btn {
+      background: #182B49; color: #C69214; border: none; padding: 0.5rem 1rem;
+      border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .title-only-add-btn:hover { background: #0d1e35; }
+
+    /* ── Responsive ─────────────────────────────────────── */
+    @media (max-width: 720px) {
+      .progress-overview { grid-template-columns: 1fr; }
+      .paper-fields { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Login overlay (shown when not authenticated) ─────── -->
+<div id="login-overlay">
+  <div class="login-box">
+    <h2>K-ATLAS</h2>
+    <p class="login-sub">COGS 160 — Sign in to access your article collection page</p>
+    <div class="login-field">
+      <label>UCSD Email</label>
+      <input type="email" id="login-user" placeholder="e.g., astudent@ucsd.edu" autocomplete="email">
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="login-pass" placeholder="Your K-ATLAS password" autocomplete="current-password">
+    </div>
+    <p class="login-error" id="login-error">Invalid username or password.</p>
+    <button class="btn-sign-in" onclick="handleLogin()">Sign In</button>
+    <div class="login-back"><a href="ka_collect_articles.html">← Back to assignment page</a></div>
+  </div>
+</div>
+
+<!-- ── Top bar ───────────────────────────────────────────── -->
+<div class="topbar">
+  <span class="topbar-logo">K-ATLAS <span>/ Collect Articles</span></span>
+  <div class="topbar-user">
+    <span>Signed in as <span class="username" id="display-name">—</span></span>
+    <a href="#" class="logout" onclick="handleLogout()">Sign out</a>
+  </div>
+</div>
+
+<!-- ── Student hero ──────────────────────────────────────── -->
+<div class="student-hero">
+  <h1>My Article Collection — <span id="hero-name">Loading…</span></h1>
+  <p id="hero-status">Loading your assigned questions…</p>
+</div>
+
+<!-- ── Progress overview ─────────────────────────────────── -->
+<div class="progress-overview">
+  <!-- Q1 card -->
+  <div class="prog-card prog-card-exp" id="prog-q1">
+    <span class="prog-label">Question 1 — 10-EXP</span>
+    <div class="prog-q-id" id="prog-q1-id">—</div>
+    <div class="prog-q-text" id="prog-q1-text">Loading…</div>
+    <div class="prog-bar-wrap"><div class="prog-bar" id="prog-bar-q1" style="width:0%"></div></div>
+    <div class="prog-count" id="prog-count-q1">0 / 10 experimental papers</div>
+    <div class="prog-note">⚠ Only papers classified as Experimental count toward your 10</div>
+  </div>
+  <!-- Q2 card -->
+  <div class="prog-card prog-card-mixed" id="prog-q2">
+    <span class="prog-label">Question 2 — Mixed</span>
+    <div class="prog-q-id" id="prog-q2-id">—</div>
+    <div class="prog-q-text" id="prog-q2-text">Loading…</div>
+    <div class="prog-bar-wrap"><div class="prog-bar" id="prog-bar-q2" style="width:0%"></div></div>
+    <div class="prog-count" id="prog-count-q2">0 / 10 papers</div>
+    <div class="prog-note">All article types count toward your 10</div>
+  </div>
+  <!-- Brownie card (hidden until Q2 complete) -->
+  <div class="prog-card prog-card-brownie" id="prog-brownie">
+    <span class="prog-label">⭐ Brownie Points</span>
+    <div class="prog-count" id="prog-count-brownie">0 brownie points earned</div>
+    <div class="prog-note">Each additional completed question (10 papers) = 1 brownie point, considered in final grade</div>
+  </div>
+</div>
+
+<!-- ── Tabs ──────────────────────────────────────────────── -->
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('q1', this)">
+      Q1 — Experimental <span class="tab-badge tab-badge-exp">10-EXP</span>
+    </button>
+    <button class="tab" onclick="switchTab('q2', this)">
+      Q2 — Open Corpus <span class="tab-badge tab-badge-mixed">MIXED</span>
+    </button>
+    <button class="tab locked" id="tab-brownie" onclick="switchTab('brownie', this)">
+      Brownie Questions <span class="tab-badge tab-badge-brownie">⭐</span>
+    </button>
+  </div>
+</div>
+
+<!-- ── Main content ──────────────────────────────────────── -->
+<div class="main-content">
+
+  <!-- Brownie offer (appears after Q2 complete) -->
+  <div class="brownie-offer" id="brownie-offer">
+    <h3>🎉 Both questions complete! Want a brownie point?</h3>
+    <p>You have met the full requirement. Accept an additional question to earn extra credit — brownie points are taken into account when final grades are assigned. No cap on how many you can earn.</p>
+    <button class="btn-brownie" onclick="acceptBrownie()">Yes, give me a brownie question!</button>
+  </div>
+
+  <!-- Q1 Tab Panel -->
+  <div class="tab-panel active" id="panel-q1">
+    <div class="alert alert-warn" id="alert-q1">
+      <strong>Note for Q1:</strong> You must collect <strong>10 papers classified as Experimental</strong>.
+      Papers of other types (reviews, theoretical, case studies) are stored and count toward the K-ATLAS
+      corpus, but they do not count toward your personal requirement of 10.
+    </div>
+
+    <!-- Manifest Upload Toggle & Form -->
+    <button class="manifest-toggle collapsed" onclick="toggleManifest('q1', this)">
+      <span class="manifest-toggle-icon">▶</span> Use CSV Manifest ↓
+    </button>
+    <div class="manifest-upload-area" id="manifest-area-q1">
+      <div class="manifest-instructions">
+        <strong>CSV Format:</strong>
+        <code>filename,apa_citation,doi<br>smith2023.pdf,"Smith, J. (2023). Title...",10.1234/abc<br>jones2022.pdf,"Jones, K. (2022). Title...",10.5678/def</code>
+      </div>
+      <div class="manifest-input-group">
+        <label>Upload CSV</label>
+        <input type="file" id="manifest-input-q1" accept=".csv" onchange="handleManifestUpload('q1', this.files[0])">
+      </div>
+      <div class="manifest-status" id="manifest-status-q1"></div>
+    </div>
+
+    <div class="upload-zone" id="dropzone-q1" onclick="document.getElementById('file-input-q1').click()">
+      <div class="upload-icon">📂</div>
+      <p><strong>Drop PDFs here</strong> or click to browse</p>
+      <p style="margin-top:0.3rem; font-size:0.8rem;">Multiple files accepted · PDF only</p>
+      <input type="file" id="file-input-q1" multiple accept=".pdf" onchange="handleFiles('q1', this.files)">
+    </div>
+
+    <div class="papers-form" id="papers-form-q1">
+      <!-- Paper rows injected by JS -->
+    </div>
+
+    <div class="fetch-bar">
+      <button class="btn-fetch" id="btn-fetch-q1" onclick="fetchAbstracts('q1')" disabled>
+        <span>Fetch Abstracts &amp; Classify</span>
+        <div class="spinner" id="spinner-q1"></div>
+      </button>
+      <span class="fetch-note" id="fetch-note-q1">Upload PDFs above to activate this button</span>
+    </div>
+
+    <!-- Results table -->
+    <div class="results-wrap" id="results-q1-wrap" style="display:none">
+      <table class="results-table" id="results-q1">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Article Type</th>
+            <th>Abstract</th>
+            <th>PDF</th>
+            <th>In Corpus</th>
+            <th>Qualifies</th>
+          </tr>
+        </thead>
+        <tbody id="results-q1-body">
+        </tbody>
+      </table>
+    </div>
+
+    <div class="empty-state" id="empty-q1">
+      <div class="empty-icon">🔍</div>
+      <p>Upload PDFs and click "Fetch Abstracts &amp; Classify" to see your papers here.</p>
+    </div>
+
+    <!-- Title-Only Papers Section -->
+    <div class="title-only-section">
+      <button class="title-only-toggle collapsed" onclick="toggleTitleOnly('q1', this)">
+        <span class="title-only-toggle-icon">▶</span> Can't find the PDF? Record the title anyway
+      </button>
+      <div class="title-only-form" id="title-only-form-q1">
+        <div id="title-only-entries-q1">
+          <!-- Rows injected by JS -->
+        </div>
+        <button class="title-only-add-btn" onclick="addTitleOnlyEntry('q1')">+ Add another</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 Tab Panel -->
+  <div class="tab-panel" id="panel-q2">
+    <div class="alert alert-info" id="alert-q2" style="display:block">
+      <strong>Q2 — Open Corpus:</strong> All article types count toward your 10. Experimental, review,
+      theoretical, and other types are all welcome.
+    </div>
+
+    <!-- Manifest Upload Toggle & Form -->
+    <button class="manifest-toggle collapsed" onclick="toggleManifest('q2', this)">
+      <span class="manifest-toggle-icon">▶</span> Use CSV Manifest ↓
+    </button>
+    <div class="manifest-upload-area" id="manifest-area-q2">
+      <div class="manifest-instructions">
+        <strong>CSV Format:</strong>
+        <code>filename,apa_citation,doi<br>smith2023.pdf,"Smith, J. (2023). Title...",10.1234/abc<br>jones2022.pdf,"Jones, K. (2022). Title...",10.5678/def</code>
+      </div>
+      <div class="manifest-input-group">
+        <label>Upload CSV</label>
+        <input type="file" id="manifest-input-q2" accept=".csv" onchange="handleManifestUpload('q2', this.files[0])">
+      </div>
+      <div class="manifest-status" id="manifest-status-q2"></div>
+    </div>
+
+    <div class="upload-zone" id="dropzone-q2" onclick="document.getElementById('file-input-q2').click()">
+      <div class="upload-icon">📂</div>
+      <p><strong>Drop PDFs here</strong> or click to browse</p>
+      <p style="margin-top:0.3rem; font-size:0.8rem;">Multiple files accepted · PDF only</p>
+      <input type="file" id="file-input-q2" multiple accept=".pdf" onchange="handleFiles('q2', this.files)">
+    </div>
+
+    <div class="papers-form" id="papers-form-q2"></div>
+
+    <div class="fetch-bar">
+      <button class="btn-fetch" id="btn-fetch-q2" onclick="fetchAbstracts('q2')" disabled>
+        <span>Fetch Abstracts &amp; Classify</span>
+        <div class="spinner" id="spinner-q2"></div>
+      </button>
+      <span class="fetch-note" id="fetch-note-q2">Upload PDFs above to activate this button</span>
+    </div>
+
+    <div class="results-wrap" id="results-q2-wrap" style="display:none">
+      <table class="results-table" id="results-q2">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Article Type</th>
+            <th>Abstract</th>
+            <th>PDF</th>
+            <th>In Corpus</th>
+            <th>Qualifies</th>
+          </tr>
+        </thead>
+        <tbody id="results-q2-body"></tbody>
+      </table>
+    </div>
+
+    <div class="empty-state" id="empty-q2">
+      <div class="empty-icon">🔍</div>
+      <p>Upload PDFs and click "Fetch Abstracts &amp; Classify" to see your papers here.</p>
+    </div>
+
+    <!-- Title-Only Papers Section -->
+    <div class="title-only-section">
+      <button class="title-only-toggle collapsed" onclick="toggleTitleOnly('q2', this)">
+        <span class="title-only-toggle-icon">▶</span> Can't find the PDF? Record the title anyway
+      </button>
+      <div class="title-only-form" id="title-only-form-q2">
+        <div id="title-only-entries-q2">
+          <!-- Rows injected by JS -->
+        </div>
+        <button class="title-only-add-btn" onclick="addTitleOnlyEntry('q2')">+ Add another</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Brownie Tab Panel -->
+  <div class="tab-panel" id="panel-brownie">
+    <div class="empty-state">
+      <div class="empty-icon">⭐</div>
+      <p>Complete both Q1 and Q2 to unlock brownie-point questions.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── State ─────────────────────────────────────────────────
+const API = '/api';
+let studentId = null;
+let assignments = { q1: null, q2: null, brownie: [] };
+let pendingFiles = { q1: [], q2: [] };
+let results = { q1: [], q2: [] };
+let manifests = { q1: new Map(), q2: new Map() };  // filename -> {apa_citation, doi}
+let titleOnlyEntries = { q1: [], q2: [] };  // array of {title, doi, apa_citation}
+
+// ── Auth ──────────────────────────────────────────────────
+async function handleLogin() {
+  const email = document.getElementById('login-user').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  if (!email || !pass) return;
+
+  try {
+    const resp = await fetch(`${API}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, password: pass })
+    });
+    if (!resp.ok) throw new Error('Invalid credentials');
+    const data = await resp.json();
+    localStorage.setItem('katlas_token', data.access_token);
+    localStorage.setItem('katlas_user', email);
+    document.getElementById('login-overlay').style.display = 'none';
+    studentId = email;
+    initPage();
+  } catch (e) {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+
+function handleLogout() {
+  localStorage.removeItem('katlas_token');
+  localStorage.removeItem('katlas_user');
+  window.location.reload();
+}
+
+// ── Page init ─────────────────────────────────────────────
+async function initPage() {
+  const token = localStorage.getItem('katlas_token');
+  const user = localStorage.getItem('katlas_user');
+  if (!token || !user) return;
+
+  studentId = user;
+  document.getElementById('login-overlay').style.display = 'none';
+  document.getElementById('display-name').textContent = user;
+  document.getElementById('hero-name').textContent = user;
+
+  // Load assignments from API
+  try {
+    const resp = await fetch(`${API}/api/student/assignments`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (resp.status === 401) { handleLogout(); return; }
+    if (!resp.ok) throw new Error('Assignment fetch failed');
+    const data = await resp.json();
+    // data shape: {q1, q2, brownie, both_complete}
+    assignments = { q1: data.q1, q2: data.q2, brownie: data.brownie || [] };
+    renderAssignments(assignments);
+    loadProgress();
+    if (data.both_complete) showBrownieOffer();
+    document.getElementById('hero-status').textContent = 'Your questions are assigned — start searching!';
+  } catch (e) {
+    document.getElementById('hero-status').textContent = 'Unable to load assignments — please refresh.';
+    // Demo mode: show sample data when server is unreachable
+    loadDemoData();
+  }
+}
+
+function loadDemoData() {
+  // Demo mode for development / screenshots
+  const demo = {
+    q1: { question_id: 'SQ-037', question_text: 'What neuroimaging evidence demonstrates that default mode network deactivation during spatial navigation tasks is modulated by the visual complexity and wayfinding legibility of indoor architectural environments?', question_type: '10-exp', qualifying_count: 3 },
+    q2: { question_id: 'SQ-052', question_text: 'What experimental or longitudinal evidence shows that residential greenery exposure and neighbourhood walkability jointly predict lower depression symptom severity in urban adults?', question_type: 'mixed', qualifying_count: 7 },
+    brownie: []
+  };
+  renderAssignments(demo);
+  updateProgress('q1', 3, 10);
+  updateProgress('q2', 7, 10);
+  document.getElementById('alert-q1').style.display = 'block';
+  document.getElementById('hero-status').textContent = 'Demo mode — connect to K-ATLAS server to submit papers.';
+}
+
+function renderAssignments(data) {
+  if (data.q1) {
+    document.getElementById('prog-q1-id').textContent = data.q1.question_id;
+    document.getElementById('prog-q1-text').textContent = data.q1.question_text;
+  }
+  if (data.q2) {
+    document.getElementById('prog-q2-id').textContent = data.q2.question_id;
+    document.getElementById('prog-q2-text').textContent = data.q2.question_text;
+  }
+}
+
+async function loadProgress() {
+  const token = localStorage.getItem('katlas_token');
+  try {
+    const resp = await fetch(`${API}/api/student/progress`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await resp.json();
+    updateProgress('q1', data.q1_qualifying, 10);
+    updateProgress('q2', data.q2_qualifying, 10);
+    if (data.q1_qualifying >= 10) markComplete('q1');
+    if (data.q2_qualifying >= 10) markComplete('q2');
+    if (data.q1_qualifying >= 10 && data.q2_qualifying >= 10) showBrownieOffer();
+    renderResultsTable('q1', data.q1_papers || []);
+    renderResultsTable('q2', data.q2_papers || []);
+  } catch (e) {
+    // Demo progress shown by loadDemoData()
+  }
+}
+
+// ── Progress bars ──────────────────────────────────────────
+function updateProgress(which, count, total) {
+  const pct = Math.min(100, (count / total) * 100);
+  document.getElementById(`prog-bar-${which}`).style.width = pct + '%';
+  const label = which === 'q1' ? `${count} / ${total} experimental papers` : `${count} / ${total} papers`;
+  document.getElementById(`prog-count-${which}`).textContent = label;
+}
+
+function markComplete(which) {
+  const el = document.getElementById(`prog-count-${which}`);
+  if (!el.querySelector('.complete-badge')) {
+    el.insertAdjacentHTML('beforeend', '<span class="complete-badge">✓ Complete!</span>');
+  }
+}
+
+function showBrownieOffer() {
+  document.getElementById('brownie-offer').classList.add('visible');
+  document.getElementById('prog-brownie').classList.add('visible');
+  document.getElementById('tab-brownie').classList.remove('locked');
+}
+
+// ── Tab switching ──────────────────────────────────────────
+function switchTab(which, el) {
+  if (el.classList.contains('locked')) return;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(`panel-${which}`).classList.add('active');
+}
+
+// ── File upload ────────────────────────────────────────────
+function handleFiles(which, files) {
+  const form = document.getElementById(`papers-form-${which}`);
+  Array.from(files).forEach(file => {
+    if (!file.name.endsWith('.pdf')) return;
+    pendingFiles[which].push(file);
+    const idx = pendingFiles[which].length - 1;
+    const row = document.createElement('div');
+    row.className = 'paper-row';
+    row.id = `row-${which}-${idx}`;
+
+    // Check if manifest has data for this file
+    const manifestData = manifests[which].get(file.name) || {};
+    const apaValue = manifestData.apa_citation || '';
+    const doiValue = manifestData.doi || '';
+
+    row.innerHTML = `
+      <div class="paper-row-header">
+        <span class="paper-filename">📄 ${file.name}</span>
+        <button class="paper-remove" onclick="removeFile('${which}', ${idx})">Remove</button>
+      </div>
+      <div class="paper-fields">
+        <div class="field-group">
+          <label>APA Citation *</label>
+          <textarea id="apa-${which}-${idx}"
+            placeholder="Author, A. B., & Author, C. D. (Year). Title of article. Journal Name, volume(issue), pages. https://doi.org/xxxxx"
+            rows="3">${apaValue}</textarea>
+        </div>
+        <div class="field-group">
+          <label>DOI (optional)</label>
+          <input type="text" id="doi-${which}-${idx}"
+            placeholder="10.xxxx/xxxxx" value="${doiValue}">
+        </div>
+      </div>
+    `;
+    form.appendChild(row);
+  });
+
+  if (pendingFiles[which].length > 0) {
+    document.getElementById(`btn-fetch-${which}`).disabled = false;
+    document.getElementById(`fetch-note-${which}`).textContent =
+      `${pendingFiles[which].length} PDF${pendingFiles[which].length > 1 ? 's' : ''} ready — click to fetch abstracts`;
+  }
+
+  // Drag-and-drop styling reset
+  document.getElementById(`dropzone-${which}`).classList.remove('dragover');
+}
+
+function removeFile(which, idx) {
+  pendingFiles[which][idx] = null;
+  const row = document.getElementById(`row-${which}-${idx}`);
+  if (row) row.remove();
+  const remaining = pendingFiles[which].filter(f => f !== null).length;
+  if (remaining === 0) {
+    document.getElementById(`btn-fetch-${which}`).disabled = true;
+    document.getElementById(`fetch-note-${which}`).textContent = 'Upload PDFs above to activate this button';
+  }
+}
+
+// ── Drag and drop ──────────────────────────────────────────
+['q1', 'q2'].forEach(which => {
+  const zone = document.getElementById(`dropzone-${which}`);
+  if (!zone) return;
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    handleFiles(which, e.dataTransfer.files);
+  });
+});
+
+// ── Fetch abstracts ────────────────────────────────────────
+async function fetchAbstracts(which) {
+  const btn = document.getElementById(`btn-fetch-${which}`);
+  const spinner = document.getElementById(`spinner-${which}`);
+  btn.disabled = true;
+  spinner.style.display = 'block';
+
+  const token = localStorage.getItem('katlas_token');
+  const questionId = which === 'q1' ? assignments.q1?.question_id : assignments.q2?.question_id;
+
+  // Build submission payload
+  const papers = pendingFiles[which]
+    .map((file, idx) => file ? {
+      idx, filename: file.name,
+      apa: document.getElementById(`apa-${which}-${idx}`)?.value?.trim() || '',
+      doi: document.getElementById(`doi-${which}-${idx}`)?.value?.trim() || ''
+    } : null)
+    .filter(Boolean);
+
+  // Check APA citations for PDF papers only (title-only entries are optional)
+  if (papers.some(p => !p.apa)) {
+    alert('Please enter an APA citation for every PDF paper before fetching.');
+    btn.disabled = false;
+    spinner.style.display = 'none';
+    return;
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append('question_id', questionId || '');
+    formData.append('question_type', which === 'q1' ? '10-exp' : 'mixed');
+    formData.append('papers_json', JSON.stringify(papers.map(p => ({
+      doi: p.doi, apa_citation: p.apa, filename: p.filename
+    }))));
+    pendingFiles[which].forEach((file, i) => {
+      if (file) formData.append('pdfs', file, file.name);
+    });
+
+    const resp = await fetch(`${API}/api/student/fetch-abstracts`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` },
+      body: formData
+    });
+
+    if (!resp.ok) throw new Error('Server error');
+    const data = await resp.json();
+
+    renderResultsTable(which, data.papers);
+    let totalQualifying = data.qualifying_count;
+
+    // Submit title-only papers if any
+    if (titleOnlyEntries[which].length > 0) {
+      const titleOnlyPapers = titleOnlyEntries[which]
+        .filter(e => e.title)  // skip empty entries
+        .map(e => ({
+          question_id: questionId || '',
+          doi: e.doi || '',
+          article_title: e.title,
+          apa_citation: e.apa || ''
+        }));
+
+      if (titleOnlyPapers.length > 0) {
+        const titleResp = await fetch(`${API}/api/student/title-only`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            question_id: questionId || '',
+            question_type: which === 'q1' ? '10-exp' : 'mixed',
+            papers: titleOnlyPapers
+          })
+        });
+
+        if (titleResp.ok) {
+          const titleData = await titleResp.json();
+          renderResultsTable(which, titleData.papers);
+          totalQualifying = titleData.qualifying_count;
+          titleOnlyEntries[which] = [];
+          const form = document.getElementById(`title-only-form-${which}`);
+          if (form) document.getElementById(`title-only-entries-${which}`).innerHTML = '';
+        }
+      }
+    }
+
+    updateProgress(which, totalQualifying, 10);
+    if (totalQualifying >= 10) {
+      markComplete(which);
+    }
+    if (totalQualifying >= 10 && which === 'q2') showBrownieOffer();
+
+    // Clear uploaded rows
+    pendingFiles[which] = [];
+    document.getElementById(`papers-form-${which}`).innerHTML = '';
+    const totalCount = (data.papers.length || 0) + (titleOnlyEntries[which] ? titleOnlyEntries[which].filter(e => e.title).length : 0);
+    document.getElementById(`fetch-note-${which}`).textContent = `✓ ${totalCount} papers processed`;
+
+  } catch (e) {
+    // Demo: render mock results
+    renderDemoResults(which);
+  }
+
+  spinner.style.display = 'none';
+  btn.disabled = pendingFiles[which].filter(Boolean).length === 0;
+}
+
+// ── Render results ─────────────────────────────────────────
+function renderResultsTable(which, papers) {
+  const tbody = document.getElementById(`results-${which}-body`);
+  if (!papers || papers.length === 0) return;
+
+  document.getElementById(`results-${which}-wrap`).style.display = 'block';
+  document.getElementById(`empty-${which}`).style.display = 'none';
+
+  papers.forEach((p, i) => {
+    let typeHtml;
+    if (p.title_only) {
+      typeHtml = '<span class="type-pill type-other">📋 No PDF</span>';
+    } else {
+      const typeClass = {
+        'Experimental': 'type-exp',
+        'Review': 'type-review',
+        'Theoretical': 'type-theory'
+      }[p.article_type] || 'type-other';
+      typeHtml = `<span class="type-pill ${typeClass}">${p.article_type || 'Other'}</span>`;
+    }
+
+    const qualifies = which === 'q1' ? p.article_type === 'Experimental' : true;
+    const qualHtml = qualifies
+      ? '<span class="qualifies-yes">✓ Yes</span>'
+      : `<span class="qualifies-no">✗ Not experimental</span>`;
+
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${results[which].length + i + 1}</td>
+      <td class="col-title"><strong>${p.title || p.filename || p.article_title || '—'}</strong></td>
+      <td>${typeHtml}</td>
+      <td class="col-abstract">${(p.abstract || 'Not available').substring(0, 200)}${p.abstract && p.abstract.length > 200 ? '…' : ''}</td>
+      <td>${p.pdf_present ? '<span class="status-yes">✓</span>' : '<span class="status-no">✗</span>'}</td>
+      <td class="${p.in_corpus ? '' : 'status-yes'}">${p.in_corpus ? '<span class="status-corpus">In corpus</span>' : 'New'}</td>
+      <td>${qualHtml}</td>
+    `;
+    tbody.appendChild(row);
+  });
+
+  results[which].push(...papers);
+}
+
+// ── CSV Manifest helpers ────────────────────────────────────
+function parseCSVLine(line) {
+  const result = [];
+  let current = '';
+  let insideQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    if (char === '"') {
+      insideQuotes = !insideQuotes;
+    } else if (char === ',' && !insideQuotes) {
+      result.push(current.trim());
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  result.push(current.trim());
+  return result.map(s => s.replace(/^"|"$/g, ''));  // remove outer quotes
+}
+
+function toggleManifest(which, btn) {
+  const area = document.getElementById(`manifest-area-${which}`);
+  btn.classList.toggle('collapsed');
+  area.classList.toggle('open');
+}
+
+async function handleManifestUpload(which, file) {
+  if (!file) return;
+  const text = await file.text();
+  const lines = text.split(/\r?\n/).filter(l => l.trim());
+  if (lines.length < 2) {
+    alert('CSV must have at least a header row and one data row.');
+    return;
+  }
+
+  const manifest = new Map();
+  for (let i = 1; i < lines.length; i++) {
+    const parts = parseCSVLine(lines[i]);
+    if (parts.length >= 3) {
+      const filename = parts[0].trim();
+      const apa = parts[1].trim();
+      const doi = parts[2].trim();
+      manifest.set(filename, { apa_citation: apa, doi: doi });
+    }
+  }
+
+  manifests[which] = manifest;
+  document.getElementById(`manifest-status-${which}`).textContent =
+    `Manifest loaded: ${manifest.size} papers`;
+
+  // Try to auto-populate fields for already-uploaded PDFs
+  for (let i = 0; i < pendingFiles[which].length; i++) {
+    const file = pendingFiles[which][i];
+    if (file && manifest.has(file.name)) {
+      const data = manifest.get(file.name);
+      const doiElem = document.getElementById(`doi-${which}-${i}`);
+      const apaElem = document.getElementById(`apa-${which}-${i}`);
+      if (doiElem) doiElem.value = data.doi;
+      if (apaElem) apaElem.value = data.apa_citation;
+    }
+  }
+}
+
+// ── Title-only section helpers ──────────────────────────────
+function toggleTitleOnly(which, btn) {
+  const form = document.getElementById(`title-only-form-${which}`);
+  btn.classList.toggle('collapsed');
+  form.classList.toggle('open');
+}
+
+function addTitleOnlyEntry(which) {
+  const id = Date.now() + Math.random();
+  const entry = { id, title: '', doi: '', apa: '' };
+  titleOnlyEntries[which].push(entry);
+  renderTitleOnlyEntry(which, entry);
+}
+
+function renderTitleOnlyEntry(which, entry) {
+  const container = document.getElementById(`title-only-entries-${which}`);
+  const row = document.createElement('div');
+  row.className = 'title-only-entry';
+  row.id = `title-only-entry-${entry.id}`;
+  row.innerHTML = `
+    <div class="title-only-fields">
+      <div class="field-group">
+        <label>Article Title</label>
+        <input type="text" placeholder="e.g., Natural environments restore attention..."
+               value="${entry.title}" onchange="titleOnlyEntries['${which}'].find(e => e.id === ${entry.id}).title = this.value">
+      </div>
+      <button type="button" class="title-only-remove" onclick="removeTitleOnlyEntry('${which}', ${entry.id})">✕ Remove</button>
+    </div>
+    <div class="title-only-fields">
+      <div class="field-group">
+        <label>DOI (optional)</label>
+        <input type="text" placeholder="10.1234/example"
+               value="${entry.doi}" onchange="titleOnlyEntries['${which}'].find(e => e.id === ${entry.id}).doi = this.value">
+      </div>
+    </div>
+    <div class="title-only-fields">
+      <div class="field-group">
+        <label>APA Citation (optional)</label>
+        <textarea placeholder="Smith, J. (2023). Title of paper. Journal Name, 45(3), 123-145."
+                  onchange="titleOnlyEntries['${which}'].find(e => e.id === ${entry.id}).apa = this.value">${entry.apa}</textarea>
+      </div>
+    </div>
+  `;
+  container.appendChild(row);
+}
+
+function removeTitleOnlyEntry(which, id) {
+  titleOnlyEntries[which] = titleOnlyEntries[which].filter(e => e.id !== id);
+  const row = document.getElementById(`title-only-entry-${id}`);
+  if (row) row.remove();
+}
+
+function renderDemoResults(which) {
+  const demo = [
+    { title: 'Natural environments restore attention in workplace settings', article_type: 'Experimental', abstract: 'We examined the effects of brief exposures to natural scenes on directed attention capacity in 84 office workers using the ART framework...', pdf_present: true, in_corpus: false },
+    { title: 'A systematic review of biophilic design interventions', article_type: 'Review', abstract: 'This systematic review synthesises 42 studies examining the effects of biophilic design on cognitive outcomes in built environments...', pdf_present: true, in_corpus: true },
+    { title: 'Attention Restoration Theory: 30 years of evidence', article_type: 'Theoretical', abstract: 'We review the theoretical foundations of ART and its empirical record across three decades of research on restorative environments...', pdf_present: false, in_corpus: false }
+  ];
+  renderResultsTable(which, demo);
+  const demoCount = which === 'q1' ? 1 : 3; // only experimental counts for q1
+  updateProgress(which, demoCount, 10);
+}
+
+// ── Brownie ────────────────────────────────────────────────
+async function acceptBrownie() {
+  const token = localStorage.getItem('katlas_token');
+  try {
+    const resp = await fetch(`${API}/api/student/accept-brownie`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await resp.json();
+    document.getElementById('brownie-offer').innerHTML = `
+      <h3>⭐ Brownie question assigned!</h3>
+      <p><strong>${data.question_id}</strong>: ${data.question_text}</p>
+      <p style="margin-top:0.5rem; font-size:0.82rem; color:#888">Switch to the "Brownie Questions" tab to upload papers for this question.</p>
+    `;
+    document.getElementById('panel-brownie').innerHTML = `
+      <div style="padding:1rem">
+        <p style="font-weight:700; color:#182B49; margin-bottom:0.3rem">${data.question_id}</p>
+        <p style="font-style:italic; margin-bottom:1rem">${data.question_text}</p>
+        <p style="font-size:0.88rem; color:#888">Upload 10 papers (any type) to earn your brownie point. Same workflow as Q2.</p>
+      </div>
+    `;
+  } catch (e) {
+    document.getElementById('brownie-offer').innerHTML = `
+      <h3>⭐ Brownie point activated!</h3>
+      <p>Your instructor will assign you an additional question. Check your email or the course page for your new question ID.</p>
+    `;
+  }
+}
+
+// ── On load ────────────────────────────────────────────────
+const token = localStorage.getItem('katlas_token');
+const savedUser = localStorage.getItem('katlas_user');
+if (token && savedUser) {
+  studentId = savedUser;
+  initPage();
+}
+</script>
+</body>
+</html>

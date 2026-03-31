@@ -1254,6 +1254,16 @@ graph TD
     };
     walk(document.getElementById('docBody'));
   }
+
+  // Repository source references are useful in prose, but this served site
+  // does not expose the whole repo tree. Route those links to Atlas docs
+  // rather than letting them fall through to 404s during demos.
+  document.querySelectorAll('a[href^="../"], a.docx-link').forEach((link) => {
+    const originalHref = link.getAttribute('href');
+    link.dataset.originalHref = originalHref;
+    link.setAttribute('href', 'ka_sitemap.html');
+    link.setAttribute('title', 'Repository reference not served here. Opening Atlas documentation instead.');
+  });
 </script>
 </body>
 </html>

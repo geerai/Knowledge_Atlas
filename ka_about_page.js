@@ -45,7 +45,13 @@
     }
     #ka-about-trigger:hover { background: #1C3D3A; color: #F5A623; }
 
-    /* About section ── injected before </body> */
+    /* Stack both floating buttons right-aligned */
+    #ka-fn-btn {
+      right: 24px !important;
+      bottom: 18px !important;
+    }
+
+    /* About section ── injected before </body>, hidden until clicked */
     #about-this-page {
       background: #F0EDE7;
       border-top: 2px solid #D4CDC4;
@@ -53,6 +59,10 @@
       padding: 40px 32px 48px;
       margin-top: 0;
       scroll-margin-top: 72px; /* offset for fixed nav */
+      display: none; /* hidden by default — revealed by trigger click */
+    }
+    #about-this-page.ka-about-visible {
+      display: block;
     }
 
     .ka-about-inner {
@@ -191,10 +201,14 @@
     a.title = 'What this page is for, who it serves, and how to use it';
     // Smooth scroll on click
     a.addEventListener('click', function (e) {
+      e.preventDefault();
       const sec = document.getElementById('about-this-page');
       if (sec) {
-        e.preventDefault();
-        sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const isVisible = sec.classList.contains('ka-about-visible');
+        sec.classList.toggle('ka-about-visible');
+        if (!isVisible) {
+          sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       }
     });
     return a;

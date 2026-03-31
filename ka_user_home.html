@@ -1460,6 +1460,25 @@
   </div>
 </footer>
 
+<script>
+// Class intro CTA — injected via JS to avoid HTML nesting issues
+window.addEventListener('load', function() {
+  var footer = document.querySelector('footer') || document.querySelector('.ka-page-footer');
+  var target = footer || document.body;
+  if (!document.getElementById('class-intro-cta')) {
+    var cta = document.createElement('div');
+    cta.id = 'class-intro-cta';
+    cta.style.cssText = 'text-align:center; padding:40px 20px 20px;';
+    cta.innerHTML = '<a href="160sp/ka_schedule.html" style="display:inline-block; background:#1C3D3A; color:#F7F4EF; font-size:1.1rem; font-weight:700; padding:14px 36px; border-radius:8px; text-decoration:none; letter-spacing:0.3px; border:2px solid #E8872A; box-shadow:0 2px 8px rgba(0,0,0,0.15);">← Back to Schedule</a>';
+    if (footer) {
+      footer.parentNode.insertBefore(cta, footer);
+    } else {
+      document.body.appendChild(cta);
+    }
+  }
+});
+</script>
+
 <!-- Usability Critique Agent — visible for COGS160 Spring students -->
 <script src="ka_usability_critic.js"></script>
 
