@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COGS160: AI & VR — GUI Track: Expert Design Panel Reference</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+         background:#f5f5f5;padding:20px;color:#222;line-height:1.7}
+    .container{max-width:980px;margin:0 auto;background:#fff;padding:48px;
+               box-shadow:0 2px 10px rgba(0,0,0,.08)}
+    .nav{display:flex;justify-content:space-between;align-items:center;
+         margin-bottom:32px;padding-bottom:16px;border-bottom:2px solid #6b3fa0}
+    .nav a{color:#6b3fa0;text-decoration:none;font-weight:600;font-size:.9rem}
+    .nav a:hover{text-decoration:underline}
+    .track-pill{background:#6b3fa0;color:#fff;padding:4px 14px;border-radius:20px;
+                font-size:.8rem;font-weight:700;letter-spacing:.5px}
+    header{margin-bottom:36px}
+    .week-label{font-size:.85rem;font-weight:700;color:#6b3fa0;text-transform:uppercase;
+                letter-spacing:1px;margin-bottom:6px}
+    h1{font-size:2rem;color:#182B49;font-weight:800;margin-bottom:8px;line-height:1.2}
+    .subtitle{font-size:1.05rem;color:#555;margin-bottom:20px}
+    .meta-row{display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;color:#777}
+    .meta-row span strong{color:#333}
+    h2{font-size:1.35rem;color:#182B49;font-weight:700;margin:44px 0 14px;
+       padding-bottom:6px;border-bottom:2px solid #6b3fa0}
+    h3{font-size:1.05rem;color:#6b3fa0;font-weight:700;margin:28px 0 8px}
+    h4{font-size:.95rem;color:#444;font-weight:700;margin:18px 0 6px}
+    p{margin-bottom:14px;color:#333;font-size:.95rem;line-height:1.7}
+    ul,ol{padding-left:20px;margin-bottom:14px}
+    li{font-size:.93rem;color:#333;margin-bottom:6px;line-height:1.6}
+
+    /* Expert cards */
+    .expert-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin:24px 0}
+    .expert-chip{
+      background:#fff;border:1.5px solid #e0d5f0;border-radius:10px;
+      padding:14px 16px;display:flex;gap:12px;align-items:flex-start
+    }
+    .expert-chip-icon{font-size:1.8rem;flex-shrink:0}
+    .expert-chip-body{}
+    .expert-chip-name{font-size:.88rem;font-weight:700;color:#182B49;margin-bottom:2px}
+    .expert-chip-role{font-size:.78rem;color:#6b3fa0;margin-bottom:4px}
+    .expert-chip-key{font-size:.82rem;color:#555;font-style:italic}
+
+    /* Verbatim expert block */
+    .expert-section{
+      border:1.5px solid #e0d5f0;border-radius:12px;
+      margin-bottom:28px;overflow:hidden
+    }
+    .expert-header{
+      background:linear-gradient(135deg,#6b3fa0,#9b59d4);
+      color:#fff;padding:18px 24px;
+      display:flex;align-items:flex-start;gap:14px
+    }
+    .expert-header-icon{font-size:2rem;flex-shrink:0}
+    .expert-header-body{}
+    .expert-header-name{font-size:1.1rem;font-weight:800;margin-bottom:2px}
+    .expert-header-affil{font-size:.82rem;opacity:.85}
+    .expert-body{padding:22px 24px}
+    .expert-body p{font-size:.94rem;line-height:1.75;color:#333;margin-bottom:14px}
+    .expert-body p:last-child{margin-bottom:0}
+    .expert-principles{
+      background:#faf5ff;border:1px solid #ddd0f5;border-radius:8px;
+      padding:14px 18px;margin-top:12px
+    }
+    .expert-principles h4{color:#6b3fa0;font-size:.8rem;text-transform:uppercase;
+                           letter-spacing:1px;margin-bottom:8px}
+    .expert-principles li{font-size:.88rem;color:#444;margin-bottom:5px}
+
+    /* Design decision trace */
+    .decision-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:.88rem}
+    .decision-table th{background:#182B49;color:#fff;padding:10px 14px;text-align:left;font-weight:700}
+    .decision-table td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    .decision-table tr:nth-child(even) td{background:#fafafa}
+    .decision-table td:first-child{font-weight:600;color:#6b3fa0;white-space:nowrap}
+
+    /* APA references */
+    .ref-list{list-style:none;padding:0}
+    .ref-list li{font-size:.85rem;color:#444;line-height:1.6;
+                 padding:8px 0;border-bottom:1px solid #f0e8fc;
+                 padding-left:24px;text-indent:-24px}
+    .ref-list li:last-child{border-bottom:none}
+
+    /* Callout */
+    .callout{background:#fff8e6;border:1px solid #e8c87a;border-left:4px solid #C69214;
+             border-radius:6px;padding:16px 20px;margin:20px 0}
+    .callout-green{background:#f0fff4;border:1px solid #a8d5b5;border-left:4px solid #28a745}
+    .callout strong{display:block;margin-bottom:4px;font-size:.9rem}
+    .callout p{font-size:.9rem;margin-bottom:0}
+
+    /* How to use box */
+    .use-box{background:linear-gradient(135deg,#faf5ff,#f3e8ff);border:1px solid #c4a0e8;
+             border-left:4px solid #6b3fa0;border-radius:6px;padding:20px 24px;margin-bottom:32px}
+    .use-box p{font-size:.95rem;color:#444;margin-bottom:8px}
+    .use-box p:last-child{margin-bottom:0}
+
+    .sep{height:1px;background:#f0e8fc;margin:36px 0}
+
+    @media(max-width:680px){.container{padding:24px 16px}.expert-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="nav">
+    <div>
+      <a href="gui_track_overview.html">← GUI Track Overview</a>
+      &nbsp;|&nbsp;
+      <a href="gui_wk05_expert_panel.html">Week 5: Expert Panel</a>
+      &nbsp;|&nbsp;
+      <a href="gui_visualization_guide.html">Visualization Guide →</a>
+    </div>
+    <span class="track-pill">Track 4 · GUI</span>
+  </nav>
+
+  <header>
+    <div class="week-label">Reference · GUI Track · COGS160 Spring 2026</div>
+    <h1>Expert Design Panel Reference</h1>
+    <div class="subtitle">Verbatim advice from the canonical voices in HCI, UX, and interaction design — and how each argument shaped the ATLAS interface you are auditing.</div>
+    <div class="meta-row">
+      <span><strong>Status:</strong> Permanent reference — use throughout Weeks 3–10</span>
+      <span><strong>Relevance:</strong> All GUI track deliverables</span>
+      <span><strong>Companion:</strong> <a href="gui_visualization_guide.html" style="color:#6b3fa0">Visualization Design Guide</a></span>
+    </div>
+  </header>
+
+  <div class="use-box">
+    <p><strong>How to use this document.</strong> This page records, verbatim, the arguments that the expert panel made when consulted during the design of the ATLAS user-home and workflow-hub pages (March 2026). Each expert's position is stated in their own terms — not summarised into bullet points — because the reasoning matters as much as the conclusion. When you write your usability critiques and success conditions, you should cite these experts by name with APA references from the list at the bottom of this page. A critique that cites Norman on affordances or Shneiderman on closure is more persuasive than one that says "it was confusing."</p>
+    <p>A companion page, <a href="gui_visualization_guide.html" style="color:#6b3fa0">Visualization Design Guide</a>, covers data display, chart choice, and Tufte's data-ink principle for the ATLAS dashboard and evidence cards.</p>
+  </div>
+
+  <!-- ── PANEL ROSTER ─────────────────────────────────────────────── -->
+  <h2>Panel Roster</h2>
+  <p>The panel spans three generations of HCI and UX scholarship, from the founding cognitive ergonomists of the 1980s through the contemporary practitioners who shaped modern web and mobile design.</p>
+
+  <div class="expert-grid">
+    <div class="expert-chip">
+      <div class="expert-chip-icon">🧠</div>
+      <div class="expert-chip-body">
+        <div class="expert-chip-name">Don Norman</div>
+        <div class="expert-chip-role">Cognitive ergonomics, UCSD (emeritus)</div>
+        <div class="expert-chip-key">Mental models, affordances, feedback loops</div>
+      </div>
+    </div>
+    <div class="expert-chip">
+      <div class="expert-chip-icon">🔍</div>
+      <div class="expert-chip-body">
+        <div class="expert-chip-name">Jakob Nielsen</div>
+        <div class="expert-chip-role">Nielsen Norman Group</div>
+        <div class="expert-chip-key">Progressive disclosure, 10 usability heuristics</div>
+      </div>
+    </div>
+    <div class="expert-chip">
+      <div class="expert-chip-icon">👤</div>
+      <div class="expert-chip-body">
+        <div class="expert-chip-name">Alan Cooper</div>
+        <div class="expert-chip-role">Cooper UX; inventor of Goal-Directed Design</div>
+        <div class="expert-chip-key">Personas, role-differentiated interfaces</div>
+      </div>
+    </div>
+    <div class="expert-chip">
+      <div class="expert-chip-icon">📊</div>
+      <div class="expert-chip-body">
+        <div class="expert-chip-name">Ben Shneiderman</div>
+        <div class="expert-chip-role">University of Maryland Human-Computer Interaction Lab</div>
+        <div class="expert-chip-key">8 Golden Rules of UI Design</div>
+      </div>
+    </div>
+    <div class="expert-chip">
+      <div class="expert-chip-icon">💛</div>
+      <div class="expert-chip-body">
+        <div class="expert-chip-name">Aarron Walter</div>
+        <div class="expert-chip-role">InVision, MailChimp; author <em>Designing for Emotion</em></div>
+        <div class="expert-chip-key">Emotional design hierarchy, personality in UI</div>
+      </div>
+    </div>
+    <div class="expert-chip">
+      <div class="expert-chip-icon">📱</div>
+      <div class="expert-chip-body">
+        <div class="expert-chip-name">Luke Wroblewski</div>
+        <div class="expert-chip-role">Google Product Director; author <em>Mobile First</em></div>
+        <div class="expert-chip-key">One primary action per screen, progressive disclosure in forms</div>
+      </div>
+    </div>
+    <div class="expert-chip">
+      <div class="expert-chip-icon">🌉</div>
+      <div class="expert-chip-body">
+        <div class="expert-chip-name">Jared Spool</div>
+        <div class="expert-chip-role">Center Centre, UIE</div>
+        <div class="expert-chip-key">Experience gap, knowledge transfer in UX</div>
+      </div>
+    </div>
+    <div class="expert-chip">
+      <div class="expert-chip-icon">📲</div>
+      <div class="expert-chip-body">
+        <div class="expert-chip-name">Josh Clark</div>
+        <div class="expert-chip-role">Big Medium; author <em>Tapworthy</em></div>
+        <div class="expert-chip-key">Task-first design, context-driven interfaces</div>
+      </div>
+    </div>
+    <div class="expert-chip">
+      <div class="expert-chip-icon">🎨</div>
+      <div class="expert-chip-body">
+        <div class="expert-chip-name">Erik Kennedy</div>
+        <div class="expert-chip-role">Learn UI Design</div>
+        <div class="expert-chip-key">Color, spacing, sizing as the three levers of visual hierarchy</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ── VERBATIM PANEL ADVICE ───────────────────────────────────── -->
+  <h2>Verbatim Panel Advice</h2>
+  <p>The following records, as faithfully as possible, the argument each expert makes when applied to the specific design problem of a role-based research tool for architectural and environmental psychology. These are not summaries. They are the reasoning, stated in the terms each expert uses.</p>
+
+  <!-- NORMAN -->
+  <div class="expert-section">
+    <div class="expert-header">
+      <div class="expert-header-icon">🧠</div>
+      <div class="expert-header-body">
+        <div class="expert-header-name">Don Norman — The Design of Everyday Things (1988, revised 2013)</div>
+        <div class="expert-header-affil">Cognitive ergonomics · UCSD emeritus · co-founder, Nielsen Norman Group</div>
+      </div>
+    </div>
+    <div class="expert-body">
+      <p>Norman's central argument is that poor design is not a user failure but a design failure. When people cannot figure out how to use a system, the fault lies in the system's failure to provide adequate signifiers, mappings, and feedback — not in the user's cognitive limitations. Applied to ATLAS: when a student cannot figure out where to start, or submits an article and receives no feedback about whether it landed, the problem is the interface, not the student.</p>
+      <p>The concept of the <em>gulf of execution</em> — the gap between the user's intention and the available actions — is directly applicable to ATLAS's article submission flow. If the student's intention is "I want to contribute this paper to the evidence base," but the available actions on the page present a generic upload form with no context about how the paper will be processed, the gulf is wide. Norman argues that closing this gulf requires making the relationship between intention and action legible through what he calls <em>natural mappings</em>: the form should reflect the mental model of the task, not the data model of the database.</p>
+      <p>The corresponding <em>gulf of evaluation</em> — the gap between the system's state and the user's perception of that state — is equally present in ATLAS. After submitting an article, the student has no reliable signal about what happened. Norman is unambiguous: feedback must be immediate, informative, and matched to the action. A silent success is a design failure. A loading spinner with no progress indication is a design failure. The user's model of the system state must stay aligned with the actual system state at all times.</p>
+      <p>Norman also distinguishes between <em>knowledge in the head</em> (what the user has memorized) and <em>knowledge in the world</em> (information embedded in the environment that can be read off without prior learning). Good design minimizes the demand for knowledge in the head and maximizes the availability of knowledge in the world. Every workflow step in ATLAS should be legible to someone who has not memorized the system — because during a live class session, no one has.</p>
+      <div class="expert-principles">
+        <h4>Key principles for your ATLAS audit</h4>
+        <ul>
+          <li>Every action should produce a response the user can see within 100ms (perceived as immediate) or 1 second (perceived as responding), or show a progress indicator</li>
+          <li>The form should reflect the user's task model, not the database schema — label fields for what they mean to the user, not what they mean to the server</li>
+          <li>Error messages should explain what went wrong and what to do next — "Error 422" fails on both counts</li>
+          <li>Controls that cannot be used should be visibly unavailable (disabled state), not silently ignored</li>
+          <li>Reversibility: wherever possible, actions should be undoable — Norman calls this the most important single design heuristic</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- NIELSEN -->
+  <div class="expert-section">
+    <div class="expert-header" style="background:linear-gradient(135deg,#1a6fb5,#3a8cd6)">
+      <div class="expert-header-icon">🔍</div>
+      <div class="expert-header-body">
+        <div class="expert-header-name">Jakob Nielsen — Usability Engineering (1993) &amp; Progressive Disclosure (1990–2024)</div>
+        <div class="expert-header-affil">Nielsen Norman Group · 10 Heuristics for User Interface Design</div>
+      </div>
+    </div>
+    <div class="expert-body">
+      <p>Nielsen's progressive disclosure principle holds that a system should show users only the information they need at the moment, deferring advanced or secondary features until the user actively requests them. This is not simplification — it is cognitive respect. Every additional element on a screen competes for the user's limited attention; elements that are not needed now are not neutral, they are actively harmful to the user's focus on the current task.</p>
+      <p>Applied to the ATLAS workflow hub: a user on Step 2 of the Evidence Pipeline workflow does not need to see Steps 4 and 5 in full. They need to see Step 2 fully and have confident peripheral awareness that a structured path continues beyond. The left-side step list provides this peripheral awareness without forcing the user to read and process all five step descriptions before starting. This is precisely the progressive disclosure pattern — the detail is available but not imposed.</p>
+      <p>Nielsen's ten heuristics remain the most widely used evaluation framework in professional UX practice, precisely because they are concrete enough to apply to specific interface elements while remaining general enough to cover virtually any system. The heuristics most relevant to ATLAS are: (1) Visibility of system status — the user should always know where they are, what is happening, and what just happened; (6) Recognition rather than recall — the interface should show options rather than requiring the user to remember them; (8) Aesthetic and minimalist design — every element that is not serving the user's current task is competing with it; and (9) Help users recognize, diagnose, and recover from errors — error messages should be in plain language, identify the problem precisely, and suggest a solution.</p>
+      <p>Nielsen's empirical finding that five users reveal approximately 85% of usability problems (Nielsen &amp; Landauer, 1993) is the foundation of the Phase 3 walkthrough methodology in COGS 160. You are, in effect, the five users. The structured walkthrough you conduct in Week 8 is a formal application of Nielsen's discount usability testing method.</p>
+      <div class="expert-principles">
+        <h4>Nielsen's 10 Heuristics — apply to every page you audit</h4>
+        <ul>
+          <li><strong>H1 Visibility of system status</strong> — user knows where they are and what is happening</li>
+          <li><strong>H2 Match between system and real world</strong> — speak the user's language; follow real-world conventions</li>
+          <li><strong>H3 User control and freedom</strong> — provide clearly marked "emergency exits" for unwanted states</li>
+          <li><strong>H4 Consistency and standards</strong> — follow platform conventions; don't make users guess whether different words mean the same thing</li>
+          <li><strong>H5 Error prevention</strong> — design to prevent errors before they occur, not just to handle them gracefully</li>
+          <li><strong>H6 Recognition rather than recall</strong> — make options visible; minimize reliance on user memory</li>
+          <li><strong>H7 Flexibility and efficiency of use</strong> — accelerators for expert users that are invisible to novices</li>
+          <li><strong>H8 Aesthetic and minimalist design</strong> — every irrelevant element reduces the relative visibility of relevant elements</li>
+          <li><strong>H9 Help recognize, diagnose, and recover from errors</strong> — plain language, precise problem statement, constructive suggestion</li>
+          <li><strong>H10 Help and documentation</strong> — even well-designed systems sometimes need documentation; it should be searchable and task-focused</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- COOPER -->
+  <div class="expert-section">
+    <div class="expert-header" style="background:linear-gradient(135deg,#2A7868,#3da08a)">
+      <div class="expert-header-icon">👤</div>
+      <div class="expert-header-body">
+        <div class="expert-header-name">Alan Cooper — About Face: The Essentials of Interaction Design (4th ed., 2014)</div>
+        <div class="expert-header-affil">Goal-Directed Design · Persona methodology · Cooper UX</div>
+      </div>
+    </div>
+    <div class="expert-body">
+      <p>Cooper's argument begins with an observation that most software is designed to satisfy the requirements document rather than to satisfy a specific person with a specific goal. The result is software that addresses every possible use case but serves no particular user well. His solution — Goal-Directed Design — begins not with features but with personas: detailed, named descriptions of specific archetypes representing the actual human beings who will use the system.</p>
+      <p>A persona is not a demographic average. It is a named individual — Cooper's canonical example is "Kara, the experienced administrator" or "Chuck, the midlevel manager" — with specific goals, specific frustrations, and specific knowledge levels. The critical design insight is that different personas have <em>primary goals</em> that differ enough from each other to require genuinely different interfaces, not the same interface with different labels. A student exploring ATLAS for the first time and a researcher testing a hypothesis are using the same system but with fundamentally incompatible primary goals; giving them the same entry point is a failure of Goal-Directed Design.</p>
+      <p>Cooper's analysis of the <em>elastic user</em> is particularly relevant to ATLAS's mode-switch system. When designers talk about "the user," they implicitly invent a fictitious person who conveniently agrees with whatever the designer wants to do. The result is an interface that satisfies no one precisely because it was designed for everyone abstractly. ATLAS's six user types (student explorer, contributor, researcher, practitioner, instructor, theory-mechanism explorer) are an attempt to resist the elastic user — to commit to specific personas and design entry points that reflect their real primary goals.</p>
+      <p>Cooper also distinguishes between <em>primary goals</em> (what the user is fundamentally trying to accomplish — "I want to understand what the evidence says about ceiling height"), <em>secondary goals</em> (what the user needs to do to accomplish the primary goal — "I need to find the right search terms"), and <em>false goals</em> (goals the user doesn't actually have but that the designer assumes they have — "I want to understand the system's data model"). False goals produce features no one uses. The audit exercise for ATLAS should include an assessment of which interface elements serve false goals.</p>
+      <div class="expert-principles">
+        <h4>Cooper's design principles for your ATLAS audit</h4>
+        <ul>
+          <li>Identify the primary persona for each ATLAS page — who is this page primarily designed for?</li>
+          <li>Assess whether the page design serves that persona's primary goal or their false goals</li>
+          <li>Check whether the page "design for one" — i.e., serves one use case excellently — or "design for all" — i.e., serves many use cases mediocrely</li>
+          <li>Evaluate whether the user types accessible via the mode-switch actually receive different enough experiences to match their different primary goals</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHNEIDERMAN -->
+  <div class="expert-section">
+    <div class="expert-header" style="background:linear-gradient(135deg,#8b1a2e,#b52540)">
+      <div class="expert-header-icon">📊</div>
+      <div class="expert-header-body">
+        <div class="expert-header-name">Ben Shneiderman — Designing the User Interface (6th ed., 2016, with Plaisant)</div>
+        <div class="expert-header-affil">Human-Computer Interaction Lab, University of Maryland · 8 Golden Rules</div>
+      </div>
+    </div>
+    <div class="expert-body">
+      <p>Shneiderman's 8 Golden Rules are the most frequently cited design heuristics in formal HCI curricula, in part because they are stated at a level of specificity that makes them directly applicable to individual interface elements. They are not philosophical positions — they are engineering constraints.</p>
+      <p><strong>Rule 1 — Strive for consistency</strong> is violated whenever the same action requires different inputs in different parts of the same system, or whenever the same input produces different outcomes in different contexts. In ATLAS, inconsistent link styling (some links orange, some blue, some underlined, some not) is a Rule 1 violation: the visual language is not settled enough to be reliable.</p>
+      <p><strong>Rule 4 — Design dialogues to yield closure</strong> is the rule most directly relevant to the workflow hub design. Shneiderman argues that sequences of actions should have a beginning, middle, and end; the end should be clearly marked and should give the user a sense of completion before moving to the next task. The completion screen on the workflow hub — the green "Workflow Complete" state with a summary of what was accomplished — is a direct implementation of Rule 4. Without closure, users cannot tell whether they finished or merely stopped.</p>
+      <p><strong>Rule 6 — Permit easy reversal of actions</strong> is violated in several ATLAS flows where submitted data cannot be retrieved or edited. Shneiderman's observation is that reversibility relieves anxiety: users who know they can undo are more willing to explore, which is exactly the exploratory behavior ATLAS wants from its student contributors. An article submitted in error should be retractable; a registration submitted with the wrong track preference should be correctable.</p>
+      <p><strong>Rule 7 — Support internal locus of control</strong> holds that users should feel they are in control of the system, not the reverse. ATLAS currently violates this in its demonstration mode: the mode-switch behavior changes the page in ways that are not fully explained, leaving users uncertain about what they changed and how to change it back. Rule 7 violation produces learned helplessness — users who stop exploring because they no longer trust their ability to predict outcomes.</p>
+      <p><strong>Rule 8 — Reduce short-term memory load</strong> is the rationale for keeping workflow steps separated rather than presenting them all at once. The cognitive science behind this rule is Baddeley and Hitch's (1974) working memory model, which places the capacity of human working memory at approximately 7 ± 2 items (Miller, 1956). A workflow step description that requires the user to hold seven pieces of information in mind simultaneously while also navigating to an external page will fail: some of those items will drop.</p>
+      <div class="expert-principles">
+        <h4>Shneiderman's 8 Golden Rules — audit checklist</h4>
+        <ul>
+          <li><strong>R1 Consistency</strong> — same action, same result; same element, same appearance</li>
+          <li><strong>R2 Shortcuts for expert users</strong> — keyboard shortcuts, abbreviations, macros available</li>
+          <li><strong>R3 Informative feedback</strong> — every action produces a response visible to the user</li>
+          <li><strong>R4 Closure</strong> — sequences have clear end states; users know when they are done</li>
+          <li><strong>R5 Error prevention and simple error handling</strong> — errors are rare and recovery is easy</li>
+          <li><strong>R6 Easy reversal of actions</strong> — undo is available; submissions are retractable</li>
+          <li><strong>R7 Internal locus of control</strong> — user feels in charge; system responds to actions, not the reverse</li>
+          <li><strong>R8 Reduce short-term memory load</strong> — don't require users to remember information from one part of the screen to use it in another</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- WALTER -->
+  <div class="expert-section">
+    <div class="expert-header" style="background:linear-gradient(135deg,#b07d1a,#d4a020)">
+      <div class="expert-header-icon">💛</div>
+      <div class="expert-header-body">
+        <div class="expert-header-name">Aarron Walter — Designing for Emotion (2011)</div>
+        <div class="expert-header-affil">InVision · MailChimp Head of UX · A Book Apart series</div>
+      </div>
+    </div>
+    <div class="expert-body">
+      <p>Walter's central argument is that usability is necessary but not sufficient. A system can be fully functional, reliable, and usable and still produce no loyalty, no delight, and no return visits. The hierarchy he proposes — functional → reliable → usable → pleasurable — is a taxonomy of failure modes: a system that is pleasurable but not functional is a toy; a system that is usable but not pleasurable is a tool that users will abandon the moment a more engaging alternative appears.</p>
+      <p>This hierarchy has direct implications for ATLAS's audit priority. Before assessing whether ATLAS is delightful, the audit should establish whether it is functional (does it do what it says it does?) and reliable (does it do so consistently?). A beautiful interface that submits articles to a database that never processes them is pleasurable on the surface and broken underneath. The Phase 3 walkthrough should work through the hierarchy in order: identify functional failures first, then reliability failures, then usability failures, then assess pleasurability last.</p>
+      <p>Walter's concept of <em>personality</em> in interface design is particularly applicable to the article collector. His argument, drawing on Maslow's hierarchy of needs and cognitive psychology, is that interfaces that express personality — that feel like they were designed by people who cared about the user's experience — create emotional resonance that functional equivalents without personality cannot. The pulse animation when an article is added to the basket, the "Added to basket ✓" flash, the click sound (if implemented) — these micro-interactions are in Walter's pleasurable tier. They are not decorations; they are signals that the system noticed what the user did and cares about acknowledging it. This acknowledgment builds trust in the system's reliability at the functional level.</p>
+      <p>Walter also argues for designing <em>for the user's emotions at the moment of use</em>, not for the user's emotions in the abstract. A student who is frustrated because they cannot find the article they just read is in a different emotional state from a student who just submitted their fifteenth article and is feeling accomplished. The interface should respond differently to these states. ATLAS's current design treats all users as emotionally neutral — a common failure mode that Walter calls designing for a "theoretical user" rather than a real one.</p>
+      <div class="expert-principles">
+        <h4>Walter's principles for your ATLAS audit</h4>
+        <ul>
+          <li>Check functional completeness first: does every promised feature actually work end-to-end?</li>
+          <li>Identify any pleasurable elements (animations, confirmations, personality) and assess whether they are built on a functional/reliable foundation</li>
+          <li>Note any moment in your walkthrough where the system felt indifferent to your actions — these are personality gaps</li>
+          <li>Assess whether error states are emotionally calibrated: an error message that is technically correct but tonally dismissive is a Walter failure</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- WROBLEWSKI -->
+  <div class="expert-section">
+    <div class="expert-header" style="background:linear-gradient(135deg,#2A5FA0,#3a7cc4)">
+      <div class="expert-header-icon">📱</div>
+      <div class="expert-header-body">
+        <div class="expert-header-name">Luke Wroblewski — Web Form Design (2008) &amp; Mobile First (2011)</div>
+        <div class="expert-header-affil">Google Product Director · Rosenfeld Media · A Book Apart series</div>
+      </div>
+    </div>
+    <div class="expert-body">
+      <p>Wroblewski's most influential design principle is deceptively simple: <em>one primary action per screen</em>. This principle emerges from his extensive research on form completion and conversion rates, and it generalizes well beyond forms to any page where the user must do something. When a page presents two equally prominent actions — say, "Submit Article" and "Save as Draft" — the user's attention is divided and cognitive load increases. When one action is primary (visually dominant, clearly afforded) and the other is secondary (visually subordinate, clearly available but not demanding attention), completion rates increase significantly.</p>
+      <p>The sticky CTA at the bottom of the workflow hub pages is a direct implementation of this principle: at every moment in the workflow, there is exactly one primary action (Next Step, or Complete Workflow on the last step) and one secondary action (Previous Step). The forward action is colored in the workflow's theme color; the backward action is neutral. The user's next move is never ambiguous.</p>
+      <p>Wroblewski's work on progressive disclosure in form design is directly applicable to the ATLAS article submission form. His finding — that breaking complex forms into smaller, sequenced sections (a "one question at a time" approach) significantly increases completion rates — is the basis for arguing that ATLAS's article submission should be a multi-step wizard rather than a single long form. The cognitive cost of seeing all fields at once is high; the cognitive cost of seeing only the fields relevant to the current step is low. More fields visible simultaneously also increases the perceived effort required, which is a conversion barrier independent of the actual effort required.</p>
+      <p>Wroblewski's Mobile First methodology argues that designing for the most constrained context first — the small screen, the slow connection, the divided attention of a mobile user — produces better designs for all contexts. The discipline of fitting everything essential into a small viewport forces prioritization: if something is not essential enough to appear on a 375px-wide screen, is it essential at all? This "constraint as design tool" approach is a useful heuristic for the ATLAS audit: for each page element, ask what a mobile version would include. Elements that do not survive this exercise are candidates for removal or demotion.</p>
+      <div class="expert-principles">
+        <h4>Wroblewski's principles for your ATLAS audit</h4>
+        <ul>
+          <li>Identify the primary action on each ATLAS page — is it clear, visually dominant, and unambiguous?</li>
+          <li>Count the actions competing for primary attention — if more than one, flag it</li>
+          <li>Assess the article submission form: is it a single long form or a sequenced multi-step wizard?</li>
+          <li>Check each page at 375px viewport width — what survives, what breaks, what disappears?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPOOL -->
+  <div class="expert-section">
+    <div class="expert-header" style="background:linear-gradient(135deg,#4a7c59,#5fa070)">
+      <div class="expert-header-icon">🌉</div>
+      <div class="expert-header-body">
+        <div class="expert-header-name">Jared Spool — Experience Gap &amp; UIE Research</div>
+        <div class="expert-header-affil">Center Centre · User Interface Engineering · Kathy Sierra collaboration</div>
+      </div>
+    </div>
+    <div class="expert-body">
+      <p>Spool's most important contribution to UX practice is the concept of the <em>experience gap</em>: the distance between what a designer knows about the system and what a new user knows. Every expert who has worked on a system for months has internalized its mental model so thoroughly that they can no longer see it as a novice sees it. The system that seems obvious to the designer is opaque to the user — not because the user is deficient but because the designer has forgotten what it is like to not know. The experience gap is the fundamental obstacle to good UX, and the solution is relentless exposure to actual users who have not internalized the system.</p>
+      <p>This is precisely the methodological rationale for the Phase 3 cross-audit structure in COGS 160: you are auditing a section of the site that you did not build. Your naivety is a methodological asset, not a limitation. Spool would say that the most valuable thing you bring to the audit is the experience gap — you see things that the team who built the section cannot see because they have closed the gap themselves.</p>
+      <p>Spool's work with Kathy Sierra introduced the principle that good design makes the user feel <em>badass</em> — competent, skilled, and capable — not just satisfied. The distinction matters: a user who successfully completes a task on a well-designed system feels capable; a user who successfully completes the same task on a poorly designed system may feel relieved. The former generates engagement; the latter generates avoidance of future similar tasks. For ATLAS, this means that a student who successfully identifies a gap in the evidence base and articulates it clearly should feel like a real researcher, not like someone who completed a homework assignment. The interface design should support this elevated sense of competence.</p>
+      <p>Spool's experience gap also applies within the ATLAS system itself. ATLAS was designed by people who understand environmental psychology, Bayesian epistemology, and warrant theory. Its users include students who may be encountering these concepts for the first time. The experience gap between designer and user is maximal in this system — which is both its greatest design challenge and the most important audit finding to document.</p>
+      <div class="expert-principles">
+        <h4>Spool's principles for your ATLAS audit</h4>
+        <ul>
+          <li>Note every moment in your walkthrough where you had to figure something out that "should" have been obvious — these are experience-gap failures</li>
+          <li>Ask, for each page: does this make the user feel competent and capable, or confused and relieved?</li>
+          <li>Identify any terminology or concepts on the page that require prior knowledge of environmental psychology or epistemology — these are experience gaps for naive users</li>
+          <li>Explicitly exploit your naivety as a methodological advantage — you are seeing the gap that the builders cannot see</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLARK -->
+  <div class="expert-section">
+    <div class="expert-header" style="background:linear-gradient(135deg,#5c3d8f,#7a55b0)">
+      <div class="expert-header-icon">📲</div>
+      <div class="expert-header-body">
+        <div class="expert-header-name">Josh Clark — Tapworthy (2010) &amp; Designing for Touch (2015)</div>
+        <div class="expert-header-affil">Big Medium · Modern UX practice · Design systems</div>
+      </div>
+    </div>
+    <div class="expert-body">
+      <p>Clark's foundational argument is that interfaces should be designed <em>task-first</em>: the first thing the user sees should be what they need to do right now, not an explanation of what the site is or who built it. This sounds obvious but is systematically violated by institutional and academic systems, which tend to foreground context and identity — who built the system, what it is called, what it is for — before the user's actual task. The homepage of a research tool should not tell the user what research is; it should help them do it.</p>
+      <p>Applied to ATLAS: the workflow hub pages were designed with Clark's task-first principle as a constraint. The step panel opens directly on the task ("Choose a Topic") with the action button ("Open Topics ↗") visually dominant, before the description of the task. This inversion of the typical academic document structure — context before action — is deliberate. A student who arrives at a workflow step has already committed to doing the task; they do not need to be convinced. They need to be enabled. The page should therefore begin with the enabling action, not the justification for it.</p>
+      <p>Clark's concept of <em>context as the primary UX variable</em> holds that the same interface element can be appropriate or inappropriate depending on the user's context at the moment of use. A long description of a data visualization tool is appropriate when the user is learning; it is an obstacle when the user is under time pressure and already knows what they are doing. ATLAS's student-explorer workflows and researcher workflows show the same pages but at different speeds and with different emphasis — the context differs even though the destination is the same.</p>
+      <div class="expert-principles">
+        <h4>Clark's principles for your ATLAS audit</h4>
+        <ul>
+          <li>Check each page: does it lead with the task (what to do) or with context (what this is)?</li>
+          <li>Identify any page where the user must scroll before reaching the first actionable element — this is a task-first violation</li>
+          <li>Ask: what is the user's most likely context when they arrive at this page? Does the page design serve that context?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- KENNEDY -->
+  <div class="expert-section">
+    <div class="expert-header" style="background:linear-gradient(135deg,#555,#888)">
+      <div class="expert-header-icon">🎨</div>
+      <div class="expert-header-body">
+        <div class="expert-header-name">Erik Kennedy — Learn UI Design (2018–present)</div>
+        <div class="expert-header-affil">Practitioner educator · Visual hierarchy in web UI</div>
+      </div>
+    </div>
+    <div class="expert-body">
+      <p>Kennedy's contribution is the systematic application of visual design principles — drawn from graphic design, typography, and cognitive psychology — to screen-based interface design. His most teachable insight is that <em>spacing, sizing, and color are the three levers of visual hierarchy</em>. Every decision about how prominent an element appears relative to its neighbors is a function of these three variables. Understanding this lets designers fix visual hierarchy problems systematically rather than through aesthetic intuition alone.</p>
+      <p>On spacing: Kennedy observes that most interfaces fail because elements that are logically related are not visually grouped together, and elements that are logically unrelated are not separated. The Gestalt principle of proximity holds that elements that are close together are perceived as belonging together. An ATLAS page that places the evidence quality badge five elements away from the study citation it describes is a Kennedy spacing failure: the proximity relationship is not reflected in the visual layout.</p>
+      <p>On color: Kennedy argues that color should carry semantic weight, not decorative weight. In a well-designed system, color encodes meaning (green = success, red = error, blue = interactive) so reliably that a colorblind user (and a WCAG accessibility audit) can still parse the interface correctly. In a poorly designed system, color encodes personality ("our brand is orange") and information density is reduced. ATLAS's use of the track color as a theme variable — running the workflow's color through the entire page via a CSS custom property — is a Kennedy-aligned approach to semantic color: every colored element on the workflow hub pages carries the same semantic meaning (this is your current context, this is what you are doing).</p>
+      <p>On sizing: Kennedy's typography hierarchy argument holds that a page with five different font sizes, three different font weights, and two different font families has a hierarchy problem: too many levels of hierarchy make hierarchy meaningless. ATLAS's visual audit should count the number of distinct typographic levels in use and ask whether each level is semantically necessary or whether it reflects inconsistency in the CSS.</p>
+      <div class="expert-principles">
+        <h4>Kennedy's principles for your ATLAS audit</h4>
+        <ul>
+          <li>Count distinct font sizes, weights, and colors in use on each page — flag anything above 3-4 of each as a hierarchy problem</li>
+          <li>Check spacing: are logically related elements visually grouped? Are unrelated elements visually separated?</li>
+          <li>Check color semantics: does each color carry a consistent meaning, or is the same color used for unrelated purposes?</li>
+          <li>Check color accessibility: does the page remain navigable without color (grayscale test)?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ── DESIGN DECISIONS TRACED ────────────────────────────────── -->
+  <h2>How Expert Advice Shaped ATLAS Design Decisions</h2>
+  <p>The following table records, for each significant design decision made in the March 2026 ATLAS interface sprint, which expert argument drove it. This trace is itself an auditable artifact: if a decision proves wrong in your walkthrough, the expert argument it was based on should be re-examined.</p>
+
+  <table class="decision-table">
+    <thead>
+      <tr>
+        <th>Design Decision</th>
+        <th>Expert Source</th>
+        <th>Principle Invoked</th>
+        <th>What to Test</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>6 user-type home pages with different workflow queues</td>
+        <td>Cooper (2014)</td>
+        <td>Goal-Directed Design; primary persona determines entry point</td>
+        <td>Does the researcher workflow genuinely differ from the student workflow in ways that match their different primary goals?</td>
+      </tr>
+      <tr>
+        <td>Step-by-step workflow architecture (one step visible at a time)</td>
+        <td>Nielsen (1995); Wroblewski (2011)</td>
+        <td>Progressive disclosure; one primary action per screen</td>
+        <td>Does hiding future steps reduce cognitive load, or does it leave users uncertain about the overall structure?</td>
+      </tr>
+      <tr>
+        <td>Article collector pulse animation + "Added ✓" flash</td>
+        <td>Walter (2011)</td>
+        <td>Pleasurable tier of emotional design hierarchy; personality in micro-interactions</td>
+        <td>Does the animation reinforce the user's sense that the action was acknowledged? Or is it distracting?</td>
+      </tr>
+      <tr>
+        <td>Sticky bottom CTA with prev/next only</td>
+        <td>Wroblewski (2011); MECLABS (above-fold research)</td>
+        <td>One primary action per screen; above-fold CTA receives 102% more views</td>
+        <td>Is the CTA always visible? Does "one action" feel constraining or clarifying?</td>
+      </tr>
+      <tr>
+        <td>Completion screen changes color + label to "Complete ✓"</td>
+        <td>Shneiderman (2016), Rule 4</td>
+        <td>Design dialogues to yield closure</td>
+        <td>Does the completion state feel conclusive? Does the user know they are finished?</td>
+      </tr>
+      <tr>
+        <td>Role description paragraph on user home page</td>
+        <td>Spool (experience gap)</td>
+        <td>Close the experience gap between designer knowledge and user knowledge</td>
+        <td>Does the description reduce confusion about what a "researcher" or "practitioner" mode means in ATLAS?</td>
+      </tr>
+      <tr>
+        <td>"Open [Page] ↗" button before description on step panels</td>
+        <td>Clark (2010)</td>
+        <td>Task-first design: enable before explaining</td>
+        <td>Does the button placement help users who are ready to act, or confuse users who need context first?</td>
+      </tr>
+      <tr>
+        <td>Single CSS variable (--wf-color) for all color elements per workflow</td>
+        <td>Kennedy (2018–)</td>
+        <td>Color carries semantic weight; consistent color = consistent meaning</td>
+        <td>Does the color consistency aid navigation, or is the color too saturated to read comfortably?</td>
+      </tr>
+      <tr>
+        <td>Article submission form (critique: should be multi-step wizard)</td>
+        <td>Wroblewski (2008); Norman (2013)</td>
+        <td>Progressive disclosure in forms; reduce gulf of execution</td>
+        <td>Is the current single-page form overwhelming? Would step-by-step submission increase completion rates?</td>
+      </tr>
+      <tr>
+        <td>Verbatim "what to look for" bullets on each workflow step</td>
+        <td>Norman (2013); Shneiderman R8</td>
+        <td>Knowledge in the world; reduce short-term memory load</td>
+        <td>Do the look-for prompts reduce cognitive demand, or do they over-direct the user's attention?</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-green">
+    <strong>Your job as the auditor</strong>
+    <p>Each row of this table is a testable hypothesis. Your Phase 3 walkthrough should verify or disconfirm each design decision against the expert principle it was based on. A success condition that passes confirms the principle held in this context. A success condition that fails is evidence that the principle was mis-applied, mis-implemented, or does not generalize to this system and user population.</p>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ── REFERENCES ──────────────────────────────────────────────── -->
+  <h2>APA References</h2>
+  <ul class="ref-list">
+    <li>Cooper, A., Reimann, R., Cronin, D., &amp; Noessel, C. (2014). <em>About face: The essentials of interaction design</em> (4th ed.). Wiley. https://www.wiley.com/en-us/About+Face%3A+The+Essentials+of+Interaction+Design%2C+4th+Edition-p-9781118766576</li>
+    <li>Kennedy, E. (2018–present). <em>Learn UI design</em>. learnui.design. https://learnui.design</li>
+    <li>Krug, S. (2013). <em>Don't make me think, revisited: A common sense approach to web usability</em> (3rd ed.). New Riders. (Original work published 2000)</li>
+    <li>Miller, G. A. (1956). The magical number seven, plus or minus two: Some limits on our capacity for processing information. <em>Psychological Review, 63</em>(2), 81–97. https://doi.org/10.1037/h0043158</li>
+    <li>Nielsen, J. (1995). Progressive disclosure. Nielsen Norman Group. https://www.nngroup.com/articles/progressive-disclosure/</li>
+    <li>Nielsen, J. (1994). Enhancing the explanatory power of usability heuristics. In <em>Proceedings of the SIGCHI Conference on Human Factors in Computing Systems</em> (pp. 152–158). ACM. https://doi.org/10.1145/191666.191729</li>
+    <li>Nielsen, J., &amp; Landauer, T. K. (1993). A mathematical model of the finding of usability problems. In <em>Proceedings of the INTERACT '93 and CHI '93 Conference on Human Factors in Computing Systems</em> (pp. 206–213). ACM. https://doi.org/10.1145/169059.169166</li>
+    <li>Norman, D. A. (2013). <em>The design of everyday things</em> (Revised and expanded ed.). Basic Books. (Original work published 1988) https://www.basicbooks.com/titles/don-norman/the-design-of-everyday-things/9780465050659/</li>
+    <li>Shneiderman, B., &amp; Plaisant, C. (2016). <em>Designing the user interface: Strategies for effective human-computer interaction</em> (6th ed.). Pearson. https://www.pearson.com/en-us/subject-catalog/p/designing-the-user-interface/P200000003470</li>
+    <li>Spool, J. (2005). The experience gap. UIE Brain Sparks. https://jmspool.medium.com/the-experience-gap-1eba65aa6b3c</li>
+    <li>Walter, A. (2011). <em>Designing for emotion</em>. A Book Apart. https://abookapart.com/products/designing-for-emotion</li>
+    <li>Wroblewski, L. (2008). <em>Web form design: Filling in the blanks</em>. Rosenfeld Media. https://rosenfeldmedia.com/books/web-form-design/</li>
+    <li>Wroblewski, L. (2011). <em>Mobile first</em>. A Book Apart. https://abookapart.com/products/mobile-first</li>
+    <li>Clark, J. (2010). <em>Tapworthy: Designing great iPhone apps</em>. O'Reilly Media.</li>
+    <li>EICS '15. (2015). Engineering adaptive user interfaces for enterprise applications. <em>Proceedings of the 5th ACM SIGCHI Symposium on Engineering Interactive Computing Systems</em>. ACM. https://doi.org/10.1145/2494603.2480333</li>
+  </ul>
+
+</div>
+</body>
+</html>

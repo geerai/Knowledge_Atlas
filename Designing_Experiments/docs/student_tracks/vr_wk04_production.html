@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COGS160: AI & VR — VR Track Week 4 – Production Sprint 1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #182B49 0%, #1a4d7a 100%);
+            color: white;
+            padding: 2.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            margin-bottom: 1rem;
+        }
+
+        nav.top-nav {
+            background: #182B49;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            border-bottom: 3px solid #2a8fcc;
+        }
+
+        nav.top-nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav.top-nav a:hover {
+            color: #2a8fcc;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        section {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        section h2 {
+            color: #182B49;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid #2a8fcc;
+        }
+
+        section h3 {
+            color: #2a8fcc;
+            font-size: 1.3rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .context-box {
+            background: linear-gradient(135deg, #e8f4f8 0%, #f0f8fc 100%);
+            border-left: 4px solid #2a8fcc;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+        }
+
+        .learning-outcomes {
+            background: linear-gradient(135deg, #f0f8fc 0%, #e8f4f8 100%);
+            border-left: 4px solid #2a8fcc;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .learning-outcomes ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .learning-outcomes li {
+            padding: 0.5rem 0 0.5rem 2rem;
+            position: relative;
+        }
+
+        .learning-outcomes li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #2a8fcc;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .procedure {
+            background: #fafbfc;
+            border: 1px solid #e0e6ed;
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .procedure h4 {
+            color: #182B49;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: #2a8fcc;
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .procedure p, .procedure ul {
+            margin-left: 1rem;
+        }
+
+        .procedure ul {
+            list-style: disc;
+            padding-left: 2rem;
+        }
+
+        .procedure li {
+            margin: 0.5rem 0;
+        }
+
+        .checklist {
+            background: #fafbfc;
+            border: 1px solid #e0e6ed;
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .checklist h4 {
+            color: #182B49;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .checklist ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            padding: 0.75rem 0 0.75rem 2rem;
+            position: relative;
+            background: white;
+            margin-bottom: 0.5rem;
+            border-radius: 3px;
+            border-left: 3px solid #2a8fcc;
+            padding-left: 1.5rem;
+        }
+
+        .checklist li:before {
+            content: "□";
+            position: absolute;
+            left: 0.5rem;
+            color: #2a8fcc;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .milestone {
+            background: linear-gradient(135deg, #e8f8f0 0%, #f0fcf8 100%);
+            border-left: 4px solid #16a085;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .milestone h4 {
+            color: #16a085;
+            margin-bottom: 0.5rem;
+        }
+
+        .ai-tips {
+            background: linear-gradient(135deg, #fff9e6 0%, #fffaed 100%);
+            border-left: 4px solid #f39c12;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .ai-tips h4 {
+            color: #d68910;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ai-tips ul {
+            list-style: disc;
+            padding-left: 2rem;
+            margin-top: 0.75rem;
+        }
+
+        .ai-tips li {
+            margin: 0.5rem 0;
+        }
+
+        .time-estimate {
+            background: linear-gradient(135deg, #f0e6ff 0%, #f8f0ff 100%);
+            border-left: 4px solid #8e44ad;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .time-estimate h4 {
+            color: #7d3c98;
+            margin-bottom: 0.75rem;
+        }
+
+        .time-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e0d5f0;
+        }
+
+        .time-row:last-child {
+            border-bottom: none;
+        }
+
+        .time-label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .time-value {
+            color: #7d3c98;
+            font-weight: bold;
+        }
+
+        .faq-section {
+            margin: 1.5rem 0;
+        }
+
+        .faq-item {
+            margin-bottom: 1.25rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            color: #182B49;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .faq-question:before {
+            content: "Q";
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: #2a8fcc;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .faq-answer {
+            color: #2c3e50;
+            padding-left: 2.5rem;
+            line-height: 1.7;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .resource-card {
+            background: #fafbfc;
+            border: 1px solid #e0e6ed;
+            border-radius: 6px;
+            padding: 1.25rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(42, 143, 204, 0.15);
+        }
+
+        .resource-card h4 {
+            color: #182B49;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .resource-card p {
+            color: #555;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .resource-card a {
+            color: #2a8fcc;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .resource-card a:hover {
+            color: #182B49;
+        }
+
+        footer {
+            background: #182B49;
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            nav.top-nav {
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .resources-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>VR Track – Week 4: Production Sprint 1</h1>
+        <p>Building Scenes 1, 3, and 5 of Your Stimulus Set</p>
+    </div>
+
+    <nav class="top-nav">
+        <a href="vr_wk03_specification.html">← Week 3</a>
+        <a href="index.html">All Tracks</a>
+        <a href="vr_wk05_validation.html">Week 5 →</a>
+    </nav>
+
+    <div class="container">
+        <!-- Context Section -->
+        <section>
+            <h2>Context & Input/Output</h2>
+            <div class="context-box">
+                <strong>Input:</strong> Your D1 Design Plan from Week 3 (stimulus dimension definition, level specifications, confound list, asset requirements)
+            </div>
+            <div class="context-box">
+                <strong>Output:</strong> Three working Unity scenes (Scene 1, Scene 3, Scene 5) with standardized documentation and photo evidence. No formal deliverable submission this week, but TAs will check progress during scheduled check-ins.
+            </div>
+            <p style="margin-top: 1.5rem;">
+                Week 4 is about translating your design specification into executable scenes. You will operate Unity, follow your design constraints precisely, and document your work systematically. This week builds the stimulus artifact that will be validated in Week 5-6.
+            </p>
+        </section>
+
+        <!-- Learning Outcomes -->
+        <section>
+            <h2>Learning Outcomes</h2>
+            <div class="learning-outcomes">
+                <ul>
+                    <li>Operate a 3D graphics engine (Unity) within design specifications</li>
+                    <li>Import and organize assets from standardized libraries</li>
+                    <li>Build reproducible scenes with consistent lighting, camera positioning, and environmental properties</li>
+                    <li>Execute preliminary confound audit—identify and document sources of unintended variation</li>
+                    <li>Document visual evidence with standardized photography protocol</li>
+                    <li>Work methodically from specification to implementation without scope creep</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Detailed Procedures -->
+        <section>
+            <h2>Step-by-Step Procedures</h2>
+
+            <div class="procedure">
+                <h4><span class="step-number">1</span> Environment Setup in Unity</h4>
+                <p>Create a new 3D project in Unity (2022 LTS or later recommended). Configure the basic environment:</p>
+                <ul>
+                    <li><strong>Project Settings:</strong> Confirm target platform (PC/Mac), graphics quality tier (high-fidelity for research), and build settings</li>
+                    <li><strong>Lighting Profile:</strong> Import the standardized lighting profile from your Week 3 specification doc. If not yet created, define it now: three-point lighting with specific intensity values (e.g., key light 1.2, fill 0.5, back 0.8) and color temperature (5600K D65 neutral daylight)</li>
+                    <li><strong>Camera Setup:</strong> Create a main camera. Set position to (0, 1.7, 0) meters—eye height for an average standing adult. This becomes your standard viewpoint for all three scenes</li>
+                    <li><strong>File Organization:</strong> Create folders: <code>Assets/Scenes</code>, <code>Assets/Models</code>, <code>Assets/Textures</code>, <code>Assets/Lighting</code></li>
+                </ul>
+            </div>
+
+            <div class="procedure">
+                <h4><span class="step-number">2</span> Importing Assets from the COGS160: AI & VR Asset Library</h4>
+                <p>Access the shared asset library at: <code>/Users/davidusa/REPOS/COGS160_Assets/</code></p>
+                <ul>
+                    <li><strong>Library Structure:</strong> Assets are organized by category (furniture, outdoor, lighting, textures, characters, etc.). Locate the assets specified in your Week 3 design plan</li>
+                    <li><strong>Import Process:</strong> Copy models (.fbx, .obj) and textures into your project's Assets folder. Use Unity's import settings to confirm scale is correct (typically 1 unit = 1 meter in real world)</li>
+                    <li><strong>Missing Assets:</strong> If an asset you need is not in the library, check the library README for the request form. Submit requests to <code>cogs160.ta@ucsd.edu</code> with: (a) asset description, (b) reference image or 3D model file, (c) desired scale, (d) deadline. Typical turnaround: 3–5 business days</li>
+                    <li><strong>Naming Convention:</strong> Rename imported models descriptively, e.g., <code>Chair_OakWood_A</code> or <code>Desk_Standard_1.8m</code></li>
+                </ul>
+            </div>
+
+            <div class="procedure">
+                <h4><span class="step-number">3</span> Building Scene 1 (Lowest Stimulus Level)</h4>
+                <p>Create <code>Scenes/Scene_01_Level_Low.unity</code>. This scene embodies the lowest level of your target stimulus dimension.</p>
+                <ul>
+                    <li><strong>Reference Your Design:</strong> Open your Week 3 D1 plan. Identify all properties that vary across levels (e.g., clutter, lighting brightness, color saturation, spatial density)</li>
+                    <li><strong>Environment Setup:</strong> Create a base ground plane (simple mesh or imported landscape). Apply the lighting profile. Position the main camera at (0, 1.7, 0)</li>
+                    <li><strong>Asset Placement:</strong> Import and position the assets appropriate to Level 1. For example, if your dimension is "visual clutter," place minimal furniture and objects. If it's "lighting," set lights to lowest brightness specification</li>
+                    <li><strong>Consistency Checks:</strong> Confirm all objects have consistent material properties, no floating objects, and proper collision geometry (even though this is a VR passive view, good geometry prevents rendering glitches)</li>
+                    <li><strong>Save:</strong> Save the scene file with version control in mind. Use meaningful naming: <code>Scene_01_Level_Low_v01.unity</code></li>
+                </ul>
+            </div>
+
+            <div class="procedure">
+                <h4><span class="step-number">4</span> Building Scene 3 (Middle Stimulus Level)</h4>
+                <p>Create <code>Scenes/Scene_03_Level_Mid.unity</code>. This represents the middle level of your stimulus dimension.</p>
+                <ul>
+                    <li><strong>Proportional Adjustment:</strong> If Scene 1 has a clutter score of 2/10, Scene 3 should have ~5/10. Scale all dimension-relevant properties proportionally from your specification</li>
+                    <li><strong>Reuse Components:</strong> You may reuse some assets from Scene 1 (e.g., base ground, lighting rig), but adjust their properties or add new elements for the middle level</li>
+                    <li><strong>Version Control:</strong> Save as <code>Scene_03_Level_Mid_v01.unity</code></li>
+                </ul>
+            </div>
+
+            <div class="procedure">
+                <h4><span class="step-number">5</span> Building Scene 5 (Highest Stimulus Level)</h4>
+                <p>Create <code>Scenes/Scene_05_Level_High.unity</code>. This represents the highest level of your stimulus dimension.</p>
+                <ul>
+                    <li><strong>Full Specification:</strong> Implement all elements at their maximum specified values. If Scene 1 = clutter 2/10, this = clutter ~10/10 (or as specified in your design)</li>
+                    <li><strong>Consistency with Precedents:</strong> Ensure the progression from Scene 1 → Scene 3 → Scene 5 follows your specification logically and consistently</li>
+                    <li><strong>Asset Count:</strong> Document how many unique/instanced objects you've added to each scene. Use a spreadsheet or scene description file to track this</li>
+                    <li><strong>Save:</strong> Save as <code>Scene_05_Level_High_v01.unity</code></li>
+                </ul>
+            </div>
+
+            <div class="procedure">
+                <h4><span class="step-number">6</span> Standardized Screenshot Protocol</h4>
+                <p>Document each scene with three standardized photos. These become your visual record and are used in the confound audit.</p>
+                <ul>
+                    <li><strong>Camera Position:</strong> All three views use camera height 1.7m (eye level)</li>
+                    <li><strong>Three Fixed Positions:</strong>
+                        <ul style="list-style: lower-alpha; margin-left: 1.5rem;">
+                            <li><strong>Front View:</strong> Camera at (0, 1.7, -5), looking north (0, 0, 1)</li>
+                            <li><strong>Right Side View:</strong> Camera at (5, 1.7, 0), looking west (-1, 0, 0)</li>
+                            <li><strong>Elevated Corner View:</strong> Camera at (3, 2.5, -3), looking toward scene center</li>
+                        </ul>
+                    </li>
+                    <li><strong>Lighting Consistency:</strong> Ensure all three screenshots use the same lighting setup (no time-of-day changes, no shadow adjustments between shots)</li>
+                    <li><strong>File Naming:</strong> Save screenshots as <code>Scene01_FrontView.png</code>, <code>Scene01_RightView.png</code>, <code>Scene01_CornerView.png</code> (repeat for Scenes 3 and 5)</li>
+                    <li><strong>Storage:</strong> Create a folder <code>Documentation/Screenshots/</code> in your project. Keep originals at full resolution</li>
+                </ul>
+            </div>
+
+            <div class="procedure">
+                <h4><span class="step-number">7</span> Preliminary Confound Audit Checklist</h4>
+                <p>Complete the confound audit checklist below for each scene. Document findings in a shared report.</p>
+                <div class="checklist">
+                    <h4>Confound Audit Checklist</h4>
+                    <ul>
+                        <li><strong>Intended Dimension:</strong> Does each scene clearly differ in the target dimension (e.g., clutter, brightness)?</li>
+                        <li><strong>Shadow Consistency:</strong> Are shadows stable across the three scenes, or do they vary in a way that could confound the stimulus?</li>
+                        <li><strong>Reflections & Gloss:</strong> Do material reflectivity or specularity vary unintentionally?</li>
+                        <li><strong>Color Saturation:</strong> Is color saturation consistent unless explicitly part of your stimulus design?</li>
+                        <li><strong>Object Positioning:</strong> Could the spatial layout introduce confounds (e.g., do high-clutter scenes always have objects on the right)?</li>
+                        <li><strong>Viewing Angle Dependencies:</strong> Does the stimulus effect vary with viewing angle in a way that confounds perception?</li>
+                        <li><strong>Animation or Motion:</strong> Any unintended motion in lights or objects?</li>
+                        <li><strong>Audio (if applicable):</strong> Is audio consistent or is it an unintended confound?</li>
+                        <li><strong>Asset Realism:</strong> Do assets have similar visual quality/realism across scenes, or could quality differences confound the dimension?</li>
+                        <li><strong>Ground Plane & Background:</strong> Are background and ground plane identical across scenes?</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Assistance Tips -->
+        <section>
+            <h2>Using AI Assistance</h2>
+            <div class="ai-tips">
+                <h4>💡 How AI Can Help (and What It Cannot)</h4>
+                <p style="margin-top: 0.75rem;">
+                    AI cannot build your scenes for you—Unity requires direct interaction and fine-tuning that you must do. However, AI excels at systematic analysis:
+                </p>
+                <ul>
+                    <li><strong>Confound Analysis:</strong> Describe your scenes in text or paste screenshots into Claude/ChatGPT. Ask: "Here is my experimental design [paste spec]. Here are my three scenes [describe or paste images]. What confounds might I have introduced? Rate each by severity." AI can systematically check against your specification and identify unintended variables.</li>
+                    <li><strong>Asset Planning:</strong> Before starting, describe your vision. Ask AI to generate a checklist of every asset you'll need, organized by category, with suggested sources.</li>
+                    <li><strong>Documentation:</strong> After building, use AI to write confound audit reports, scene descriptions, and technical documentation. Provide screenshots and design specs; AI can structure findings clearly.</li>
+                    <li><strong>Specification Gaps:</strong> If your Week 3 spec was incomplete (e.g., you didn't quantify "clutter"), ask AI to help operationalize the dimension. Give examples; let AI suggest metrics.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Progress Milestone -->
+        <section>
+            <h2>Expected Progress Milestone</h2>
+            <div class="milestone">
+                <h4>✓ Week 4 TA Check-In (ungraded, but required)</h4>
+                <p style="margin-top: 0.75rem;">
+                    By the end of Week 4, schedule a ~15-minute check-in with the TA. Have ready:
+                </p>
+                <ul style="margin-top: 1rem; padding-left: 2rem; list-style: disc;">
+                    <li>All three scenes saved and loadable in Unity</li>
+                    <li>Nine screenshot files (3 views × 3 scenes) with consistent metadata</li>
+                    <li>Preliminary confound audit checklist completed for at least Scene 1</li>
+                    <li>Scene description document (1–2 pages) describing the three levels and how they operationalize your stimulus dimension</li>
+                </ul>
+                <p style="margin-top: 1rem;">
+                    This is not graded; it's a sanity check. The TA will confirm your scenes align with your D1 design plan and flag any major issues before you move to Week 5 validation testing.
+                </p>
+            </div>
+        </section>
+
+        <!-- Time Estimate -->
+        <section>
+            <h2>Time Estimate</h2>
+            <div class="time-estimate">
+                <h4>Traditional Approach vs. with AI Assistance</h4>
+                <div style="margin-top: 1rem;">
+                    <div class="time-row">
+                        <span class="time-label">Traditional (per pair):</span>
+                        <span class="time-value">~20 hours</span>
+                    </div>
+                    <div class="time-row">
+                        <span class="time-label">With AI Assistance:</span>
+                        <span class="time-value">~3–4 hours per pair</span>
+                    </div>
+                </div>
+                <p style="margin-top: 1.25rem; font-size: 0.95rem; color: #555;">
+                    <strong>Breakdown with AI:</strong> ~30 min planning & asset list generation (AI) + ~2.5 hours actual Unity building (manual, can't be compressed) + ~30 min confound audit & documentation (AI assists with analysis, you verify). The savings come from systematic confound checking and automated documentation rather than faster scene building.
+                </p>
+            </div>
+        </section>
+
+        <!-- FAQs -->
+        <section>
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-section">
+                <div class="faq-item">
+                    <div class="faq-question">What if an asset I need isn't in the COGS160: AI & VR library?</div>
+                    <div class="faq-answer">
+                        Submit a request to <code>cogs160.ta@ucsd.edu</code> with a clear description, reference image, and deadline. For assets not available anywhere, you can use the Sketchfab or TurboSquid free libraries (with appropriate licensing) or use Unity's built-in primitives as placeholders. However, match the quality and style of library assets to maintain consistency.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">How do I ensure my lighting is consistent across all three scenes?</div>
+                    <div class="faq-answer">
+                        Save your lighting setup as a Prefab in Unity. This is a reusable template that you can apply identically to each scene. Set lights to fixed positions and intensities based on your Week 3 spec. After placing lights, document their coordinates, intensity values, and color in a spreadsheet so you can recreate them exactly if needed.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What counts as a "confound" in this context?</div>
+                    <div class="faq-answer">
+                        A confound is any variable that changes across your three scenes OTHER than your intended stimulus dimension, and that could plausibly affect participant judgment. Examples: if clutter is your dimension but shadows are deeper in the high-clutter scene (more objects cast shadows), that's a confound—shadows aren't your stimulus, but they might influence perception. If lighting color shifts from warm (Scene 1) to cool (Scene 5), that's a confound. Confounds don't always ruin an experiment, but you must document them so reviewers can assess whether they're a threat.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Can I reuse the same models across scenes?</div>
+                    <div class="faq-answer">
+                        Yes! In fact, you should reuse assets (ground plane, base furniture, camera rig, lighting) to reduce unintended variation. What changes is the count and arrangement of objects that vary your stimulus dimension. For example, a simple office desk stays the same across scenes; you add or remove clutter around it to vary clutter level.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Do I need to optimize scenes for real-time rendering or VR performance yet?</div>
+                    <div class="faq-answer">
+                        Not this week. Week 4 is about fidelity to specification. Focus on accuracy of stimulus dimensions. Performance optimization happens in Week 5. However, avoid obviously inefficient practices (e.g., 1000 instances of the same model without instancing). Basic sense-checking is enough.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resources -->
+        <section>
+            <h2>Resources</h2>
+            <div class="resources-grid">
+                <div class="resource-card">
+                    <h4>Unity Asset Store</h4>
+                    <p>Browse free and paid 3D models, textures, and tools. Useful for supplementing the COGS160: AI & VR library.</p>
+                    <a href="https://assetstore.unity.com/" target="_blank">Visit Asset Store →</a>
+                </div>
+
+                <div class="resource-card">
+                    <h4>COGS160: AI & VR Asset Library</h4>
+                    <p>Shared repository of models and textures curated for research consistency. Location: <code>/Users/davidusa/REPOS/COGS160_Assets/</code></p>
+                    <a href="#resources">Request Missing Assets →</a>
+                </div>
+
+                <div class="resource-card">
+                    <h4>Unity 3D Manual (Lighting)</h4>
+                    <p>Official documentation on lighting setup, materials, and rendering in Unity 2022+.</p>
+                    <a href="https://docs.unity3d.com/Manual/LightingOverview.html" target="_blank">Read Docs →</a>
+                </div>
+
+                <div class="resource-card">
+                    <h4>VR Lab Scheduling</h4>
+                    <p>Book lab space and VR equipment for testing your scenes in Week 5-6.</p>
+                    <a href="https://calendar.ucsd.edu/spaces/vr-lab" target="_blank">Lab Calendar →</a>
+                </div>
+
+                <div class="resource-card">
+                    <h4>Design Specification Template</h4>
+                    <p>Reference your Week 3 D1 document (created in Week 3 module). Ensure all decisions carry forward here.</p>
+                    <a href="vr_wk03_specification.html">View Week 3 Module →</a>
+                </div>
+
+                <div class="resource-card">
+                    <h4>Confound Analysis Guide</h4>
+                    <p>Academic resource on experimental confounds. Helps you think systematically about unintended variables.</p>
+                    <a href="#resources">Download Guide (PDF) →</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 COGS160: AI & VR, UC San Diego. Designed for collaborative research learning.</p>
+    </footer>
+</body>
+</html>

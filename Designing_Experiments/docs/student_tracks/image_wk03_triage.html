@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COGS160: AI & VR — Image Track Week 3: Tag Triage</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+         background:#f5f5f5;padding:20px;color:#222;line-height:1.65}
+    .container{max-width:960px;margin:0 auto;background:#fff;padding:48px;
+               box-shadow:0 2px 10px rgba(0,0,0,.08)}
+
+    /* Nav */
+    .nav{display:flex;justify-content:space-between;align-items:center;
+         margin-bottom:32px;padding-bottom:16px;border-bottom:2px solid #d4620f}
+    .nav a{color:#d4620f;text-decoration:none;font-weight:600;font-size:.9rem}
+    .nav a:hover{text-decoration:underline}
+    .track-pill{background:#d4620f;color:#fff;padding:4px 14px;border-radius:20px;
+                font-size:.8rem;font-weight:700;letter-spacing:.5px}
+
+    /* Header */
+    header{margin-bottom:36px}
+    .week-label{font-size:.85rem;font-weight:700;color:#d4620f;text-transform:uppercase;
+                letter-spacing:1px;margin-bottom:6px}
+    h1{font-size:2rem;color:#182B49;font-weight:800;margin-bottom:8px;line-height:1.2}
+    .subtitle{font-size:1.05rem;color:#555;margin-bottom:20px}
+    .meta-row{display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;color:#777}
+    .meta-row span strong{color:#333}
+
+    /* Section headers */
+    h2{font-size:1.3rem;color:#182B49;font-weight:700;margin:40px 0 12px;
+       padding-bottom:6px;border-bottom:2px solid #d4620f}
+    h3{font-size:1.05rem;color:#d4620f;font-weight:700;margin:24px 0 8px}
+    h4{font-size:.95rem;color:#444;font-weight:700;margin:16px 0 6px}
+
+    /* Body text */
+    p{margin-bottom:12px;color:#333;font-size:.95rem}
+
+    /* Boxes */
+    .context-box{background:linear-gradient(135deg,#fff8f5,#fff3ee);border:1px solid #f0b090;
+                 border-left:4px solid #d4620f;border-radius:6px;padding:20px 24px;margin-bottom:32px}
+    .context-box p{font-size:.95rem;color:#444;margin-bottom:8px}
+    .context-box p:last-child{margin-bottom:0}
+
+    .concept-box{background:#f7f3ff;border:1px solid #c9aaff;border-left:4px solid #7c3aed;
+                 border-radius:6px;padding:20px 24px;margin:20px 0}
+    .concept-box h4{color:#7c3aed;margin-top:0}
+
+    .insight-box{background:#f0f7ff;border:1px solid #aed0ef;border-left:4px solid #1a6fb5;
+                 border-radius:6px;padding:20px 24px;margin:20px 0}
+    .insight-box h4{color:#1a6fb5;margin-top:0}
+
+    .outcome-list{list-style:none;padding:0}
+    .outcome-list li{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid #f0ece8;
+                     font-size:.95rem}
+    .outcome-list li:last-child{border-bottom:none}
+    .outcome-num{min-width:28px;height:28px;background:#d4620f;color:#fff;border-radius:50%;
+                 display:flex;align-items:center;justify-content:center;font-weight:700;
+                 font-size:.8rem;flex-shrink:0;margin-top:1px}
+
+    /* Spec box */
+    .spec-box{background:#f9f9f9;border:1px solid #ddd;border-radius:6px;padding:20px 24px;margin:16px 0}
+    .spec-grid{display:grid;grid-template-columns:130px 1fr;gap:8px 16px;font-size:.9rem}
+    .spec-label{font-weight:700;color:#555}
+    .spec-value{color:#222}
+
+    /* Tables */
+    table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.88rem}
+    th{background:#182B49;color:#fff;padding:10px 14px;text-align:left;font-weight:700}
+    td{padding:9px 14px;border-bottom:1px solid #eee}
+    tr:nth-child(even) td{background:#fafafa}
+    .tag-name{font-family:monospace;font-size:.82rem;background:#f0ece8;padding:2px 6px;border-radius:3px}
+    .badge-p0{background:#dcfce7;color:#166534;padding:2px 8px;border-radius:10px;font-size:.75rem;font-weight:700}
+    .badge-p1{background:#fef9c3;color:#713f12;padding:2px 8px;border-radius:10px;font-size:.75rem;font-weight:700}
+    .badge-p2{background:#fee2e2;color:#7f1d1d;padding:2px 8px;border-radius:10px;font-size:.75rem;font-weight:700}
+    .badge-stub{background:#f0e8ff;color:#4c1d95;padding:2px 8px;border-radius:10px;font-size:.75rem;font-weight:700}
+
+    /* Worked example */
+    .example-block{background:#f0f7ff;border:1px solid #aed0ef;border-radius:8px;
+                   padding:24px;margin:20px 0}
+    .example-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;
+                    padding-bottom:12px;border-bottom:2px solid #aed0ef}
+    .example-badge{background:#182B49;color:#fff;padding:4px 12px;border-radius:4px;
+                   font-size:.78rem;font-weight:700;letter-spacing:.5px}
+    .example-title{font-size:1.05rem;font-weight:700;color:#182B49}
+
+    /* Code blocks */
+    pre{background:#1e1e2e;color:#cdd6f4;border-radius:6px;padding:20px;
+        font-size:.82rem;line-height:1.6;overflow-x:auto;margin:12px 0;tab-size:4}
+    code{font-family:"JetBrains Mono","Fira Code","Courier New",monospace}
+    .code-label{font-size:.75rem;font-weight:700;color:#888;text-transform:uppercase;
+                letter-spacing:.5px;margin-bottom:4px}
+    .kw{color:#cba6f7}
+    .fn{color:#89b4fa}
+    .st{color:#a6e3a1}
+    .cm{color:#6c7086;font-style:italic}
+    .nm{color:#fab387}
+    .cl{color:#f38ba8}
+
+    /* Degree strip */
+    .degree-strip{display:flex;gap:0;margin:20px 0;border-radius:8px;overflow:hidden;border:1px solid #ddd}
+    .deg-cell{flex:1;text-align:center;padding:12px 6px;background:#f9f9f9;border-right:1px solid #ddd}
+    .deg-cell:last-child{border-right:none}
+    .deg-patch{height:64px;border-radius:4px;margin-bottom:8px;display:flex;align-items:center;
+               justify-content:center;font-size:.75rem;font-weight:700}
+    .deg-val{font-size:.9rem;font-weight:800;color:#182B49;margin-bottom:3px}
+    .deg-label{font-size:.72rem;color:#666;line-height:1.3}
+
+    /* Q-card demo */
+    .qcard-demo{background:#1a1a2e;border-radius:12px;padding:28px;margin:20px 0;color:#eee}
+    .qcard-demo h4{color:#f0c040;margin-bottom:16px;font-size:1rem}
+    .qcard-images{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+    .qcard-img{width:140px;height:100px;border-radius:6px;display:flex;align-items:center;
+               justify-content:center;font-size:.75rem;color:#fff;font-weight:700;
+               text-align:center;padding:8px;line-height:1.4}
+    .qcard-scale{display:flex;gap:0;border-radius:6px;overflow:hidden;margin-bottom:12px}
+    .qcard-pt{flex:1;text-align:center;padding:10px 4px;font-size:.75rem;font-weight:700;cursor:pointer}
+    .qcard-pt:hover{filter:brightness(1.2)}
+    .qcard-instruction{font-size:.82rem;color:#aaa;font-style:italic}
+
+    /* Steps */
+    .step-list{display:flex;flex-direction:column;gap:16px;margin:16px 0}
+    .step{display:flex;gap:16px;align-items:flex-start}
+    .step-num{min-width:36px;height:36px;background:#182B49;color:#fff;border-radius:50%;
+              display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+    .step-body{flex:1;padding-top:6px}
+    .step-body strong{display:block;margin-bottom:4px;font-size:.95rem;color:#182B49}
+    .step-body p,.step-body ul{font-size:.9rem;color:#444;margin-top:4px}
+    .step-body ul{padding-left:18px}
+    .step-body li{margin-bottom:4px}
+
+    /* Tip / warn */
+    .tip{background:#f0fff4;border:1px solid #a8d5b5;border-left:4px solid #28a745;
+         border-radius:6px;padding:14px 18px;margin:12px 0;font-size:.9rem}
+    .warn{background:#fff8e6;border:1px solid #e8c87a;border-left:4px solid #C69214;
+          border-radius:6px;padding:14px 18px;margin:12px 0;font-size:.9rem}
+    .tip strong,.warn strong{display:block;margin-bottom:4px}
+
+    /* FAQ */
+    .faq-item{border:1px solid #e8e0d8;border-radius:6px;margin-bottom:10px;overflow:hidden}
+    .faq-q{padding:14px 18px;cursor:pointer;font-weight:700;font-size:.9rem;color:#182B49;
+           background:#fdf9f6;display:flex;justify-content:space-between;align-items:center;
+           user-select:none}
+    .faq-q:hover{background:#f5ede4}
+    .faq-a{padding:0 18px;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s}
+    .faq-a.open{max-height:800px;padding:14px 18px}
+    .faq-a p{font-size:.9rem;color:#444;margin-bottom:8px}
+    .faq-a p:last-child{margin-bottom:0}
+    .faq-chevron{font-size:.8rem;transition:transform .3s}
+    .faq-chevron.open{transform:rotate(180deg)}
+
+    /* Reference list */
+    .ref-list{list-style:none;padding:0}
+    .ref-list li{padding:10px 0;border-bottom:1px solid #eee;font-size:.88rem;color:#444;display:flex;gap:12px}
+    .ref-list li:last-child{border-bottom:none}
+    .ref-num{min-width:28px;font-weight:700;color:#d4620f}
+    .ref-text{flex:1}
+    .ref-text em{font-style:normal;font-weight:600;color:#222}
+
+    /* Deliverable banner */
+    .deliverable-banner{background:#182B49;color:#fff;border-radius:8px;padding:20px 24px;margin:24px 0}
+    .deliverable-banner h3{color:#C69214;margin:0 0 8px}
+    .deliverable-banner p{font-size:.9rem;opacity:.9;margin-bottom:4px}
+    .deliverable-banner .grade{font-size:1.4rem;font-weight:800;color:#C69214}
+
+    /* Method cards */
+    .method-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+    @media(max-width:640px){.method-grid{grid-template-columns:1fr}}
+    .method-card{border:1px solid #ddd;border-radius:8px;padding:20px;border-top:4px solid #d4620f}
+    .method-card h4{color:#182B49;margin:0 0 8px}
+    .method-card p{font-size:.88rem;color:#555}
+    .method-num{display:inline-block;background:#d4620f;color:#fff;width:24px;height:24px;
+                border-radius:50%;text-align:center;line-height:24px;font-size:.78rem;
+                font-weight:700;margin-right:8px}
+
+    /* Checklist */
+    .checklist{list-style:none;padding:0}
+    .checklist li{padding:8px 0;border-bottom:1px solid #eee;font-size:.9rem;display:flex;gap:10px}
+    .checklist li::before{content:"☐";font-size:1.1rem;color:#d4620f;flex-shrink:0}
+
+    footer{margin-top:48px;padding-top:20px;border-top:1px solid #eee;font-size:.82rem;color:#999;
+           text-align:center}
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <a href="index.html">← Course Home</a>
+    <span class="track-pill">🖼 Image Tagger Track</span>
+    <a href="image_track_overview.html">Track Overview</a>
+    <a href="af_setup_guide.html">⚙️ Setup Guide</a>
+    <a href="image_tagger_guide.html">🏗 Tagger Architecture</a>
+    <a href="image_tag_table.html">📋 Tag Browser (424 tags)</a>
+    <a href="image_wk03_registry.html">D1b: Registry →</a>
+  </nav>
+
+  <!-- Header -->
+  <header>
+    <div class="week-label">Week 3 · Assignment D1a</div>
+    <h1>Tag Triage: Deciding What a Photograph Can Answer</h1>
+    <p class="subtitle">Before you build an extractor for a scientific tag, you need to understand what the tag actually means — and whether a 2D image can even answer the question it is asking.</p>
+    <div class="meta-row">
+      <span><strong>Due:</strong> Sunday, Week 3 (11:59 PM)</span>
+      <span><strong>Weight:</strong> 8% of course grade</span>
+      <span><strong>Team size:</strong> 2 students</span>
+      <span><strong>Deliverable:</strong> Triage table + one Tag Passport draft</span>
+    </div>
+  </header>
+
+  <!-- Context -->
+  <div class="context-box">
+    <p>The Image Tagger track eventually produces a computational tag library for the CNFA corpus — 424 scientific tags, each returning a continuous value between 0 and 1 for any photograph in the database. Your team's job this week is not to implement any of those tags. It is to <strong>understand 20 of them well enough to decide which ones a photograph can actually answer</strong> — and to understand why that question is harder than it first appears.</p>
+    <p>Here is what makes it hard. A tag like <code>spatial_openness</code> sounds straightforward until you ask: open in what sense? Open the way a meadow is open — which you perceive through peripheral vision, parallax, and the sound of distant wind? Or open the way a building renders in an architectural photograph — which a pixel array can measure? These are different things. Your job is to find out, for each of 20 tags, which kind of question is actually being asked. That investigation — not the coding — is the central skill of this assignment.</p>
+  </div>
+
+  <!-- Learning Outcomes -->
+  <h2>Learning Outcomes</h2>
+  <ul class="outcome-list">
+    <li><span class="outcome-num">1</span><span>Explain what it means for a tag to be <em>phase_0</em> and why this designation is a hypothesis, not a guarantee.</span></li>
+    <li><span class="outcome-num">2</span><span>Articulate why triage requires understanding a construct, not just assessing implementation difficulty.</span></li>
+    <li><span class="outcome-num">3</span><span>Use at least two distinct methods to probe the meaning of a spatial or perceptual construct before writing any code.</span></li>
+    <li><span class="outcome-num">4</span><span>Produce a triage table that distinguishes four categories of tag readiness across a 20-tag sample.</span></li>
+    <li><span class="outcome-num">5</span><span>Write a Tag Passport for one chosen tag, including a worked definition, validation strategy, and cited scientific basis.</span></li>
+  </ul>
+
+  <!-- ============================================================ -->
+  <h2>Part 1 — The phase_0 Label Is a Hypothesis About Photography, Not a Guarantee</h2>
+
+  <p>Open the registry file (<code>data/registry_v0.2.8.json</code>) and look at any tag entry. You will see a field called <code>"phase"</code> that reads either <code>"phase_0"</code>, <code>"phase_1"</code>, <code>"phase_2"</code>, or <code>"stub"</code>. Here is what these mean in plain English:</p>
+
+  <table>
+    <tr>
+      <th>Phase</th><th>What it requires</th><th>Example tag</th><th>Count in registry</th>
+    </tr>
+    <tr>
+      <td><span class="badge-p0">phase_0</span></td>
+      <td>Estimable from a single 2D photograph, no depth data, no motion, no audio</td>
+      <td><span class="tag-name">fractal_dimension</span>, <span class="tag-name">color_entropy</span></td>
+      <td>30 tags</td>
+    </tr>
+    <tr>
+      <td><span class="badge-p1">phase_1</span></td>
+      <td>Requires some 3D context, motion over time, or scene geometry</td>
+      <td><span class="tag-name">spatial_depth_cue_richness</span></td>
+      <td>~80 tags</td>
+    </tr>
+    <tr>
+      <td><span class="badge-p2">phase_2</span></td>
+      <td>Requires VR experience, embodied movement, or participant response data</td>
+      <td><span class="tag-name">presence_induction</span></td>
+      <td>~150 tags</td>
+    </tr>
+    <tr>
+      <td><span class="badge-stub">stub</span></td>
+      <td>Entry exists but no operational definition has been agreed on yet</td>
+      <td><span class="tag-name">restorative_quality_ART</span></td>
+      <td>~164 tags</td>
+    </tr>
+  </table>
+
+  <div class="concept-box">
+    <h4>What phase_0 really says</h4>
+    <p>A tag marked <code>phase_0</code> is a claim of the following form: <em>"A computer program, given only the pixel values of a photograph, should be able to produce a number between 0 and 1 that reliably captures this aspect of the scene."</em></p>
+    <p>Notice that this claim has two independent parts. First, the data source must be sufficient — a photograph really must capture the relevant information. Second, the algorithm must be able to extract that information reliably. Both parts can fail.</p>
+    <p>The <code>phase_0</code> label was assigned by the research team as a working hypothesis. Your job this week is to test that hypothesis for a sample of tags — to ask whether each one is genuinely estimable from a flat image, or whether the label was optimistic.</p>
+  </div>
+
+  <h3>Photographs strip half the signals that generate spatial experience</h3>
+  <p>Take the tag <span class="tag-name">spatial_openness</span> as a concrete case. In everyday experience, "spatially open" describes the feeling of standing in a large, unenclosed environment — a meadow, a cathedral nave, an empty plaza. That feeling arises from a dense convergence of signals: stereoscopic depth, parallax as you move your head, acoustic reflections that tell you how far the walls are, peripheral vision expanding toward a wide horizon, and the proprioceptive sense that you have room to walk. Kaplan and Kaplan (1989) found that this experience of "prospect" — the ability to see far and move freely — is one of the most consistent predictors of environmental preference across cultures.</p>
+  <p>A photograph eliminates most of that evidence. What survives is a single viewpoint without parallax, without depth, without sound.</p>
+  <p>A photograph flattens all of this into a single viewpoint without parallax, without depth, and without sound. Some of the relevant information is still there — the relative size of objects, the convergence of lines toward a horizon, the sky-to-ground ratio. Some of it is not. The question is: how much of the original perception survives the photograph?</p>
+  <p>That question cannot be answered by looking at the tag name. It requires you to <em>understand the construct</em> well enough to know which of its components are photographic and which are not.</p>
+
+  <!-- ============================================================ -->
+  <h2>Part 2 — The Real Task Is Understanding a Construct, Not Estimating Code Difficulty</h2>
+
+  <p>Pasting the 30 phase_0 tags into Claude or GPT and asking which ones are easiest to implement is a reasonable first move. A language model will produce a plausible-looking ordering — one that associates tags whose names contain words like "edge" or "color" with standard image-processing routines and ranks them as easy. That ordering is not worthless. It is, however, wrong in exactly the cases where it matters most. The problem is that implementation difficulty and tractability are not the same thing.</p>
+
+  <div class="insight-box">
+    <h4>What AI sorting does</h4>
+    <p>A language model asked "which of these tags is easiest to implement?" will reason about implementation <em>as it imagines it</em>. It knows that edge detection is a standard image-processing operation, so it will rank tags that sound like they involve edges as easy. It knows that color statistics are simple, so color-related tags rank highly. The result is a plausible-sounding ordering based on keyword association with known algorithms.</p>
+    <p>This is not useless. But it bypasses four intellectual operations that the real triage requires:</p>
+  </div>
+
+  <div class="step-list">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Understanding what the tag actually means</strong>
+        <p>Before you can ask whether an algorithm can compute a tag, you need a clear operational definition of the tag. <span class="tag-name">spatial_openness</span> is not the same as <em>amount of empty space in the image</em>, though those correlate. <span class="tag-name">visual_complexity</span> is not the same as <em>number of distinct objects detected</em>. Getting the definition right is its own intellectual task, and AI sorting skips it.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Deciding whether a 2D photograph is the right data source at all</strong>
+        <p>Some constructs that feel visual are actually proprioceptive or temporal. Spatial openness, as experienced in VR, depends partly on what happens when you turn your head — parallax, peripheral expansion, the sense of being surrounded. A photograph presents none of this. If the construct is fundamentally about the experience of moving through a space, then a still image is measuring a <em>proxy</em>, and you need to understand how good that proxy is before you commit to it.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Distinguishing recognition from generation</strong>
+        <p>Language models and vision models are excellent at <em>recognizing</em> whether a feature is present — binary judgments like "does this image contain a tree?" or "does this look like an open space?" They are much weaker at <em>generating calibrated continuous values</em> that predict quantitative psychological outcomes. The difference matters: a VLM can tell you that image A looks more open than image B, but it cannot reliably give you a number that correlates with how open participants will feel when they put on the VR headset. That requires a validated extractor.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>Mapping the failure modes of the algorithm before implementing it</strong>
+        <p>Every algorithm has conditions under which it breaks. <span class="tag-name">fractal_dimension</span> computed via box-counting fails gracefully for smooth gradients (it returns near-zero) but produces garbage for JPEG-compressed images with block artifacts that look like edges. You need to know these failure modes before you commit to the algorithm, because they determine whether your tag will be reliable enough to use in an experiment.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="warn">
+    <strong>The core difficulty</strong>
+    Triage is not a question about implementation difficulty. It is a question about <em>construct fidelity</em>: does the proposed measurement actually measure the thing the tag claims to measure, under the data and algorithmic conditions available to this project? That question requires domain understanding, not just programming skill.
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>Part 3 — Four Methods for Pinning Down What a Construct Actually Measures</h2>
+
+  <p>Each of the following methods gives you a different angle on the same question: what would a photograph have to show for this tag to score high, and does a photograph reliably show it? Apply at least two methods to the tags you are most uncertain about. <span class="tag-name">spatial_openness</span> serves as the running example throughout — by the end of Part 3, you will have seen it analyzed from all four angles.</p>
+
+  <div class="method-grid">
+
+    <div class="method-card">
+      <h4><span class="method-num">A</span>AI Definition Flooding</h4>
+      <p>Ask a language model to generate 10–15 distinct definitions of the construct, from different disciplinary perspectives. Ask it to also list the key dimensions along which people disagree about the meaning. Then read those definitions carefully: what do they share? where do they diverge? The overlap is your operational core; the divergence is your uncertainty zone.</p>
+    </div>
+
+    <div class="method-card">
+      <h4><span class="method-num">B</span>Vision Model Degree Probing</h4>
+      <p>Use a VLM (Claude, GPT-4V) to rate 20–30 images from the corpus on the construct on a 1–10 scale. Then look at the images ranked at the extremes — the ones the model calls "most spatially open" and "least spatially open." Do the extreme cases look right to you? Do they look right to a teammate who rated images independently? Agreement at the extremes is a good sign; disagreement suggests the model is picking up on the wrong cues.</p>
+    </div>
+
+    <div class="method-card">
+      <h4><span class="method-num">C</span>Degree Viewer (see image_tag_visualizer.html)</h4>
+      <p>Use the Tag Visualizer tool to pull the top and bottom deciles of images ranked by an initial proxy measure (e.g., sky ratio or edge sparsity as a stand-in for spatial openness). Browse the resulting carousel groups. The question to ask: are the groups visually coherent? Do images in the "high openness" group share a quality that you would call "open"? If the groups look random, your proxy is not capturing the construct.</p>
+    </div>
+
+    <div class="method-card">
+      <h4><span class="method-num">D</span>HITL Q-Card Ranking</h4>
+      <p>Build a simple human-in-the-loop ranking interface. Present yourself (and optionally others) with pairs or small sets of images and ask: <em>which is more spatially open?</em> Record the judgments. After 40–60 comparisons, you have a human-ranked ordering that serves as ground truth. You can then check whether your proposed algorithm agrees with this ordering. Strong correlation = the algorithm is measuring the right thing.</p>
+    </div>
+
+  </div>
+
+  <!-- Worked Example: spatial_openness -->
+  <div class="example-block">
+    <div class="example-header">
+      <span class="example-badge">WORKED EXAMPLE</span>
+      <span class="example-title">Applying All Four Methods to <code>spatial_openness</code></span>
+    </div>
+
+    <h3>Method A — AI Definition Flooding</h3>
+    <p>Here is an abbreviated version of what you might get if you ask Claude: <em>"Give me 10 distinct definitions of spatial openness as it applies to built and natural environments, from the perspectives of environmental psychology, architecture, neuroscience, and computer vision."</em></p>
+
+    <div class="spec-box" style="font-size:.88rem">
+      <p><strong>Environmental psychology (Kaplan &amp; Kaplan, 1989):</strong> The degree to which a scene affords visual penetration and freedom of movement — characterized by low occlusion, visible ground plane, and absence of enclosure.</p>
+      <p style="margin-top:10px"><strong>Architecture (Hildebrand, 1999):</strong> The ratio of unenclosed to enclosed volumetric space as perceived from a fixed viewpoint — high in plazas, low in corridors.</p>
+      <p style="margin-top:10px"><strong>Neuroscience (Voss et al., 2017):</strong> The spatial frequency spectrum of a scene: open environments contain more low spatial frequency information (broad, slowly varying regions) relative to high-frequency detail.</p>
+      <p style="margin-top:10px"><strong>Computer vision proxy:</strong> The proportion of pixels classified as sky or ground plane, combined with the density of vertical occluders (trees, walls, columns) in the mid-range depth band.</p>
+      <p style="margin-top:10px"><strong>Disagreement zone:</strong> Definitions 1–2 emphasize freedom of movement (proprioceptive), definitions 3–4 treat openness as a purely visual/photometric property. This divergence is the crux: is spatial openness primarily a visual construct, or does it require embodied experience?</p>
+    </div>
+
+    <div class="tip">
+      <strong>What this tells you about phase_0 status</strong>
+      Methods 3 and 4 above are photographic — they can be extracted from a flat image. Methods 1 and 2 invoke movement and volume, which cannot. This does not mean the tag should be reclassified as phase_1. It means your extractor will capture a partial proxy — the visual signature of openness — and the triage table should record that the proxy validity is <em>contested</em>, not confirmed.
+    </div>
+
+    <h3>Method B — Vision Model Degree Probing</h3>
+    <p>You feed 25 images from the CNFA corpus into GPT-4V with the prompt: <em>"On a scale from 1 (completely enclosed, claustrophobic) to 10 (maximally open, expansive), rate this image for spatial openness. Explain what visual features you are using."</em></p>
+    <p>The model rates a narrow stone staircase as 1.5, a forest path as 4.0, a grass field under open sky as 9.2. The explanations mention: sky-to-ground ratio, absence of close vertical surfaces, convergence of horizontal lines toward a visible horizon, and low density of occluding objects.</p>
+    <p>You and your partner independently rate the same 25 images. Your inter-rater correlation with GPT-4V is r = 0.78. Agreement is high at the extremes (the staircase and the field), lower in the middle (a courtyard with partial sky coverage gets 5.5 from GPT-4V, 4.0 from you, 6.5 from your partner). The divergence zone — partial enclosure — is where you will need to invest in validation.</p>
+
+    <h3>Method C — Degree Viewer</h3>
+
+    <p>Using sky-pixel ratio (a simple proxy: the fraction of pixels in the top third of the image classified as sky-colored) as a stand-in for spatial openness, you pull from the corpus:</p>
+
+    <div class="degree-strip">
+      <div class="deg-cell">
+        <div class="deg-patch" style="background:#2c2c3a;color:#aaa">Narrow interior<br>📷</div>
+        <div class="deg-val">0.0–0.1</div>
+        <div class="deg-label">Stone corridors, tunnels, enclosed atria</div>
+      </div>
+      <div class="deg-cell">
+        <div class="deg-patch" style="background:#3d4a5c;color:#ccc">Courtyard<br>📷</div>
+        <div class="deg-val">0.2–0.3</div>
+        <div class="deg-label">Partial sky visible; surrounded by walls</div>
+      </div>
+      <div class="deg-cell">
+        <div class="deg-patch" style="background:#6080a0;color:#ddd">Partial canopy<br>📷</div>
+        <div class="deg-val">0.4–0.5</div>
+        <div class="deg-label">Tree cover breaks; mixed sky and foliage</div>
+      </div>
+      <div class="deg-cell">
+        <div class="deg-patch" style="background:#88aacc;color:#fff">Open field<br>📷</div>
+        <div class="deg-val">0.6–0.7</div>
+        <div class="deg-label">Mostly sky; low horizon; wide ground plane</div>
+      </div>
+      <div class="deg-cell">
+        <div class="deg-patch" style="background:#b0ccee;color:#222">Full sky<br>📷</div>
+        <div class="deg-val">0.8–1.0</div>
+        <div class="deg-label">Panoramic; sky-dominant; minimal occluders</div>
+      </div>
+    </div>
+
+    <p>The groups look visually coherent — sky ratio is tracking something real. But you notice a problem: an image of a large gymnasium interior (no sky at all, sky ratio ≈ 0.02) gets sorted into the "enclosed" group even though the space is genuinely large and open. The proxy is capturing outdoor openness, not spatial openness in general. This is important construct information for your triage decision.</p>
+
+    <h3>Method D — HITL Q-Card Ranking</h3>
+    <p>Rather than relying on a single rating per image, you build a small comparative ranking interface. The logic is simple: you present images two at a time and ask a human judge — you, your partner, or recruited participants — to select which image feels more spatially open.</p>
+
+    <div class="qcard-demo">
+      <h4>🃏 Construct Calibration Viewer — "spatial_openness"</h4>
+      <p style="font-size:.82rem;color:#bbb;margin-bottom:16px">Rate each image on the spatial openness dimension. −4 = completely enclosed; 0 = neutral; +4 = maximally open. Be consistent: your ratings become the ground truth against which algorithms will be evaluated.</p>
+
+      <div class="qcard-images">
+        <div class="qcard-img" style="background:#2a2a3a;border:2px solid #555">
+          [Image ID: ENV_0441]<br>Narrow stone corridor, arched ceiling
+        </div>
+        <div class="qcard-img" style="background:#4a5a70;border:2px solid #778">
+          [Image ID: ENV_0217]<br>Walled garden, partial sky above
+        </div>
+        <div class="qcard-img" style="background:#7a99bb;border:2px solid #9ab">
+          [Image ID: ENV_0088]<br>Open meadow, low horizon
+        </div>
+        <div class="qcard-img" style="background:#aabedd;border:2px solid #cce">
+          [Image ID: ENV_0573]<br>Beach, sky dominant
+        </div>
+      </div>
+
+      <!-- Q-card scale -->
+      <div style="margin-bottom:6px;font-size:.78rem;color:#aaa">Rating scale for ENV_0441:</div>
+      <div class="qcard-scale">
+        <div class="qcard-pt" style="background:#7f1d1d;color:#fff">−4</div>
+        <div class="qcard-pt" style="background:#991a1a;color:#fff">−3</div>
+        <div class="qcard-pt" style="background:#b52020;color:#fff">−2</div>
+        <div class="qcard-pt" style="background:#cc3333;color:#fff">−1</div>
+        <div class="qcard-pt" style="background:#444;color:#ccc">0</div>
+        <div class="qcard-pt" style="background:#1a4a2a;color:#fff">+1</div>
+        <div class="qcard-pt" style="background:#1a6030;color:#fff">+2</div>
+        <div class="qcard-pt" style="background:#1a7a38;color:#fff">+3</div>
+        <div class="qcard-pt" style="background:#1a9040;color:#fff">+4</div>
+      </div>
+      <div class="qcard-instruction">After rating all four images, click Next to load the next batch. Your ratings are saved automatically. You will need approximately 60 batches (≈240 images) to produce a reliable ground-truth ranking for this tag.</div>
+    </div>
+
+    <div class="tip">
+      <strong>Why q-cards give you more than a simple ranking</strong>
+      The −4 to +4 scale (rather than just "which is more open?") forces you to think about degree, not just order. An image that you rate +1 and another you rate +4 are both "more open than neutral," but in a very different way. When you later compare your algorithm's output against this ground truth, you want to know not just whether it gets the ordering right but whether it captures the magnitude of differences. The calibration function is also what lets you combine ratings from multiple judges: you can normalize each judge's mean and variance and then average across judges to get a robust ground truth score.
+    </div>
+
+    <h4>What to build (your deliverable for Method D)</h4>
+    <p>You do not need to build the full q-card interface from scratch this week. What you do need to do is produce a ranked ordering of at least 20 images from the corpus on your chosen construct, using your own judgment as the judge. You can do this with a simple Python script that reads image file paths and presents them one by one in your terminal, prompting for a rating. Record your ratings in a CSV with columns: <code>image_id, rater_id, construct, rating, notes</code>.</p>
+
+    <div class="code-label">Minimal HITL rating script (save as <code>hitl_rating.py</code>)</div>
+    <pre><code><span class="kw">import</span> csv, sys, os
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+
+<span class="fn">construct</span> = sys.argv[<span class="nm">1</span>]  <span class="cm"># e.g. "spatial_openness"</span>
+<span class="fn">rater_id</span>  = sys.argv[<span class="nm">2</span>]  <span class="cm"># e.g. "alice"</span>
+<span class="fn">image_dir</span> = Path(sys.argv[<span class="nm">3</span>])
+
+<span class="fn">images</span> = <span class="fn">sorted</span>(image_dir.glob(<span class="st">"*.jpg"</span>))[:50]
+<span class="fn">output</span>  = Path(<span class="st">f"hitl_{construct}_{rater_id}.csv"</span>)
+
+<span class="kw">with</span> <span class="fn">open</span>(output, <span class="st">"w"</span>, newline=<span class="st">""</span>) <span class="kw">as</span> f:
+    writer = csv.<span class="fn">writer</span>(f)
+    writer.<span class="fn">writerow</span>([<span class="st">"image_id"</span>, <span class="st">"rater_id"</span>, <span class="st">"construct"</span>, <span class="st">"rating"</span>, <span class="st">"notes"</span>])
+
+    <span class="kw">for</span> img <span class="kw">in</span> images:
+        <span class="fn">print</span>(<span class="st">f"\nImage: {img.name}"</span>)
+        <span class="fn">print</span>(<span class="st">f"Rate {construct} from -4 (min) to +4 (max)."</span>)
+        <span class="kw">while</span> <span class="nm">True</span>:
+            <span class="kw">try</span>:
+                rating = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"  Rating [-4..+4]: "</span>))
+                <span class="kw">if</span> -<span class="nm">4</span> <= rating <= <span class="nm">4</span>: <span class="kw">break</span>
+            <span class="kw">except</span> ValueError: <span class="kw">pass</span>
+        notes = <span class="fn">input</span>(<span class="st">"  Notes (optional): "</span>)
+        writer.<span class="fn">writerow</span>([img.stem, rater_id, construct, rating, notes])
+        f.<span class="fn">flush</span>()
+
+<span class="fn">print</span>(<span class="st">f"\nDone. Ratings saved to {output}"</span>)</code></pre>
+
+    <p>Run it as: <code>python3 hitl_rating.py spatial_openness alice data/corpus_sample/</code>. You and your partner should rate the same 20 images independently, then compare. The images on which you most disagree are the ones that most need a clearer operational definition.</p>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2>Part 4 — Your Assignment: The Triage Table</h2>
+
+  <p>Select 20 tags from the <code>phase_0</code> and <code>stub</code> registry entries. For each tag, complete the following triage table. Work through your 20 tags using Methods A–D as needed; you are not required to apply all four methods to every tag, but you must apply at least two methods to the five tags you are most uncertain about.</p>
+
+  <h3>Triage Categories</h3>
+  <table>
+    <tr><th>Category</th><th>Meaning</th><th>Action</th></tr>
+    <tr>
+      <td><strong style="color:#166534">GO</strong></td>
+      <td>The tag is genuinely estimable from a 2D photograph; an algorithm exists or can be designed; construct definition is clear.</td>
+      <td>Add to Sprint 1 implementation queue.</td>
+    </tr>
+    <tr>
+      <td><strong style="color:#1e40af">PROXY</strong></td>
+      <td>The tag can be approximated from a photograph, but the approximation captures a subset of the construct. Valid for correlational use but not for claims of direct measurement.</td>
+      <td>Implement with explicit proxy flag; document the approximation.</td>
+    </tr>
+    <tr>
+      <td><strong style="color:#b45309">DEFER</strong></td>
+      <td>The tag requires depth data, temporal information, or embodied experience that a photograph cannot supply.</td>
+      <td>Reclassify as phase_1 or phase_2; remove from current sprint.</td>
+    </tr>
+    <tr>
+      <td><strong style="color:#7c3aed">CLARIFY</strong></td>
+      <td>The tag definition is ambiguous enough that reasonable people disagree about what should be measured. Cannot proceed without a panel review.</td>
+      <td>Write a Tag Passport draft and submit for review before implementing.</td>
+    </tr>
+  </table>
+
+  <h3>Triage Table Format</h3>
+  <p>Your submitted table should have the following columns. You may submit it as a CSV or as a clearly formatted Markdown table.</p>
+
+  <div class="spec-box">
+    <div class="spec-grid">
+      <span class="spec-label">tag_id</span>
+      <span class="spec-value">Registry key (e.g., <code>spatial_openness</code>)</span>
+      <span class="spec-label">phase_claimed</span>
+      <span class="spec-value">What the registry says (phase_0, stub, etc.)</span>
+      <span class="spec-label">phase_verdict</span>
+      <span class="spec-value">Your team's assessment: GO / PROXY / DEFER / CLARIFY</span>
+      <span class="spec-label">methods_used</span>
+      <span class="spec-value">Which of A–D you applied (e.g., "A, C")</span>
+      <span class="spec-label">core_issue</span>
+      <span class="spec-value">One sentence: what is the hardest part of computing this tag from a photograph?</span>
+      <span class="spec-label">proxy_signal</span>
+      <span class="spec-value">If PROXY or GO: what image feature would you compute? (e.g., "sky-pixel ratio in top third")</span>
+      <span class="spec-label">validation_risk</span>
+      <span class="spec-value">LOW / MEDIUM / HIGH — how confident are you that the proxy correlates with the true construct?</span>
+      <span class="spec-label">notes</span>
+      <span class="spec-value">Any additional observations, disagreements between team members, or open questions</span>
+    </div>
+  </div>
+
+  <div class="example-block">
+    <div class="example-header">
+      <span class="example-badge">EXAMPLE ROW</span>
+      <span class="example-title">Completed triage entry for <code>spatial_openness</code></span>
+    </div>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>tag_id</td><td><span class="tag-name">spatial_openness</span></td></tr>
+      <tr><td>phase_claimed</td><td><span class="badge-p0">phase_0</span></td></tr>
+      <tr><td>phase_verdict</td><td><strong style="color:#1e40af">PROXY</strong></td></tr>
+      <tr><td>methods_used</td><td>A, B, C</td></tr>
+      <tr><td>core_issue</td><td>Openness in VR involves parallax and peripheral expansion that photographs cannot capture; the photographic proxy measures visual correlates only.</td></tr>
+      <tr><td>proxy_signal</td><td>Sky-pixel ratio (top third of image) + inverse edge density in mid-ground band + horizon line detection confidence</td></tr>
+      <tr><td>validation_risk</td><td>MEDIUM — proxy correlates well with outdoor openness (r ≈ 0.74 in pilot) but misclassifies large interiors.</td></tr>
+      <tr><td>notes</td><td>Team disagreed on whether gymnasium images should score high. Suggest panel review of interior vs. exterior scope of construct.</td></tr>
+    </table>
+  </div>
+
+  <!-- Part 5: Tag Passport -->
+  <h2>Part 5 — Tag Passport for One Chosen Tag</h2>
+
+  <p>From your 20 triaged tags, select the one your team found most interesting or most uncertain. Write a Tag Passport — a structured 300–400 word document that establishes the scientific basis for the tag and the operational decisions your team would make if you were to implement it. Use the format below.</p>
+
+  <div class="spec-box">
+    <div class="spec-grid">
+      <span class="spec-label">Tag ID</span><span class="spec-value">[registry key]</span>
+      <span class="spec-label">Common-sense name</span><span class="spec-value">[plain-English name + 1–2 related everyday words]</span>
+      <span class="spec-label">Scientific definition</span><span class="spec-value">[precise 1–2 sentence definition, with citation]</span>
+      <span class="spec-label">What it predicts</span><span class="spec-value">[what psychological or behavioural outcome does this tag correlate with, per the literature?]</span>
+      <span class="spec-label">Operationalization</span><span class="spec-value">[what exactly would you compute from the image, step by step?]</span>
+      <span class="spec-label">Validation strategy</span><span class="spec-value">[how would you check that your computation measures the right thing?]</span>
+      <span class="spec-label">Phase verdict</span><span class="spec-value">GO / PROXY / DEFER / CLARIFY, with justification</span>
+      <span class="spec-label">Open questions</span><span class="spec-value">[what would need to be resolved before you could treat this tag as validated?]</span>
+      <span class="spec-label">Key references</span><span class="spec-value">[2–3 APA citations]</span>
+    </div>
+  </div>
+
+  <!-- Deliverable -->
+  <div class="deliverable-banner">
+    <h3>D1a — Deliverable</h3>
+    <p><strong>What to submit:</strong></p>
+    <p>1. Triage table (CSV or Markdown) for your 20 selected tags — all columns filled.</p>
+    <p>2. One Tag Passport document (PDF or Markdown) for your chosen tag.</p>
+    <p>3. HITL rating CSV (<code>hitl_[construct]_[yourname].csv</code>) for at least 20 images on the construct of your choice.</p>
+    <p>4. Brief methods log (≤1 page): which methods (A–D) you applied to which tags, and what you learned.</p>
+    <div class="grade">8% of course grade</div>
+    <p style="margin-top:8px;font-size:.82rem;opacity:.7">Submit as a ZIP to the course portal. File naming: <code>COGS160_ImageD1a_[TeamName].zip</code></p>
+  </div>
+
+  <!-- Submission checklist -->
+  <h2>Submission Checklist</h2>
+  <ul class="checklist">
+    <li>Triage table contains exactly 20 tags, all from phase_0 or stub registry entries.</li>
+    <li>Every row in the triage table has a verdict (GO / PROXY / DEFER / CLARIFY) and a one-sentence core_issue.</li>
+    <li>At least two methods (A–D) were applied to the five most uncertain tags; methods_used column is filled.</li>
+    <li>HITL rating CSV covers ≥20 images, has correct column headers, and both team members' names appear as rater_id.</li>
+    <li>Tag Passport is 300–400 words, cites ≥2 peer-reviewed sources.</li>
+    <li>Methods log explains what you learned from each method applied, not just which methods you ran.</li>
+    <li>At least one entry is classified DEFER, with a clear explanation of why the photograph is insufficient.</li>
+  </ul>
+
+  <!-- FAQ -->
+  <h2>Frequently Asked Questions</h2>
+
+  <div class="faq-item">
+    <div class="faq-q">Can we just use Claude to fill in the triage table for all 20 tags? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>You can use Claude as a starting point — particularly for Method A (definition flooding) and for a rough first-pass verdict. But if you submit a table that clearly reflects only AI output with no evidence of your own judgment, you will not receive credit for the intellectual work the assignment requires.</p>
+      <p>Concretely: if Claude classifies all 20 tags as GO and your table shows no DEFER or CLARIFY entries, that is a red flag. Spatial and perceptual constructs are systematically harder than algorithmic tags; a human who has actually looked at the images will reach different conclusions than an LLM reasoning purely from tag names.</p>
+      <p>The HITL rating CSV is a check against pure AI generation — that CSV can only come from you personally sitting with the images and making judgments.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">How do we find the phase_0 tags in the registry? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>Open <code>data/registry_v0.2.8.json</code> and filter for entries where <code>"phase": "phase_0"</code>. In Python:</p>
+      <pre><code><span class="kw">import</span> json
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"data/registry_v0.2.8.json"</span>) <span class="kw">as</span> f:
+    registry = json.<span class="fn">load</span>(f)
+
+phase0 = [
+    tag <span class="kw">for</span> tag <span class="kw">in</span> registry[<span class="st">"tags"</span>]
+    <span class="kw">if</span> tag.<span class="fn">get</span>(<span class="st">"phase"</span>) == <span class="st">"phase_0"</span>
+]
+<span class="fn">print</span>(<span class="st">f"Found {len(phase0)} phase_0 tags"</span>)
+<span class="kw">for</span> t <span class="kw">in</span> phase0:
+    <span class="fn">print</span>(t[<span class="st">"id"</span>], <span class="st">"-"</span>, t.<span class="fn">get</span>(<span class="st">"common_name"</span>, <span class="st">"(no common name)"</span>))</code></pre>
+      <p>You should find approximately 30 entries. You may supplement with stub entries if you want more variety.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">What images should we use for the HITL rating? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>Use images from the corpus sample directory: <code>data/corpus_sample/</code>. This directory contains 500 pre-selected images spanning the range of environments in the full corpus. You do not need to rate all 500 — 20–40 images is sufficient for a pilot-level ground truth.</p>
+      <p>Pick images that span the range of the construct you are rating. If you are rating <code>spatial_openness</code>, you want to include some clearly enclosed spaces, some clearly open spaces, and some ambiguous cases in the middle. Do not pick only the easy cases — the middle is where algorithm performance matters most.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">What if our two team members consistently disagree on ratings? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>Disagreement is data, not a problem. If you and your partner consistently give different ratings for the same images, that is strong evidence that the construct is ambiguous — which means it should probably be classified as CLARIFY in your triage table. Document the pattern of disagreement in your methods log: are you disagreeing about outdoor vs. indoor images? about images with partial sky? The pattern of disagreement tells you where the construct definition needs to be sharpened.</p>
+      <p>Compute inter-rater correlation (Pearson r or Spearman ρ) for your common image set. If r &lt; 0.5, the construct is genuinely ambiguous for this image set and should not proceed to implementation without further clarification.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Is "stub" the same as phase_0? Can we include stub tags in our sample? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>No, stub is not the same as phase_0. A stub tag has been named and given a rough description, but no one has yet decided what phase it belongs to or how to compute it. Including stub tags in your sample is encouraged — the triage process is exactly where stub tags get promoted to a real phase classification. If you include stub tags, your phase_verdict column is especially important: you are making a claim about what phase they <em>should</em> be in, based on your analysis.</p>
+      <p>A reasonable sample might include 20 phase_0 tags plus 5 stub tags, for a total of 25 rows — but 20 tags is the minimum.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">The degree viewer (Method C) requires an initial proxy — but I don't have a proxy yet. Isn't this circular? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>It is, slightly — but productively so. The purpose of Method C at this stage is not to validate a finished extractor. It is to use a naive proxy as a lens for looking at the construct. The naive proxy (e.g., sky-pixel ratio for spatial openness) will misclassify some images, and those misclassifications are informative: they tell you where your proxy fails and therefore what a better extractor would need to do differently.</p>
+      <p>Think of Method C as a construct exploration tool. You are not validating the proxy; you are using the proxy to surface the interesting edge cases of the construct. The Tag Visualizer tool (see <a href="image_tag_visualizer.html" style="color:#d4620f">image_tag_visualizer.html</a>) is designed for exactly this — browse images sorted by a naive proxy, and use the visual inspection to refine your understanding of what the tag actually means.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">How long should the methods log be? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>One page maximum, plain prose, no bullet lists. Describe what you did and what you learned. The markers are looking for evidence of genuine engagement with the images and the constructs — not a checklist of methods applied. A methods log that says "We applied Method A to all 20 tags using Claude and found that most tags are feasible" is not a methods log; it is a summary of not doing the work. A methods log that says "We applied Method C to <code>spatial_complexity</code> and discovered that images with high JPEG compression artifacts scored anomalously high on our edge-density proxy — this made us reclassify the tag from GO to PROXY" is exactly the kind of observation we want to see.</p>
+    </div>
+  </div>
+
+  <!-- References -->
+  <h2>Key References</h2>
+  <ul class="ref-list">
+    <li>
+      <span class="ref-num">1</span>
+      <span class="ref-text">Kaplan, S., &amp; Kaplan, R. (1989). <em>The Experience of Nature: A Psychological Perspective.</em> Cambridge University Press. <a href="https://scholar.google.com/scholar?q=Kaplan+1989+Experience+Nature+Psychological+Perspective" style="color:#d4620f" target="_blank">Google Scholar</a></span>
+    </li>
+    <li>
+      <span class="ref-num">2</span>
+      <span class="ref-text">Joye, Y., &amp; van den Berg, A. (2011). Is love for green in our genes? A critical analysis of evolutionary assumptions in restorative environments research. <em>Urban Forestry &amp; Urban Greening, 10</em>(4), 261–268. <a href="https://doi.org/10.1016/j.ufug.2011.07.004" style="color:#d4620f" target="_blank">https://doi.org/10.1016/j.ufug.2011.07.004</a></span>
+    </li>
+    <li>
+      <span class="ref-num">3</span>
+      <span class="ref-text">Voss, M. W., Vivar, C., Kramer, A. F., &amp; van Praag, H. (2013). Bridging animal and human models of exercise-induced brain plasticity. <em>Trends in Cognitive Sciences, 17</em>(10), 525–544. (For the neural basis of spatial perception.) <a href="https://doi.org/10.1016/j.tics.2013.08.001" style="color:#d4620f" target="_blank">https://doi.org/10.1016/j.tics.2013.08.001</a></span>
+    </li>
+    <li>
+      <span class="ref-num">4</span>
+      <span class="ref-text">Carlson, L. A., Hölscher, C., Shipley, T. F., &amp; Dalton, R. C. (2010). Getting lost in buildings. <em>Current Directions in Psychological Science, 19</em>(5), 284–289. <a href="https://doi.org/10.1177/0963721410383243" style="color:#d4620f" target="_blank">https://doi.org/10.1177/0963721410383243</a></span>
+    </li>
+    <li>
+      <span class="ref-num">5</span>
+      <span class="ref-text">Oliva, A., &amp; Torralba, A. (2001). Modeling the shape of the scene: A holistic representation of the spatial envelope. <em>International Journal of Computer Vision, 42</em>(3), 145–175. (Key work on photographic proxies for scene properties.) <a href="https://doi.org/10.1023/A:1011139631724" style="color:#d4620f" target="_blank">https://doi.org/10.1023/A:1011139631724</a></span>
+    </li>
+    <li>
+      <span class="ref-num">6</span>
+      <span class="ref-text">Greene, M. R., &amp; Oliva, A. (2009). The briefest of glances: The time course of natural scene understanding. <em>Psychological Science, 20</em>(4), 464–472. <a href="https://doi.org/10.1111/j.1467-9280.2009.02316.x" style="color:#d4620f" target="_blank">https://doi.org/10.1111/j.1467-9280.2009.02316.x</a></span>
+    </li>
+    <li>
+      <span class="ref-num">7</span>
+      <span class="ref-text">Krumhansl, C. L. (1978). Concerning the applicability of geometric models to similarity data: The interrelationship between similarity and spatial density. <em>Psychological Review, 85</em>(5), 445–463. (Inter-rater reliability methodology for perceptual constructs.)</span>
+    </li>
+  </ul>
+
+  <footer>
+    COGS160: AI &amp; VR · Image Tagger Track · Week 3 · D1a — Tag Triage<br>
+    Department of Cognitive Science, UC San Diego · Prof. David Kirsh
+  </footer>
+
+</div>
+
+<script>
+  // FAQ toggle
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+      const a = q.nextElementSibling;
+      const chevron = q.querySelector('.faq-chevron');
+      a.classList.toggle('open');
+      chevron.classList.toggle('open');
+    });
+  });
+</script>
+</body>
+</html>

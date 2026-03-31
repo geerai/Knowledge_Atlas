@@ -39,83 +39,82 @@ window.KA_WORKFLOWS = {
     'first-questions': {
       id: 'first-questions',
       title: 'First Questions',
-      subtitle: 'Orient yourself in the evidence landscape',
-      objective: 'Surface three research questions the literature actually answers, and three it leaves open — so you know where ATLAS can help and where the real gaps are.',
+      subtitle: 'Learn how to explore Atlas before you try to contribute to it',
+      objective: 'Use the Did You Know findings, the topic hierarchy, and the question tools to understand what Atlas covers well, what it only tentatively classifies, and which questions are worth pursuing next.',
       forRoles: ['student_explorer', 'contributor'],
-      estimatedTime: '45–60 min',
+      estimatedTime: '35–50 min',
       badge: 'Onboarding',
       badgeColor: '#2A7868',
       icon: '🔍',
       steps: [
         {
           id: 's1',
-          title: 'Pick a Topic',
-          pageLink: 'ka_topics.html',
-          pageName: 'Topics',
-          description: 'Browse the Topics page and pick one or two research areas that genuinely interest you. The topics are organised by broad construct (light, space, nature, sound, materials). Do not try to cover everything — the goal is depth over breadth in this first pass.',
+          title: 'Start with Did You Know',
+          pageLink: 'ka_home.html',
+          pageName: 'Home',
+          description: 'Begin on the Atlas home page and read several Did You Know cards. The point is not to memorise them but to learn the style of claim Atlas can surface: a concrete environmental factor, a human consequence, and a degree of epistemic caution.',
           lookFor: [
-            'Which areas have many ATLAS-backed questions? (Those have robust evidence.)',
-            'Which have very few questions? (Those are real literature gaps.)',
-            'Do any topics surprise you by having more or less evidence than expected?',
-            'Are the topic labels intuitive? (Note any that confuse you — useful for Phase 3 audit.)'
+            'Which findings feel genuinely surprising rather than merely familiar?',
+            'Which cards state a mechanism, and which merely state an effect?',
+            'Which cards make you want to ask “why?” or “for whom?”'
+          ],
+          imageType: 'qa-interface',
+          collectArticles: false
+        },
+        {
+          id: 's2',
+          title: 'Probe One Finding More Deeply',
+          pageLink: 'ka_demo_v04.html',
+          pageName: 'Ask ATLAS',
+          description: 'Pick one finding from Step 1 and push on it in the Ask ATLAS interface. Ask what evidence supports it, what the likely mechanism is, and where the uncertainty still lies.',
+          lookFor: [
+            'Does Atlas distinguish between evidence, interpretation, and projection?',
+            'What follow-up question would sharpen the original claim?',
+            'Where does the system hedge, and does the hedging seem reasonable?'
+          ],
+          imageType: 'qa-interface',
+          collectArticles: false
+        },
+        {
+          id: 's3',
+          title: 'Open the Topic Hierarchy',
+          pageLink: 'ka_topic_hierarchy.html',
+          pageName: 'Topic Map',
+          description: 'Move from single findings to the larger map. Use the defended and working views to see which parts of the corpus Atlas can classify confidently and which parts remain provisional.',
+          lookFor: [
+            'Which top-level environmental families recur across multiple human outcomes?',
+            'Which topic neighborhoods have many nearby topics, and which stand alone?',
+            'What changes when you expand from the defended map to the working map?'
           ],
           imageType: 'topic-browser',
           collectArticles: false
         },
         {
-          id: 's2',
-          title: 'Generate Search Queries',
-          pageLink: 'ka_question_maker.html',
-          pageName: 'Question Maker',
-          description: 'Use the Question Maker to transform your chosen topic into semantically rich search queries. The goal is to move beyond simple keyword Boolean strings toward queries that find high-signal scientific literature. Try at least three different query reformulations.',
+          id: 's4',
+          title: 'Compare Topic Areas',
+          pageLink: 'ka_topics.html',
+          pageName: 'Topics',
+          description: 'Use the Topics page to compare broad areas, research fronts, and open questions. This is where curiosity becomes a more disciplined sense of which domains are mature, emerging, or thinly evidenced.',
           lookFor: [
-            'Does the tool suggest facets or sub-questions you had not considered?',
-            'Which query formulation returns the most useful results when you test it in Scholar?',
-            'Are the suggested queries specific enough to find measurable claims, or too broad?'
+            'Which topics are mature enough to teach from immediately?',
+            'Which topics are active but contested?',
+            'Which topics would make a good first research question for a student?'
           ],
-          imageType: 'query-builder',
+          imageType: 'topic-browser',
           collectArticles: false
         },
         {
-          id: 's3',
-          title: 'Find and Collect Articles',
-          pageLink: 'ka_article_search.html',
-          pageName: 'Article Search',
-          description: 'Search using at least three of: Google Scholar AI, Elicit, OpenAlex, Consensus, or Scholar GPT. Use the queries you generated in Step 2. When you find a promising article, use the Article Collector (right panel) to save it — you will submit these in Step 4.',
-          lookFor: [
-            'Do different search tools surface different literature? (They often do.)',
-            'Which articles make explicit empirical claims with effect sizes?',
-            'Are the findings consistent across studies, or contradictory?'
-          ],
-          imageType: 'article-search',
-          collectArticles: true
-        },
-        {
-          id: 's4',
-          title: 'Submit to the Archive',
-          pageLink: 'ka_article_propose.html',
-          pageName: 'Submit Articles',
-          description: 'Submit the best articles you collected to the ATLAS evidence archive. For each submission, write one sentence describing the key empirical claim. This annotation is what makes your submission valuable — the system already has many unannotated PDFs.',
-          lookFor: [
-            'Does the submission form capture all the metadata you care about?',
-            'Is there anything about a paper that the form cannot express? (Note it.)',
-            'How long does it take to submit five articles with good annotations?'
-          ],
-          imageType: 'submit-form',
-          collectArticles: true
-        },
-        {
           id: 's5',
-          title: 'Reflect: Answered vs. Open',
-          pageLink: 'ka_demo_v04.html',
-          pageName: 'Ask ATLAS',
-          description: 'Return to the topic you chose in Step 1. Ask ATLAS three questions: one you suspect it can answer well, one you are uncertain about, and one you believe it cannot answer yet. For each, assess whether the response is accurate, hedged appropriately, or over-confident.',
+          title: 'Turn Curiosity into Searchable Questions',
+          pageLink: 'ka_question_maker.html',
+          pageName: 'Question Maker',
+          description: 'Finish by turning one promising topic into a small set of sharper questions. This step prepares you either to stop, satisfied that you understand the territory better, or to move on into article finding and contribution work.',
           lookFor: [
-            'Which questions does ATLAS handle confidently? Which does it hedge?',
-            'Is the hedging calibrated? (Does it hedge when it should and commit when it should?)',
-            'What is the gap between what the literature has and what ATLAS surfaces?'
+            'Can you produce one broad question, one mechanism question, and one gap question?',
+            'Do the questions sound like things a real researcher could investigate?',
+            'Would you now know where to go next in Atlas if you wanted to contribute?'
           ],
-          imageType: 'qa-interface',
+          imageType: 'query-builder',
           collectArticles: false
         }
       ]
@@ -396,8 +395,8 @@ window.KA_WORKFLOWS = {
     'design-decision': {
       id: 'design-decision',
       title: 'Design Decision Support',
-      subtitle: 'Find the evidence behind a specific architectural choice',
-      objective: 'Leave with a concise, evidence-grounded brief on one design decision — knowing what the literature supports, what remains uncertain, and what questions to ask of your client or the building occupants.',
+      subtitle: 'Move from an image or design idea to its likely human consequences',
+      objective: 'Start from a concrete environmental example, inspect how Atlas would tag it, trace the likely cognitive, affective, and social consequences, and leave with a concise practice-facing note rather than a vague design intuition.',
       forRoles: ['practitioner'],
       estimatedTime: '30–45 min',
       badge: 'Practice',
@@ -406,41 +405,41 @@ window.KA_WORKFLOWS = {
       steps: [
         {
           id: 's1',
-          title: 'Frame the Design Question',
-          pageLink: 'ka_question_maker.html',
-          pageName: 'Question Maker',
-          description: 'Start with a concrete design decision you are facing or anticipating — not "should buildings have good lighting?" but "what ceiling height optimises creative collaboration in a co-working studio for 15-person teams?" The more specific, the more ATLAS can help and the more clearly you will see where the evidence is thin.',
-          lookFor: ['Can you operationalise the decision in terms of measurable spatial properties?', 'Is there an expected occupant population you can specify?', 'What outcome matters most — productivity, wellbeing, creative output?'],
-          imageType: 'query-builder',
+          title: 'Inspect How an Image Is Tagged',
+          pageLink: 'ka_tagger.html',
+          pageName: 'Image Tagger',
+          description: 'Begin with the image-tagging surface so you can see how a built environment is decomposed into meaningful features and likely constructs. This is the quickest way for a practitioner to understand what Atlas thinks it is seeing before it makes any broader claim.',
+          lookFor: ['Which environmental features drive the proposed tags?', 'Which tags look plausible, and which feel over-extended?', 'What information is missing from the image alone?'],
+          imageType: 'tagger-ui',
           collectArticles: false
         },
         {
           id: 's2',
-          title: 'Browse Relevant Evidence',
+          title: 'See Likely Consequences',
+          pageLink: 'ka_topics.html',
+          pageName: 'Topics',
+          description: 'Move from the tagged environmental features to the likely consequence families. Use the topic and front cards to see which cognitive, affective, and social outcomes Atlas most strongly associates with the kind of environment you are considering.',
+          lookFor: ['Which consequence families recur: stress, comfort, navigation, preference, social response?', 'Which consequences are well established, and which are still frontier questions?', 'Do the topic cards suggest caution rather than confidence anywhere?'],
+          imageType: 'topic-browser',
+          collectArticles: false
+        },
+        {
+          id: 's3',
+          title: 'Review the Evidence Behind the Consequences',
           pageLink: 'ka_evidence.html',
           pageName: 'Evidence',
-          description: 'Search the evidence base for your decision domain. Focus on studies with populations similar to your target occupants and measurement of the outcome you care about. Collect articles into the Article Collector as you find them.',
-          lookFor: ['Do the study populations match your client\'s context?', 'Are effect sizes large enough to be practically significant?', 'Are the environmental manipulations within achievable design parameters?'],
+          description: 'Open the evidence layer to check what actually supports the consequence claims. A practitioner needs to know not only what Atlas suggests, but what sort of studies, populations, and measurements sit behind the suggestion.',
+          lookFor: ['Are the claims supported by strong studies or only by thin evidence?', 'Do the populations resemble the setting you care about?', 'Which practical caveats would you need to mention to a client?'],
           imageType: 'evidence-card',
           collectArticles: true
         },
         {
-          id: 's3',
-          title: 'Check ATLAS\'s Reasoning',
-          pageLink: 'ka_demo_v04.html',
-          pageName: 'Ask ATLAS',
-          description: 'Ask ATLAS directly about your decision. Treat the answer not as an oracle but as a first-pass synthesis. Check whether the evidence it cites aligns with what you found in Step 2. Disagreements between your search and ATLAS\'s answer are informative — they reveal either ATLAS gaps or your search gaps.',
-          lookFor: ['Does ATLAS\'s answer match the evidence you collected?', 'Does ATLAS hedges where the literature hedges?', 'Is there anything in the evidence you found that ATLAS did not cite?'],
-          imageType: 'qa-interface',
-          collectArticles: false
-        },
-        {
           id: 's4',
-          title: 'Draft the Design Brief Bullet',
+          title: 'Write the Practice Note',
           pageLink: 'ka_annotations.html',
           pageName: 'Annotations',
-          description: 'Write a single, citable design brief bullet: one claim, the evidence behind it, the confidence level, and the key caveat. Example: "Ceiling heights above 2.9m correlate with improved creative-thinking task performance (Meyers-Levy & Zhu, 2007; effect: d = 0.43), though effect is moderated by task type and may not hold for analytical tasks." This is the practice-ready output.',
-          lookFor: ['Is your brief bullet specific enough to inform an actual design parameter?', 'Have you included both the evidence and its limits?', 'Would a structural engineer or client understand it without HCI background?'],
+          description: 'Finish with one short practice note: what this environmental feature is likely to do, what the evidence behind that claim looks like, and what uncertainty remains. The aim is not to sound certain; it is to be action-guiding without becoming careless.',
+          lookFor: ['Can a client read the note without specialist vocabulary?', 'Does the note separate what is likely from what is speculative?', 'Would this note help a real design decision rather than merely decorate it?'],
           imageType: 'annotation-view',
           collectArticles: false
         }
@@ -562,8 +561,8 @@ window.KA_WORKFLOWS = {
     'mechanism-trace': {
       id: 'mechanism-trace',
       title: 'Mechanism Trace',
-      subtitle: 'Follow the causal chain from built environment to human outcome',
-      objective: 'Map the full causal mechanism for one environmental effect — from physical stimulus to neural/physiological mediator to psychological/behavioural outcome — and assess where the chain is well-supported versus speculative.',
+      subtitle: 'Trace a theory, its mechanism claims, and the experiment that would test them',
+      objective: 'Move from rival theories to mechanism claims, then inspect how Atlas itself reasons about them and what critical experiment would genuinely distinguish the options.',
       forRoles: ['theory_mechanism_explorer', 'researcher'],
       estimatedTime: '60–90 min',
       badge: 'Theory',
@@ -572,41 +571,41 @@ window.KA_WORKFLOWS = {
       steps: [
         {
           id: 's1',
-          title: 'Select an Effect to Trace',
-          pageLink: 'ka_demo_v04.html',
-          pageName: 'Ask ATLAS',
-          description: 'Begin with a known environmental psychology finding — one you believe is real but want to understand at the mechanistic level. State the effect in the form: "[physical property] → [outcome]." Then ask yourself: what is the mechanism? Do not settle for "exposure to nature reduces stress" — push to "which features of nature exposure, through which sensory channels, with what neural mediators, producing what stress-response modulation?"',
-          lookFor: ['Can you identify at least one plausible mechanistic pathway?', 'Is the mechanism explicitly stated in the ATLAS answer, or inferred?', 'Are there multiple plausible mechanisms that could produce the same observed effect?'],
-          imageType: 'qa-interface',
+          title: 'Compare Rival Theories',
+          pageLink: 'Designing_Experiments/theory_and_experiment_design.html',
+          pageName: 'Theory & Experiment Design',
+          description: 'Begin with the theory page, not with an isolated result. The task is to understand which theoretical programmes are in play, what each predicts, and what would count as a meaningful discrimination between them.',
+          lookFor: ['Which theories genuinely compete, and which merely use different language for the same idea?', 'What mechanism does each theory rely on?', 'What would each theory predict in the same built-environment case?'],
+          imageType: 'hypothesis-form',
           collectArticles: false
         },
         {
           id: 's2',
-          title: 'Find Mechanistic Evidence',
-          pageLink: 'ka_evidence.html',
-          pageName: 'Evidence',
-          description: 'Search specifically for studies that test the mechanism, not just the input-output relationship. Mechanistic studies typically: measure the mediator directly (e.g., cortisol, EEG), use designs that can establish mediation (e.g., mediation analysis, causal inference), or manipulate the purported mechanism to test whether the effect disappears.',
-          lookFor: ['Are there studies that measure the mediating variable directly?', 'Do any studies use designs that allow causal inference about the mechanism?', 'What is the strength of the mechanistic evidence relative to the observational evidence?'],
-          imageType: 'evidence-card',
-          collectArticles: true
-        },
-        {
-          id: 's3',
-          title: 'Map the Causal Chain',
+          title: 'Trace Mechanism Claims',
           pageLink: 'ka_argumentation.html',
           pageName: 'Argumentation',
-          description: 'Using your collected evidence, map the causal chain with explicit uncertainty at each link. A well-specified mechanism map distinguishes: (a) well-supported links, (b) assumed but untested links, (c) plausible but untested alternatives, and (d) links that are probably spurious. Each "weak link" in the chain is a potential research gap.',
-          lookFor: ['Where does the mechanistic chain break down — where is the evidence thinnest?', 'Are there alternative mechanisms that could explain the evidence equally well?', 'Does the mechanism generalise across populations and contexts?'],
+          description: 'Use the argumentation layer to inspect how mechanism-level claims are supported, attacked, or undercut. This is where Theory Explorer should feel different from ordinary browsing: you are not merely asking what happens, but why Atlas thinks it happens and what counts against that view.',
+          lookFor: ['Which claims are explicitly mechanistic rather than merely associative?', 'What attack schemes or defeaters appear around the mechanism claims?', 'Where is the mechanism chain strongest, and where does it become speculative?'],
           imageType: 'argument-graph',
           collectArticles: false
         },
         {
+          id: 's3',
+          title: 'See How Atlas Itself Reasons',
+          pageLink: 'ka_explain_system.html',
+          pageName: 'How Atlas Works',
+          description: 'Open the system explanation page to see how Atlas moves from extracted claims to warrants, argumentation, and proposed experiments. This matters because a theory explorer needs to know not only the content of the claim but the machinery that assembled it.',
+          lookFor: ['How does Atlas distinguish warrant, interpretation, and projection?', 'Where in the system would a new mechanism be discovered, challenged, or promoted?', 'Which parts of the architecture remain more aspirational than complete?'],
+          imageType: 'annotation-view',
+          collectArticles: false
+        },
+        {
           id: 's4',
-          title: 'Identify the Critical Test',
+          title: 'Propose the Critical Experiment',
           pageLink: 'ka_hypothesis_builder.html',
           pageName: 'Hypothesis Builder',
-          description: 'Identify the "critical test" — the study design that would most decisively adjudicate between competing mechanistic accounts. A critical test ideally: (1) discriminates between two plausible mechanisms, (2) is feasible in a real building, (3) measures the mediating variable directly, and (4) has ecological validity.',
-          lookFor: ['What would a sceptic of your preferred mechanism demand as evidence?', 'Is the critical test technically feasible within current environmental psychology methods?', 'What is the smallest study that would be informative?'],
+          description: 'End by proposing the experiment that would best discriminate between the rival theories or mechanisms. A theory explorer should not stop at description; the real question is what study would force the field to learn something definite next.',
+          lookFor: ['Which outcome and mediator would the experiment measure directly?', 'What result would support one theory and count against another?', 'Could this experiment be done in VR, in the field, or only in the lab?'],
           imageType: 'hypothesis-form',
           collectArticles: false
         }
@@ -618,8 +617,8 @@ window.KA_WORKFLOWS = {
   // ─── ROLE CONFIGURATION ──────────────────────────────────────────────────
 
   byRole: {
-    student_explorer:         ['first-questions', 'deep-dive', 'evidence-pipeline'],
-    contributor:              ['evidence-pipeline', 'first-questions', 'deep-dive'],
+    student_explorer:         ['first-questions', 'deep-dive'],
+    contributor:              ['evidence-pipeline', 'deep-dive', 'first-questions'],
     researcher:               ['hypothesis-test', 'lit-synthesis', 'evidence-pipeline', 'deep-dive'],
     practitioner:             ['design-decision', 'client-brief', 'deep-dive'],
     instructor:               ['student-onboarding'],
@@ -634,7 +633,7 @@ window.KA_WORKFLOWS = {
       icon: '🎒',
       color: '#2A7868',
       bgLight: '#f0fff4',
-      description: 'You are in the orientation phase — learning what ATLAS contains, how evidence is structured, and where the gaps are. The First Questions workflow is the right place to start.',
+      description: 'You are learning how Atlas is meant to be explored. Start with the Did You Know findings, then move into the topic map and question tools before you try to collect or tag anything yourself.',
       tagline: 'Explore the evidence landscape before you build in it.'
     },
     contributor: {
@@ -658,7 +657,7 @@ window.KA_WORKFLOWS = {
       icon: '📐',
       color: '#b05e1a',
       bgLight: '#fff7ed',
-      description: 'You are an architect, designer, or consultant using ATLAS to ground your practice in evidence. You need specific, actionable guidance — not textbook summaries — that you can translate into design parameters.',
+      description: 'You are an architect, designer, or consultant using Atlas to turn an environment, image, or design option into likely human consequences and then into a concise practice-facing note.',
       tagline: 'Evidence-grounded design requires knowing what the science actually shows.'
     },
     instructor: {
@@ -674,8 +673,8 @@ window.KA_WORKFLOWS = {
       icon: '🧠',
       color: '#5c3d8f',
       bgLight: '#faf5ff',
-      description: 'You are interested in the mechanistic underpinnings of environmental effects — why they happen, not just that they happen. ATLAS\'s argumentation layer and theory guides are your primary entry points.',
-      tagline: 'Understanding mechanism is the difference between knowing and understanding.'
+      description: 'You are tracing theories, mechanisms, and critical tests. This mode foregrounds theory comparison, mechanism-level argumentation, and the parts of Atlas that explain how the system itself reasons.',
+      tagline: 'Understand mechanism, not only outcome.'
     }
   },
 

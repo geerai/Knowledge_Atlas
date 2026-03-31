@@ -464,7 +464,7 @@
   <main class="main" id="main-content">
     <div id="error-state" class="error-state" style="display:none">
       <h2>Route not found</h2>
-      <p>The route you requested does not exist. <a href="ka_user_home.html">Go back to recommended paths</a>.</p>
+      <p>The path you requested does not exist. <a href="ka_user_home.html">Go back to recommended paths</a>.</p>
     </div>
     <div id="wf-hero" class="wf-hero" style="display:none">
       <div class="wf-hero-badge" id="hero-badge"></div>
@@ -487,8 +487,8 @@
     <span class="progress-label" id="progress-label">Step 1 of 1</span>
   </div>
   <div class="sticky-cta-actions">
-    <button class="cta-prev-btn" id="cta-prev">← Previous</button>
-    <button class="cta-next-btn" id="cta-next">Next Step →</button>
+    <button class="cta-prev-btn" id="cta-prev">Back</button>
+    <button class="cta-next-btn" id="cta-next">Next</button>
   </div>
 </div>
 
@@ -535,7 +535,7 @@
     '<span>⏱ ' + wf.estimatedTime + '</span>' +
     '<span>📋 ' + wf.steps.length + ' steps</span>';
   document.getElementById('hero-note').textContent =
-    'This is a recommended route, not a requirement. Use Next and Previous if you want a guided sequence. You may open other Atlas pages at any time, and your place in this route will still be remembered.';
+    'This is a recommended path, not a requirement. Use Next and Back if you want a guided sequence. You may open other Atlas pages at any time, and your place in this path will still be remembered.';
 
   /* ── Progress persistence ────────────────────────────────────────── */
   const PROG_KEY = 'ka_wf_progress_' + wfId;
@@ -579,7 +579,7 @@
       url.searchParams.set('wf', wfId);
       url.searchParams.set('step', stepIdx);
       url.searchParams.set('from', 'workflow');
-      return url.pathname.split('/').pop() + url.search;
+      return url.pathname + url.search;
     } catch (e) {
       return targetPath;
     }
@@ -609,7 +609,7 @@
           '<div class="step-title-large">' + step.title + '</div>' +
         '</div>' +
         (step.pageLink
-          ? '<a href="' + routedLink + '" class="step-page-link" target="_blank" rel="noopener" style="margin-left:auto">Open ' + step.pageName + ' ↗</a>'
+          ? '<a href="' + routedLink + '" class="step-page-link" target="_blank" rel="noopener" style="margin-left:auto">Open this step in ' + step.pageName + ' ↗</a>'
           : '') +
       '</div>' +
       buildImagePanel(step) +
@@ -679,7 +679,8 @@
     const nextBtn = document.getElementById('cta-next');
     prevBtn.disabled = idx === 0;
     const isLast = idx === wf.steps.length - 1;
-    nextBtn.textContent = isLast ? 'Complete Route ✓' : 'Next Step →';
+    const nextStep = wf.steps[idx + 1];
+    nextBtn.textContent = isLast ? 'Finish path' : 'Next: ' + (nextStep ? nextStep.title : 'next step') + ' →';
     nextBtn.classList.toggle('last', isLast);
 
     // Persist progress

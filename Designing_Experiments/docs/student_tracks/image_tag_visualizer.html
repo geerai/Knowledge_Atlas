@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COGS160: AI & VR — Tag Visualizer: 0 → 1</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+         background:#111;color:#eee;line-height:1.6;padding:0}
+
+    /* Top nav */
+    .top-nav{background:#0a0a14;border-bottom:2px solid #d4620f;padding:14px 32px;
+             display:flex;justify-content:space-between;align-items:center;
+             position:sticky;top:0;z-index:100}
+    .top-nav a{color:#d4620f;text-decoration:none;font-weight:600;font-size:.85rem}
+    .title-bar{color:#fff;font-weight:800;font-size:1.1rem}
+    .title-bar span{color:#d4620f}
+
+    /* Controls */
+    .controls{background:#1a1a2a;border-bottom:1px solid #333;padding:20px 32px;
+              display:flex;gap:24px;flex-wrap:wrap;align-items:flex-end}
+    .ctrl-group{display:flex;flex-direction:column;gap:6px}
+    .ctrl-label{font-size:.75rem;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.5px}
+    select,input[type=range]{background:#2a2a3a;border:1px solid #444;border-radius:6px;
+                              color:#eee;padding:8px 12px;font-size:.9rem;cursor:pointer}
+    select:focus{outline:2px solid #d4620f;border-color:#d4620f}
+    .threshold-row{display:flex;align-items:center;gap:10px}
+    .threshold-val{min-width:36px;font-weight:700;color:#d4620f;font-size:.9rem}
+
+    /* Description strip */
+    .tag-desc{background:#16161f;border:1px solid #333;border-radius:8px;
+              margin:24px 32px 0;padding:16px 20px}
+    .tag-desc-name{font-size:1.1rem;font-weight:800;color:#d4620f;margin-bottom:4px}
+    .tag-desc-def{font-size:.88rem;color:#ccc;margin-bottom:8px}
+    .tag-terms{display:flex;gap:6px;flex-wrap:wrap}
+    .term-chip{background:#2a2030;border:1px solid #5a3060;border-radius:12px;
+               padding:3px 10px;font-size:.75rem;color:#c890f0}
+
+    /* Main visualizer */
+    .viz-section{padding:24px 32px 48px}
+    .viz-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:20px}
+    .viz-title{font-size:1rem;font-weight:700;color:#aaa}
+    .viz-count{font-size:.85rem;color:#666}
+
+    /* The 0→1 strip */
+    .spectrum-strip{margin-bottom:32px}
+    .spectrum-labels{display:flex;justify-content:space-between;
+                     font-size:.72rem;font-weight:700;color:#888;margin-bottom:8px;padding:0 2px}
+    .spectrum-bar{height:8px;border-radius:4px;
+                  background:linear-gradient(90deg,#1a2a4a,#2a4a8a,#4a8a4a,#8a8a2a,#d4620f,#f02020);
+                  margin-bottom:24px}
+
+    /* Groups */
+    .group-section{margin-bottom:40px}
+    .group-header{display:flex;align-items:baseline;gap:12px;margin-bottom:14px;
+                  padding-bottom:10px;border-bottom:1px solid #2a2a3a}
+    .group-label{font-size:1rem;font-weight:800;color:#fff}
+    .group-meta{font-size:.8rem;color:#666}
+    .group-mean{font-size:.85rem;font-weight:700;color:#d4620f}
+
+    /* Carousel */
+    .carousel{position:relative;overflow:hidden}
+    .carousel-track{display:flex;gap:12px;overflow-x:auto;padding-bottom:12px;
+                    scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+    .carousel-track::-webkit-scrollbar{height:4px}
+    .carousel-track::-webkit-scrollbar-track{background:#1a1a2a}
+    .carousel-track::-webkit-scrollbar-thumb{background:#d4620f;border-radius:2px}
+
+    /* Image cards */
+    .img-card{flex-shrink:0;width:220px;scroll-snap-align:start;
+              background:#1e1e2e;border-radius:8px;overflow:hidden;
+              border:1px solid #2a2a3a;cursor:pointer;transition:border-color .2s,transform .2s}
+    .img-card:hover{border-color:#d4620f;transform:translateY(-2px)}
+    .img-card.highlighted{border-color:#C69214;border-width:2px}
+    .img-thumb{width:100%;height:150px;object-fit:cover;background:#2a2a3a;
+               display:flex;align-items:center;justify-content:center;color:#444;font-size:.75rem}
+    .img-thumb.placeholder{background:linear-gradient(135deg,#1a1a2a,#2a2a3a)}
+    .img-footer{padding:10px 12px}
+    .img-score{font-size:1.1rem;font-weight:800;color:#d4620f}
+    .img-score-bar{height:4px;background:#1a2a3a;border-radius:2px;margin:4px 0 6px;overflow:hidden}
+    .img-score-fill{height:100%;background:#d4620f;border-radius:2px}
+    .img-id{font-size:.7rem;color:#555}
+
+    /* Spatial overlay demo */
+    .spatial-demo{background:#16161f;border:1px solid #2a2a3a;border-radius:8px;
+                  padding:20px;margin-bottom:32px}
+    .spatial-demo h3{font-size:.95rem;font-weight:700;color:#d4620f;margin-bottom:12px}
+    .spatial-grid-wrap{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
+    .spatial-img-wrap{position:relative;width:270px;flex-shrink:0}
+    .spatial-img-wrap img,.spatial-placeholder{width:270px;height:180px;border-radius:4px;
+                                               object-fit:cover;display:block;background:#2a2a3a}
+    .grid-overlay{position:absolute;top:0;left:0;width:270px;height:180px;
+                  display:grid;grid-template-columns:repeat(3,1fr);
+                  grid-template-rows:repeat(3,1fr)}
+    .grid-cell{border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;
+               justify-content:center;font-size:.75rem;font-weight:700;color:#fff;
+               text-shadow:0 1px 3px rgba(0,0,0,.8)}
+    .spatial-legend{flex:1}
+    .spatial-legend p{font-size:.83rem;color:#aaa;margin-bottom:8px}
+    .spatial-table{width:100%;border-collapse:collapse;font-size:.8rem}
+    .spatial-table th{text-align:left;padding:5px 8px;color:#888;border-bottom:1px solid #2a2a3a}
+    .spatial-table td{padding:5px 8px;border-bottom:1px solid #1a1a2a;color:#ccc}
+    .heat-chip{display:inline-block;width:12px;height:12px;border-radius:2px;
+               margin-right:6px;vertical-align:middle}
+
+    /* Detail panel */
+    .detail-panel{display:none;background:#12121c;border:1px solid #d4620f;
+                  border-radius:8px;padding:20px 24px;margin-top:12px}
+    .detail-panel.open{display:block}
+    .detail-panel h4{color:#d4620f;font-size:.9rem;margin-bottom:10px}
+    .detail-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-bottom:12px}
+    .detail-cell{background:#1e1e2e;border-radius:4px;padding:8px;text-align:center}
+    .detail-cell .region{font-size:.7rem;color:#888;margin-bottom:2px}
+    .detail-cell .val{font-size:1rem;font-weight:800;color:#d4620f}
+
+    /* Build-this note */
+    .build-note{background:#0d1a0d;border:1px solid #2a4a2a;border-left:4px solid #4a8a4a;
+                border-radius:6px;padding:18px 22px;margin:24px 32px}
+    .build-note h3{color:#4a8a4a;margin-bottom:8px;font-size:1rem}
+    .build-note p,.build-note ul{font-size:.88rem;color:#9ab89a;margin-bottom:6px}
+    .build-note ul{margin-left:18px}
+    .build-note code{background:#1a2a1a;padding:2px 6px;border-radius:3px;font-size:.82rem;color:#8fd48f}
+
+    pre{background:#0d0d14;color:#cdd6f4;border-radius:6px;padding:16px 20px;
+        font-size:.8rem;line-height:1.6;overflow-x:auto;margin:12px 0}
+    code{font-family:"JetBrains Mono","Fira Code","Courier New",monospace;font-size:.85rem}
+    .kw{color:#cba6f7}.fn{color:#89b4fa}.st{color:#a6e3a1}.cm{color:#6c7086;font-style:italic}.nm{color:#fab387}
+
+    footer{background:#0a0a14;border-top:1px solid #222;padding:16px 32px;
+           font-size:.78rem;color:#555;text-align:center}
+  </style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a href="image_track_overview.html">← Track Overview</a>
+  <div class="title-bar">Tag Visualizer &nbsp;<span>0 → 1</span></div>
+  <a href="image_wk05_extractors.html">Week 5: Extractors →</a>
+</nav>
+
+<!-- Controls -->
+<div class="controls">
+  <div class="ctrl-group">
+    <div class="ctrl-label">Scientific Tag</div>
+    <select id="tagSelect" onchange="updateView()">
+      <option value="fractal_dimension">cnfa.fractal_dimension — Visual complexity (self-similarity)</option>
+      <option value="biophilic_richness">cnfa.biophilic_richness — Biophilic content density</option>
+      <option value="luminance_uniformity">cnfa.luminance_uniformity — Evenness of light distribution</option>
+      <option value="spatial_openness">cnfa.spatial_openness — Perceived spaciousness</option>
+      <option value="material_warmth">cnfa.material_warmth — Warmth of surface materials</option>
+      <option value="edge_density">cnfa.edge_density — Density of visible contours</option>
+    </select>
+  </div>
+  <div class="ctrl-group">
+    <div class="ctrl-label">Threshold (show cells ≥)</div>
+    <div class="threshold-row">
+      <input type="range" id="threshold" min="0" max="100" value="0" step="5"
+             oninput="document.getElementById('threshVal').textContent=(this.value/100).toFixed(2);updateView()">
+      <span class="threshold-val" id="threshVal">0.00</span>
+    </div>
+  </div>
+  <div class="ctrl-group">
+    <div class="ctrl-label">Group By</div>
+    <select id="groupBy" onchange="updateView()">
+      <option value="common_sense">Common-sense category</option>
+      <option value="building_type">Building type</option>
+      <option value="score_bucket">Score bucket (0.2 intervals)</option>
+    </select>
+  </div>
+  <div class="ctrl-group">
+    <div class="ctrl-label">Spatial Region</div>
+    <select id="regionSel" onchange="updateView()">
+      <option value="whole">Whole image</option>
+      <option value="top_centre">Upper-centre (ceiling area)</option>
+      <option value="mid_centre">Mid-centre (eye level)</option>
+      <option value="bot_centre">Lower-centre (floor area)</option>
+    </select>
+  </div>
+</div>
+
+<!-- Tag description -->
+<div class="tag-desc" id="tagDesc">
+  <div class="tag-desc-name" id="descName">cnfa.fractal_dimension</div>
+  <div class="tag-desc-def" id="descDef">Box-counting fractal dimension of visible surfaces. Measures self-similarity of texture across spatial scales. High in foliage and natural materials; low in smooth concrete or plaster.</div>
+  <div class="tag-terms" id="descTerms">
+    <span class="term-chip">intricate patterns</span>
+    <span class="term-chip">organic texture</span>
+    <span class="term-chip">leafy</span>
+    <span class="term-chip">bark</span>
+    <span class="term-chip">stone grain</span>
+    <span class="term-chip">woven fabric</span>
+    <span class="term-chip">visual complexity</span>
+  </div>
+</div>
+
+<!-- Spectrum bar -->
+<div class="viz-section">
+  <div class="spectrum-strip">
+    <div class="spectrum-labels"><span>0.0</span><span>0.2</span><span>0.4</span><span>0.6</span><span>0.8</span><span>1.0</span></div>
+    <div class="spectrum-bar"></div>
+  </div>
+
+  <!-- SPATIAL OVERLAY DEMO -->
+  <div class="spatial-demo">
+    <h3>📐 Spatial Breakdown — Example Image</h3>
+    <div class="spatial-grid-wrap">
+      <div class="spatial-img-wrap">
+        <!-- Placeholder for real image -->
+        <div class="spatial-placeholder" style="background:linear-gradient(160deg,#1a2a1a 0%,#2a3a2a 30%,#1a1a2a 60%,#2a2a3a 100%)"></div>
+        <div class="grid-overlay" id="gridOverlay">
+          <!-- populated by JS -->
+        </div>
+      </div>
+      <div class="spatial-legend">
+        <p>Each cell in the 3×3 grid receives its own <span style="color:#d4620f">fractal_dimension</span> value. This lets queries like <em>"show me images where the ceiling region has fractal dimension ≥ 0.6"</em> work correctly.</p>
+        <table class="spatial-table">
+          <tr><th>Region</th><th>Value</th><th>Interpretation</th></tr>
+          <tr><td><span class="heat-chip" style="background:#1a4a2a"></span>Top-left</td><td>0.14</td><td>Plain ceiling tile</td></tr>
+          <tr><td><span class="heat-chip" style="background:#2a6a4a"></span>Top-centre</td><td>0.31</td><td>Window frame + sky</td></tr>
+          <tr><td><span class="heat-chip" style="background:#1a4a2a"></span>Top-right</td><td>0.18</td><td>Plain ceiling</td></tr>
+          <tr><td><span class="heat-chip" style="background:#4a8a3a"></span>Mid-left</td><td>0.47</td><td>Stone wall feature</td></tr>
+          <tr><td><span class="heat-chip" style="background:#8a8a2a"></span>Mid-centre</td><td>0.68</td><td>Lush planted wall</td></tr>
+          <tr><td><span class="heat-chip" style="background:#4a8a3a"></span>Mid-right</td><td>0.51</td><td>Stone + planting</td></tr>
+          <tr><td><span class="heat-chip" style="background:#2a5a3a"></span>Bot-left</td><td>0.39</td><td>Wooden floor grain</td></tr>
+          <tr><td><span class="heat-chip" style="background:#d4620f"></span>Bot-centre</td><td>0.74</td><td>Woven rug detail</td></tr>
+          <tr><td><span class="heat-chip" style="background:#4a6a3a"></span>Bot-right</td><td>0.43</td><td>Floor + low furniture</td></tr>
+        </table>
+        <p style="margin-top:10px;font-size:.78rem;color:#666">Whole-image value: <strong style="color:#d4620f">0.53</strong> — the mid-centre planted wall and the rug are pulling this up, but the whole-image average masks where the complexity actually lives.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- GROUPS + CAROUSELS -->
+  <div class="viz-header">
+    <div class="viz-title">Images matching <code id="tagInTitle">cnfa.fractal_dimension</code><span id="regionLabel"></span></div>
+    <div class="viz-count" id="vizCount">Showing prototype layout — connect database to populate</div>
+  </div>
+
+  <!-- Group A: natural materials -->
+  <div class="group-section">
+    <div class="group-header">
+      <div class="group-label">🌿 Natural materials &amp; vegetation</div>
+      <div class="group-meta">87 images &nbsp;·&nbsp;</div>
+      <div class="group-mean">mean 0.74</div>
+    </div>
+    <div class="carousel">
+      <div class="carousel-track" id="group-a-track">
+        <!-- Score 0.91 -->
+        <div class="img-card" onclick="showDetail('a1')">
+          <div class="img-thumb placeholder" style="background:linear-gradient(135deg,#1a3a1a,#2a5a2a,#1a4a1a)">
+            <span>Dense planted wall<br>PDF-0214 frame 3</span>
+          </div>
+          <div class="img-footer">
+            <div class="img-score">0.91</div>
+            <div class="img-score-bar"><div class="img-score-fill" style="width:91%"></div></div>
+            <div class="img-id">img-7342 · planted wall</div>
+          </div>
+        </div>
+        <!-- Score 0.84 -->
+        <div class="img-card" onclick="showDetail('a2')">
+          <div class="img-thumb placeholder" style="background:linear-gradient(135deg,#2a3a1a,#3a5a2a,#4a6a1a)">
+            <span>Ficus hedge + skylight<br>PDF-0331 frame 1</span>
+          </div>
+          <div class="img-footer">
+            <div class="img-score">0.84</div>
+            <div class="img-score-bar"><div class="img-score-fill" style="width:84%"></div></div>
+            <div class="img-id">img-1082 · atrium vegetation</div>
+          </div>
+        </div>
+        <!-- Score 0.78 -->
+        <div class="img-card" onclick="showDetail('a3')">
+          <div class="img-thumb placeholder" style="background:linear-gradient(135deg,#1a2a0a,#2a4a1a,#3a5a1a)">
+            <span>Bamboo screen wall<br>ANFA-2024-img-44</span>
+          </div>
+          <div class="img-footer">
+            <div class="img-score">0.78</div>
+            <div class="img-score-bar"><div class="img-score-fill" style="width:78%"></div></div>
+            <div class="img-id">img-2219 · bamboo partition</div>
+          </div>
+        </div>
+        <!-- Score 0.71 -->
+        <div class="img-card">
+          <div class="img-thumb placeholder" style="background:linear-gradient(135deg,#2a3a1a,#3a4a2a,#2a3a1a)">
+            <span>Bark-textured panel<br>Stock-CC-img-882</span>
+          </div>
+          <div class="img-footer">
+            <div class="img-score">0.71</div>
+            <div class="img-score-bar"><div class="img-score-fill" style="width:71%"></div></div>
+            <div class="img-id">img-5501 · bark cladding</div>
+          </div>
+        </div>
+        <div class="img-card">
+          <div class="img-thumb placeholder" style="background:linear-gradient(135deg,#1a4a1a,#3a6a2a,#2a5a1a)">
+            <span>Moss wall installation<br>PDF-0089 frame 2</span>
+          </div>
+          <div class="img-footer">
+            <div class="img-score">0.69</div>
+            <div class="img-score-bar"><div class="img-score-fill" style="width:69%"></div></div>
+            <div class="img-id">img-0931 · moss wall</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Group B: woven / textile -->
+  <div class="group-section">
+    <div class="group-header">
+      <div class="group-label">🧵 Woven, textile &amp; fabric surfaces</div>
+      <div class="group-meta">54 images &nbsp;·&nbsp;</div>
+      <div class="group-mean">mean 0.61</div>
+    </div>
+    <div class="carousel">
+      <div class="carousel-track">
+        <div class="img-card">
+          <div class="img-thumb placeholder" style="background:repeating-linear-gradient(45deg,#3a2a1a 0,#3a2a1a 4px,#5a4a2a 4px,#5a4a2a 8px)">
+            <span>Persian rug detail<br>img-3341</span>
+          </div>
+          <div class="img-footer">
+            <div class="img-score">0.79</div>
+            <div class="img-score-bar"><div class="img-score-fill" style="width:79%"></div></div>
+            <div class="img-id">img-3341 · rug + seating</div>
+          </div>
+        </div>
+        <div class="img-card">
+          <div class="img-thumb placeholder" style="background:repeating-conic-gradient(#3a2a0a 0% 25%,#5a4a2a 0% 50%) 0 0/16px 16px">
+            <span>Woven cane pendant<br>img-7721</span>
+          </div>
+          <div class="img-footer">
+            <div class="img-score">0.67</div>
+            <div class="img-score-bar"><div class="img-score-fill" style="width:67%"></div></div>
+            <div class="img-id">img-7721 · woven ceiling</div>
+          </div>
+        </div>
+        <div class="img-card">
+          <div class="img-thumb placeholder" style="background:repeating-linear-gradient(90deg,#4a3a2a 0,#4a3a2a 3px,#2a1a0a 3px,#2a1a0a 9px)">
+            <span>Macramé wall hanging<br>Stock-CC</span>
+          </div>
+          <div class="img-footer">
+            <div class="img-score">0.63</div>
+            <div class="img-score-bar"><div class="img-score-fill" style="width:63%"></div></div>
+            <div class="img-id">img-4401 · textile art wall</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Group C: stone / masonry -->
+  <div class="group-section">
+    <div class="group-header">
+      <div class="group-label">🪨 Stone, masonry &amp; brick</div>
+      <div class="group-meta">61 images &nbsp;·&nbsp;</div>
+      <div class="group-mean">mean 0.52</div>
+    </div>
+    <div class="carousel">
+      <div class="carousel-track">
+        <div class="img-card">
+          <div class="img-thumb placeholder" style="background:repeating-linear-gradient(0deg,#3a3530 0,#3a3530 20px,#4a453a 20px,#4a453a 22px)">
+            <span>Stacked slate wall<br>img-2089</span>
+          </div>
+          <div class="img-footer">
+            <div class="img-score">0.66</div>
+            <div class="img-score-bar"><div class="img-score-fill" style="width:66%"></div></div>
+            <div class="img-id">img-2089 · slate wall</div>
+          </div>
+        </div>
+        <div class="img-card">
+          <div class="img-thumb placeholder" style="background:repeating-linear-gradient(90deg,#5a5050 0,#5a5050 30px,#4a4545 30px,#4a4545 32px)">
+            <span>Exposed brick loft<br>img-6612</span>
+          </div>
+          <div class="img-footer">
+            <div class="img-score">0.51</div>
+            <div class="img-score-bar"><div class="img-score-fill" style="width:51%"></div></div>
+            <div class="img-id">img-6612 · exposed brick</div>
+          </div>
+        </div>
+        <div class="img-card">
+          <div class="img-thumb placeholder" style="background:radial-gradient(circle at 30% 40%,#6a6060,#4a4545 30%,#5a5050 60%)">
+            <span>Rough concrete finish<br>img-9934</span>
+          </div>
+          <div class="img-footer">
+            <div class="img-score">0.38</div>
+            <div class="img-score-bar"><div class="img-score-fill" style="width:38%"></div></div>
+            <div class="img-id">img-9934 · board-form concrete</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Group D: smooth / low -->
+  <div class="group-section">
+    <div class="group-header">
+      <div class="group-label">⬜ Smooth walls &amp; minimal surfaces</div>
+      <div class="group-meta">43 images &nbsp;·&nbsp;</div>
+      <div class="group-mean">mean 0.14</div>
+    </div>
+    <div class="carousel">
+      <div class="carousel-track">
+        <div class="img-card">
+          <div class="img-thumb placeholder" style="background:linear-gradient(135deg,#f0ece8,#e8e4e0)">
+            <span style="color:#aaa">White painted drywall<br>img-0011</span>
+          </div>
+          <div class="img-footer">
+            <div class="img-score">0.08</div>
+            <div class="img-score-bar"><div class="img-score-fill" style="width:8%;background:#4a6a8a"></div></div>
+            <div class="img-id">img-0011 · plain white room</div>
+          </div>
+        </div>
+        <div class="img-card">
+          <div class="img-thumb placeholder" style="background:linear-gradient(160deg,#d8e0e8,#c8d8e8)">
+            <span style="color:#889">Glass curtain wall<br>img-3340</span>
+          </div>
+          <div class="img-footer">
+            <div class="img-score">0.17</div>
+            <div class="img-score-bar"><div class="img-score-fill" style="width:17%;background:#4a6a8a"></div></div>
+            <div class="img-id">img-3340 · glazed office wall</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end viz-section -->
+
+<!-- BUILD-THIS NOTE -->
+<div class="build-note">
+  <h3>🛠 Building This Page — Assignment for Pair 3</h3>
+  <p>This page is currently a <strong>design prototype</strong> with placeholder image tiles. Your task is to wire it to the real image database so every tile shows an actual photograph with its computed tag values.</p>
+  <p><strong>The data pipeline you need:</strong></p>
+  <ul>
+    <li>Query the image database: <code>SELECT image_id, path, common_sense_label, tag_values_json FROM images WHERE json_extract(tag_values_json, '$.{tag}.whole_image') &gt;= threshold</code></li>
+    <li>Group results by <code>common_sense_label</code> (from the augmented registry's <code>common_sense_terms</code>, matched at ingest time by VLM)</li>
+    <li>Sort groups by count descending; sort images within groups by tag value descending</li>
+    <li>Serve as JSON from a lightweight Flask endpoint — the page fetches it on load and on control change</li>
+    <li>The spatial breakdown table (above) loads the <code>cells</code> array from the tag JSON for the selected image</li>
+  </ul>
+  <p><strong>Success criterion:</strong> Give the page to a VR track student. Ask them: "Find me 5 images where the upper-centre region (ceiling area) scores above 0.6 on fractal dimension." They should be able to do it in under 2 minutes without any instruction from you.</p>
+
+  <pre><code><span class="cm"># Flask endpoint sketch (backend/api/tag_browser.py)</span>
+<span class="kw">from</span> flask <span class="kw">import</span> Blueprint, jsonify, request
+<span class="kw">import</span> sqlite3, json
+
+bp = Blueprint(<span class="st">"tag_browser"</span>, __name__)
+
+@bp.route(<span class="st">"/api/tag-browser"</span>)
+<span class="kw">def</span> <span class="fn">tag_browser</span>():
+    tag     = request.args.get(<span class="st">"tag"</span>, <span class="st">"cnfa.fractal_dimension"</span>)
+    thresh  = float(request.args.get(<span class="st">"threshold"</span>, <span class="nm">0.0</span>))
+    region  = request.args.get(<span class="st">"region"</span>, <span class="st">"whole_image"</span>)
+    group_by= request.args.get(<span class="st">"group_by"</span>, <span class="st">"common_sense"</span>)
+
+    conn = sqlite3.connect(<span class="st">"image_tags.db"</span>)
+    rows = conn.execute(<span class="st">"""
+        SELECT image_id, thumb_path, common_sense_label, building_type,
+               json_extract(tag_values, ?) AS score
+        FROM   tagged_images
+        WHERE  json_extract(tag_values, ?) &gt;= ?
+        ORDER  BY score DESC
+    """</span>, (f<span class="st">"$.{tag}.{region}"</span>, f<span class="st">"$.{tag}.{region}"</span>, thresh)).fetchall()
+
+    <span class="cm"># Group and serialize</span>
+    groups = {}
+    <span class="kw">for</span> img_id, thumb, cs_label, btype, score <span class="kw">in</span> rows:
+        key = cs_label <span class="kw">if</span> group_by == <span class="st">"common_sense"</span> <span class="kw">else</span> btype
+        groups.setdefault(key, []).append({
+            <span class="st">"id"</span>: img_id, <span class="st">"thumb"</span>: thumb, <span class="st">"score"</span>: round(score, <span class="nm">3</span>)})
+    <span class="kw">return</span> jsonify([{<span class="st">"label"</span>: k, <span class="st">"images"</span>: v} <span class="kw">for</span> k,v <span class="kw">in</span>
+                    sorted(groups.items(), key=<span class="kw">lambda</span> x: -len(x[<span class="nm">1</span>]))])</code></pre>
+</div>
+
+<footer>
+  COGS160: AI &amp; VR — Spring 2026 &nbsp;|&nbsp; Track 1: Image Tagger &nbsp;|&nbsp; Tag Visualizer Tool
+  &nbsp;|&nbsp; Prof. David Kirsh, UCSD Cognitive Science
+</footer>
+
+<script>
+// Populate the spatial grid overlay with heat colours
+const vals = [0.14, 0.31, 0.18, 0.47, 0.68, 0.51, 0.39, 0.74, 0.43];
+const labels = ['TL','TC','TR','ML','MC','MR','BL','BC','BR'];
+const grid = document.getElementById('gridOverlay');
+vals.forEach((v, i) => {
+  const cell = document.createElement('div');
+  cell.className = 'grid-cell';
+  const r = Math.round(v * 220);
+  const g = Math.round((1-v) * 180 + 30);
+  cell.style.background = `rgba(${r},${g},20,${0.35 + v*0.4})`;
+  cell.textContent = v.toFixed(2);
+  grid.appendChild(cell);
+});
+
+const tagMeta = {
+  fractal_dimension: {
+    name: 'cnfa.fractal_dimension',
+    def: 'Box-counting fractal dimension. Measures self-similarity of texture across spatial scales. High in natural materials; low in smooth surfaces.',
+    terms: ['intricate patterns','organic texture','leafy','bark','stone grain','woven fabric','visual complexity']
+  },
+  biophilic_richness: {
+    name: 'cnfa.biophilic_richness',
+    def: 'Proportion and variety of biophilic elements: plants, water features, natural light, organic materials. Composite of green pixel fraction, VLM naturalness, and material warmth.',
+    terms: ['plants','greenery','nature indoors','living wall','wood','natural light']
+  },
+  luminance_uniformity: {
+    name: 'cnfa.luminance_uniformity',
+    def: 'Coefficient of variation of pixel luminance across the image (inverted). Low values = harsh glare or deep shadows; high values = even, comfortable illumination.',
+    terms: ['even lighting','no glare','diffuse light','uniform brightness','calm light']
+  },
+  spatial_openness: {
+    name: 'cnfa.spatial_openness',
+    def: 'Estimated horizontal field of view and ceiling height proxy, derived from vanishing point analysis and vertical edge distribution.',
+    terms: ['spacious','open plan','high ceiling','airy','expansive','open']
+  },
+  material_warmth: {
+    name: 'cnfa.material_warmth',
+    def: 'Proportion of visible surface area in warm colour hues (Hue 0–60° in HSV). Correlates with perceived thermal comfort and affective valence.',
+    terms: ['warm tones','wood','brick','amber light','terracotta','honey']
+  },
+  edge_density: {
+    name: 'cnfa.edge_density',
+    def: 'Fraction of pixels classified as edges by Canny detector. Proxy for visual busyness and clutter.',
+    terms: ['busy','detailed','cluttered','complex','many lines','intricate']
+  }
+};
+
+function updateView() {
+  const tag = document.getElementById('tagSelect').value;
+  const meta = tagMeta[tag] || tagMeta['fractal_dimension'];
+  document.getElementById('descName').textContent = meta.name;
+  document.getElementById('descDef').textContent = meta.def;
+  const tc = document.getElementById('descTerms');
+  tc.innerHTML = meta.terms.map(t => `<span class="term-chip">${t}</span>`).join('');
+  document.getElementById('tagInTitle').textContent = meta.name;
+  const region = document.getElementById('regionSel').value;
+  const regionNames = {whole:'',top_centre:' — upper-centre region',mid_centre:' — mid-centre region',bot_centre:' — lower-centre region'};
+  document.getElementById('regionLabel').textContent = regionNames[region] || '';
+}
+updateView();
+</script>
+</body>
+</html>

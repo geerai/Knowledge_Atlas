@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 7: Improvement Proposal – Article Finder Track | COGS160</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #182B49 0%, #1a4d7a 100%);
+            color: white;
+            padding: 2.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .accent-teal {
+            color: #1a7a5e;
+        }
+
+        nav.top-nav {
+            background: #182B49;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            border-bottom: 3px solid #1a7a5e;
+        }
+
+        nav.top-nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav.top-nav a:hover {
+            color: #1a7a5e;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        section {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        section h2 {
+            color: #182B49;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid #1a7a5e;
+        }
+
+        section h3 {
+            color: #1a7a5e;
+            font-size: 1.3rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        section h4 {
+            color: #2c3e50;
+            font-size: 1.1rem;
+            margin: 1.25rem 0 0.75rem 0;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        .subsection {
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: #f8fbf9;
+            border-left: 4px solid #1a7a5e;
+            border-radius: 4px;
+        }
+
+        .subsection h4 {
+            color: #1a7a5e;
+            margin-top: 0;
+        }
+
+        .task-box {
+            background: linear-gradient(135deg, #fff9e6 0%, #fffaed 100%);
+            border-left: 4px solid #f39c12;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .task-box h4 {
+            color: #d68910;
+            margin-top: 0;
+        }
+
+        .deliverable {
+            background: linear-gradient(135deg, #fff9e6 0%, #fffaed 100%);
+            border-left: 4px solid #f39c12;
+            padding: 1.25rem;
+            margin: 1.25rem 0;
+            border-radius: 4px;
+        }
+
+        .deliverable h4 {
+            color: #d68910;
+            margin-top: 0;
+        }
+
+        .timeline-box {
+            background: linear-gradient(135deg, #e8f8f3 0%, #f0fcf9 100%);
+            border-left: 4px solid #1a7a5e;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .highlight-box {
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .highlight-box strong {
+            color: #7d6608;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        table th {
+            background: linear-gradient(135deg, #e8f8f3 0%, #f0fcf9 100%);
+            color: #182B49;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid #1a7a5e;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        table tr:hover {
+            background: #fafbfc;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+            line-height: 1.4;
+        }
+
+        .component-box {
+            background: #fafbfc;
+            border: 1px solid #e0e6ed;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 1.25rem 0;
+        }
+
+        .component-box h4 {
+            color: #182B49;
+            margin-top: 0;
+        }
+
+        .resource-block {
+            background: linear-gradient(135deg, #e8f8f3 0%, #f0fcf9 100%);
+            border: 1px solid #1a7a5e;
+            border-radius: 6px;
+            padding: 1.25rem;
+            margin: 1rem 0;
+        }
+
+        .resource-block h4 {
+            color: #1a7a5e;
+            margin-top: 0;
+        }
+
+        .resource-block a {
+            color: #1a7a5e;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .resource-block a:hover {
+            color: #0d4738;
+        }
+
+        .faq-section {
+            margin: 1.5rem 0;
+        }
+
+        .faq-item {
+            margin-bottom: 1.25rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            color: #182B49;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .faq-question:before {
+            content: "Q";
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: #1a7a5e;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .faq-answer {
+            color: #2c3e50;
+            padding-left: 2.5rem;
+            line-height: 1.7;
+        }
+
+        .grading-criteria {
+            background: linear-gradient(135deg, #e8f8f3 0%, #f0fcf9 100%);
+            border-left: 4px solid #1a7a5e;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .grading-criteria h4 {
+            color: #1a7a5e;
+            margin-top: 0;
+        }
+
+        .grading-criteria ul {
+            list-style: disc;
+            padding-left: 2rem;
+        }
+
+        footer {
+            background: #182B49;
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .reference-list {
+            background: #f8fbf9;
+            padding: 1.5rem;
+            border-radius: 4px;
+            border-left: 4px solid #1a7a5e;
+            margin: 1.5rem 0;
+        }
+
+        .reference-list h4 {
+            color: #1a7a5e;
+            margin-top: 0;
+        }
+
+        .reference-list ol {
+            list-style: decimal;
+            padding-left: 2rem;
+        }
+
+        .reference-list li {
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            nav.top-nav {
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+
+            table th, table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Week 7: The Gap Is Real. <span class="accent-teal">Now Design a Bridge.</span></h1>
+        <p>From Evaluation to Architecture</p>
+    </div>
+
+    <nav class="top-nav">
+        <a href="af_track_planning.html">← AF Track Overview</a>
+        <a href="index.html">All Tracks</a>
+        <a href="#tasks">Tasks</a>
+        <a href="#grading">Grading</a>
+        <a href="#faq">FAQ</a>
+    </nav>
+
+    <div class="container">
+        <!-- Section 1: Context & Complication -->
+        <section id="context">
+            <h2>The Complication: No Single Platform Covers the Literature</h2>
+
+            <p>Your D3 measurements showed it clearly: Semantic Scholar finds 79% of papers on "natural light → attention" but only 43% on "computational modeling of restoration." Consensus returns high-precision results but misses older foundational work. Scite shows citations in context but doesn't index design literature. No platform excels at everything.</p>
+
+            <p>The question is no longer "Which platform should ATLAS use?" The answer is "All of them, strategically." This week moves from measurement to design. You will architect a VOI-to-Query Bridge: a system that takes a belief gap from ATLAS ("insufficient evidence for attention recovery from natural light in older adults") and translates it into optimized, platform-specific queries, executes them across multiple platforms intelligently, and returns a deduplicated, ranked candidate list that ATLAS integrates into its evidence corpus.</p>
+
+            <p>This bridge is not a finished product. It is a technical specification—a blueprint for Week 8's implementation. A good spec makes implementation straightforward. A vague spec means Week 8 bogs down in ambiguity. Your job: make your choice concrete and defensible.</p>
+
+            <div class="timeline-box">
+                <h4>What You Will Deliver</h4>
+                <p>A 10–12 page technical proposal that a developer (Week 8 student or external engineer) can read and implement. It includes: input schema, query generation logic per gap type, platform selection rules based on D3 data, deduplication strategy, relevance filtering, output schema, three architectural trade-offs with explicit choices, and a one-page implementation roadmap for D5.</p>
+            </div>
+        </section>
+
+        <!-- Section 2: Learning Outcomes -->
+        <section id="outcomes">
+            <h2>Learning Outcomes</h2>
+
+            <p>By completing this week's work, you will:</p>
+
+            <ul>
+                <li><strong>Reverse-engineer query generation:</strong> You will examine the QueryGenerator class in the codebase and understand how it maps gap types (VALIDATION, MECHANISM, DIRECTION, BOUNDARY) to search strategies. Then decide whether to extend it or replace it.</li>
+                <li><strong>Design for heterogeneous systems:</strong> Each platform has different API contracts, ranking algorithms, and indexing strategies. Your bridge must abstract over those differences—mapping a single logical query to platform-specific syntax without losing meaning.</li>
+                <li><strong>Make architectural trade-offs concrete:</strong> Every design choice involves a trade-off (precision vs. recall, latency vs. completeness, cost vs. quality). You will identify three key trade-offs, enumerate options, and explain your choice with data.</li>
+                <li><strong>Connect evaluation to implementation:</strong> Your D3 data should drive decisions. Example: "Semantic Scholar is platform choice for neuroscience VOIs because D3 shows 85% recall on this domain, 15% higher than alternatives."</li>
+                <li><strong>Specify system contracts:</strong> You will define input and output schemas precisely—what a gap looks like, what a candidate paper looks like—so another team can build against these contracts without ambiguity.</li>
+            </ul>
+        </section>
+
+        <!-- Section 3: Conceptual Framework -->
+        <section id="framework">
+            <h2>The VOI-to-Query Bridge: Conceptual Architecture</h2>
+
+            <h3>What Is a Bridge?</h3>
+
+            <p>A bridge takes a gap description from ATLAS and produces a ranked list of candidate papers from multiple platforms. It is a translation layer:</p>
+
+            <ul>
+                <li><strong>Input:</strong> A gap object from GapDetector (class: GapType, belief statement, domain, confidence estimate)</li>
+                <li><strong>Processing:</strong> (1) Translate gap to platform-agnostic query intent, (2) Generate platform-specific queries, (3) Select which platforms to query, (4) Execute queries in parallel, (5) Deduplicate results, (6) Rank by relevance, (7) Filter by quality threshold</li>
+                <li><strong>Output:</strong> A ranked list of candidate papers with metadata and provenance (which platform found it, confidence score)</li>
+            </ul>
+
+            <h3>Why Not Just Query One Platform?</h3>
+
+            <p>D3 showed you why: no single platform is comprehensive. But the bridge isn't just running queries on all five platforms. It is:</p>
+
+            <ul>
+                <li><strong>Platform-smart:</strong> Don't query Consensus for pure methodology VOIs (Consensus synthesizes findings, not methods). Do query it for clinical questions.</li>
+                <li><strong>Cost-aware:</strong> Scite and Elicit have metered APIs. Budget them for high-impact VOIs, use free platforms for exploratory gaps.</li>
+                <li><strong>Latency-conscious:</strong> Run fast platforms (Semantic Scholar, OpenAlex) in parallel; run slower platforms (Elicit) only if needed.</li>
+                <li><strong>Deduplication-rigorous:</strong> A paper found by two platforms is still one paper. Merge results, aggregate platform confidence scores.</li>
+            </ul>
+
+            <h3>Gap Types: Different Gaps, Different Queries</h3>
+
+            <p>The QueryGenerator class (which you will examine) recognizes that different gap types need different query strategies:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Gap Type</th>
+                        <th>Query Focus</th>
+                        <th>Best Platform(s)</th>
+                        <th>Example Query</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>VALIDATION</strong></td>
+                        <td>Does the claimed effect exist? Primary evidence</td>
+                        <td>Consensus, Semantic Scholar</td>
+                        <td>"natural light attention cognition effects"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MECHANISM</strong></td>
+                        <td>Why does it work? Causal pathways</td>
+                        <td>Semantic Scholar, OpenAlex (broad indexing)</td>
+                        <td>"attention recovery circadian melatonin light exposure mechanism"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>DIRECTION</strong></td>
+                        <td>Are effects consistent? Contradictions/moderators</td>
+                        <td>Scite (shows supporting vs. disputing citations)</td>
+                        <td>"natural light attention contradictions boundary conditions"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>BOUNDARY</strong></td>
+                        <td>When does it fail? Limits/exceptions</td>
+                        <td>Semantic Scholar, OpenAlex (design + implementation literature)</td>
+                        <td>"natural light attention failures limitations context-dependent"</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 4: Tasks -->
+        <section id="tasks">
+            <h2>Week 7 Task Sequence (5 Days)</h2>
+
+            <h3>Monday & Tuesday: Reverse-Engineer & Understand the Codebase</h3>
+
+            <div class="task-box">
+                <h4>Task 1: Examine the QueryGenerator Class</h4>
+
+                <p>Read the QueryGenerator class in Article_Eater_PostQuinean_v1_recovery/src/services/voi_search.py (lines ~722–920). Document:</p>
+
+                <ul>
+                    <li><strong>Input schema:</strong> What does a gap object look like? What fields does QueryGenerator expect? (Likely: gap_type, belief_statement, domain, confidence.)</li>
+                    <li><strong>Query generation logic:</strong> For each gap type (VALIDATION, MECHANISM, DIRECTION, BOUNDARY), how does it generate queries? Does it expand terms (e.g., "natural light" → "daylight," "sunlight," "window exposure")? Does it compose fields (e.g., title + abstract searches)?</li>
+                    <li><strong>Platform adaptation:</strong> Does QueryGenerator currently output platform-specific syntax, or does it output a single query and leave platform adaptation to another layer?</li>
+                    <li><strong>Extensibility:</strong> How would you add a new gap type (e.g., IMPLEMENTATION: how is this finding actually applied in practice)?</li>
+                </ul>
+
+                <p><strong>Deliverable (for your notes, not submitted):</strong> A one-page summary of QueryGenerator's architecture. Include a code snippet showing an example gap → query transformation.</p>
+            </div>
+
+            <div class="task-box">
+                <h4>Task 2: Examine IntegratedQueryService & AutomatedQueueSearcher</h4>
+
+                <p>Read two more critical classes:</p>
+
+                <ul>
+                    <li><strong>IntegratedQueryService</strong> (Article_Eater_PostQuinean_v1_recovery/src/services/integrated_query_service.py): How does it currently dispatch queries to multiple platforms? Does it have platform selection logic, or does it query all platforms for everything?</li>
+                    <li><strong>AutomatedQueueSearcher</strong> (Article_Eater_PostQuinean_v1_recovery/src/queue/automated_searcher.py): What does the output object look like (AutomatedTargetRun)? What metadata must your bridge provide for each candidate paper?</li>
+                </ul>
+
+                <p><strong>Deliverable (for your notes):</strong> A one-page summary of these classes' contracts. What are the input/output schemas you must conform to?</p>
+            </div>
+
+            <h3>Wednesday: Design the Bridge Specification</h3>
+
+            <div class="task-box">
+                <h4>Task 3: Define the Bridge's Input & Output Schemas</h4>
+
+                <p>Write formal specifications for the data flowing into and out of your bridge. Use pseudocode or JSON-schema style notation.</p>
+
+                <p><strong>Input Schema (Gap Object):</strong></p>
+                <div class="code-example">
+gap {
+  id: string
+  type: enum [VALIDATION, MECHANISM, DIRECTION, BOUNDARY, IMPLEMENTATION]
+  belief_statement: string (e.g., "Exposure to natural light improves attention in office workers")
+  domain: string (e.g., "neuroarchitecture", "psychology", "design")
+  search_keywords: string[] (provided by GapDetector, e.g., ["natural light", "attention", "office"])
+  confidence: float (0–1, current system confidence in the belief)
+  background: string (optional, additional context)
+}
+                </div>
+
+                <p><strong>Output Schema (Candidate Paper List):</strong></p>
+                <div class="code-example">
+candidate_paper {
+  doi: string
+  title: string
+  authors: string[] (first name, last name)
+  year: int
+  abstract: string
+  found_by: string[] (platforms that found it, e.g., ["Consensus", "Semantic Scholar"])
+  relevance_score: float (0–1, confidence this paper is relevant to the gap)
+  relevance_reasoning: string (why is this relevant? which gap type does it address?)
+  url: string (link to paper or abstract on platform)
+  access_type: enum [open_access, paywalled, unknown]
+}
+                </div>
+
+                <p><strong>What to specify:</strong> What fields are required vs. optional? What are valid values for enums? How is relevance_score calculated?</p>
+            </div>
+
+            <div class="task-box">
+                <h4>Task 4: Query Generation Strategy per Gap Type</h4>
+
+                <p>Building on Task 1 (understanding QueryGenerator), specify how your bridge will generate queries. For each gap type, write pseudo-code or English-language rules:</p>
+
+                <div class="subsection">
+                    <h4>Example: VALIDATION Gap</h4>
+                    <p><strong>Goal:</strong> Find primary evidence that the claimed effect exists.</p>
+                    <p><strong>Query pattern:</strong> {Main Effect} AND {Population/Context}</p>
+                    <p><strong>Vocabulary expansion:</strong> "natural light" → ["natural light", "daylight", "sunlight", "window exposure", "daylighting", "light exposure"]. "attention" → ["attention", "focus", "concentration", "cognitive function", "executive function"].</p>
+                    <p><strong>Platform strategy:</strong> Consensus (synthesis), Semantic Scholar (broad), OpenAlex (comprehensive).</p>
+                    <p><strong>Example query (Semantic Scholar):</strong> <code>("natural light" OR daylight OR sunlight OR "window exposure") AND (attention OR focus OR concentration)</code></p>
+                </div>
+
+                <p>You must write similar specifications for MECHANISM, DIRECTION, BOUNDARY, and either keep IMPLEMENTATION implicit or add it if you believe it adds value.</p>
+            </div>
+
+            <div class="task-box">
+                <h4>Task 5: Platform Selection Logic</h4>
+
+                <p>Specify which platforms to use for which gap types. Use your D3 data to justify:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Gap Type</th>
+                            <th>Primary Platform (why?)</th>
+                            <th>Secondary Platforms</th>
+                            <th>Skip?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>VALIDATION</td>
+                            <td>Consensus (synthesizes findings) or Semantic Scholar (highest avg recall from D3)</td>
+                            <td>Elicit (structured synthesis), OpenAlex (completeness)</td>
+                            <td>Scite (shows citations, less for primary claims)</td>
+                        </tr>
+                        <tr>
+                            <td>MECHANISM</td>
+                            <td>Semantic Scholar (broad indexing of theory)</td>
+                            <td>OpenAlex (interdisciplinary), Scite (traces causal chains)</td>
+                            <td>Consider cost: Elicit API charges per search</td>
+                        </tr>
+                        <tr>
+                            <td>DIRECTION</td>
+                            <td>Scite (showing supporting vs. disputing context is its strength)</td>
+                            <td>Semantic Scholar (contradictory findings)</td>
+                            <td>Consensus (it averages disagreement, doesn't surface it)</td>
+                        </tr>
+                        <tr>
+                            <td>BOUNDARY</td>
+                            <td>Semantic Scholar + OpenAlex (design + implementation literature)</td>
+                            <td>None—this gap type is hardest for academic platforms</td>
+                            <td>All platforms (gray literature is better source)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p><strong>Cost & latency constraints:</strong> If your system will run 15–20 searches per session, specify which platforms are "always query" (free, fast) vs. "query if budget allows" (metered).</p>
+            </div>
+
+            <h3>Thursday: Identify & Compare Architectural Trade-Offs</h3>
+
+            <div class="task-box">
+                <h4>Task 6: Three Design Alternatives with Explicit Trade-Offs</h4>
+
+                <p>Every system design involves hard choices. Identify three key architectural decisions. For each, enumerate at least two alternatives and recommend one. Examples:</p>
+
+                <p><strong>Trade-Off 1: Query Execution Strategy</strong></p>
+                <ul>
+                    <li><strong>Alternative A — Sequential (Platform 1, then Platform 2, etc.):</strong> Simplifies code, reduces API contention, but slow (total time = sum of individual platform latencies). Good for low-frequency searches; bad for interactive use.</li>
+                    <li><strong>Alternative B — Parallel (all platforms simultaneously):</strong> Fast (total time = slowest platform latency). But requires async code, error handling if one platform fails, and careful API rate-limit management.</li>
+                    <li><strong>Alternative C — Smart Sequential (fast platforms in parallel, slow platforms conditional):</strong> Run Semantic Scholar + OpenAlex in parallel (free, fast). If recall is <60%, query Consensus/Scite next. Balances speed and quality.</li>
+                    <li><strong>Recommendation:</strong> Alternative C. Justification: D3 shows Semantic Scholar + OpenAlex achieve 70–80% average recall; only 30% of searches need additional platforms. This saves API costs and keeps latency <3 seconds for 85% of queries.</li>
+                </ul>
+
+                <p><strong>Trade-Off 2: Query Language Strategy</strong></p>
+                <ul>
+                    <li><strong>Alternative A — Universal Query Language:</strong> Translate all gap-to-query logic into a single format (e.g., "concept:X AND concept:Y AND (outcome:Z OR outcome:W)"). Each platform adapter converts to its native syntax. Scales well as you add platforms.</li>
+                    <li><strong>Alternative B — Platform-Specific Generation:</strong> Each gap type has platform-specific query code. Semantic Scholar gets one query, Scite gets a different query tuned to its ranking. Harder to maintain but potentially higher quality results.</li>
+                    <li><strong>Alternative C — Hybrid:</strong> Use universal format for the query intent, let each platform adapter optionally enhance with platform-specific optimizations (e.g., "if Semantic Scholar, add fielded search; if Consensus, add synthesis filter").</li>
+                    <li><strong>Recommendation:</strong> Alternative C. Justification: Universal format keeps the architecture clean, but platform adapters can exploit platform strengths. This allows you to improve results incrementally without refactoring the entire pipeline.</li>
+                </ul>
+
+                <p><strong>Trade-Off 3: Deduplication & Merging</strong></p>
+                <ul>
+                    <li><strong>Alternative A — Exact Matching Only (DOI or exact title):</strong> Safe but misses papers with missing/incorrect metadata. May show the same paper twice if one platform uses slightly different title.</li>
+                    <li><strong>Alternative B — Fuzzy Matching (title similarity >80%):</strong> Catches more duplicates, but risk of false merges (e.g., two different papers on the same topic with similar titles).</li>
+                    <li><strong>Alternative C — Smart Merging (exact match + fuzzy match on author+year):</strong> If DOI matches, merge. If title 80%+ similar AND authors 60%+ similar AND year within 1 year, merge. Otherwise, keep separate.</li>
+                    <li><strong>Recommendation:</strong> Alternative C. Justification: Reduces false positives while catching genuine duplicates. Cost of implementing fuzzy match is low; benefit of showing users one paper instead of three is high.</li>
+                </ul>
+
+                <p>Your proposal must include three such trade-offs with explicit recommendations and brief justifications. They should be meaningful (not trivial) and grounded in data from D3 or system requirements from earlier weeks.</p>
+            </div>
+
+            <h3>Friday: Connect to ATLAS & Implementation Roadmap</h3>
+
+            <div class="task-box">
+                <h4>Task 7: Specify Integration with ATLAS Contracts</h4>
+
+                <p>Your bridge must work inside the larger ATLAS system. Specify:</p>
+
+                <ul>
+                    <li><strong>How GapDetector feeds into your bridge:</strong> Does GapDetector emit the gap objects you designed in Task 3, or do you need an adapter?</li>
+                    <li><strong>How AutomatedQueueSearcher consumes your output:</strong> Does your candidate_paper schema match what AutomatedTargetRun expects? If not, where is the impedance mismatch, and how do you resolve it?</li>
+                    <li><strong>Connection to StrategySelector:</strong> In voi_search.py, there is a StrategySelector class that uses epsilon-greedy strategy selection for choosing which search strategy to use. Discuss: Is epsilon-greedy appropriate for a student-operated system that runs 15–20 queries per session? Should the bridge use it, ignore it, or modify it?</li>
+                </ul>
+            </div>
+
+            <div class="task-box">
+                <h4>Task 8: Implementation Roadmap for Week 8</h4>
+
+                <p>Write a one-page roadmap for the D5 implementation team. Include:</p>
+
+                <ul>
+                    <li><strong>Phased rollout:</strong> What's implemented Day 1? Day 2? What's stretch goal?</li>
+                    <li><strong>Critical path items:</strong> What must be done before other work can proceed?</li>
+                    <li><strong>Testing strategy:</strong> How will Week 8 team test the bridge? What does a passing test look like?</li>
+                    <li><strong>Known risks:</strong> What could go wrong? What's your contingency?</li>
+                </ul>
+
+                <p>Example:</p>
+                <ul>
+                    <li><strong>Day 1:</strong> Implement input/output schemas, basic query generation for VALIDATION gaps only, Semantic Scholar API adapter</li>
+                    <li><strong>Day 2:</strong> Add Consensus, Elicit adapters; implement deduplication logic</li>
+                    <li><strong>Day 3:</strong> Extend to MECHANISM, DIRECTION gaps; write unit tests for all query types</li>
+                    <li><strong>Day 4–5:</strong> Integration testing with GapDetector and AutomatedQueueSearcher; documentation</li>
+                    <li><strong>Stretch:</strong> StrategySelector integration, cost analytics dashboard</li>
+                    <li><strong>Risk:</strong> Semantic Scholar API rate limiting. Contingency: Batch queries, cache results, fall back to manual search if API down.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 5: Deliverable Specification -->
+        <section id="deliverable">
+            <h2>Deliverable: D4 – Improvement Proposal</h2>
+
+            <div class="deliverable">
+                <h4>What You Submit (Due: Friday EOD)</h4>
+
+                <p><strong>Format:</strong> PDF report, 10–12 pages single-spaced, 11pt font. Include diagrams as needed (system architecture, query generation flow, etc.).</p>
+
+                <p><strong>Section Structure & Page Allocation:</strong></p>
+
+                <ul>
+                    <li><strong>Executive Summary (1 page):</strong> The problem (D3 showed no single platform is comprehensive), the solution (a VOI-to-Query Bridge that intelligently combines platforms), and the expected outcome (ATLAS can reliably find evidence for any gap).</li>
+
+                    <li><strong>Background: D3 Findings (1–1.5 pages):</strong> Recap your D3 recall/precision matrix. Which VOI/platform combinations showed gaps? What does this data suggest about which platforms to trust for different question types? This section is the data foundation for all design choices below.</li>
+
+                    <li><strong>Design Specification (4–5 pages):</strong>
+                        <ul>
+                            <li>Input/Output schemas (from Task 3): Show gap object and candidate_paper schemas formally</li>
+                            <li>Query generation per gap type (from Task 4): For each gap type (VALIDATION, MECHANISM, DIRECTION, BOUNDARY), show the query pattern, vocabulary expansion, and example query</li>
+                            <li>Platform selection logic (from Task 5): Table showing which platforms to use for which gap types, justified by D3 data</li>
+                            <li>Deduplication & ranking (Task 6 Trade-Off 3): How do you merge papers found by multiple platforms? How do you rank results?</li>
+                            <li>Architecture diagram: A box-and-arrow diagram showing: Gap Input → Query Generation → Platform Dispatchers → Result Aggregation → Deduplication & Ranking → Output</li>
+                        </ul>
+                    </li>
+
+                    <li><strong>Trade-Off Analysis (2–2.5 pages):</strong> Three architectural choices (from Task 6), each with alternatives and explicit recommendation. For each: 0.5–0.75 page per trade-off. Be concrete; avoid vague statements like "balance speed and accuracy." Include numbers: "Alternative A takes 8 seconds per query; Alternative C takes 3 seconds and achieves 85% of the precision. We choose C."</li>
+
+                    <li><strong>ATLAS Integration & StrategySelector (0.75 page):</strong> How your bridge connects to GapDetector, AutomatedQueueSearcher, and StrategySelector. Discuss the epsilon-greedy question: Is it the right approach for student-operated queries?</li>
+
+                    <li><strong>Implementation Roadmap (0.5–1 page):</strong> Day-by-day plan for Week 8. What's in scope? What's stretch? Known risks and contingencies.</li>
+
+                    <li><strong>References:</strong> Cite Simon (1956) on satisficing, Pearl (2009) on VOI, Giles (2009) on computational approaches, Bates (1989), and at least one paper from your D2/D3 work.</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <strong>Critical Note:</strong> This proposal is a specification document, not a design essay. It will be reviewed by the course instructor AND used by Week 8 as a development spec. If your proposal is vague (e.g., "we will use some machine learning to rank results"), Week 8 gets stuck. If it is concrete (e.g., "we will rank by (0.4 × recall_coverage) + (0.4 × relevance_score) + (0.2 × recency_weight), where relevance_score is calculated by checking if the paper's abstract contains at least two keywords from the gap's vocabulary"), Week 8 can implement immediately.
+            </div>
+        </section>
+
+        <!-- Section 6: Codebase Connection -->
+        <section id="codebase">
+            <h2>Codebase Connections: What You're Designing</h2>
+
+            <div class="component-box">
+                <h4>QueryGenerator Class (Article_Eater_PostQuinean_v1_recovery/src/services/voi_search.py, lines ~722–920)</h4>
+                <p>This is your starting point. It translates gap types into queries. Your Task 1 is to understand its current logic deeply. Your proposal either extends it (adding new gap types, enhancing vocabulary expansion) or argues for replacing it (if the current design is fundamentally incompatible with your architecture). Either way, you need to cite it and explain the choice.</p>
+            </div>
+
+            <div class="component-box">
+                <h4>VOISearchCoordinator (Article_Eater_PostQuinean_v1_recovery/src/services/voi_search.py)</h4>
+                <p>This orchestrates the full pipeline: detect gap → generate queries → execute searches → evaluate results. Your bridge is a replacement or enhancement of its current search execution step. Clarify in your proposal: Do you replace this class, or do you plug into it?</p>
+            </div>
+
+            <div class="component-box">
+                <h4>IntegratedQueryService (Article_Eater_PostQuinean_v1_recovery/src/services/integrated_query_service.py)</h4>
+                <p>Currently handles multi-platform querying. Your proposal should clarify: Does your bridge wrap this service, or does it rewrite the platform integration logic? What's the inheritance/composition relationship?</p>
+            </div>
+
+            <div class="component-box">
+                <h4>AutomatedQueueSearcher (Article_Eater_PostQuinean_v1_recovery/src/queue/automated_searcher.py)</h4>
+                <p>Runs scheduled searches and produces AutomatedTargetRun outputs. Your bridge's output must be compatible with this contract. In Task 3, you design candidate_paper schema—make sure it maps cleanly to AutomatedTargetRun fields without requiring translation code.</p>
+            </div>
+
+            <div class="component-box">
+                <h4>StrategySelector (Article_Eater_PostQuinean_v1_recovery/src/services/voi_search.py)</h4>
+                <p>Uses epsilon-greedy strategy selection. This is a deliberate challenge question in your proposal. The epsilon-greedy algorithm balances exploration (trying different strategies) and exploitation (using known-good strategies). For a system run by students on a finite query budget, is this the right approach? Or should you use a simpler heuristic (e.g., "always use the platform with highest D3 recall for this VOI type")? Your proposal should engage with this question directly.</p>
+            </div>
+        </section>
+
+        <!-- Section 7: Grading Rubric -->
+        <section id="grading">
+            <h2>Grading Rubric: D4 (15% of course grade)</h2>
+
+            <div class="grading-criteria">
+                <h4>Specification Quality (40% of D4 grade)</h4>
+                <ul>
+                    <li><strong>Input/Output Schemas (15%):</strong> Schemas are formally specified (JSON-schema style or pseudocode). All required fields are defined. Field types are explicit (string, int, enum, float). Valid values for enums are listed. A developer can read the schema and implement code against it without asking clarifying questions.</li>
+                    <li><strong>Query Generation Logic (15%):</strong> For each gap type, the query pattern is explicit. Vocabulary expansion is specified (e.g., "natural light" expands to ["natural light", "daylight", "sunlight", ...]). Example queries for each gap type are provided in realistic platform syntax (Semantic Scholar, Consensus, etc.).</li>
+                    <li><strong>Platform Selection (10%):</strong> Decision rules are clear. Example: "For VALIDATION gaps, use Consensus (primary, highest precision for clinical claims), Semantic Scholar (secondary, broadest coverage), OpenAlex (tertiary, completeness check)." Rules are justified with D3 data.</li>
+                </ul>
+            </div>
+
+            <div class="grading-criteria">
+                <h4>Architectural Design (35% of D4 grade)</h4>
+                <ul>
+                    <li><strong>Three Trade-Offs (15%):</strong> Three distinct architectural choices are identified. For each: alternatives are enumerated (at least 2 per trade-off, more if meaningful), trade-offs are explicit (e.g., "A is faster but lower precision; B is slower but higher precision"), recommendation is made with justification grounded in data or system requirements. Trade-offs are substantial, not trivial (not "use Python or Java").</li>
+                    <li><strong>System Architecture (10%):</strong> An architecture diagram is included (box-and-arrow, clear data flow). The diagram shows: input → query generation → platform dispatchers → aggregation → deduplication → ranking → output. Components are labeled; relationships are clear.</li>
+                    <li><strong>Integration Clarity (10%):</strong> Proposal clearly states how the bridge connects to GapDetector, AutomatedQueueSearcher, and StrategySelector. Impedance mismatches (if any) are identified and addressed. The proposal answers: Can Week 8 implement this without asking clarifying questions?</li>
+                </ul>
+            </div>
+
+            <div class="grading-criteria">
+                <h4>Evidence-Based Reasoning (20% of D4 grade)</h4>
+                <ul>
+                    <li><strong>Use of D3 Data (10%):</strong> Design choices are justified with D3 recall/precision matrix. Example: "We recommend Semantic Scholar as primary platform for MECHANISM gaps because D3 shows 85% average recall on mechanism-type papers across all VOIs, 15 points higher than Consensus." Not vague appeals to "best practice."</li>
+                    <li><strong>Thoughtful Engagement with Code (10%):</strong> Proposal shows understanding of QueryGenerator, IntegratedQueryService, and AutomatedQueueSearcher. It acknowledges what code already does and what needs to be built/changed. The epsilon-greedy question is addressed substantively (not dismissed, not blindly endorsed).</li>
+                </ul>
+            </div>
+
+            <div class="grading-criteria">
+                <h4>Implementation Roadmap (5% of D4 grade)</h4>
+                <ul>
+                    <li>Roadmap is realistic and phased (Day 1 tasks are achievable; stretch goals are ambitious but not impossible). Critical path is identified. Testing strategy is clear. Known risks are acknowledged with contingencies.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 8: FAQ -->
+        <section id="faq">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="faq-section">
+                <div class="faq-item">
+                    <div class="faq-question">Should my bridge be a replacement for IntegratedQueryService, or an enhancement?</div>
+                    <div class="faq-answer">Good question. If IntegratedQueryService already does most of what you need, enhance it (clarify what you're adding, why it needs enhancement). If it doesn't fit your architecture, replace it and explain why the new design is better. Either way, your proposal should make the choice explicit and justify it.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Can I propose platforms beyond the five we tested in D2/D3?</div>
+                    <div class="faq-answer">Yes, but you lose the D3 data that justifies platform choice. If you propose adding Google Scholar API or PubMed, explain why it's necessary (e.g., "Biomedical literature is indexed better in PubMed than in Semantic Scholar; D3 showed 40% recall for biomedical VOIs across all five platforms") and acknowledge the implementation cost (learning a new API).</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">How detailed should my query generation logic be?</div>
+                    <div class="faq-answer">Detailed enough that a developer can implement it. You don't need to write Python code, but pseudocode or English-language algorithms should be precise. Example: "For VALIDATION gaps, expand {main_term} with synonyms using WordNet, then combine with {population} using AND, then filter results to year >= [current_year - 10]." Not: "generate smart queries."</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Do I need to propose cost estimates for platform APIs?</div>
+                    <div class="faq-answer">Yes. Get current pricing (Scite, Elicit, Consensus all have metered APIs). If your system will run 20 queries per session, estimate monthly cost. This informs your platform selection trade-offs (maybe Scite is great, but it's $0.50/query—budget limits its use).</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">The epsilon-greedy question feels hard. What's a good answer?</div>
+                    <div class="faq-answer">Engage thoughtfully. Epsilon-greedy works well in environments where you have many samples and can learn over time. In your case, you have ~200 total queries over the semester with budget constraints—fewer samples. Consider: "Epsilon-greedy is good for learning; but for a bounded student project, a simpler heuristic (platform selection based on D3 data) is more efficient. We recommend epsilon-greedy for future years when ATLAS runs continuously, but use deterministic platform choice for D5."</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 9: References -->
+        <section id="references">
+            <div class="reference-list">
+                <h4>References</h4>
+                <ol>
+                    <li>Simon, H. A. (1956). Rational choice and the structure of the environment. <em>Psychological Review, 63</em>(2), 129–138.</li>
+                    <li>Pearl, J. (2009). <em>Causality: Models, reasoning, and inference</em> (2nd ed.). Cambridge University Press. Chapter 3: Causal diagrams and the identification of causal effects.</li>
+                    <li>Giles, J. (2009). Computational science: Making the grade. <em>Nature, 462</em>(7271), 290–291.</li>
+                    <li>Bates, M. J. (1989). The design of browsing and berrypicking techniques for the online search interface. <em>Online Information Review, 13</em>(5), 407–424.</li>
+                    <li>Manning, C. D., Raghavan, P., & Schütze, H. (2008). <em>Introduction to information retrieval.</em> Cambridge University Press. Chapter 6: Scoring, term weighting, and the vector space model.</li>
+                </ol>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>COGS160: AI & VR at UCSD | Article Finder Track | Week 7 (D4)</p>
+        <p>Last updated: March 2026 | David Kirsh, Cognitive Science Department</p>
+    </footer>
+</body>
+</html>

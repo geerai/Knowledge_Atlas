@@ -38,6 +38,7 @@ FRONTS_V7_PATH = AE / 'data' / 'rebuild' / 'research_fronts_v7.json'
 CLAIMS_PATH = AE / 'data' / 'rebuild' / 'gold_claims_v7.jsonl'
 TOPIC_ONTOLOGY_V1_PATH = AE / 'data' / 'rebuild' / 'topic_ontology_v1.json'
 TOPIC_MEMBERSHIPS_V1_PATH = AE / 'data' / 'rebuild' / 'topic_memberships_v1.json'
+CONSTRUCT_PATCHES_V1_PATH = AE / 'data' / 'backfill' / 'construct_patches_v1.jsonl'
 IV_DV_CLASSIFICATIONS_PATH = AE / 'data' / 'exports' / 'ae_bundle' / 'supplementary' / 'iv_dv_classifications.json'
 REPAIRS_PATH = AE / 'data' / 'rebuild' / 'bibliographic_repairs.json'
 AG_PDF_PACKAGE_REPAIRS_PATH = AE / 'data' / 'rebuild' / 'ag_pdf_package_repairs.json'
@@ -958,6 +959,25 @@ def load_json(path, default):
         return json.loads(path.read_text())
     except Exception:
         return default
+
+
+def load_jsonl(path):
+    rows = []
+    if not path.exists():
+        return rows
+    try:
+        with path.open(encoding='utf-8') as handle:
+            for line in handle:
+                text = line.strip()
+                if not text:
+                    continue
+                try:
+                    rows.append(json.loads(text))
+                except Exception:
+                    continue
+    except Exception:
+        return []
+    return rows
 
 
 def parse_page_number(value):
@@ -2288,8 +2308,179 @@ def _normalize_cross_relations(values):
 
 def _load_canonical_topic_artifacts():
     if not (TOPIC_ONTOLOGY_V1_PATH.exists() and TOPIC_MEMBERSHIPS_V1_PATH.exists()):
-        return None, None
-    return load_json(TOPIC_ONTOLOGY_V1_PATH, {}), load_json(TOPIC_MEMBERSHIPS_V1_PATH, {})
+        return None, None, {}
+    ontology_payload = load_json(TOPIC_ONTOLOGY_V1_PATH, {})
+    membership_payload = load_json(TOPIC_MEMBERSHIPS_V1_PATH, {})
+    return _reconcile_canonical_topic_artifacts(ontology_payload, membership_payload)
+
+
+def _canonical_topic_id(iv_root, dv_focus):
+    return slugify(f"{str(iv_root or 'unspecified')}__{str(dv_focus or 'unspecified.outcome')}")
+
+
+def _load_construct_patch_rows():
+    rows = []
+    by_paper = {}
+    for row in load_jsonl(CONSTRUCT_PATCHES_V1_PATH):
+        paper_id = str(row.get('paper_id') or '').strip()
+        iv_root = str(row.get('iv_root') or '').strip()
+        dv_focus = str(row.get('dv_focus') or '').strip()
+        evidence = ' '.join(str(row.get('evidence') or '').split())
+        if not paper_id or not iv_root or not dv_focus or len(evidence.split()) < 10:
+            continue
+        normalized = {
+            'paper_id': paper_id,
+            'iv_root': iv_root,
+            'dv_focus': dv_focus,
+            'confidence': round(float(row.get('confidence') or 0.0), 3),
+            'extraction_method': str(row.get('extraction_method') or '').strip() or 'construct_patch',
+            'evidence': compact_text(evidence, 260),
+        }
+        existing = by_paper.get(paper_id)
+        if not existing or normalized['confidence'] >= existing['confidence']:
+            by_paper[paper_id] = normalized
+    return by_paper
+
+
+def _mutable_topic_node_store(ontology_payload):
+    topic_nodes = ontology_payload.get('topic_nodes')
+    if isinstance(topic_nodes, dict):
+        return topic_nodes
+    store = {}
+    for row in _first_list(ontology_payload, 'topic_nodes', 'topics', 'nodes', 'items'):
+        if not isinstance(row, dict):
+            continue
+        topic_id = str(row.get('topic_id') or row.get('id') or row.get('node_id') or '').strip()
+        if topic_id:
+            store[topic_id] = dict(row)
+    ontology_payload['topic_nodes'] = store
+    return store
+
+
+def _ensure_canonical_topic_node(ontology_payload, iv_root, dv_focus):
+    topic_id = _canonical_topic_id(iv_root, dv_focus)
+    store = _mutable_topic_node_store(ontology_payload)
+    if topic_id in store:
+        return topic_id, False
+
+    dv_root = canonical_dv_root(dv_focus)
+    store[topic_id] = {
+        'topic_id': topic_id,
+        'label': f"{iv_root_label(iv_root)} × {dv_focus_label(dv_focus)}",
+        'iv_root': iv_root,
+        'iv_root_label': iv_root_label(iv_root),
+        'iv_root_description': iv_root_description(iv_root),
+        'iv_branch': iv_root,
+        'iv_branch_label': iv_root_label(iv_root),
+        'dv_root': dv_root,
+        'dv_root_label': dv_root_label(dv_root),
+        'dv_focus': dv_focus,
+        'dv_focus_label': dv_focus_label(dv_focus),
+        'authority_iv': iv_root,
+        'authority_dv': dv_root,
+        'description': f"Provisional KA ingest extension created from construct patch evidence for {iv_root_label(iv_root)} and {dv_focus_label(dv_focus)}.",
+        'provisional': True,
+        'provisional_note': 'Created in Knowledge Atlas ingest to reconcile construct patch output with canonical topic memberships.',
+        'parent_authority_node': iv_root,
+        'paper_ids': [],
+        'paper_count': 0,
+        'aliases': [],
+        'cross_relations': [],
+    }
+    provisional = ontology_payload.setdefault('provisional_extensions', [])
+    provisional.append(
+        {
+            'topic_id': topic_id,
+            'iv_root': iv_root,
+            'dv_focus': dv_focus,
+            'parent_authority_node': iv_root,
+            'status': 'ka_ingest_extension',
+            'reason': 'construct patch introduced a topic pair absent from the canonical topic node inventory',
+        }
+    )
+    return topic_id, True
+
+
+def _reconcile_canonical_topic_artifacts(ontology_payload, membership_payload):
+    ontology_payload = json.loads(json.dumps(ontology_payload or {}))
+    membership_rows = membership_payload if isinstance(membership_payload, list) else _first_list(membership_payload, 'memberships', 'paper_topic_memberships', 'items')
+    membership_rows = json.loads(json.dumps(membership_rows or []))
+    patch_rows = _load_construct_patch_rows()
+    membership_by_paper = {
+        str(row.get('paper_id') or '').strip(): row
+        for row in membership_rows
+        if isinstance(row, dict) and str(row.get('paper_id') or '').strip()
+    }
+
+    conflict_count = 0
+    provisional_node_count = 0
+    for paper_id, patch in patch_rows.items():
+        row = membership_by_paper.get(paper_id)
+        if not row:
+            continue
+        topic_id, created = _ensure_canonical_topic_node(ontology_payload, patch['iv_root'], patch['dv_focus'])
+        provisional_node_count += 1 if created else 0
+        current_primary = str(row.get('primary_topic_id') or '').strip()
+        if current_primary and current_primary != topic_id:
+            conflict_count += 1
+
+        topic_ids = [str(value).strip() for value in (row.get('topic_ids') or []) if str(value).strip()]
+        if topic_id not in topic_ids:
+            topic_ids.insert(0, topic_id)
+        else:
+            topic_ids = [topic_id] + [value for value in topic_ids if value != topic_id]
+
+        row['topic_ids'] = topic_ids
+        row['primary_topic_id'] = topic_id
+        row['secondary_topic_ids'] = [value for value in topic_ids if value != topic_id]
+        row['iv_roots'] = [patch['iv_root']] + [value for value in (row.get('iv_roots') or []) if value != patch['iv_root']]
+        row['dv_focuses'] = [patch['dv_focus']] + [value for value in (row.get('dv_focuses') or []) if value != patch['dv_focus']]
+        row['confidence'] = round(max(float(row.get('confidence') or 0.0), float(patch.get('confidence') or 0.0)), 3)
+        row['visibility'] = str(row.get('visibility') or 'visible').strip() or 'visible'
+        if row['visibility'] == 'visible':
+            row['hide_reason'] = ''
+
+        patch_basis = f"construct_patch:{patch['extraction_method']}"
+        evidence_basis = [str(value).strip() for value in (row.get('evidence_basis') or []) if str(value).strip()]
+        row['evidence_basis'] = [patch_basis] + [value for value in evidence_basis if value != patch_basis]
+
+        if current_primary != topic_id:
+            row['assignment_method'] = patch_basis
+
+        provenance = dict(row.get('provenance') or {})
+        provenance['construct_patch'] = {
+            'iv_root': patch['iv_root'],
+            'dv_focus': patch['dv_focus'],
+            'confidence': patch['confidence'],
+            'extraction_method': patch['extraction_method'],
+            'evidence': patch['evidence'],
+        }
+        row['provenance'] = provenance
+
+    return ontology_payload, membership_rows, {
+        'patch_row_count': len(patch_rows),
+        'conflict_count': conflict_count,
+        'provisional_node_count': provisional_node_count,
+    }
+
+
+def _filtered_membership_payload(membership_payload, include_predicate, hidden_reason):
+    rows = json.loads(json.dumps(membership_payload or []))
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        if str(row.get('visibility') or '').lower() != 'visible':
+            continue
+        if include_predicate(row):
+            continue
+        row['visibility'] = 'hidden'
+        if not row.get('hide_reason'):
+            row['hide_reason'] = hidden_reason
+    return rows
+
+
+def _is_defended_membership(row):
+    return float(row.get('confidence') or 0.0) >= 0.75
 
 
 def _extract_topic_nodes(ontology_payload):
@@ -2445,6 +2636,54 @@ def _extract_hidden_membership_rows(membership_payload):
             }
         )
     return normalized
+
+
+def apply_canonical_topic_metadata(articles, evidence, ontology_payload, membership_payload):
+    if not ontology_payload or not membership_payload:
+        return articles, evidence
+
+    topic_lookup = {row['id']: row for row in _extract_topic_nodes(ontology_payload)}
+    membership_by_paper = {}
+    for row in membership_payload or []:
+        if not isinstance(row, dict):
+            continue
+        paper_id = str(row.get('paper_id') or '').strip()
+        if paper_id:
+            membership_by_paper[paper_id] = row
+
+    def apply_to_row(row, paper_id):
+        membership = membership_by_paper.get(paper_id)
+        if not membership:
+            return row
+        topic_ids = [str(value).strip() for value in (membership.get('topic_ids') or []) if str(value).strip()]
+        primary_topic_id = str(membership.get('primary_topic_id') or '').strip()
+        if not primary_topic_id and topic_ids:
+            primary_topic_id = topic_ids[0]
+        primary_topic = topic_lookup.get(primary_topic_id, {})
+        visibility = str(membership.get('visibility') or 'hidden').strip() or 'hidden'
+
+        row['topic_ids'] = topic_ids
+        row['primary_topic_id'] = primary_topic_id
+        row['secondary_topic_ids'] = [value for value in topic_ids if value != primary_topic_id]
+        row['topic_membership_visibility'] = visibility
+        row['topic_assignment_method'] = membership.get('assignment_method') or ''
+        row['topic_confidence'] = round(float(membership.get('confidence') or 0.0), 3)
+        row['iv_roots'] = [str(value).strip() for value in (membership.get('iv_roots') or []) if str(value).strip()]
+        row['dv_focuses'] = [str(value).strip() for value in (membership.get('dv_focuses') or []) if str(value).strip()]
+        row['topic_hide_reason'] = membership.get('hide_reason') or ''
+        if primary_topic:
+            row['primary_topic'] = primary_topic.get('label') or row.get('primary_topic') or ''
+            row['topic_labels'] = [
+                topic_lookup.get(topic_id, {}).get('label') or topic_id
+                for topic_id in topic_ids
+            ]
+        return row
+
+    for article in articles:
+        apply_to_row(article, article.get('paper_id'))
+    for item in evidence:
+        apply_to_row(item, item.get('paper_id'))
+    return articles, evidence
 
 
 def build_topic_hierarchy_from_canonical(articles, topic_summary, ontology_payload, membership_payload):
@@ -2750,15 +2989,28 @@ def build_topic_hierarchy_from_canonical(articles, topic_summary, ontology_paylo
     }
 
 
-def build_topic_hierarchy_payload(articles, topic_summary):
-    ontology_payload, membership_payload = _load_canonical_topic_artifacts()
+def build_topic_hierarchy_payload(articles, topic_summary, ontology_payload=None, membership_payload=None, reconcile_meta=None):
+    if ontology_payload is None or membership_payload is None:
+        ontology_payload, membership_payload, reconcile_meta = _load_canonical_topic_artifacts()
+    reconcile_meta = reconcile_meta or {}
     canonical_payload = None
+    canonical_defended_payload = None
     if ontology_payload and membership_payload:
         canonical_payload = build_topic_hierarchy_from_canonical(
             articles,
             topic_summary,
             ontology_payload,
             membership_payload,
+        )
+        canonical_defended_payload = build_topic_hierarchy_from_canonical(
+            articles,
+            topic_summary,
+            ontology_payload,
+            _filtered_membership_payload(
+                membership_payload,
+                _is_defended_membership,
+                'below defended confidence threshold',
+            ),
         )
 
     rows = load_iv_dv_classifications()
@@ -3080,17 +3332,22 @@ def build_topic_hierarchy_payload(articles, topic_summary):
             'topics': str((OUT / 'topics.json').relative_to(ROOT)),
         },
     }
-    if canonical_payload:
-        heuristic_payload['notes'].insert(
-            0,
-            f"Canonical topic artifacts are available and provide the defended map, but they currently surface only {canonical_payload.get('summary', {}).get('visible_article_count', 0)} of {len(articles)} papers. The broader working map remains useful for exploratory coverage.",
-        )
-        heuristic_payload['source_files']['topic_ontology'] = str(TOPIC_ONTOLOGY_V1_PATH.relative_to(ROOT))
-        heuristic_payload['source_files']['topic_memberships'] = str(TOPIC_MEMBERSHIPS_V1_PATH.relative_to(ROOT))
-        defended_visible = int(canonical_payload.get('summary', {}).get('visible_article_count', 0))
-        working_visible = int(heuristic_payload.get('summary', {}).get('visible_article_count', 0))
-        hidden_until_reviewed = int(heuristic_payload.get('summary', {}).get('hidden_article_count', 0))
-        excluded_count = int(heuristic_payload.get('summary', {}).get('excluded_article_count', 0))
+    if canonical_payload and canonical_defended_payload:
+        defended_visible = int(canonical_defended_payload.get('summary', {}).get('visible_article_count', 0))
+        working_visible = int(canonical_payload.get('summary', {}).get('visible_article_count', 0))
+        hidden_until_reviewed = int(canonical_payload.get('summary', {}).get('hidden_article_count', 0))
+        excluded_count = int(canonical_payload.get('summary', {}).get('excluded_article_count', 0))
+        notes = [
+            'This map now uses progressive disclosure within the canonical topic authority rather than switching between unrelated map builders.',
+            f"The defended map shows {defended_visible} papers whose topic placement is strong enough to defend publicly.",
+            f"The working map expands that to {working_visible} papers by including lower-confidence but still explicit canonical topic assignments.",
+            f"{hidden_until_reviewed} papers remain hidden until reviewed, and {excluded_count} were separated as safe exclusions.",
+            'Research fronts remain overlays on top of the topic map rather than the main taxonomy.',
+        ]
+        if reconcile_meta.get('conflict_count'):
+            notes.append(
+                f"KA ingest reconciled {int(reconcile_meta['conflict_count'])} construct-patch conflicts and added {int(reconcile_meta.get('provisional_node_count') or 0)} provisional topic nodes needed by the current corpus."
+            )
         return {
             'summary': {
                 'article_count': len(articles),
@@ -3103,13 +3360,7 @@ def build_topic_hierarchy_payload(articles, topic_summary):
                 'front_source': topic_summary.get('front_source') or 'research_fronts_v7',
                 'default_view': 'defended',
             },
-            'notes': [
-                'This map now uses progressive disclosure rather than a single confidence policy.',
-                f"The defended map shows {defended_visible} papers whose topic placement is strong enough to defend publicly.",
-                f"The working map expands that to {working_visible} papers by including provisional placements that are still under review.",
-                f"{hidden_until_reviewed} papers remain hidden until reviewed, and {excluded_count} were separated as safe exclusions.",
-                'Research fronts remain overlays on top of the topic map rather than the main taxonomy.',
-            ],
+            'notes': notes,
             'default_view': 'defended',
             'available_views': ['defended', 'working'],
             'progressive_disclosure': {
@@ -3120,19 +3371,18 @@ def build_topic_hierarchy_payload(articles, topic_summary):
                 'excluded_article_count': excluded_count,
             },
             'views': {
-                'defended': canonical_payload,
-                'working': heuristic_payload,
+                'defended': canonical_defended_payload,
+                'working': canonical_payload,
             },
-            'roots': canonical_payload.get('roots') or [],
-            'topics': canonical_payload.get('topics') or [],
-            'repair_queue': heuristic_payload.get('repair_queue') or [],
-            'exclusion_queue': heuristic_payload.get('exclusion_queue') or [],
+            'roots': canonical_defended_payload.get('roots') or [],
+            'topics': canonical_defended_payload.get('topics') or [],
+            'repair_queue': canonical_payload.get('repair_queue') or [],
+            'exclusion_queue': canonical_payload.get('exclusion_queue') or [],
             'source_files': {
                 'topic_ontology': str(TOPIC_ONTOLOGY_V1_PATH.relative_to(ROOT)),
                 'topic_memberships': str(TOPIC_MEMBERSHIPS_V1_PATH.relative_to(ROOT)),
-                'iv_dv_classifications': str(IV_DV_CLASSIFICATIONS_PATH.relative_to(ROOT)),
+                'construct_patches': str(CONSTRUCT_PATCHES_V1_PATH.relative_to(ROOT)),
                 'articles': str((OUT / 'articles.json').relative_to(ROOT)),
-                'topics': str((OUT / 'topics.json').relative_to(ROOT)),
             },
         }
     return heuristic_payload
@@ -3417,10 +3667,25 @@ def main():
     generated_at = datetime.now(timezone.utc).isoformat()
     workflow = build_workflow_payload()
     topics, gaps, topic_summary = load_fronts()
+    ontology_payload, membership_payload, reconcile_meta = _load_canonical_topic_artifacts()
     evidence, articles = parse_claims()
+    if ontology_payload and membership_payload:
+        articles, evidence = apply_canonical_topic_metadata(
+            articles,
+            evidence,
+            ontology_payload,
+            membership_payload,
+        )
+        articles = build_related_papers(articles)
     topic_summary['front_covered_paper_count'] = topic_summary.get('unique_paper_count', 0)
     topic_summary['article_count'] = len(articles)
-    topic_hierarchy = build_topic_hierarchy_payload(articles, topic_summary)
+    topic_hierarchy = build_topic_hierarchy_payload(
+        articles,
+        topic_summary,
+        ontology_payload,
+        membership_payload,
+        reconcile_meta,
+    )
     dashboard = build_dashboard(articles, evidence)
     json_status = build_json_status(articles)
     argumentation = build_argumentation_payload()
@@ -3452,8 +3717,12 @@ def main():
     (OUT / 'topic_hierarchy.json').write_text(json.dumps(topic_hierarchy, indent=2))
     (OUT / 'topic_repair_queue.json').write_text(json.dumps({'repair_queue': topic_hierarchy.get('repair_queue') or []}, indent=2))
     (OUT / 'topic_exclusion_queue.json').write_text(json.dumps({'exclusion_queue': topic_hierarchy.get('exclusion_queue') or []}, indent=2))
-    _write_optional_payload_copy(TOPIC_ONTOLOGY_V1_PATH, 'topic_ontology.json')
-    _write_optional_payload_copy(TOPIC_MEMBERSHIPS_V1_PATH, 'topic_memberships.json')
+    if ontology_payload and membership_payload:
+        (OUT / 'topic_ontology.json').write_text(json.dumps(ontology_payload, indent=2))
+        (OUT / 'topic_memberships.json').write_text(json.dumps(membership_payload, indent=2))
+    else:
+        _write_optional_payload_copy(TOPIC_ONTOLOGY_V1_PATH, 'topic_ontology.json')
+        _write_optional_payload_copy(TOPIC_MEMBERSHIPS_V1_PATH, 'topic_memberships.json')
     _write_optional_payload_copy(FRONTS_V7_PATH, 'research_fronts.json')
     (OUT / 'argumentation.json').write_text(json.dumps(argumentation, indent=2))
     (OUT / 'annotations.json').write_text(json.dumps(annotations, indent=2))

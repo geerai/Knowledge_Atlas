@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COGS160: AI & VR — GUI Track: Visualization Design Guide</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+         background:#f5f5f5;padding:20px;color:#222;line-height:1.7}
+    .container{max-width:980px;margin:0 auto;background:#fff;padding:48px;
+               box-shadow:0 2px 10px rgba(0,0,0,.08)}
+    .nav{display:flex;justify-content:space-between;align-items:center;
+         margin-bottom:32px;padding-bottom:16px;border-bottom:2px solid #6b3fa0}
+    .nav a{color:#6b3fa0;text-decoration:none;font-weight:600;font-size:.9rem}
+    .nav a:hover{text-decoration:underline}
+    .track-pill{background:#6b3fa0;color:#fff;padding:4px 14px;border-radius:20px;
+                font-size:.8rem;font-weight:700;letter-spacing:.5px}
+    header{margin-bottom:36px}
+    .week-label{font-size:.85rem;font-weight:700;color:#6b3fa0;text-transform:uppercase;
+                letter-spacing:1px;margin-bottom:6px}
+    h1{font-size:2rem;color:#182B49;font-weight:800;margin-bottom:8px;line-height:1.2}
+    .subtitle{font-size:1.05rem;color:#555;margin-bottom:20px}
+    .meta-row{display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;color:#777}
+    h2{font-size:1.3rem;color:#182B49;font-weight:700;margin:40px 0 12px;
+       padding-bottom:6px;border-bottom:2px solid #6b3fa0}
+    h3{font-size:1.05rem;color:#6b3fa0;font-weight:700;margin:24px 0 8px}
+    h4{font-size:.95rem;color:#444;font-weight:700;margin:14px 0 6px}
+    p{margin-bottom:14px;color:#333;font-size:.95rem;line-height:1.7}
+    ul,ol{padding-left:20px;margin-bottom:14px}
+    li{font-size:.93rem;color:#333;margin-bottom:6px;line-height:1.6}
+
+    /* Viz expert section */
+    .viz-expert{border:1.5px solid #e0d5f0;border-radius:12px;margin-bottom:28px;overflow:hidden}
+    .viz-expert-hdr{color:#fff;padding:16px 24px;display:flex;align-items:flex-start;gap:14px}
+    .viz-expert-icon{font-size:1.8rem;flex-shrink:0}
+    .viz-expert-name{font-size:1.05rem;font-weight:800;margin-bottom:2px}
+    .viz-expert-affil{font-size:.8rem;opacity:.85}
+    .viz-expert-body{padding:22px 24px}
+    .viz-expert-body p{font-size:.94rem;line-height:1.75;color:#333;margin-bottom:14px}
+
+    /* Principle chips */
+    .principle-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin:16px 0}
+    .principle-chip{background:#faf5ff;border:1.5px solid #ddd0f5;border-radius:8px;padding:14px 16px}
+    .principle-chip-title{font-size:.82rem;font-weight:700;color:#6b3fa0;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+    .principle-chip-body{font-size:.86rem;color:#444;line-height:1.5}
+
+    /* Chart choice table */
+    .chart-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.87rem}
+    .chart-table th{background:#182B49;color:#fff;padding:10px 14px;text-align:left;font-weight:700}
+    .chart-table td{padding:9px 14px;border-bottom:1px solid #eee;vertical-align:top}
+    .chart-table tr:nth-child(even) td{background:#fafafa}
+    .chart-table td:first-child{font-weight:600;color:#182B49}
+    .tag-good{display:inline-block;background:#d1fae5;color:#065f46;border-radius:4px;font-size:.75rem;font-weight:700;padding:1px 6px;margin:1px}
+    .tag-bad{display:inline-block;background:#fee2e2;color:#991b1b;border-radius:4px;font-size:.75rem;font-weight:700;padding:1px 6px;margin:1px}
+    .tag-cond{display:inline-block;background:#fff3cd;color:#92400e;border-radius:4px;font-size:.75rem;font-weight:700;padding:1px 6px;margin:1px}
+
+    /* ATLAS-specific checklist */
+    .audit-checklist{background:#f0f7ff;border:1px solid #aed0ef;border-left:4px solid #1a6fb5;
+                     border-radius:6px;padding:20px 24px;margin:20px 0}
+    .audit-checklist h4{color:#1a6fb5;margin-top:0;margin-bottom:10px}
+    .checklist-item{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid #ddeeff;font-size:.9rem}
+    .checklist-item:last-child{border-bottom:none}
+    .ck-box{width:16px;height:16px;border:1.5px solid #aed0ef;border-radius:3px;flex-shrink:0;margin-top:3px}
+
+    /* Callout */
+    .callout{border-radius:6px;padding:16px 20px;margin:20px 0}
+    .callout-amber{background:#fff8e6;border:1px solid #e8c87a;border-left:4px solid #C69214}
+    .callout-green{background:#f0fff4;border:1px solid #a8d5b5;border-left:4px solid #28a745}
+    .callout-red{background:#fff1f2;border:1px solid #fca5a5;border-left:4px solid #dc2626}
+    .callout strong{display:block;margin-bottom:4px;font-size:.9rem}
+    .callout p{font-size:.9rem;margin-bottom:0}
+
+    /* Anti-patterns gallery */
+    .antipattern-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin:16px 0}
+    .antipattern-card{background:#fff1f2;border:1.5px solid #fca5a5;border-radius:8px;padding:16px}
+    .antipattern-name{font-size:.85rem;font-weight:700;color:#991b1b;margin-bottom:6px}
+    .antipattern-desc{font-size:.83rem;color:#444;line-height:1.5}
+    .antipattern-fix{font-size:.82rem;color:#065f46;background:#d1fae5;border-radius:4px;padding:4px 8px;margin-top:8px;display:block}
+
+    .ref-list{list-style:none;padding:0}
+    .ref-list li{font-size:.85rem;color:#444;line-height:1.6;
+                 padding:8px 0;border-bottom:1px solid #f0e8fc;
+                 padding-left:24px;text-indent:-24px}
+    .ref-list li:last-child{border-bottom:none}
+    .sep{height:1px;background:#f0e8fc;margin:36px 0}
+
+    .use-box{background:linear-gradient(135deg,#faf5ff,#f3e8ff);border:1px solid #c4a0e8;
+             border-left:4px solid #6b3fa0;border-radius:6px;padding:20px 24px;margin-bottom:32px}
+    .use-box p{font-size:.95rem;color:#444;margin-bottom:8px}
+    .use-box p:last-child{margin-bottom:0}
+
+    @media(max-width:680px){.container{padding:24px 16px}.principle-grid,.antipattern-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="nav">
+    <div>
+      <a href="gui_track_overview.html">← GUI Track Overview</a>
+      &nbsp;|&nbsp;
+      <a href="gui_design_experts_reference.html">Expert Panel Reference</a>
+      &nbsp;|&nbsp;
+      <a href="gui_wk07_report.html">Week 7: Final Report →</a>
+    </div>
+    <span class="track-pill">Track 4 · GUI</span>
+  </nav>
+
+  <header>
+    <div class="week-label">Reference · GUI Track · COGS160 Spring 2026</div>
+    <h1>Visualization Design Guide</h1>
+    <div class="subtitle">The canon of data visualization scholarship — from Tufte's data-ink principle to contemporary chart choice frameworks — applied to the ATLAS dashboard, evidence cards, and argument maps you are auditing.</div>
+    <div class="meta-row">
+      <span><strong>Status:</strong> Permanent reference — especially relevant for Weeks 5–7 and Phase 3</span>
+      <span><strong>Companion:</strong> <a href="gui_design_experts_reference.html" style="color:#6b3fa0">Expert Panel Reference</a></span>
+    </div>
+  </header>
+
+  <div class="use-box">
+    <p><strong>Why visualization?</strong> ATLAS is a data-heavy system. Its dashboard displays article coverage statistics, evidence quality ratings, argument graphs, and tag distributions. Its evidence cards encode study quality metadata. Its interpretation pages display probability assessments. Every one of these is a data visualization — and every one can be done well or badly. The difference between a well-designed evidence card and a poorly designed one is not aesthetic: it is epistemic. A card that misrepresents effect size confidence, obscures sample heterogeneity, or presents contested findings as settled is not just ugly — it is misleading.</p>
+    <p>The visualization literature has produced a body of principles that are as well-established as anything in HCI. Your audit of the ATLAS data displays should apply these principles systematically. When you find a violation, articulate it in terms of the principle it violates and the scholar who established it.</p>
+  </div>
+
+  <!-- ── TUFTE ─────────────────────────────────────────────────── -->
+  <div class="viz-expert">
+    <div class="viz-expert-hdr" style="background:linear-gradient(135deg,#182B49,#2A4F7A)">
+      <div class="viz-expert-icon">📐</div>
+      <div>
+        <div class="viz-expert-name">Edward Tufte — The Visual Display of Quantitative Information (1983, 2001)</div>
+        <div class="viz-expert-affil">Yale University · Envisioning Information (1990) · Visual Explanations (1997)</div>
+      </div>
+    </div>
+    <div class="viz-expert-body">
+      <p>Tufte's foundational argument is that the primary virtue of a data visualization is the maximally efficient communication of data. Every non-data element — every gridline, every border, every decorative mark — consumes the reader's attention without contributing information. He formalizes this as the <em>data-ink ratio</em>: the fraction of a graphic's ink that is devoted to the non-redundant display of data. A visualization with a high data-ink ratio devotes most of its visual complexity to data; a visualization with a low data-ink ratio buries data in decoration.</p>
+      <p>The practical implication for ATLAS is that the dashboard's statistical displays should be examined for <em>chartjunk</em> — Tufte's term for visual elements that decorate rather than inform. Drop shadows on bar charts are chartjunk. Three-dimensional pie charts are chartjunk. Color gradients that do not encode data variation are chartjunk. The test for any visual element is: if I remove this, do I lose information? If the answer is no, the element is chartjunk and should be removed.</p>
+      <p>Tufte's concept of <em>small multiples</em> — the same chart format repeated at small scale across a grid to show variation across conditions — is particularly relevant to ATLAS's evidence display. Rather than showing a single aggregate bar chart of evidence quality, ATLAS could show a small-multiple grid with one thumbnail per study, each encoding the same variables, allowing the reader to see the distribution of evidence quality across studies rather than only the summary statistic. The summary statistic destroys information; the small-multiple grid preserves it.</p>
+      <p>His principle of <em>data-ink maximization</em> has a corollary: the axis labels, tick marks, and legends that survive the data-ink test should be as small as they can be while remaining legible. Large, heavy axis labels on a small chart compete with the data for visual attention. The data should dominate.</p>
+      <div class="principle-grid">
+        <div class="principle-chip">
+          <div class="principle-chip-title">Data-Ink Ratio</div>
+          <div class="principle-chip-body">Maximize the proportion of ink devoted to data. Remove every non-data mark that does not contribute information.</div>
+        </div>
+        <div class="principle-chip">
+          <div class="principle-chip-title">Chartjunk</div>
+          <div class="principle-chip-body">Gridlines, borders, 3D effects, decorative backgrounds, and redundant labels are chartjunk. Each costs attention without yielding information.</div>
+        </div>
+        <div class="principle-chip">
+          <div class="principle-chip-title">Small Multiples</div>
+          <div class="principle-chip-body">Show the same format at small scale across conditions to reveal distribution. More informative than the aggregate alone.</div>
+        </div>
+        <div class="principle-chip">
+          <div class="principle-chip-title">Lie Factor</div>
+          <div class="principle-chip-body">The ratio of the visual effect size to the data effect size. A bar that is twice as tall should represent data that is twice as large. Anything else is a lie.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CLEVELAND ──────────────────────────────────────────────── -->
+  <div class="viz-expert">
+    <div class="viz-expert-hdr" style="background:linear-gradient(135deg,#8b1a2e,#b03050)">
+      <div class="viz-expert-icon">📈</div>
+      <div>
+        <div class="viz-expert-name">William Cleveland — The Elements of Graphing Data (1985) &amp; Visualizing Data (1993)</div>
+        <div class="viz-expert-affil">Bell Labs · Purdue University · Graphical perception hierarchy</div>
+      </div>
+    </div>
+    <div class="viz-expert-body">
+      <p>Cleveland's contribution is the most empirically rigorous of the visualization canon. Working at Bell Labs in the 1980s, he conducted controlled experiments asking whether human readers could decode different visual encodings of data with equal accuracy. The result was the <em>graphical perception hierarchy</em> — a ranked ordering of visual channels by the precision with which humans can read quantitative data from them.</p>
+      <p>The hierarchy, from most to least accurate: (1) position along a common scale, (2) position along identical but non-aligned scales, (3) length, (4) angle and slope, (5) area, (6) volume, (7) color saturation, (8) color hue. The practical implication is immediate: when encoding quantitative data, use position if possible (bar charts, scatter plots, dot plots), and avoid area and volume (bubble charts, pie charts) for anything that requires precise comparison. Color hue is the least accurate quantitative channel — it should encode categorical distinctions, not magnitudes.</p>
+      <p>This hierarchy is directly applicable to ATLAS's evidence quality displays. If the dashboard encodes evidence quality using color hue (red/yellow/green traffic lights), it is using the least accurate quantitative channel for a critical piece of information. A dot plot or bar chart showing confidence intervals would be far more informative. Cleveland would say the traffic-light approach does not show the reader how much better green is than yellow — it only shows that it is better. Quantitative precision requires position, not hue.</p>
+      <p>Cleveland also establishes the principle of <em>banking to 45 degrees</em>: the aspect ratio of a line chart should be chosen so that the mean absolute slope of the line segments is approximately 45 degrees. This produces the most accurate visual perception of rate of change. Charts that are too wide (near-horizontal slopes) understate volatility; charts that are too tall (near-vertical slopes) overstate it. Any trend display in ATLAS should be checked against this principle.</p>
+      <div class="principle-grid">
+        <div class="principle-chip">
+          <div class="principle-chip-title">Graphical Perception Hierarchy</div>
+          <div class="principle-chip-body">Position &gt; Length &gt; Angle &gt; Area &gt; Color. Use the most accurate channel available for the most important quantitative comparison.</div>
+        </div>
+        <div class="principle-chip">
+          <div class="principle-chip-title">No Pie Charts for Comparison</div>
+          <div class="principle-chip-body">Angle and area are low-accuracy channels. Humans cannot accurately compare slice sizes in a pie chart. Use a bar chart instead.</div>
+        </div>
+        <div class="principle-chip">
+          <div class="principle-chip-title">Banking to 45°</div>
+          <div class="principle-chip-body">Choose aspect ratios so that the mean slope of line segments is ~45°. Avoids understating or overstating rate of change.</div>
+        </div>
+        <div class="principle-chip">
+          <div class="principle-chip-title">Reference Lines</div>
+          <div class="principle-chip-body">Include reference distributions alongside data to support comparison. An isolated bar is less informative than a bar shown in context.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CAIRO ──────────────────────────────────────────────────── -->
+  <div class="viz-expert">
+    <div class="viz-expert-hdr" style="background:linear-gradient(135deg,#2A7868,#3da08a)">
+      <div class="viz-expert-icon">🎯</div>
+      <div>
+        <div class="viz-expert-name">Alberto Cairo — The Functional Art (2012) &amp; The Truthful Art (2016)</div>
+        <div class="viz-expert-affil">University of Miami · Knight Chair in Visual Journalism</div>
+      </div>
+    </div>
+    <div class="viz-expert-body">
+      <p>Cairo's argument begins from the claim that visualization is a <em>functional</em> art: its primary purpose is to inform, not to impress. He proposes a hierarchy of visualization virtues: <strong>truthful</strong> (honest about what the data shows, including uncertainty), <strong>functional</strong> (serves a specific communicative purpose), <strong>beautiful</strong> (visually appealing in a way that aids comprehension), <strong>insightful</strong> (reveals something the reader could not see without the visualization), and <strong>enlightening</strong> (connects the data to something meaningful in the reader's world). The hierarchy is ordered: a visualization that is beautiful but not truthful fails at the most fundamental level.</p>
+      <p>Truthfulness in visualization is not merely factual accuracy — it includes honest representation of uncertainty. Cairo argues at length that displaying a point estimate without a confidence interval is a form of visual lying: it implies precision the data does not possess. An evidence card on ATLAS that shows a single effect size number without a confidence interval is untruthful in Cairo's sense, regardless of whether the number itself is accurate. The uncertainty is part of the data and must be shown.</p>
+      <p>Cairo's distinction between <em>exploratory</em> and <em>explanatory</em> visualization is particularly relevant to ATLAS. Exploratory visualizations help the analyst discover patterns; explanatory visualizations help the audience understand a specific pre-identified pattern. ATLAS's evidence dashboard is primarily exploratory (the researcher is discovering the evidence landscape), but its individual evidence cards are explanatory (communicating a specific finding to a specific audience). These two contexts require different design approaches: exploratory tools benefit from rich interactivity and many variables; explanatory charts benefit from focus, annotation, and deliberate reduction of complexity.</p>
+      <p>His practical guidance on uncertainty visualization: show error bars or confidence bands whenever a point estimate is shown; use color carefully (do not use the same hue for both uncertainty ranges and data), and annotate uncertainty explicitly in text ("error bars represent 95% confidence intervals") because visual conventions for uncertainty are not universal.</p>
+      <div class="principle-grid">
+        <div class="principle-chip">
+          <div class="principle-chip-title">Truthful First</div>
+          <div class="principle-chip-body">A visualization that misrepresents uncertainty is untruthful, even if every number is correct. Show confidence intervals always.</div>
+        </div>
+        <div class="principle-chip">
+          <div class="principle-chip-title">Functional Purpose</div>
+          <div class="principle-chip-body">Every chart should have a specific communicative purpose that can be stated in one sentence. If it cannot, the chart has no function.</div>
+        </div>
+        <div class="principle-chip">
+          <div class="principle-chip-title">Exploratory vs. Explanatory</div>
+          <div class="principle-chip-body">Exploratory tools need interactivity and breadth; explanatory charts need focus and annotation. Design for the right mode.</div>
+        </div>
+        <div class="principle-chip">
+          <div class="principle-chip-title">Annotate Uncertainty</div>
+          <div class="principle-chip-body">Visual uncertainty conventions (error bars) are not universal. Always add a text label: "error bars = 95% CI" or equivalent.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── KNAFLIC ─────────────────────────────────────────────────── -->
+  <div class="viz-expert">
+    <div class="viz-expert-hdr" style="background:linear-gradient(135deg,#b05e1a,#d4821a)">
+      <div class="viz-expert-icon">📖</div>
+      <div>
+        <div class="viz-expert-name">Cole Nussbaumer Knaflic — Storytelling with Data (2015)</div>
+        <div class="viz-expert-affil">Google People Analytics alumni · practitioner educator</div>
+      </div>
+    </div>
+    <div class="viz-expert-body">
+      <p>Knaflic's contribution is translating the academic visualization canon into a repeatable practitioner process. Her six lessons — understand context, choose an appropriate display, eliminate clutter, draw attention where you want it, think like a designer, tell a story — form the most widely used framework in data communication practice outside academia.</p>
+      <p>Her <em>understand context</em> lesson begins with three questions that every ATLAS visualization designer should answer before drawing a single mark: Who is my audience? What do I need them to know or do? How will this visualization be used (passive viewing, active exploration, presentation)? The evidence quality display on the ATLAS dashboard serves a different context from the evidence card detail view: the former is scanned, the latter is read. They require different design responses even if they show the same data.</p>
+      <p>Her clutter elimination framework directly extends Tufte's data-ink principle into practice. She identifies the specific elements that most commonly create visual clutter in organizational dashboards: unnecessary borders (remove), gridlines (reduce or remove), data labels that duplicate axis positions (remove), default chart colors (replace with semantically meaningful palette), 3D effects (always remove), legends that can be replaced by direct labels (replace). This list is a checklist for any ATLAS dashboard audit.</p>
+      <p>Knaflic's most important practical insight for the ATLAS context is the power of <em>preattentive attributes</em> — visual properties that are processed before conscious attention: color, size, shape, motion, and position. When you want a reader's eye to go somewhere specific in a complex display, preattentive attributes are your tools. An evidence card that uses the same gray for everything gives the reader no entry point; an evidence card that uses a single accent color on the most important number (the effect size, the p-value) guides the eye immediately. The designer's job is to make the most important thing the most visually prominent thing, and to do so before the reader makes a conscious choice about where to look.</p>
+      <div class="principle-grid">
+        <div class="principle-chip">
+          <div class="principle-chip-title">Context First</div>
+          <div class="principle-chip-body">Who sees it? What should they do? How will they use it? Answer all three before designing a single element.</div>
+        </div>
+        <div class="principle-chip">
+          <div class="principle-chip-title">Preattentive Attributes</div>
+          <div class="principle-chip-body">Color, size, shape, and position are processed before attention. Use one accent color to guide the eye to the most important datum.</div>
+        </div>
+        <div class="principle-chip">
+          <div class="principle-chip-title">Clutter Elimination Checklist</div>
+          <div class="principle-chip-body">Remove: unnecessary borders, redundant gridlines, duplicate data labels, default colors, 3D effects, legends replaceable by direct labels.</div>
+        </div>
+        <div class="principle-chip">
+          <div class="principle-chip-title">Tell a Story</div>
+          <div class="principle-chip-body">Every visualization should have a headline that states the conclusion. "Evidence quality varies widely across topic areas" is a headline. "Figure 3" is not.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ── CHART CHOICE TABLE ─────────────────────────────────────── -->
+  <h2>Chart Choice for ATLAS Data Types</h2>
+  <p>The following applies the visualization canon to the specific data types ATLAS displays. The <span class="tag-good">USE</span> tags indicate chart types supported by the literature; <span class="tag-cond">CONDITIONAL</span> indicates appropriate only under specific conditions; <span class="tag-bad">AVOID</span> indicates chart types that the literature consistently argues produce lower accuracy or higher distortion for this data type.</p>
+
+  <table class="chart-table">
+    <thead>
+      <tr><th>ATLAS Data Type</th><th>Recommended Display</th><th>Avoid</th><th>Key Principle</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Effect sizes across studies</td>
+        <td><span class="tag-good">Forest plot</span> <span class="tag-good">Dot plot with CI</span> <span class="tag-good">Strip plot</span></td>
+        <td><span class="tag-bad">Bar chart (hides distribution)</span> <span class="tag-bad">Pie chart</span></td>
+        <td>Cleveland: position most accurate; show full CI, not just point estimate (Cairo)</td>
+      </tr>
+      <tr>
+        <td>Evidence quality ratings (single study)</td>
+        <td><span class="tag-good">Labeled icon array (criteria met/not)</span> <span class="tag-good">Horizontal bar (% criteria met)</span></td>
+        <td><span class="tag-bad">Traffic light only (hue = least accurate)</span> <span class="tag-bad">Radar chart</span></td>
+        <td>Cleveland: avoid hue for quantitative; Tufte: remove decorative color</td>
+      </tr>
+      <tr>
+        <td>Topic coverage distribution</td>
+        <td><span class="tag-good">Bar chart (sorted)</span> <span class="tag-good">Treemap</span></td>
+        <td><span class="tag-bad">Pie chart</span> <span class="tag-bad">3D bar chart</span></td>
+        <td>Cleveland: bars (length) outperform slices (angle) for comparison</td>
+      </tr>
+      <tr>
+        <td>Argument structure (warrant → claim)</td>
+        <td><span class="tag-good">Node-link diagram (DAG)</span> <span class="tag-good">Hierarchical indented list</span></td>
+        <td><span class="tag-bad">Undirected network graph (hides direction)</span></td>
+        <td>Cairo: functional purpose (show directionality of inference); preserve topology</td>
+      </tr>
+      <tr>
+        <td>Bayesian probability / credence</td>
+        <td><span class="tag-good">Probability density plot</span> <span class="tag-good">Horizontal bar with uncertainty band</span></td>
+        <td><span class="tag-bad">Single number without distribution</span> <span class="tag-bad">Gauge chart</span></td>
+        <td>Cairo: truthfulness requires showing the full distribution, not the point estimate</td>
+      </tr>
+      <tr>
+        <td>Student progress / completion rates</td>
+        <td><span class="tag-good">Progress bar (completion %)</span> <span class="tag-good">Simple count with total</span></td>
+        <td><span class="tag-bad">Pie chart</span> <span class="tag-bad">Animated gauge</span></td>
+        <td>Knaflic: preattentive — use position, not color hue, as primary indicator</td>
+      </tr>
+      <tr>
+        <td>Tag distribution across images</td>
+        <td><span class="tag-good">Histogram</span> <span class="tag-good">Box plot</span> <span class="tag-good">Violin plot</span></td>
+        <td><span class="tag-bad">Mean ± SD only (hides skew)</span></td>
+        <td>Tufte: small multiples across tag categories; show full distribution</td>
+      </tr>
+      <tr>
+        <td>Trend over time (article submissions)</td>
+        <td><span class="tag-good">Line chart (banked to 45°)</span> <span class="tag-good">Area chart</span></td>
+        <td><span class="tag-bad">Bar chart with too many time points</span></td>
+        <td>Cleveland: bank to 45° for accurate slope perception; connect the temporal sequence</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="sep"></div>
+
+  <!-- ── ANTI-PATTERNS ─────────────────────────────────────────── -->
+  <h2>Common Visualization Anti-Patterns in Research Dashboards</h2>
+  <p>The following anti-patterns are frequently found in academic and research tool interfaces. Each has a literature-grounded name, a description, and a fix. When you find these in ATLAS, cite the scholar whose principle they violate.</p>
+
+  <div class="antipattern-grid">
+    <div class="antipattern-card">
+      <div class="antipattern-name">Chartjunk Overload (Tufte)</div>
+      <div class="antipattern-desc">3D effects, drop shadows, gradient fills, and decorative borders on charts that convey data. Each element costs attention without yielding information.</div>
+      <span class="antipattern-fix">Fix: Strip all decoration. Test: can I remove this mark and lose no information?</span>
+    </div>
+    <div class="antipattern-card">
+      <div class="antipattern-name">Truncated Y-Axis (Cairo)</div>
+      <div class="antipattern-desc">Bar charts that do not start at zero exaggerate the visual difference between values. A difference of 5% looks like a difference of 50% when the axis starts at 95%.</div>
+      <span class="antipattern-fix">Fix: Start bar chart axes at zero. Use line charts (which can have non-zero baselines) for trend data.</span>
+    </div>
+    <div class="antipattern-card">
+      <div class="antipattern-name">Traffic Lights for Quantitative Data (Cleveland)</div>
+      <div class="antipattern-desc">Using green/yellow/red hue to encode evidence quality presents ordinal data as categorical and uses the least accurate visual channel for quantitative comparison.</div>
+      <span class="antipattern-fix">Fix: Use a bar or dot plot showing the actual score; add color as a secondary redundant cue, not the primary.</span>
+    </div>
+    <div class="antipattern-card">
+      <div class="antipattern-name">Point Estimate Without Uncertainty (Cairo)</div>
+      <div class="antipattern-desc">Displaying effect size as a single number (d = 0.43) without a confidence interval implies false precision. The interval is part of the finding.</div>
+      <span class="antipattern-fix">Fix: Always show d [95% CI: 0.18, 0.68] or equivalent. Use error bars or whisker plots.</span>
+    </div>
+    <div class="antipattern-card">
+      <div class="antipattern-name">Unlabeled Axes (Tufte, Knaflic)</div>
+      <div class="antipattern-desc">Axis labels that say "Value" or "Count" without specifying the unit force the reader to guess what they are reading. This is avoidable and unacceptable in a scientific tool.</div>
+      <span class="antipattern-fix">Fix: Every axis must state what it measures and in what units. "Effect size (Cohen's d)" not "Effect."</span>
+    </div>
+    <div class="antipattern-card">
+      <div class="antipattern-name">Pie Charts for Comparison (Cleveland)</div>
+      <div class="antipattern-desc">Comparing slice areas is among the least accurate perceptual tasks. Humans cannot accurately assess that one slice is 23% and another is 28%. A bar chart shows this comparison accurately.</div>
+      <span class="antipattern-fix">Fix: Replace every pie chart with a sorted horizontal bar chart. No exceptions for scientific data.</span>
+    </div>
+    <div class="antipattern-card">
+      <div class="antipattern-name">Dual Y-Axis (Cairo)</div>
+      <div class="antipattern-desc">Two variables on the same chart with different y-axis scales can make any correlation look strong or weak by adjusting the scale ratio. The reader cannot detect this manipulation.</div>
+      <span class="antipattern-fix">Fix: Show two variables in two separate panels (small multiples), sharing an x-axis, with independent y-axes.</span>
+    </div>
+    <div class="antipattern-card">
+      <div class="antipattern-name">Meaningless Color (Knaflic)</div>
+      <div class="antipattern-desc">Using a rainbow palette or random colors to distinguish categories imposes a false ordinal structure (warm colors "feel" higher than cool colors) on data that has no natural order.</div>
+      <span class="antipattern-fix">Fix: Use gray for all bars except the one you want the reader to focus on. Use a single accent color purposefully.</span>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ── ATLAS AUDIT CHECKLIST ──────────────────────────────────── -->
+  <h2>ATLAS Visualization Audit Checklist</h2>
+  <p>Use this checklist during your Phase 3 walkthrough for every data display you encounter — dashboard statistics, evidence cards, argument maps, probability assessments, progress indicators. Each item maps to a specific scholar and principle.</p>
+
+  <div class="audit-checklist">
+    <h4>Dashboard and Statistics Panels</h4>
+    <div class="checklist-item"><div class="ck-box"></div><div>Does every chart start its quantitative axis at zero (or justify why not)? [Cairo — truthfulness]</div></div>
+    <div class="checklist-item"><div class="ck-box"></div><div>Are effect sizes shown with confidence intervals, not as point estimates alone? [Cairo — truthfulness, uncertainty]</div></div>
+    <div class="checklist-item"><div class="ck-box"></div><div>Are all axes labeled with variable name and unit ("Effect size [Cohen's d]")? [Tufte — data-ink; Knaflic — context]</div></div>
+    <div class="checklist-item"><div class="ck-box"></div><div>Is color used semantically (green = good, red = problem) rather than decoratively? [Kennedy — color carries meaning]</div></div>
+    <div class="checklist-item"><div class="ck-box"></div><div>Can the page be read in grayscale without losing critical information? [WCAG accessibility + Kennedy]</div></div>
+    <div class="checklist-item"><div class="ck-box"></div><div>Are any pie charts present? (Flag all of them — replace with bar charts) [Cleveland — graphical perception hierarchy]</div></div>
+    <div class="checklist-item"><div class="ck-box"></div><div>Does the chart have a title or headline that states the conclusion, not just the topic? [Knaflic — tell a story]</div></div>
+    <div class="checklist-item"><div class="ck-box"></div><div>Are 3D effects, drop shadows, or gradient fills present on charts? (Flag as chartjunk) [Tufte]</div></div>
+  </div>
+
+  <div class="audit-checklist" style="border-left-color:#6b3fa0;background:#faf5ff">
+    <h4 style="color:#6b3fa0">Evidence Cards</h4>
+    <div class="checklist-item"><div class="ck-box"></div><div>Does the card show the effect size with its confidence interval? [Cairo]</div></div>
+    <div class="checklist-item"><div class="ck-box"></div><div>Is the study design (RCT, quasi-experiment, correlation) visible on the card? [Cleveland — compare like with like]</div></div>
+    <div class="checklist-item"><div class="ck-box"></div><div>Is the sample size and population shown? [Cairo — truthfulness about generalizability]</div></div>
+    <div class="checklist-item"><div class="ck-box"></div><div>Does the quality indicator use position/length (bar) rather than hue alone (traffic light)? [Cleveland]</div></div>
+    <div class="checklist-item"><div class="ck-box"></div><div>Is the most important datum (effect size, p-value) the most visually prominent element? [Knaflic — preattentive attributes]</div></div>
+    <div class="checklist-item"><div class="ck-box"></div><div>Are confidence intervals explained in text? ("Error bars = 95% CI") [Cairo — annotate uncertainty]</div></div>
+  </div>
+
+  <div class="audit-checklist" style="border-left-color:#2A5FA0;background:#eff6ff">
+    <h4 style="color:#2A5FA0">Argument Maps and Network Diagrams</h4>
+    <div class="checklist-item"><div class="ck-box"></div><div>Does the diagram make directionality of inference legible (arrows, left-to-right flow)? [Cairo — functional purpose]</div></div>
+    <div class="checklist-item"><div class="ck-box"></div><div>Are defeaters (evidence against the claim) visually distinguishable from supporters? [Cairo — truthfulness]</div></div>
+    <div class="checklist-item"><div class="ck-box"></div><div>Does edge thickness or weight encode something meaningful — or is it decorative? [Tufte — data-ink]</div></div>
+    <div class="checklist-item"><div class="ck-box"></div><div>Can the topology of the argument be read without zooming or scrolling? [Tufte — small multiples; Cleveland — legibility]</div></div>
+  </div>
+
+  <div class="callout callout-amber">
+    <strong>The epistemic stakes are high in this system</strong>
+    <p>ATLAS makes claims about the strength of scientific evidence. A visualization that misrepresents effect size confidence or presents contested findings as settled is not just a design failure — it is an epistemic failure. The visualization audit is therefore not an aesthetic exercise; it is an assessment of whether the data display honestly represents what the underlying evidence actually shows. Apply Cairo's truthfulness criterion first and Tufte's data-ink criterion second.</p>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- ── APA REFERENCES ─────────────────────────────────────────── -->
+  <h2>APA References</h2>
+  <ul class="ref-list">
+    <li>Cairo, A. (2012). <em>The functional art: An introduction to information graphics and visualization</em>. New Riders.</li>
+    <li>Cairo, A. (2016). <em>The truthful art: Data, charts, and maps for communication</em>. New Riders. https://www.amazon.com/Truthful-Art-Data-Charts-Communication/dp/0321934075</li>
+    <li>Cleveland, W. S. (1985). <em>The elements of graphing data</em>. Wadsworth.</li>
+    <li>Cleveland, W. S. (1993). <em>Visualizing data</em>. Hobart Press.</li>
+    <li>Cleveland, W. S., &amp; McGill, R. (1984). Graphical perception: Theory, experimentation, and application to the development of graphical methods. <em>Journal of the American Statistical Association, 79</em>(387), 531–554. https://doi.org/10.1080/01621459.1984.10478080</li>
+    <li>Knaflic, C. N. (2015). <em>Storytelling with data: A data visualization guide for business professionals</em>. Wiley. https://www.wiley.com/en-us/Storytelling+with+Data%3A+A+Data+Visualization+Guide+for+Business+Professionals-p-9781119002253</li>
+    <li>Schwabish, J. (2021). <em>Better data visualizations: A guide for scholars, researchers, and wonks</em>. Columbia University Press. https://cup.columbia.edu/book/better-data-visualizations/9780231193115</li>
+    <li>Tufte, E. R. (1983). <em>The visual display of quantitative information</em>. Graphics Press.</li>
+    <li>Tufte, E. R. (1990). <em>Envisioning information</em>. Graphics Press.</li>
+    <li>Tufte, E. R. (1997). <em>Visual explanations: Images and quantities, evidence and narrative</em>. Graphics Press.</li>
+    <li>Tufte, E. R. (2001). <em>The visual display of quantitative information</em> (2nd ed.). Graphics Press.</li>
+    <li>Ware, C. (2020). <em>Information visualization: Perception for design</em> (4th ed.). Morgan Kaufmann. https://doi.org/10.1016/C2019-0-01864-3</li>
+    <li>Wilkinson, L. (1999). <em>The grammar of graphics</em>. Springer. https://doi.org/10.1007/978-1-4757-3100-2</li>
+    <li>Wong, D. M. (2010). <em>The Wall Street Journal guide to information graphics: The dos and don'ts of presenting data, facts, and figures</em>. W. W. Norton.</li>
+  </ul>
+
+</div>
+</body>
+</html>

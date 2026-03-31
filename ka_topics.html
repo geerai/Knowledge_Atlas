@@ -451,7 +451,7 @@ nav a.active { color: #F5A623; }
       <option value="contributor">Contributor</option>
       <option value="instructor">Instructor</option>
       <option value="practitioner">Practitioner</option>
-      <option value="theory_mechanism_explorer">Theory + Mechanisms</option>
+      <option value="theory_mechanism_explorer">Theory Explorer</option>
     </select>
   </div>
 </nav>
@@ -1027,7 +1027,7 @@ async function initializeTopicsPage() {
       contributor: { sort: 'voi', category: 'all' },
       instructor: { sort: 'voi', category: 'Methodology' },
       practitioner: { sort: 'papers', category: 'Environmental' },
-      theory_mechanism_explorer: { sort: 'voi', category: 'Neuroscience' }
+      theory_mechanism_explorer: { sort: 'voi', category: 'all' }
     };
     const cfg = cfgMap[mode] || cfgMap.student_explorer;
 
@@ -1079,6 +1079,7 @@ window.KA_ABOUT_PAGE = {
 </script>
 <script src="ka_about_page.js"></script>
 <script src="ka_ui_fixes.js"></script>
+<script src="ka_route_cta.js"></script>
 
 </body>
 </html>

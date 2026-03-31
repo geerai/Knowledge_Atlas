@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COGS160 — Phase 3 Week 9: Bug Fixes and Success Conditions</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+         background:#f5f5f5;padding:20px;color:#222;line-height:1.65}
+    .container{max-width:980px;margin:0 auto;background:#fff;padding:48px;
+               box-shadow:0 2px 10px rgba(0,0,0,.08)}
+    .nav{display:flex;justify-content:space-between;align-items:center;
+         margin-bottom:32px;padding-bottom:16px;border-bottom:2px solid #2A5FA0}
+    .nav a{color:#2A5FA0;text-decoration:none;font-weight:600;font-size:.9rem}
+    .nav a:hover{text-decoration:underline}
+    .track-pill{background:#2A5FA0;color:#fff;padding:4px 14px;border-radius:20px;
+                font-size:.8rem;font-weight:700;letter-spacing:.5px}
+    header{margin-bottom:36px}
+    .week-label{font-size:.85rem;font-weight:700;color:#2A5FA0;text-transform:uppercase;
+                letter-spacing:1px;margin-bottom:6px}
+    h1{font-size:2rem;color:#182B49;font-weight:800;margin-bottom:8px;line-height:1.2}
+    .subtitle{font-size:1.05rem;color:#555;margin-bottom:20px}
+    .meta-row{display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;color:#777}
+    .meta-row span strong{color:#333}
+    h2{font-size:1.3rem;color:#182B49;font-weight:700;margin:40px 0 12px;
+       padding-bottom:6px;border-bottom:2px solid #2A5FA0}
+    h3{font-size:1.05rem;color:#2A5FA0;font-weight:700;margin:24px 0 8px}
+    p{margin-bottom:12px;color:#333;font-size:.95rem}
+    ul,ol{margin-left:1.4rem;margin-bottom:12px}
+    li{margin-bottom:5px;color:#333;font-size:.95rem}
+    code.inline{background:#f0ece8;color:#c0392b;padding:2px 6px;border-radius:3px;
+                font-size:.85rem;font-family:"JetBrains Mono","Courier New",monospace}
+    pre{background:#1e1e2e;color:#cdd6f4;border-radius:6px;padding:20px;
+        font-size:.82rem;line-height:1.6;overflow-x:auto;margin:12px 0}
+    .prompt{color:#7addb9}.comment-c{color:#6a9fb5}
+
+    .context-box{background:linear-gradient(135deg,#f0f7ff,#e8f0fe);border:1px solid #aed0ef;
+                 border-left:4px solid #2A5FA0;border-radius:6px;padding:20px 24px;margin-bottom:32px}
+    .context-box p{font-size:.95rem;color:#1a3d6a;margin-bottom:8px}
+    .warning-box{background:#fff8e1;border:1px solid #ffc107;border-left:4px solid #e65100;
+                 border-radius:6px;padding:16px 20px;margin:16px 0}
+    .warning-box p{margin:0;font-size:.9rem;color:#555}
+    .success-box{background:#f0fff4;border:1px solid #86efac;border-left:4px solid #166534;
+                 border-radius:6px;padding:16px 20px;margin:16px 0}
+    .success-box p{margin:0;font-size:.9rem;color:#555}
+
+    table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.88rem}
+    th{background:#182B49;color:#fff;padding:10px 14px;text-align:left;font-weight:700}
+    td{padding:9px 14px;border-bottom:1px solid #eee;color:#333;vertical-align:top}
+    tr:nth-child(even) td{background:#fafafa}
+
+    .deliverable-box{background:#fff3e0;border:2px solid #ff9800;border-radius:8px;
+                     padding:20px 24px;margin:24px 0}
+    .deliverable-box h3{color:#e65100;margin-top:0;margin-bottom:12px}
+
+    .sc-example{background:#1e2d3a;border-radius:8px;padding:20px 24px;margin:16px 0;
+                font-family:"JetBrains Mono","Courier New",monospace;font-size:.82rem;
+                color:#d4e6ef;line-height:1.7}
+    .sc-key{color:#7addb9;font-weight:700}
+    .sc-pass{color:#a6e3a1}
+    .sc-fail{color:#f38ba8}
+    .sc-note{color:#6a9fb5;font-style:italic}
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="nav">
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <a href="index.html">← All Tracks</a>
+      <a href="phase3_wk08.html">← Week 8: Walkthrough</a>
+      <a href="phase3_wk10.html">Week 10: Final →</a>
+    </div>
+    <span class="track-pill">PHASE 3 · ALL TRACKS</span>
+  </div>
+
+  <header>
+    <div class="week-label">Phase 3 · Week 9 · All Teams</div>
+    <h1>Bug Fixes and Success Conditions</h1>
+    <p class="subtitle">Work through the issues found in your Week 8 walkthrough. Fix what you can, document what you cannot. Write formal success conditions for each function in your section.</p>
+    <div class="meta-row">
+      <span><strong>Repo:</strong> Designing_Experiments</span>
+      <span><strong>Weight:</strong> 30% of final grade (cumulative Phase 3)</span>
+      <span><strong>Due Thu:</strong> Fixes committed, success_conditions.md pushed</span>
+    </div>
+  </header>
+
+  <div class="context-box">
+    <p><strong>This week has two parallel workstreams.</strong> First: work through your walkthrough log systematically, fixing every BLOCKING and MAJOR issue within your competence. Second: write success conditions — precise, testable statements — for every non-trivial function in your section. These two tasks reinforce each other: writing a success condition often reveals whether a function is actually working correctly.</p>
+  </div>
+
+  <h2>Workstream 1: Bug Fixes</h2>
+
+  <h3>Triage your walkthrough log</h3>
+  <p>Open <code class="inline">walkthrough_log.md</code> and categorise every observation by whether you can fix it this week:</p>
+
+  <table>
+    <tr>
+      <th>Category</th>
+      <th>Action</th>
+      <th>Examples</th>
+    </tr>
+    <tr>
+      <td><strong>Can fix now</strong></td>
+      <td>Fix it, commit, mark as RESOLVED in the log</td>
+      <td>Broken nav link, wrong file path, missing HTML element, typo in code</td>
+    </tr>
+    <tr>
+      <td><strong>Requires upstream change</strong></td>
+      <td>Open a GitHub issue on Tag-UCSD/Designing_Experiments; link it in the log</td>
+      <td>Missing page (wk04, wk06), feature that requires a new file, external tool not set up</td>
+    </tr>
+    <tr>
+      <td><strong>Out of scope</strong></td>
+      <td>Document in log as NOT-IN-SCOPE with explanation; note for Week 10 report</td>
+      <td>Issues that are intentional placeholders, not-yet-built features flagged as future work</td>
+    </tr>
+    <tr>
+      <td><strong>Needs instructor decision</strong></td>
+      <td>Flag with a question for David; bring to class Tuesday</td>
+      <td>Ambiguous requirements, conflicting design choices, scope that affects other sections</td>
+    </tr>
+  </table>
+
+  <h3>Git workflow for fixes</h3>
+
+  <p>Continue working on your Phase 3 branch. For each substantive fix, make a separate commit with a descriptive message:</p>
+
+  <pre><span class="comment-c"># Example commit workflow</span>
+<span class="prompt">$</span> git add docs/student_tracks/image_wk03_triage.html
+<span class="prompt">$</span> git commit -m "fix(section-A): restore broken nav link to image_tagger_guide.html"
+
+<span class="prompt">$</span> git add docs/student_tracks/af_setup_guide.html
+<span class="prompt">$</span> git commit -m "fix(section-A): correct Python venv activation command for Windows"
+
+<span class="prompt">$</span> git push origin phase3/section-A-audit-team-name</pre>
+
+  <div class="warning-box">
+    <p><strong>Do not modify pages outside your assigned section</strong> without first checking with the team that owns that section. If you notice an issue in another section, open a GitHub issue and assign it to them rather than committing a fix.</p>
+  </div>
+
+  <h2>Workstream 2: Writing Success Conditions</h2>
+
+  <p>A <em>success condition</em> is a precise, binary statement: given a specific input or user action, what must the page or function produce for it to be considered working correctly? Success conditions serve two purposes: they document what was intended, and they provide a test protocol that anyone can run to verify the function works.</p>
+
+  <h3>The success condition format</h3>
+
+  <p>Add to <code class="inline">docs/phase3_audit/section_X/success_conditions.md</code> using the following template for each function:</p>
+
+  <div class="sc-example">
+    <div><span class="sc-key">## SC-A-03: image_tag_table.html — Tag browser loads and filters correctly</span></div>
+    <div>&nbsp;</div>
+    <div><span class="sc-key">**Page**</span>: image_tag_table.html</div>
+    <div><span class="sc-key">**Function**</span>: Sortable tag browser with domain/from_2d/status filters and full-text search</div>
+    <div><span class="sc-key">**Precondition**</span>: File opened in any modern browser; no server required</div>
+    <div>&nbsp;</div>
+    <div><span class="sc-key">**PASS criteria**</span>:</div>
+    <div>  <span class="sc-pass">✓</span> Page loads without JS errors in browser console</div>
+    <div>  <span class="sc-pass">✓</span> All 424 rows are visible in the default view (confirmed via row count in UI)</div>
+    <div>  <span class="sc-pass">✓</span> Clicking "Domain" column header sorts tags alphabetically by domain</div>
+    <div>  <span class="sc-pass">✓</span> Clicking "Domain" again reverses the sort order</div>
+    <div>  <span class="sc-pass">✓</span> Selecting "from_2d = yes" in the filter dropdown reduces visible rows to ≤239</div>
+    <div>  <span class="sc-pass">✓</span> Typing "luminance" in the search box shows only tags whose canonical_name contains "luminance"</div>
+    <div>&nbsp;</div>
+    <div><span class="sc-key">**FAIL criteria**</span>:</div>
+    <div>  <span class="sc-fail">✗</span> Page loads but shows 0 rows (data array not embedded)</div>
+    <div>  <span class="sc-fail">✗</span> Sort click has no effect (JS event not wired)</div>
+    <div>  <span class="sc-fail">✗</span> Filter dropdown exists but does not change visible rows</div>
+    <div>&nbsp;</div>
+    <div><span class="sc-key">**Status as of Week 9**</span>: <span class="sc-pass">PASS</span> / <span class="sc-fail">FAIL</span> / PARTIAL (describe)</div>
+    <div><span class="sc-note"><!-- Fill in after testing --></span></div>
+  </div>
+
+  <h3>Which functions need success conditions?</h3>
+
+  <p>Every page in your section should have at least one success condition. Prioritise:</p>
+
+  <ol>
+    <li><strong>Interactive elements</strong>: any link, button, filter, sort control, or form</li>
+    <li><strong>Navigation</strong>: every nav link leads to the correct page</li>
+    <li><strong>Code examples</strong>: every terminal command in a code block produces the stated output when run</li>
+    <li><strong>External references</strong>: every referenced file, tool, or URL is accessible</li>
+    <li><strong>Content completeness</strong>: no section headed "TBD" or "coming soon" without an explicit NOTE that it is intentionally placeholder</li>
+  </ol>
+
+  <h3>Numbering convention</h3>
+
+  <p>Use <code class="inline">SC-[Section]-[NN]</code> where Section is A, B, C, or D and NN is a two-digit sequence number (SC-A-01, SC-A-02, …). This makes it easy to reference specific conditions in the Week 10 report.</p>
+
+  <h2>Optional: Sensor and Adaptive Psych Instrument Work</h2>
+
+  <p>Students interested in an alternative to the site-debugging work may instead work with David on one of two technical extensions:</p>
+
+  <ul>
+    <li><strong>Sensor hookup</strong>: integrating wearable physiological sensors (heart rate, EDA, or eye-tracking) with the ATLAS image-viewing interface to collect real psychophysiological data during VR exposure. This is an alternative track for Week 9 and 10 — speak with David in Week 8 to confirm your participation.</li>
+    <li><strong>Adaptive psychological instruments</strong>: designing or implementing a Q-sort, implicit association test, or adaptive preference survey to be embedded in the Fall COGS 160 site. Also an alternative track for the debugging work — speak with David in Week 8.</li>
+  </ul>
+
+  <div class="deliverable-box">
+    <h3>Week 9 Deliverables</h3>
+    <p><strong>Due: By end of Thursday class.</strong> Push to your Phase 3 audit branch:</p>
+    <ul style="margin-left:1.4rem;margin-top:8px">
+      <li><code class="inline">docs/phase3_audit/section_X/walkthrough_log.md</code> — every observation from Week 8 now has a status: RESOLVED, OPEN (with GitHub issue link), NOT-IN-SCOPE, or NEEDS-DECISION. Resolved items include the commit hash of the fix.</li>
+      <li><code class="inline">docs/phase3_audit/section_X/success_conditions.md</code> — at least one success condition per page in your section; each condition has all required fields and a current status (PASS/FAIL/PARTIAL)</li>
+      <li>Any fixed HTML/JS files committed directly to the branch</li>
+    </ul>
+    <p style="margin-top:10px"><strong>Grading (15 pts):</strong> 5 pts for bug fixes with clear commit messages; 7 pts for success conditions (completeness, precision, binary testability); 3 pts for updated walkthrough log with resolved/open status on every item.</p>
+  </div>
+
+  <hr style="margin:40px 0;border:none;border-top:1px solid #eee">
+  <p style="color:#777;font-size:.85rem;text-align:center">
+    COGS160: AI &amp; VR · UCSD · Prof. David Kirsh · Phase 3 Week 9 · 2026-03-29
+  </p>
+
+</div>
+</body>
+</html>

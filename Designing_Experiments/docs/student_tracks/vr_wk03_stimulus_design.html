@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COGS160: AI & VR — VR Track Week 3: Stimulus Design Planning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Navigation Bar */
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .nav-link {
+            color: #182B49;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 6px 10px;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: #f0f0f0;
+        }
+
+        .nav-center {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #182B49;
+            padding-bottom: 20px;
+        }
+
+        .breadcrumb {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #182B49;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Context Box */
+        .context-box {
+            background: linear-gradient(135deg, #f5f7fb 0%, #fff9f0 100%);
+            border: 2px solid #C69214;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .context-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #182B49;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #C69214;
+            padding-bottom: 8px;
+        }
+
+        .context-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .context-item-title {
+            font-weight: 700;
+            color: #182B49;
+            margin-bottom: 4px;
+        }
+
+        .context-item-text {
+            color: #555;
+        }
+
+        /* Learning Outcomes */
+        .learning-outcomes {
+            background: #f9f9f9;
+            border-left: 4px solid #2d7a4a;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #182B49;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .outcome-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .outcome-item {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .outcome-item:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #2d7a4a;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        /* Assignment Description */
+        .assignment-section {
+            margin-bottom: 30px;
+        }
+
+        .subsection-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #182B49;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
+        }
+
+        .assignment-text {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+
+        /* Sections List */
+        .sections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .section-box {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 14px;
+            border-left: 3px solid #C69214;
+        }
+
+        .section-number {
+            font-size: 11px;
+            font-weight: 700;
+            color: #C69214;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .section-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #182B49;
+            margin-bottom: 6px;
+        }
+
+        .section-desc {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Procedures */
+        .procedure-step {
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .procedure-step:last-child {
+            border-bottom: none;
+        }
+
+        .step-header {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .step-number {
+            min-width: 28px;
+            height: 28px;
+            background: #182B49;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .step-title {
+            font-weight: 700;
+            color: #182B49;
+            font-size: 13px;
+            flex: 1;
+            padding-top: 3px;
+        }
+
+        .step-details {
+            margin-left: 40px;
+            font-size: 12px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .sub-step {
+            margin-top: 8px;
+            padding-left: 12px;
+            position: relative;
+        }
+
+        .sub-step:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #C69214;
+            font-weight: bold;
+        }
+
+        /* AI Assistance Tips */
+        .ai-tips-box {
+            background: linear-gradient(135deg, #fef9e7 0%, #fff5f0 100%);
+            border: 2px dashed #C69214;
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 30px;
+        }
+
+        .ai-tips-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #182B49;
+            margin-bottom: 12px;
+        }
+
+        .ai-tip-item {
+            margin-bottom: 12px;
+            padding-left: 20px;
+            position: relative;
+            font-size: 12px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .ai-tip-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .ai-tip-item:before {
+            content: "🤖";
+            position: absolute;
+            left: 0;
+        }
+
+        .prompt-example {
+            background: white;
+            border-left: 3px solid #C69214;
+            padding: 10px;
+            margin-top: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: #333;
+            border-radius: 2px;
+        }
+
+        /* Deliverable Format */
+        .deliverable-box {
+            background: white;
+            border: 2px solid #182B49;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .deliverable-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #182B49;
+            margin-bottom: 14px;
+            border-bottom: 2px solid #182B49;
+            padding-bottom: 8px;
+        }
+
+        .format-spec {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+
+        .grading-criteria {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #ddd;
+        }
+
+        .criteria-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .criteria-item {
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .criteria-item:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #182B49;
+            font-weight: bold;
+        }
+
+        /* Time Estimate */
+        .time-estimate {
+            background: linear-gradient(135deg, #f5f7fb 0%, #f0fff5 100%);
+            border: 1px solid #2d7a4a;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 30px;
+            font-size: 13px;
+        }
+
+        .time-label {
+            font-weight: 700;
+            color: #182B49;
+            margin-bottom: 8px;
+        }
+
+        .time-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .time-item {
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .time-item-label {
+            font-weight: 600;
+            color: #2d7a4a;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .time-item-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: #182B49;
+        }
+
+        /* FAQs */
+        .faq-section {
+            margin-bottom: 30px;
+        }
+
+        .faq-item {
+            background: #f9f9f9;
+            border-left: 3px solid #C69214;
+            padding: 14px;
+            margin-bottom: 12px;
+            border-radius: 4px;
+        }
+
+        .faq-question {
+            font-weight: 700;
+            color: #182B49;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .faq-answer {
+            font-size: 12px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* Resources */
+        .resources-section {
+            margin-bottom: 30px;
+        }
+
+        .resource-category {
+            margin-bottom: 18px;
+        }
+
+        .resource-category-title {
+            font-weight: 700;
+            color: #182B49;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .resource-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .resource-item {
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .resource-item:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #C69214;
+            font-weight: bold;
+        }
+
+        .resource-link {
+            color: #2d7a4a;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .resource-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        .footer-section {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                max-width: 100%;
+                padding: 20px;
+                box-shadow: none;
+            }
+
+            h1 {
+                font-size: 24px;
+                page-break-after: avoid;
+            }
+
+            .nav-bar {
+                display: none;
+            }
+
+            .section-box,
+            .deliverable-box {
+                page-break-inside: avoid;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .nav-bar {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .sections-grid,
+            .context-grid,
+            .time-comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .step-details {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Bar -->
+        <div class="nav-bar">
+            <a href="vr_wk02_common.html" class="nav-link">← Week 2 (Common Class)</a>
+            <div class="nav-center">
+                <a href="vr_track_overview.html" class="nav-link">All Tracks & Weeks</a>
+            </div>
+            <a href="vr_wk04_production1.html" class="nav-link">Week 4 →</a>
+        </div>
+
+        <!-- Header -->
+        <header>
+            <div class="breadcrumb">VR Track • Week 3 of 10</div>
+            <h1>Stimulus Design Planning</h1>
+            <p class="subtitle">Literature Review, Apparatus Training, Stimulus Dimension Specification</p>
+        </header>
+
+        <!-- Context Box -->
+        <div class="context-box">
+            <div class="context-title">Where You Are in the Project</div>
+            <div class="context-grid">
+                <div>
+                    <div class="context-item-title">What Came Before</div>
+                    <div class="context-item-text">Week 1: Common class foundations (D0 due Mon night Week 2). You completed a literature search, annotated key papers, and wrote a D0 reflection identifying your design question.</div>
+                </div>
+                <div>
+                    <div class="context-item-title">This Week (Week 3)</div>
+                    <div class="context-item-text">You formalize your stimulus design: choose a dimension, identify literature evidence, specify ≥3 levels to test, create a held-constant list, write rationale, and predict preference functions.</div>
+                </div>
+                <div>
+                    <div class="context-item-title">What Comes Next</div>
+                    <div class="context-item-text">Weeks 4–5: Build the VR scenes (Sprints 1 & 2). Weeks 6–8: Run preference testing and analyze results. Weeks 9–10: Final integration & presentation.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Learning Outcomes -->
+        <div class="learning-outcomes">
+            <div class="section-title">Learning Outcomes</div>
+            <ul class="outcome-list">
+                <li class="outcome-item"><strong>Design Specification:</strong> Articulate a specific stimulus dimension (e.g., spatial openness, lighting quality) grounded in cognitive science or human factors literature, with a clear operational definition.</li>
+                <li class="outcome-item"><strong>Stimulus Levels:</strong> Identify ≥3 distinguishable levels of your dimension and justify the choice of levels based on literature and design constraints.</li>
+                <li class="outcome-item"><strong>Held-Constant Variables:</strong> List and justify all design parameters that will remain constant across stimulus levels to isolate the effect of your chosen dimension.</li>
+                <li class="outcome-item"><strong>Preference Prediction:</strong> Generate predictions about how participants' preferences will vary across stimulus levels, based on theory and prior findings.</li>
+            </ul>
+        </div>
+
+        <!-- Assignment Description -->
+        <div class="assignment-section">
+            <div class="section-title">The Stimulus Design Plan (D1)</div>
+            <p class="assignment-text">
+                This deliverable is a <strong>detailed specification</strong> of the VR scenes you will build in Weeks 4–5. It is <strong>not</strong> a literature review or essay; it is a structured design document that an engineer could use to build your scenes without ambiguity. It must include evidence from your literature search to justify each design choice.
+            </p>
+
+            <div class="subsection-title">D1 Must Include These 5 Sections</div>
+
+            <div class="sections-grid">
+                <div class="section-box">
+                    <div class="section-number">Section 1</div>
+                    <div class="section-name">Stimulus Dimension & Rationale</div>
+                    <div class="section-desc">Define your chosen dimension in one paragraph. Name ≥2 citations that support why this dimension matters for human perception or preference in your domain (e.g., lighting and attention, spatial openness and restoration). Be specific about the mechanism (e.g., "color temperature affects circadian arousal via melanopsin pathways").</div>
+                </div>
+
+                <div class="section-box">
+                    <div class="section-number">Section 2</div>
+                    <div class="section-name">Stimulus Levels & Operationalization</div>
+                    <div class="section-desc">List ≥3 levels of your dimension (e.g., cool daylight 5600K, warm incandescent 2700K, fluorescent 4000K). For each level, provide a specific, measurable description (units, values, asset names). This section is a checklist for your production team.</div>
+                </div>
+
+                <div class="section-box">
+                    <div class="section-number">Section 3</div>
+                    <div class="section-name">Held-Constant Parameters</div>
+                    <div class="section-desc">List all design variables that will NOT vary across your stimulus levels (e.g., room dimensions 4m × 4m × 3m, furniture set {table, chairs}, avatar presence yes/no, interaction mechanics). Format as a table. This ensures your dimension is isolated.</div>
+                </div>
+
+                <div class="section-box">
+                    <div class="section-number">Section 4</div>
+                    <div class="section-name">Design Rationale & Predicted Preference Function</div>
+                    <div class="section-desc">Explain why you predict participants will prefer one level over others. Ground prediction in theory (e.g., inverted-U function for arousal, linear for authenticity). Include a simple sketch or table showing predicted preference × stimulus level. What prior studies support your prediction?</div>
+                </div>
+
+                <div class="section-box">
+                    <div class="section-number">Section 5</div>
+                    <div class="section-name">Technical & Production Notes</div>
+                    <div class="section-desc">Briefly note any Unity assets, plugins, or rendering techniques you'll use to achieve each stimulus level (e.g., "HDRP Post-Process Volume for color temperature grading," "Quixel Megascans for plant assets"). This helps peers understand feasibility.</div>
+                </div>
+            </div>
+
+            <p class="assignment-text" style="margin-top: 20px;">
+                <strong>Suggested Length:</strong> 4–6 pages. <strong>Format:</strong> PDF, Word, or Google Doc. <strong>Due:</strong> End of Week 3 (class submission portal). <strong>Submit As:</strong> Team PDF named <code>D1_StimulusDesignPlan_[YourNames].pdf</code>
+            </p>
+        </div>
+
+        <!-- VR Apparatus Training -->
+        <div class="assignment-section">
+            <div class="section-title">Mandatory VR Apparatus Training</div>
+            <p class="assignment-text">
+                Before building or testing scenes, <strong>both students in your pair must complete VR apparatus training</strong> during a supervised lab session. Training covers safety, hardware operation, and motion control mechanics. This is non-negotiable. <strong>Attendance is required.</strong> If you miss the session, contact the TA to reschedule before Week 4.
+            </p>
+
+            <p class="assignment-text">
+                <strong>Topics covered:</strong>
+            </p>
+            <ul class="outcome-list">
+                <li class="outcome-item">Headset setup, strap adjustment, lens cleaning</li>
+                <li class="outcome-item">Motion controller operation and hand tracking</li>
+                <li class="outcome-item">Guardian boundary definition and safety protocols</li>
+                <li class="outcome-item">Nausea prevention strategies (locomotion speed, teleport vs. smooth movement)</li>
+                <li class="outcome-item">Building and deploying a simple test scene in Unity</li>
+            </ul>
+
+            <p class="assignment-text" style="margin-top: 12px;">
+                <strong>Lab Schedule:</strong> [Insert schedule from course site. Example: "Monday 2–4 PM, Wednesday 3–5 PM, Friday 1–3 PM, Room [X]"]
+            </p>
+        </div>
+
+        <!-- Step-by-Step Procedures -->
+        <div class="assignment-section">
+            <div class="section-title">Step-by-Step Workflow</div>
+
+            <div class="procedure-step">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Review Your D0 Reflection & Identify a Stimulus Dimension</div>
+                </div>
+                <div class="step-details">
+                    <p>Open the reflection you wrote in Week 2. What design question did you pose? What gap in the literature did you identify? Choose ONE dimension that directly addresses your question.</p>
+                    <div class="sub-step"><strong>Example:</strong> If your question was "Does restorativeness depend on spatial geometry?" choose "spatial openness" as your dimension.</div>
+                    <div class="sub-step">If unclear, discuss with your pair and TA this week (office hours).</div>
+                </div>
+            </div>
+
+            <div class="procedure-step">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Conduct Targeted Literature Search (AI-Assisted)</div>
+                </div>
+                <div class="step-details">
+                    <p>Build on your Week 2 search. Use Google Scholar to find papers specifically about your chosen dimension. Look for:</p>
+                    <div class="sub-step">Empirical studies testing your dimension in lab or field settings</div>
+                    <div class="sub-step">Psychophysical measurement papers (e.g., how to quantify color temperature, spatial scale)</div>
+                    <div class="sub-step">Prior VR/3D visualization studies on the same dimension</div>
+                    <p style="margin-top: 10px;"><strong>Target:</strong> ≥5 new papers, at least 2 empirical studies.</p>
+                </div>
+            </div>
+
+            <div class="procedure-step">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Define Stimulus Levels (with AI Assistance)</div>
+                </div>
+                <div class="step-details">
+                    <p>Using literature + domain knowledge, decide on ≥3 levels of your dimension. Each level must be:</p>
+                    <div class="sub-step"><strong>Operationalized</strong>: Expressed in measurable units (e.g., "2700K–3000K warm," "5600K–6500K cool")</div>
+                    <div class="sub-step"><strong>Distinguishable</strong>: Visually or perceptually different enough that humans notice</div>
+                    <div class="sub-step"><strong>Feasible</strong>: Can be implemented in Unity without excessive complexity</div>
+                    <p style="margin-top: 10px;"><strong>Example Levels for Lighting Quality:</strong></p>
+                    <div class="sub-step">Level 1 (Cool): 5600K daylight, diffuse (overcast sky), no visible shadows</div>
+                    <div class="sub-step">Level 2 (Neutral): 4000K (fluorescent), moderate directional light, soft shadows</div>
+                    <div class="sub-step">Level 3 (Warm): 2700K incandescent, strong directional source, sharp shadows</div>
+                </div>
+            </div>
+
+            <div class="procedure-step">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Create a Held-Constant Checklist (with AI Assistance)</div>
+                </div>
+                <div class="step-details">
+                    <p>List every design variable in your scenes that will NOT change across stimulus levels. This isolates your dimension and ensures comparability. Use a table format:</p>
+                    <div style="background: #f0f0f0; padding: 10px; margin-top: 8px; border-radius: 4px; font-family: monospace; font-size: 11px;">
+<pre>Variable              | Value / Constraint
+Room dimensions       | 4m (W) × 4m (D) × 3m (H)
+Base furniture        | 1 table (2m × 1m), 4 chairs, 1 bookcase
+Flooring material     | Light oak hardwood
+Avatar presence       | Yes (default avatar, no customization)
+Interaction mechanic  | Teleport locomotion only (no smooth movement)
+Sound                 | Ambient background (35 dB SPL constant)
+Temporal setting      | Daytime (implied from lighting)</pre>
+                    </div>
+                    <div class="sub-step" style="margin-top: 10px;">Think broadly: geometry, materials, objects, interactivity, audio, temporal context, weather/sky.</div>
+                </div>
+            </div>
+
+            <div class="procedure-step">
+                <div class="step-header">
+                    <div class="step-number">5</div>
+                    <div class="step-title">Draft Design Rationale & Prediction</div>
+                </div>
+                <div class="step-details">
+                    <p>Write 1–2 paragraphs (with AI help) explaining:</p>
+                    <div class="sub-step"><strong>Why this dimension matters:</strong> What does literature say about its psychological or perceptual effects?</div>
+                    <div class="sub-step"><strong>Your prediction:</strong> How will preference vary across your levels? (linear increase, inverted U, threshold effect?)</div>
+                    <div class="sub-step"><strong>Citation support:</strong> Name ≥2 studies that support your prediction.</div>
+                    <p style="margin-top: 10px;"><strong>Example (Spatial Openness):</strong> "We predict an inverted-U function: moderate spatial openness (semi-open room) will maximize restoration ratings compared to enclosed corridor or fully open atrium. This aligns with Kaplan & Kaplan's (1989) information-rate theory: environments with moderate complexity and visual depth optimize attentional recovery."</p>
+                </div>
+            </div>
+
+            <div class="procedure-step">
+                <div class="step-header">
+                    <div class="step-number">6</div>
+                    <div class="step-title">Identify Assets & Tools You'll Use (Brief Technical Section)</div>
+                </div>
+                <div class="step-details">
+                    <p>List Unity plugins, asset libraries, or rendering techniques that will enable your stimulus levels. Be specific:</p>
+                    <div class="sub-step"><strong>For Lighting:</strong> HDRP (High Definition Render Pipeline) + Post-Process Volume (for color temperature grading), or Colorgrading LUT textures</div>
+                    <div class="sub-step"><strong>For Spatial Geometry:</strong> ProBuilder (built-in geometry tool) or custom meshes from Blender</div>
+                    <div class="sub-step"><strong>For Biophilic Content:</strong> Quixel Megascans (free in-engine plant library), or SpeedTree for vegetation</div>
+                    <p style="margin-top: 10px;">Research feasibility. Do you have licenses? Do tutorials exist? Can your pair learn the tool in 2–3 days? If a tool is too hard, pivot to a simpler alternative.</p>
+                </div>
+            </div>
+
+            <div class="procedure-step">
+                <div class="step-header">
+                    <div class="step-number">7</div>
+                    <div class="step-title">Attend Mandatory VR Training Lab Session</div>
+                </div>
+                <div class="step-details">
+                    <p>Schedule and attend during lab hours (see section above). Complete all training modules. Take notes on motion control, safety, and build/deploy mechanics—you'll need this for production starting Week 4.</p>
+                </div>
+            </div>
+
+            <div class="procedure-step">
+                <div class="step-header">
+                    <div class="step-number">8</div>
+                    <div class="step-title">Assemble D1 & Submit</div>
+                </div>
+                <div class="step-details">
+                    <p>Compile Sections 1–5 into a PDF or shared Google Doc. Check that all sections are complete, citations are present, and technical notes are feasible. Submit to the course portal by end of day Friday.</p>
+                    <div class="sub-step">Use a consistent format (headings, tables, figures where helpful).</div>
+                    <div class="sub-step">Have your pair review before submission (peer check).</div>
+                    <div class="sub-step">Filename: <code>D1_StimulusDesignPlan_[LastName1]_[LastName2].pdf</code></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Assistance Tips -->
+        <div class="ai-tips-box">
+            <div class="ai-tips-title">Where AI Tools Help Most This Week</div>
+
+            <div class="ai-tip-item">
+                <strong>Literature Evidence Review & Citation Synthesis:</strong> Use Claude or ChatGPT to accelerate your search results analysis. Paste abstracts and ask the tool to summarize the effect sizes, sample sizes, and key findings. This cuts reading time from 4 hrs to 1.5 hrs.
+                <div class="prompt-example">"I found these 3 papers on lighting and mood. Summarize the main finding, effect size, and sample size for each. Which studies are most robust?"</div>
+            </div>
+
+            <div class="ai-tip-item">
+                <strong>Held-Constant Checklist Creation:</strong> AI is excellent at generating comprehensive checklists. Describe your scene concept, and ask the tool to propose a held-constant list. You'll refine it, but this saves 30 minutes of brainstorming.
+                <div class="prompt-example">"I'm designing VR scenes to test spatial openness (enclosed vs. semi-open vs. fully open). What variables must I hold constant to isolate that effect?"</div>
+            </div>
+
+            <div class="ai-tip-item">
+                <strong>Design Rationale & Prediction Writing:</strong> Once you have outline notes, use AI to draft your 1–2 paragraph rationale. Give the tool your stimulus levels, predicted preference function, and 2–3 key citations. Edit the output for accuracy and clarity (AI often overstates certainty—watch for that).
+                <div class="prompt-example">"Write a design rationale for why I predict preference will be highest for moderate spatial openness (semi-open room) compared to enclosed and fully open. Here are my key sources: [paste citations]."</div>
+            </div>
+
+            <div class="ai-tip-item">
+                <strong>Technical Feasibility Assessment:</strong> Ask AI whether your chosen dimension and tools are realistic for a 2-student, 2-week production sprint. AI can flag potential pitfalls (e.g., "Advanced Shader Graph color temperature grading has a steep learning curve; consider using simpler Post-Process Volume adjustment + LUT instead").
+                <div class="prompt-example">"Can a pair of students with no Unity experience build 5 VR scenes with varying color temperatures in 2 weeks using HDRP? What's the fastest path?"</div>
+            </div>
+
+            <div class="ai-tip-item">
+                <strong>Format & Structure Checking:</strong> Before submitting D1, use AI as a proofreader. Paste your draft and ask it to flag missing sections, unclear operationalizations, or unsupported claims. This ensures D1 is complete and professional.
+                <div class="prompt-example">"Review this D1 outline against the 5-section rubric. Are all sections present? Is the held-constant list comprehensive?"</div>
+            </div>
+        </div>
+
+        <!-- Deliverable Format -->
+        <div class="deliverable-box">
+            <div class="deliverable-title">D1 Deliverable Format & Grading</div>
+
+            <div class="format-spec">
+                <strong>Submit as:</strong> PDF or shared Google Doc (read-only link provided to instructors)<br>
+                <strong>Length:</strong> 4–6 pages<br>
+                <strong>Due Date:</strong> End of Week 3 (Friday 11:59 PM)<br>
+                <strong>Submission Portal:</strong> [Course LMS link]
+            </div>
+
+            <div class="grading-criteria">
+                <strong style="font-size: 13px;">You will be graded on these 4 criteria:</strong>
+                <ul class="criteria-list">
+                    <li class="criteria-item"><strong>Clarity & Completeness (25%):</strong> All 5 sections present and well-organized. Stimulus dimension is clearly defined and operationalized. Held-constant list is comprehensive and realistic.</li>
+                    <li class="criteria-item"><strong>Literature Grounding (25%):</strong> Design choices backed by ≥2 empirical studies. Effect sizes or key findings cited. Rationale shows understanding of why the dimension matters.</li>
+                    <li class="criteria-item"><strong>Feasibility & Technical Appropriateness (25%):</strong> Stimulus levels are distinguishable and implementable in Unity. Assets and tools identified are available and learnable. No unrealistic scope creep.</li>
+                    <li class="criteria-item"><strong>Prediction Justification (25%):</strong> Preference prediction is explicit and grounded in theory or prior work. Predicted function (linear, inverted-U, threshold) is justified with citations.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Time Estimate -->
+        <div class="time-estimate">
+            <div class="time-label">Time Investment This Week</div>
+            <div class="time-comparison">
+                <div class="time-item">
+                    <div class="time-item-label">Traditional (Without AI)</div>
+                    <div class="time-item-value">≈ 12 hours</div>
+                    <div style="font-size: 11px; color: #666; margin-top: 4px;">4 hrs literature search, 3 hrs design decisions, 2 hrs writing, 1.5 hrs revision, 1.5 hrs assembly</div>
+                </div>
+                <div class="time-item">
+                    <div class="time-item-label">With AI Pair-Working</div>
+                    <div class="time-item-value">≈ 1.7 hours</div>
+                    <div style="font-size: 11px; color: #666; margin-top: 4px;">50 min lit review + AI synthesis, 30 min design spec, 20 min writing draft + revision, 10 min final assembly</div>
+                </div>
+            </div>
+            <p style="margin-top: 12px; font-size: 12px; color: #555; line-height: 1.6;">
+                <strong>Note:</strong> The time estimate assumes you've already completed Week 2 literature search and attended VR training. If VR training is rescheduled or you're significantly behind on research, add 2–3 hours. Working with a pair halves individual contribution; communicating within the pair takes ~30 min.
+            </p>
+        </div>
+
+        <!-- FAQs -->
+        <div class="faq-section">
+            <div class="section-title">Frequently Asked Questions</div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q: Can I change my stimulus dimension after Week 3?</div>
+                <div class="faq-answer">A: It's possible but costly. If you realize your dimension is infeasible or uninteresting by mid-Week 3, talk to the TA immediately. You can pivot, but you'll lose 1–2 days of progress. Best to commit by Thursday so you enter production Week 4 confidently.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q: How many literature citations do I really need for D1?</div>
+                <div class="faq-answer">A: Minimum: 3 citations (1 for why the dimension matters, ≥2 for your prediction). Ideal: 5–7, showing you engaged deeply with the literature. Quality beats quantity—understand what you cite, not just find papers that mention keywords.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q: What if I don't know Unity yet? Can I still design scenes?</div>
+                <div class="faq-answer">A: Absolutely. This week is design and planning; implementation happens in Weeks 4–5. Use this week to learn Unity basics (see Resources). The VR training lab covers fundamentals. By Week 4, you'll be ready to build.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q: How detailed should my technical notes section be?</div>
+                <div class="faq-answer">A: Detailed enough that another student could understand what tools you'll use, but not so detailed that you're writing code. 1–2 paragraphs naming assets, plugins, and rendering techniques is perfect. Save implementation details for Week 4 design documents.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Q: Can our pair do different stimulus dimensions?</div>
+                <div class="faq-answer">A: No. Your pair chooses one dimension and builds all scenes together. This ensures you develop shared expertise and produce coherent scenes. The course structure gives each 3-person track a different dimension (see VR Track Overview), so you're not duplicating work.</div>
+            </div>
+        </div>
+
+        <!-- Resources -->
+        <div class="resources-section">
+            <div class="section-title">Resources & Links</div>
+
+            <div class="resource-category">
+                <div class="resource-category-title">Unity Basics & VR Development</div>
+                <ul class="resource-list">
+                    <li class="resource-item">
+                        <a href="https://learn.unity.com/tutorial/part-1-essentials" class="resource-link">Unity Learn: Essentials Track (Part 1)</a>
+                        <span style="color: #999;"> — Official Unity intro, 4–6 hours</span>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://learn.unity.com/project/oculus-xr-plugin-setup" class="resource-link">Meta (Oculus) XR Plugin Setup Tutorial</a>
+                        <span style="color: #999;"> — Required if using Meta Quest headsets</span>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://www.youtube.com/watch?v=6d8XpAUmOK4" class="resource-link">YouTube: VR Scene Building in Unity (15 min video)</a>
+                        <span style="color: #999;"> — Fast practical walkthrough</span>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://docs.unity3d.com/Manual/HDRP-Getting-started.html" class="resource-link">Unity HDRP Manual: Getting Started</a>
+                        <span style="color: #999;"> — For advanced lighting (color temperature grading)</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="resource-category">
+                <div class="resource-category-title">Stimulus Dimension Literature & Guides</div>
+                <ul class="resource-list">
+                    <li class="resource-item">
+                        <a href="https://scholar.google.com" class="resource-link">Google Scholar</a>
+                        <span style="color: #999;"> — Primary source for papers on your dimension</span>
+                    </li>
+                    <li class="resource-item">
+                        Kaplan, S., & Kaplan, R. (1989). The Experience of Nature: A Psychological Perspective. Cambridge University Press.
+                        <span style="color: #999;"> — Essential for spatial openness & restorativeness; check library reserves</span>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://www.cie.co.at" class="resource-link">CIE (International Commission on Illumination)</a>
+                        <span style="color: #999;"> — Standards for color temperature, lighting quality; free technical reports</span>
+                    </li>
+                    <li class="resource-item">
+                        Appleton, J. (1975). The Experience of Landscape. Wiley.
+                        <span style="color: #999;"> — Prospect-refuge theory; relevant for spatial geometry & biophilic design</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="resource-category">
+                <div class="resource-category-title">VR Assets & Tools</div>
+                <ul class="resource-list">
+                    <li class="resource-item">
+                        <a href="https://quixel.com/megascans" class="resource-link">Quixel Megascans</a>
+                        <span style="color: #999;"> — Free plant, material, environment assets (Epic Games account required; in-engine library)</span>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sketchfab.com" class="resource-link">Sketchfab</a>
+                        <span style="color: #999;"> — 3D model library (filter by license: free, commercial use allowed)</span>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://www.blender.org" class="resource-link">Blender (Free & Open Source)</a>
+                        <span style="color: #999;"> — For custom geometry if needed; has VR rendering support</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="resource-category">
+                <div class="resource-category-title">VR Safety & Best Practices</div>
+                <ul class="resource-list">
+                    <li class="resource-item">
+                        <a href="https://www.vrhealth.institute" class="resource-link">VR Health Institute</a>
+                        <span style="color: #999;"> — Cybersickness mitigation strategies</span>
+                    </li>
+                    <li class="resource-item">
+                        Meta/Oculus Documentation: <a href="https://developer.oculus.com/documentation/native/android/mobile-design/" class="resource-link">Best Practices for Mobile VR Design</a>
+                        <span style="color: #999;"> — Includes comfort recommendations</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="resource-category">
+                <div class="resource-category-title">Writing & Scientific Communication</div>
+                <ul class="resource-list">
+                    <li class="resource-item">
+                        <a href="https://www.apa.org/science/about/psa/writing/biased-language" class="resource-link">APA Writing Guide: Avoiding Biased Language</a>
+                        <span style="color: #999;"> — Keep D1 precise and neutral</span>
+                    </li>
+                    <li class="resource-item">
+                        Pinker, S. (2014). The Sense of Style. Penguin.
+                        <span style="color: #999;"> — For clear, concise prose in your rationale sections</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-section">
+            <p>COGS160: AI & VR | VR Track | Week 3 Module</p>
+            <p style="margin-top: 6px;">Stimulus Design Planning & Literature Specification</p>
+            <p style="margin-top: 6px; font-size: 11px;">Generated 2026-03-28 | For Students</p>
+        </div>
+    </div>
+</body>
+</html>

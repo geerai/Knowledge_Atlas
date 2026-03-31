@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COGS160 — Phase 3 Week 10: Final Walkthroughs and Hand-Off</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+         background:#f5f5f5;padding:20px;color:#222;line-height:1.65}
+    .container{max-width:980px;margin:0 auto;background:#fff;padding:48px;
+               box-shadow:0 2px 10px rgba(0,0,0,.08)}
+    .nav{display:flex;justify-content:space-between;align-items:center;
+         margin-bottom:32px;padding-bottom:16px;border-bottom:2px solid #2A5FA0}
+    .nav a{color:#2A5FA0;text-decoration:none;font-weight:600;font-size:.9rem}
+    .nav a:hover{text-decoration:underline}
+    .track-pill{background:#166534;color:#fff;padding:4px 14px;border-radius:20px;
+                font-size:.8rem;font-weight:700;letter-spacing:.5px}
+    header{margin-bottom:36px}
+    .week-label{font-size:.85rem;font-weight:700;color:#166534;text-transform:uppercase;
+                letter-spacing:1px;margin-bottom:6px}
+    h1{font-size:2rem;color:#182B49;font-weight:800;margin-bottom:8px;line-height:1.2}
+    .subtitle{font-size:1.05rem;color:#555;margin-bottom:20px}
+    .meta-row{display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;color:#777}
+    .meta-row span strong{color:#333}
+    h2{font-size:1.3rem;color:#182B49;font-weight:700;margin:40px 0 12px;
+       padding-bottom:6px;border-bottom:2px solid #166534}
+    h3{font-size:1.05rem;color:#166534;font-weight:700;margin:24px 0 8px}
+    p{margin-bottom:12px;color:#333;font-size:.95rem}
+    ul,ol{margin-left:1.4rem;margin-bottom:12px}
+    li{margin-bottom:5px;color:#333;font-size:.95rem}
+    code.inline{background:#f0ece8;color:#c0392b;padding:2px 6px;border-radius:3px;
+                font-size:.85rem;font-family:"JetBrains Mono","Courier New",monospace}
+    pre{background:#1e1e2e;color:#cdd6f4;border-radius:6px;padding:20px;
+        font-size:.82rem;line-height:1.6;overflow-x:auto;margin:12px 0}
+    .prompt{color:#7addb9}.comment-c{color:#6a9fb5}
+
+    .context-box{background:#f0fff4;border:1px solid #86efac;
+                 border-left:4px solid #166534;border-radius:6px;padding:20px 24px;margin-bottom:32px}
+    .context-box p{font-size:.95rem;color:#0e3d20;margin-bottom:8px}
+
+    table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.88rem}
+    th{background:#182B49;color:#fff;padding:10px 14px;text-align:left;font-weight:700}
+    td{padding:9px 14px;border-bottom:1px solid #eee;color:#333;vertical-align:top}
+    tr:nth-child(even) td{background:#fafafa}
+
+    .deliverable-box{background:#fff3e0;border:2px solid #ff9800;border-radius:8px;
+                     padding:20px 24px;margin:24px 0}
+    .deliverable-box h3{color:#e65100;margin-top:0;margin-bottom:12px}
+
+    .final-grade-box{background:#182B49;color:#fff;border-radius:10px;padding:28px 32px;margin:32px 0}
+    .final-grade-box h3{color:#F5A623;margin-bottom:16px;font-size:1.1rem}
+    .grade-row{display:flex;justify-content:space-between;padding:8px 0;
+               border-bottom:1px solid rgba(255,255,255,.1);font-size:.9rem}
+    .grade-row:last-child{border-bottom:none}
+    .grade-row span:last-child{font-weight:700;color:#F5A623}
+
+    .presentation-card{border:2px solid #166534;border-radius:8px;overflow:hidden;margin:20px 0}
+    .presentation-card-header{background:#166534;color:#fff;padding:12px 20px}
+    .presentation-card-header h4{color:#fff;margin:0}
+    .presentation-card-body{padding:16px 20px}
+    .presentation-card-body li{font-size:.9rem}
+
+    .pr-steps{background:#f8f9fa;border:1px solid #dee2e6;border-radius:8px;padding:20px;margin:16px 0}
+    .pr-steps h4{color:#182B49;margin-bottom:12px}
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="nav">
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <a href="index.html">← All Tracks</a>
+      <a href="phase3_wk08.html">Week 8: Walkthrough</a>
+      <a href="phase3_wk09.html">← Week 9: Bug Fixes</a>
+    </div>
+    <span class="track-pill">PHASE 3 · FINAL WEEK</span>
+  </div>
+
+  <header>
+    <div class="week-label">Phase 3 · Week 10 · Final Week · All Teams</div>
+    <h1>Final Walkthroughs, Hand-Off Report, and Presentations</h1>
+    <p class="subtitle">Re-run the simulation on the now-partially-debugged site. Write the hand-off document. Present your section to the class. Open a PR to the upstream repo.</p>
+    <div class="meta-row">
+      <span><strong>Repo:</strong> Designing_Experiments</span>
+      <span><strong>Due Tue:</strong> Re-walkthrough complete, PR opened</span>
+      <span><strong>Due Thu:</strong> Final hand-off report pushed; in-class presentation (5–8 min)</span>
+    </div>
+  </header>
+
+  <div class="context-box">
+    <p><strong>The test of whether your work was meaningful is the re-walkthrough.</strong> In Week 8 you documented what was broken. In Week 9 you fixed what you could. Now you repeat the simulation from scratch — fresh eyes — and measure the difference. If a naïve Fall student can now navigate your section without the obstacles you documented, your contribution is real. If they still cannot, you know precisely what remains and why.</p>
+    <p>The hand-off document is what the Fall instructor receives. It is the artefact that outlives your participation in this project.</p>
+  </div>
+
+  <h2>Tuesday: Second Student Simulation Walkthrough</h2>
+
+  <p>Repeat the exact same walkthrough protocol you used in Week 8. Start at the track overview page for your section. Attempt every task without using knowledge from Weeks 8–9. Use a fresh browser tab with no localStorage or session state from your development work.</p>
+
+  <h3>Re-walkthrough log</h3>
+  <p>Create a new file: <code class="inline">docs/phase3_audit/section_X/re_walkthrough_log.md</code>. Use the same observation format as Week 8. After completing the re-walkthrough, produce a comparison table at the top of the file:</p>
+
+  <table>
+    <tr><th>Metric</th><th>Week 8</th><th>Week 10</th><th>Notes</th></tr>
+    <tr><td>Total observations logged</td><td>—</td><td>—</td><td></td></tr>
+    <tr><td>BLOCKING issues</td><td>—</td><td>—</td><td></td></tr>
+    <tr><td>MAJOR issues</td><td>—</td><td>—</td><td></td></tr>
+    <tr><td>MINOR issues</td><td>—</td><td>—</td><td></td></tr>
+    <tr><td>MISSING content items</td><td>—</td><td>—</td><td></td></tr>
+    <tr><td>Pages fully functional (all SC PASS)</td><td>—</td><td>—</td><td></td></tr>
+    <tr><td>Pages with remaining open issues</td><td>—</td><td>—</td><td></td></tr>
+  </table>
+
+  <p>This comparison table is the most important table in your final report. It shows what changed.</p>
+
+  <h2>Tuesday–Thursday: The Hand-Off Document</h2>
+
+  <p>Create <code class="inline">docs/phase3_audit/section_X/HANDOFF_REPORT.md</code>. This document is addressed to the Fall 2026 instructor who will use the Designing_Experiments site with a new cohort of students. Its purpose is to tell them exactly what state the site is in, what works, what does not, and what would need to happen to complete any unfinished items.</p>
+
+  <h3>Required sections of the hand-off report</h3>
+
+  <ol>
+    <li>
+      <strong>Section overview</strong> (1–2 paragraphs): what this section of the site is supposed to do, which pages are included, and which student track it serves.
+    </li>
+    <li>
+      <strong>State of the site as of Week 10</strong>: a table listing every page in the section with its current functional status and the most important open issue (if any).
+    </li>
+    <li>
+      <strong>What we fixed</strong>: a list of every fix committed during Weeks 9–10, with commit hash and a one-sentence description of the problem that was resolved.
+    </li>
+    <li>
+      <strong>What remains open</strong>: every issue that was not resolved, with severity, the reason it was not fixed, and a recommendation for the Fall instructor (fix before Week N, defer to later, or intentional placeholder).
+    </li>
+    <li>
+      <strong>Success conditions</strong>: copy or link to your <code class="inline">success_conditions.md</code>. The Fall instructor uses these to verify the site works before the quarter starts.
+    </li>
+    <li>
+      <strong>Recommendations for improvement</strong>: the three or four most impactful changes that would improve the student experience — beyond bug fixes, into pedagogical or design improvements.
+    </li>
+  </ol>
+
+  <h2>Thursday: In-Class Presentation</h2>
+
+  <div class="presentation-card">
+    <div class="presentation-card-header"><h4>Presentation format: 5–8 minutes + 2 minutes Q&amp;A</h4></div>
+    <div class="presentation-card-body">
+      <p style="margin-bottom:10px">Cover the following points in order — you do not need slides, but a live browser demo is encouraged:</p>
+      <ol>
+        <li>What section were you assigned? What is it supposed to do?</li>
+        <li>What were the three most critical issues you found in Week 8?</li>
+        <li>Which of those did you fix? Show the diff in GitHub or in the browser.</li>
+        <li>What is still broken, and why was it not fixed?</li>
+        <li>What does the comparison table show — how much better is the section now?</li>
+        <li>What is your top recommendation for whoever works on this section next?</li>
+      </ol>
+    </div>
+  </div>
+
+  <h2>Opening the Pull Request</h2>
+
+  <p>Before Thursday class, open a PR from your Phase 3 branch to the upstream <code class="inline">Tag-UCSD/Designing_Experiments</code> main branch. This is how your fixes enter the canonical site.</p>
+
+  <div class="pr-steps">
+    <h4>PR checklist</h4>
+    <ul>
+      <li>Branch pushed to your fork: <code class="inline">git push origin phase3/section-X-audit-team-name</code></li>
+      <li>All commits have clear messages referencing the issue they fix</li>
+      <li><code class="inline">docs/phase3_audit/section_X/</code> folder contains: walkthrough_log.md, re_walkthrough_log.md, success_conditions.md, HANDOFF_REPORT.md</li>
+      <li>PR title: <code class="inline">[Phase 3] Section X audit and fixes — Team Name</code></li>
+      <li>PR description includes: summary of changes, comparison table (W8 vs W10 issue counts), link to HANDOFF_REPORT.md</li>
+      <li>No modifications to pages outside your assigned section (unless with instructor permission and explicit note in PR description)</li>
+    </ul>
+  </div>
+
+  <pre><span class="comment-c"># Final push before opening PR</span>
+<span class="prompt">$</span> git add docs/phase3_audit/section_X/
+<span class="prompt">$</span> git add docs/student_tracks/  <span class="comment-c"># any fixed pages</span>
+<span class="prompt">$</span> git commit -m "phase3(section-X): final hand-off report and re-walkthrough log"
+<span class="prompt">$</span> git push origin phase3/section-X-audit-team-name
+<span class="comment-c"># Then go to github.com/YOUR-USERNAME/Designing_Experiments
+# and open Compare &amp; Pull Request</span></pre>
+
+  <div class="deliverable-box">
+    <h3>Week 10 Deliverables</h3>
+    <p><strong>Due Tuesday:</strong> Re-walkthrough log pushed to branch, PR opened.</p>
+    <p style="margin-top:8px"><strong>Due Thursday (before class):</strong> HANDOFF_REPORT.md pushed to branch.</p>
+    <p style="margin-top:8px"><strong>Thursday in class:</strong> 5–8 minute presentation.</p>
+    <p style="margin-top:10px"><strong>Grading (25 pts):</strong> 8 pts for re-walkthrough log with comparison table; 10 pts for hand-off report (completeness, specificity, usefulness to Fall instructor); 7 pts for in-class presentation (clarity, evidence of genuine testing, honest assessment of what remains open).</p>
+  </div>
+
+  <!-- Phase 3 grade summary -->
+  <div class="final-grade-box">
+    <h3>Phase 3 Grade Summary (Weeks 8–10)</h3>
+    <div class="grade-row">
+      <span>Week 8 — Walkthrough log (10 obs. min., severity ratings, README)</span>
+      <span>10 pts</span>
+    </div>
+    <div class="grade-row">
+      <span>Week 9 — Bug fixes + success conditions + updated log</span>
+      <span>15 pts</span>
+    </div>
+    <div class="grade-row">
+      <span>Week 10 — Re-walkthrough + hand-off report + presentation</span>
+      <span>25 pts</span>
+    </div>
+    <div class="grade-row" style="border-top:2px solid rgba(255,255,255,.3);margin-top:8px;padding-top:12px">
+      <span>Phase 3 total</span>
+      <span>50 pts (20% of course grade)</span>
+    </div>
+  </div>
+
+  <hr style="margin:40px 0;border:none;border-top:1px solid #eee">
+  <p style="color:#777;font-size:.85rem;text-align:center">
+    COGS160: AI &amp; VR · UCSD · Prof. David Kirsh · Phase 3 Week 10 · 2026-03-29
+  </p>
+
+</div>
+</body>
+</html>

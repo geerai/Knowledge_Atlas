@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COGS160: AI & VR — VR Track Week 5 – Production Sprint 2 + Preference Testing Setup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #182B49 0%, #1a4d7a 100%);
+            color: white;
+            padding: 2.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            margin-bottom: 1rem;
+        }
+
+        nav.top-nav {
+            background: #182B49;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            border-bottom: 3px solid #2a8fcc;
+        }
+
+        nav.top-nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav.top-nav a:hover {
+            color: #2a8fcc;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        section {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        section h2 {
+            color: #182B49;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid #2a8fcc;
+        }
+
+        section h3 {
+            color: #2a8fcc;
+            font-size: 1.3rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .context-box {
+            background: linear-gradient(135deg, #e8f4f8 0%, #f0f8fc 100%);
+            border-left: 4px solid #2a8fcc;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+        }
+
+        .learning-outcomes {
+            background: linear-gradient(135deg, #f0f8fc 0%, #e8f4f8 100%);
+            border-left: 4px solid #2a8fcc;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .learning-outcomes ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .learning-outcomes li {
+            padding: 0.5rem 0 0.5rem 2rem;
+            position: relative;
+        }
+
+        .learning-outcomes li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #2a8fcc;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .procedure {
+            background: #fafbfc;
+            border: 1px solid #e0e6ed;
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .procedure h4 {
+            color: #182B49;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: #2a8fcc;
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .procedure p, .procedure ul {
+            margin-left: 1rem;
+        }
+
+        .procedure ul {
+            list-style: disc;
+            padding-left: 2rem;
+        }
+
+        .procedure li {
+            margin: 0.5rem 0;
+        }
+
+        .checklist {
+            background: #fafbfc;
+            border: 1px solid #e0e6ed;
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .checklist h4 {
+            color: #182B49;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .checklist ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            padding: 0.75rem 0 0.75rem 2rem;
+            position: relative;
+            background: white;
+            margin-bottom: 0.5rem;
+            border-radius: 3px;
+            border-left: 3px solid #2a8fcc;
+            padding-left: 1.5rem;
+        }
+
+        .checklist li:before {
+            content: "□";
+            position: absolute;
+            left: 0.5rem;
+            color: #2a8fcc;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .milestone {
+            background: linear-gradient(135deg, #e8f8f0 0%, #f0fcf8 100%);
+            border-left: 4px solid #16a085;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .milestone h4 {
+            color: #16a085;
+            margin-bottom: 0.5rem;
+        }
+
+        .ai-tips {
+            background: linear-gradient(135deg, #fff9e6 0%, #fffaed 100%);
+            border-left: 4px solid #f39c12;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .ai-tips h4 {
+            color: #d68910;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ai-tips ul {
+            list-style: disc;
+            padding-left: 2rem;
+            margin-top: 0.75rem;
+        }
+
+        .ai-tips li {
+            margin: 0.5rem 0;
+        }
+
+        .time-estimate {
+            background: linear-gradient(135deg, #f0e6ff 0%, #f8f0ff 100%);
+            border-left: 4px solid #8e44ad;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .time-estimate h4 {
+            color: #7d3c98;
+            margin-bottom: 0.75rem;
+        }
+
+        .time-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e0d5f0;
+        }
+
+        .time-row:last-child {
+            border-bottom: none;
+        }
+
+        .time-label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .time-value {
+            color: #7d3c98;
+            font-weight: bold;
+        }
+
+        .faq-section {
+            margin: 1.5rem 0;
+        }
+
+        .faq-item {
+            margin-bottom: 1.25rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            color: #182B49;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .faq-question:before {
+            content: "Q";
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: #2a8fcc;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .faq-answer {
+            color: #2c3e50;
+            padding-left: 2.5rem;
+            line-height: 1.7;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .resource-card {
+            background: #fafbfc;
+            border: 1px solid #e0e6ed;
+            border-radius: 6px;
+            padding: 1.25rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(42, 143, 204, 0.15);
+        }
+
+        .resource-card h4 {
+            color: #182B49;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .resource-card p {
+            color: #555;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .resource-card a {
+            color: #2a8fcc;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .resource-card a:hover {
+            color: #182B49;
+        }
+
+        footer {
+            background: #182B49;
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+        }
+
+        .rubric-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .rubric-table th {
+            background: #182B49;
+            color: white;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .rubric-table td {
+            border: 1px solid #e0e6ed;
+            padding: 0.75rem;
+        }
+
+        .rubric-table tr:nth-child(even) {
+            background: #f9fafb;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            nav.top-nav {
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .resources-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>VR Track – Week 5: Production Sprint 2 + Preference Testing Setup</h1>
+        <p>Completing Your Stimulus Set and Piloting Preference Testing</p>
+    </div>
+
+    <nav class="top-nav">
+        <a href="vr_wk04_production.html">← Week 4</a>
+        <a href="index.html">All Tracks</a>
+        <a href="vr_wk06_validation.html">Week 6 →</a>
+    </nav>
+
+    <div class="container">
+        <!-- Context Section -->
+        <section>
+            <h2>Context & Input/Output</h2>
+            <div class="context-box">
+                <strong>Input:</strong> Three completed scenes (Scenes 1, 3, 5) from Week 4, plus your D1 Design Plan specifying all stimulus dimensions and confound controls.
+            </div>
+            <div class="context-box">
+                <strong>Output:</strong> D2 Stimulus Set—a complete, validated set of ≥5 scenes with documented assets, pilot preference testing data, and participant instructions. This deliverable is worth 15% of your final grade.
+            </div>
+            <p style="margin-top: 1.5rem;">
+                Week 5 completes your stimulus artifact. You build the remaining scenes (Scenes 2 and 4, filling gaps in your design dimension), verify asset integrity across all scenes, set up the adaptive preference testing protocol, and conduct one pilot run with an internal participant. By Friday end-of-week, D2 is submitted and your data pipeline is validated.
+            </p>
+        </section>
+
+        <!-- Learning Outcomes -->
+        <section>
+            <h2>Learning Outcomes</h2>
+            <div class="learning-outcomes">
+                <ul>
+                    <li>Complete a validated ≥5-scene stimulus set that passes the design checklist from D1</li>
+                    <li>Verify asset integrity across all scenes (no missing textures, consistent lighting, reproducible settings)</li>
+                    <li>Configure and deploy an adaptive paired-comparison preference testing protocol</li>
+                    <li>Conduct a pilot run with internal participant and verify data recording works end-to-end</li>
+                    <li>Document stimulus dimensions and asset inventory for reproducibility and replication</li>
+                    <li>Interpret early pilot data and validate algorithmic updates during preference testing</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Assignment: D2 -->
+        <section>
+            <h2>Deliverable: D2 Stimulus Set (15% of Final Grade)</h2>
+            <p style="margin-bottom: 1.5rem;">
+                D2 is a complete, validated stimulus set submitted as a Git repository archive or shared drive folder. It must contain:
+            </p>
+            <div class="checklist">
+                <h4>D2 Submission Requirements</h4>
+                <ul>
+                    <li><strong>All scene files linked or committed</strong> — Full Unity project or scene export, verifiable by TAs</li>
+                    <li><strong>Asset manifest</strong> — Spreadsheet listing every texture, model, prefab, and light setting with file paths and version control info</li>
+                    <li><strong>15 standardized screenshots</strong> — 3 camera positions per scene × 5 scenes, PNG format, full resolution</li>
+                    <li><strong>Pilot preference data</strong> — One complete session recorded as CSV with all required columns (see Step 6 below)</li>
+                    <li><strong>Participant instructions</strong> — Plain English, ≤1 page, no jargon, covers informed consent summary + task description</li>
+                    <li><strong>Brief QA notes</strong> — 1-2 pages documenting confound audit results, data quality, and any issues encountered during pilot</li>
+                </ul>
+            </div>
+            <h3>Grading Rubric (D2: 15%)</h3>
+            <table class="rubric-table">
+                <tr>
+                    <th>Criterion</th>
+                    <th>Weight</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td><strong>Scene Completeness</strong></td>
+                    <td>30%</td>
+                    <td>All ≥5 scenes built, loadable, with 3 screenshots each. Proper versioning and naming.</td>
+                </tr>
+                <tr>
+                    <td><strong>Design Fidelity</strong></td>
+                    <td>30%</td>
+                    <td>Each scene matches your D1 specification: stimulus dimension operationalized correctly, confounds documented and minimal.</td>
+                </tr>
+                <tr>
+                    <td><strong>Asset Integrity</strong></td>
+                    <td>20%</td>
+                    <td>All texture files present, lighting consistent, no broken references. Asset manifest is complete and accurate.</td>
+                </tr>
+                <tr>
+                    <td><strong>Successful Pilot Run</strong></td>
+                    <td>20%</td>
+                    <td>Pilot data recorded correctly, algorithm updated between trials, instructions clear and followed by participant.</td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- Detailed Procedures -->
+        <section>
+            <h2>Step-by-Step Procedures</h2>
+
+            <div class="procedure">
+                <h4><span class="step-number">1</span> Build Remaining Scenes (Scenes 2 and 4)</h4>
+                <p>Create the intermediate stimulus levels that fill gaps between your Week 4 scenes (1, 3, 5).</p>
+                <ul>
+                    <li><strong>Scene 2 (Low-Mid):</strong> Position this scene between Scene 1 (low) and Scene 3 (mid). If your dimension is clutter on a 1–10 scale, Scene 1 = 2, Scene 3 = 5, then Scene 2 ≈ 3–4. Adjust all relevant properties proportionally.</li>
+                    <li><strong>Scene 4 (Mid-High):</strong> Similarly positioned between Scene 3 (mid) and Scene 5 (high). If Scene 3 = 5 and Scene 5 = 10, Scene 4 ≈ 7–8.</li>
+                    <li><strong>Reuse and Modify:</strong> Use the same base assets and lighting rig from earlier scenes. Only adjust the properties that vary your stimulus dimension. Maintain the same camera position (0, 1.7, 0) and lighting setup.</li>
+                    <li><strong>Version Control:</strong> Save as <code>Scene_02_Level_LowMid_v01.unity</code> and <code>Scene_04_Level_MidHigh_v01.unity</code></li>
+                    <li><strong>Timing:</strong> ~1–2 hours per scene (faster than Week 4 because you reuse components)</li>
+                </ul>
+            </div>
+
+            <div class="procedure">
+                <h4><span class="step-number">2</span> Asset Verification Sweep</h4>
+                <p>Verify that all texture files, models, and lighting assets are present and correctly referenced across all five scenes.</p>
+                <ul>
+                    <li><strong>Manual Check:</strong> Open all 5 scenes in Unity. For each scene, check the Inspector for broken assets (red X icons or missing component warnings).</li>
+                    <li><strong>Automated Script:</strong> AI can help you write a Python or bash script to verify file existence. Example request: "I have a Unity project with scenes referencing textures in Assets/Textures/. Write a script to check if all referenced files exist and report missing ones."</li>
+                    <li><strong>Texture Audit:</strong> Create a folder <code>Documentation/AssetManifest/</code> with a spreadsheet listing:
+                        <ul style="list-style: lower-alpha; margin-left: 1.5rem;">
+                            <li>Asset filename (e.g., <code>Desk_Oak_v02.fbx</code>)</li>
+                            <li>File path in project (e.g., <code>Assets/Models/Furniture/</code>)</li>
+                            <li>Used in scenes (e.g., "Scenes 1, 2, 3, 5")</li>
+                            <li>Status: OK / MISSING / DEPRECATED</li>
+                        </ul>
+                    </li>
+                    <li><strong>Lighting Parameters:</strong> Document each scene's lighting: key light intensity, fill light intensity, back light intensity, light color (hex or temperature), shadow distance. Create a table for quick reference.</li>
+                    <li><strong>Consistency Check:</strong> Confirm lighting parameters are identical across all scenes (unless lighting variation is your stimulus dimension).</li>
+                </ul>
+            </div>
+
+            <div class="procedure">
+                <h4><span class="step-number">3</span> Cross-Scene Consistency Check</h4>
+                <p>Verify that all five scenes maintain visual consistency and that stimulus variation is clear and intentional.</p>
+                <ul>
+                    <li><strong>Side-by-Side Review:</strong> If possible, open all 5 scenes in a split-screen or use a multi-monitor setup to compare them simultaneously. If not, take all 15 screenshots and view them as a contact sheet.</li>
+                    <li><strong>Checklist:</strong>
+                        <ul style="list-style: lower-alpha; margin-left: 1.5rem;">
+                            <li>Do all scenes have the same ground plane and background?</li>
+                            <li>Does the target stimulus dimension increase/decrease smoothly and consistently across scenes?</li>
+                            <li>Are there any unintended visual differences (e.g., color shifts, shadow differences, reflectivity changes)?</li>
+                            <li>Are all objects properly positioned (no floating, no clipping through geometry)?</li>
+                            <li>Is the level of detail and asset quality consistent?</li>
+                        </ul>
+                    </li>
+                    <li><strong>Screenshot Comparison:</strong> Use the same three camera positions for all five scenes (Front, Right Side, Elevated Corner). Compare each position across all scenes.</li>
+                    <li><strong>Confound Audit (Part 2):</strong> Revisit the confound audit from Week 4. Update it now with all five scenes. Flag any confounds and document their severity (low/medium/high).</li>
+                </ul>
+            </div>
+
+            <div class="procedure">
+                <h4><span class="step-number">4</span> Write Participant Instructions</h4>
+                <p>Create clear, plain-English instructions for your pilot participant. This becomes part of D2.</p>
+                <ul>
+                    <li><strong>Length:</strong> ≤1 page (500–700 words)</li>
+                    <li><strong>Sections:</strong>
+                        <ul style="list-style: lower-alpha; margin-left: 1.5rem;">
+                            <li><strong>Study Overview:</strong> "In this study, you will view pairs of 3D virtual scenes side-by-side and indicate which one you prefer."</li>
+                            <li><strong>Informed Consent Summary:</strong> Acknowledge that participation is voluntary, data is anonymized, they can withdraw at any time. (Full consent form is separate; this is a summary.)</li>
+                            <li><strong>What They'll See:</strong> "You will see 10 pairs of scenes. Each pair appears on screen for as long as you need. You have no time limit."</li>
+                            <li><strong>How to Make Comparisons:</strong> "Indicate your preference by clicking a button or pressing a key (clearly specify which). You may think aloud or stay silent—either is fine."</li>
+                            <li><strong>No Jargon:</strong> Avoid words like "stimulus," "adaptive," "algorithm," "confound." Use everyday language.</li>
+                            <li><strong>Reassurance:</strong> "There are no right or wrong answers. We're interested in your honest preference."</li>
+                        </ul>
+                    </li>
+                    <li><strong>Example Prompt for AI:</strong> "I'm studying preference for visual clutter in VR scenes. Write one-page participant instructions for a paired-comparison study. Include informed consent summary, what they'll see, how to respond, and reassurance. Use no jargon."</li>
+                </ul>
+            </div>
+
+            <div class="procedure">
+                <h4><span class="step-number">5</span> Configure the Preference Testing Protocol</h4>
+                <p>Set up your adaptive paired-comparison testing software or script. Define the trial sequence and data recording structure.</p>
+                <ul>
+                    <li><strong>Trial Sequence:</strong>
+                        <ul style="list-style: lower-alpha; margin-left: 1.5rem;">
+                            <li><strong>Familiarization (2 trials):</strong> Show two random pairs to acclimate the participant. Discard these responses from analysis.</li>
+                            <li><strong>Adaptive Main Trials (8–10 trials):</strong> Use an adaptive algorithm (e.g., Bradley-Terry, Thurstonian) to select pairs based on participant responses. If participant strongly prefers scenes A and B over others, the algorithm will probe boundary pairs (e.g., A vs. a medium scene).</li>
+                            <li><strong>Total Session Time:</strong> ~10–15 minutes</li>
+                        </ul>
+                    </li>
+                    <li><strong>Algorithm Not Yet Available?</strong> If your lab's adaptive algorithm isn't ready, use a fixed sequence of all possible pairs (non-adaptive). Document this as a limitation in your QA notes. Example: "All 10 possible pairs (Scene 1 vs 2, 1 vs 3, ..., 4 vs 5) presented in random order."</li>
+                    <li><strong>Data Recording Structure:</strong> Configure output to write a CSV file with these columns:
+                        <ul style="list-style: lower-alpha; margin-left: 1.5rem;">
+                            <li><code>participant_id</code> — Unique identifier (e.g., "Pilot_001")</li>
+                            <li><code>trial_num</code> — Sequential trial number (1–10)</li>
+                            <li><code>scene_A_id</code> — Identifier of left/first scene (e.g., "Scene_01")</li>
+                            <li><code>scene_B_id</code> — Identifier of right/second scene</li>
+                            <li><code>choice</code> — Participant's choice (A or B)</li>
+                            <li><code>response_time_ms</code> — Milliseconds from stimulus onset to response</li>
+                            <li><code>algorithm_state_json</code> — JSON string with algorithm's internal state after this trial (e.g., Bradley-Terry preference scores, confidence bounds)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Testing Software Options:</strong> PsychoPy, OpenSesame, or a custom Python script using Pygame/Panda3D for scene rendering. Consult course resources or lab documentation for your lab's preferred tool.</li>
+                </ul>
+            </div>
+
+            <div class="procedure">
+                <h4><span class="step-number">6</span> Configure Data Recording</h4>
+                <p>Set up automated logging to ensure data is recorded reliably during the pilot session.</p>
+                <ul>
+                    <li><strong>CSV Output Path:</strong> Define where the data file will be saved, e.g., <code>Data/Pilot_001.csv</code> with a timestamp in the filename (e.g., <code>Pilot_001_20260317_1430.csv</code>)</li>
+                    <li><strong>Verify Columns:</strong> Before running the pilot, manually test the data recording. Run a practice trial and confirm the CSV file is created with all expected columns.</li>
+                    <li><strong>Algorithm State Logging:</strong> If you're using an adaptive algorithm, ensure its internal state (e.g., Bradley-Terry preference estimates, confidence intervals) is logged after each trial. This allows you to verify the algorithm updated correctly.</li>
+                    <li><strong>Backup Recording:</strong> Also save a timestamped text log with informal notes (e.g., "Trial 3: participant said 'Scene 2 felt too cluttered'"). This qualitative data enriches interpretation.</li>
+                    <li><strong>Test Run:</strong> Run a dry run without a real participant, stepping through all 10 trials automatically, and verify the CSV has all 10 rows with correct data.</li>
+                </ul>
+            </div>
+
+            <div class="procedure">
+                <h4><span class="step-number">7</span> Conduct Pilot Run with Internal Participant</h4>
+                <p>Recruit a labmate or friend and run the full preference testing protocol. This validates the data pipeline.</p>
+                <ul>
+                    <li><strong>Participant Recruitment:</strong> You (the experimenter) can be the participant, or recruit a labmate who hasn't seen your scenes before. Aim for someone unfamiliar with your hypothesis.</li>
+                    <li><strong>Setup:</strong> Run the protocol in a quiet space with stable lighting. Use a standard display or VR headset (depending on your stimuli format—real-time VR or rendered images).</li>
+                    <li><strong>Session Flow:</strong>
+                        <ul style="list-style: lower-alpha; margin-left: 1.5rem;">
+                            <li>Greet participant; hand them the instructions; answer clarification questions</li>
+                            <li>Run 2 familiarization trials (discard data)</li>
+                            <li>Run 8–10 adaptive or fixed-sequence trials (record data)</li>
+                            <li>Debrief: ask "Did the scenes feel different to you? How?" Jot down qualitative observations</li>
+                        </ul>
+                    </li>
+                    <li><strong>Duration:</strong> ~15 minutes total</li>
+                    <li><strong>Data Verification:</strong> Immediately after the session, check:
+                        <ul style="list-style: lower-alpha; margin-left: 1.5rem;">
+                            <li>Is the CSV file created and saved correctly?</li>
+                            <li>Are all rows present (10 data trials + header)?</li>
+                            <li>Do response times look reasonable (~1–5 seconds per trial)?</li>
+                            <li>If using an adaptive algorithm, did its estimates update after each trial? (Print the algorithm_state_json column and inspect.)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Issues Encountered:</strong> Document any problems: software crashes, missing data columns, algorithm errors, participant confusion about instructions. Note all in your QA report.</li>
+                </ul>
+            </div>
+
+            <div class="procedure">
+                <h4><span class="step-number">8</span> Assemble D2 Submission Package</h4>
+                <p>Organize all required files and commit to Git or shared drive.</p>
+                <ul>
+                    <li><strong>Folder Structure:</strong>
+                        <ul style="list-style: lower-alpha; margin-left: 1.5rem;">
+                            <li><code>D2_Stimulus_Set/</code> (root)</li>
+                            <li><code>├── Scenes/</code> (all five .unity scene files, or exported .fbx/.obj assets)</li>
+                            <li><code>├── Documentation/</code></li>
+                            <li><code>│   ├── AssetManifest.xlsx</code> (or .csv)</li>
+                            <li><code>│   ├── Screenshots/</code> (15 PNG files, organized by scene)</li>
+                            <li><code>│   ├── ParticipantInstructions.pdf</code> (or .txt)</li>
+                            <li><code>│   └── ConfoundAudit.md</code> (checklist results)</li>
+                            <li><code>├── Data/</code></li>
+                            <li><code>│   └── Pilot_001.csv</code> (preference testing data)</li>
+                            <li><code>└── QA_Report.md</code> (brief summary of confound audit, data quality, issues)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Commit to Git:</strong> If your lab uses version control, commit all files with a message: <code>git commit -m "D2 Submission: ≥5 stimulus set + pilot preference data"</code> and push to the shared repository.</li>
+                    <li><strong>Alternative (Shared Drive):</strong> If not using Git, create a folder on Google Drive or institutional storage, share with your instructor, and note the link in your submission.</li>
+                    <li><strong>Verification Checklist:</strong>
+                        <ul style="list-style: lower-alpha; margin-left: 1.5rem;">
+                            <li>All 5 scene files present and loadable</li>
+                            <li>All 15 screenshots taken and stored</li>
+                            <li>Asset manifest complete and accurate</li>
+                            <li>Participant instructions ≤1 page, plain language</li>
+                            <li>Pilot CSV data recorded with all required columns</li>
+                            <li>Confound audit documented</li>
+                            <li>QA notes written (1–2 pages)</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- AI Assistance Tips -->
+        <section>
+            <h2>Using AI Assistance</h2>
+            <div class="ai-tips">
+                <h4>💡 How AI Can Help (and What It Cannot)</h4>
+                <p style="margin-top: 0.75rem;">
+                    AI cannot build your scenes or run the pilot session for you. However, it excels at documentation, scripting, and systematic analysis:
+                </p>
+                <ul>
+                    <li><strong>Participant Instructions:</strong> Describe your study briefly (dimension, what they'll see, response mechanism). Ask AI: "Write clear, jargon-free participant instructions for this study..." AI generates a draft in minutes; you edit and finalize.</li>
+                    <li><strong>Asset Verification Script:</strong> Ask AI: "I have a Unity project with scene files in Assets/. Write a Python script to check if all texture files referenced in the scenes actually exist on disk. Report missing files." AI generates the script; you run it and interpret results.</li>
+                    <li><strong>QA Notes & Confound Audit Report:</strong> After your pilot session, paste your asset manifest, screenshots, and design spec into Claude. Ask: "Here's my stimulus set. Do you see any confounds I should document? Any data quality issues from my pilot CSV?" AI performs systematic analysis and generates a structured report.</li>
+                    <li><strong>Data Interpretation:</strong> Paste your pilot CSV and ask: "Here's my algorithm's Bradley-Terry estimates after 8 trials. Is this behavior what I'd expect? Are the preference scores converging?" AI can help validate algorithmic updates.</li>
+                    <li><strong>Spreadsheet/CSV Generation:</strong> Ask AI: "Generate an Excel template for an asset manifest with columns: [filename, path, scenes used, status]. Make it 5 rows of example data." AI generates a template you can fill in.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Expected Progress Milestone -->
+        <section>
+            <h2>Expected Progress Milestone</h2>
+            <div class="milestone">
+                <h4>✓ D2 Submission (Graded, 15% of Final Grade)</h4>
+                <p style="margin-top: 0.75rem;">
+                    D2 is due by end of business Friday of Week 5. Submit a single folder or Git repository containing:
+                </p>
+                <ul style="margin-top: 1rem; padding-left: 2rem; list-style: disc;">
+                    <li>All ≥5 scene files and assets</li>
+                    <li>Asset manifest (complete and accurate)</li>
+                    <li>15 standardized screenshots (3 per scene)</li>
+                    <li>One pilot session's preference testing data (CSV)</li>
+                    <li>Participant instructions (≤1 page, plain language)</li>
+                    <li>Confound audit document and QA notes (1–2 pages)</li>
+                </ul>
+                <p style="margin-top: 1rem;">
+                    Your TA will review for completeness, fidelity to your D1 specification, asset integrity, and successful pilot data recording. Grading focuses on the four rubric criteria listed in the D2 section above.
+                </p>
+            </div>
+        </section>
+
+        <!-- Time Estimate -->
+        <section>
+            <h2>Time Estimate</h2>
+            <div class="time-estimate">
+                <h4>Traditional Approach vs. with AI Assistance</h4>
+                <div style="margin-top: 1rem;">
+                    <div class="time-row">
+                        <span class="time-label">Traditional (per pair):</span>
+                        <span class="time-value">~18 hours</span>
+                    </div>
+                    <div class="time-row">
+                        <span class="time-label">With AI Assistance:</span>
+                        <span class="time-value">~4 hours per pair</span>
+                    </div>
+                </div>
+                <p style="margin-top: 1.25rem; font-size: 0.95rem; color: #555;">
+                    <strong>Breakdown with AI:</strong> ~2 hours building Scenes 2 and 4 (manual, requires Unity interaction) + ~30 min asset verification (AI script helps, you run it) + ~30 min participant instructions (AI drafts, you review) + ~1 hour conducting pilot session (manual, required) + ~1 hour assembling D2 package and writing QA notes (AI assists with analysis and report generation). AI saves ~2 hours on documentation and scripting; the core work (building scenes, running pilot) cannot be compressed.
+                </p>
+            </div>
+        </section>
+
+        <!-- FAQs -->
+        <section>
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-section">
+                <div class="faq-item">
+                    <div class="faq-question">We can't reach 5 scenes because building them takes too long. What do we do?</div>
+                    <div class="faq-answer">
+                        If you have only 3 scenes by mid-week, continue building Scenes 2 and 4 in parallel while also working on the preference testing setup. Scene 2 and 4 are faster than Scenes 1, 3, 5 because you reuse components. However, the minimum is 5 scenes for D2—this is a hard requirement. If you fall behind, flag this to your TA by Wednesday so they can advise on scope reduction or timeline adjustment. Do not submit with <3 scenes.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">The adaptive algorithm isn't available yet. How do we set up preference testing?</div>
+                    <div class="faq-answer">
+                        Use a non-adaptive approach: generate all possible pairs of your 5 scenes (10 unique pairs if you treat AB the same as BA) and present them in random order. Document this limitation clearly in your QA notes. Your pilot will still validate the data pipeline (CSV recording, response timing, etc.). When the lab algorithm is ready, you can re-run testing with it in Week 6.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Our pilot participant showed strong preferences for one scene. Does that mean our spacing is wrong?</div>
+                    <div class="faq-answer">
+                        Not necessarily. One participant's preferences are noisy data. Strong preferences could mean: (a) your stimulus dimension is clear and effective, or (b) unintended confounds make one scene obviously better/worse. This is why you run pilot data to see the pattern, then investigate. In your QA notes, flag the pattern and hypothesize causes. In Week 6 validation, you'll collect data from multiple participants and see if the pattern holds.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What's an "asset manifest"? Do we need special software?</div>
+                    <div class="faq-answer">
+                        An asset manifest is simply a spreadsheet (Excel, Google Sheets, or CSV) listing every file your scenes reference: models, textures, lighting presets, etc. Columns: filename, file path, which scenes use it, file size (optional), status (OK / MISSING). No special software needed—Excel or a CSV file works fine. AI can help you generate a template if you ask.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Can scenes be rendered images rather than real-time VR?</div>
+                    <div class="faq-answer">
+                        Yes. If real-time VR isn't feasible, you can render high-quality stills from your scenes in Unity (File → Build & Run, or export screenshots) and display them as image pairs in your preference testing software. This is common in preference research. Document that you used rendered stills rather than real-time VR in your QA notes, and note any implications (e.g., participants can't look around; you're measuring static image preference rather than interactive VR preference).
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resources -->
+        <section>
+            <h2>Resources</h2>
+            <div class="resources-grid">
+                <div class="resource-card">
+                    <h4>Unity Multi-Scene Management</h4>
+                    <p>Official documentation on organizing and loading multiple scenes in a project.</p>
+                    <a href="https://docs.unity3d.com/Manual/MultiSceneEditing.html" target="_blank">Read Docs →</a>
+                </div>
+
+                <div class="resource-card">
+                    <h4>PsychoPy (Preference Testing Software)</h4>
+                    <p>Open-source Python framework for building behavioral experiments, including paired-comparison designs.</p>
+                    <a href="https://www.psychopy.org/" target="_blank">Visit PsychoPy →</a>
+                </div>
+
+                <div class="resource-card">
+                    <h4>Bradley-Terry Model (Adaptive Algorithm)</h4>
+                    <p>Tutorial and implementation guide for paired-comparison preference estimation using Bradley-Terry statistics.</p>
+                    <a href="https://en.wikipedia.org/wiki/Bradley%E2%80%93Terry_model" target="_blank">Learn More →</a>
+                </div>
+
+                <div class="resource-card">
+                    <h4>Data Recording Templates</h4>
+                    <p>CSV templates for preference testing data. Includes columns for trial info, choice, response time, and algorithm state.</p>
+                    <a href="#resources">Download Template (CSV) →</a>
+                </div>
+
+                <div class="resource-card">
+                    <h4>Informed Consent Template</h4>
+                    <p>UCSD-compliant informed consent form template for research studies. Required for formal studies; optional for pilots but recommended.</p>
+                    <a href="#resources">Download Template (PDF) →</a>
+                </div>
+
+                <div class="resource-card">
+                    <h4>Confound Analysis Checklist</h4>
+                    <p>Comprehensive checklist for identifying confounds in experimental stimuli. References by field (cognitive psychology, HCI, vision science).</p>
+                    <a href="#resources">Download Checklist (PDF) →</a>
+                </div>
+
+                <div class="resource-card">
+                    <h4>D1 Design Plan Reference</h4>
+                    <p>Review your Week 3 D1 submission to ensure all Scenes 2 and 4 align with your specification.</p>
+                    <a href="vr_wk03_specification.html">View Week 3 Module →</a>
+                </div>
+
+                <div class="resource-card">
+                    <h4>VR Lab Scheduling</h4>
+                    <p>Book lab space and VR equipment for testing scenes. Also required for formal validation in Week 6.</p>
+                    <a href="https://calendar.ucsd.edu/spaces/vr-lab" target="_blank">Lab Calendar →</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 COGS160: AI & VR, UC San Diego. Designed for collaborative research learning.</p>
+    </footer>
+</body>
+</html>

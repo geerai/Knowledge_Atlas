@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COGS160: AI & VR — Article Finder Track – Planning & Deliverables</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #182B49 0%, #1a4d7a 100%);
+            color: white;
+            padding: 2.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .accent-teal {
+            color: #1a7a5e;
+        }
+
+        nav.top-nav {
+            background: #182B49;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            border-bottom: 3px solid #1a7a5e;
+        }
+
+        nav.top-nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav.top-nav a:hover {
+            color: #1a7a5e;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        section {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        section h2 {
+            color: #182B49;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid #1a7a5e;
+        }
+
+        section h3 {
+            color: #1a7a5e;
+            font-size: 1.3rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        section h4 {
+            color: #2c3e50;
+            font-size: 1.1rem;
+            margin: 1.25rem 0 0.75rem 0;
+            font-weight: 600;
+        }
+
+        .subsection {
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: #f8fbf9;
+            border-left: 4px solid #1a7a5e;
+            border-radius: 4px;
+        }
+
+        .subsection h4 {
+            color: #1a7a5e;
+            margin-top: 0;
+        }
+
+        .timeline-box {
+            background: linear-gradient(135deg, #e8f8f3 0%, #f0fcf9 100%);
+            border-left: 4px solid #1a7a5e;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .deliverable {
+            background: linear-gradient(135deg, #fff9e6 0%, #fffaed 100%);
+            border-left: 4px solid #f39c12;
+            padding: 1.25rem;
+            margin: 1.25rem 0;
+            border-radius: 4px;
+        }
+
+        .deliverable h4 {
+            color: #d68910;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .deliverable ul {
+            list-style: disc;
+            padding-left: 2rem;
+            margin-top: 0.75rem;
+        }
+
+        .deliverable li {
+            margin: 0.5rem 0;
+        }
+
+        .component-box {
+            background: #fafbfc;
+            border: 1px solid #e0e6ed;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 1.25rem 0;
+        }
+
+        .component-box h4 {
+            color: #182B49;
+            margin-top: 0;
+        }
+
+        .component-box ul, .component-box p {
+            margin: 0.75rem 0;
+        }
+
+        .component-box ul {
+            list-style: disc;
+            padding-left: 2rem;
+        }
+
+        .component-box li {
+            margin: 0.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        table th {
+            background: linear-gradient(135deg, #e8f8f3 0%, #f0fcf9 100%);
+            color: #182B49;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid #1a7a5e;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        table tr:hover {
+            background: #fafbfc;
+        }
+
+        .team-pair {
+            background: linear-gradient(135deg, #f0f8f5 0%, #f8fcfb 100%);
+            border: 1px solid #1a7a5e;
+            border-radius: 6px;
+            padding: 1.25rem;
+            margin: 1.25rem 0;
+        }
+
+        .team-pair h4 {
+            color: #1a7a5e;
+            margin-top: 0;
+        }
+
+        .team-pair ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .team-pair li {
+            padding: 0.5rem 0 0.5rem 1.5rem;
+            position: relative;
+        }
+
+        .team-pair li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #1a7a5e;
+            font-weight: bold;
+        }
+
+        .git-guide {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .git-guide h4 {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #182B49;
+        }
+
+        .git-command {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 0.75rem;
+            margin: 0.75rem 0;
+            border-radius: 3px;
+            overflow-x: auto;
+        }
+
+        .faq-section {
+            margin: 1.5rem 0;
+        }
+
+        .faq-item {
+            margin-bottom: 1.25rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            color: #182B49;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .faq-question:before {
+            content: "Q";
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: #1a7a5e;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .faq-answer {
+            color: #2c3e50;
+            padding-left: 2.5rem;
+            line-height: 1.7;
+        }
+
+        .architecture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .architecture-card {
+            background: linear-gradient(135deg, #fafbfc 0%, #f5f7fa 100%);
+            border: 2px solid #1a7a5e;
+            border-radius: 6px;
+            padding: 1.5rem;
+        }
+
+        .architecture-card h4 {
+            color: #1a7a5e;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .architecture-card p, .architecture-card ul {
+            margin: 0.75rem 0;
+        }
+
+        .architecture-card ul {
+            list-style: disc;
+            padding-left: 1.5rem;
+        }
+
+        .architecture-card li {
+            margin: 0.35rem 0;
+            font-size: 0.95rem;
+        }
+
+        .resource-block {
+            background: linear-gradient(135deg, #e8f8f3 0%, #f0fcf9 100%);
+            border: 1px solid #1a7a5e;
+            border-radius: 6px;
+            padding: 1.25rem;
+            margin: 1rem 0;
+        }
+
+        .resource-block h4 {
+            color: #1a7a5e;
+            margin-top: 0;
+        }
+
+        .resource-block a {
+            color: #1a7a5e;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .resource-block a:hover {
+            color: #0d4738;
+        }
+
+        footer {
+            background: #182B49;
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .highlight-box {
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .highlight-box strong {
+            color: #7d6608;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            nav.top-nav {
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .architecture-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Article Finder Track – <span class="accent-teal">AF-Track Planning & Deliverables</span></h1>
+        <p>Smart RAG Integration, VOI-to-Query Pipeline, and Research Contribution Infrastructure</p>
+    </div>
+
+    <nav class="top-nav">
+        <a href="index.html">← All Tracks</a>
+        <a href="af_setup_guide.html">⚙️ Setup Guide</a>
+        <a href="af_wk03.html">Week 3 (D1)</a>
+        <a href="af_wk04.html">Week 4 (D2)</a>
+        <a href="af_wk05.html">Week 5 (D2)</a>
+        <a href="af_wk06.html">Week 6 (D3)</a>
+        <a href="af_wk07.html">Week 7 (D4)</a>
+        <a href="#section2">Timeline</a>
+    </nav>
+
+    <div class="container">
+        <!-- Section 1: Track Overview -->
+        <section id="section1">
+            <h2>Section 1: Track Overview</h2>
+
+            <h3>What Is the AF Track?</h3>
+            <p>
+                The <strong>Article Finder (AF) Track</strong> is a 6-week research engineering project that tracks down and retrieves relevant scientific articles to expand the ATLAS research corpus. Your team (6 students, 3 pairs) will build VOI-driven search queries, retrieve articles via RAG platforms and open databases, and create the infrastructure for researchers to contribute their own PDFs. At the end of the 6 weeks, you'll have built a functional component of the ATLAS/Knowledge Accelerator system that enables researchers to discover and contribute evidence-backed findings.
+            </p>
+
+            <h3>How AF Contributes to ATLAS/KA</h3>
+            <p>
+                The broader ATLAS project aims to build a coherence-based knowledge system for computational epistemology. The Article Finder track addresses a critical bottleneck: <strong>how do we systematically discover evidence to fill gaps in the system's knowledge?</strong> Your work produces:
+            </p>
+            <ul style="list-style: disc; padding-left: 2rem; margin: 1rem 0;">
+                <li><strong>Smart RAG Evaluation Report:</strong> Comparison of Consensus, Elicit, Scite, Semantic Scholar, and OpenAlex for evidence discovery</li>
+                <li><strong>VOI-to-Query Bridge:</strong> A translation layer that converts research questions into optimized search queries for multiple backends</li>
+                <li><strong>Public Contribution System:</strong> Interface for researchers to suggest topics, upload PDFs, and contribute findings</li>
+                <li><strong>AI Subscription Architecture:</strong> Blueprint for running AI-powered discovery on sustainable subscriptions (not per-call costs)</li>
+                <li><strong>Governance & Self-Repair:</strong> Automated testing and monitoring so the system catches failures and notifies overseers</li>
+            </ul>
+
+            <div class="subsection">
+                <h4>Your 6-Week Deliverable Chain</h4>
+                <p>
+                    Each week's deliverable builds on the previous one. By Week 8, you'll have a working, tested component that plugs into the larger ATLAS system.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: Deliverables Timeline -->
+        <section id="section2">
+            <h2>Section 2: Deliverables Timeline (Weeks 3–9)</h2>
+
+            <h3>Grade Weights & Schedule</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Week</th>
+                        <th>Deliverable</th>
+                        <th>Grade Weight</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>3</strong></td>
+                        <td><strong>D1: Pipeline Orientation Report</strong></td>
+                        <td>5%</td>
+                        <td>Overview of current literature discovery workflows; outline of AF subsystem components</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4–5</strong></td>
+                        <td><strong>D2: Usability Evaluation Report</strong></td>
+                        <td>10%</td>
+                        <td>User testing of Smart RAG interfaces; usability findings and comparative scores</td>
+                    </tr>
+                    <tr>
+                        <td><strong>6</strong></td>
+                        <td><strong>D3: Recall/Precision Analysis</strong></td>
+                        <td>15%</td>
+                        <td>Systematic evaluation of search quality across platforms; benchmark dataset + results</td>
+                    </tr>
+                    <tr>
+                        <td><strong>7</strong></td>
+                        <td><strong>D4: Improvement Proposal</strong></td>
+                        <td>15%</td>
+                        <td>Proposal for VOI-to-Query bridge design; prototype pseudocode or API sketch</td>
+                    </tr>
+                    <tr>
+                        <td><strong>8</strong></td>
+                        <td><strong>D5: Implementation + HOW-TO Guide</strong></td>
+                        <td>20%</td>
+                        <td>Working code (Python or JavaScript) + documentation for deployment</td>
+                    </tr>
+                    <tr>
+                        <td><strong>9–10</strong></td>
+                        <td><strong>D6: Final Report (25%) + Presentation (10%)</strong></td>
+                        <td>35%</td>
+                        <td>Research-quality report synthesizing all components; 15-min oral presentation</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Detailed Breakdown by Week</h3>
+
+            <div class="deliverable">
+                <h4>📋 <a href="af_wk03.html" style="color:#d68910;">Week 3 (D1): Pipeline Orientation Report (5%)</a></h4>
+                <ul>
+                    <li><strong>What:</strong> 3–5 page report surveying the current state of scientific literature discovery and positioning the AF subsystem</li>
+                    <li><strong>Includes:</strong> Literature review of existing tools (Google Scholar, PubMed, Scite, Consensus), ATLAS gap analysis, AF subsystem scope diagram</li>
+                    <li><strong>Output:</strong> Shared Google Doc or markdown file; one pair drafts, other pairs review and contribute sections</li>
+                </ul>
+            </div>
+
+            <div class="deliverable">
+                <h4>🧪 <a href="af_wk04.html" style="color:#d68910;">Weeks 4–5 (D2): Usability Evaluation Report (10%)</a> — <a href="af_wk05.html" style="color:#d68910;font-size:0.9em;">→ Week 5</a></h4>
+                <ul>
+                    <li><strong>What:</strong> Structured usability testing of Smart RAG platforms (Consensus, Elicit, Scite, Semantic Scholar, OpenAlex)</li>
+                    <li><strong>Method:</strong> ~5 users per platform; standardized task (search for a specific research question); System Usability Scale (SUS) + think-aloud protocol</li>
+                    <li><strong>Output:</strong> 8–10 page report with SUS scores, usability heatmaps, comparative ratings, quotes from users</li>
+                </ul>
+            </div>
+
+            <div class="deliverable">
+                <h4>📊 <a href="af_wk06.html" style="color:#d68910;">Week 6 (D3): Recall/Precision Analysis (15%)</a></h4>
+                <ul>
+                    <li><strong>What:</strong> Systematic search quality evaluation. Create a benchmark dataset (15–20 research questions + ground-truth relevant papers) and run each RAG platform against it</li>
+                    <li><strong>Metrics:</strong> Recall@10, Precision@10, Mean Average Precision (MAP)</li>
+                    <li><strong>Output:</strong> Results spreadsheet + analysis report; visualizations comparing platforms</li>
+                </ul>
+            </div>
+
+            <div class="deliverable">
+                <h4>💡 <a href="af_wk07.html" style="color:#d68910;">Week 7 (D4): Improvement Proposal (15%)</a></h4>
+                <ul>
+                    <li><strong>What:</strong> Design specification for the VOI-to-Query bridge (the core innovation of the AF track)</li>
+                    <li><strong>Includes:</strong> Architecture diagram, query translation algorithm pseudocode, API design, example: "Research Q: 'Does priming affect memory for emotional stimuli?' → Query A (Consensus): 'priming emotional memory', Query B (Semantic Scholar): 'emotional priming AND memory', Query C (Scite): 'emotion priming citations', etc.</li>
+                    <li><strong>Output:</strong> 5–8 page technical proposal with examples and test cases</li>
+                </ul>
+            </div>
+
+            <div class="deliverable">
+                <h4>⚙️ Week 8 (D5): Implementation + HOW-TO Guide (20%)</h4>
+                <ul>
+                    <li><strong>What:</strong> Working code implementing the VOI-to-Query bridge + governance layer (testing, self-repair, notifications)</li>
+                    <li><strong>Tech Stack:</strong> Python (Flask or FastAPI) or JavaScript (Node.js); APIs for each RAG platform; Claude Sonnet API for query optimization</li>
+                    <li><strong>Output:</strong> GitHub repo with code + comprehensive README ("HOW-TO Deploy AF Subsystem"); example scripts; test suite</li>
+                </ul>
+            </div>
+
+            <div class="deliverable">
+                <h4>📖 Weeks 9–10 (D6): Final Report + Presentation (35%)</h4>
+                <ul>
+                    <li><strong>Report:</strong> 15–20 page research report integrating all previous deliverables. Structure: Introduction → Literature Review → Methods → Results (usability, recall/precision, architecture) → Discussion → Conclusion → Appendices</li>
+                    <li><strong>Presentation:</strong> 15-min oral + 5-min Q&A. Slides, live demo of VOI-to-Query bridge, audience engagement</li>
+                    <li><strong>Output:</strong> Final report PDF + slides + recorded demo video (for archive)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 3: AF Subsystem Architecture -->
+        <section id="section3">
+            <h2>Section 3: AF Subsystem Architecture – What Needs Work</h2>
+            <p>
+                This section describes the five major components of the Article Finder subsystem. Each component is assigned to one pair; your pair will design, prototype, evaluate, and document your component end-to-end.
+            </p>
+
+            <h3>3a. Smart RAG Integrations (Pair 1 / Primary Responsibility)</h3>
+            <div class="subsection">
+                <p>
+                    Evaluate and integrate five cutting-edge retrieval-augmented generation platforms for scientific literature discovery.
+                </p>
+
+                <h4>Platform Overview Table</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Platform</th>
+                            <th>What It Does</th>
+                            <th>API?</th>
+                            <th>Subscription Option?</th>
+                            <th>Browser Agent Viable?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Consensus</strong><br><code>consensus.app</code></td>
+                            <td>AI-synthesizes evidence from abstracts; returns consensus findings with confidence</td>
+                            <td>Yes (beta)</td>
+                            <td>Yes (premium $120/yr)</td>
+                            <td>Yes (in ChatGPT)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Elicit</strong><br><code>elicit.com</code></td>
+                            <td>Structured literature synthesis; auto-extracts data tables from papers</td>
+                            <td>Yes (documented)</td>
+                            <td>Yes (pro plans)</td>
+                            <td>Moderate (chat interface)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Scite</strong><br><code>scite.ai</code></td>
+                            <td>Citation context classifier; shows how papers are cited (support vs. dispute)</td>
+                            <td>Yes</td>
+                            <td>Yes (institutional)</td>
+                            <td>Yes (web interface)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Semantic Scholar</strong><br><code>semanticscholar.org</code></td>
+                            <td>Free academic search; strong citation graph; API well-documented</td>
+                            <td>Yes (free)</td>
+                            <td>Free</td>
+                            <td>Yes (easy)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>OpenAlex</strong><br><code>openalex.org</code></td>
+                            <td>Free, comprehensive metadata; fast search; JSON API</td>
+                            <td>Yes (free)</td>
+                            <td>Free</td>
+                            <td>Yes (API-first)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>Pair 1 Responsibilities</h4>
+                <div class="component-box">
+                    <h4>📍 Pair 1: VOI-to-Query Bridge + Smart RAG Evaluation</h4>
+                    <ul>
+                        <li><strong>D2 (Weeks 4–5):</strong> Usability testing across all five platforms. Interface review, task completion times, user satisfaction scores</li>
+                        <li><strong>D3 (Week 6):</strong> Recall/Precision benchmark. Build test queries, run systematic evaluations, compute metrics for each platform</li>
+                        <li><strong>D4 (Week 7):</strong> Design the VOI-to-Query bridge: how a research question gets translated into optimized queries for each platform</li>
+                        <li><strong>D5 (Week 8):</strong> Code the bridge. Integrate APIs. Handle failures gracefully (if Consensus is down, fall back to Semantic Scholar)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>3b. VOI-to-Query Bridge (Core Innovation — Pair 1 Primary, All Support)</h3>
+            <div class="subsection">
+                <p>
+                    <strong>This is the heart of the AF subsystem.</strong> The VOI (Voice of Information) contract produces research QUESTIONS, not Boolean queries. Your job is to design and implement an intelligent translation layer.
+                </p>
+
+                <h4>The Problem</h4>
+                <p>
+                    A VOI question might be: <em>"Does moderate alcohol consumption increase or decrease cardiovascular risk?"</em><br>
+                    This is not a Boolean query. Each RAG platform expects different input:
+                </p>
+                <ul style="list-style: disc; padding-left: 2rem; margin: 1rem 0;">
+                    <li><strong>Consensus:</strong> Natural language question, prefers plain English</li>
+                    <li><strong>Elicit:</strong> Structured query with variables (e.g., "effect of alcohol on cardiovascular outcomes")</li>
+                    <li><strong>Scite:</strong> Keywords + citation context filters</li>
+                    <li><strong>Semantic Scholar:</strong> Title/abstract keywords + optional filters</li>
+                    <li><strong>OpenAlex:</strong> Title field, author, publication year, DOI if available</li>
+                </ul>
+
+                <h4>The Solution: Intelligent Query Adaptation</h4>
+                <div class="component-box">
+                    <p>
+                        Your bridge takes ONE research question and expands it into multiple semantically-equivalent but platform-optimized queries:
+                    </p>
+                    <div style="background: #2c3e50; color: #ecf0f1; padding: 1rem; border-radius: 4px; font-family: monospace; font-size: 0.9rem; overflow-x: auto; margin: 1rem 0;">
+Input: "Does moderate alcohol consumption affect cardiovascular risk?"
+
+Consensus Query:
+  "Does moderate alcohol consumption increase or decrease cardiovascular risk?"
+
+Elicit Query:
+  "Effect of alcohol consumption on cardiovascular risk"
+  Variables: [alcohol_level: moderate, outcome: cardiovascular_risk]
+
+Scite Query:
+  Keywords: ["alcohol" OR "ethanol", "cardiovascular", "risk"]
+  Citation context: "dispute" (find papers that challenge consensus)
+
+Semantic Scholar Query:
+  q: "alcohol cardiovascular risk"
+  filters: [venue_type: "journal", year_min: 2000]
+
+OpenAlex Query:
+  title: ["alcohol", "cardiovascular"]
+  publication_date: "2000-01-01:2024-12-31"
+                    </div>
+                    <p style="margin-top: 1rem;">
+                        Your code will:
+                    </p>
+                    <ul style="list-style: disc; padding-left: 2rem;">
+                        <li>Parse the input question (extract key concepts, relationships)</li>
+                        <li>Generate platform-specific queries (using Claude API to optimize)</li>
+                        <li>Execute queries in parallel across all backends</li>
+                        <li>Deduplicate results (same paper found in multiple sources)</li>
+                        <li>Rank by relevance (combine confidence scores from each platform)</li>
+                        <li>Return unified result set to the user</li>
+                    </ul>
+                </div>
+
+                <h4>Success Criteria for the Bridge</h4>
+                <ul style="list-style: disc; padding-left: 2rem; margin: 1rem 0;">
+                    <li>Given a research question, produces ≥3 usable queries per platform (no syntax errors)</li>
+                    <li>Retrieves relevant papers from all five platforms for the same question</li>
+                    <li>Deduplicates results (identifies same paper across sources)</li>
+                    <li>Gracefully handles API failures (if one platform is down, others still work)</li>
+                    <li>Ranks results sensibly (not just arbitrary order)</li>
+                    <li>Response time <10 seconds for typical queries</li>
+                </ul>
+            </div>
+
+            <h3>3c. AI Subscription Model for Article Finding (Pair 2 Primary)</h3>
+            <div class="subsection">
+                <p>
+                    All AI calls must run on subscriptions (Claude, OpenAI, etc.), NOT per-call APIs. This avoids runaway costs.
+                </p>
+
+                <h4>The Challenge</h4>
+                <p>
+                    If you call Consensus API 100 times per day, OpenAlex 100 times, Semantic Scholar 100 times, your bill explodes. Solution: use subscriptions for your AI logic, then call platforms economically.
+                </p>
+
+                <h4>Proposed Architecture</h4>
+                <div class="component-box">
+                    <p><strong>Option A: Claude-in-Terminal (Recommended)</strong></p>
+                    <ul style="list-style: disc; padding-left: 2rem; margin: 0.75rem 0;">
+                        <li>Run Claude as a backend service in a dedicated terminal/Docker container</li>
+                        <li>Your Flask app sends queries to Claude via the Anthropic SDK (subscription-based, not per-call)</li>
+                        <li>Claude handles: question parsing, query generation, result ranking, ambiguity resolution</li>
+                        <li>RAG platforms are called only once (or a few times) per question, not per intermediate step</li>
+                    </ul>
+
+                    <p style="margin-top: 1rem;"><strong>Option B: Browser Agent for Consensus & Scholar AI</strong></p>
+                    <ul style="list-style: disc; padding-left: 2rem; margin: 0.75rem 0;">
+                        <li>Consensus and Scholar AI are available as ChatGPT plugins (in browser)</li>
+                        <li>Can you automate browser interactions to run queries through ChatGPT (on subscription)?</li>
+                        <li>Pair 2 should prototype: browser automation agent that talks to ChatGPT + plugins</li>
+                        <li>If viable, this gives free (subscription-funded) access to Consensus + OpenAI's RAG</li>
+                    </ul>
+
+                    <p style="margin-top: 1rem;"><strong>Pair 2 Responsibilities:</strong></p>
+                    <ul style="list-style: disc; padding-left: 2rem;">
+                        <li>Investigate and prototype both options (Terminal + Browser Agent)</li>
+                        <li>Cost analysis: compare per-call API costs vs. subscription-based architecture</li>
+                        <li>Document chosen architecture in D5 (Week 8) implementation guide</li>
+                        <li>Handle authentication, error recovery, rate limits</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>3d. Public-Facing Contribution Pages (Pair 3 Primary)</h3>
+            <div class="subsection">
+                <p>
+                    Build three web pages for researchers to contribute findings to ATLAS. These should have a distinct "Contribute" branding, slightly different color/style from admin pages.
+                </p>
+
+                <h4>Page 1: Research Topic Suggestion</h4>
+                <div class="component-box">
+                    <ul style="list-style: disc; padding-left: 2rem;">
+                        <li><strong>Purpose:</strong> Researchers or the public suggest a topic; system interprets it and finds it in the VOI gap list or adds it</li>
+                        <li><strong>UX:</strong> Simple form: "What research question would you like ATLAS to explore?" + optional contact email</li>
+                        <li><strong>Backend:</strong> Parse question using Claude API, check against existing VOI questions, rank by similarity, show top matches. If not found, queue for VOI team review</li>
+                        <li><strong>Visual Distinction:</strong> Use teal accent (#1a7a5e) but softer than admin; "Suggest a Topic" heading instead of admin-style terminology</li>
+                    </ul>
+                </div>
+
+                <h4>Page 2: PDF Upload (ANFA Contributors)</h4>
+                <div class="component-box">
+                    <ul style="list-style: disc; padding-left: 2rem;">
+                        <li><strong>Purpose:</strong> ANFA members and other researchers can upload PDFs they think should be in ATLAS</li>
+                        <li><strong>UX:</strong> Drag-and-drop upload, optional metadata (title, authors, source), auto-queue for processing</li>
+                        <li><strong>Backend:</strong> Accept PDFs, extract metadata (using pdfplumber or similar), auto-run title/abstract through Semantic Scholar to find DOI, queue for ingest pipeline</li>
+                        <li><strong>Feedback:</strong> User gets confirmation: "PDF received! We'll process it and notify you when it's available."</li>
+                    </ul>
+                </div>
+
+                <h4>Page 3: Registered Contributor Dashboard</h4>
+                <div class="component-box">
+                    <ul style="list-style: disc; padding-left: 2rem;">
+                        <li><strong>Purpose:</strong> Researchers register → get assigned a VOI question → upload results to their assigned page</li>
+                        <li><strong>Workflow:</strong>
+                            <ol style="list-style: decimal; padding-left: 2rem; margin-top: 0.5rem;">
+                                <li>Researcher fills form: name, institution, expertise areas</li>
+                                <li>System matches them to an open VOI question (e.g., "Effects of blue light on circadian rhythm")</li>
+                                <li>They get a personalized page showing the VOI question + upload interface for their findings</li>
+                                <li>After upload, findings are vetted by ATLAS team before integration</li>
+                            </ol>
+                        </li>
+                        <li><strong>Visual Branding:</strong> Friendly, encouraging tone; "Your Contribution" instead of "Data Submission"</li>
+                    </ul>
+                </div>
+
+                <h4>Pair 3 Responsibilities</h4>
+                <ul style="list-style: disc; padding-left: 2rem; margin: 1rem 0;">
+                    <li><strong>D2 (Weeks 4–5):</strong> UX/UI design for contribution pages. Prototypes, user feedback</li>
+                    <li><strong>D3 (Week 6):</strong> Usability testing with target users (researchers, ANFA members)</li>
+                    <li><strong>D4 (Week 7):</strong> Technical architecture proposal (frontend framework, database schema, backend API)</li>
+                    <li><strong>D5 (Week 8):</strong> Working implementation + deployment guide</li>
+                </ul>
+            </div>
+
+            <h3>3e. APA/Abstract/PDF Collection (Supporting Role — Pair 2 Contributes)</h3>
+            <div class="subsection">
+                <p>
+                    For each paper found by the AF subsystem, retrieve and store: APA citation, abstract, and PDF (if open access).
+                </p>
+
+                <h4>Data Pipeline</h4>
+                <div class="component-box">
+                    <ol style="list-style: decimal; padding-left: 2rem;">
+                        <li><strong>DOI → Metadata Lookup:</strong> Use OpenAlex API to resolve DOI → full citation, abstract, publication year</li>
+                        <li><strong>Citation Graph:</strong> Semantic Scholar API for citing papers, cited-by relationships</li>
+                        <li><strong>PDF Discovery:</strong> Check for open-access PDFs (unpaywall API, arxiv, author websites)</li>
+                        <li><strong>Storage:</strong> Cache metadata in database (PostgreSQL); store PDFs in object storage (S3 or local filesystem)</li>
+                    </ol>
+                </div>
+
+                <h4>Responsibilities</h4>
+                <ul style="list-style: disc; padding-left: 2rem; margin: 1rem 0;">
+                    <li>Pair 2 researches and prototypes OpenAlex + Semantic Scholar integration</li>
+                    <li>Handles DOI → PDF lookup pipeline</li>
+                    <li>Integrates into D5 code (Pair 1 calls, Pair 2 supplies metadata)</li>
+                </ul>
+            </div>
+
+            <h3>3f. Success Conditions, Tests, Self-Repair (All Pairs Implement)</h3>
+            <div class="subsection">
+                <p>
+                    <strong>Critical:</strong> Every component must have automated testing, self-repair, and notification logic. This is NOT optional.
+                </p>
+
+                <h4>Required Governance Architecture (For Each Component)</h4>
+                <div class="component-box">
+                    <p><strong>1. Success Condition Definition</strong></p>
+                    <ul style="list-style: disc; padding-left: 2rem; margin: 0.75rem 0;">
+                        <li>Write in JSON: what does "working" mean for this component?</li>
+                        <li>Example: "VOI-to-Query bridge: processes query in <10 sec, returns results from ≥3 platforms, zero API errors"</li>
+                    </ul>
+
+                    <p style="margin-top: 1rem;"><strong>2. Automated Test Suite</strong></p>
+                    <ul style="list-style: disc; padding-left: 2rem; margin: 0.75rem 0;">
+                        <li>pytest or Jest tests for each component</li>
+                        <li>Example tests: "test_query_generation_produces_valid_syntax", "test_bridge_handles_api_timeout", "test_deduplication_finds_duplicate_papers"</li>
+                        <li>Target: ≥80% code coverage</li>
+                    </ul>
+
+                    <p style="margin-top: 1rem;"><strong>3. Self-Repair Routine</strong></p>
+                    <ul style="list-style: disc; padding-left: 2rem; margin: 0.75rem 0;">
+                        <li>If a test fails or success condition is violated, the system attempts recovery</li>
+                        <li>Example: "If Consensus API returns 500 error, retry with exponential backoff; if still failing after 3 retries, use Semantic Scholar instead"</li>
+                        <li>Log all recovery attempts</li>
+                    </ul>
+
+                    <p style="margin-top: 1rem;"><strong>4. Notification to Overseer</strong></p>
+                    <ul style="list-style: disc; padding-left: 2rem; margin: 0.75rem 0;">
+                        <li>If self-repair fails, send alert email to TA/faculty</li>
+                        <li>Include: component name, error description, timestamp, suggested fix</li>
+                        <li>Implement: Python script with email + logging</li>
+                    </ul>
+                </div>
+
+                <p style="margin-top: 1.5rem;">
+                    <strong>This governance layer ensures the AF subsystem is production-ready and maintainable by future teams.</strong>
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 4: Team Assignments -->
+        <section id="section4">
+            <h2>Section 4: Team Assignments & Work Distribution</h2>
+
+            <div class="team-pair">
+                <h4>Pair 1: VOI-to-Query Bridge + Smart RAG Evaluation</h4>
+                <ul>
+                    <li>Lead: VOI-to-Query bridge design & implementation (D4, D5)</li>
+                    <li>Support: Usability testing of Smart RAG platforms (D2), Recall/Precision benchmarking (D3)</li>
+                    <li>Skills Needed: Python, API integration, NLP (query translation), test design</li>
+                    <li>Deliverables: Working bridge code + comprehensive README</li>
+                </ul>
+            </div>
+
+            <div class="team-pair">
+                <h4>Pair 2: AI Subscription Model + Browser Agent Prototype</h4>
+                <ul>
+                    <li>Lead: Architecture design for subscription-based AI backend (D4), Terminal + Browser Agent prototyping (D5)</li>
+                    <li>Support: APA/Abstract/PDF collection pipeline (D5); OpenAlex & Semantic Scholar integration</li>
+                    <li>Skills Needed: Python/JavaScript, API authentication, browser automation (Selenium or Puppeteer), cost analysis</li>
+                    <li>Deliverables: Working AI subscription architecture + browser agent prototype code</li>
+                </ul>
+            </div>
+
+            <div class="team-pair">
+                <h4>Pair 3: Public-Facing Contribution Pages + APA Collection</h4>
+                <ul>
+                    <li>Lead: Design & implement three public contribution pages (D2, D4, D5)</li>
+                    <li>Support: Usability testing + UX validation; contribute to APA collection integration</li>
+                    <li>Skills Needed: Frontend (React or Vue), UI/UX design, backend API design (Flask/FastAPI), user research</li>
+                    <li>Deliverables: Three working public pages + deployment guide</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <strong>⚠️ Cross-Pair Coordination:</strong> All pairs must integrate their work by Week 8. Schedule weekly sync meetings (30 min) to coordinate API contracts, database schemas, and authentication. Pair 1's bridge must call Pair 2's AI backend and Pair 3's contribution APIs seamlessly.
+            </div>
+        </section>
+
+        <!-- Section 5: Git Branch Setup Guide -->
+        <section id="section5">
+            <h2>Section 5: Git Branch Setup & Workflow</h2>
+
+            <p>
+                Each pair works on a feature branch. This prevents conflicts and keeps the main codebase clean.
+            </p>
+
+            <h3>Branch Naming Convention</h3>
+            <div class="git-guide">
+<pre>feature/af-{component}-{pair_initials}
+
+Examples:
+  feature/af-voi-query-bridge-jm         (Pair 1: Jenna & Mike)
+  feature/af-ai-subscription-sk          (Pair 2: Sophie & Kevin)
+  feature/af-contrib-pages-ar            (Pair 3: Aisha & Raj)</pre>
+            </div>
+
+            <h3>Workflow Steps</h3>
+
+            <div class="component-box">
+                <h4>1. Create Your Feature Branch (Week 3, Day 1)</h4>
+                <div class="git-command">git checkout -b feature/af-{component}-{initials}</div>
+                <p style="margin-top: 0.75rem;">Example:</p>
+                <div class="git-command">git checkout -b feature/af-voi-query-bridge-jm</div>
+            </div>
+
+            <div class="component-box">
+                <h4>2. Develop & Commit Frequently</h4>
+                <p>Make small, meaningful commits as you work:</p>
+                <div class="git-command">git add .</div>
+                <div class="git-command">git commit -m "Add query translation for Consensus platform"</div>
+                <p style="margin-top: 0.75rem;"><strong>Commit Message Style:</strong> "Add [feature]" or "Fix [bug]" or "Refactor [component]". Keep messages ≤80 characters.</p>
+            </div>
+
+            <div class="component-box">
+                <h4>3. Push Daily</h4>
+                <div class="git-command">git push origin feature/af-{component}-{initials}</div>
+                <p style="margin-top: 0.75rem;">Keeps work backed up and visible to teammates.</p>
+            </div>
+
+            <div class="component-box">
+                <h4>4. Pull Request Checklist (When Ready for Review)</h4>
+                <ul style="list-style: disc; padding-left: 2rem; margin-top: 0.75rem;">
+                    <li>All tests pass locally: <code>pytest tests/</code> or <code>npm test</code></li>
+                    <li>Code follows style guide (PEP 8 for Python, ESLint for JavaScript)</li>
+                    <li>README updated with new functionality</li>
+                    <li>No merge conflicts with main branch</li>
+                    <li>Assign reviewers (both other pairs + TA)</li>
+                </ul>
+            </div>
+
+            <div class="component-box">
+                <h4>5. Code Review & Merge</h4>
+                <p>At least one other pair must review before merging. Reviewers check:</p>
+                <ul style="list-style: disc; padding-left: 2rem; margin-top: 0.75rem;">
+                    <li>Code quality (clear, documented, no obvious bugs)</li>
+                    <li>API compatibility (does this work with other components?)</li>
+                    <li>Test coverage (new code has tests)</li>
+                </ul>
+                <p style="margin-top: 0.75rem;">After approval, merge to main:</p>
+                <div class="git-command">git checkout main && git pull</div>
+                <div class="git-command">git merge --no-ff feature/af-{component}-{initials}</div>
+            </div>
+
+            <div class="component-box">
+                <h4>6. Tag Releases (End of Each Week)</h4>
+                <p>After Week 3 deliverable (D1) is ready, tag it:</p>
+                <div class="git-command">git tag -a v0.1 -m "D1: Pipeline Orientation Report"</div>
+                <div class="git-command">git push origin --tags</div>
+                <p style="margin-top: 0.75rem;">Continue: v0.2 (D2), v0.3 (D3), etc.</p>
+            </div>
+
+            <h3>Repository Structure</h3>
+            <div class="git-guide">
+<pre>af-track-repo/
+├── README.md                    # Overview & setup instructions
+├── ARCHITECTURE.md              # System design (all pairs contribute)
+├── tests/                       # Test suite
+│   ├── test_voi_bridge.py      # Pair 1 tests
+│   ├── test_ai_subscription.py # Pair 2 tests
+│   └── test_contrib_pages.py   # Pair 3 tests
+├── src/
+│   ├── voi_query_bridge/       # Pair 1
+│   ├── ai_subscription/        # Pair 2
+│   └── contrib_pages/          # Pair 3
+├── docs/                        # Documentation
+│   ├── D1_Pipeline_Orientation.md
+│   ├── D2_Usability_Report.md
+│   ├── ...
+│   └── DEPLOYMENT.md           # How to run in production
+└── .gitignore                  # Exclude .env, __pycache__, etc.</pre>
+            </div>
+        </section>
+
+        <!-- Section 6: FAQs -->
+        <section id="section6">
+            <h2>Section 6: Frequently Asked Questions</h2>
+
+            <div class="faq-section">
+                <div class="faq-item">
+                    <div class="faq-question">How do we coordinate between pairs if we're working in parallel?</div>
+                    <div class="faq-answer">
+                        Weekly sync meetings (30 min, Tuesdays at 2pm recommended). Each pair shares: (1) progress on D#, (2) blockers, (3) what you need from other pairs. Use a shared Google Doc or Slack channel. Pair 1 leads the meeting (since bridge is the core component). Also: define API contracts early (what data flows between components?). Example: "Pair 1's bridge returns {question, results[], timestamps}. Pair 3's contribution page consumes that JSON. Here's the schema." Get alignment on schema before coding.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What if one pair finishes early? Can they help other pairs?</div>
+                    <div class="faq-answer">
+                        Yes, absolutely. If Pair 1 completes the VOI-to-Query bridge by mid-Week 7, they can help Pair 2 with integration testing or Pair 3 with backend API design. Tag these contributions clearly in commits (e.g., "co-authored-by: jenna@ucsd.edu, mike@ucsd.edu"). Document cross-pair contributions in the final report under "Team Contributions."
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What's the minimum viable scope for D5 (implementation)?</div>
+                    <div class="faq-answer">
+                        Working, tested code for your assigned component. Not production-grade, but functional. Example: Pair 1's bridge successfully translates 10 test questions into valid queries for all 5 platforms, deduplicates results, and ranks them. No UI needed; command-line interface is fine. Pair 3's pages need a basic HTML/CSS frontend + Flask backend. Pair 2's AI subscription setup needs to successfully route queries to Claude and receive results. All must have tests and a README.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Can we use existing libraries or must we code from scratch?</div>
+                    <div class="faq-answer">
+                        Use libraries! LangChain, pydantic, requests, flask, react, etc. This is real engineering, not a coding bootcamp. You're evaluated on system design, API integration, and testing—not on reinventing the wheel. Just cite libraries in your report and documentation.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">How much should we rely on AI assistance (Claude/ChatGPT)?</div>
+                    <div class="faq-answer">
+                        Heavily! Use AI for: code scaffolding, debugging, testing strategy, documentation writing, API integration examples. Your job is to understand what the code does, test it, and integrate it into the larger system—not to write every line from scratch. Just don't use AI to avoid thinking. For major design decisions, discuss with your team and TA before implementing.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What if a Smart RAG platform changes its API or pricing mid-project?</div>
+                    <div class="faq-answer">
+                        Document the change and adapt. This is realistic engineering. Your bridge is designed to handle multiple backends precisely so a single failure doesn't break everything. If Consensus changes pricing, you can still fall back to Semantic Scholar. Update your D6 report to discuss this risk and how your architecture mitigated it.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Who owns the final code? Can we use it after the class?</div>
+                    <div class="faq-answer">
+                        It belongs to UC San Diego / Professor Kirsh's research group. Your team may use it for job interviews (as a portfolio project). If you want to publish the work, discuss with the faculty supervisor. This is normal academic/research practice.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Closing -->
+        <section style="background: linear-gradient(135deg, #e8f8f3 0%, #f0fcf9 100%); border-left: 4px solid #1a7a5e;">
+            <h2 style="border-bottom: 3px solid #1a7a5e;">Final Notes</h2>
+            <p>
+                The AF Track is ambitious—you're building research infrastructure used by real scientists. Your work validates Smart RAG platforms, designs a novel VOI-to-Query bridge, and creates pathways for researchers to contribute evidence. By Week 8, you'll have a working system that could be deployed. By Week 10, you'll have a publication-quality report documenting the entire effort.
+            </p>
+            <p style="margin-top: 1rem;">
+                <strong>This is research engineering, not coursework.</strong> Mistakes are learning opportunities. Unexpected challenges (APIs go down, scope changes) are realistic. Document everything, test rigorously, and integrate constantly.
+            </p>
+            <p style="margin-top: 1rem;">
+                Questions? Ask the TA (office hours) or post in the Slack channel. We'll help you succeed.
+            </p>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 COGS160: AI & VR, UC San Diego.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">AF Track Planning Guide | Article Finder Subsystem Engineering</p>
+    </footer>
+</body>
+</html>

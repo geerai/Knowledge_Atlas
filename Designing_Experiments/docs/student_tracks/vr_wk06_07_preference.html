@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COGS160: AI & VR — VR Track Weeks 6–7 – Adaptive Preference Testing & Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #182B49 0%, #1a4d7a 100%);
+            color: white;
+            padding: 2.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            margin-bottom: 1rem;
+        }
+
+        nav.top-nav {
+            background: #182B49;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            border-bottom: 3px solid #2a8fcc;
+        }
+
+        nav.top-nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav.top-nav a:hover {
+            color: #2a8fcc;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        section {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        section h2 {
+            color: #182B49;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid #2a8fcc;
+        }
+
+        section h3 {
+            color: #2a8fcc;
+            font-size: 1.3rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .context-box {
+            background: linear-gradient(135deg, #e8f4f8 0%, #f0f8fc 100%);
+            border-left: 4px solid #2a8fcc;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+        }
+
+        .learning-outcomes {
+            background: linear-gradient(135deg, #f0f8fc 0%, #e8f4f8 100%);
+            border-left: 4px solid #2a8fcc;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .learning-outcomes ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .learning-outcomes li {
+            padding: 0.5rem 0 0.5rem 2rem;
+            position: relative;
+        }
+
+        .learning-outcomes li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #2a8fcc;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .methodology-box {
+            background: linear-gradient(135deg, #e8f8f0 0%, #f0fcf8 100%);
+            border-left: 4px solid #16a085;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .methodology-box h4 {
+            color: #16a085;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .procedure {
+            background: #fafbfc;
+            border: 1px solid #e0e6ed;
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .procedure h4 {
+            color: #182B49;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: #2a8fcc;
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .procedure p, .procedure ul {
+            margin-left: 1rem;
+        }
+
+        .procedure ul {
+            list-style: disc;
+            padding-left: 2rem;
+        }
+
+        .procedure li {
+            margin: 0.5rem 0;
+        }
+
+        .deliverable-box {
+            background: linear-gradient(135deg, #fff9e6 0%, #fffaed 100%);
+            border-left: 4px solid #f39c12;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .deliverable-box h4 {
+            color: #d68910;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .deliverable-box ul {
+            list-style: disc;
+            padding-left: 2rem;
+            margin-top: 0.75rem;
+        }
+
+        .deliverable-box li {
+            margin: 0.5rem 0;
+        }
+
+        .ai-tips {
+            background: linear-gradient(135deg, #fff9e6 0%, #fffaed 100%);
+            border-left: 4px solid #f39c12;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .ai-tips h4 {
+            color: #d68910;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ai-tips ul {
+            list-style: disc;
+            padding-left: 2rem;
+            margin-top: 0.75rem;
+        }
+
+        .ai-tips li {
+            margin: 0.5rem 0;
+        }
+
+        .time-estimate {
+            background: linear-gradient(135deg, #f0e6ff 0%, #f8f0ff 100%);
+            border-left: 4px solid #8e44ad;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .time-estimate h4 {
+            color: #7d3c98;
+            margin-bottom: 0.75rem;
+        }
+
+        .time-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e0d5f0;
+        }
+
+        .time-row:last-child {
+            border-bottom: none;
+        }
+
+        .time-label {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .time-value {
+            color: #7d3c98;
+            font-weight: bold;
+        }
+
+        .faq-section {
+            margin: 1.5rem 0;
+        }
+
+        .faq-item {
+            margin-bottom: 1.25rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            color: #182B49;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .faq-question:before {
+            content: "Q";
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: #2a8fcc;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .faq-answer {
+            color: #2c3e50;
+            padding-left: 2.5rem;
+            line-height: 1.7;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .resource-card {
+            background: #fafbfc;
+            border: 1px solid #e0e6ed;
+            border-radius: 6px;
+            padding: 1.25rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(42, 143, 204, 0.15);
+        }
+
+        .resource-card h4 {
+            color: #182B49;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .resource-card p {
+            color: #555;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .resource-card a {
+            color: #2a8fcc;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .resource-card a:hover {
+            color: #182B49;
+        }
+
+        .grade-weight {
+            background: #f0f8fc;
+            border: 1px solid #2a8fcc;
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-weight: 600;
+            color: #182B49;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        table th {
+            background: #f0f8fc;
+            color: #182B49;
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 2px solid #2a8fcc;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        table tr:hover {
+            background: #fafbfc;
+        }
+
+        footer {
+            background: #182B49;
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+        }
+
+        .week-section {
+            border-left: 4px solid #2a8fcc;
+            padding-left: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .week-section h3 {
+            color: #2a8fcc;
+            margin-left: -1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            nav.top-nav {
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .resources-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>VR Track – Weeks 6–7: Adaptive Preference Testing & Analysis</h1>
+        <p>Validating Your Stimulus Set Through Bayesian Paired Comparisons</p>
+    </div>
+
+    <nav class="top-nav">
+        <a href="vr_wk05_validation.html">← Week 5</a>
+        <a href="index.html">All Tracks</a>
+        <a href="vr_wk08_synthesis.html">Week 8 →</a>
+    </nav>
+
+    <div class="container">
+        <!-- Context Section -->
+        <section>
+            <h2>Context & Scope</h2>
+            <div class="context-box">
+                <strong>Input:</strong> Three validated scenes from Weeks 4–5 (Scene 1, 3, 5; passed confound audit and technical QA).
+            </div>
+            <div class="context-box">
+                <strong>Output (Week 6):</strong> Preference data from ≥8 participants (≥40 paired comparisons per participant = ≥320 total decisions).
+            </div>
+            <div class="context-box">
+                <strong>Output (Week 7):</strong> D3 Preference Data Analysis Report (formal deliverable, 20% of final grade).
+            </div>
+            <p style="margin-top: 1.5rem;">
+                Weeks 6–7 validate that your stimulus dimension actually produces measurable preference differences and that your three stimulus levels are appropriately spaced. You will collect preference judgments from human participants using adaptive Bayesian paired-comparison methodology, then analyze the resulting preference function to assess whether your design successfully operationalizes your construct.
+            </p>
+        </section>
+
+        <!-- Methodology Explanation -->
+        <section>
+            <h2>Adaptive Preference Testing: Overview</h2>
+            <div class="methodology-box">
+                <h4>What Is Adaptive Preference Testing?</h4>
+                <p style="margin-top: 0.75rem;">
+                    Adaptive preference testing uses Bayesian paired comparisons to efficiently estimate participant preferences across your stimulus dimension. Rather than asking every participant to judge all pairs (which is time-consuming), the system adapts: after each decision, it updates a posterior belief about where the participant's preference threshold lies, then selects the next most informative pair to compare.
+                </p>
+                <p style="margin-top: 1rem;">
+                    <strong>The Key Insight:</strong> A participant's preference function is a continuous curve (e.g., "I prefer Level 5 over Level 1, but Level 3 is better than I initially thought"). By iteratively asking the most discriminative questions, we pinpoint that curve efficiently in ~40–50 judgments instead of ~100.
+                </p>
+                <p style="margin-top: 1rem;">
+                    <strong>What Changes Week to Week:</strong> Initially, you're uncertain about the participant's preferences. After their first few judgments, posteriors narrow. By judgment 40, your credible interval around their preference function is tight. This narrowing of uncertainty is the core of adaptive testing.
+                </p>
+            </div>
+        </section>
+
+        <!-- Learning Outcomes -->
+        <section>
+            <h2>Learning Outcomes (Weeks 6–7)</h2>
+            <div class="learning-outcomes">
+                <ul>
+                    <li>Design and execute a human-subjects study following ethical protocols (IRB compliance, informed consent, participant safety)</li>
+                    <li>Recruit a sufficient sample (≥8 participants) and manage scheduling/logistics</li>
+                    <li>Operate adaptive paired-comparison software (e.g., adaptive.design platform or custom implementation)</li>
+                    <li>Collect behavioral preference data systematically and reliably</li>
+                    <li>Aggregate preference judgments and fit a group-level preference model (Bayesian hierarchical regression or item-response theory)</li>
+                    <li>Interpret preference functions: compute credible intervals, assess whether stimulus spacing validates your design, identify individual differences</li>
+                    <li>Write a professional research report interpreting findings for your construct</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Week 6: Preference Testing Procedures -->
+        <section>
+            <h2>Week 6: Preference Testing Procedures</h2>
+
+            <div class="week-section">
+                <h3>Step 1: Participant Recruitment & Scheduling</h3>
+                <div class="procedure">
+                    <p>You need ≥8 participants. Aim for 10–12 to account for no-shows.</p>
+                    <ul>
+                        <li><strong>Eligibility:</strong> Typically, any UCSD student ≥18 years, no history of motion sickness or vision problems that would prevent VR use (or sufficient correctable vision). Your specific inclusion/exclusion criteria should be in your IRB protocol.</li>
+                        <li><strong>Recruitment:</strong> Post on SONA (UCSD psychology participant pool), email relevant student groups, or use word-of-mouth. Offer compensation: typically $15–20/session or course credit (0.5–1 unit).</li>
+                        <li><strong>Scheduling:</strong> Participants are usually 20–30 min each (includes consent, setup, ~40 paired comparisons, debriefing). Use a shared calendar (e.g., Google Calendar or Calendly). Book VR lab space in advance.</li>
+                        <li><strong>Confirm Details:</strong> Send reminder email 24 hours before session with location, duration, compensation, and cancellation policy.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="week-section">
+                <h3>Step 2: Session Setup (Pre-Participant)</h3>
+                <div class="procedure">
+                    <p>Before each session, prepare the lab and equipment:</p>
+                    <ul>
+                        <li><strong>VR System Check:</strong> Boot the VR headset, check tracking, confirm all three scenes load correctly and respond to input</li>
+                        <li><strong>Pair Comparison Software:</strong> Load the adaptive testing software. Check that it can present Scene 1 vs. Scene 3, Scene 3 vs. Scene 5, etc., with appropriate button controls for "prefer left," "prefer right," or "no preference."</li>
+                        <li><strong>Consent Form:</strong> Print and have ready (should be part of your IRB approval). Include study purpose, risks (minimal: VR may cause mild motion sickness), benefits, privacy protections, and participant rights.</li>
+                        <li><strong>Data Recording:</strong> Confirm the system logs responses to a CSV or JSON file with columns: participant_id, trial_number, scene_left, scene_right, response, response_time, timestamp.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="week-section">
+                <h3>Step 3: Running a Participant Session</h3>
+                <div class="procedure">
+                    <p><strong>Timeline (20–25 min per participant):</strong></p>
+                    <ul>
+                        <li><strong>Consent & Instructions (5 min):</strong> Participant reads and signs consent form. Explain: "You'll see pairs of virtual environments. For each pair, tell us which you prefer using the buttons. This isn't about 'right' or 'wrong'—just your genuine preference. We'll show you about 40 pairs."</li>
+                        <li><strong>VR Setup (3 min):</strong> Help participant don the headset. Adjust straps and IPD (inter-pupillary distance) for comfort. Have them look around and confirm visibility is clear.</li>
+                        <li><strong>Preference Testing (15 min):</strong> Run the adaptive paired-comparison protocol. The software presents Scene A vs. Scene B. Participant indicates preference via hand controller buttons. Software adapts: if participant prefers higher levels, next pair might be Scene 3 vs. Scene 5. If uncertain, the algorithm picks a maximally informative pair. Continue for ~40 decisions (stops when credible interval converges or time limit reached).</li>
+                        <li><strong>Debriefing (2 min):</strong> Remove headset. Ask: "What dimension were you judging?" (to confirm they understood your intended dimension). "Any discomfort?" Ask them not to discuss the study with other students.</li>
+                        <li><strong>Data Export:</strong> Save participant's response file with naming convention: <code>P{participant_id}_{date}_{initials}.csv</code></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="week-section">
+                <h3>Step 4: Data Recording & Safety Checks</h3>
+                <div class="procedure">
+                    <p>As sessions complete, maintain a log:</p>
+                    <ul>
+                        <li><strong>Participant Log (spreadsheet):</strong> Participant ID, date/time, session duration, reported comfort level (1–5 scale), any technical issues, compensation given</li>
+                        <li><strong>Adverse Events:</strong> If any participant reports discomfort, dizziness, or any safety concern, document immediately and contact the faculty supervisor and IRB</li>
+                        <li><strong>Data Integrity:</strong> After each session, verify the response CSV is complete (≥40 rows) and shows sensible response patterns (not all same button, reasonable response times ~2–10 sec per pair)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="week-section">
+                <h3>Step 5: Consolidation</h3>
+                <div class="procedure">
+                    <p>By end of Week 6, have:</p>
+                    <ul>
+                        <li>≥8 complete participant datasets (each ≥40 decisions)</li>
+                        <li>Participant log spreadsheet (tracking recruitment, comfort, compensation)</li>
+                        <li>All raw response CSVs in a folder: <code>Data/Week6_Preference_Responses/</code></li>
+                        <li>Aggregate CSV combining all participants: <code>All_Responses_Week6.csv</code> with columns: participant_id, trial, scene_a, scene_b, preference, response_time</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Week 7: Analysis Procedures -->
+        <section>
+            <h2>Week 7: Preference Analysis & D3 Deliverable</h2>
+
+            <div class="week-section">
+                <h3>Step 1: Aggregate Data & Descriptive Statistics</h3>
+                <div class="procedure">
+                    <p>Start by summarizing what you collected:</p>
+                    <ul>
+                        <li><strong>Aggregate Preference Counts:</strong> For each pair of scenes (e.g., Scene 1 vs. 3), count how many times each was preferred across all participants. Example: "Scene 1 vs. 3: 2 prefer Scene 1, 12 prefer Scene 3, 1 indifferent."</li>
+                        <li><strong>Pair-Wise Matrix:</strong> Create a matrix showing preference proportions for all pairs tested. Use this to visualize whether preferences follow your expected gradient (e.g., higher levels consistently preferred).</li>
+                        <li><strong>Individual Differences:</strong> Look for outliers: participants whose preferences deviate substantially from the group. This is interesting (diversity of taste) but also a check for data quality.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="week-section">
+                <h3>Step 2: Fit Preference Model</h3>
+                <div class="procedure">
+                    <p>Estimate the underlying preference function using Bayesian hierarchical regression or item-response theory:</p>
+                    <ul>
+                        <li><strong>Model Choice:</strong> For this course, use a simple approach: treat each scene as an "item" and fit cumulative preference curves per participant. Most straightforward: use JAGS or Stan (or Python's PyMC3) to fit a hierarchical model: P(prefer Scene j | Scene i, participant k) ~ logistic(α_k + β_k × (j − i)), where α and β are participant-specific intercept and slope, with group-level priors.</li>
+                        <li><strong>Alternative (Simpler):</strong> If hierarchical modeling is unfamiliar, compute scene preference scores simply: for each scene, sum how many times it was preferred across all pairs it appeared in. This gives a rough "preference score" per scene. Plot and interpret.</li>
+                        <li><strong>Credible Intervals:</strong> Compute 95% credible intervals around preference estimates. Report: "Mean preference for Scene 1: 0.30 (95% CI: 0.15–0.45)." Narrow intervals suggest strong consensus; wide intervals suggest individual variation.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="week-section">
+                <h3>Step 3: Stimulus Spacing Validation</h3>
+                <div class="procedure">
+                    <p>Assess whether your three stimulus levels are appropriately spaced:</p>
+                    <ul>
+                        <li><strong>Preference Gradient:</strong> Do preferences increase monotonically from Scene 1 → Scene 3 → Scene 5? Or is there a ceiling/floor effect? Example finding: "Scene 5 is strongly preferred (~80%) over Scene 1, but Scenes 3 and 5 are nearly equivalent (~55% prefer Scene 5). This suggests your middle level may be too close to the high level."</li>
+                        <li><strong>Spacing Index:</strong> Compute effect sizes (e.g., log-odds ratios) for adjacent pairs: 1v3, 3v5. If both are similar, spacing is balanced. If one is much larger, your stimuli cluster.</li>
+                        <li><strong>Interpretation:</strong> Write this up as "Stimulus Validation Results": Do your three scenes occupy meaningfully distinct points on the preference dimension? Would you recommend adjusting stimulus levels for future iterations?</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="week-section">
+                <h3>Step 4: Confound Reassessment</h3>
+                <div class="procedure">
+                    <p>Review confounds identified in Week 4 audit. Did participant behavior suggest you missed any?</p>
+                    <ul>
+                        <li><strong>Comments During Debriefing:</strong> Did participants mention other factors influencing their choices? ("It was darker in Scene 5, so I assumed it was less pleasant" — confound between stimulus dimension and lighting)</li>
+                        <li><strong>Response Anomalies:</strong> Any participants showing unexpected preference reversals or very quick responses (potential misunderstanding)?</li>
+                        <li><strong>Document:</strong> In your report, note any new confounds identified and revise your understanding for future work.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="week-section">
+                <h3>Step 5: Write D3 Preference Data Analysis Report</h3>
+                <div class="deliverable-box">
+                    <h4>D3 Deliverable: Preference Data Analysis Report (20% of Final Grade)</h4>
+                    <p style="margin-top: 0.75rem;">
+                        A formal research report, ~8–12 pages (including figures). Required sections:
+                    </p>
+                    <ul>
+                        <li><strong>Abstract (150 words):</strong> Summary of design, methods, key findings</li>
+                        <li><strong>Introduction:</strong> Brief restatement of your research question and stimulus dimension. Why validate via preference testing?</li>
+                        <li><strong>Methods:</strong>
+                            <ul style="margin-top: 0.5rem;">
+                                <li>Participants: N, demographics, inclusion criteria, compensation</li>
+                                <li>Stimuli: Describe Scenes 1, 3, 5 and the dimension they vary on</li>
+                                <li>Procedure: Adaptive paired-comparison protocol, software, number of judgments per participant</li>
+                            </ul>
+                        </li>
+                        <li><strong>Results:</strong>
+                            <ul style="margin-top: 0.5rem;">
+                                <li>Descriptive statistics: preference counts for all pairs</li>
+                                <li>Figure: Pairwise preference matrix (heatmap showing % preference for each pair)</li>
+                                <li>Figure: Individual preference curves or scores</li>
+                                <li>Model estimates: fitted preference function parameters with credible intervals</li>
+                                <li>Stimulus spacing validation: preference gradients, effect sizes</li>
+                            </ul>
+                        </li>
+                        <li><strong>Discussion:</strong>
+                            <ul style="margin-top: 0.5rem;">
+                                <li>Do findings support your hypothesis about the stimulus dimension?</li>
+                                <li>Are scenes appropriately spaced for future research?</li>
+                                <li>Individual differences: any notable patterns in who preferred which scenes?</li>
+                                <li>Confounds identified: any new insights from participant behavior?</li>
+                                <li>Limitations: sample size, VR-specific confounds, generalizability</li>
+                                <li>Future work: refinements to stimuli, next steps in your research program</li>
+                            </ul>
+                        </li>
+                        <li><strong>References:</strong> APA format, ≥15 sources (including your own methodology citations)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Assistance Tips -->
+        <section>
+            <h2>Using AI Assistance (Weeks 6–7)</h2>
+            <div class="ai-tips">
+                <h4>💡 Where AI Can Help</h4>
+                <ul>
+                    <li><strong>Data Interpretation:</strong> Paste your aggregate preference data (or describe patterns in words). Ask Claude/ChatGPT: "I have these preference proportions: [data]. What do they tell me about how participants ranked my stimuli? Are there confounds I might have missed?" AI can systematically check against your design spec.</li>
+                    <li><strong>Writing the Results Section:</strong> Provide AI with your figures and statistics. Ask it to draft clear, structured descriptions. AI is excellent at turning numbers into narrative ("Across all participants, Scene 5 was preferred in 78% of comparisons against Scene 1, yielding a log-odds ratio of 1.25...").</li>
+                    <li><strong>Statistical Interpretation:</strong> If you fit a complex model, ask AI to explain the credible intervals and effect sizes in plain language suitable for a research audience.</li>
+                    <li><strong>Confound Analysis (Revisited):</strong> Use AI to systematically review debriefing notes and anomalies, checking whether any new confounds emerged.</li>
+                    <li><strong>Literature Context:</strong> Ask AI to help position your findings in the broader literature on preference assessment, stimulus design, and your specific domain.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Grade Specification -->
+        <section>
+            <h2>D3 Grading Rubric</h2>
+            <p style="margin-bottom: 1.5rem;">
+                The D3 Preference Data Analysis Report is worth <strong>20% of your final course grade</strong>. Here's how it's evaluated:
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Criterion</th>
+                        <th>Weight</th>
+                        <th>Excellent (90–100%)</th>
+                        <th>Good (80–89%)</th>
+                        <th>Acceptable (70–79%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Methods Clarity</strong></td>
+                        <td>20%</td>
+                        <td>Methods section is complete, precise, and reproducible. Sample size justified. Procedure fully described.</td>
+                        <td>Methods are clear and mostly complete. Minor gaps in detail (e.g., software not named).</td>
+                        <td>Methods present but lack some detail. Reader could not fully reproduce study.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Results Presentation</strong></td>
+                        <td>25%</td>
+                        <td>Data clearly summarized with appropriate figures. Preference matrix, individual data, and model estimates all shown. Figures labeled, captions explanatory.</td>
+                        <td>Results well-presented with good figures. Mostly clear but one or two elements missing or poorly labeled.</td>
+                        <td>Results presented but figures are unclear or incomplete. Difficult to extract key findings visually.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Statistical Rigor</strong></td>
+                        <td>20%</td>
+                        <td>Appropriate model fit. Credible intervals and effect sizes reported. Uncertainty quantified. Assumptions checked.</td>
+                        <td>Sound statistics with minor gaps. Mostly appropriate methods; one assumption left unchecked.</td>
+                        <td>Basic statistics applied. Model choice not justified. Limited uncertainty quantification.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stimulus Validation & Interpretation</strong></td>
+                        <td>20%</td>
+                        <td>Clear assessment of whether stimuli are appropriately spaced. Spacing indices or effect sizes reported. Recommendations for future iterations.</td>
+                        <td>Stimulus spacing addressed. Some quantitative support. Minor gaps in recommendations.</td>
+                        <td>Stimulus spacing discussed qualitatively. Limited quantitative evidence. Vague recommendations.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Discussion & Broader Context</strong></td>
+                        <td>15%</td>
+                        <td>Results situated in literature. Confounds thoughtfully analyzed. Limitations acknowledged. Future directions clear.</td>
+                        <td>Good discussion with literature references. Confounds mentioned. Some limitations noted.</td>
+                        <td>Discussion present but superficial. Limited literature engagement. Confounds briefly mentioned.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Time Estimate -->
+        <section>
+            <h2>Time Estimate</h2>
+            <div class="time-estimate">
+                <h4>Week 6 – Preference Testing</h4>
+                <div style="margin-top: 1rem;">
+                    <div class="time-row">
+                        <span class="time-label">Participant time (fixed):</span>
+                        <span class="time-value">~8–10 hours (for 8–10 participants × 20–30 min each + setup/admin)</span>
+                    </div>
+                    <div class="time-row">
+                        <span class="time-label">TA/admin time (fixed):</span>
+                        <span class="time-value">~2–3 hours (recruiting, scheduling, data consolidation)</span>
+                    </div>
+                    <div class="time-row">
+                        <span class="time-label">Team effort:</span>
+                        <span class="time-value">~3–4 hours per pair (parallel work: one recruits, one runs sessions, one manages data)</span>
+                    </div>
+                </div>
+
+                <h4 style="margin-top: 2rem;">Week 7 – Analysis & Report</h4>
+                <div style="margin-top: 1rem;">
+                    <div class="time-row">
+                        <span class="time-label">Traditional analysis:</span>
+                        <span class="time-value">~6–8 hours (manual plotting, writing, interpretation)</span>
+                    </div>
+                    <div class="time-row">
+                        <span class="time-label">With AI assistance:</span>
+                        <span class="time-value">~40–50 minutes (if you use Claude for analysis scaffolding, writing, interpretation)</span>
+                    </div>
+                </div>
+
+                <p style="margin-top: 1.5rem; font-size: 0.95rem; color: #555;">
+                    <strong>Key Insight:</strong> Week 6 time is dominated by participant availability (you can't compress that). Week 7 analysis can be dramatically accelerated by AI. The 10–12x speedup comes from AI handling data interpretation, results writing, and statistical narrative generation.
+                </p>
+            </div>
+        </section>
+
+        <!-- FAQs -->
+        <section>
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-section">
+                <div class="faq-item">
+                    <div class="faq-question">How do I recruit 8+ participants in one week?</div>
+                    <div class="faq-answer">
+                        Start recruiting in Week 5 (don't wait until Week 6). Use UCSD's SONA psychology participant pool—post your study ASAP. Offer flexible scheduling (morning, afternoon, evening slots) and adequate compensation ($15–20 or 1 course unit credit). Recruit 10–12 to account for 1–2 no-shows. Set up scheduling with a shared Google Calendar or Calendly so students self-select time slots.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What if a participant doesn't show up or cancels?</div>
+                    <div class="faq-answer">
+                        Have backup slots available. Contact your backup list immediately. You need a minimum of 8 completes; 10–12 is safer. If recruitment falls short, the TA can help identify additional participants or extend into Week 8 briefly. Document any changes to your protocol and report them in your D3 report under "Limitations."
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What if participant preference function is flat (no strong preference)?</div>
+                    <div class="faq-answer">
+                        A flat preference function (all scenes equally preferred) is scientifically meaningful—it suggests your stimulus dimension may not drive preferences as strongly as hypothesized. This is a valid finding. Report it clearly: "Contrary to expectations, participants showed no systematic preference for any stimulus level (Scene 1 vs. 5: 51% prefer high level, 49% prefer low). This suggests [possible explanations: dimension doesn't matter for this task, confound X dominates, stimuli too subtle]." This outcome is publishable; it constrains theory.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Do all participants need to see the same pairs?</div>
+                    <div class="faq-answer">
+                        No. Adaptive testing means each participant gets a personalized sequence. Person A might see {Scene1 vs. 3, Scene3 vs. 5, Scene1 vs. 5, ...} while Person B sees {Scene3 vs. 5, Scene1 vs. 5, Scene1 vs. 3, ...}. The key is: all participants should complete ≥40 decisions and all pairs should appear at least a few times across the group so you can compute aggregate preference proportions.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">How detailed should my Methods section be?</div>
+                    <div class="faq-answer">
+                        Detailed enough that a peer researcher could replicate your study. Include: participant characteristics (N, age, gender, etc.), exact stimuli description (scene names, what differs), apparatus (VR headset model, software version), procedure (# pairs per participant, decision time limit if any), data collection (how responses logged, file format). Aim for 1.5–2 pages for a ~8-12 page report.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resources -->
+        <section>
+            <h2>Resources & References</h2>
+            <div class="resources-grid">
+                <div class="resource-card">
+                    <h4>Adaptive Design Portal</h4>
+                    <p>Online platform for running adaptive paired-comparison studies. Free educational accounts available.</p>
+                    <a href="https://adaptive.design/" target="_blank">Visit Platform →</a>
+                </div>
+
+                <div class="resource-card">
+                    <h4>UCSD SONA System</h4>
+                    <p>Recruit psychology students for paid participation. Submit study for approval and begin recruitment.</p>
+                    <a href="https://ucsd.sona-systems.com/" target="_blank">SONA Portal →</a>
+                </div>
+
+                <div class="resource-card">
+                    <h4>Bayesian Paired Comparisons (Paper)</h4>
+                    <p>Classic reference: Thurstone's law of comparative judgment and modern Bayesian extensions.</p>
+                    <a href="https://scholar.google.com/scholar?q=Thurstone+comparative+judgment" target="_blank">Search Scholar →</a>
+                </div>
+
+                <div class="resource-card">
+                    <h4>VR Lab Scheduling</h4>
+                    <p>Book VR equipment and lab space. Reserve early to avoid conflicts with other classes.</p>
+                    <a href="https://calendar.ucsd.edu/spaces/vr-lab" target="_blank">Lab Calendar →</a>
+                </div>
+
+                <div class="resource-card">
+                    <h4>Data Analysis Tools</h4>
+                    <p>Python/R packages: PyMC3 (Bayesian modeling), tidyverse (data wrangling), ggplot2 (visualization).</p>
+                    <a href="https://www.pymc.io/" target="_blank">PyMC3 Docs →</a>
+                </div>
+
+                <div class="resource-card">
+                    <h4>APA Citation Style</h4>
+                    <p>Format your bibliography and in-text citations following APA 7th edition.</p>
+                    <a href="https://apastyle.apa.org/" target="_blank">APA Style Guide →</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Takeaway -->
+        <section style="background: linear-gradient(135deg, #e8f4f8 0%, #f0f8fc 100%); border-left: 4px solid #2a8fcc;">
+            <h2 style="border-bottom: 3px solid #2a8fcc;">Key Takeaway</h2>
+            <p>
+                Weeks 6–7 transform your theoretical design (from Week 3) and built artifacts (from Week 4) into empirical validation. You'll collect real human preferences, analyze them rigorously, and produce a research-quality report. This is where you discover whether your stimulus dimension actually matters to people—a crucial reality check before proceeding to larger-scale studies.
+            </p>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 COGS160: AI & VR, UC San Diego. Designed for collaborative research learning.</p>
+    </footer>
+</body>
+</html>

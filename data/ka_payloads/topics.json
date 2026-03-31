@@ -1,6 +1,82 @@
 {
   "topics": [
     {
+      "id": "RF_A1F1CE00",
+      "cat": "Neuroscience",
+      "n": 3,
+      "voi": 0.624,
+      "name": "Luminous Environment \u00d7 Wellbeing (Circadian)",
+      "desc": "Theories: Circadian Photobiology Constructs: luminous  affect wellbeing Maturity: emerging.",
+      "maturity": "emerging",
+      "mean_credence": 0.784,
+      "mean_omega": 0.624,
+      "shared_theories": [
+        "Circadian Photobiology"
+      ],
+      "shared_constructs": [
+        "luminous  affect wellbeing"
+      ],
+      "contradictions": 0,
+      "replications": 0,
+      "paper_ids": [
+        "PDF-0014",
+        "PDF-0221",
+        "PDF-0518"
+      ]
+    },
+    {
+      "id": "RF_53DA3A44",
+      "cat": "Neuroscience",
+      "n": 3,
+      "voi": 0.621,
+      "name": "Spatial Form \u00d7 Aesthetic Preference (Neuroaesthetics)",
+      "desc": "Theories: Neuroaesthetics Constructs: spatial  affect preference Maturity: emerging.",
+      "maturity": "emerging",
+      "mean_credence": 0.794,
+      "mean_omega": 0.621,
+      "shared_theories": [
+        "Neuroaesthetics"
+      ],
+      "shared_constructs": [
+        "spatial  affect preference"
+      ],
+      "contradictions": 0,
+      "replications": 0,
+      "paper_ids": [
+        "PDF-0043",
+        "PDF-0274",
+        "PDF-0280"
+      ]
+    },
+    {
+      "id": "RF_0BCE22B3",
+      "cat": "Methodology",
+      "n": 3,
+      "voi": 0.621,
+      "name": "Spatial Form \u00d7 Spatial Navigation (Spatial)",
+      "desc": "Theories: Spatial Cognition, Environmental Cognition, Wayfinding Theory Constructs: spatial  behav navigation Maturity: emerging.",
+      "maturity": "emerging",
+      "mean_credence": 0.774,
+      "mean_omega": 0.621,
+      "shared_theories": [
+        "Spatial Cognition",
+        "Environmental Cognition",
+        "Wayfinding Theory",
+        "Environmental Psychology",
+        "Universal Design"
+      ],
+      "shared_constructs": [
+        "spatial  behav navigation"
+      ],
+      "contradictions": 0,
+      "replications": 0,
+      "paper_ids": [
+        "PDF-0122",
+        "PDF-0385",
+        "PDF-0911"
+      ]
+    },
+    {
       "id": "RF_76D7C1B4",
       "cat": "Neuroscience",
       "n": 3,
@@ -140,6 +216,34 @@
       ]
     },
     {
+      "id": "RF_4E1CF4CC",
+      "cat": "Physiological",
+      "n": 3,
+      "voi": 0.596,
+      "name": "Nature & Biophilia \u00d7 Wellbeing (Evidence-Based)",
+      "desc": "Theories: Evidence-Based Design, Biophilia Hypothesis, Stress Reduction Theory Constructs: natural  affect wellbeing Maturity: emerging.",
+      "maturity": "emerging",
+      "mean_credence": 0.713,
+      "mean_omega": 0.596,
+      "shared_theories": [
+        "Evidence-Based Design",
+        "Biophilia Hypothesis",
+        "Stress Reduction Theory",
+        "Biophilic Design",
+        "Sustainability"
+      ],
+      "shared_constructs": [
+        "natural  affect wellbeing"
+      ],
+      "contradictions": 0,
+      "replications": 0,
+      "paper_ids": [
+        "PDF-0287",
+        "PDF-0585",
+        "PDF-0885"
+      ]
+    },
+    {
       "id": "RF_D339EF64",
       "cat": "Neuroscience",
       "n": 3,
@@ -163,6 +267,34 @@
         "PDF-0186",
         "PDF-0448",
         "PDF-0686"
+      ]
+    },
+    {
+      "id": "RF_751D22AE",
+      "cat": "Neuroscience",
+      "n": 3,
+      "voi": 0.592,
+      "name": "Nature & Biophilia \u00d7 Wellbeing (Biophilic)",
+      "desc": "Theories: Biophilic Design, Attention Restoration Theory, Stress Recovery Theory Constructs: natural  affect wellbeing Maturity: emerging.",
+      "maturity": "emerging",
+      "mean_credence": 0.708,
+      "mean_omega": 0.592,
+      "shared_theories": [
+        "Biophilic Design",
+        "Attention Restoration Theory",
+        "Stress Recovery Theory",
+        "Green Building",
+        "Salutogenic Design"
+      ],
+      "shared_constructs": [
+        "natural  affect wellbeing"
+      ],
+      "contradictions": 0,
+      "replications": 0,
+      "paper_ids": [
+        "PDF-0780",
+        "PDF-0816",
+        "PDF-0885"
       ]
     },
     {
@@ -391,10 +523,10 @@
     }
   ],
   "summary": {
-    "front_count": 14,
-    "unique_paper_count": 51,
+    "front_count": 19,
+    "unique_paper_count": 64,
     "front_source": "research_fronts_v7",
-    "front_covered_paper_count": 51,
+    "front_covered_paper_count": 64,
     "article_count": 760
   }
 }

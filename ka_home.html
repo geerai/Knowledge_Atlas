@@ -459,7 +459,7 @@ body { font-family: Arial, sans-serif; color: #2D2D2D; overflow-x: hidden; }
         <button class="mode-btn" data-ka-mode="contributor">Contributor</button>
         <button class="mode-btn" data-ka-mode="instructor">Instructor</button>
         <button class="mode-btn" data-ka-mode="practitioner">Practitioner</button>
-        <button class="mode-btn" data-ka-mode="theory_mechanism_explorer">Theory + Mechanisms</button>
+        <button class="mode-btn" data-ka-mode="theory_mechanism_explorer">Theory Explorer</button>
       </div>
       <div class="mode-preview-note" id="home-mode-note">
         Choose a mode to preview a more relevant navbar and first actions before you register.
@@ -954,7 +954,7 @@ window.KA_PAGE_FUNCTION = {
       navOrder: ['nav-home-theory', 'nav-home-explore', 'nav-home-docs', 'nav-home-about'],
       primary: { text: 'Open Theory Guides →', href: '../theory_guides/index.html' },
       secondary: { text: 'Explore Topics', href: 'ka_topics.html' },
-      note: 'Theory + mechanisms mode foregrounds explanatory frameworks while keeping literature exploration one click away.'
+      note: 'Theory Explorer foregrounds explanatory frameworks while keeping literature exploration one click away.'
     }
   };
 
@@ -1057,6 +1057,7 @@ window.KA_ABOUT_PAGE = {
 </script>
 <script src="ka_about_page.js"></script>
 <script src="ka_ui_fixes.js"></script>
+<script src="ka_route_cta.js"></script>
 
 <!-- Usability Critique Agent — visible for COGS160 Spring students -->
 <script src="ka_usability_critic.js"></script>

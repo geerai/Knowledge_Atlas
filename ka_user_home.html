@@ -981,7 +981,7 @@
       name ? 'Welcome back, ' + name : 'Welcome to ATLAS';
     document.getElementById('welcome-desc').textContent = meta.description;
     document.getElementById('path-guidance-body').textContent =
-      'This home page gives you recommended objective paths for your role. Use them when you want guidance; ignore them when you want to explore directly.';
+      'Choose a path for the job you want to do. Follow Next and Back for guidance, or leave the path at any time. Atlas remembers your place.';
   }
 
   /* ── Resume Card ─────────────────────────────────────────────────────── */
@@ -1070,7 +1070,13 @@
         '<div class="wf-card-footer">' +
           '<span class="wf-card-time">⏱ ' + wf.estimatedTime + ' · ' + totalSteps + ' steps</span>' +
           '<span class="wf-card-cta">' +
-            (isComplete ? '✓ Completed' : isStarted ? 'Continue Step ' + (done + 1) + ' →' : 'Start this path →') +
+            (
+              isComplete
+                ? 'Review path ✓'
+                : isStarted
+                  ? 'Continue path →'
+                  : 'Open path →'
+            ) +
           '</span>' +
         '</div>' +
       '</a>';

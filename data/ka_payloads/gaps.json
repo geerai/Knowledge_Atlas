@@ -79,6 +79,19 @@
       "evidenceLink": "ka_evidence.html?front=RF_F3410218"
     },
     {
+      "id": "RF_A1F1CE00",
+      "type": "untested",
+      "title": "Luminous Environment \u00d7 Wellbeing (Circadian)",
+      "description": "Theories: Circadian Photobiology Constructs: luminous  affect wellbeing Maturity: emerging.",
+      "construct": "luminous__affect_wellbeing",
+      "context": "multiple",
+      "voi": "medium",
+      "credence": 0.62,
+      "whyMatters": "This front remains strategically important because its current maturity is emerging with corpus size 3.",
+      "hypothesisBuild": "ka_hypothesis_builder.html?front=RF_A1F1CE00",
+      "evidenceLink": "ka_evidence.html?front=RF_A1F1CE00"
+    },
+    {
       "id": "RF_401C04F4",
       "type": "untested",
       "title": "Material & Surface \u00d7 Physiological Response (Biophilic)",
@@ -170,6 +183,45 @@
       "evidenceLink": "ka_evidence.html?front=RF_1214616B"
     },
     {
+      "id": "RF_751D22AE",
+      "type": "untested",
+      "title": "Nature & Biophilia \u00d7 Wellbeing (Biophilic)",
+      "description": "Theories: Biophilic Design, Attention Restoration Theory, Stress Recovery Theory Constructs: natural  affect wellbeing Maturity: emerging.",
+      "construct": "natural__affect_wellbeing",
+      "context": "multiple",
+      "voi": "medium",
+      "credence": 0.59,
+      "whyMatters": "This front remains strategically important because its current maturity is emerging with corpus size 3.",
+      "hypothesisBuild": "ka_hypothesis_builder.html?front=RF_751D22AE",
+      "evidenceLink": "ka_evidence.html?front=RF_751D22AE"
+    },
+    {
+      "id": "RF_4E1CF4CC",
+      "type": "untested",
+      "title": "Nature & Biophilia \u00d7 Wellbeing (Evidence-Based)",
+      "description": "Theories: Evidence-Based Design, Biophilia Hypothesis, Stress Reduction Theory Constructs: natural  affect wellbeing Maturity: emerging.",
+      "construct": "natural__affect_wellbeing",
+      "context": "multiple",
+      "voi": "medium",
+      "credence": 0.6,
+      "whyMatters": "This front remains strategically important because its current maturity is emerging with corpus size 3.",
+      "hypothesisBuild": "ka_hypothesis_builder.html?front=RF_4E1CF4CC",
+      "evidenceLink": "ka_evidence.html?front=RF_4E1CF4CC"
+    },
+    {
+      "id": "RF_53DA3A44",
+      "type": "untested",
+      "title": "Spatial Form \u00d7 Aesthetic Preference (Neuroaesthetics)",
+      "description": "Theories: Neuroaesthetics Constructs: spatial  affect preference Maturity: emerging.",
+      "construct": "spatial__affect_preference",
+      "context": "multiple",
+      "voi": "medium",
+      "credence": 0.62,
+      "whyMatters": "This front remains strategically important because its current maturity is emerging with corpus size 3.",
+      "hypothesisBuild": "ka_hypothesis_builder.html?front=RF_53DA3A44",
+      "evidenceLink": "ka_evidence.html?front=RF_53DA3A44"
+    },
+    {
       "id": "RF_622DE4B3",
       "type": "untested",
       "title": "Spatial Form \u00d7 Physiological Response (Stress)",
@@ -181,6 +233,19 @@
       "whyMatters": "This front remains strategically important because its current maturity is emerging with corpus size 3.",
       "hypothesisBuild": "ka_hypothesis_builder.html?front=RF_622DE4B3",
       "evidenceLink": "ka_evidence.html?front=RF_622DE4B3"
+    },
+    {
+      "id": "RF_0BCE22B3",
+      "type": "untested",
+      "title": "Spatial Form \u00d7 Spatial Navigation (Spatial)",
+      "description": "Theories: Spatial Cognition, Environmental Cognition, Wayfinding Theory Constructs: spatial  behav navigation Maturity: emerging.",
+      "construct": "spatial__behav_navigation",
+      "context": "multiple",
+      "voi": "medium",
+      "credence": 0.62,
+      "whyMatters": "This front remains strategically important because its current maturity is emerging with corpus size 3.",
+      "hypothesisBuild": "ka_hypothesis_builder.html?front=RF_0BCE22B3",
+      "evidenceLink": "ka_evidence.html?front=RF_0BCE22B3"
     }
   ]
 }

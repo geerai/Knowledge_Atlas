@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 4: Platform Evaluation – Article Finder Track | COGS160</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #182B49 0%, #1a4d7a 100%);
+            color: white;
+            padding: 2.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .accent-teal {
+            color: #1a7a5e;
+        }
+
+        nav.top-nav {
+            background: #182B49;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            border-bottom: 3px solid #1a7a5e;
+        }
+
+        nav.top-nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav.top-nav a:hover {
+            color: #1a7a5e;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        section {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        section h2 {
+            color: #182B49;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid #1a7a5e;
+        }
+
+        section h3 {
+            color: #1a7a5e;
+            font-size: 1.3rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        section h4 {
+            color: #2c3e50;
+            font-size: 1.1rem;
+            margin: 1.25rem 0 0.75rem 0;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        .subsection {
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: #f8fbf9;
+            border-left: 4px solid #1a7a5e;
+            border-radius: 4px;
+        }
+
+        .subsection h4 {
+            color: #1a7a5e;
+            margin-top: 0;
+        }
+
+        .task-box {
+            background: linear-gradient(135deg, #fff9e6 0%, #fffaed 100%);
+            border-left: 4px solid #f39c12;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .task-box h4 {
+            color: #d68910;
+            margin-top: 0;
+        }
+
+        .deliverable {
+            background: linear-gradient(135deg, #fff9e6 0%, #fffaed 100%);
+            border-left: 4px solid #f39c12;
+            padding: 1.25rem;
+            margin: 1.25rem 0;
+            border-radius: 4px;
+        }
+
+        .deliverable h4 {
+            color: #d68910;
+            margin-top: 0;
+        }
+
+        .timeline-box {
+            background: linear-gradient(135deg, #e8f8f3 0%, #f0fcf9 100%);
+            border-left: 4px solid #1a7a5e;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .highlight-box {
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .highlight-box strong {
+            color: #7d6608;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        table th {
+            background: linear-gradient(135deg, #e8f8f3 0%, #f0fcf9 100%);
+            color: #182B49;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid #1a7a5e;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        table tr:hover {
+            background: #fafbfc;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+            line-height: 1.4;
+        }
+
+        .component-box {
+            background: #fafbfc;
+            border: 1px solid #e0e6ed;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 1.25rem 0;
+        }
+
+        .component-box h4 {
+            color: #182B49;
+            margin-top: 0;
+        }
+
+        .resource-block {
+            background: linear-gradient(135deg, #e8f8f3 0%, #f0fcf9 100%);
+            border: 1px solid #1a7a5e;
+            border-radius: 6px;
+            padding: 1.25rem;
+            margin: 1rem 0;
+        }
+
+        .resource-block h4 {
+            color: #1a7a5e;
+            margin-top: 0;
+        }
+
+        .resource-block a {
+            color: #1a7a5e;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .resource-block a:hover {
+            color: #0d4738;
+        }
+
+        .faq-section {
+            margin: 1.5rem 0;
+        }
+
+        .faq-item {
+            margin-bottom: 1.25rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            color: #182B49;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .faq-question:before {
+            content: "Q";
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: #1a7a5e;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .faq-answer {
+            color: #2c3e50;
+            padding-left: 2.5rem;
+            line-height: 1.7;
+        }
+
+        .grading-criteria {
+            background: linear-gradient(135deg, #e8f8f3 0%, #f0fcf9 100%);
+            border-left: 4px solid #1a7a5e;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .grading-criteria h4 {
+            color: #1a7a5e;
+            margin-top: 0;
+        }
+
+        .grading-criteria ul {
+            list-style: disc;
+            padding-left: 2rem;
+        }
+
+        footer {
+            background: #182B49;
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .reference-list {
+            background: #f8fbf9;
+            padding: 1.5rem;
+            border-radius: 4px;
+            border-left: 4px solid #1a7a5e;
+            margin: 1.5rem 0;
+        }
+
+        .reference-list h4 {
+            color: #1a7a5e;
+            margin-top: 0;
+        }
+
+        .reference-list ol {
+            list-style: decimal;
+            padding-left: 2rem;
+        }
+
+        .reference-list li {
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            nav.top-nav {
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+
+            table th, table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Week 4: Five Platforms, <span class="accent-teal">One Question</span></h1>
+        <p>Which RAG System Actually Finds the Evidence?</p>
+    </div>
+
+    <nav class="top-nav">
+        <a href="af_track_planning.html">← AF Track Overview</a>
+        <a href="index.html">All Tracks</a>
+        <a href="#tasks">Tasks</a>
+        <a href="#faq">FAQ</a>
+    </nav>
+
+    <div class="container">
+        <!-- Section 1: Context -->
+        <section id="context">
+            <h2>The Complication: Same Question, Different Answers</h2>
+
+            <p>You search five different platforms for evidence about whether biophilic design reduces stress. Consensus returns 87 relevant papers with a 72% consensus finding. Scite returns 34 papers, but with more nuanced citation context: some papers support the claim, others challenge it. Semantic Scholar returns 143 papers sorted by citation count, not relevance. OpenAlex returns everything published with those keywords, regardless of rigor.</p>
+
+            <p>The evidence did not change between platforms. The platforms changed what counts as evidence. This week you discover exactly where those differences emerge—not in the databases themselves, but in how they index, rank, and present research. By the end of this week, you will have tested all five platforms systematically and produced a comparative matrix that makes the invisible differences visible.</p>
+
+            <p>Your <strong>Usability Evaluation Report (D2, Part 1)</strong> documents this discovery. It is not a consumer review. It is a technical investigation of how platform design choices—indexing strategy, ranking algorithm, interface simplicity, result filtering—shape which research questions get answered.</p>
+
+            <div class="timeline-box">
+                <h4>What You Will Know By Friday</h4>
+                <p>Which platform returns results fastest. Which one shows abstracts (and which makes you click to see them). Which one lets you export your results. What happens when a platform has zero results. How long a first-time user should expect to spend learning the interface. Most importantly: which platform would you trust to tell you that <strong>no evidence exists</strong> for a claim?</p>
+            </div>
+        </section>
+
+        <!-- Section 2: Learning Outcomes -->
+        <section id="outcomes">
+            <h2>Learning Outcomes</h2>
+
+            <p>By completing this week's work, you will:</p>
+
+            <ul>
+                <li><strong>Evaluate interface design empirically:</strong> Instead of describing what you see, you will measure it—time to first result, number of clicks to access an abstract, whether filtering works as expected.</li>
+                <li><strong>Distinguish between coverage and quality:</strong> A platform with 300 results is not necessarily better than one with 30. You will learn when volume matters and when precision matters more.</li>
+                <li><strong>Recognize algorithmic bias in ranking:</strong> All five platforms rank results differently. You will understand why: citation count, recency, semantic relevance, user engagement. Each choice encodes an assumption about what counts as "best."</li>
+                <li><strong>Apply think-aloud protocol rigorously:</strong> Rather than guessing what confuses users, you will watch users search and record exactly where they hesitate, click wrong buttons, or abandon the platform.</li>
+                <li><strong>Design evaluation criteria before testing:</strong> You will write the evaluation matrix this week (before testing), not after. This prevents "seeing what you want to see" in the results.</li>
+            </ul>
+        </section>
+
+        <!-- Section 3: The Five Platforms -->
+        <section id="platforms">
+            <h2>The Five Platforms: Quick Reference</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Platform</th>
+                        <th>What It Does</th>
+                        <th>Access</th>
+                        <th>Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Consensus</strong> (consensus.app)</td>
+                        <td>AI synthesizes consensus findings from paper abstracts; displays confidence meter (e.g., "72% of studies found positive effect")</td>
+                        <td>Free browser interface; API available</td>
+                        <td>Free tier; Premium $120/year</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Elicit</strong> (elicit.org)</td>
+                        <td>Structured literature synthesis; auto-extracts key data from papers into tables; helps with meta-analysis</td>
+                        <td>Free browser; API documented</td>
+                        <td>Free tier; Pro $13/month</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Scite</strong> (scite.ai)</td>
+                        <td>Shows how papers are cited: supporting vs. disputing context. Visualization of citation graphs</td>
+                        <td>Free browser; API (limited free tier)</td>
+                        <td>Free tier; Institutional subscriptions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Semantic Scholar</strong> (semanticscholar.org)</td>
+                        <td>Free academic search by keyword; strong citation graph; detailed metadata from PDF parsing</td>
+                        <td>Free browser; Free API</td>
+                        <td>Free</td>
+                    </tr>
+                    <tr>
+                        <td><strong>OpenAlex</strong> (openalex.org)</td>
+                        <td>Comprehensive metadata for all scholarly publications; fast JSON API; no paywall content</td>
+                        <td>Free browser; Free API</td>
+                        <td>Free</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Section 4: Tasks -->
+        <section id="tasks">
+            <h2>Week 4 Task Sequence (4 Days)</h2>
+
+            <h3>Monday: Evaluation Design + Account Setup</h3>
+
+            <div class="task-box">
+                <h4>Task 1a: Design the Evaluation Matrix</h4>
+                <p>Before you test anything, write the evaluation criteria. This week's deliverable (Part 1 of D2) requires a comparative platform matrix. You define the columns NOW.</p>
+
+                <p>Create a spreadsheet (Google Sheets shared with your team) with these columns:</p>
+                <ul>
+                    <li><strong>Query:</strong> The test question (we provide 5 below)</li>
+                    <li><strong>Platform:</strong> Name (Consensus, Elicit, Scite, Semantic Scholar, OpenAlex)</li>
+                    <li><strong>Results Count:</strong> Total number of papers returned</li>
+                    <li><strong>Time to First Result:</strong> How many seconds until any result appears on screen? (measured with a stopwatch)</li>
+                    <li><strong>Top 3 Titles:</strong> The first three paper titles shown</li>
+                    <li><strong>Abstract Visible?:</strong> Yes/No — do you see abstracts in the main results list, or do you have to click?</li>
+                    <li><strong>PDF Link Accessible?:</strong> Yes/Partial/No — can you access the full text without institutional login?</li>
+                    <li><strong>Filtering/Export Options:</strong> What can you do with results? (e.g., export to BibTeX, filter by year, sort by relevance)</li>
+                    <li><strong>Confusing Aspects (User 1-5):</strong> Direct quotes from users: "I didn't know where to click," "I expected the results to be sorted by year," etc.</li>
+                    <li><strong>Positive Aspects (User 1-5):</strong> What worked well? Direct quotes</li>
+                    <li><strong>Interface Notes:</strong> Your observations (colors, layout, button labels, documentation)</li>
+                </ul>
+
+                <p><strong>Save this as a template spreadsheet.</strong> You will fill it in on Wednesday–Thursday.</p>
+            </div>
+
+            <div class="task-box">
+                <h4>Task 1b: Create Accounts & Test Logins</h4>
+                <p>Sign up for free accounts on all five platforms (if required). Test that logins work. Note any barriers:</p>
+                <ul>
+                    <li>Does the platform require institutional email? (If so, note this—it affects who can use it.)</li>
+                    <li>Does it require phone verification?</li>
+                    <li>Does it have rate limits (e.g., max 50 free searches/day)?</li>
+                    <li>Is there a user guide or tutorial?</li>
+                </ul>
+                <p>Record setup time for each platform (in minutes).</p>
+            </div>
+
+            <h3>Tuesday: Finalize Test Queries</h3>
+
+            <div class="task-box">
+                <h4>Task 2: Select & Validate 5 Test Queries</h4>
+                <p>These five queries are provided. Your team will use them on all five platforms. They should be:</p>
+                <ul>
+                    <li>Specific enough that a researcher would ask them</li>
+                    <li>Broad enough that each platform will return results (not zero-hit queries)</li>
+                    <li>Representative of the types of questions ATLAS needs to answer</li>
+                </ul>
+
+                <p><strong>Your Five Test Queries:</strong></p>
+                <ol>
+                    <li>"Does biophilic design reduce psychological stress in indoor workspaces?"</li>
+                    <li>"What is the evidence that natural light exposure improves cognitive task performance?"</li>
+                    <li>"Does exposure to ceiling height affect creative thinking ability?"</li>
+                    <li>"How does visual complexity in architectural design influence attention and focus?"</li>
+                    <li>"Does the presence of plants in indoor spaces improve air quality and occupant health?"</li>
+                </ol>
+
+                <p>Before testing, each pair should predict: which platform will return the most results? Which will be most relevant? Write your predictions in the spreadsheet as a baseline.</p>
+            </div>
+
+            <h3>Wednesday–Thursday: Systematic Testing</h3>
+
+            <div class="task-box">
+                <h4>Task 3: Run All Queries on All Platforms</h4>
+                <p>Divide work among your three pairs:</p>
+                <ul>
+                    <li><strong>Pair 1:</strong> Consensus + Elicit (Queries 1–3)</li>
+                    <li><strong>Pair 2:</strong> Scite + Semantic Scholar (Queries 1–3)</li>
+                    <li><strong>Pair 3:</strong> OpenAlex + review/validation (Queries 1–3)</li>
+                </ul>
+                <p>On Thursday, all pairs run Queries 4–5 on all platforms to validate the comparative pattern.</p>
+
+                <p><strong>For each query-platform combination, record:</strong></p>
+                <ul>
+                    <li>Results count (exact number)</li>
+                    <li>Time to first result (measure with stopwatch or browser developer tools Network tab)</li>
+                    <li>Top 3 titles (copy exactly)</li>
+                    <li>Whether abstracts are visible without clicking</li>
+                    <li>Whether PDFs are accessible (check at least one paper)</li>
+                </ul>
+
+                <p><strong>What "counts" as a result:</strong> A paper with enough information to judge relevance (title + abstract minimum). Some platforms show relevance scores; record those. Some show only titles; note this.</p>
+            </div>
+
+            <div class="task-box">
+                <h4>Task 4: Think-Aloud Protocol (5 Minutes Per Platform)</h4>
+                <p>For each platform, have one team member (who hasn't used it before) run ONE of your test queries while thinking aloud. The other pair member takes notes. This is not a full user test—it is a <strong>5-minute structured observation</strong> to catch confusing UI elements.</p>
+
+                <p><strong>What to record:</strong></p>
+                <ul>
+                    <li>Where does the user click first? Is it obvious?</li>
+                    <li>Do they find the search box immediately?</li>
+                    <li>What confuses them? (e.g., "I don't know if this is filtering or searching," "The buttons look like links," "I can't tell if my query was submitted")</li>
+                    <li>What works well? (e.g., "The autocomplete suggestions helped," "The results loaded instantly")</li>
+                    <li>Direct quotes: "Oh, I see, I had to click here," "This is intuitive," "I'm lost"</li>
+                </ul>
+
+                <p>Ericsson & Simon (1993) call this "concurrent verbalization." The goal is NOT to judge the user; it is to reveal where the interface fails to communicate its purpose.</p>
+            </div>
+
+            <h3>Friday: Synthesis</h3>
+
+            <div class="task-box">
+                <h4>Task 5: Comparative Matrix Analysis</h4>
+                <p>Aggregate all data into your spreadsheet. For each query-platform cell, calculate:</p>
+                <ul>
+                    <li>Average results count across queries</li>
+                    <li>Average time to first result</li>
+                    <li>Frequency of abstract visibility (3 out of 5 queries: yes)</li>
+                    <li>Frequency of PDF access (1 out of 5 queries: yes, others: no/partial)</li>
+                </ul>
+
+                <p><strong>Synthesize:</strong> Write 2–3 paragraphs summarizing the patterns. Example:</p>
+                <ul>
+                    <li>Consensus returns the fewest results but highest confidence scores.</li>
+                    <li>Semantic Scholar returns the most results but requires clicking to see abstracts.</li>
+                    <li>Scite is slowest (average 8 seconds) but provides citation context that other platforms miss.</li>
+                    <li>OpenAlex has the best structured API but no user-friendly web interface.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 5: What to Submit (D2 Part 1) -->
+        <section id="deliverable">
+            <h2>What to Submit: D2 Part 1 (Week 4)</h2>
+
+            <div class="deliverable">
+                <h4>D2 Part 1: Comparative Platform Matrix (Due Friday, 5 PM)</h4>
+                <p><strong>Format:</strong> Google Sheets (shared link) + one-page PDF summary.</p>
+
+                <p><strong>Spreadsheet Contents:</strong></p>
+                <ul>
+                    <li>Full evaluation matrix (Query × Platform, with all columns listed above)</li>
+                    <li>Raw data from all 5 test queries on all 5 platforms</li>
+                    <li>Think-aloud protocol notes (tab 2)</li>
+                    <li>Account setup notes (tab 3)</li>
+                </ul>
+
+                <p><strong>PDF Summary (1 page, single-spaced):</strong></p>
+                <ol>
+                    <li><strong>Results Overview (3–4 sentences):</strong> Which platform returned the most results? Fewest? Fastest?</li>
+                    <li><strong>Key Findings (5–6 bullets):</strong>
+                        <ul>
+                            <li>Platform X excels at Y (e.g., "Consensus shines at summarizing consensus across studies")</li>
+                            <li>Platform Z has unexpected limitation A (e.g., "Semantic Scholar requires clicking to see abstracts, slowing exploration")</li>
+                            <li>Ranking differences: Which platform prioritizes recency? Relevance? Citation count?</li>
+                        </ul>
+                    </li>
+                    <li><strong>User Experience Patterns (3–4 sentences):</strong> What did think-aloud testing reveal? Which platform had the steepest learning curve?</li>
+                    <li><strong>Two Preliminary Recommendations (2–3 sentences):</strong> Based on this week's testing, which TWO platforms would you recommend for ATLAS integration? Why those two?</li>
+                </ol>
+            </div>
+
+            <p><strong>How we will grade D2 Part 1:</strong></p>
+            <ul>
+                <li><strong>Data completeness (40%):</strong> Did you test all 5 queries on all 5 platforms? Are measurements precise (not approximate)?</li>
+                <li><strong>Think-aloud rigor (30%):</strong> Did you follow the protocol faithfully? Are user quotes specific, not paraphrased?</li>
+                <li><strong>Comparative analysis (20%):</strong> Does your PDF summary highlight differences in a structured way? Can a reader understand the trade-offs?</li>
+                <li><strong>Clarity (10%):</strong> Is the matrix easy to read? Are column headings clear? Does the PDF flow logically?</li>
+            </ul>
+        </section>
+
+        <!-- Section 6: Grading Rubric -->
+        <section id="grading">
+            <h2>Grading Criteria for D2 Part 1</h2>
+
+            <div class="grading-criteria">
+                <h4>Excellent (90–100%)</h4>
+                <ul>
+                    <li>All 5 queries tested on all 5 platforms with precise measurements (times, exact counts, title accuracy)</li>
+                    <li>Think-aloud protocol executed rigorously: direct user quotes, clear documentation of hesitations and successes</li>
+                    <li>Comparative analysis identifies 5+ distinct platform differences (not just surface features—real differences in algorithm, indexing, ranking)</li>
+                    <li>PDF summary is well-structured and provides actionable insights for choosing between platforms</li>
+                    <li>Spreadsheet is well-organized, formatted professionally, with no missing data</li>
+                </ul>
+            </div>
+
+            <div class="grading-criteria">
+                <h4>Good (80–89%)</h4>
+                <ul>
+                    <li>All 5 queries tested on all 5 platforms, but with some measurements rounded or approximate</li>
+                    <li>Think-aloud protocol mostly rigorous, with most user observations documented directly</li>
+                    <li>Comparative analysis identifies 3–4 platform differences with clear explanations</li>
+                    <li>PDF summary is clear but lacks some actionable detail</li>
+                    <li>Spreadsheet is complete with minor formatting issues</li>
+                </ul>
+            </div>
+
+            <div class="grading-criteria">
+                <h4>Satisfactory (70–79%)</h4>
+                <ul>
+                    <li>Most queries tested on most platforms; some missing data or inconsistent measurement approach</li>
+                    <li>Think-aloud protocol partially documented, with some paraphrasing instead of direct quotes</li>
+                    <li>Comparative analysis identifies 2–3 platform differences but lacks depth</li>
+                    <li>PDF summary is generic (could apply to any platform comparison)</li>
+                    <li>Spreadsheet has gaps or is disorganized</li>
+                </ul>
+            </div>
+
+            <div class="grading-criteria">
+                <h4>Needs Improvement (<70%)</h4>
+                <ul>
+                    <li>Incomplete testing; significant gaps in data</li>
+                    <li>Think-aloud protocol missing or not documented</li>
+                    <li>Comparative analysis minimal or vague</li>
+                    <li>PDF summary does not synthesize findings</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 7: FAQ -->
+        <section id="faq">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="faq-section">
+                <div class="faq-item">
+                    <div class="faq-question">Do all five of us have to test all five platforms?</div>
+                    <div class="faq-answer">No. Divide the work: Pair 1 handles Consensus + Elicit for queries 1–3, Pair 2 handles Scite + Semantic Scholar for queries 1–3, Pair 3 handles OpenAlex + cross-validation. On Thursday, all pairs run queries 4–5 on all platforms to validate patterns. This prevents duplication and exposes each pair to all platforms before we move to Week 5.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What if a platform returns zero results for a query?</div>
+                    <div class="faq-answer">Record "0" in the Results Count column. This is data. Then try a simpler query: just "biophilic design" without the full question. If you get results with the simplified query, note the difference. This reveals the platform's query sensitivity and is important for Week 5 (D3), when we assess platform recall on a curated benchmark.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">How precisely should I measure "time to first result"?</div>
+                    <div class="faq-answer">Use your browser's Network tab (Developer Tools → Network → time to first response) or a stopwatch from the moment you hit Enter until the first paper title appears on screen. If the platform loads in sections (first 10 results, then more), record the time to see the first 10. Consistency matters more than precision; use the same method for all platforms.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">One platform requires institutional login. Can we skip it?</div>
+                    <div class="faq-answer">No. Use a library card number or institutional email if you have one. If you cannot access it, note this as a major usability barrier in your "Confusing Aspects" column. The fact that a platform is inaccessible to the public is important data—it affects ATLAS's choice.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What is "think-aloud protocol" exactly? Do we need an IRB approval?</div>
+                    <div class="faq-answer">Think-aloud is a simple observational method: you watch someone use a tool while they narrate their thoughts ("I'm looking for the search box... there it is... now I'm clicking..."). You record what they say and do. For classroom evaluation like this, you do not need IRB approval—you're testing tools, not recruiting human subjects. But do ask your observer's permission to take notes and use direct quotes.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 8: References -->
+        <section id="references">
+            <div class="reference-list">
+                <h4>References & Reading</h4>
+                <ol>
+                    <li>Ericsson, K. A., & Simon, H. A. (1993). <em>Protocol analysis: Verbal reports as data</em> (Rev. ed.). MIT Press. — The foundational methodology for think-aloud protocols; optional but recommended reading for pairs conducting user observation.</li>
+                    <li>Bates, M. J. (1989). The design of browsing and berrypicking techniques for the online search interface. <em>Online Information Review, 13</em>(5), 407–424. — Seminal work on how users browse information systems; explains why platform UI design matters for search success.</li>
+                    <li>Sugimoto, C. R., & Larivière, V. (2018). Measuring research: What everyone should know about research metrics. <em>University of Chicago Press</em>. — Accessible overview of how academic databases make indexing and ranking choices; Chapter 3 covers Google Scholar and Semantic Scholar biases.</li>
+                    <li>Jacso, P. (2005). Google Scholar: The pros and the cons. <em>Online Information Review, 29</em>(2), 208–214. — Critical examination of free academic search limitations; directly relevant to comparing free vs. premium platforms.</li>
+                    <li>Consensus.app, Elicit.org, Scite.ai, Semantic Scholar, OpenAlex documentation and user guides (consulted during platform setup, Week 4).</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Section 9: Key Concept -->
+        <section id="keypoint">
+            <h2>The Epistemic Question That Makes This Week Important</h2>
+
+            <div class="highlight-box">
+                <p><strong>The question you are answering this week is not "Which platform is best?"—it is "Which platform should ATLAS trust for a given research question?"</strong></p>
+
+                <p>Different platforms encode different assumptions about what counts as evidence. Consensus assumes that consensus-by-volume is a good proxy for truth. Semantic Scholar assumes that citation frequency indicates quality. Scite asks: is this paper cited as support or as a warning?</p>
+
+                <p>When ATLAS integrates one of these platforms, ATLAS is not just adopting a search tool. It is adopting an epistemology—a philosophy of what makes a claim credible. Your comparative matrix documents those hidden epistemological choices. In Week 5, you use this documentation to decide which platform ATLAS should trust to answer what kinds of questions.</p>
+            </div>
+        </section>
+
+        <!-- Section 10: Next Week Preview -->
+        <section id="preview">
+            <h2>Looking Ahead to Week 5</h2>
+
+            <p>This week you test the platforms with YOUR test queries. Next week, you will test them against a curated benchmark dataset (papers we know are relevant to biophilic design research) and measure recall and precision. This week answers "How hard is this platform to use?" Next week answers "How good is this platform at finding the right papers?" Both answers go into D2 Part 2, the full Usability Evaluation Report, due next Friday.</p>
+
+            <p>Keep your raw data clean and well-organized. Next week you will add recall/precision metrics to the same spreadsheet, so structure matters now.</p>
+        </section>
+    </div>
+
+    <footer>
+        <p><strong>Article Finder Track, Week 4</strong> | COGS160: AI & VR | UCSD Cognitive Science | Spring 2026</p>
+        <p>Questions? Consult the <a href="af_track_planning.html" style="color: white; text-decoration: underline;">AF Track Overview</a> or ask during office hours.</p>
+    </footer>
+</body>
+</html>

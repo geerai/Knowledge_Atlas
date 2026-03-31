@@ -190,6 +190,69 @@
       "paper_count": 4
     },
     {
+      "front_id": "RF_A1F1CE00",
+      "title": "Luminous Environment \u00d7 Wellbeing (Circadian)",
+      "description": "Research front: Circadian Photobiology studies investigating Luminous Environment effects on Wellbeing.",
+      "paper_ids": [
+        "PDF-0014",
+        "PDF-0221",
+        "PDF-0518"
+      ],
+      "topic_ids": [
+        "luminous__affect_wellbeing"
+      ],
+      "shared_theories": [
+        "Circadian Photobiology"
+      ],
+      "dominant_iv_families": [
+        "luminous"
+      ],
+      "dominant_dv_families": [
+        "affect.wellbeing"
+      ],
+      "maturity": "emerging",
+      "mean_credence": 0.0,
+      "mean_omega": 0.0,
+      "contradiction_count": 0,
+      "replication_count": 0,
+      "open_questions": [
+        "What spectral quality and dose parameters produce reliable circadian entrainment effects?",
+        "Insufficient replication: needs \u22653 independent labs before causal claim."
+      ],
+      "paper_count": 3
+    },
+    {
+      "front_id": "RF_53DA3A44",
+      "title": "Spatial Form \u00d7 Aesthetic Preference (Neuroaesthetics)",
+      "description": "Research front: Neuroaesthetics studies investigating Spatial Form effects on Aesthetic Preference.",
+      "paper_ids": [
+        "PDF-0043",
+        "PDF-0274",
+        "PDF-0280"
+      ],
+      "topic_ids": [
+        "spatial__affect_preference"
+      ],
+      "shared_theories": [
+        "Neuroaesthetics"
+      ],
+      "dominant_iv_families": [
+        "spatial"
+      ],
+      "dominant_dv_families": [
+        "affect.preference"
+      ],
+      "maturity": "emerging",
+      "mean_credence": 0.0,
+      "mean_omega": 0.0,
+      "contradiction_count": 0,
+      "replication_count": 0,
+      "open_questions": [
+        "Insufficient replication: needs \u22653 independent labs before causal claim."
+      ],
+      "paper_count": 3
+    },
+    {
       "front_id": "RF_76D7C1B4",
       "title": "Nature & Biophilia \u00d7 Stress Response (Attention)",
       "description": "Research front: Attention Restoration Theory studies investigating Nature & Biophilia effects on Stress Response.",
@@ -259,6 +322,41 @@
       "paper_count": 3
     },
     {
+      "front_id": "RF_0BCE22B3",
+      "title": "Spatial Form \u00d7 Spatial Navigation (Spatial)",
+      "description": "Research front: Spatial Cognition studies investigating Spatial Form effects on Spatial Navigation.",
+      "paper_ids": [
+        "PDF-0122",
+        "PDF-0385",
+        "PDF-0911"
+      ],
+      "topic_ids": [
+        "spatial__behav_navigation"
+      ],
+      "shared_theories": [
+        "Spatial Cognition",
+        "Environmental Cognition",
+        "Wayfinding Theory",
+        "Environmental Psychology",
+        "Universal Design"
+      ],
+      "dominant_iv_families": [
+        "spatial"
+      ],
+      "dominant_dv_families": [
+        "behav.navigation"
+      ],
+      "maturity": "emerging",
+      "mean_credence": 0.0,
+      "mean_omega": 0.0,
+      "contradiction_count": 0,
+      "replication_count": 0,
+      "open_questions": [
+        "Insufficient replication: needs \u22653 independent labs before causal claim."
+      ],
+      "paper_count": 3
+    },
+    {
       "front_id": "RF_9A8C8821",
       "title": "Acoustic Environment \u00d7 Physiological Response (Soundscape)",
       "description": "Research front: Soundscape Theory studies investigating Acoustic Environment effects on Physiological Response.",
@@ -318,6 +416,42 @@
         "mechanism",
         "affect.preference",
         "cog.creativity"
+      ],
+      "maturity": "emerging",
+      "mean_credence": 0.0,
+      "mean_omega": 0.0,
+      "contradiction_count": 0,
+      "replication_count": 0,
+      "open_questions": [
+        "Is dose-response relationship with nature exposure monotonic or threshold-gated?",
+        "Insufficient replication: needs \u22653 independent labs before causal claim."
+      ],
+      "paper_count": 3
+    },
+    {
+      "front_id": "RF_4E1CF4CC",
+      "title": "Nature & Biophilia \u00d7 Wellbeing (Evidence-Based)",
+      "description": "Research front: Evidence-Based Design studies investigating Nature & Biophilia effects on Wellbeing.",
+      "paper_ids": [
+        "PDF-0287",
+        "PDF-0585",
+        "PDF-0885"
+      ],
+      "topic_ids": [
+        "natural__affect_wellbeing"
+      ],
+      "shared_theories": [
+        "Evidence-Based Design",
+        "Biophilia Hypothesis",
+        "Stress Reduction Theory",
+        "Biophilic Design",
+        "Sustainability"
+      ],
+      "dominant_iv_families": [
+        "natural"
+      ],
+      "dominant_dv_families": [
+        "affect.wellbeing"
       ],
       "maturity": "emerging",
       "mean_credence": 0.0,
@@ -436,6 +570,42 @@
       "open_questions": [
         "What is the mechanistic pathway linking environmental stimulus to physiological response?",
         "What spectral quality and dose parameters produce reliable circadian entrainment effects?",
+        "Insufficient replication: needs \u22653 independent labs before causal claim."
+      ],
+      "paper_count": 3
+    },
+    {
+      "front_id": "RF_751D22AE",
+      "title": "Nature & Biophilia \u00d7 Wellbeing (Biophilic)",
+      "description": "Research front: Biophilic Design studies investigating Nature & Biophilia effects on Wellbeing.",
+      "paper_ids": [
+        "PDF-0780",
+        "PDF-0816",
+        "PDF-0885"
+      ],
+      "topic_ids": [
+        "natural__affect_wellbeing"
+      ],
+      "shared_theories": [
+        "Biophilic Design",
+        "Attention Restoration Theory",
+        "Stress Recovery Theory",
+        "Green Building",
+        "Salutogenic Design"
+      ],
+      "dominant_iv_families": [
+        "natural"
+      ],
+      "dominant_dv_families": [
+        "affect.wellbeing"
+      ],
+      "maturity": "emerging",
+      "mean_credence": 0.0,
+      "mean_omega": 0.0,
+      "contradiction_count": 0,
+      "replication_count": 0,
+      "open_questions": [
+        "Is dose-response relationship with nature exposure monotonic or threshold-gated?",
         "Insufficient replication: needs \u22653 independent labs before causal claim."
       ],
       "paper_count": 3

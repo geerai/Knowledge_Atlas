@@ -340,7 +340,7 @@ nav a.active { color: #F5A623; }
       <option value="contributor">Contributor</option>
       <option value="instructor">Instructor</option>
       <option value="practitioner">Practitioner</option>
-      <option value="theory_mechanism_explorer">Theory + mechanisms</option>
+      <option value="theory_mechanism_explorer">Theory Explorer</option>
     </select>
     <div class="mode-pill" id="article-search-mode-pill">RESEARCHER</div>
   </div>
@@ -382,12 +382,12 @@ nav a.active { color: #F5A623; }
     </button>
     <button class="mode-tab" data-mode="both" onclick="setMode('both', this)">
       <span class="mode-tab-icon">🔍</span>
-      <span class="mode-tab-label">Construct + Instrument</span>
-      <span class="mode-tab-sub">Construct + Instrument combined</span>
+      <span class="mode-tab-label">Most specific match</span>
+      <span class="mode-tab-sub">Combine a topic with a measure or sensor</span>
     </button>
   </div>
   <div style="margin-top:10px;font-size:0.82rem;color:#7A7060;line-height:1.55;">
-    Use <strong>Construct</strong> to explore a topic or question area. Use <strong>Instrument or Sensor</strong> to find papers by how the construct was measured. Use <strong>Construct + Instrument</strong> to find the most specific set of papers.
+    Use <strong>Construct</strong> to explore a topic or question area. Use <strong>Instrument or Sensor</strong> to find papers by how the construct was measured. Use <strong>Most specific match</strong> when you already know both the topic and the measure or sensor.
   </div>
 </div>
 
@@ -956,7 +956,22 @@ function sortResults(val) {
     const wf = window.KA_WORKFLOWS.workflows[wfId];
     const step = wf.steps[Math.max(0, Math.min(isNaN(stepIdx) ? 0 : stepIdx, wf.steps.length - 1))];
     host.classList.add('show');
-    host.innerHTML = `You reached Article Search from the recommended route <strong>${wf.title}</strong>${step ? `, step ${stepIdx + 1}: <strong>${step.title}</strong>` : ''}. Search here, then <a href="ka_workflow_hub.html?wf=${encodeURIComponent(wfId)}&step=${isNaN(stepIdx) ? 0 : stepIdx}">return to the route</a> when you are ready.`;
+    host.innerHTML = `You reached Article Search from the recommended path <strong>${wf.title}</strong>${step ? `, step ${stepIdx + 1}: <strong>${step.title}</strong>` : ''}. Search here, then use the path banner below the navigation bar to go back or continue when you are ready.`;
+  }
+
+  function inferDefaultMode() {
+    const params = new URLSearchParams(window.location.search);
+    const wfId = params.get('wf') || '';
+    if (!wfId || !window.KA_WORKFLOWS || !window.KA_WORKFLOWS.workflows[wfId]) {
+      return 'researcher';
+    }
+    const workflow = window.KA_WORKFLOWS.workflows[wfId];
+    if (workflow.forRoles.includes('student_explorer')) return 'student_explorer';
+    if (workflow.forRoles.includes('contributor')) return 'contributor';
+    if (workflow.forRoles.includes('practitioner')) return 'practitioner';
+    if (workflow.forRoles.includes('theory_mechanism_explorer')) return 'theory_mechanism_explorer';
+    if (workflow.forRoles.includes('instructor')) return 'instructor';
+    return workflow.forRoles[0] || 'researcher';
   }
 
   async function initializeArticleSearchPage() {
@@ -998,7 +1013,7 @@ function sortResults(val) {
     navContainerSelector: 'nav ul',
     modeSelectId: 'article-search-mode-select',
     modePillId: 'article-search-mode-pill',
-    defaultMode: 'researcher'
+    defaultMode: inferDefaultMode()
   });
   initializeRouteStatus();
   initializeArticleSearchPage();
@@ -1048,6 +1063,7 @@ window.KA_ABOUT_PAGE = {
 </script>
 <script src="ka_about_page.js"></script>
 <script src="ka_ui_fixes.js"></script>
+<script src="ka_route_cta.js"></script>
 
 </body>
 </html>

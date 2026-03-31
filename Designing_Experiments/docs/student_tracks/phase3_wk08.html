@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COGS160 — Phase 3 Week 8: Site Assignment & Walkthrough</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+         background:#f5f5f5;padding:20px;color:#222;line-height:1.65}
+    .container{max-width:980px;margin:0 auto;background:#fff;padding:48px;
+               box-shadow:0 2px 10px rgba(0,0,0,.08)}
+    .nav{display:flex;justify-content:space-between;align-items:center;
+         margin-bottom:32px;padding-bottom:16px;border-bottom:2px solid #2A5FA0}
+    .nav a{color:#2A5FA0;text-decoration:none;font-weight:600;font-size:.9rem}
+    .nav a:hover{text-decoration:underline}
+    .track-pill{background:#2A5FA0;color:#fff;padding:4px 14px;border-radius:20px;
+                font-size:.8rem;font-weight:700;letter-spacing:.5px}
+    header{margin-bottom:36px}
+    .week-label{font-size:.85rem;font-weight:700;color:#2A5FA0;text-transform:uppercase;
+                letter-spacing:1px;margin-bottom:6px}
+    h1{font-size:2rem;color:#182B49;font-weight:800;margin-bottom:8px;line-height:1.2}
+    .subtitle{font-size:1.05rem;color:#555;margin-bottom:20px}
+    .meta-row{display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;color:#777}
+    .meta-row span strong{color:#333}
+    h2{font-size:1.3rem;color:#182B49;font-weight:700;margin:40px 0 12px;
+       padding-bottom:6px;border-bottom:2px solid #2A5FA0}
+    h3{font-size:1.05rem;color:#2A5FA0;font-weight:700;margin:24px 0 8px}
+    h4{font-size:.95rem;color:#444;font-weight:700;margin:16px 0 6px}
+    p{margin-bottom:12px;color:#333;font-size:.95rem}
+    ul,ol{margin-left:1.4rem;margin-bottom:12px}
+    li{margin-bottom:5px;color:#333;font-size:.95rem}
+    code.inline{background:#f0ece8;color:#c0392b;padding:2px 6px;border-radius:3px;
+                font-size:.85rem;font-family:"JetBrains Mono","Courier New",monospace}
+    pre{background:#1e1e2e;color:#cdd6f4;border-radius:6px;padding:20px;
+        font-size:.82rem;line-height:1.6;overflow-x:auto;margin:12px 0}
+    .prompt{color:#7addb9}.comment-c{color:#6a9fb5}
+
+    .context-box{background:linear-gradient(135deg,#f0f7ff,#e8f0fe);border:1px solid #aed0ef;
+                 border-left:4px solid #2A5FA0;border-radius:6px;padding:20px 24px;margin-bottom:32px}
+    .context-box p{font-size:.95rem;color:#1a3d6a;margin-bottom:8px}
+    .context-box p:last-child{margin-bottom:0}
+    .warning-box{background:#fff8e1;border:1px solid #ffc107;border-left:4px solid #e65100;
+                 border-radius:6px;padding:16px 20px;margin:16px 0}
+    .warning-box p{margin:0;font-size:.9rem;color:#555}
+    .success-box{background:#f0fff4;border:1px solid #86efac;border-left:4px solid #166534;
+                 border-radius:6px;padding:16px 20px;margin:16px 0}
+    .success-box p{margin:0;font-size:.9rem;color:#555}
+
+    table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.88rem}
+    th{background:#182B49;color:#fff;padding:10px 14px;text-align:left;font-weight:700}
+    td{padding:9px 14px;border-bottom:1px solid #eee;color:#333;vertical-align:top}
+    tr:nth-child(even) td{background:#fafafa}
+
+    .step-box{border:1.5px solid #dde3e9;border-radius:6px;margin:1.25rem 0;overflow:hidden}
+    .step-header{background:#182B49;color:#fff;padding:10px 16px;
+                 font-size:.85rem;font-weight:700;display:flex;align-items:center;gap:10px}
+    .step-num{background:#2A5FA0;color:#fff;width:24px;height:24px;border-radius:50%;
+              display:flex;align-items:center;justify-content:center;font-size:.75rem;
+              font-weight:800;flex-shrink:0}
+    .step-body{padding:16px 20px;background:#fafafa}
+
+    .section-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+    .section-card{border:2px solid #2A5FA0;border-radius:8px;overflow:hidden}
+    .section-card-header{background:#2A5FA0;color:#fff;padding:10px 16px}
+    .section-card-header h4{color:#fff;margin:0;font-size:.95rem}
+    .section-card-body{padding:14px;background:#fff}
+    .section-card-body ul{font-size:.82rem;margin-left:1.2rem}
+    .section-card-body li{margin-bottom:3px;color:#444}
+
+    .deliverable-box{background:#fff3e0;border:2px solid #ff9800;border-radius:8px;
+                     padding:20px 24px;margin:24px 0}
+    .deliverable-box h3{color:#e65100;margin-top:0;margin-bottom:12px}
+    .deliverable-box p,.deliverable-box li{font-size:.9rem}
+
+    @media(max-width:640px){
+      .container{padding:24px}
+      .section-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="nav">
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <a href="index.html">← All Tracks</a>
+      <a href="phase3_wk09.html">Week 9: Bug Fixes →</a>
+      <a href="phase3_wk10.html">Week 10: Final →</a>
+    </div>
+    <span class="track-pill">PHASE 3 · ALL TRACKS</span>
+  </div>
+
+  <header>
+    <div class="week-label">Phase 3 · Week 8 · All Teams</div>
+    <h1>Site Assignment and First Walkthrough</h1>
+    <p class="subtitle">Each team is assigned a section of the Designing_Experiments site to audit, test, and fix. This week: orient, claim your section on GitHub, and run the first student simulation walkthrough.</p>
+    <div class="meta-row">
+      <span><strong>Repo:</strong> Designing_Experiments (github.com/Tag-UCSD/Designing_Experiments)</span>
+      <span><strong>Weight:</strong> 20% of final grade</span>
+      <span><strong>Due Thu:</strong> Walkthrough log pushed to your branch</span>
+    </div>
+  </header>
+
+  <div class="context-box">
+    <p><strong>What Weeks 8–10 are for.</strong> Tracks 1–4 built the research infrastructure (image tagger, article finder, VR stimuli, GUI prototype) in Weeks 3–7. Now you switch roles: instead of being a builder, you are a tester and documentarian. Your job is to simulate the experience of a student who will take the Fall 2026 version of this course — a student who has never seen these pages before — and record everything that is broken, confusing, missing, or incorrect.</p>
+    <p>The deliverable is not a critique: it is a working fix. You will leave the site section better than you found it, with every function documented and every tested path either working or explicitly flagged as not yet implemented.</p>
+  </div>
+
+  <h2>Section Assignments</h2>
+
+  <p>The Designing_Experiments site is divided into four sections. Your instructor will assign your team to a section on Tuesday of Week 8. Each section covers a different track's pages — you are auditing pages you did <em>not</em> build, which means you come to them with genuine naivety.</p>
+
+  <div class="section-grid">
+    <div class="section-card">
+      <div class="section-card-header"><h4>Section A — Image Tagger Track</h4></div>
+      <div class="section-card-body">
+        <ul>
+          <li>image_track_overview.html</li>
+          <li>image_tagger_guide.html</li>
+          <li>image_tag_table.html (424 tags)</li>
+          <li>image_wk03_triage.html</li>
+          <li>image_wk03_registry.html</li>
+          <li>image_wk05_extractors.html</li>
+          <li>image_tag_visualizer.html</li>
+          <li>af_setup_guide.html (shared)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="section-card">
+      <div class="section-card-header"><h4>Section B — Article Finder Track</h4></div>
+      <div class="section-card-body">
+        <ul>
+          <li>af_track_planning.html</li>
+          <li>af_wk03.html (D1 Pipeline Orientation)</li>
+          <li>af_wk04.html (D2 Part 1: RAG Platforms)</li>
+          <li>af_wk05.html (D2 Part 2: Platform Trust)</li>
+          <li>af_wk06.html (D3 Recall/Precision)</li>
+          <li>af_wk07.html (D4 Improvement Proposal)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="section-card">
+      <div class="section-card-header"><h4>Section C — VR Production Track</h4></div>
+      <div class="section-card-body">
+        <ul>
+          <li>vr_track_overview.html</li>
+          <li>vr_wk03_stimulus_design.html</li>
+          <li>vr_wk04_production.html</li>
+          <li>vr_wk05_production2.html</li>
+          <li>vr_wk06_07_preference.html</li>
+        </ul>
+      </div>
+    </div>
+    <div class="section-card">
+      <div class="section-card-header"><h4>Section D — GUI/UX Design Track</h4></div>
+      <div class="section-card-body">
+        <ul>
+          <li>gui_track_overview.html</li>
+          <li>gui_wk03_user_profiles.html</li>
+          <li>gui_wk04_ai_capability.html</li>
+          <li>gui_wk05_expert_panel.html</li>
+          <li>gui_wk06_ai_help.html</li>
+          <li>gui_wk07_report.html</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h2>GitHub Setup for Phase 3</h2>
+
+  <p>Phase 3 work lives in the <strong>Designing_Experiments</strong> repository. If you have not already forked it, do so now. Your team works on a single shared branch for the section audit.</p>
+
+  <div class="step-box">
+    <div class="step-header"><span class="step-num">1</span> Fork and clone (if not already done)</div>
+    <div class="step-body">
+      <pre><span class="prompt">$</span> <span class="comment-c"># Fork at github.com/Tag-UCSD/Designing_Experiments → click Fork</span>
+<span class="prompt">$</span> git clone https://github.com/YOUR-USERNAME/Designing_Experiments.git
+<span class="prompt">$</span> cd Designing_Experiments
+<span class="prompt">$</span> git remote add upstream https://github.com/Tag-UCSD/Designing_Experiments.git</pre>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-header"><span class="step-num">2</span> Create your Phase 3 audit branch</div>
+    <div class="step-body">
+      <pre><span class="prompt">$</span> git checkout -b phase3/section-A-audit-team-name
+<span class="comment-c"># Replace A with your section letter and team-name with your team identifier
+# Examples:
+#   phase3/section-B-mesa-group
+#   phase3/section-C-hillcrest-team</span></pre>
+      <p>Both team members work on the same branch. One person creates it and pushes; the other clones and checks it out:</p>
+      <pre><span class="prompt">$</span> git push origin phase3/section-A-audit-team-name
+<span class="comment-c"># Partner then does:
+# git fetch origin
+# git checkout phase3/section-A-audit-team-name</span></pre>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-header"><span class="step-num">3</span> Create the audit folder for your section</div>
+    <div class="step-body">
+      <pre><span class="prompt">$</span> mkdir -p docs/phase3_audit/section_A
+<span class="prompt">$</span> touch docs/phase3_audit/section_A/walkthrough_log.md
+<span class="prompt">$</span> touch docs/phase3_audit/section_A/success_conditions.md
+<span class="prompt">$</span> git add docs/phase3_audit/
+<span class="prompt">$</span> git commit -m "phase3(section-A): initialise audit folder"
+<span class="prompt">$</span> git push origin phase3/section-A-audit-team-name</pre>
+    </div>
+  </div>
+
+  <h2>The Student Simulation Walkthrough (Thursday)</h2>
+
+  <p>On Thursday, each person on the team independently simulates the experience of a Fall 2026 student encountering your assigned section for the first time. The goal is to follow every instructed step, click every link, and attempt every task — without using any knowledge you gained building your own track. Log every obstacle precisely.</p>
+
+  <h3>What to simulate</h3>
+  <p>Start at the track overview page for your section. Attempt to complete the sequence as a student would: read the overview, navigate to the first weekly assignment, follow the instructions, access the referenced files and tools, and proceed to the next week. Stop when you reach the end of Week 7 or hit an unresolvable blocker.</p>
+
+  <h3>Walkthrough log format</h3>
+
+  <p>Your <code class="inline">walkthrough_log.md</code> must use the following entry structure for each observation:</p>
+
+  <pre><span class="comment-c">## Observation [N]
+
+**Page**: image_wk03_triage.html
+**Step**: "Open the Tag Browser (424 tags) link in the nav"
+**What happened**: Link exists but opens image_tag_table.html which shows a loading spinner
+  and never populates — the JS array data appears to be missing or the file path is wrong.
+**Severity**: BLOCKING (cannot complete the step without this working)
+**Suggested fix**: Verify that the embedded tag data array in image_tag_table.html is intact;
+  re-run the Python generation script if the data was not committed.
+**Files affected**: image_tag_table.html</span></pre>
+
+  <h3>Severity classification</h3>
+
+  <table>
+    <tr><th>Severity</th><th>Definition</th><th>Examples</th></tr>
+    <tr>
+      <td><strong>BLOCKING</strong></td>
+      <td>Cannot complete the stated task without resolving this</td>
+      <td>Broken link, missing file, JS error, empty page</td>
+    </tr>
+    <tr>
+      <td><strong>MAJOR</strong></td>
+      <td>Significantly degrades understanding or usability</td>
+      <td>Wrong deliverable format, unclear instructions, missing code reference</td>
+    </tr>
+    <tr>
+      <td><strong>MINOR</strong></td>
+      <td>Causes confusion or requires guesswork but does not block</td>
+      <td>Ambiguous wording, inconsistent nav, broken formatting</td>
+    </tr>
+    <tr>
+      <td><strong>MISSING</strong></td>
+      <td>Content that is referenced but does not exist yet</td>
+      <td>Week N page not created, linked file not committed, tool not available</td>
+    </tr>
+    <tr>
+      <td><strong>SUGGESTION</strong></td>
+      <td>Enhancement that would improve the experience</td>
+      <td>Better example, additional context, clearer heading structure</td>
+    </tr>
+  </table>
+
+  <div class="warning-box">
+    <p><strong>Log everything, even things that seem trivial.</strong> A MINOR issue in Week 3 that is not fixed may compound into a BLOCKING issue in Week 5 when it is built upon. A SUGGESTION from one team may be a BLOCKING issue for a less experienced student.</p>
+  </div>
+
+  <h2>What Counts as a Well-Defined Step</h2>
+
+  <p>Not everything on a page is a testable step. The following table clarifies what you are testing versus what you are not:</p>
+
+  <table>
+    <tr>
+      <th>You are testing</th>
+      <th>You are NOT testing</th>
+    </tr>
+    <tr>
+      <td>Whether every link in the nav goes to the right page</td>
+      <td>Whether the academic content is scientifically correct</td>
+    </tr>
+    <tr>
+      <td>Whether every referenced file or tool is accessible and functional</td>
+      <td>Whether you agree with the deliverable design</td>
+    </tr>
+    <tr>
+      <td>Whether a student could follow the stated instructions without help</td>
+      <td>Whether the page looks visually polished (unless it prevents reading)</td>
+    </tr>
+    <tr>
+      <td>Whether code examples run without errors</td>
+      <td>Whether there are alternative ways to accomplish the task</td>
+    </tr>
+    <tr>
+      <td>Whether referenced external tools (GitHub, ATLAS, Colab) actually exist and work</td>
+      <td>Whether you would personally structure the assignment differently</td>
+    </tr>
+  </table>
+
+  <div class="deliverable-box">
+    <h3>Week 8 Deliverable</h3>
+    <p><strong>Due: By end of Thursday class.</strong> Push the following to your audit branch:</p>
+    <ul style="margin-left:1.4rem;margin-top:8px">
+      <li><code class="inline">docs/phase3_audit/section_X/walkthrough_log.md</code> — at least 10 observations, each with page, step, what-happened, severity, suggested fix, and files-affected fields</li>
+      <li><code class="inline">docs/phase3_audit/section_X/README.md</code> — a one-paragraph summary of your section: what it is supposed to do, what state it is in, and the three most critical issues you found</li>
+    </ul>
+    <p style="margin-top:10px"><strong>Grading (10 pts):</strong> 6 pts for completeness and specificity of walkthrough log; 2 pts for severity classifications that are clearly justified; 2 pts for README summary.</p>
+  </div>
+
+  <hr style="margin:40px 0;border:none;border-top:1px solid #eee">
+  <p style="color:#777;font-size:.85rem;text-align:center">
+    COGS160: AI &amp; VR · UCSD · Prof. David Kirsh · Phase 3 Week 8 · 2026-03-29
+  </p>
+
+</div>
+</body>
+</html>

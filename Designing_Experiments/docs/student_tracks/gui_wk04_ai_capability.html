@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COGS160: AI & VR — GUI Track Week 4: AI Capability Boundary</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+         background:#f5f5f5;padding:20px;color:#222;line-height:1.7}
+    .container{max-width:960px;margin:0 auto;background:#fff;padding:48px;
+               box-shadow:0 2px 10px rgba(0,0,0,.08)}
+    .nav{display:flex;justify-content:space-between;align-items:center;
+         margin-bottom:32px;padding-bottom:16px;border-bottom:2px solid #6b3fa0}
+    .nav a{color:#6b3fa0;text-decoration:none;font-weight:600;font-size:.9rem}
+    .nav a:hover{text-decoration:underline}
+    .track-pill{background:#6b3fa0;color:#fff;padding:4px 14px;border-radius:20px;
+                font-size:.8rem;font-weight:700;letter-spacing:.5px}
+    header{margin-bottom:36px}
+    .week-label{font-size:.85rem;font-weight:700;color:#6b3fa0;text-transform:uppercase;
+                letter-spacing:1px;margin-bottom:6px}
+    h1{font-size:2rem;color:#182B49;font-weight:800;margin-bottom:8px;line-height:1.2}
+    .subtitle{font-size:1.05rem;color:#555;margin-bottom:20px}
+    .meta-row{display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;color:#777}
+    .meta-row span strong{color:#333}
+    h2{font-size:1.3rem;color:#182B49;font-weight:700;margin:40px 0 12px;
+       padding-bottom:6px;border-bottom:2px solid #6b3fa0}
+    h3{font-size:1.05rem;color:#6b3fa0;font-weight:700;margin:24px 0 8px}
+    h4{font-size:.95rem;color:#444;font-weight:700;margin:16px 0 6px}
+    p{margin-bottom:14px;color:#333;font-size:.95rem;line-height:1.7}
+
+    .context-box{background:linear-gradient(135deg,#faf5ff,#f3e8ff);border:1px solid #c4a0e8;
+                 border-left:4px solid #6b3fa0;border-radius:6px;padding:20px 24px;margin-bottom:32px}
+    .context-box p{font-size:.95rem;color:#444;margin-bottom:8px}
+    .context-box p:last-child{margin-bottom:0}
+
+    .insight-box{background:#f0f7ff;border:1px solid #aed0ef;border-left:4px solid #1a6fb5;
+                 border-radius:6px;padding:20px 24px;margin:20px 0}
+    .insight-box h4{color:#1a6fb5;margin-top:0}
+
+    .outcome-list{list-style:none;padding:0}
+    .outcome-list li{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid #ede0f5;font-size:.95rem}
+    .outcome-list li:last-child{border-bottom:none}
+    .outcome-num{min-width:28px;height:28px;background:#6b3fa0;color:#fff;border-radius:50%;
+                 display:flex;align-items:center;justify-content:center;font-weight:700;
+                 font-size:.8rem;flex-shrink:0;margin-top:2px}
+
+    .example-block{background:#f0f7ff;border:1px solid #aed0ef;border-radius:8px;padding:24px;margin:20px 0}
+    .example-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;
+                    padding-bottom:12px;border-bottom:2px solid #aed0ef}
+    .example-badge{background:#182B49;color:#fff;padding:4px 12px;border-radius:4px;
+                   font-size:.78rem;font-weight:700;letter-spacing:.5px}
+    .example-title{font-size:1.05rem;font-weight:700;color:#182B49}
+
+    .step-list{display:flex;flex-direction:column;gap:16px;margin:16px 0}
+    .step{display:flex;gap:16px;align-items:flex-start}
+    .step-num{min-width:36px;height:36px;background:#6b3fa0;color:#fff;border-radius:50%;
+              display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+    .step-body{flex:1;padding-top:6px}
+    .step-body strong{display:block;margin-bottom:4px;font-size:.95rem;color:#182B49}
+    .step-body p{font-size:.9rem;color:#444;margin-top:4px}
+
+    table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.88rem}
+    th{background:#182B49;color:#fff;padding:10px 14px;text-align:left;font-weight:700}
+    td{padding:9px 14px;border-bottom:1px solid #eee}
+    tr:nth-child(even) td{background:#fafafa}
+
+    .tip{background:#f0fff4;border:1px solid #a8d5b5;border-left:4px solid #28a745;
+         border-radius:6px;padding:14px 18px;margin:12px 0;font-size:.9rem}
+    .warn{background:#fff8e6;border:1px solid #e8c87a;border-left:4px solid #C69214;
+          border-radius:6px;padding:14px 18px;margin:12px 0;font-size:.9rem}
+    .tip strong,.warn strong{display:block;margin-bottom:4px}
+
+    .faq-item{border:1px solid #e8e0f5;border-radius:6px;margin-bottom:10px;overflow:hidden}
+    .faq-q{padding:14px 18px;cursor:pointer;font-weight:700;font-size:.9rem;color:#182B49;
+           background:#fdf9ff;display:flex;justify-content:space-between;align-items:center;
+           user-select:none}
+    .faq-q:hover{background:#f5ecff}
+    .faq-a{padding:0 18px;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s}
+    .faq-a.open{max-height:700px;padding:14px 18px}
+    .faq-a p{font-size:.9rem;color:#444;margin-bottom:8px}
+    .faq-a p:last-child{margin-bottom:0}
+    .faq-chevron{font-size:.8rem;transition:transform .3s}
+    .faq-chevron.open{transform:rotate(180deg)}
+
+    .ref-list{list-style:none;padding:0}
+    .ref-list li{padding:10px 0;border-bottom:1px solid #eee;font-size:.88rem;color:#444;display:flex;gap:12px}
+    .ref-list li:last-child{border-bottom:none}
+    .ref-num{min-width:28px;font-weight:700;color:#6b3fa0}
+    .ref-text{flex:1}
+
+    .deliverable-banner{background:#182B49;color:#fff;border-radius:8px;padding:20px 24px;margin:24px 0}
+    .deliverable-banner h3{color:#C69214;margin:0 0 8px}
+    .deliverable-banner p{font-size:.9rem;opacity:.9;margin-bottom:4px}
+    .deliverable-banner .grade{font-size:1.4rem;font-weight:800;color:#C69214}
+
+    .checklist{list-style:none;padding:0}
+    .checklist li{padding:8px 0;border-bottom:1px solid #eee;font-size:.9rem;display:flex;gap:10px}
+    .checklist li::before{content:"☐";font-size:1.1rem;color:#6b3fa0;flex-shrink:0}
+
+    .spec-box{background:#f9f9f9;border:1px solid #ddd;border-radius:6px;padding:20px 24px;margin:16px 0}
+    .spec-grid{display:grid;grid-template-columns:140px 1fr;gap:8px 16px;font-size:.9rem}
+    .spec-label{font-weight:700;color:#555}
+    .spec-value{color:#222}
+
+    footer{margin-top:48px;padding-top:20px;border-top:1px solid #eee;font-size:.82rem;color:#999;text-align:center}
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="nav">
+    <a href="index.html">← Course Home</a>
+    <span class="track-pill">🖥 GUI Evaluation Track</span>
+    <a href="gui_track_overview.html">Track Overview →</a>
+  </nav>
+
+  <header>
+    <div class="week-label">Week 4 · Deliverable D2 · Pair 2 leads</div>
+    <h1>Where AI Help Breaks</h1>
+    <p class="subtitle">Mapping AI Capability Boundaries and Designing Context-Sensitive Help</p>
+    <div class="meta-row">
+      <span><strong>Due:</strong> Sunday, Week 4 (11:59 PM)</span>
+      <span><strong>Weight:</strong> 12% of course grade</span>
+      <span><strong>Lead:</strong> Pair 2 (all pairs contribute probe tasks)</span>
+    </div>
+  </header>
+
+  <!-- Opening narrative — Gawande's arc: setup → complication → resolution -->
+  <div class="context-box">
+    <p>A human expert, asked a question outside their domain, will say "I don't know." They establish a boundary. An AI language model, asked the same question, will produce a confident-sounding answer that may be catastrophically wrong — and the answer will be wrong in a way that is <em>difficult for a non-expert to detect</em>. This asymmetry is not a small usability problem. It is the central design problem for any interface that integrates AI assistance. Evidence from recent industry studies indicates that users equipped with AI help are often <em>less accurate</em> than users without it, because the AI's false confidence overwrites the user's own caution (Weld & Bansal, 2019).</p>
+    <p>This week, Pair 2 turns this failure mode into a design opportunity. You will systematically probe the Article Eater's help capacity — what it handles well, what it fails at, and how those failures look from a user perspective — then design a help architecture that compensates for the boundary. The key methodological innovation is the "first-timer rule": at least one person testing the AI help must encounter it with no prior knowledge of what it is supposed to do.</p>
+  </div>
+
+  <h2>Learning Outcomes</h2>
+  <ul class="outcome-list">
+    <li><span class="outcome-num">1</span><span>Explain the asymmetry between human and AI failure modes in help systems, and why this asymmetry creates a usability problem distinct from conventional interface problems.</span></li>
+    <li><span class="outcome-num">2</span><span>Design boundary probe tasks that stress-test the AI system at the edge of its capability rather than in domains where it reliably succeeds.</span></li>
+    <li><span class="outcome-num">3</span><span>Document the shape of the capability boundary — classify failures into failure modes (confabulation, hallucination, reasoning error, domain gap) — and map which user types are most at risk.</span></li>
+    <li><span class="outcome-num">4</span><span>Propose a context-sensitive help architecture that detects when the user is entering a boundary zone and adjusts confidence presentation accordingly.</span></li>
+  </ul>
+
+  <!-- Part 1: Defamiliarization — make the familiar strange -->
+  <h2>Part 1 — What "AI Help" Actually Means (And Why It Fails Differently)</h2>
+
+  <p>The narrative around AI-assisted systems often treats AI help as a more efficient version of human help. Faster. More available. Consistent. But this framing misses a crucial fact: AI help and human help fail in almost opposite ways. When a human expert reaches the boundary of their knowledge, they signal it — "I'm not certain," "That's outside my expertise," "I'd need to check." The signal itself is valuable data. When a language model reaches the boundary of its training data or the coherence of its reasoning, it does not signal. It produces the next statistically likely token, which often sounds confident and knowledgeable. Bender et al. (2021) describe this phenomenon as stochastic parroting: the model is, by design, never uncertain. It has no mechanism for expressing the doubt that would actually warn a user they have entered dangerous territory.</p>
+
+  <p>For the Article Eater system specifically, the help capacity includes five main components: (a) query reformulation — the AI suggests how to restructure a VOI query for better results; (b) confidence calibration — the AI explains what a confidence score means; (c) citation tracing — the AI reconstructs the evidence chain that produced a particular ranking; (d) contradiction resolution — the AI highlights contradictory findings in the results; and (e) domain guidance — the AI explains domain-specific terminology. Each of these has a capability boundary. Query reformulation fails gracefully when the domain contains terms the model has not seen. Confidence calibration fails silently when the model misunderstands the statistical basis of the score. Citation tracing fails when the evidence chain is circular or incomplete. Your job is to find those boundaries empirically — not through speculation, but through direct testing with real users encountering real failure modes.</p>
+
+  <h2>Part 2 — Designing Boundary Probe Tasks</h2>
+
+  <p>A boundary probe task is a specific request that pushes the AI system to the edge of what it can handle — not so far that it crashes, but far enough that its limitations become visible. The design challenge is constructing probes that are realistic (a user would actually make this request) while being sensitive enough to reveal the boundary (the request exposes rather than obscures the failure mode).</p>
+
+  <h3>Three types of boundary probes</h3>
+
+  <p><strong>Domain-gap probes</strong> push the system into territories where training data is sparse or absent. Example: "The Article Eater system was designed to map psychological variables. I want to use it to find articles about how urban design affects ant colony foraging. Can your help system explain how to set up that query?" A well-designed AI help system will recognize the domain gap and either refuse, or offer guidance that acknowledges the limitation.</p>
+
+  <p><strong>Contradiction probes</strong> confront the system with conflicting evidence. Example: "I found two articles with the exact same metadata but opposite conclusions about green space effects. Your confidence scores rank them differently. Can your help explain why?" This tests whether the help system can trace reasoning about contradiction or whether it defaults to deferring to the confidence score.</p>
+
+  <p><strong>Reasoning-chain probes</strong> ask the system to justify its own internal logic. Example: "Why did you suggest I add 'cognitive load' as a confounding variable? I don't see that term in the article titles." This probes whether the help system is reasoning about the domain or pattern-matching on surface features.</p>
+
+  <h3>The first-timer constraint</h3>
+
+  <p>Every boundary probe session must include at least one tester who encounters the AI help system <em>without prior knowledge</em> of what it does. This is methodologically essential. Users who know the system will have learned workarounds, developed mental models of its capabilities, and grown accustomed to its failure modes. They will no longer notice failures that have become familiar. The first-timer's fresh encounter with the system will reveal assumptions that experienced users have stopped questioning. If the AI help system says something confidently wrong, the first-timer will be confused; the experienced user might nod along because they have learned what the system usually means by statements like that.</p>
+
+  <h2>Part 3 — Recording and Classifying Failures</h2>
+
+  <p>When the AI help system produces an answer, take notes on four dimensions: (1) <strong>Does the user notice the failure?</strong> Some failures are so subtle that users accept the answer as correct. (2) <strong>What is the failure mode?</strong> Is it a confabulation (invention of plausible-sounding facts not in the training data), a hallucination (internal contradiction or nonsensical reasoning), a reasoning error (correct facts assembled into wrong conclusions), or a domain gap (the system reaching beyond its training distribution)? (3) <strong>Can the user recover without intervention?</strong> Some failures trap the user in a false understanding; others leave enough doubt that the user will double-check. (4) <strong>Who is most at risk?</strong> Which user type (from Week 3's personas) would be most likely to accept this failure as correct guidance and build downstream work on it?</p>
+
+  <div class="example-block">
+    <div class="example-header">
+      <span class="example-badge">WORKED EXAMPLE</span>
+      <span class="example-title">Boundary probe session: The Researcher confronts domain gap</span>
+    </div>
+
+    <div class="spec-box">
+      <p><strong>Probe type:</strong> Domain-gap probe</p>
+      <p style="margin-top:12px"><strong>Setup:</strong> A cognitive psychology researcher (high domain expertise in human factors, low familiarity with Article Eater) wants to use the system to find articles about how room temperature affects coding error rates in software developers.</p>
+      <p style="margin-top:12px"><strong>User's request to AI help:</strong> "I'm trying to query for articles about temperature effects on cognitive task performance. Should I use 'room temperature' or 'environmental temperature' as my independent variable term? What dependent constructs would be most relevant?"</p>
+      <p style="margin-top:12px"><strong>AI help response:</strong> "For temperature studies, I recommend using 'environmental_temperature' as your IV. For dependent constructs, try: cognitive_load, task_accuracy, response_time, error_rate, and attention_span. The system has strong coverage in human factors research."</p>
+      <p style="margin-top:12px"><strong>What actually happens:</strong> The researcher constructs the query. It returns 3 articles total. None of them are about temperature effects on cognitive performance. One is about temperature effects on material properties. One is about psychological temperature (warmth metaphors in language). One is about thermal comfort in buildings. The system's suggestion was plausible but wrong: the Article Eater was not trained on temperature-cognition studies, and the help system confabulated a confident recommendation.</p>
+      <p style="margin-top:12px"><strong>Failure classification:</strong> Confabulation + domain gap. The AI help system produced plausible-sounding guidance for a domain where it has no actual coverage, and the confidence of the recommendation actively misled the user into believing the domain coverage was strong.</p>
+      <p style="margin-top:12px"><strong>User's response:</strong> The researcher assumes the problem is with their query construction. They revise the query four times before concluding the system simply does not contain the research they want. They do not suspect the help system's confidence was inappropriate; they blame themselves for not finding the "right" terminology.</p>
+      <p style="margin-top:12px"><strong>At-risk user type:</strong> The Researcher persona — high domain knowledge masks the confabulation, because the user might reasonably assume the system knows the domain better than they do. The Architect and Newcomer personas would also be at risk, but for different reasons: the Architect lacks the domain knowledge to detect the confabulation; the Newcomer lacks any basis for questioning the recommendation.</p>
+      <p style="margin-top:12px"><strong>Design implication:</strong> The help system needs a domain-awareness check: before making confident suggestions about coverage, it should report actual coverage statistics for that domain (e.g., "We have 47 articles tagged with environmental_temperature effects, but only 2 with cognitive task performance measures"). When coverage is below a threshold, the confidence language must shift from recommendation to caveat.</p>
+    </div>
+  </div>
+
+  <h2>Part 4 — Designing Context-Sensitive Help Architecture</h2>
+
+  <p>Given your findings about where the AI help fails, design a revised help system that compensates. The key principle is context-sensitivity: the help system should detect when the user is entering a boundary zone and adjust its output accordingly. This is not about making the AI smarter (that is the Article Eater backend team's job). It is about making the interface more honest about the AI's actual capabilities.</p>
+
+  <div class="insight-box">
+    <h4>Context-sensitivity in practice</h4>
+    <p>When a user asks a query-reformulation question, the help system should check: (a) How much training data does the Article Eater have in this domain? (b) Are the user's suggested terms present in the knowledge base with meaningful frequency? (c) Is this a well-known domain (green space and mood) or a sparse domain (temperature and coding errors)? Based on these checks, adjust not the truthfulness of the answer but the calibration of confidence: "Strongly recommended" becomes "Worth trying, but coverage is limited," or "I'd verify this with a domain expert before trusting the results."</p>
+  </div>
+
+  <p>Your design should address at least four of the following control points:</p>
+
+  <div class="step-list">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Pre-query confidence calibration</strong>
+        <p>Before the user submits a query, show them coverage statistics for the terms they have entered. "Psychological wellbeing: 4,237 articles. Green space: 891 articles. Both terms together: 127 articles." This grounds their expectations before the query runs, reducing the false confidence problem.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Help system transparency about its own training</strong>
+        <p>When the AI help system makes a suggestion, show a provenance badge: "Based on 3,400 psychology articles in our training set" or "This recommendation is based on limited data (47 articles in this domain)." Let the user see the evidence base for the help recommendation itself.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Escalation paths for high-risk scenarios</strong>
+        <p>When the user enters a boundary zone (sparse domain, conflicting evidence, contradictory recommendations), offer escalation: "This domain has limited coverage. Would you like to (a) try a broader query, (b) consult a domain expert, or (c) accept the uncertainty and proceed?" Rather than leaving the user alone with a confident-sounding but unreliable answer.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>Contrastive help — what the system cannot do</strong>
+        <p>For each help feature, explicitly state its boundary: "Query reformulation works well for single-variable queries. For multi-variable interactions, the suggestion may miss important confounds. Always verify with domain experts." Users who know the limit are less likely to misuse the feature.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="warn">
+    <strong>The confidence calibration problem</strong>
+    The AI help system cannot be made perfect; its failure modes are inherent to how language models work. Your design cannot eliminate confabulation or hallucination. What it can do is make the user aware when they are entering a zone where those failures are likely. "We have strong confidence in this recommendation" is not a realistic goal. "We have moderate confidence, based on 200 training examples, but you should verify" is achievable.
+  </div>
+
+  <h2>Deliverable Specification</h2>
+
+  <div class="deliverable-banner">
+    <h3>D2: AI Capability Boundary Assessment</h3>
+    <p><strong>Format:</strong> PDF report (8–12 pages) + recorded think-aloud sessions (video files)</p>
+    <p><strong>Due:</strong> Sunday, Week 4, 11:59 PM</p>
+    <p class="grade">12%</p>
+  </div>
+
+  <h3>Required report sections</h3>
+
+  <ul class="checklist">
+    <li>Title page (system name, pair members, date)</li>
+    <li>Executive summary (1 page): What is the AI help capability boundary? Which user types are at highest risk from confabulation?</li>
+    <li>Methodology (1–2 pages): How many boundary probe sessions did you run? Who participated? What types of probes did you design?</li>
+    <li>Findings (4–6 pages): For each failure mode discovered, include (a) the probe task that exposed it, (b) a transcript or recording excerpt, (c) the classification (confabulation / hallucination / reasoning error / domain gap), (d) which user types are at risk, (e) whether the user noticed the failure</li>
+    <li>Proposed help architecture (2–3 pages): Wireframes or descriptive text for the context-sensitive help system. Show at least two redesigned help interactions that address high-risk failure modes from your findings.</li>
+    <li>Limitations (0.5 page): What were the constraints of your boundary probes? What parts of the help system did you not test? What would you test with more resources?</li>
+    <li>References (APA format, minimum 4–5 sources)</li>
+  </ul>
+
+  <h3>Video submission checklist</h3>
+
+  <ul class="checklist">
+    <li>Minimum 2 recorded boundary probe sessions, each 15–20 minutes</li>
+    <li>At least one first-timer (participant with no prior knowledge of the Article Eater system)</li>
+    <li>Clear timestamps or chapters marking moments where the AI help system fails</li>
+    <li>Post-session debrief (5 min per session) where participants reflect on their experience with the AI help</li>
+  </ul>
+
+  <h2>FAQs</h2>
+
+  <div class="faq-item">
+    <div class="faq-q">What counts as a "boundary"? How do I know when the AI is at the edge of its capability? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>The boundary is where the AI's output transitions from reliable to unreliable, but the reliability curve is not a sharp cliff. You are looking for the zone where the AI's confidence level no longer matches its actual accuracy. Evidence indicates this happens in domains with sparse training data, at the intersection of multiple concepts, or when the user's request requires reasoning about causal structure rather than pattern-matching (Horvitz, 1999). Practically: the AI is at the boundary when a domain expert and a non-expert would strongly disagree about the quality of the AI's recommendation, or when the user reports surprise at the results.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Do I need to test the AI help on all eight user types? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>No. You need at least one first-timer (to get an unbiased encounter with the system) and at least one person from a high-risk user type (e.g., the Researcher or Architect, whose domain expertise might mask confabulation). The minimum viable design is 2 sessions. Better designs include 4–6 sessions covering 3–4 different user types. You will learn the most by testing user types that use different help features: a Researcher probing citation tracing, an Architect probing domain guidance, a Student probing query reformulation.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">What if the AI help system works perfectly and I can't find any failures? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>This is extremely unlikely, but if it happens, document that finding as explicitly as you would document failures. Report: (a) how many sessions you ran, (b) what types of boundary probes you designed, (c) what you were looking for but did not find. The absence of observed failures is itself informative — it suggests the help system is either exceptionally well-designed, or your probes were not sensitive enough to expose the boundaries. In your Limitations section, propose what kinds of probes might have revealed failures that you missed.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">How should I record the sessions? Do I need studio-quality video? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>Use Zoom, OBS, or any screen recording tool that captures the participant's voice and the system's interface. Transcription quality matters more than video quality; you need to hear what the user is saying. The system's visual state also matters; you need to see what the AI help system displayed. Phone video or studio quality are both fine — clarity of the interface and voice are the criteria. Each video should be named with the date and participant code (e.g., 2026-03-17_P1_FirstTimer.mp4) and should include a timestamp log showing when failures or key moments occurred.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">If I find a failure in the AI help system, should I report it to the Article Eater team? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>Yes, please. Include a note in your report with your findings, or reach out to the system maintainers directly. Documenting failures in this assignment serves two purposes: it teaches you about system design, and it helps the Article Eater improve. However, for the purposes of this assignment, your job is analysis and redesign, not fixing the backend system. Improvements to the Article Eater's AI capabilities are outside the scope of the GUI Evaluation Track.</p>
+    </div>
+  </div>
+
+  <h2>Key References</h2>
+  <ul class="ref-list">
+    <li>
+      <span class="ref-num">1</span>
+      <span class="ref-text">Bender, E. M., Gebru, T., McMillan-Major, B., &amp; Shmitchell, S. (2021). On the dangers of stochastic parrots. In <em>Proceedings of the 2021 ACM Conference on Fairness, Accountability, and Transparency</em> (pp. 610–623). ACM. <a href="https://doi.org/10.1145/3442188.3445922" style="color:#6b3fa0" target="_blank">https://doi.org/10.1145/3442188.3445922</a> (~3,200 citations) — Foundational analysis of why language models produce confident outputs even in domains where they lack knowledge. Section 3 on training data and behavioral consequences is directly relevant.</span>
+    </li>
+    <li>
+      <span class="ref-num">2</span>
+      <span class="ref-text">Weld, D. S., &amp; Bansal, G. (2019). The challenge of crafting intelligible intelligence. <em>Communications of the ACM</em>, 62(3), 70–79. <a href="https://doi.org/10.1145/3241765" style="color:#6b3fa0" target="_blank">https://doi.org/10.1145/3241765</a> (~800 citations) — Examines why AI systems intended to help users often reduce user accuracy, particularly when users calibrate their confidence based on the AI's stated confidence.</span>
+    </li>
+    <li>
+      <span class="ref-num">3</span>
+      <span class="ref-text">Amershi, S., Bussone, A., Chaudhri, A., Hoover, B., Kaur, H., Lukoševičius, M., &amp; Zellers, R. (2019). Software engineering for machine learning: A case study. In <em>2019 IEEE/ACM 41st International Conference on Software Engineering: Software Engineering in Practice</em> (pp. 291–300). IEEE. <a href="https://doi.org/10.1109/ICSE-SEIP.2019.00042" style="color:#6b3fa0" target="_blank">https://doi.org/10.1109/ICSE-SEIP.2019.00042</a> (~600 citations) — Documents how AI systems fail in production systems, with emphasis on failure modes that are hard to detect during development.</span>
+    </li>
+    <li>
+      <span class="ref-num">4</span>
+      <span class="ref-text">Horvitz, E. (1999). Principles of mixed-initiative user interfaces. In <em>Proceedings of the SIGCHI Conference on Human Factors in Computing Systems</em> (pp. 159–166). ACM. <a href="https://doi.org/10.1145/302979.303030" style="color:#6b3fa0" target="_blank">https://doi.org/10.1145/302979.303030</a> (~1,200 citations) — Defines design principles for systems where AI and humans collaborate, including when to defer to the user and when to escalate. Chapter on confidence communication is foundational.</span>
+    </li>
+    <li>
+      <span class="ref-num">5</span>
+      <span class="ref-text">Nielsen, J. (1993). <em>Usability engineering</em>. Academic Press. (~4,000 citations) — Chapter 5 on feedback and error handling provides the classical framework for thinking about when systems should reassure users and when they should warn them. Directly applicable to confidence calibration in AI help systems.</span>
+    </li>
+  </ul>
+
+  <footer>
+    COGS160: AI &amp; VR · GUI Evaluation Track · Week 4 · D2 — AI Capability Boundary Assessment<br>
+    Department of Cognitive Science, UC San Diego · Prof. David Kirsh
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+      const a = q.nextElementSibling;
+      const ch = q.querySelector('.faq-chevron');
+      a.classList.toggle('open');
+      ch.classList.toggle('open');
+    });
+  });
+</script>
+</body>
+</html>
