@@ -189,6 +189,17 @@
     .qualifies-yes { color: #27ae60; font-weight: 700; }
     .qualifies-no { color: #999; font-size: 0.78rem; }
 
+    /* ── Real-time classify badges ────────────────────────── */
+    .classify-badge {
+      display: inline-block; padding: 0.2rem 0.7rem; border-radius: 20px;
+      font-size: 0.75rem; font-weight: 700; white-space: nowrap;
+    }
+    .classify-pending { background: #f0f0f0; color: #888; }
+    .classify-pass { background: #d4edda; color: #155724; }
+    .classify-fail { background: #f8d7da; color: #721c24; }
+    .classify-warn { background: #fff3cd; color: #856404; }
+    .classify-neutral { background: #e2e3e5; color: #383d41; }
+
     /* ── Brownie offer ────────────────────────────────────── */
     .brownie-offer {
       display: none; background: linear-gradient(135deg, #fffbf0, #fff3cc);
@@ -413,6 +424,51 @@
 
 <!-- ── Main content ──────────────────────────────────────── -->
 <div class="main-content">
+
+  <!-- Assignment Instructions -->
+  <div style="background:#fff;border:2px solid #b0bece;border-left:4px solid #C69214;padding:1.5rem;border-radius:8px;margin-bottom:2rem;">
+    <p style="font-size:0.95rem;line-height:1.7;margin:0 0 0.5rem;color:#1a1a1a;font-weight:600;">Your assignment is to:</p>
+    <div style="background:#f8d7da;border:1px solid #f5c6cb;border-radius:6px;padding:0.6rem 1rem;margin-bottom:1rem;font-size:0.88rem;color:#721c24;font-weight:700;">
+      ⚠ IMPORTANT: All 10 articles must be <u>experiment articles</u> — papers that report original empirical studies with participants, data collection, and results. Review articles, meta-analyses, theoretical papers, and opinion pieces do <u>not</u> count. Each PDF is automatically checked when you upload it.
+    </div>
+    <ol style="margin:0;padding-left:1.5rem;font-size:0.93rem;line-height:1.8;">
+      <li style="margin-bottom:0.5rem;"><strong>Upload ten APA citations</strong> for <span style="background:#fff3cd;padding:0.1rem 0.4rem;border-radius:3px;font-weight:800;">EXPERIMENT ARTICLES</span> — either one at a time copied into the text box, or upload a file with all 10.</li>
+      <li style="margin-bottom:0.5rem;"><strong>Upload the PDFs</strong> that correspond to those citations. Each PDF is classified in real time — you'll see ✓ or ✗ immediately.</li>
+      <li style="margin-bottom:1rem;"><strong>We automatically verify</strong> that they are articles about experiments (not theory, reviews, or meta-analyses) and that they are on the topic we assigned you.</li>
+    </ol>
+    <p style="font-size:0.93rem;line-height:1.7;margin:1rem 0 0;border-top:2px solid #e8e8e8;padding-top:1rem;color:#1a1a1a;">Then:</p>
+    <ol style="margin:1rem 0 0;padding-left:1.5rem;font-size:0.93rem;line-height:1.8;">
+      <li><strong>Create a question</strong> for Google AI Scholar on one of our CNFA Topics and repeat the same APA + PDF upload process — but this time you can upload the 10 articles you think are the best, regardless of article type.</li>
+    </ol>
+  </div>
+
+  <!-- ── Quick-add single APA citation ── -->
+  <div style="background:#fff;border:1px solid #e0e4ec;border-radius:10px;padding:1.5rem;margin-bottom:1.5rem;">
+    <h3 style="font-size:1rem;font-weight:700;color:#182B49;margin-bottom:0.5rem;">Paste a Citation</h3>
+    <p style="font-size:0.85rem;color:#666;margin-bottom:0.75rem;">
+      Don't have the PDF yet? Paste an APA citation here to add it to your list. You can upload the PDF later.
+    </p>
+    <div style="display:flex;gap:0.75rem;align-items:flex-end;flex-wrap:wrap;">
+      <div style="flex:1;min-width:300px;">
+        <label style="display:block;font-size:0.8rem;font-weight:600;color:#444;margin-bottom:0.3rem;">APA Citation</label>
+        <textarea id="quick-apa-input" rows="2" placeholder="Author, A. B. (Year). Title of article. Journal Name, volume(issue), pages. https://doi.org/xxxxx"
+          style="width:100%;padding:0.6rem;border:1px solid #c0c8d0;border-radius:6px;font-size:0.88rem;font-family:inherit;resize:vertical;"></textarea>
+      </div>
+      <div style="min-width:120px;">
+        <label style="display:block;font-size:0.8rem;font-weight:600;color:#444;margin-bottom:0.3rem;">DOI (optional)</label>
+        <input id="quick-doi-input" type="text" placeholder="10.xxxx/xxxxx"
+          style="width:100%;padding:0.6rem;border:1px solid #c0c8d0;border-radius:6px;font-size:0.88rem;">
+      </div>
+      <button onclick="addQuickCitation()" style="padding:0.6rem 1.2rem;background:#182B49;color:#fff;border:none;border-radius:6px;font-weight:700;font-size:0.88rem;cursor:pointer;white-space:nowrap;">
+        Add Citation →
+      </button>
+    </div>
+    <p style="font-size:0.78rem;color:#999;margin-top:0.5rem;">
+      Or <strong>upload a text file</strong> (.txt) with one APA citation per line:
+      <input type="file" id="citation-file-input" accept=".txt,.csv" onchange="handleCitationFile(this.files[0])"
+        style="font-size:0.78rem;margin-left:0.25rem;">
+    </p>
+  </div>
 
   <!-- Brownie offer (appears after Q2 complete) -->
   <div class="brownie-offer" id="brownie-offer">
@@ -753,6 +809,7 @@ function handleFiles(which, files) {
     row.innerHTML = `
       <div class="paper-row-header">
         <span class="paper-filename">📄 ${file.name}</span>
+        <span id="classify-badge-${which}-${idx}" class="classify-badge classify-pending">⏳ Checking…</span>
         <button class="paper-remove" onclick="removeFile('${which}', ${idx})">Remove</button>
       </div>
       <div class="paper-fields">
@@ -770,6 +827,9 @@ function handleFiles(which, files) {
       </div>
     `;
     form.appendChild(row);
+
+    // Real-time classification: send PDF to classify-one endpoint immediately
+    classifyOneFile(which, idx, file);
   });
 
   if (pendingFiles[which].length > 0) {
@@ -790,6 +850,59 @@ function removeFile(which, idx) {
   if (remaining === 0) {
     document.getElementById(`btn-fetch-${which}`).disabled = true;
     document.getElementById(`fetch-note-${which}`).textContent = 'Upload PDFs above to activate this button';
+  }
+}
+
+// ── Real-time single-PDF classification ──────────────────
+async function classifyOneFile(which, idx, file) {
+  const badge = document.getElementById(`classify-badge-${which}-${idx}`);
+  if (!badge) return;
+
+  const token = localStorage.getItem('katlas_token');
+  try {
+    const formData = new FormData();
+    formData.append('pdf', file, file.name);
+
+    const resp = await fetch(`${API}/api/student/classify-one`, {
+      method: 'POST',
+      headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+      body: formData
+    });
+
+    if (!resp.ok) throw new Error('Classification unavailable');
+    const result = await resp.json();
+
+    badge.classList.remove('classify-pending');
+    if (result.is_experimental) {
+      badge.className = 'classify-badge classify-pass';
+      badge.textContent = `✓ Experimental (${Math.round(result.confidence * 100)}%)`;
+      // Update running count for immediate feedback
+      updateExpCountPreview(which);
+    } else if (result.article_type === 'unknown') {
+      badge.className = 'classify-badge classify-warn';
+      badge.textContent = '⚠ Type unclear — will check on submit';
+    } else {
+      badge.className = 'classify-badge classify-fail';
+      badge.textContent = `✗ ${result.article_type} — not experimental`;
+      if (which === 'q1') {
+        badge.title = 'Task 1 requires experimental articles. This paper will be stored but won\'t count toward your 10.';
+      }
+    }
+  } catch (e) {
+    // Server unavailable — show neutral state
+    badge.classList.remove('classify-pending');
+    badge.className = 'classify-badge classify-neutral';
+    badge.textContent = '— Will classify on submit';
+  }
+}
+
+function updateExpCountPreview(which) {
+  // Count how many uploaded PDFs have been classified as experimental
+  const badges = document.querySelectorAll(`[id^="classify-badge-${which}-"].classify-pass`);
+  const note = document.getElementById(`fetch-note-${which}`);
+  if (note && badges.length > 0) {
+    const total = pendingFiles[which].filter(f => f !== null).length;
+    note.textContent = `${total} PDF${total > 1 ? 's' : ''} ready — ${badges.length} classified as experimental so far`;
   }
 }
 
@@ -1109,6 +1222,63 @@ async function acceptBrownie() {
   }
 }
 
+// ── Quick citation entry (paste single APA without PDF) ────
+function addQuickCitation() {
+  const apa = document.getElementById('quick-apa-input').value.trim();
+  const doi = document.getElementById('quick-doi-input').value.trim();
+  if (!apa) { alert('Please paste an APA citation first.'); return; }
+
+  // Determine active tab
+  const activePanel = document.querySelector('.tab-panel.active');
+  const which = activePanel ? activePanel.id.replace('panel-', '') : 'q1';
+
+  // Add as title-only entry (no PDF)
+  const id = Date.now();
+  titleOnlyEntries[which].push({ id, title: apa.substring(0, 80), doi, apa });
+  addTitleOnlyRow(which, { id, title: '', doi, apa });
+
+  // Clear inputs
+  document.getElementById('quick-apa-input').value = '';
+  document.getElementById('quick-doi-input').value = '';
+
+  // Open the title-only section so student sees it was added
+  const form = document.getElementById(`title-only-form-${which}`);
+  if (form && !form.classList.contains('open')) {
+    const btn = form.previousElementSibling;
+    if (btn) toggleTitleOnly(which, btn);
+  }
+}
+
+// ── Bulk citation file upload (.txt with one APA per line) ──
+function handleCitationFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const lines = e.target.result.split('\n').map(l => l.trim()).filter(l => l.length > 10);
+    const activePanel = document.querySelector('.tab-panel.active');
+    const which = activePanel ? activePanel.id.replace('panel-', '') : 'q1';
+
+    lines.forEach(line => {
+      const id = Date.now() + Math.random();
+      // Try to extract DOI from the citation line
+      const doiMatch = line.match(/10\.\d{4,}\/[^\s]+/);
+      const doi = doiMatch ? doiMatch[0] : '';
+      titleOnlyEntries[which].push({ id, title: line.substring(0, 80), doi, apa: line });
+      addTitleOnlyRow(which, { id, title: '', doi, apa: line });
+    });
+
+    // Open the title-only section
+    const form = document.getElementById(`title-only-form-${which}`);
+    if (form && !form.classList.contains('open')) {
+      const btn = form.previousElementSibling;
+      if (btn) toggleTitleOnly(which, btn);
+    }
+
+    alert(`Added ${lines.length} citation(s) from file.`);
+  };
+  reader.readAsText(file);
+}
+
 // ── On load ────────────────────────────────────────────────
 const token = localStorage.getItem('katlas_token');
 const savedUser = localStorage.getItem('katlas_user');
@@ -1117,5 +1287,18 @@ if (token && savedUser) {
   initPage();
 }
 </script>
+
+<!-- ── Footer CTA ── -->
+<div style="background:#182B49;padding:2rem;margin-top:2rem;border-radius:10px 10px 0 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+  <div>
+    <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#C69214;margin-bottom:0.3rem;">Next step</div>
+    <div style="font-size:1rem;color:#fff;font-weight:600;">Finished uploading? Read the AI Methodology guide before your first track sprint.</div>
+  </div>
+  <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+    <a href="ka_student_setup.html" style="display:inline-block;padding:0.65rem 1.3rem;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:6px;text-decoration:none;font-weight:600;font-size:0.88rem;">← Back to Student Home</a>
+    <a href="../ka_ai_methodology.html" style="display:inline-block;padding:0.65rem 1.3rem;background:#C69214;color:#fff;border-radius:6px;text-decoration:none;font-weight:700;font-size:0.88rem;">Read AI Methodology* →</a>
+  </div>
+</div>
+
 </body>
 </html>

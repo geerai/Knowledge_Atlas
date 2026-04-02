@@ -620,10 +620,10 @@
                     <!-- Success screen (shown on submit) -->
                     <div class="success-screen" id="successScreen">
                         <div class="success-icon">✓</div>
-                        <h2>Registration request submitted</h2>
-                        <p>Your application has been received. The instructor will review it and send you an approval email, usually within one working day.</p>
+                        <h2>You're registered!</h2>
+                        <p>Your account is active and ready to go. You can sign in now and start exploring the Atlas.</p>
                         <div class="success-detail" id="successDetail"></div>
-                        <a href="ka_home.html" class="btn btn-primary" style="text-decoration:none;display:inline-block;width:auto;padding:12px 32px">Return to Knowledge Atlas →</a>
+                        <a href="ka_login.html" class="btn btn-primary" style="text-decoration:none;display:inline-block;width:auto;padding:12px 32px">Sign In Now →</a>
                     </div>
 
                     <form id="registerForm">
@@ -945,12 +945,17 @@
           trackChoice1: track1,
           trackChoice2: document.getElementById('trackChoice2').value,
           timestamp: new Date().toISOString(),
-          status: 'pending'
+          status: 'approved'
         };
 
-        // Save to pending registrations list
+        // Auto-approve: save directly to approved registrations
+        // (Instructor can review/revoke later via ka_approve.html)
         if (window.KA_WORKFLOW_STORE) {
           window.KA_WORKFLOW_STORE.addPendingRegistration(userData);
+          // Also immediately approve in the store
+          if (window.KA_WORKFLOW_STORE.approveRegistration) {
+            window.KA_WORKFLOW_STORE.approveRegistration(userData.id, userData.trackChoice1);
+          }
         } else {
           const regs = JSON.parse(localStorage.getItem('ka_pending_registrations') || '[]');
           regs.push(userData);
@@ -977,7 +982,7 @@
           '<strong>Name:</strong> ' + userData.firstName + ' ' + userData.lastName + '<br>' +
           '<strong>Email:</strong> ' + userData.email + '<br>' +
           '<strong>Track requested:</strong> ' + (TRACK_NAMES[track1] || track1) + '<br>' +
-          '<strong>Status:</strong> Pending instructor approval';
+          '<strong>Status:</strong> Active — ready to sign in';
         screen.scrollIntoView({ behavior: 'smooth' });
       });
     })();

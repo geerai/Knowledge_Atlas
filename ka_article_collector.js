@@ -21,6 +21,81 @@
 (function () {
   'use strict';
 
+  if (window.KA_WORKSPACE) {
+    function mapArticleIn(article) {
+      return {
+        kind: 'article',
+        sourceId: article.doi || article.url || article.title || '',
+        title: article.title || 'Untitled article',
+        subtitle: article.doi ? `DOI: ${article.doi}` : (article.url ? 'Saved article link' : ''),
+        url: article.url || (article.doi ? `https://doi.org/${article.doi}` : ''),
+        notes: article.notes || '',
+        meta: {
+          doi: article.doi || '',
+          url: article.url || '',
+        },
+      };
+    }
+
+    function mapArticleOut(item) {
+      return {
+        id: item.id,
+        title: item.title,
+        url: item.meta && item.meta.url ? item.meta.url : item.url,
+        doi: item.meta && item.meta.doi ? item.meta.doi : '',
+        notes: item.notes || '',
+      };
+    }
+
+    function wireButtons() {
+      document.querySelectorAll('[data-collect-title]').forEach(function (btn) {
+        if (btn.dataset.collectBound === 'true') return;
+        btn.dataset.collectBound = 'true';
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.KA_WORKSPACE.add(mapArticleIn({
+            title: btn.dataset.collectTitle || btn.textContent,
+            url: btn.dataset.collectUrl || '',
+            doi: btn.dataset.collectDoi || '',
+            notes: btn.dataset.collectNotes || '',
+          }));
+        });
+      });
+    }
+
+    window.KA_COLLECTOR = {
+      init: function () {
+        window.KA_WORKSPACE.init();
+        wireButtons();
+      },
+      add: function (article) {
+        return window.KA_WORKSPACE.add(mapArticleIn(article || {}));
+      },
+      remove: function (id) {
+        window.KA_WORKSPACE.remove(id);
+      },
+      clear: function () {
+        window.KA_WORKSPACE.clearKind('article');
+      },
+      getAll: function () {
+        return window.KA_WORKSPACE.getAll().filter(function (item) { return item.kind === 'article'; }).map(mapArticleOut);
+      },
+      count: function () {
+        return window.KA_WORKSPACE.getAll().filter(function (item) { return item.kind === 'article'; }).length;
+      },
+      openPanel: function () {
+        window.KA_WORKSPACE.openPanel();
+      },
+      closePanel: function () {
+        window.KA_WORKSPACE.closePanel();
+      },
+      wireButtons: wireButtons,
+      onAdd: function () {}
+    };
+    return;
+  }
+
   const STORAGE_KEY = 'ka_article_basket';
   const callbacks = { add: [] };
 

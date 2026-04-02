@@ -493,6 +493,7 @@
 </div>
 
 <script src="ka_workflows.js"></script>
+<script src="ka_workspace.js"></script>
 <script src="ka_article_collector.js"></script>
 <script>
 (function () {
@@ -597,8 +598,8 @@
     const collectNotice = step.collectArticles
       ? '<div class="collect-notice">' +
           '<div class="collect-notice-icon">📚</div>' +
-          '<div class="collect-notice-text"><strong>Article Collector active on this step.</strong> When you find relevant articles on the ATLAS pages linked below, use the Article Collector (bottom-right button) to save them for later submission.</div>' +
-          '<button class="collect-open-btn" onclick="window.KA_COLLECTOR.openPanel()">Open Basket</button>' +
+          '<div class="collect-notice-text"><strong>Workspace basket active on this step.</strong> When you find relevant articles on the Atlas pages linked below, save them into your workspace so they remain available for later submission or synthesis.</div>' +
+          '<button class="collect-open-btn" onclick="window.KA_COLLECTOR.openPanel()">Open Workspace</button>' +
         '</div>'
       : '';
 
@@ -750,11 +751,12 @@
       '<div style="font-size:3.5rem;margin-bottom:16px">' + wf.icon + '</div>' +
       '<h2 style="font-size:1.5rem;font-weight:800;color:#111827;margin-bottom:8px">Route complete!</h2>' +
       '<p style="color:#6b7280;line-height:1.6;margin-bottom:20px">' +
-        'You have finished <strong>' + wf.title + '</strong>. Your notes are saved and your collected articles are ready to submit.' +
+        'You have finished <strong>' + wf.title + '</strong>. Your notes and saved workspace items are ready for review, export, or submission.' +
       '</p>' +
       collectorNote +
       '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">' +
         '<a href="ka_user_home.html" style="background:#002d5b;color:#fff;border-radius:8px;padding:10px 20px;text-decoration:none;font-weight:700;font-size:.9rem">← Back to Recommended Paths</a>' +
+        '<a href="ka_my_work.html" style="background:#fff;color:#1C3D3A;border:1px solid #CBBCA8;border-radius:8px;padding:10px 20px;text-decoration:none;font-weight:700;font-size:.9rem">Open My Work</a>' +
         '<a href="ka_article_propose.html" style="background:' + color + ';color:#fff;border-radius:8px;padding:10px 20px;text-decoration:none;font-weight:700;font-size:.9rem">Submit Articles →</a>' +
       '</div>';
     container2.appendChild(doneEl);

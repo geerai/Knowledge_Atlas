@@ -1,0 +1,623 @@
+/**
+ * Neuroscientific Grounding Opportunities Modal — CSS
+ * Knowledge Atlas Design System
+ *
+ * Colors:
+ *   --navy: #1C3D3A
+ *   --amber: #E8872A
+ *   --cream: #F7F4EF
+ *   --green: #2A7868
+ *   --text: #2D2010
+ *   --muted: #6A5E50
+ *
+ * Last Updated: April 1, 2026
+ */
+
+:root {
+  --neuro-navy: #1C3D3A;
+  --neuro-amber: #E8872A;
+  --neuro-cream: #F7F4EF;
+  --neuro-green: #2A7868;
+  --neuro-text: #2D2010;
+  --neuro-muted: #6A5E50;
+  --neuro-border: #DDD6CD;
+  --neuro-light: #EDE8E0;
+}
+
+/* ── Modal Overlay ── */
+.neuro-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(28, 61, 58, 0.4);
+  backdrop-filter: blur(3px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.neuro-modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── Modal Container ── */
+.neuro-modal-container {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  max-width: 700px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  animation: slideInUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Close Button ── */
+.neuro-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--neuro-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.15s;
+  z-index: 1;
+}
+
+.neuro-modal-close:hover {
+  background: var(--neuro-light);
+  color: var(--neuro-navy);
+}
+
+/* ── Modal Content ── */
+.neuro-modal-content {
+  padding: 40px 32px;
+}
+
+/* ── Modal Header ── */
+.neuro-modal-header {
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--neuro-border);
+}
+
+.neuro-modal-type-badge {
+  display: inline-block;
+  background: var(--neuro-amber);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.neuro-modal-type-badge.topic {
+  background: var(--neuro-green);
+}
+
+.neuro-modal-title {
+  font-family: Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: var(--neuro-navy);
+  line-height: 1.35;
+  margin-bottom: 10px;
+}
+
+.neuro-modal-meta {
+  font-size: 0.85rem;
+  color: var(--neuro-muted);
+  line-height: 1.5;
+}
+
+/* ── Modal Body ── */
+.neuro-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* ── Claims Section ── */
+.neuro-claims-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.neuro-section-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--neuro-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+/* ── Claim Card ── */
+.neuro-claim-card {
+  background: #f9f8f5;
+  border: 1px solid var(--neuro-border);
+  border-radius: 10px;
+  padding: 18px 20px;
+  transition: all 0.15s;
+}
+
+.neuro-claim-card:hover {
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.neuro-claim-header {
+  margin-bottom: 14px;
+}
+
+.neuro-claim-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--neuro-navy);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Mechanism Pills ── */
+.neuro-mechanisms-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.neuro-mechanism-pill {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.neuro-mechanism-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ── Chains ── */
+.neuro-chains {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 14px 0;
+}
+
+.neuro-chain-box {
+  background: #fff;
+  border: 1px solid var(--neuro-border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.neuro-chain-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--neuro-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+
+.neuro-chain-notation {
+  font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+  font-size: 0.75rem;
+  color: var(--neuro-green);
+  line-height: 1.6;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: #f5fbf9;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+.neuro-chain-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 500px) {
+  .neuro-chain-meta {
+    grid-template-columns: 1fr;
+  }
+}
+
+.neuro-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.neuro-meta-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--neuro-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.neuro-meta-value {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--neuro-navy);
+}
+
+/* ── CCI Confidence Bar ── */
+.neuro-cci-bar {
+  background: var(--neuro-light);
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.neuro-cci-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--neuro-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.neuro-cci-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.neuro-cci-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.neuro-cci-text {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--neuro-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── Grounding Gaps ── */
+.neuro-gaps {
+  background: #fff9f0;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-top: 12px;
+}
+
+.neuro-gaps-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--neuro-navy);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.neuro-gaps-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.neuro-gaps-list li {
+  font-size: 0.8rem;
+  color: var(--neuro-muted);
+  line-height: 1.4;
+  padding-left: 0;
+  position: relative;
+}
+
+.neuro-gaps-list li::before {
+  content: '•';
+  color: var(--neuro-amber);
+  font-weight: 700;
+  margin-right: 8px;
+}
+
+/* ── Topic Stats ── */
+.neuro-topic-stats {
+  background: linear-gradient(135deg, var(--neuro-navy), #163230);
+  border-radius: 12px;
+  padding: 24px;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.neuro-stat-box {
+  text-align: center;
+}
+
+.neuro-stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--neuro-amber);
+  margin-bottom: 6px;
+}
+
+.neuro-stat-label {
+  font-size: 0.9rem;
+  color: #A8C8BF;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.neuro-progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.neuro-progress-fill {
+  height: 100%;
+  background: var(--neuro-amber);
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+.neuro-progress-text {
+  font-size: 0.75rem;
+  color: #7AACA0;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* ── Top Mechanisms ── */
+.neuro-top-mechanisms {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.neuro-mechanisms-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.neuro-mech-preview {
+  background: #f9f8f5;
+  border: 1px solid var(--neuro-border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  transition: all 0.15s;
+}
+
+.neuro-mech-preview:hover {
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.neuro-mech-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--neuro-navy);
+  margin-bottom: 6px;
+  line-height: 1.35;
+}
+
+.neuro-mech-chain-small {
+  font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+  font-size: 0.7rem;
+  color: var(--neuro-green);
+  line-height: 1.5;
+  margin-bottom: 8px;
+  max-height: 2.5em;
+  overflow: hidden;
+}
+
+.neuro-mech-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.neuro-badge-bridge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  background: var(--neuro-light);
+  color: var(--neuro-navy);
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.neuro-badge-confidence {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+.neuro-badge-confidence.strong {
+  background: var(--neuro-green);
+}
+
+.neuro-badge-confidence.well-supported {
+  background: var(--neuro-amber);
+}
+
+.neuro-badge-confidence.plausible {
+  background: #D4A574;
+}
+
+.neuro-badge-confidence.speculative {
+  background: #B8A89A;
+}
+
+/* ── Footer ── */
+.neuro-footer {
+  padding-top: 20px;
+  border-top: 1px solid var(--neuro-border);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.neuro-footer-text {
+  font-size: 0.8rem;
+  color: var(--neuro-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.neuro-footer-link {
+  color: var(--neuro-green);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.neuro-footer-link:hover {
+  color: var(--neuro-amber);
+}
+
+.neuro-cta-button {
+  display: inline-block;
+  background: var(--neuro-green);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.15s;
+  letter-spacing: 0.03em;
+}
+
+.neuro-cta-button:hover {
+  background: #1F5F56;
+  box-shadow: 0 4px 12px rgba(42, 120, 104, 0.25);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .neuro-modal-container {
+    max-height: 90vh;
+    border-radius: 12px;
+  }
+
+  .neuro-modal-content {
+    padding: 32px 20px;
+  }
+
+  .neuro-modal-title {
+    font-size: 1.35rem;
+  }
+
+  .neuro-chain-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .neuro-modal-close {
+    width: 36px;
+    height: 36px;
+    top: 12px;
+    right: 12px;
+  }
+
+  .neuro-stat-value {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .neuro-modal-content {
+    padding: 24px 16px;
+  }
+
+  .neuro-modal-title {
+    font-size: 1.15rem;
+  }
+
+  .neuro-claim-text {
+    font-size: 0.85rem;
+  }
+
+  .neuro-chain-notation {
+    font-size: 0.7rem;
+  }
+}
+
+/* ── Accessibility ── */
+@media (prefers-reduced-motion: reduce) {
+  .neuro-modal-overlay,
+  .neuro-modal-container,
+  .neuro-mechanism-pill,
+  .neuro-mech-preview,
+  .neuro-cci-fill,
+  .neuro-progress-fill {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* Focus states for keyboard navigation */
+.neuro-footer-link:focus,
+.neuro-cta-button:focus {
+  outline: 2px solid var(--neuro-amber);
+  outline-offset: 2px;
+}
+
+.neuro-modal-close:focus {
+  outline: 2px solid var(--neuro-green);
+  outline-offset: -2px;
+}

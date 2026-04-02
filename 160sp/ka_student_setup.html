@@ -290,12 +290,11 @@
 </nav>
 
 <div class="page-hero">
-  <div class="eyebrow">COGS 160 · Student Orientation</div>
-  <h1>Welcome to Knowledge Atlas</h1>
+  <div class="eyebrow">COGS 160 · Student Setup</div>
+  <h1>Get Started with COGS 160</h1>
   <p>
-    Knowledge Atlas is a live, versioned research system built by students and faculty.
-    Pick your track below, and we'll send you to the assignment page where setup instructions,
-    milestones, and acceptance criteria all live in one place.
+    Welcome to AI-Directed Knowledge System Building. This page has three steps:
+    read about our methodology, collect research articles, and choose your track.
   </p>
   <div class="track-pills">
     <span class="track-pill t1">Track 1</span>
@@ -311,201 +310,110 @@
 
 <div class="outer">
 
-  <!-- ── SECTION 0: Universal Assignment ── -->
-  <div class="setup-section" style="border-left:4px solid #E8872A;padding-left:1.5rem;">
-    <div class="section-header">
-      <span class="section-num" style="background:#E8872A;">A0</span>
-      <div>
-        <h2>Universal Assignment: Collect Articles</h2>
-        <div class="sh-sub">Every student does this in Week 1 — regardless of track</div>
-      </div>
-    </div>
-    <p style="margin:0.75rem 0 1rem;">Find and upload 10 research articles for each of your two assigned K-ATLAS questions. This builds the empirical corpus that everyone else's work depends on.</p>
-    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
-      <a href="ka_collect_articles.html" style="display:inline-block;padding:0.55rem 1.2rem;background:#1C3D3A;color:#fff;border-radius:6px;text-decoration:none;font-weight:600;font-size:0.9rem;">Go to A0 Assignment →</a>
-      <a href="ka_google_search_guide.html" style="display:inline-block;padding:0.55rem 1.2rem;background:#f0f7f5;color:#1C3D3A;border:1.5px solid #1C3D3A;border-radius:6px;text-decoration:none;font-weight:600;font-size:0.9rem;">Google Search Guide</a>
-    </div>
-  </div>
-
-  <!-- ── SECTION 1: Pick Your Track ── -->
+  <!-- ── SECTION 1: Required Reading ── -->
   <div class="setup-section">
     <div class="section-header">
       <span class="section-num">1</span>
       <div>
-        <h2>Pick Your Track</h2>
-        <div class="sh-sub">Your assignment page has everything you need — setup, milestones, evaluation criteria</div>
+        <h2>Required Reading: How This Course Uses AI</h2>
+        <div class="sh-sub">Before anything else, read the AI Methodology guide</div>
+      </div>
+    </div>
+
+    <p style="margin-bottom: 1rem;">This course is different from most classes you've taken. We use AI as a development tool, not as cheating or a shortcut. Before you start on any track, you need to understand how this works and what "AI-directed" actually means.</p>
+
+    <div class="callout callout-info" style="background: #E6F5F0; border-left: 4px solid var(--green); color: #1a4a3f; margin-bottom: 1.5rem;">
+      <strong>This is not optional.</strong> The AI Methodology guide explains the philosophy, the workflow, and your responsibility as a student. Read it first.
+    </div>
+
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+      <a href="../ka_ai_methodology.html" style="display:inline-block;padding:0.75rem 1.6rem;background:#1C3D3A;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Read the AI Methodology Guide →</a>
+      <label style="display:flex;align-items:center;gap:8px;font-size:0.9rem;color:var(--text);">
+        <input type="checkbox" id="understand-ai" style="width:16px;height:16px;accent-color:var(--green);">
+        I understand that AI is a tool in this course, not a shortcut
+      </label>
+    </div>
+  </div>
+
+  <!-- ── SECTION 2: Your First Assignment ── -->
+  <div class="setup-section">
+    <div class="section-header">
+      <span class="section-num">2</span>
+      <div>
+        <h2>Your First Assignment: Collect Research Articles</h2>
+        <div class="sh-sub">Every student completes this in Week 1</div>
+      </div>
+    </div>
+
+    <div class="callout" style="background:#fff;border:2px solid var(--border);border-left:4px solid var(--amber);padding:1.2rem;border-radius:8px;margin:1rem 0;">
+      <p style="font-size:0.92rem;line-height:1.7;margin:0 0 0.8rem;">Your assignment is to:</p>
+      <ol style="margin:0;padding-left:1.6rem;font-size:0.92rem;line-height:1.7;">
+        <li style="margin-bottom:0.4rem;"><strong>Upload ten APA citations</strong> for EXPERIMENT ARTICLES — either one at a time copied into the text box, or upload a file with all 10.</li>
+        <li style="margin-bottom:0.4rem;"><strong>Upload the PDFs</strong> that correspond to those citations.</li>
+        <li style="margin-bottom:0.8rem;"><strong>We will verify</strong> that they are articles about experiments (not theory or meta-reviews) and that they are on the topic we assigned you.</li>
+      </ol>
+      <p style="font-size:0.92rem;line-height:1.7;margin:0.8rem 0 0;border-top:2px solid var(--border);padding-top:0.8rem;">Then:</p>
+      <ol style="margin:0.8rem 0 0;padding-left:1.6rem;font-size:0.92rem;line-height:1.7;">
+        <li><strong>Create a question</strong> for Google AI Scholar on one of our CNFA Topics and repeat the same APA + PDF upload process — but this time you can upload the 10 articles you think are the best, regardless of article type.</li>
+      </ol>
+    </div>
+
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.5rem;">
+      <a href="collect-articles-upload.html" style="display:inline-block;padding:0.75rem 1.6rem;background:#1C3D3A;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Go to Article Upload Page →</a>
+      <a href="ka_google_search_guide.html" style="display:inline-block;padding:0.75rem 1.6rem;background:#f0f7f5;color:#1C3D3A;border:1.5px solid #1C3D3A;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem;transition:all 0.15s;" onmouseover="this.style.background='#e8f3f0'" onmouseout="this.style.background='#f0f7f5'">Google Scholar Search Guide</a>
+    </div>
+  </div>
+
+  <!-- ── SECTION 3: Choose Your Track ── -->
+  <div class="setup-section">
+    <div class="section-header">
+      <span class="section-num">3</span>
+      <div>
+        <h2>Choose Your Track</h2>
+        <div class="sh-sub">After completing the article collection, spend the rest of the quarter on one of four specialized tracks</div>
       </div>
     </div>
 
     <div class="track-grid">
       <!-- Track 1 -->
-      <a href="ka_tag_assignment.html" class="track-card t1">
-        <h3>Track 1: Image Tagging &amp; CNFA Annotation</h3>
+      <a href="ka_track1_tagging.html" class="track-card t1">
+        <h3>Track ONE: Image Tagging</h3>
         <p>
-          Develop a Python annotation tool that labels images with Evidence-Based Tags and aligns them with Coherence-NF Authority propositions. Learn data verification and pipeline architecture.
+          Develop annotation tools that label architectural and environmental images with evidence-based tags aligned with K-ATLAS propositions. Learn data verification and pipeline architecture.
         </p>
-        <div class="tagline">Your setup guide, assignments, and milestones are all on one page.</div>
-        <div class="cta-button">Go to Track 1 →</div>
+        <div class="tagline">View track overview and syllabus</div>
+        <div class="cta-button">View Track 1 →</div>
       </a>
 
       <!-- Track 2 -->
-      <a href="ka_article_finder_assignment.html" class="track-card t2">
-        <h3>Track 2: Article Finder Pipeline</h3>
+      <a href="ka_track2_pipeline.html" class="track-card t2">
+        <h3>Track TWO: AI Article Pipeline</h3>
         <p>
-          Build a query engine and batch retrieval system to find relevant papers from open-access databases. Implement deduplication, schema validation, and database integrity checks.
+          Build automated article discovery systems using RAG and AI. Implement relevance scoring, Value of Information prioritization, and quality gates for evidence gathering.
         </p>
-        <div class="tagline">Your setup guide, assignments, and milestones are all on one page.</div>
-        <div class="cta-button">Go to Track 2 →</div>
+        <div class="tagline">View track overview and syllabus</div>
+        <div class="cta-button">View Track 2 →</div>
       </a>
 
       <!-- Track 3 -->
-      <a href="ka_vr_assignment.html" class="track-card t3">
-        <h3>Track 3: VR Environment Production</h3>
+      <a href="ka_track3_vr.html" class="track-card t3">
+        <h3>Track THREE: VR for Experiments</h3>
         <p>
-          Design 3D scenarios in Unreal Engine that visualize epistemological concepts and warrant structures. Create interactive demonstrations of coherence and evidence dynamics.
+          Create a library of configurable VR environments for controlled experiments. Build parametric scenes with integrated eye tracking and behavioral measurement.
         </p>
-        <div class="tagline">Your setup guide, assignments, and milestones are all on one page.</div>
-        <div class="cta-button">Go to Track 3 →</div>
+        <div class="tagline">View track overview and syllabus</div>
+        <div class="cta-button">View Track 3 →</div>
       </a>
 
       <!-- Track 4 -->
-      <a href="ka_gui_assignment.html" class="track-card t4">
-        <h3>Track 4: GUI &amp; Use-Case Evaluation</h3>
+      <a href="ka_track4_ux.html" class="track-card t4">
+        <h3>Track FOUR: Interaction Design & Evaluation</h3>
         <p>
-          Build web interfaces for researchers to explore the KA evidence graph and evaluate the system's performance on real use cases. Test against acceptance criteria and document usability findings.
+          Understand how different user types navigate the K-Atlas system. Analyze journeys, improve information architecture, and measure task completion.
         </p>
-        <div class="tagline">Your setup guide, assignments, and milestones are all on one page.</div>
-        <div class="cta-button">Go to Track 4 →</div>
+        <div class="tagline">View track overview and syllabus</div>
+        <div class="cta-button">View Track 4 →</div>
       </a>
-    </div>
-  </div>
-
-  <!-- ── SECTION 2: Before You Start ── -->
-  <div class="setup-section">
-    <div class="section-header">
-      <span class="section-num">2</span>
-      <div>
-        <h2>Before You Start</h2>
-        <div class="sh-sub">Environment setup — your track page has track-specific git commands</div>
-      </div>
-    </div>
-
-    <div class="accordion">
-      <div class="accordion-header" onclick="toggleAccordion(this)">
-        <span>Install Python 3.12, git, and VS Code</span>
-        <span class="chevron">▼</span>
-      </div>
-      <div class="accordion-body">
-        <div class="tabs">
-          <button class="tab-button active" onclick="switchTab(event, 'mac-tab')">macOS</button>
-          <button class="tab-button" onclick="switchTab(event, 'windows-tab')">Windows</button>
-        </div>
-
-        <div id="mac-tab" class="tab-content active">
-          <pre><span class="cmd-comment"># Install Homebrew if needed</span>
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-<span class="cmd-comment"># Install Python 3.12, git, VS Code</span>
-brew install python@3.12 git
-brew install --cask visual-studio-code
-
-<span class="cmd-comment"># Verify</span>
-python3 --version   <span class="cmd-comment"># should be 3.12.x</span>
-git --version</pre>
-        </div>
-
-        <div id="windows-tab" class="tab-content">
-          <pre><span class="cmd-comment"># In PowerShell (run as Administrator)</span>
-winget install Python.Python.3.12
-winget install Git.Git
-winget install Microsoft.VisualStudioCode
-
-<span class="cmd-comment"># Restart terminal, then verify</span>
-python --version
-git --version</pre>
-        </div>
-      </div>
-    </div>
-
-    <div class="callout callout-info">
-      <strong>Track-specific setup:</strong> Each track page has clone and branch commands tailored to your work.
-      Read the "Getting Started" section on your track page before your first sprint.
-    </div>
-
-    <div class="callout callout-info" style="margin-top: 14px;">
-      <strong>Next step:</strong> <a href="../ka_ai_methodology.html" style="color: #1a4a3f; font-weight: 700; text-decoration: underline;">Read the AI Methodology guide</a>
-      before your first sprint. This is how COGS 160 development works.
-    </div>
-  </div>
-
-  <!-- ── SECTION: Course Schedules ── -->
-  <div class="setup-section">
-    <div class="section-header">
-      <span class="section-num">☰</span>
-      <div>
-        <h2>Course Schedules</h2>
-        <div class="sh-sub">Week-by-week plans for each quarter</div>
-      </div>
-    </div>
-
-    <div class="track-grid" style="grid-template-columns: 1fr 1fr;">
-      <a href="../Designing_Experiments/cogs160_spring_2026_site.html" class="track-card" style="border-left: 4px solid #2A7868;">
-        <h3>COGS 160 Spring 2026</h3>
-        <p>AI-Directed Knowledge System Building. The inaugural quarter — 4 tracks, 10 weeks, full pipeline.</p>
-        <div class="cta-button">Open Spring Schedule →</div>
-      </a>
-      <a href="../fall160_schedule.html" class="track-card" style="border-left: 4px solid #E8872A;">
-        <h3>COGS 160 Fall 2026</h3>
-        <p>Experiment Making. Team-based experimental design with the Knowledge Atlas as the shared evidence infrastructure.</p>
-        <div class="cta-button">Open Fall Schedule →</div>
-      </a>
-    </div>
-  </div>
-
-  <!-- ── SECTION 3: Getting Help ── -->
-  <div class="setup-section">
-    <div class="section-header">
-      <span class="section-num">3</span>
-      <div>
-        <h2>Getting Help</h2>
-        <div class="sh-sub">Stuck? Use AI as a tool, not a shortcut</div>
-      </div>
-    </div>
-
-    <div class="callout" style="background: #FFF3E0; border-left: 4px solid var(--amber); color: #5A3010;">
-      <strong style="color: #2D1800; font-size: 0.98rem;">Stuck? Take a screenshot and ask AI.</strong>
-      <p style="margin-top: 10px; margin-bottom: 0; font-size: 0.9rem;">
-        At any point during setup or track work, if you hit a wall:
-      </p>
-      <ol style="margin: 12px 0 0 20px; font-size: 0.9rem;">
-        <li>Take a screenshot of exactly what you see (error message, confusing output, broken page)</li>
-        <li>Open <strong>ChatGPT, Claude, or Gemini</strong></li>
-        <li>Upload the screenshot and ask: <em>"I'm a COGS 160 student working on [your track]. I see this. What should I do next to succeed at [your task]?"</em></li>
-      </ol>
-      <p style="margin: 12px 0 0 0; font-size: 0.9rem;">
-        This is not cheating — it's the methodology. AI-directed development means using AI as a tool, not pretending it doesn't exist.
-        Your job is to <strong>verify the answer against your track's acceptance criteria</strong>.
-      </p>
-    </div>
-
-    <p style="margin-top: 24px; font-weight: 700; color: var(--navy); font-size: 0.95rem;">Common Questions</p>
-    <div class="faq-grid">
-      <div class="faq-item">
-        <div class="faq-q">Where do I find my track assignments?</div>
-        <div class="faq-a">On your track page above. Click your track card to open it.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">What if my environment won't install?</div>
-        <div class="faq-a">Screenshot the error, ask AI (see above), or post in your track's Slack channel.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">Can I switch tracks?</div>
-        <div class="faq-a">Yes — talk to the instructor by end of Week 1.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-q">Where do I submit work?</div>
-        <div class="faq-a">Your track page has the PR workflow. Short: commit → push → PR → await review.</div>
-      </div>
     </div>
   </div>
 

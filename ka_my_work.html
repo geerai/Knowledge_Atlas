@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Work — Knowledge Atlas</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f4f5f7;
+      color: #1f2937;
+    }
+    .topbar {
+      background: #182B49;
+      color: #fff;
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .brand {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      font-size: 1.1rem;
+    }
+    .brand span { color: #7dd3fc; }
+    .navlinks {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-left: auto;
+    }
+    .navlinks a {
+      color: rgba(255,255,255,0.9);
+      text-decoration: none;
+      font-size: .86rem;
+    }
+    .navlinks a:hover { text-decoration: underline; }
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 22px 72px;
+    }
+    .hero {
+      background: linear-gradient(135deg, #1C3D3A 0%, #2A7868 100%);
+      color: #fff;
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 22px;
+    }
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 1.8rem;
+    }
+    .hero p {
+      margin: 0;
+      max-width: 780px;
+      line-height: 1.65;
+      font-size: .95rem;
+    }
+    .status {
+      background: #fff8e8;
+      border: 1px solid #ecd6a5;
+      color: #6b4c12;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 22px;
+      font-size: .9rem;
+      line-height: 1.6;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 18px;
+    }
+    .toolbar select,
+    .toolbar button {
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      padding: 9px 12px;
+      font-size: .86rem;
+    }
+    .toolbar button {
+      background: #fff;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .toolbar button.primary {
+      background: #2A7868;
+      color: #fff;
+      border-color: #2A7868;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .summary-card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .summary-kicker {
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #6b7280;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .summary-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #111827;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 18px;
+    }
+    .panel {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 18px;
+    }
+    .panel h2 {
+      margin: 0 0 14px;
+      font-size: 1rem;
+    }
+    .folder-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .folder-btn {
+      width: 100%;
+      text-align: left;
+      border: 1px solid #dbe6f3;
+      background: #f8fafc;
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      color: #374151;
+    }
+    .folder-btn.active {
+      border-color: #2A7868;
+      background: #edf7f3;
+      color: #1C3D3A;
+      font-weight: 700;
+    }
+    .folder-meta {
+      font-size: .78rem;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+    .items {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .item {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 14px;
+      background: #fafafa;
+    }
+    .item-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .item-kind {
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #2A7868;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .item-title {
+      font-size: .96rem;
+      font-weight: 700;
+      color: #111827;
+      line-height: 1.45;
+    }
+    .item-subtitle, .item-meta {
+      font-size: .82rem;
+      color: #6b7280;
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+    .item-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .item-actions button,
+    .item-actions a {
+      border: 1px solid #d1d5db;
+      background: #fff;
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: .78rem;
+      text-decoration: none;
+      color: #374151;
+      cursor: pointer;
+    }
+    .empty {
+      color: #6b7280;
+      line-height: 1.6;
+      font-size: .9rem;
+      padding: 28px 8px;
+    }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="ka_home.html">Knowledge <span>Atlas</span></a>
+    <nav class="navlinks">
+      <a href="ka_user_home.html">My ATLAS</a>
+      <a href="ka_topic_hierarchy.html">Topic Map</a>
+      <a href="ka_topics.html">Topics</a>
+      <a href="ka_article_search.html">Article Search</a>
+      <a href="ka_evidence.html">Evidence</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <h1>My Work</h1>
+      <p>This page turns saved items into something legible. Instead of scattering notes, articles, topics, evidence, and questions across separate pages, Atlas should let you gather them into folders, review them, and export them as a working dossier.</p>
+    </section>
+
+    <div class="status">
+      The current workspace persists in the browser. That is already better than having no visible collection at all, but it is not yet server-backed. The next step is to sync this state through the auth server so work survives device changes.
+    </div>
+
+    <div class="toolbar">
+      <select id="folderSelect" aria-label="Choose folder"></select>
+      <button id="newFolderBtn">New folder</button>
+      <button id="copyMdBtn">Copy Markdown</button>
+      <button id="downloadMdBtn" class="primary">Download Markdown</button>
+    </div>
+
+    <section class="summary-grid">
+      <div class="summary-card"><div class="summary-kicker">Items</div><div class="summary-value" id="statItems">0</div></div>
+      <div class="summary-card"><div class="summary-kicker">Folders</div><div class="summary-value" id="statFolders">0</div></div>
+      <div class="summary-card"><div class="summary-kicker">Articles</div><div class="summary-value" id="statArticles">0</div></div>
+      <div class="summary-card"><div class="summary-kicker">Questions</div><div class="summary-value" id="statQuestions">0</div></div>
+      <div class="summary-card"><div class="summary-kicker">Evidence</div><div class="summary-value" id="statEvidence">0</div></div>
+      <div class="summary-card"><div class="summary-kicker">Topics</div><div class="summary-value" id="statTopics">0</div></div>
+    </section>
+
+    <section class="layout">
+      <aside class="panel">
+        <h2>Folders</h2>
+        <div class="folder-list" id="folderList"></div>
+      </aside>
+
+      <section class="panel">
+        <h2 id="itemsHeading">Saved Items</h2>
+        <div class="items" id="itemsHost"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="ka_workspace.js"></script>
+  <script>
+    function escapeHtml(text) {
+      return String(text || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function humanizeKind(kind) {
+      const labels = {
+        article: 'Article',
+        evidence: 'Evidence',
+        question: 'Question',
+        topic: 'Topic',
+        front: 'Research Front',
+        note: 'Note'
+      };
+      return labels[kind] || kind;
+    }
+
+    function currentFolder(state) {
+      return state.folders.find(folder => folder.id === state.currentFolderId) || state.folders[0];
+    }
+
+    function render() {
+      const state = window.KA_WORKSPACE.getState();
+      const folder = currentFolder(state);
+      const items = state.items.filter(item => item.folderId === folder.id);
+
+      document.getElementById('folderSelect').innerHTML = state.folders.map(folderRow =>
+        `<option value="${folderRow.id}"${folderRow.id === folder.id ? ' selected' : ''}>${escapeHtml(folderRow.name)}</option>`
+      ).join('');
+
+      document.getElementById('statItems').textContent = state.items.length;
+      document.getElementById('statFolders').textContent = state.folders.length;
+      document.getElementById('statArticles').textContent = state.items.filter(item => item.kind === 'article').length;
+      document.getElementById('statQuestions').textContent = state.items.filter(item => item.kind === 'question').length;
+      document.getElementById('statEvidence').textContent = state.items.filter(item => item.kind === 'evidence').length;
+      document.getElementById('statTopics').textContent = state.items.filter(item => item.kind === 'topic').length;
+
+      document.getElementById('folderList').innerHTML = state.folders.map(folderRow => {
+        const count = state.items.filter(item => item.folderId === folderRow.id).length;
+        return `
+          <button class="folder-btn ${folderRow.id === folder.id ? 'active' : ''}" data-folder-id="${folderRow.id}">
+            ${escapeHtml(folderRow.name)}
+            <div class="folder-meta">${count} item${count === 1 ? '' : 's'}</div>
+          </button>
+        `;
+      }).join('');
+
+      document.querySelectorAll('.folder-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          window.KA_WORKSPACE.setCurrentFolder(button.dataset.folderId);
+          render();
+        });
+      });
+
+      document.getElementById('itemsHeading').textContent = `${folder.name} · Saved Items`;
+      const host = document.getElementById('itemsHost');
+      if (!items.length) {
+        host.innerHTML = '<div class="empty">This folder is empty. Save items from the Topic Map, Topics, Article Search, Evidence, or Question Maker pages and they will appear here.</div>';
+        return;
+      }
+      host.innerHTML = items.map(item => {
+        const meta = [];
+        if (item.meta && item.meta.paperId) meta.push(item.meta.paperId);
+        if (item.meta && item.meta.year) meta.push(item.meta.year);
+        if (item.meta && item.meta.primaryTopic) meta.push(item.meta.primaryTopic);
+        if (item.sourcePage) meta.push(item.sourcePage);
+        return `
+          <div class="item">
+            <div class="item-top">
+              <div>
+                <div class="item-kind">${humanizeKind(item.kind)}</div>
+                <div class="item-title">${escapeHtml(item.title)}</div>
+                ${item.subtitle ? `<div class="item-subtitle">${escapeHtml(item.subtitle)}</div>` : ''}
+                ${meta.length ? `<div class="item-meta">${escapeHtml(meta.join(' · '))}</div>` : ''}
+              </div>
+              <div class="item-actions">
+                ${item.url ? `<a href="${escapeHtml(item.url)}">Open</a>` : ''}
+                <button data-remove-id="${item.id}">Remove</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      host.querySelectorAll('[data-remove-id]').forEach(button => {
+        button.addEventListener('click', function() {
+          window.KA_WORKSPACE.remove(button.dataset.removeId);
+          render();
+        });
+      });
+    }
+
+    document.getElementById('folderSelect').addEventListener('change', function() {
+      window.KA_WORKSPACE.setCurrentFolder(this.value);
+      render();
+    });
+    document.getElementById('newFolderBtn').addEventListener('click', function() {
+      const name = window.prompt('New folder name');
+      if (name) {
+        window.KA_WORKSPACE.createFolder(name);
+        render();
+      }
+    });
+    document.getElementById('copyMdBtn').addEventListener('click', function() {
+      window.KA_WORKSPACE.copyMarkdown();
+    });
+    document.getElementById('downloadMdBtn').addEventListener('click', function() {
+      window.KA_WORKSPACE.exportMarkdownFile();
+    });
+
+    render();
+  </script>
+</body>
+</html>

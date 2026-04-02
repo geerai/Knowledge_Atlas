@@ -1700,7 +1700,10 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="add-button" onclick="addToHypothesis(event)">Add to Hypothesis Brief</button>
+                        <div style="display:flex;gap:10px;flex-wrap:wrap">
+                            <button class="add-button" onclick="addToHypothesis(event)">Add to Hypothesis Brief</button>
+                            <button class="add-button" onclick="saveEvidenceItem(event, '${item.id}')">Save to Workspace</button>
+                        </div>
                         <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #E8E0D8;">
                             <a class="evidence-cta" href="ka_warrants.html">Inspect warrant strength →</a>
                             <a class="evidence-cta" href="ka_argumentation.html">See critiques →</a>
@@ -1768,6 +1771,28 @@
         function addToHypothesis(event) {
             event.stopPropagation();
             showToast('Added to hypothesis brief');
+        }
+
+        function saveEvidenceItem(event, itemId) {
+            event.stopPropagation();
+            if (!window.KA_WORKSPACE) return;
+            const item = evidenceData.find(function(row) { return row.id === itemId; });
+            if (!item) return;
+            window.KA_WORKSPACE.add({
+                kind: 'evidence',
+                sourceId: item.id,
+                title: item.finding,
+                subtitle: `${item.construct} · ${item.studyType} · credence ${item.credence.toFixed(2)}`,
+                url: 'ka_evidence.html',
+                notes: item.claim || '',
+                meta: {
+                    paperId: item.paper_id || '',
+                    year: item.year || '',
+                    warrant: item.warrant || '',
+                    topic: item.primary_topic || item.primary_front || '',
+                    sensorSummary: item.sensor_summary || ''
+                }
+            });
         }
 
         function showToast(message) {
@@ -1863,6 +1888,7 @@ window.KA_ABOUT_PAGE = {
 </script>
 <script src="ka_about_page.js"></script>
 <script src="ka_ui_fixes.js"></script>
+<script src="ka_workspace.js"></script>
 <script src="ka_route_cta.js"></script>
 
 </body>

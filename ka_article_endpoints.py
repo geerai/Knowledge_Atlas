@@ -1407,3 +1407,554 @@ def _update_claim_counts(db, user_id: str, question_id: str):
                   WHERE user_id=? AND question_id=? AND released_at IS NULL""",
                (task1, task2, user_id, question_id))
     db.commit()
+
+
+# ════════════════════════════════════════════════
+# AUTOMATIC ARTICLE TYPE CLASSIFICATION
+# ════════════════════════════════════════════════
+
+# Keywords strongly associated with experimental papers
+_EXP_KEYWORDS = {
+    "participants", "experiment", "experiments", "experimental", "randomized",
+    "randomised", "randomly assigned", "controlled trial", "rct", "anova",
+    "t-test", "t test", "chi-square", "regression analysis", "sample size",
+    "n =", "n=", "between-subjects", "within-subjects", "repeated measures",
+    "condition", "conditions", "manipulation", "manipulated", "stimulus",
+    "stimuli", "pre-test", "post-test", "pretest", "posttest", "baseline",
+    "intervention", "dependent variable", "independent variable", "effect size",
+    "cohen's d", "eta squared", "significant difference", "p <", "p<", "p =",
+    "findings suggest", "results showed", "results indicated", "was measured",
+    "were measured", "performance was", "reaction time", "accuracy was",
+    "eye tracking", "eye-tracking", "fmri", "eeg", "galvanic skin",
+    "physiological", "behavioral measure", "self-report", "likert",
+    "questionnaire", "survey instrument", "recruited", "enrolled",
+    "informed consent", "irb", "ethics committee", "exclusion criteria",
+    "inclusion criteria", "control group", "experimental group",
+    "treatment group", "placebo", "double-blind", "single-blind",
+    "counterbalanced", "latin square", "factorial design", "mixed design",
+    "between-group", "within-group", "lab study", "laboratory study",
+    "field experiment", "quasi-experiment", "longitudinal study",
+    "cross-sectional study", "cohort study", "observational study"
+}
+
+# Keywords associated with reviews and meta-analyses
+_REVIEW_KEYWORDS = {
+    "systematic review", "meta-analysis", "meta analysis", "literature review",
+    "scoping review", "narrative review", "reviewed the literature",
+    "databases were searched", "prisma", "search strategy", "inclusion criteria",
+    "exclusion criteria for studies", "studies were identified", "studies met",
+    "effect sizes were", "pooled effect", "heterogeneity", "funnel plot",
+    "publication bias", "forest plot", "quality assessment", "risk of bias",
+    "we reviewed", "this review", "review of the literature"
+}
+
+# Keywords associated with theoretical papers
+_THEORY_KEYWORDS = {
+    "theoretical framework", "we propose", "we argue", "conceptual model",
+    "conceptual framework", "theoretical model", "theory of", "we theorize",
+    "philosophical", "epistemological", "ontological", "we contend",
+    "thought experiment", "framework for understanding", "taxonomy of",
+    "typology of", "we develop a", "integrative model", "computational model"
+}
+
+
+def _classify_article_type(text: str) -> dict:
+    """
+    Classify article type from abstract or full text using keyword heuristics.
+    Returns {"article_type": str, "confidence": float, "signals": list}.
+    """
+    if not text or len(text.strip()) < 20:
+        return {"article_type": "unknown", "confidence": 0.0, "signals": ["insufficient_text"]}
+
+    text_lower = text.lower()
+    signals = []
+
+    # Count keyword matches for each type
+    exp_hits = sum(1 for kw in _EXP_KEYWORDS if kw in text_lower)
+    rev_hits = sum(1 for kw in _REVIEW_KEYWORDS if kw in text_lower)
+    theory_hits = sum(1 for kw in _THEORY_KEYWORDS if kw in text_lower)
+
+    # Strong signals: methods section indicators
+    has_methods = bool(re.search(r'\b(method|methods|procedure|materials|design)\b', text_lower))
+    has_results = bool(re.search(r'\b(results|findings)\b', text_lower))
+    has_n_equals = bool(re.search(r'\bn\s*=\s*\d+', text_lower))
+    has_p_value = bool(re.search(r'p\s*[<>=]\s*[0-9.]', text_lower))
+
+    if has_methods:
+        signals.append("has_methods_section")
+    if has_results:
+        signals.append("has_results_section")
+    if has_n_equals:
+        signals.append("has_sample_size")
+        exp_hits += 3  # strong signal
+    if has_p_value:
+        signals.append("has_p_values")
+        exp_hits += 3  # strong signal
+
+    # Weighted scoring
+    exp_score = exp_hits
+    rev_score = rev_hits * 2  # review keywords are more specific
+    theory_score = theory_hits * 2
+
+    # Determine classification
+    if rev_score >= 4 and rev_score > exp_score:
+        article_type = "review" if "meta-analysis" not in text_lower and "meta analysis" not in text_lower else "meta_analysis"
+        confidence = min(0.95, 0.5 + rev_score * 0.05)
+        signals.append(f"review_keywords={rev_hits}")
+    elif exp_score >= 3:
+        article_type = "experimental"
+        confidence = min(0.95, 0.4 + exp_score * 0.03)
+        signals.append(f"exp_keywords={exp_hits}")
+    elif theory_score >= 4 and theory_score > exp_score:
+        article_type = "theory"
+        confidence = min(0.90, 0.4 + theory_score * 0.05)
+        signals.append(f"theory_keywords={theory_hits}")
+    elif exp_score >= 1 and has_methods and has_results:
+        article_type = "experimental"
+        confidence = 0.55
+        signals.append("weak_exp_with_methods_results")
+    else:
+        article_type = "unknown"
+        confidence = 0.2
+        signals.append("no_strong_signal")
+
+    return {"article_type": article_type, "confidence": round(confidence, 2), "signals": signals}
+
+
+def _extract_text_from_pdf_bytes(data: bytes, max_chars: int = 5000) -> str:
+    """Extract text from PDF bytes for classification. Best-effort."""
+    try:
+        import io
+        # Try pdfplumber first (better extraction)
+        try:
+            import pdfplumber
+            with pdfplumber.open(io.BytesIO(data)) as pdf:
+                text = ""
+                for page in pdf.pages[:5]:  # first 5 pages max
+                    page_text = page.extract_text() or ""
+                    text += page_text + "\n"
+                    if len(text) > max_chars:
+                        break
+                return text[:max_chars]
+        except ImportError:
+            pass
+
+        # Fallback: PyPDF2
+        try:
+            from PyPDF2 import PdfReader
+            reader = PdfReader(io.BytesIO(data))
+            text = ""
+            for page in reader.pages[:5]:
+                text += (page.extract_text() or "") + "\n"
+                if len(text) > max_chars:
+                    break
+            return text[:max_chars]
+        except ImportError:
+            pass
+
+        # Last resort: raw byte search for text
+        text_bytes = data[:50000]
+        # Extract ASCII text fragments
+        fragments = re.findall(rb'[A-Za-z][A-Za-z0-9\s.,;:!?\-()]{10,}', text_bytes)
+        return " ".join(f.decode('ascii', errors='ignore') for f in fragments)[:max_chars]
+    except Exception:
+        return ""
+
+
+# ════════════════════════════════════════════════
+# STUDENT-FACING BRIDGE ENDPOINTS
+# ════════════════════════════════════════════════
+# These wrap the core submit infrastructure and add automatic classification.
+# The frontend (collect-articles-upload.html) calls these endpoints.
+
+student_router = APIRouter(prefix="/api/student", tags=["student"])
+
+
+@student_router.post("/fetch-abstracts")
+async def fetch_abstracts_and_classify(request: Request):
+    """
+    A0 upload endpoint: receive PDFs + citation metadata, automatically classify
+    each article's type, store everything, and return per-paper feedback.
+
+    Expects multipart form data with:
+    - question_id: str
+    - question_type: '10-exp' | 'mixed'
+    - papers_json: JSON array of {doi, apa_citation, filename}
+    - pdfs: uploaded PDF files
+    """
+    user = _get_optional_user(request)
+    if not user:
+        raise HTTPException(401, "You must be signed in to submit articles")
+
+    form = await request.form()
+    question_id = form.get("question_id", "")
+    question_type = form.get("question_type", "10-exp")
+    papers_json_str = form.get("papers_json", "[]")
+
+    try:
+        papers_meta = json.loads(papers_json_str)
+    except json.JSONDecodeError:
+        papers_meta = []
+
+    # Determine A0 task from question_type
+    a0_task = "task1" if question_type == "10-exp" else "task2"
+
+    # Get uploaded files
+    pdf_files = form.getlist("pdfs") if hasattr(form, "getlist") else []
+    # Also check for UploadFile objects
+    if not pdf_files:
+        for key in form:
+            val = form.getlist(key)
+            for v in val:
+                if hasattr(v, 'read') and hasattr(v, 'filename'):
+                    pdf_files.append(v)
+
+    # Create batch
+    submission_id = _next_id("KA-IN-", "submission_batches", "submission_id")
+    now = _now()
+    db = _get_db()
+    db.execute(
+        "INSERT INTO submission_batches VALUES (?,?,?,?,?,?,?,?)",
+        (submission_id, user["user_id"], user["role"], "a0_upload", 0,
+         "collect_articles_upload", now, None))
+    db.commit()
+    db.close()
+
+    result_papers = []
+    qualifying_count = 0
+
+    # Process each PDF
+    for i, pdf_file in enumerate(pdf_files):
+        if not hasattr(pdf_file, 'read'):
+            continue
+        content = await pdf_file.read()
+        filename = getattr(pdf_file, 'filename', f'paper_{i}.pdf')
+
+        article_id = _next_id("KA-ART-", "articles", "article_id")
+        pdf_hash = _compute_sha256(content)
+
+        # Validate PDF
+        validation = _validate_pdf_bytes(content, filename)
+        if not validation.get("valid"):
+            result_papers.append({
+                "title": filename,
+                "filename": filename,
+                "article_type": "unknown",
+                "abstract": f"Invalid PDF: {validation.get('rejection_reason', 'validation failed')}",
+                "pdf_present": True,
+                "in_corpus": False,
+                "classification_confidence": 0.0,
+                "qualifies": False,
+                "feedback": f"Rejected: {validation.get('rejection_reason', 'invalid file')}"
+            })
+            continue
+
+        # Extract text for classification
+        extracted_text = _extract_text_from_pdf_bytes(content)
+        classification = _classify_article_type(extracted_text)
+        art_type = classification["article_type"]
+        art_confidence = classification["confidence"]
+
+        # Extract abstract (first ~500 chars after "abstract" keyword, or first paragraph)
+        abstract = ""
+        if extracted_text:
+            abs_match = re.search(r'(?i)\babstract\b[:\s]*(.{50,800}?)(?:\n\n|\bintroduction\b|\bkeywords\b)', extracted_text)
+            if abs_match:
+                abstract = abs_match.group(1).strip()
+            else:
+                abstract = extracted_text[:300].strip()
+
+        # Get citation metadata if available
+        meta = papers_meta[i] if i < len(papers_meta) else {}
+        apa_citation = meta.get("apa_citation", "")
+        doi = meta.get("doi", "")
+        extracted_doi = _extract_doi_from_pdf(content) or doi
+
+        # Duplicate check
+        dup_result = _check_duplicate(pdf_hash=pdf_hash, doi=extracted_doi)
+
+        # Determine if it qualifies
+        type_valid = 1 if (a0_task != "task1" or art_type == "experimental") else 0
+        if art_type == "experimental" and a0_task == "task1":
+            qualifying_count += 1
+
+        # Determine status
+        if not validation.get("valid"):
+            status = "rejected_bad_file"
+        elif dup_result["is_duplicate"]:
+            status = "duplicate_existing"
+        else:
+            status = "staged_pending_review"
+
+        # Extract title from text
+        title = filename
+        if extracted_text:
+            # First substantial line is often the title
+            lines = [l.strip() for l in extracted_text.split('\n') if len(l.strip()) > 10]
+            if lines:
+                candidate = lines[0][:200]
+                if len(candidate) > 15 and not candidate.lower().startswith(('http', 'doi', 'volume', 'journal')):
+                    title = candidate
+
+        # Store in database
+        db = _get_db()
+        try:
+            db.execute("""INSERT INTO articles
+                (article_id, submission_id, submitter_id, submitter_type, track, input_mode,
+                 doi, pdf_filename, pdf_hash_sha256, pdf_size_bytes, quarantine_path,
+                 article_type, a0_task, article_type_valid,
+                 status, validation_notes, citation_raw,
+                 assigned_question_id,
+                 source_surface, course_context,
+                 created_at, validated_at, staged_at, metadata_confidence)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                (article_id, submission_id, user["user_id"], user["role"],
+                 user.get("track"), "pdf_single",
+                 extracted_doi, filename, pdf_hash, len(content), "",
+                 art_type, a0_task, type_valid,
+                 status, json.dumps(validation), apa_citation,
+                 question_id or None,
+                 "collect_articles_upload", "COGS160-SP26",
+                 now, now, now if status == "staged_pending_review" else None,
+                 "high" if extracted_doi else "medium"))
+            db.commit()
+        except Exception as e:
+            db.rollback()
+            print(f"[KA-ARTICLES] DB error storing {article_id}: {e}")
+        finally:
+            db.close()
+
+        # Save PDF to quarantine
+        try:
+            month_dir = QUARANTINE_DIR / datetime.now().strftime("%Y-%m")
+            month_dir.mkdir(parents=True, exist_ok=True)
+            (month_dir / f"{article_id}.pdf").write_bytes(content)
+        except Exception as e:
+            print(f"[KA-ARTICLES] File storage error for {article_id}: {e}")
+
+        # Build feedback message
+        if art_type == "experimental":
+            feedback = f"✓ Accepted — experimental article (confidence: {art_confidence:.0%})"
+        elif art_type == "unknown":
+            feedback = "⚠ Could not determine article type — will be reviewed manually"
+        else:
+            feedback = f"✗ Classified as {art_type} (confidence: {art_confidence:.0%}) — not an experiment"
+
+        if dup_result["is_duplicate"]:
+            feedback = "⚠ Duplicate — this article is already in the system"
+
+        result_papers.append({
+            "title": title,
+            "filename": filename,
+            "article_type": art_type if art_type != "unknown" else "Other",
+            "abstract": abstract[:300] if abstract else "Abstract not extracted",
+            "pdf_present": True,
+            "in_corpus": dup_result["is_duplicate"],
+            "classification_confidence": art_confidence,
+            "qualifies": bool(type_valid) and art_type == "experimental",
+            "feedback": feedback,
+            "article_id": article_id
+        })
+
+    # Update batch count
+    db = _get_db()
+    db.execute("UPDATE submission_batches SET item_count=?, completed_at=? WHERE submission_id=?",
+               (len(result_papers), _now(), submission_id))
+    db.commit()
+    db.close()
+
+    return {
+        "papers": result_papers,
+        "qualifying_count": qualifying_count,
+        "submission_id": submission_id,
+        "task": a0_task,
+        "total_submitted": len(result_papers)
+    }
+
+
+@student_router.post("/title-only")
+async def submit_title_only_papers(request: Request):
+    """
+    Submit citation-only papers (no PDF) for classification.
+    Used by the quick-add citation feature and bulk .txt upload.
+    """
+    user = _get_optional_user(request)
+    if not user:
+        raise HTTPException(401, "You must be signed in to submit articles")
+
+    body = await request.json()
+    question_id = body.get("question_id", "")
+    question_type = body.get("question_type", "10-exp")
+    papers = body.get("papers", [])
+    a0_task = "task1" if question_type == "10-exp" else "task2"
+
+    if not papers:
+        raise HTTPException(400, "No papers provided")
+
+    submission_id = _next_id("KA-IN-", "submission_batches", "submission_id")
+    now = _now()
+
+    db = _get_db()
+    db.execute(
+        "INSERT INTO submission_batches VALUES (?,?,?,?,?,?,?,?)",
+        (submission_id, user["user_id"], user["role"], "a0_title_only", 0,
+         "collect_articles_upload", now, None))
+    db.commit()
+    db.close()
+
+    result_papers = []
+    qualifying_count = 0
+
+    for paper in papers:
+        article_id = _next_id("KA-ART-", "articles", "article_id")
+        title = paper.get("article_title", "")
+        doi = paper.get("doi", "")
+        apa = paper.get("apa_citation", "")
+
+        # Classify from citation text (limited, but catches reviews/meta-analyses)
+        classify_text = f"{title} {apa}"
+        classification = _classify_article_type(classify_text)
+        art_type = classification["article_type"]
+        art_confidence = classification["confidence"]
+
+        # For citation-only, if we can't tell, default to "unknown" (needs manual review)
+        if art_type == "unknown" and art_confidence < 0.3:
+            # Citation-only papers are harder to classify; mark for review
+            art_type = "unknown"
+
+        type_valid = 1 if (a0_task != "task1" or art_type == "experimental") else 0
+        if art_type == "experimental" and a0_task == "task1":
+            qualifying_count += 1
+
+        # Duplicate check by DOI
+        dup_result = _check_duplicate(doi=doi if doi else None,
+                                       title=title if title else None)
+
+        status = "duplicate_existing" if dup_result["is_duplicate"] else "staged_pending_review"
+
+        # Parse citation for structured fields
+        parsed = _parse_citation_line(apa) if apa else {"title": title, "authors": "", "year": ""}
+
+        db = _get_db()
+        try:
+            db.execute("""INSERT INTO articles
+                (article_id, submission_id, submitter_id, submitter_type, track, input_mode,
+                 doi, title, authors, year, citation_raw,
+                 article_type, a0_task, article_type_valid,
+                 status, duplicate_of,
+                 assigned_question_id,
+                 source_surface, course_context,
+                 created_at, staged_at, metadata_confidence)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                (article_id, submission_id, user["user_id"], user["role"],
+                 user.get("track"), "citation_text",
+                 doi or None,
+                 parsed["title"] or title or None,
+                 parsed["authors"] or None,
+                 int(parsed["year"]) if parsed.get("year") else None,
+                 apa,
+                 art_type, a0_task, type_valid,
+                 status,
+                 dup_result["matches"][0]["article_id"] if dup_result["is_duplicate"] and dup_result["matches"] else None,
+                 question_id or None,
+                 "collect_articles_upload", "COGS160-SP26",
+                 now, now if status == "staged_pending_review" else None,
+                 "medium" if doi else "low"))
+            db.commit()
+        except Exception as e:
+            db.rollback()
+            print(f"[KA-ARTICLES] DB error storing title-only {article_id}: {e}")
+        finally:
+            db.close()
+
+        # Build display title
+        display_title = parsed["title"] or title or apa[:80]
+
+        # Feedback
+        if art_type == "experimental":
+            feedback = f"✓ Accepted — likely experimental (confidence: {art_confidence:.0%})"
+        elif art_type == "unknown":
+            feedback = "⚠ Cannot determine type from citation alone — upload PDF for classification"
+        else:
+            feedback = f"✗ Classified as {art_type} (confidence: {art_confidence:.0%})"
+
+        result_papers.append({
+            "title": display_title,
+            "article_type": art_type.capitalize() if art_type != "unknown" else "Unknown",
+            "abstract": "Citation only — upload PDF for full abstract",
+            "pdf_present": False,
+            "in_corpus": dup_result["is_duplicate"],
+            "title_only": True,
+            "classification_confidence": art_confidence,
+            "qualifies": bool(type_valid) and art_type == "experimental",
+            "feedback": feedback,
+            "article_id": article_id
+        })
+
+    # Update batch
+    db = _get_db()
+    db.execute("UPDATE submission_batches SET item_count=?, completed_at=? WHERE submission_id=?",
+               (len(result_papers), _now(), submission_id))
+    db.commit()
+    db.close()
+
+    return {
+        "papers": result_papers,
+        "qualifying_count": qualifying_count,
+        "submission_id": submission_id,
+        "task": a0_task,
+        "total_submitted": len(result_papers)
+    }
+
+
+@student_router.post("/classify-one")
+async def classify_single_paper(request: Request):
+    """
+    Real-time single-paper classification. Called when a PDF is dropped
+    into the upload zone — gives immediate feedback without batch submission.
+    Does NOT store the article; that happens on the full submit.
+    """
+    form = await request.form()
+    pdf_file = form.get("pdf")
+
+    if not pdf_file or not hasattr(pdf_file, 'read'):
+        raise HTTPException(400, "No PDF file provided")
+
+    content = await pdf_file.read()
+    filename = getattr(pdf_file, 'filename', 'paper.pdf')
+
+    # Quick validation
+    validation = _validate_pdf_bytes(content, filename)
+    if not validation.get("valid"):
+        return {
+            "filename": filename,
+            "valid": False,
+            "article_type": "unknown",
+            "confidence": 0.0,
+            "feedback": f"Invalid PDF: {validation.get('rejection_reason', 'validation failed')}",
+            "is_experimental": False
+        }
+
+    # Extract text and classify
+    extracted_text = _extract_text_from_pdf_bytes(content)
+    classification = _classify_article_type(extracted_text)
+
+    art_type = classification["article_type"]
+    confidence = classification["confidence"]
+
+    if art_type == "experimental":
+        feedback = f"✓ Experimental article (confidence: {confidence:.0%})"
+    elif art_type == "unknown":
+        feedback = "⚠ Could not determine type — will be classified on submission"
+    else:
+        feedback = f"✗ Appears to be {art_type} (confidence: {confidence:.0%}) — not experimental"
+
+    return {
+        "filename": filename,
+        "valid": True,
+        "article_type": art_type,
+        "confidence": confidence,
+        "feedback": feedback,
+        "is_experimental": art_type == "experimental",
+        "signals": classification["signals"]
+    }

@@ -405,7 +405,7 @@
 
 <div class="page-hero">
   <div class="eyebrow">COGS 160 · AI-Directed Development</div>
-  <h1>AI-Directed Development:<br>The KA Methodology</h1>
+  <h1>AI-Directed Development*:<br>The KA Methodology</h1>
   <p>
     In this course you use AI as a directed instrument in a production pipeline — not as a chatbot.
     The goal is not "getting good output." It is producing output that meets a formal specification,
@@ -511,8 +511,18 @@
     <p style="margin-top:18px;">
       <strong>These five are just the prompt-level failures.</strong> There are six more — session-level and systemic —
       that emerge over long sessions and multi-agent workflows.
-      <a href="ka_ai_system_failures.html" style="color:var(--amber);font-weight:700;">Read the full taxonomy: How AI Systems Actually Fail →</a>
     </p>
+
+    <div style="margin-top:24px;background:linear-gradient(135deg,#1C3D3A,#163230);border-radius:12px;padding:28px 32px;border-left:5px solid var(--amber);">
+      <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--amber);margin-bottom:8px;">* Required reading</div>
+      <div style="font-family:Georgia,serif;font-size:1.2rem;color:#F5F0E8;margin-bottom:10px;">How AI Systems Actually Fail: The Full Taxonomy</div>
+      <p style="font-size:0.9rem;color:#A8C8BF;line-height:1.6;margin-bottom:16px;">
+        The 5 prompt-level failures above are only half the story. There are 6 more failure modes that emerge at session and system scale — confirmation loops, context decay, coordination failures between multiple AI agents, and more. You will encounter all of them in this course.
+      </p>
+      <a href="ka_ai_system_failures.html" style="display:inline-block;padding:12px 28px;background:var(--amber);color:#fff;border-radius:8px;text-decoration:none;font-weight:700;font-size:0.95rem;transition:background 0.15s;">
+        Read the Full Failure Taxonomy →
+      </a>
+    </div>
   </div>
 
   <!-- ── TRACK EXAMPLES ── -->
@@ -1434,6 +1444,13 @@ window.KA_SHELL_USER.applyUser({
   document.addEventListener('DOMContentLoaded', initPagination);
 </script>
 
+<!-- Asterisk footnote -->
+<div style="max-width:900px;margin:0 auto;padding:20px 32px 40px;">
+  <p style="font-size:0.8rem;color:var(--muted);border-top:1px solid var(--border);padding-top:14px;">
+    <strong>*</strong> "AI-Directed" means you direct the AI — not the other way around. AI is a tool in this course, and like all tools it fails in predictable ways. Understanding those failure modes is not optional.
+    <a href="ka_ai_system_failures.html" style="color:var(--amber);font-weight:600;">See the full failure taxonomy →</a>
+  </p>
+</div>
 
 </body>
 </html>

@@ -370,21 +370,26 @@ def register(req: RegisterRequest):
     ph  = pwd_context.hash(req.password)
     now = datetime.now(timezone.utc).isoformat()
     db  = get_db()
+    # Auto-approve COGS 160 students so they can start working immediately.
+    # Instructor can review/revoke later via ka_approve.html.
+    initial_status = "approved"
+    approved_at    = now
+
     try:
         db.execute("""INSERT INTO users
             (user_id,email,first_name,last_name,role,password_hash,status,
-             track,question_id,department,created_at)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?)""",
+             track,question_id,department,created_at,approved_at)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
             (uid, email, req.first_name.strip(), req.last_name.strip(),
-             "student", ph, "pending",
-             req.track, req.question_id, req.department, now))
+             "student", ph, initial_status,
+             req.track, req.question_id, req.department, now, approved_at))
         db.commit()
     except sqlite3.IntegrityError:
         raise HTTPException(409, "An account with that email already exists")
     finally:
         db.close()
-    return {"message": "Registration received. Your account is pending instructor approval.",
-            "user_id": uid, "status": "pending"}
+    return {"message": "Registration complete! Your account is active — you can sign in now.",
+            "user_id": uid, "status": "approved"}
 
 # ── LOGIN
 @app.post("/auth/login")
@@ -575,7 +580,9 @@ try:
         require_instructor=require_instructor,
     )
     app.include_router(ka_article_endpoints.router)
+    app.include_router(ka_article_endpoints.student_router)
     print("[KA-AUTH] Article submission module loaded ✓")
+    print("[KA-AUTH] Student endpoints loaded ✓ (/api/student/fetch-abstracts, /title-only, /classify-one)")
 except ImportError as e:
     print(f"[KA-AUTH] Article submission module not available: {e}")
     print("[KA-AUTH] Server running with auth-only endpoints")

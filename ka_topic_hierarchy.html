@@ -755,6 +755,7 @@ function renderTopicSummary(topic) {
       <div class="topic-badge">${topic.paper_count} papers</div>
       <div class="topic-badge">${h(topic.iv_root_label)}</div>
       <div class="topic-badge">${h(topic.dv_focus_label)}</div>
+      <button class="ka-workspace-save-btn" onclick="saveHierarchyTopic('${topic.id}')">Save topic</button>
     </div>
     <div class="meta-grid">
       <div class="meta-box">
@@ -830,8 +831,53 @@ function renderPaperList(topic) {
         ${paper.primary_front ? `<br>front: ${h(paper.primary_front)}` : ''}
         ${paper.sensor_summary ? `<br>sensors: ${h(paper.sensor_summary)}` : ''}
       </div>
+      <div style="margin-top:8px">
+        <button class="ka-workspace-save-btn" onclick="saveTopicPaper('${paper.paper_id}')">Save paper</button>
+      </div>
     </div>
   `).join('');
+}
+
+function saveHierarchyTopic(topicId) {
+  if (!window.KA_WORKSPACE) return;
+  const topic = (activePayload().topics || []).find((row) => row.id === topicId);
+  if (!topic) return;
+  window.KA_WORKSPACE.add({
+    kind: 'topic',
+    sourceId: topic.id,
+    title: topic.label,
+    subtitle: `${topic.iv_root_label} × ${topic.dv_focus_label}`,
+    url: 'ka_topic_hierarchy.html',
+    meta: {
+      paperCount: topic.paper_count,
+      ivRoot: topic.iv_root_label,
+      dvFocus: topic.dv_focus_label,
+      theories: topic.theories || [],
+      sensors: topic.sensors || [],
+      fronts: topic.fronts || []
+    }
+  });
+}
+
+function saveTopicPaper(paperId) {
+  if (!window.KA_WORKSPACE || !selectedTopicId) return;
+  const topic = (activePayload().topics || []).find((row) => row.id === selectedTopicId);
+  const paper = topic && (topic.paper_preview || []).find((row) => row.paper_id === paperId);
+  if (!paper) return;
+  window.KA_WORKSPACE.add({
+    kind: 'article',
+    sourceId: paper.paper_id,
+    title: paper.title,
+    subtitle: `${paper.paper_id}${paper.year ? ' · ' + paper.year : ''}`,
+    url: 'ka_topic_hierarchy.html',
+    meta: {
+      paperId: paper.paper_id,
+      year: paper.year || '',
+      claimCount: paper.claim_count || 0,
+      primaryFront: paper.primary_front || '',
+      sensorSummary: paper.sensor_summary || ''
+    }
+  });
 }
 
 function drawNode(svg, x, y, label, kind, isCenter) {
@@ -978,6 +1024,7 @@ async function init() {
 
 init();
 </script>
+<script src="ka_workspace.js"></script>
 <script src="ka_route_cta.js"></script>
 </body>
 </html>

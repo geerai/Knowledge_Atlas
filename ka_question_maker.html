@@ -570,6 +570,7 @@ function renderBestPractices() {
     </div>
     <div style="display:flex;gap:8px;margin-top:14px">
       <button class="btn-add-queue" onclick="addGeneratedToQueue()">Add to Question Queue →</button>
+      <button class="btn-copy" onclick="saveGeneratedToWorkspace()">Save to Workspace</button>
       <button class="btn-copy" onclick="copyGenerated()">Copy question</button>
     </div>`;
 }
@@ -590,6 +591,30 @@ function addGeneratedToQueue() {
 function copyGenerated() {
   const text = document.getElementById('generatedQ').value;
   navigator.clipboard.writeText(text).then(()=>showConfirm('Copied','Question copied to clipboard.'));
+}
+
+function saveGeneratedToWorkspace() {
+  const text = document.getElementById('generatedQ').value.trim();
+  if(!text) {
+    showConfirm('Nothing to save','Generate or edit a question first.');
+    return;
+  }
+  const cluster = CLUSTERS.find(x => x.id === selectedCluster);
+  const tool = TOOLS[selectedTool];
+  if (window.KA_WORKSPACE) {
+    window.KA_WORKSPACE.add({
+      kind: 'question',
+      sourceId: `${selectedTool}:${selectedCluster || 'general'}:${text.slice(0,40)}`,
+      title: text.length > 120 ? text.slice(0, 120) + '…' : text,
+      subtitle: `${tool ? tool.label : 'Question'}${cluster ? ' · ' + cluster.name : ''}`,
+      url: 'ka_question_maker.html',
+      meta: {
+        cluster: cluster ? cluster.name : selectedCluster || '',
+        tool: tool ? tool.label : '',
+      }
+    });
+    showConfirm('Saved','Question saved to your workspace.');
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -626,6 +651,7 @@ function renderQueue() {
       <div class="qi-actions">
         ${q.claimed?'<span style="font-size:10px;color:var(--muted)">In progress</span>':`<button class="btn-claim" onclick="claimQ(${q.id})">Claim</button>`}
         <button class="btn-vote" onclick="voteQ(${q.id})">▲ Vote</button>
+        <button class="btn-vote" onclick="saveQueueQuestion(${q.id})">Save</button>
         <button class="btn-vote" onclick="copyQ(${q.id})">Copy</button>
       </div>
     </div>`;
@@ -646,6 +672,26 @@ function voteQ(id) {
 function copyQ(id) {
   const q=QUEUE.find(x=>x.id===id);
   if(q)navigator.clipboard.writeText(q.text).then(()=>showConfirm('Copied',q.text));
+}
+
+function saveQueueQuestion(id) {
+  const q = QUEUE.find(x => x.id === id);
+  const cluster = q ? CLUSTERS.find(x => x.id === q.cluster) : null;
+  if (!q || !window.KA_WORKSPACE) return;
+  window.KA_WORKSPACE.add({
+    kind: 'question',
+    sourceId: `queue:${q.id}`,
+    title: q.text.length > 120 ? q.text.slice(0, 120) + '…' : q.text,
+    subtitle: `${q.tool}${cluster ? ' · ' + cluster.name : ''}`,
+    url: 'ka_question_maker.html',
+    meta: {
+      cluster: cluster ? cluster.name : q.cluster,
+      tool: q.tool,
+      votes: q.votes,
+      claimed: q.claimed
+    }
+  });
+  showConfirm('Saved','Question saved to your workspace.');
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -726,6 +772,7 @@ window.KA_ABOUT_PAGE = {
 </script>
 <script src="ka_about_page.js"></script>
 <script src="ka_ui_fixes.js"></script>
+<script src="ka_workspace.js"></script>
 <script src="ka_route_cta.js"></script>
 <script>
 window.KA_SHELL.initShell({

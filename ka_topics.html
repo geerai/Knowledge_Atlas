@@ -800,6 +800,7 @@ function buildCard(c) {
         <a class="tc-btn tc-btn-articles" href="ka_article_search.html" title="Find articles" onclick="event.stopPropagation();">📄</a>
         <a class="tc-btn tc-btn-question" href="ka_question_maker.html" title="Make a question" onclick="event.stopPropagation();">❓</a>
         <a class="tc-btn tc-btn-build" href="ka_hypothesis_builder.html" title="Design study" onclick="event.stopPropagation();">🧪</a>
+        <button class="ka-workspace-save-btn" style="padding:4px 9px" onclick="saveTopicCard(event, '${c.id}')" title="Save topic">Save</button>
       </div>
       <a class="tc-cta" href="ka_argumentation.html" onclick="event.stopPropagation();">See debate structure →</a>
     </div>`;
@@ -879,9 +880,40 @@ function buildDetailPanel(id) {
         <a class="detail-btn detail-btn-secondary" href="ka_article_search.html">Find articles</a>
         <a class="detail-btn detail-btn-secondary" href="ka_argumentation.html">See debate structure</a>
         <a class="detail-btn detail-btn-secondary" href="ka_hypothesis_builder.html">Design a study</a>
+        <button class="ka-workspace-save-btn" onclick="saveTopicDetail('${c.id}')">Save to Workspace</button>
       </div>
     </div>
   `;
+}
+
+function saveTopicRecord(topicId) {
+  if (!window.KA_WORKSPACE) return;
+  const c = CLUSTERS.find(x => x.id === topicId);
+  if (!c) return;
+  window.KA_WORKSPACE.add({
+    kind: 'topic',
+    sourceId: c.id,
+    title: cleanTopicName(c.name),
+    subtitle: c.desc,
+    url: 'ka_topics.html',
+    meta: {
+      paperCount: c.n,
+      voi: c.voi,
+      category: c.cat,
+      maturity: c.maturity || '',
+      theories: c.theories || [],
+      constructs: c.shared_constructs || []
+    }
+  });
+}
+
+function saveTopicCard(event, topicId) {
+  event.stopPropagation();
+  saveTopicRecord(topicId);
+}
+
+function saveTopicDetail(topicId) {
+  saveTopicRecord(topicId);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1079,6 +1111,7 @@ window.KA_ABOUT_PAGE = {
 </script>
 <script src="ka_about_page.js"></script>
 <script src="ka_ui_fixes.js"></script>
+<script src="ka_workspace.js"></script>
 <script src="ka_route_cta.js"></script>
 
 </body>

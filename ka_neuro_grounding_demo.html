@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neuro Grounding Modal Demo — Knowledge Atlas</title>
+  <link rel="stylesheet" href="ka_neuro_grounding_modal.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1C3D3A;
+      --amber: #E8872A;
+      --cream: #F7F4EF;
+      --green: #2A7868;
+      --text: #2D2010;
+      --muted: #6A5E50;
+      --border: #DDD6CD;
+      --light: #EDE8E0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    /* ── Navigation ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 500;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 0 28px;
+      height: 52px;
+      border-bottom: 2px solid var(--amber);
+    }
+
+    .nav-brand {
+      color: #A8C8BF;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+    .nav-brand:hover {
+      color: var(--amber);
+    }
+
+    nav a.nav-link {
+      color: #7AACA0;
+      font-size: 0.8rem;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    nav a.nav-link:hover {
+      color: #fff;
+    }
+
+    .nav-sep {
+      color: rgba(255, 255, 255, 0.18);
+    }
+
+    .nav-center {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      flex: 1;
+    }
+
+    /* ── Hero ── */
+    .page-hero {
+      background: linear-gradient(135deg, #163230 0%, var(--navy) 50%, #1A2E2C 100%);
+      padding: 56px 40px 48px;
+      border-bottom: 3px solid var(--amber);
+    }
+
+    .page-hero .eyebrow {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #7AACA0;
+      margin-bottom: 12px;
+    }
+
+    .page-hero h1 {
+      font-family: Georgia, serif;
+      font-size: 2rem;
+      font-weight: 400;
+      color: #F5F0E8;
+      line-height: 1.25;
+      margin-bottom: 14px;
+    }
+
+    .page-hero p {
+      font-size: 1rem;
+      color: #A8C8BF;
+      line-height: 1.7;
+      max-width: 720px;
+    }
+
+    /* ── Main Container ── */
+    .outer {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 40px 32px 80px;
+    }
+
+    /* ── Section ── */
+    .demo-section {
+      margin-bottom: 60px;
+    }
+
+    .section-title {
+      font-family: Georgia, serif;
+      font-size: 1.35rem;
+      font-weight: 400;
+      color: var(--navy);
+      margin-bottom: 24px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .section-desc {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+      line-height: 1.7;
+    }
+
+    /* ── Card Grid ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    /* ── Article Card ── */
+    .article-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px 22px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+
+    .article-card:hover {
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .article-tag {
+      display: inline-block;
+      background: #E3F4EC;
+      color: #1A5C30;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+      width: fit-content;
+    }
+
+    .article-title {
+      font-family: Georgia, serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--navy);
+      line-height: 1.35;
+      margin-bottom: 10px;
+    }
+
+    .article-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .article-desc {
+      font-size: 0.85rem;
+      color: #5A5040;
+      line-height: 1.6;
+      flex: 1;
+      margin-bottom: 16px;
+    }
+
+    .article-btn {
+      background: var(--green);
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.15s;
+      letter-spacing: 0.03em;
+      display: inline-block;
+    }
+
+    .article-btn:hover {
+      background: #1F5F56;
+      box-shadow: 0 4px 12px rgba(42, 120, 104, 0.25);
+    }
+
+    /* ── Topic Card ── */
+    .topic-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px 22px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+
+    .topic-card:hover {
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .topic-badge {
+      display: inline-block;
+      background: #FFF0CC;
+      color: #7A4F00;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+      width: fit-content;
+    }
+
+    .topic-name {
+      font-family: Georgia, serif;
+      font-size: 1.1rem;
+      color: var(--navy);
+      font-weight: 600;
+      line-height: 1.3;
+      margin-bottom: 14px;
+    }
+
+    .topic-stat {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 8px;
+    }
+
+    .topic-progress {
+      width: 100%;
+      height: 6px;
+      background: var(--light);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .topic-progress-fill {
+      height: 100%;
+      background: var(--amber);
+      border-radius: 3px;
+    }
+
+    .topic-btn {
+      background: var(--amber);
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      transition: all 0.15s;
+      letter-spacing: 0.03em;
+      display: inline-block;
+      margin-top: auto;
+    }
+
+    .topic-btn:hover {
+      background: #C05A1F;
+      box-shadow: 0 4px 12px rgba(232, 135, 42, 0.25);
+    }
+
+    /* ── Footer ── */
+    .page-footer {
+      background: var(--navy);
+      padding: 32px 40px;
+      margin-top: 60px;
+      border-top: 2px solid var(--amber);
+      text-align: center;
+    }
+
+    .page-footer p {
+      font-size: 0.75rem;
+      color: #7AACA0;
+      margin: 0;
+    }
+
+    .page-footer a {
+      color: var(--amber);
+      text-decoration: none;
+    }
+
+    @media (max-width: 640px) {
+      .outer {
+        padding: 24px 20px 60px;
+      }
+
+      .page-hero {
+        padding: 40px 24px 32px;
+      }
+
+      .page-hero h1 {
+        font-size: 1.6rem;
+      }
+
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav>
+  <a href="ka_home.html" class="nav-brand">Knowledge Atlas</a>
+  <div class="nav-center">
+    <span class="nav-sep">|</span>
+    <a href="ka_home.html" class="nav-link">Home</a>
+    <a href="ka_neuro_perspective.html" class="nav-link">Neuro Perspective</a>
+    <a href="ka_neuro_grounding_demo.html" class="nav-link" style="color: var(--amber);">Modal Demo</a>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<div class="page-hero">
+  <div class="eyebrow">Modal Demo</div>
+  <h1>Neuroscientific Grounding Opportunities</h1>
+  <p>Click any article or topic card to see the modal in action. The modal displays mechanism chains, confidence levels, and grounding gaps for all claims in the Knowledge Atlas.</p>
+</div>
+
+<div class="outer">
+
+  <!-- ── Article Cards Section ── -->
+  <div class="demo-section">
+    <h2 class="section-title">Article Modals</h2>
+    <p class="section-desc">
+      Click on any article to explore mechanistically grounded claims. Each claim shows the neural mechanism chain, bridge type, CCI confidence level, and identified gaps in our current understanding.
+    </p>
+
+    <div class="card-grid">
+
+      <div class="article-card">
+        <div class="article-tag">Article</div>
+        <h3 class="article-title">Light Exposure and Circadian Sleep</h3>
+        <div class="article-meta">Stevens et al. (2024)</div>
+        <div class="article-desc">
+          Evidence-based mechanisms connecting light exposure timing to circadian entrainment and sleep consolidation.
+        </div>
+        <button class="article-btn" onclick="window.NeuroGroundingModal.openForArticle('article-001')">
+          View Mechanisms
+        </button>
+      </div>
+
+      <div class="article-card">
+        <div class="article-tag">Article</div>
+        <h3 class="article-title">Spatial Cognition and Wayfinding</h3>
+        <div class="article-meta">Choi & Park (2025)</div>
+        <div class="article-desc">
+          How architectural landmarks reduce cognitive load and enable efficient spatial memory formation through hippocampal mechanisms.
+        </div>
+        <button class="article-btn" onclick="window.NeuroGroundingModal.openForArticle('article-002')">
+          View Mechanisms
+        </button>
+      </div>
+
+      <div class="article-card">
+        <div class="article-tag">Article</div>
+        <h3 class="article-title">Threat Detection in Built Environments</h3>
+        <div class="article-meta">Uddin & Miller (2023)</div>
+        <div class="article-desc">
+          Neural mechanisms of rapid threat perception and how architectural unpredictability affects salience network function.
+        </div>
+        <button class="article-btn" onclick="window.NeuroGroundingModal.openForArticle('article-003')">
+          View Mechanisms
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Topic Cards Section ── -->
+  <div class="demo-section">
+    <h2 class="section-title">Topic Modals</h2>
+    <p class="section-desc">
+      Click on any topic to see aggregate grounding statistics and the top mechanism chains for that framework. These lighter-weight modals show coverage and strongest evidence at a glance.
+    </p>
+
+    <div class="card-grid">
+
+      <div class="topic-card">
+        <div class="topic-badge">Topic</div>
+        <h3 class="topic-name">Circadian & Sleep Alignment</h3>
+        <div class="topic-stat">8 of 12 claims grounded</div>
+        <div class="topic-progress">
+          <div class="topic-progress-fill" style="width: 67%;"></div>
+        </div>
+        <button class="topic-btn" onclick="window.NeuroGroundingModal.openForTopic('topic-circadian')">
+          Explore Topic
+        </button>
+      </div>
+
+      <div class="topic-card">
+        <div class="topic-badge">Topic</div>
+        <h3 class="topic-name">Spatial Navigation & Memory</h3>
+        <div class="topic-stat">9 of 15 claims grounded</div>
+        <div class="topic-progress">
+          <div class="topic-progress-fill" style="width: 60%;"></div>
+        </div>
+        <button class="topic-btn" onclick="window.NeuroGroundingModal.openForTopic('topic-spatial')">
+          Explore Topic
+        </button>
+      </div>
+
+      <div class="topic-card">
+        <div class="topic-badge">Topic</div>
+        <h3 class="topic-name">Threat Detection & Salience</h3>
+        <div class="topic-stat">7 of 10 claims grounded</div>
+        <div class="topic-progress">
+          <div class="topic-progress-fill" style="width: 70%;"></div>
+        </div>
+        <button class="topic-btn" onclick="window.NeuroGroundingModal.openForTopic('topic-salience')">
+          Explore Topic
+        </button>
+      </div>
+
+      <div class="topic-card">
+        <div class="topic-badge">Topic</div>
+        <h3 class="topic-name">Novelty & Exploration</h3>
+        <div class="topic-stat">6 of 8 claims grounded</div>
+        <div class="topic-progress">
+          <div class="topic-progress-fill" style="width: 75%;"></div>
+        </div>
+        <button class="topic-btn" onclick="window.NeuroGroundingModal.openForTopic('topic-novelty')">
+          Explore Topic
+        </button>
+      </div>
+
+      <div class="topic-card">
+        <div class="topic-badge">Topic</div>
+        <h3 class="topic-name">Predictive Processing & Perception</h3>
+        <div class="topic-stat">8 of 11 claims grounded</div>
+        <div class="topic-progress">
+          <div class="topic-progress-fill" style="width: 73%;"></div>
+        </div>
+        <button class="topic-btn" onclick="window.NeuroGroundingModal.openForTopic('topic-prediction')">
+          Explore Topic
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Documentation Section ── -->
+  <div class="demo-section">
+    <h2 class="section-title">How to Use</h2>
+    <p class="section-desc">
+      The Neuroscientific Grounding Modal is a reusable component that can be integrated into any Knowledge Atlas page.
+    </p>
+
+    <div style="background: #f9f8f5; border: 1px solid var(--border); border-radius: 10px; padding: 24px;">
+
+      <h3 style="font-family: Georgia, serif; font-size: 1.1rem; color: var(--navy); margin-bottom: 14px;">
+        Integration Instructions
+      </h3>
+
+      <p style="font-size: 0.9rem; color: var(--muted); margin-bottom: 16px; line-height: 1.7;">
+        1. <strong>Include the CSS</strong> on any page:
+        <code style="background: #fff; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 0.85rem;">&lt;link rel="stylesheet" href="ka_neuro_grounding_modal.css"&gt;</code>
+      </p>
+
+      <p style="font-size: 0.9rem; color: var(--muted); margin-bottom: 16px; line-height: 1.7;">
+        2. <strong>Include the JavaScript</strong> before closing &lt;/body&gt;:
+        <code style="background: #fff; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 0.85rem;">&lt;script src="ka_neuro_grounding_modal.js"&gt;&lt;/script&gt;</code>
+      </p>
+
+      <p style="font-size: 0.9rem; color: var(--muted); margin-bottom: 16px; line-height: 1.7;">
+        3. <strong>Open Article Modal</strong>:
+        <code style="background: #fff; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 0.85rem;">window.NeuroGroundingModal.openForArticle('article-001')</code>
+      </p>
+
+      <p style="font-size: 0.9rem; color: var(--muted); line-height: 1.7;">
+        4. <strong>Open Topic Modal</strong>:
+        <code style="background: #fff; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 0.85rem;">window.NeuroGroundingModal.openForTopic('topic-circadian')</code>
+      </p>
+
+    </div>
+
+    <div style="background: #f9f8f5; border: 1px solid var(--border); border-radius: 10px; padding: 24px; margin-top: 20px;">
+
+      <h3 style="font-family: Georgia, serif; font-size: 1.1rem; color: var(--navy); margin-bottom: 14px;">
+        Feature Summary
+      </h3>
+
+      <ul style="list-style: none; padding: 0; margin: 0;">
+        <li style="font-size: 0.9rem; color: var(--muted); padding: 8px 0; line-height: 1.6;">✓ Article modals show all mechanistically grounded claims with mechanism chains and confidence scores</li>
+        <li style="font-size: 0.9rem; color: var(--muted); padding: 8px 0; line-height: 1.6;">✓ Identifies grounding gaps for ungrounded claims, highlighting research opportunities</li>
+        <li style="font-size: 0.9rem; color: var(--muted); padding: 8px 0; line-height: 1.6;">✓ Topic modals show aggregate grounding statistics and top mechanism chains</li>
+        <li style="font-size: 0.9rem; color: var(--muted); padding: 8px 0; line-height: 1.6;">✓ CCI confidence bars show evidence strength (strong, well-supported, plausible, speculative)</li>
+        <li style="font-size: 0.9rem; color: var(--muted); padding: 8px 0; line-height: 1.6;">✓ Bridge type pills indicate warrant type (Mechanism, Empirical Association, Functional, etc.)</li>
+        <li style="font-size: 0.9rem; color: var(--muted); padding: 8px 0; line-height: 1.6;">✓ Smooth animations and keyboard accessibility (Escape to close)</li>
+        <li style="font-size: 0.9rem; color: var(--muted); padding: 8px 0; line-height: 1.6;">✓ Fully responsive design, works on all screen sizes</li>
+      </ul>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ── Footer ── -->
+<div class="page-footer">
+  <p>
+    Knowledge Atlas — Neuroscience-Grounded Evidence Architecture<br>
+    <a href="ka_neuro_perspective.html">Full Neuro Perspective</a> | Modal Demo 2026-04-01
+  </p>
+</div>
+
+<!-- Include modal component -->
+<script src="ka_neuro_grounding_modal.js"></script>
+
+</body>
+</html>

@@ -362,7 +362,7 @@ window.KA_WORKFLOWS = {
           title: 'Collect the Evidence Base',
           pageLink: 'ka_evidence.html',
           pageName: 'Evidence',
-          description: 'Systematically collect all relevant evidence cards in your domain. Use the Article Collector to build your corpus. Aim for completeness over selectivity in this step — you will filter and assess in Step 3.',
+          description: 'Systematically collect all relevant evidence cards in your domain. Use the workspace basket to build your corpus. Aim for completeness over selectivity in this step — you will filter and assess in Step 3.',
           lookFor: ['Are there papers you expected to find but cannot locate in ATLAS?', 'Are all the study designs represented?', 'What is the temporal spread — are there recent replications?'],
           imageType: 'evidence-card',
           collectArticles: true
@@ -472,7 +472,7 @@ window.KA_WORKFLOWS = {
           title: 'Find the Evidence',
           pageLink: 'ka_evidence.html',
           pageName: 'Evidence',
-          description: 'For each design claim, find the one or two best-supported pieces of evidence in the ATLAS archive. "Best-supported" means: clear methodology, appropriate population, replicated if possible, and effect size large enough to be practically significant. Collect these into the Article Collector.',
+          description: 'For each design claim, find the one or two best-supported pieces of evidence in the ATLAS archive. "Best-supported" means: clear methodology, appropriate population, replicated if possible, and effect size large enough to be practically significant. Save these into the workspace basket.',
           lookFor: ['Is there a single landmark study that the field widely cites?', 'Are there recent meta-analyses or systematic reviews — those are most authoritative?', 'Are any of the key authors prominent enough that naming them strengthens the brief?'],
           imageType: 'evidence-card',
           collectArticles: true

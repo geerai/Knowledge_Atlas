@@ -806,6 +806,7 @@ function renderResults(articles, construct, instrument) {
         ${a.sensorSummary ? `<span class="result-summary-pill">Sensors used: ${a.sensorSummary}</span>` : ''}
         ${typeof a.attackCount === 'number' ? `<span class="result-summary-pill">Challenges: ${a.attackCount}</span>` : ''}
         ${typeof a.supportCount === 'number' ? `<span class="result-summary-pill">Supports: ${a.supportCount}</span>` : ''}
+        <button class="ka-workspace-save-btn" onclick="saveArticleToWorkspace(event, '${a.paperId || a.title.replace(/'/g, '&#39;')}')">Save</button>
       </div>
       <div class="result-abstract">${a.abstract}</div>
       <div class="result-meta">
@@ -886,6 +887,30 @@ function sortResults(val) {
     });
   }
   renderResults(sorted, LAST_QUERY.construct, LAST_QUERY.instrument);
+}
+
+function saveArticleToWorkspace(event, paperId) {
+  event.stopPropagation();
+  if (!window.KA_WORKSPACE) return;
+  const item = LAST_RESULTS.find(function(row) {
+    return (row.paperId || row.title) === paperId;
+  });
+  if (!item) return;
+  window.KA_WORKSPACE.add({
+    kind: 'article',
+    sourceId: item.paperId || item.doi || item.title,
+    title: item.title,
+    subtitle: [item.authors, item.year ? `(${item.year})` : '', item.journal].filter(Boolean).join(' '),
+    url: item.doi ? `https://doi.org/${item.doi}` : 'ka_article_search.html',
+    meta: {
+      paperId: item.paperId,
+      year: item.year,
+      studyType: item.studyType,
+      primaryTopic: item.primaryTopic,
+      constructs: item.constructs || [],
+      sensorSummary: item.sensorSummary || ''
+    }
+  });
 }
 </script>
 <script src="ka_mode_switch.js"></script>
@@ -1063,6 +1088,7 @@ window.KA_ABOUT_PAGE = {
 </script>
 <script src="ka_about_page.js"></script>
 <script src="ka_ui_fixes.js"></script>
+<script src="ka_workspace.js"></script>
 <script src="ka_route_cta.js"></script>
 
 </body>
