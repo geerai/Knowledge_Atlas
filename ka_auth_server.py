@@ -137,6 +137,36 @@ def get_db() -> sqlite3.Connection:
     db.execute("PRAGMA foreign_keys=ON")
     return db
 
+
+def _ensure_column(db: sqlite3.Connection, table: str, column: str, spec: str) -> None:
+    cols = {row[1] for row in db.execute(f"PRAGMA table_info({table})")}
+    if column not in cols:
+        db.execute(f"ALTER TABLE {table} ADD COLUMN {column} {spec}")
+
+
+_GITHUB_USERNAME_RE = re.compile(r"^(?!-)(?!.*--)[a-z0-9-]{1,39}(?<!-)$")
+
+
+def _normalize_github_username(raw: str) -> str:
+    value = (raw or "").strip()
+    if not value:
+        raise HTTPException(400, "GitHub username is required")
+
+    if "github.com/" in value:
+        value = value.split("github.com/", 1)[1]
+    value = value.strip().strip("/")
+    value = value.split("/", 1)[0]
+    if value.startswith("@"):
+        value = value[1:]
+    value = value.strip().lower()
+
+    if not _GITHUB_USERNAME_RE.fullmatch(value):
+        raise HTTPException(
+            400,
+            "Invalid GitHub username. Use 1-39 letters, numbers, or single hyphens; no spaces; no leading or trailing hyphen."
+        )
+    return value
+
 def init_db():
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     db = get_db()
@@ -178,6 +208,9 @@ def init_db():
         notes       TEXT
     );
     """)
+    _ensure_column(db, "users", "github_username", "TEXT")
+    _ensure_column(db, "users", "github_username_source", "TEXT")
+    _ensure_column(db, "users", "github_username_updated_at", "TEXT")
     # Seed research questions if table is empty
     count = db.execute("SELECT COUNT(*) FROM research_questions").fetchone()[0]
     if count == 0:
@@ -396,6 +429,11 @@ class ApproveRequest(BaseModel):
 class RejectRequest(BaseModel):
     reason: str = "Application not approved"
 
+
+class UpdateGitHubUsernameRequest(BaseModel):
+    github_username: str
+    source: str = "explicit"
+
 # ════════════════════════════════════════════════
 # APP
 # ════════════════════════════════════════════════
@@ -580,7 +618,53 @@ def change_password(req: ChangePasswordRequest, user=Depends(get_current_user)):
 @app.get("/auth/me")
 def me(user=Depends(get_current_user)):
     return {k: user[k] for k in
-            ("user_id","email","first_name","last_name","role","status","track","question_id","last_login")}
+            (
+                "user_id",
+                "email",
+                "first_name",
+                "last_name",
+                "role",
+                "status",
+                "track",
+                "question_id",
+                "last_login",
+                "github_username",
+                "github_username_source",
+                "github_username_updated_at",
+            )}
+
+
+@app.post("/auth/github-username")
+def update_github_username(req: UpdateGitHubUsernameRequest, user=Depends(get_current_user)):
+    username = _normalize_github_username(req.github_username)
+    source = (req.source or "explicit").strip().lower()
+    if source not in {"explicit", "email_local_part"}:
+        source = "explicit"
+
+    now = datetime.now(timezone.utc).isoformat()
+    db = get_db()
+    try:
+        db.execute(
+            """
+            UPDATE users
+            SET github_username=?, github_username_source=?, github_username_updated_at=?
+            WHERE user_id=?
+            """,
+            (username, source, now, user["user_id"])
+        )
+        db.commit()
+    except sqlite3.Error:
+        db.rollback()
+        raise HTTPException(503, "GitHub username update is temporarily unavailable. Please try again in a moment.")
+    finally:
+        db.close()
+
+    return {
+        "message": "GitHub username saved.",
+        "github_username": username,
+        "github_username_source": source,
+        "github_username_updated_at": now,
+    }
 
 # ── ASSIGNMENTS
 @app.get("/api/assignments")

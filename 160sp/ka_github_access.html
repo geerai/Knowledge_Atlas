@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Access — COGS 160</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --navy:#1C3D3A;--navy-2:#163230;--amber:#E8872A;--amber-dark:#B45F14;
+      --cream:#F7F4EF;--green:#2A7868;--text:#2D2010;--muted:#6A5E50;
+      --border:#DDD6CD;--light:#EDE8E0;--danger:#A12F2F;
+    }
+    body{font-family:Arial,sans-serif;background:var(--cream);color:var(--text);line-height:1.6}
+    nav{position:sticky;top:0;z-index:500;background:var(--navy);display:flex;align-items:center;gap:24px;padding:0 28px;min-height:52px;border-bottom:2px solid var(--amber)}
+    .nav-center{display:flex;align-items:center;gap:14px;flex:1}
+    nav a.nav-link{color:#7AACA0;font-size:.8rem;text-decoration:none;padding:6px 10px;border-radius:6px}
+    nav a.nav-link:hover{color:#fff;background:rgba(255,255,255,.08)}
+    nav a.nav-link.active{color:#F5A623;background:rgba(232,135,42,.12)}
+    .page-hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-2) 100%);padding:40px 40px 34px;border-bottom:3px solid var(--amber)}
+    .page-hero .eyebrow{font-size:.65rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#7AACA0;margin-bottom:10px}
+    .page-hero h1{font-family:Georgia,serif;font-size:1.9rem;font-weight:400;color:#F5F0E8;line-height:1.25;margin-bottom:12px}
+    .page-hero p{font-size:1rem;color:#A8C8BF;max-width:760px}
+    .outer{max-width:980px;margin:0 auto;padding:0 32px 72px}
+    .section{margin-top:36px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:22px 24px}
+    .section h2{font-family:Georgia,serif;font-size:1.2rem;font-weight:500;color:var(--navy);margin-bottom:12px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:12px}
+    .card{background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:16px}
+    .card h3{font-size:1rem;color:var(--navy);margin-bottom:8px}
+    .muted{color:var(--muted);font-size:.92rem}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+    .big-handle{display:inline-block;margin-top:10px;padding:10px 14px;border-radius:8px;background:#fff;border:1px solid var(--border);font-weight:700;font-size:1.05rem}
+    .status{border-radius:8px;padding:12px 14px;font-size:.92rem;display:none;margin-top:14px}
+    .status.ok{display:block;background:#E8F4F0;border-left:4px solid var(--green);color:#184C42}
+    .status.err{display:block;background:#FCE9E7;border-left:4px solid var(--danger);color:#7C2424}
+    .status.info{display:block;background:#FFF4E6;border-left:4px solid var(--amber);color:#704111}
+    .kv{display:grid;grid-template-columns:160px 1fr;gap:10px;padding:8px 0;border-top:1px solid var(--light)}
+    .kv:first-child{border-top:none;padding-top:0}
+    .kv .k{font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+    .kv .v{font-size:.94rem;font-weight:600}
+    .btn-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    .btn{display:inline-block;padding:10px 16px;border-radius:8px;border:1px solid transparent;text-decoration:none;font-size:.9rem;font-weight:700;cursor:pointer}
+    .btn.primary{background:var(--navy);color:#fff}
+    .btn.primary:hover{background:#163230}
+    .btn.amber{background:var(--amber-dark);color:#fff}
+    .btn.amber:hover{background:#8E4A10}
+    .btn.ghost{background:transparent;color:var(--navy);border-color:var(--navy)}
+    label{display:block;font-size:.84rem;font-weight:700;color:var(--navy);margin-bottom:6px}
+    input[type="text"]{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:8px;font-size:.95rem;color:var(--text);background:#fff}
+    input[type="text"]:focus{outline:none;border-color:var(--amber);box-shadow:0 0 0 3px rgba(232,135,42,.14)}
+    .helper{font-size:.84rem;color:var(--muted);margin-top:8px}
+    .checklist{margin-top:10px;padding-left:20px}
+    .checklist li{margin:8px 0}
+    @media (max-width:760px){
+      nav{padding:10px 16px;align-items:flex-start;flex-direction:column;gap:10px}
+      .nav-center{flex-wrap:wrap}
+      .page-hero{padding:28px 20px}
+      .outer{padding:0 16px 56px}
+      .kv{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="ka_schedule.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <svg viewBox="0 0 32 32" fill="none" style="width:28px;height:28px;" aria-hidden="true">
+      <circle cx="16" cy="16" r="3.5" fill="#F5A623"/>
+      <circle cx="16" cy="5" r="2.5" fill="#A8C8BF"/>
+      <circle cx="27" cy="22" r="2.5" fill="#A8C8BF"/>
+      <circle cx="5" cy="22" r="2.5" fill="#A8C8BF"/>
+      <line x1="16" y1="7.5" x2="16" y2="12.5" stroke="#F5A623" stroke-width="1.5"/>
+      <line x1="24.8" y1="20.2" x2="19.0" y2="17.3" stroke="#F5A623" stroke-width="1.5"/>
+      <line x1="7.2" y1="20.2" x2="13.0" y2="17.3" stroke="#F5A623" stroke-width="1.5"/>
+    </svg>
+    <div style="display:flex;flex-direction:column;line-height:1.1;">
+      <span style="font-size:0.66rem;font-weight:400;letter-spacing:0.24em;text-transform:uppercase;color:#A8C8BF;">Knowledge</span>
+      <span style="font-size:1.05rem;font-weight:700;color:#fff;">At<span style="color:#F5A623;">las</span> &middot; <span style="font-size:0.85rem;color:#A8C8BF;font-weight:400;">COGS 160</span></span>
+    </div>
+  </a>
+  <div class="nav-center">
+    <a href="ka_schedule.html" class="nav-link">160 Syllabus</a>
+    <a href="week2_exercises.html" class="nav-link">A0</a>
+    <a href="week3_agenda.html" class="nav-link">A1</a>
+    <a href="ka_track1_tagging.html" class="nav-link">Track 1</a>
+    <a href="ka_track2_pipeline.html" class="nav-link">Track 2</a>
+    <a href="ka_track3_vr.html" class="nav-link">Track 3</a>
+    <a href="ka_track4_ux.html" class="nav-link">Track 4</a>
+  </div>
+  <div class="nav-right">
+    <a href="ka_student_profile.html" class="nav-link">160 Student Profile</a>
+    <a href="ka_github_access.html" class="nav-link active" aria-current="page">GitHub Access</a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="eyebrow">COGS 160 &middot; GitHub Access</div>
+  <h1>Tell Us Your GitHub Username</h1>
+  <p>We use this to invite you into the course GitHub organization and grant access to the repos your track needs.
+  If your GitHub username is exactly the same as the part of your UCSD email before the <span class="mono">@</span>,
+  you can confirm it with one click. If it is different, submit the actual username here.</p>
+</div>
+
+<div class="outer">
+  <div id="auth-status" class="status info">Checking your login…</div>
+
+  <div class="section">
+    <h2>Why This Matters</h2>
+    <ul class="checklist">
+      <li>All tracks need GitHub access.</li>
+      <li>The main site can remain private while students work in a separate course organization.</li>
+      <li>Your GitHub username, not just your email, is what we need to manage invitations and repo access cleanly.</li>
+    </ul>
+  </div>
+
+  <div class="section" id="account">
+    <h2>Your K-ATLAS Account</h2>
+    <div class="kv"><div class="k">Name</div><div class="v" id="acct-name">—</div></div>
+    <div class="kv"><div class="k">Email</div><div class="v" id="acct-email">—</div></div>
+    <div class="kv"><div class="k">Current Saved GitHub Username</div><div class="v" id="acct-gh">Not yet saved</div></div>
+    <div class="kv"><div class="k">Last Updated</div><div class="v" id="acct-gh-updated">—</div></div>
+  </div>
+
+  <div class="section">
+    <h2>Choose One</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>My GitHub Username Matches My UCSD Email Handle</h3>
+        <p class="muted">If your GitHub username is the same as the part of your account email before <span class="mono">@</span>,
+        you do not need to type it manually. Just confirm it.</p>
+        <div class="big-handle mono" id="inferred-handle">—</div>
+        <div class="btn-row">
+          <button type="button" class="btn amber" id="confirm-inferred">Use This GitHub Username</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>My GitHub Username Is Different</h3>
+        <label for="github-username">GitHub username</label>
+        <input id="github-username" type="text" placeholder="@your-handle or github.com/your-handle">
+        <div class="helper">You may enter just the username, an <span class="mono">@handle</span>, or your GitHub profile URL.</div>
+        <div class="btn-row">
+          <button type="button" class="btn primary" id="save-explicit">Save My GitHub Username</button>
+          <a class="btn ghost" href="https://github.com/join" target="_blank" rel="noopener">Create GitHub Account</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="save-status" class="status"></div>
+  </div>
+
+  <div class="section">
+    <h2>What Happens Next</h2>
+    <p class="muted">Once your username is saved, the teaching team can export the list from the K-ATLAS auth database and invite you into the course GitHub organization. You only need to submit again if your GitHub username changes.</p>
+    <div class="btn-row">
+      <a href="week3_agenda.html" class="btn ghost">Back to Week 3 Setup</a>
+      <a href="ka_student_profile.html" class="btn ghost">Back to Student Profile</a>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const API = window.__KA_CONFIG__?.apiBase ?? '';
+  const token = localStorage.getItem('ka_access_token') || '';
+  const authStatus = document.getElementById('auth-status');
+  const saveStatus = document.getElementById('save-status');
+  const acctName = document.getElementById('acct-name');
+  const acctEmail = document.getElementById('acct-email');
+  const acctGh = document.getElementById('acct-gh');
+  const acctGhUpdated = document.getElementById('acct-gh-updated');
+  const inferredHandleEl = document.getElementById('inferred-handle');
+  const explicitInput = document.getElementById('github-username');
+  const confirmBtn = document.getElementById('confirm-inferred');
+  const saveBtn = document.getElementById('save-explicit');
+
+  let currentUser = null;
+  let inferredHandle = '';
+
+  function showBox(el, kind, text){
+    el.className = 'status ' + kind;
+    el.textContent = text;
+  }
+
+  function clearBox(el){
+    el.className = 'status';
+    el.textContent = '';
+  }
+
+  function friendlyDate(iso){
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return isNaN(d.getTime()) ? iso : d.toLocaleString();
+  }
+
+  async function api(path, opts){
+    const headers = Object.assign({}, (opts && opts.headers) || {});
+    if (token) headers['Authorization'] = 'Bearer ' + token;
+    const res = await fetch(API + path, Object.assign({}, opts || {}, { headers }));
+    let data = {};
+    try { data = await res.json(); } catch (e) {}
+    if (!res.ok) throw new Error(data.detail || data.message || ('Request failed (' + res.status + ')'));
+    return data;
+  }
+
+  function renderUser(user){
+    currentUser = user;
+    const fullName = ((user.first_name || '') + ' ' + (user.last_name || '')).trim();
+    acctName.textContent = fullName || '—';
+    acctEmail.textContent = user.email || '—';
+    acctGh.textContent = user.github_username || 'Not yet saved';
+    acctGhUpdated.textContent = friendlyDate(user.github_username_updated_at);
+    inferredHandle = ((user.email || '').split('@')[0] || '').trim().toLowerCase();
+    inferredHandleEl.textContent = inferredHandle || 'No email handle available';
+    explicitInput.value = user.github_username || '';
+  }
+
+  async function saveGithubUsername(username, source){
+    clearBox(saveStatus);
+    confirmBtn.disabled = true;
+    saveBtn.disabled = true;
+    try {
+      const data = await api('/auth/github-username', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ github_username: username, source: source })
+      });
+      localStorage.setItem('ka_github_username', data.github_username || '');
+      acctGh.textContent = data.github_username || 'Not yet saved';
+      acctGhUpdated.textContent = friendlyDate(data.github_username_updated_at);
+      explicitInput.value = data.github_username || '';
+      showBox(saveStatus, 'ok', 'Saved. We will use "' + (data.github_username || username) + '" for GitHub organization and repo access.');
+    } catch (err) {
+      showBox(saveStatus, 'err', err.message || 'Could not save your GitHub username.');
+    } finally {
+      confirmBtn.disabled = false;
+      saveBtn.disabled = false;
+    }
+  }
+
+  if (!token) {
+    showBox(authStatus, 'err', 'You must log in first. Open the login page, sign in, then return here.');
+    confirmBtn.disabled = true;
+    saveBtn.disabled = true;
+  } else {
+    api('/auth/me')
+      .then(function(user){
+        renderUser(user);
+        showBox(authStatus, 'ok', 'Logged in. Save your GitHub username below.');
+      })
+      .catch(function(err){
+        showBox(authStatus, 'err', err.message || 'Could not verify your login. Please sign in again.');
+        confirmBtn.disabled = true;
+        saveBtn.disabled = true;
+      });
+  }
+
+  confirmBtn.addEventListener('click', function(){
+    if (!currentUser || !inferredHandle) {
+      showBox(saveStatus, 'err', 'No inferred GitHub username is available from your account email.');
+      return;
+    }
+    saveGithubUsername(inferredHandle, 'email_local_part');
+  });
+
+  saveBtn.addEventListener('click', function(){
+    const value = explicitInput.value.trim();
+    if (!value) {
+      showBox(saveStatus, 'err', 'Enter your GitHub username first.');
+      return;
+    }
+    saveGithubUsername(value, 'explicit');
+  });
+})();
+</script>
+
+</body>
+</html>
