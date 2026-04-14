@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Track TWO: AI Article Pipeline — COGS 160</title>
+  <title>Track TWO: Article Finder — COGS 160</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -32,26 +32,12 @@
       gap: 24px; padding: 0 28px; min-height: 52px;
       border-bottom: 2px solid var(--amber);
     }
-    .nav-brand { color: #A8C8BF; font-size: 0.78rem; font-weight: 700;
-      letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; }
-    .nav-brand:hover { color: var(--amber); }
     .nav-center { display:flex; align-items:center; gap:14px; flex:1; }
     nav a.nav-link { color: #7AACA0; font-size: 0.8rem; text-decoration: none;
       transition: color 0.15s, background 0.15s; padding: 6px 10px; border-radius: 6px; }
     nav a.nav-link:hover { color: #fff; background: rgba(255,255,255,0.08); }
     nav a.nav-link.active { color: #F5A623; background: rgba(232,135,42,0.12); }
     .nav-right { display:flex; align-items:center; gap:12px; }
-    .mode-select {
-      font-size: 0.76rem; padding: 6px 10px; border-radius: 16px;
-      border: 1px solid rgba(168, 200, 191, 0.34); background: rgba(255,255,255,0.05);
-      color: #D8EAE4;
-    }
-    .mode-select option { color: var(--navy); }
-    .mode-pill {
-      background: rgba(42,120,104,0.3); color: #5AC8AA; padding: 4px 12px;
-      border-radius: 20px; font-family: Arial, sans-serif; font-size: 0.75rem;
-      font-weight: 700; letter-spacing: 0.05em;
-    }
 
     /* ── Hero ── */
     .page-hero {
@@ -69,11 +55,11 @@
     }
     .page-hero p {
       font-size: 1rem; color: #A8C8BF; line-height: 1.7;
-      max-width: 640px;
+      max-width: 680px;
     }
 
     /* ── Layout ── */
-    .outer { max-width: 1000px; margin: 0 auto; padding: 0 32px 72px; }
+    .outer { max-width: 1020px; margin: 0 auto; padding: 0 32px 72px; }
 
     /* ── Section ── */
     .content-section { margin-top: 48px; }
@@ -90,7 +76,7 @@
     p { margin-bottom: 14px; font-size: 0.95rem; line-height: 1.7; }
     p:last-child { margin-bottom: 0; }
     ul, ol { margin-left: 1.5rem; margin-bottom: 14px; }
-    li { margin-bottom: 8px; }
+    li { margin-bottom: 8px; font-size: 0.95rem; line-height: 1.7; }
     strong { color: var(--text); }
 
     /* ── Callout ── */
@@ -102,9 +88,28 @@
       background: #E6F5F0; border-left: 4px solid var(--green);
       color: #1a4a3f;
     }
-    .callout strong { color: #1a4a3f; }
+    .callout-amber {
+      background: #FFF8F0; border-left: 4px solid var(--amber);
+      color: #5a3a10;
+    }
+    .callout strong { color: inherit; }
 
-    /* ── Milestone table ── */
+    /* ── Tables ── */
+    .data-table {
+      width: 100%; border-collapse: collapse; margin: 24px 0;
+      border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+    }
+    .data-table th {
+      background: var(--navy); color: #fff; padding: 12px 16px;
+      text-align: left; font-size: 0.85rem; font-weight: 600;
+    }
+    .data-table td {
+      padding: 12px 16px; border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: var(--light); }
+
     .milestone-table {
       width: 100%; border-collapse: collapse; margin: 24px 0;
       border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
@@ -121,7 +126,32 @@
     .milestone-table tr:hover td { background: var(--light); }
     .week-col { font-weight: 700; color: var(--navy); min-width: 70px; }
     .phase-col { color: var(--green); font-weight: 600; }
-    .activity-col { }
+
+    /* ── Maturity badges ── */
+    .badge { display:inline-block; padding:2px 10px; border-radius:10px; font-size:0.72rem; font-weight:700; letter-spacing:0.04em; }
+    .badge-prod  { background:#d4edda; color:#1a5928; }
+    .badge-func  { background:#fff3cd; color:#856404; }
+    .badge-skel  { background:#f8d7da; color:#721c24; }
+    .badge-none  { background:#e2e3e5; color:#383d41; }
+
+    /* ── Task cards ── */
+    .task-card {
+      background: #fff; border: 1px solid var(--border); border-radius: 8px;
+      padding: 18px 20px; margin-bottom: 16px;
+    }
+    .task-card h4 {
+      font-family: Georgia, serif; font-size: 1rem; font-weight: 600;
+      color: var(--navy); margin-bottom: 8px;
+    }
+    .task-card .task-meta {
+      font-size: 0.78rem; color: var(--muted); margin-bottom: 10px;
+    }
+    .task-card p, .task-card li { font-size: 0.9rem; }
+
+    /* ── 7-step mini table ── */
+    .steps-mini { font-size: 0.82rem; margin: 10px 0 0; }
+    .steps-mini td { padding: 4px 8px; vertical-align: top; }
+    .steps-mini .step-num { font-weight: 700; color: var(--green); width: 24px; }
 
     /* ── CTA buttons ── */
     .cta-button {
@@ -153,140 +183,924 @@
     }
 
     @media (max-width: 768px) {
-      .milestone-table { font-size: 0.85rem; }
+      .data-table, .milestone-table { font-size: 0.85rem; }
+      .data-table td, .data-table th,
       .milestone-table td, .milestone-table th { padding: 8px 12px; }
       .track-nav { flex-direction: column; gap: 16px; }
     }
+  
+    /* ── Sticky left-hand sub-nav (injected) ── */
+    /* Hidden until the hero banner scrolls out of view — see IntersectionObserver below. */
+    .track-subnav {
+      position: fixed; left: 14px; top: 76px;
+      width: 200px; max-height: calc(100vh - 100px);
+      overflow-y: auto;
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px 12px;
+      z-index: 200; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      font-size: 0.8rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.18s ease-in-out;
+    }
+    .track-subnav.revealed { opacity: 1; pointer-events: auto; }
+    .track-subnav-title {
+      font-family: Georgia, serif; font-size: 0.72rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;
+      padding-bottom: 6px; border-bottom: 1px solid var(--border);
+    }
+    .track-subnav a {
+      display: block; padding: 5px 8px; color: var(--text);
+      text-decoration: none; border-radius: 4px;
+      line-height: 1.35; margin-bottom: 2px; border-left: 2px solid transparent;
+    }
+    .track-subnav a:hover { background: var(--light); color: var(--navy); border-left-color: var(--amber); }
+    .track-subnav-divider { height: 1px; background: var(--border); margin: 10px -2px; }
+    .track-subnav-cta {
+      display: block !important; text-align: center;
+      background: #B45F14; color: #fff !important;
+      font-weight: 700; padding: 9px 10px; border-radius: 6px;
+      text-decoration: none; margin-top: 4px; font-size: 0.82rem;
+      border-left: none !important;
+    }
+    .track-subnav-cta:hover { background: #8E4A10; color: #fff !important; }
+    @media (max-width: 1280px) { .track-subnav { display: none; } }
+
+    /* ── Bottom triple CTA (Set Up + Join + Next Track) ── */
+    .track-bottom-ctas {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+      margin-top: 56px; padding: 26px; background: #fff;
+      border: 1px solid var(--border); border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .big-cta {
+      display: block; padding: 22px 24px; border-radius: 10px;
+      text-decoration: none; transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .big-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,0.10); }
+    .big-cta-setup { background: linear-gradient(135deg, #1C3D3A 0%, #163230 100%); color: #fff; }
+    .big-cta-join  { background: linear-gradient(135deg, #B45F14 0%, #8E4A10 100%); color: #fff; }
+    .big-cta-next  { background: linear-gradient(135deg, #2A7868 0%, #1E5A4D 100%); color: #fff; }
+    .big-cta-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; opacity: 0.82; margin-bottom: 6px; }
+    .big-cta-head  { font-family: Georgia, serif; font-size: 1.3rem; font-weight: 400;
+      margin-bottom: 6px; line-height: 1.25; }
+    .big-cta-sub   { font-size: 0.85rem; opacity: 0.92; line-height: 1.55; }
+    @media (max-width: 960px) { .track-bottom-ctas { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 720px) { .track-bottom-ctas { grid-template-columns: 1fr; } }
+
+    /* ── Join-Track modal ── */
+    .jt-modal-backdrop {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+      z-index: 9999; align-items: center; justify-content: center; padding: 24px;
+    }
+    .jt-modal-backdrop.open { display: flex; }
+    .jt-modal {
+      background: #fff; border-radius: 12px; max-width: 480px; width: 100%;
+      padding: 28px 26px; box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+    .jt-modal h3 { font-family: Georgia, serif; font-size: 1.25rem; color: var(--navy);
+      margin-bottom: 10px; line-height: 1.3; }
+    .jt-modal p { font-size: 0.92rem; line-height: 1.6; color: var(--text); }
+    .jt-modal .cur-track { display: inline-block; padding: 2px 10px; border-radius: 4px;
+      background: #FFF0CC; color: #7A4F00; font-weight: 700; font-size: 0.78rem;
+      letter-spacing: 0.06em; text-transform: uppercase; }
+    .jt-modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+    .jt-btn { padding: 9px 18px; border: none; border-radius: 7px; cursor: pointer;
+      font-weight: 600; font-size: 0.9rem; }
+    .jt-btn-cancel  { background: #EDE8E0; color: var(--text); }
+    .jt-btn-confirm { background: #B45F14; color: #fff; }
+    .jt-btn-confirm:hover { background: #8E4A10; }
+  
+    /* Offset anchor jumps so section titles clear the fixed class navbar */
+    :target { scroll-margin-top: 140px; }
+    h1[id], h2[id], h3[id], h4[id], section[id], div[id] { scroll-margin-top: 140px; }
   </style>
 </head>
 <body>
 
 <nav>
-  <a href="../ka_home.html" class="nav-brand">Knowledge Atlas</a>
+  <a href="ka_schedule.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <svg viewBox="0 0 32 32" fill="none" style="width:28px;height:28px;">
+      <circle cx="16" cy="16" r="3.5" fill="#F5A623"/>
+      <circle cx="16" cy="5"  r="2.5" fill="#A8C8BF"/>
+      <circle cx="27" cy="22" r="2.5" fill="#A8C8BF"/>
+      <circle cx="5"  cy="22" r="2.5" fill="#A8C8BF"/>
+      <line x1="16" y1="7.5" x2="16" y2="12.5" stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="24.8" y1="20.2" x2="19.0" y2="17.3" stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="7.2" y1="20.2" x2="13.0" y2="17.3" stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="16" y1="7.5" x2="25.5" y2="20" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+      <line x1="25.5" y1="20" x2="6.5" y2="20" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+      <line x1="6.5" y1="20" x2="16" y2="7.5" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+    </svg>
+    <div style="display:flex;flex-direction:column;line-height:1.1;">
+      <span style="font-size:0.66rem;font-weight:400;letter-spacing:0.24em;text-transform:uppercase;color:#A8C8BF;">Knowledge</span>
+      <span style="font-size:1.05rem;font-weight:700;color:#fff;">At<span style="color:#F5A623;">las</span> · <span style="font-size:0.85rem;color:#A8C8BF;font-weight:400;">COGS 160</span></span>
+    </div>
+  </a>
   <div class="nav-center">
-    <a id="nav-shell-explore" href="../ka_topics.html" class="nav-link">Explore</a>
-    <a id="nav-shell-evidence" href="../ka_evidence.html" class="nav-link">Evidence</a>
-    <a id="nav-shell-gaps" href="../ka_gaps.html" class="nav-link">Gaps</a>
-    <a id="nav-shell-articles" href="../ka_article_search.html" class="nav-link">Articles</a>
-    <a id="nav-shell-contribute" href="../ka_contribute.html" class="nav-link">Contribute</a>
-    <a id="nav-shell-course" href="ka_student_setup.html" class="nav-link active">Course</a>
+    <a href="ka_schedule.html" class="nav-link">160 Syllabus</a>
+    <a href="week2_exercises.html" class="nav-link">A0</a>
+    <a href="week3_agenda.html" class="nav-link">A1</a>
+    <a href="ka_track1_tagging.html" class="nav-link">Track 1</a>
+    <a href="ka_track2_pipeline.html" class="nav-link active">Track 2</a>
+    <a href="ka_track3_vr.html" class="nav-link">Track 3</a>
+    <a href="ka_track4_ux.html" class="nav-link">Track 4</a>
   </div>
   <div class="nav-right">
-    <select class="mode-select" id="track2-mode-select" aria-label="Switch user mode">
-      <option value="student_explorer">Student explorer</option>
-      <option value="researcher">Researcher</option>
-      <option value="contributor">Contributor</option>
-      <option value="instructor">Instructor</option>
-      <option value="practitioner">Practitioner</option>
-      <option value="theory_mechanism_explorer">Theory Explorer</option>
-    </select>
-    <div class="mode-pill" id="track2-mode-pill">STUDENT EXPLORER</div>
+    <a href="ka_student_profile.html" class="nav-link">160 Student Profile</a>
   </div>
 </nav>
 
+<aside class="track-subnav" aria-label="On this page">
+  <div class="track-subnav-title">On this page</div>
+    <a href="#about">Overview</a>
+    <a href="#pipeline">Pipeline</a>
+    <a href="#example">Worked Example</a>
+    <a href="#status">Current Status</a>
+    <a href="#tasks">Student Tasks</a>
+    <a href="#hitl">HITL Testing</a>
+    <a href="#syllabus">Weekly Syllabus</a>
+  <div class="track-subnav-divider"></div>
+  <a href="ka_track2_setup.html" class="track-subnav-cta">How to Set Up →</a>
+</aside>
+
+
 <div class="page-hero">
   <div class="eyebrow">COGS 160 · Track 2 of 4</div>
-  <h1>Track TWO: AI Article Pipeline</h1>
+  <h1>Track TWO: Article Finder</h1>
   <p>
-    Build automated article discovery systems using AI. Implement RAG-based retrieval, relevance scoring, and Value of Information prioritization to continuously find and filter research articles.
+    Find the right scientific articles, collect their metadata cleanly, and feed them into a pipeline
+    that extracts what the Knowledge Atlas needs. Your job is to make Article Eater hungry and well-fed.
   </p>
 </div>
 
 <div class="outer">
 
+  <!-- ═══════════════ SECTION 0: What Article Finder Is (plain-language intro) ═══════════════ -->
   <div class="content-section">
-    <h2 class="section-title">Track Overview</h2>
-    <p class="section-intro">
-      This track is not about manually finding more citations. It's about automating the article discovery process using artificial intelligence and information theory.
+    <h2 class="section-title" id="about">What Article Finder Is</h2>
+    <p style="font-size:0.98rem;line-height:1.75;color:var(--text);margin-bottom:14px;">
+      At its simplest, Article Finder is the <strong>front half of the Knowledge Atlas pipeline</strong>:
+      it searches the scientific literature for papers that might contain evidence the Atlas needs, scores
+      them for how much they would change what we currently believe, downloads the PDFs that clear that
+      bar, and hands them to Article Eater for structured extraction. Think of it as the part of the
+      system that <em>goes shopping</em>, and Article Eater as the part that <em>cooks</em>.
     </p>
+    <p style="font-size:0.98rem;line-height:1.75;color:var(--text);margin-bottom:14px;">
+      At a deeper level, Article Finder is where the Atlas's epistemic priorities meet the world's
+      publication record. Its Value-of-Information (VOI) scoring is a deliberate bet: studies that would
+      fill a gap in the coherentist web of evidence are worth more than studies that merely reinforce
+      what the Atlas already knows well. The scoring, the query generation, and the handoff contract to
+      Article Eater are all under active design this quarter, and are the places your track-owned code
+      will actually ship.
+    </p>
+    <p style="font-size:0.95rem;line-height:1.7;color:var(--muted);margin-bottom:24px;">
+      To understand the pipeline in more depth, read the Track 2 setup and intake pages:
+      <a href="ka_track2_setup.html" style="color:#E8872A;font-weight:600;">Track 2 Setup →</a>
+      and
+      <a href="ka_track2_intake.html" style="color:#E8872A;font-weight:600;">Track 2 Intake →</a>.
+      For the current implementation status — what is built, what is broken, and where student effort is
+      most needed — see the
+      <a href="MASTER_DOC_BRIEF_2026-04-08_UNIFIED_REGISTRY_AND_NOTIFICATION.md" target="_blank"
+         style="color:#E8872A;font-weight:600;">Article Finder Status Brief →</a>.
+    </p>
+  </div>
 
-    <div class="callout callout-info">
-      <strong>The Goal:</strong> Build a system that continuously hunts for relevant papers and presents them to other students ranked by how much they'd contribute to filling knowledge gaps. You'll combine Retrieval-Augmented Generation (RAG), relevance filtering, and Value of Information (VOI) scoring.
+  <!-- ═══════════════ SECTION 1: What Article Finder Does ═══════════════ -->
+  <div class="content-section">
+    <h2 class="section-title" id="pipeline">What Article Finder Actually Does</h2>
+
+    <p>The Knowledge Atlas is built from scientific articles — primarily, articles that report experimental
+    results about how built environments affect human cognition, perception, and affect. But there are millions
+    of articles in the world, and only a few thousand are relevant to neuroarchitecture. Article Finder is
+    the system that identifies those articles, collects their metadata, downloads their PDFs, and deposits
+    them where Article Eater (the extraction engine) can process them.</p>
+
+    <p>This is a two-stage pipeline. <strong>Stage 1 (Discovery &amp; Collection)</strong> finds candidate
+    articles and gathers five things for each one: a full APA citation, the abstract, the DOI, the PDF file,
+    and a database record linking them together. <strong>Stage 2 (Extraction)</strong> is handled by Article
+    Eater itself — an LLM-based system that reads each PDF and pulls out structured findings (independent
+    variable → dependent variable → effect size → statistical test). Your track owns Stage 1 and the handoff
+    to Stage 2.</p>
+
+    <p>The critical idea is <strong>Value of Information (VOI)</strong>. Not all articles are equally worth
+    collecting. An article that fills a gap in the Atlas — say, the first study on how ceiling height affects
+    creative divergent thinking — is far more valuable than the twentieth study confirming that natural light
+    improves mood. VOI scoring helps you prioritize what to collect next, so the Atlas grows where it most
+    needs to grow.</p>
+
+    <!-- ── Boxology Diagram ── -->
+    <h3 style="font-family:Georgia,serif;font-size:1.05rem;color:var(--navy);margin-top:32px;margin-bottom:16px;">Pipeline Architecture</h3>
+
+    <div style="background:#fff;border:1px solid var(--border);border-radius:10px;padding:24px 16px;margin:0 0 28px;overflow-x:auto;">
+      <svg viewBox="0 0 900 420" style="width:100%;max-width:870px;display:block;margin:0 auto;" font-family="Arial, sans-serif">
+
+        <!-- ── Stage 1: Discovery & Collection ── -->
+        <rect x="10" y="8" width="520" height="400" rx="10" fill="none" stroke="#1C3D3A" stroke-width="1.5" stroke-dasharray="6,3"/>
+        <text x="26" y="30" font-size="11" font-weight="700" fill="#1C3D3A" letter-spacing="0.08em">STAGE 1 — DISCOVERY &amp; COLLECTION (your track)</text>
+
+        <!-- VOI Query -->
+        <rect x="30" y="52" width="140" height="56" rx="8" fill="#FFF8F0" stroke="#E8872A" stroke-width="1.5"/>
+        <text x="100" y="73" font-size="10" font-weight="700" fill="#E8872A" text-anchor="middle">VOI Query</text>
+        <text x="100" y="88" font-size="9" fill="#6A5E50" text-anchor="middle">"ceiling height +</text>
+        <text x="100" y="99" font-size="9" fill="#6A5E50" text-anchor="middle">divergent thinking"</text>
+
+        <!-- arrow VOI → API -->
+        <line x1="170" y1="80" x2="198" y2="80" stroke="#E8872A" stroke-width="1.5" marker-end="url(#arrowAmber)"/>
+
+        <!-- API Search -->
+        <rect x="200" y="52" width="150" height="56" rx="8" fill="#E6F5F0" stroke="#2A7868" stroke-width="1.5"/>
+        <text x="275" y="73" font-size="10" font-weight="700" fill="#2A7868" text-anchor="middle">API Search</text>
+        <text x="275" y="88" font-size="9" fill="#6A5E50" text-anchor="middle">Semantic Scholar</text>
+        <text x="275" y="99" font-size="9" fill="#6A5E50" text-anchor="middle">OpenAlex · CrossRef</text>
+
+        <!-- arrow API → Candidates -->
+        <line x1="350" y1="80" x2="378" y2="80" stroke="#2A7868" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+
+        <!-- Candidate List -->
+        <rect x="380" y="52" width="130" height="56" rx="8" fill="#fff" stroke="#DDD6CD" stroke-width="1.5"/>
+        <text x="445" y="73" font-size="10" font-weight="700" fill="#1C3D3A" text-anchor="middle">Candidate List</text>
+        <text x="445" y="88" font-size="9" fill="#6A5E50" text-anchor="middle">~200 results per query</text>
+        <text x="445" y="99" font-size="9" fill="#6A5E50" text-anchor="middle">title, abstract, DOI</text>
+
+        <!-- arrow Candidates → Relevance -->
+        <line x1="445" y1="108" x2="445" y2="136" stroke="#1C3D3A" stroke-width="1.5" marker-end="url(#arrowNavy)"/>
+
+        <!-- Relevance Filter -->
+        <rect x="370" y="138" width="150" height="56" rx="8" fill="#E6F5F0" stroke="#2A7868" stroke-width="1.5"/>
+        <text x="445" y="159" font-size="10" font-weight="700" fill="#2A7868" text-anchor="middle">Relevance Filter</text>
+        <text x="445" y="174" font-size="9" fill="#6A5E50" text-anchor="middle">Is it empirical?</text>
+        <text x="445" y="185" font-size="9" fill="#6A5E50" text-anchor="middle">On-topic? Has data?</text>
+
+        <!-- arrow Relevance → VOI Score -->
+        <line x1="370" y1="166" x2="322" y2="166" stroke="#2A7868" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+
+        <!-- VOI Scoring -->
+        <rect x="170" y="138" width="150" height="56" rx="8" fill="#FFF8F0" stroke="#E8872A" stroke-width="1.5"/>
+        <text x="245" y="159" font-size="10" font-weight="700" fill="#E8872A" text-anchor="middle">VOI Scoring</text>
+        <text x="245" y="174" font-size="9" fill="#6A5E50" text-anchor="middle">Gap fill? Citation count?</text>
+        <text x="245" y="185" font-size="9" fill="#6A5E50" text-anchor="middle">Novelty? Rank by value</text>
+
+        <!-- HITL Review box -->
+        <rect x="30" y="138" width="120" height="56" rx="8" fill="#fce4ec" stroke="#c62828" stroke-width="1.5"/>
+        <text x="90" y="156" font-size="10" font-weight="700" fill="#c62828" text-anchor="middle">HITL Review</text>
+        <text x="90" y="171" font-size="9" fill="#6A5E50" text-anchor="middle">Human checks</text>
+        <text x="90" y="182" font-size="9" fill="#6A5E50" text-anchor="middle">top-20 picks</text>
+
+        <!-- arrow VOI → HITL -->
+        <line x1="170" y1="166" x2="152" y2="166" stroke="#c62828" stroke-width="1.5" marker-end="url(#arrowRed)"/>
+
+        <!-- arrow HITL → Metadata -->
+        <line x1="90" y1="194" x2="90" y2="236" stroke="#1C3D3A" stroke-width="1.5" marker-end="url(#arrowNavy)"/>
+
+        <!-- Metadata Collection -->
+        <rect x="30" y="238" width="220" height="64" rx="8" fill="#E6F5F0" stroke="#2A7868" stroke-width="1.5"/>
+        <text x="140" y="259" font-size="10" font-weight="700" fill="#2A7868" text-anchor="middle">Metadata Collection</text>
+        <text x="140" y="275" font-size="9" fill="#6A5E50" text-anchor="middle">For each accepted article, collect:</text>
+        <text x="140" y="290" font-size="9" font-weight="600" fill="#1C3D3A" text-anchor="middle">APA citation · Abstract · DOI · PDF · DB row</text>
+
+        <!-- arrow Metadata → Validate -->
+        <line x1="250" y1="270" x2="290" y2="270" stroke="#2A7868" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+
+        <!-- Validate & Store -->
+        <rect x="292" y="238" width="220" height="64" rx="8" fill="#fff" stroke="#DDD6CD" stroke-width="1.5"/>
+        <text x="402" y="259" font-size="10" font-weight="700" fill="#1C3D3A" text-anchor="middle">Validate &amp; Store</text>
+        <text x="402" y="275" font-size="9" fill="#6A5E50" text-anchor="middle">DOI resolves? Abstract present?</text>
+        <text x="402" y="290" font-size="9" fill="#6A5E50" text-anchor="middle">PDF readable? Insert into SQLite DB</text>
+
+        <!-- arrow Validate → PDF drop -->
+        <line x1="402" y1="302" x2="402" y2="340" stroke="#1C3D3A" stroke-width="1.5" marker-end="url(#arrowNavy)"/>
+
+        <!-- PDF Drop Zone -->
+        <rect x="300" y="342" width="210" height="52" rx="8" fill="#e8eaf6" stroke="#3949ab" stroke-width="1.5"/>
+        <text x="405" y="363" font-size="10" font-weight="700" fill="#3949ab" text-anchor="middle">PDF Drop Folder</text>
+        <text x="405" y="378" font-size="9" fill="#6A5E50" text-anchor="middle">__Zotero whole bibliography/files/</text>
+
+        <!-- ── Stage 2: Extraction ── -->
+        <rect x="555" y="8" width="335" height="400" rx="10" fill="none" stroke="#3949ab" stroke-width="1.5" stroke-dasharray="6,3"/>
+        <text x="570" y="30" font-size="11" font-weight="700" fill="#3949ab" letter-spacing="0.08em">STAGE 2 — EXTRACTION (Article Eater)</text>
+
+        <!-- arrow PDF → AE Ingest -->
+        <line x1="510" y1="368" x2="575" y2="368" stroke="#3949ab" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+
+        <!-- AE PDF Ingest -->
+        <rect x="577" y="342" width="150" height="52" rx="8" fill="#e8eaf6" stroke="#3949ab" stroke-width="1.5"/>
+        <text x="652" y="363" font-size="10" font-weight="700" fill="#3949ab" text-anchor="middle">PDF Ingest</text>
+        <text x="652" y="378" font-size="9" fill="#6A5E50" text-anchor="middle">pdfminer → sections</text>
+
+        <!-- AE LLM Extraction -->
+        <rect x="600" y="238" width="170" height="64" rx="8" fill="#e8eaf6" stroke="#3949ab" stroke-width="1.5"/>
+        <text x="685" y="259" font-size="10" font-weight="700" fill="#3949ab" text-anchor="middle">LLM Extraction</text>
+        <text x="685" y="275" font-size="9" fill="#6A5E50" text-anchor="middle">IV → DV → effect → stats</text>
+        <text x="685" y="290" font-size="9" fill="#6A5E50" text-anchor="middle">16 article-type templates</text>
+
+        <!-- arrow Ingest → Extract -->
+        <line x1="652" y1="342" x2="685" y2="304" stroke="#3949ab" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+
+        <!-- Knowledge Atlas -->
+        <rect x="620" y="52" width="150" height="56" rx="8" fill="#1C3D3A" stroke="none"/>
+        <text x="695" y="73" font-size="10" font-weight="700" fill="#F5A623" text-anchor="middle">Knowledge Atlas</text>
+        <text x="695" y="88" font-size="9" fill="#A8C8BF" text-anchor="middle">Structured findings</text>
+        <text x="695" y="99" font-size="9" fill="#A8C8BF" text-anchor="middle">Evidence graph</text>
+
+        <!-- arrow Extract → Atlas -->
+        <line x1="685" y1="238" x2="695" y2="110" stroke="#3949ab" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+
+        <!-- Enrichment pass 2 -->
+        <rect x="600" y="138" width="170" height="56" rx="8" fill="#e8eaf6" stroke="#3949ab" stroke-width="1.5"/>
+        <text x="685" y="159" font-size="10" font-weight="700" fill="#3949ab" text-anchor="middle">Pass 2 Enrichment</text>
+        <text x="685" y="174" font-size="9" fill="#6A5E50" text-anchor="middle">claim types, causal tier,</text>
+        <text x="685" y="185" font-size="9" fill="#6A5E50" text-anchor="middle">defeat codes, provenance</text>
+
+        <!-- arrow Enrichment → Atlas -->
+        <line x1="685" y1="138" x2="695" y2="110" stroke="#3949ab" stroke-width="1" stroke-dasharray="4,2" marker-end="url(#arrowBlue)"/>
+
+        <!-- Arrowhead defs -->
+        <defs>
+          <marker id="arrowAmber" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#E8872A"/></marker>
+          <marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#2A7868"/></marker>
+          <marker id="arrowNavy" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#1C3D3A"/></marker>
+          <marker id="arrowBlue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#3949ab"/></marker>
+          <marker id="arrowRed" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#c62828"/></marker>
+        </defs>
+      </svg>
     </div>
 
-    <h3 style="font-family:Georgia,serif;font-size:1.05rem;color:var(--navy);margin-top:28px;margin-bottom:12px;">Core Skills You'll Develop</h3>
-    <ul>
-      <li><strong>Automated Retrieval:</strong> Query engines that connect to Semantic Scholar API and other open-access sources</li>
-      <li><strong>RAG Systems:</strong> Retrieval-Augmented Generation pipelines that rank articles by relevance to existing knowledge</li>
-      <li><strong>Relevance Filtering:</strong> Distinguish experimental articles from theory papers and meta-reviews</li>
-      <li><strong>Value of Information:</strong> Prioritize which articles would most advance the knowledge base</li>
-      <li><strong>Quality Assurance:</strong> Automated gates that verify article type, topic relevance, and data quality</li>
-      <li><strong>Benchmarking:</strong> Test and measure retrieval accuracy against human-selected articles</li>
-    </ul>
+    <p style="font-size:0.85rem;color:var(--muted);text-align:center;margin-top:-16px;margin-bottom:24px;">
+      <em>Dashed boundaries show ownership. Stage 1 (your track) produces clean metadata + PDFs. Stage 2 (Article Eater) extracts structured findings. The red HITL Review box is where humans verify that the automated pipeline is making good decisions.</em>
+    </p>
 
-    <h3 style="font-family:Georgia,serif;font-size:1.05rem;color:var(--navy);margin-top:28px;margin-bottom:12px;">Weekly Syllabus</h3>
+  </div>
+
+  <!-- ═══════════════ SECTION 2: Worked Example ═══════════════ -->
+  <div class="content-section">
+    <h2 class="section-title" id="example">Worked Example: From VOI Query to Extracted Findings</h2>
+
+    <p>Suppose the Atlas has 40 articles on how <em>natural light</em> affects mood but zero articles
+    on how <em>ceiling height</em> affects <em>divergent thinking</em>. That gap makes ceiling-height + creativity
+    a high-VOI target. Here is how the pipeline processes it, step by step:</p>
+
+    <div style="margin:20px 0;">
+      <div style="display:grid;grid-template-columns:36px 1fr;gap:0 14px;margin-bottom:14px;">
+        <div style="background:var(--amber);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;">1</div>
+        <div>
+          <strong style="color:var(--navy);">VOI Query Generation.</strong>
+          The system (or a student) constructs a targeted query: <code style="background:#f4f0ea;padding:2px 6px;border-radius:4px;font-size:0.85rem;">"ceiling height" AND ("creative" OR "divergent thinking" OR "ideation")</code>.
+          The query is informed by the taxonomy's architectural factors (Part I, Spatial Layout) and latent variables (L36 Awe/Grandeur, which Meyers-Levy &amp; Zhu, 2007, link to abstract thinking).
+          We now also want to generate the sort of questions that Google AI Scholar uses.
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:36px 1fr;gap:0 14px;margin-bottom:14px;">
+        <div style="background:var(--green);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;">2</div>
+        <div>
+          <strong style="color:var(--navy);">API Search.</strong>
+          The query hits Semantic Scholar's graph API (already integrated in <code style="background:#f4f0ea;padding:2px 6px;border-radius:4px;font-size:0.85rem;">app/services/semantic_scholar.py</code>).
+          It returns ~180 candidate papers with title, abstract, DOI, citation count, and open-access flag. OpenAlex is used as a fallback for papers Semantic Scholar misses.
+          At present there are no API searches offered on Google AI Scholar, so this would have to be done manually, with the results page marked and copied.
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:36px 1fr;gap:0 14px;margin-bottom:14px;">
+        <div style="background:var(--green);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;">3</div>
+        <div>
+          <strong style="color:var(--navy);">Relevance Filter.</strong>
+          An LLM (or rule-based classifier) reads each abstract and asks three questions: Is this an empirical study (not a review, editorial, or theoretical paper)? Does it measure a behavioral or cognitive dependent variable? Does it manipulate or measure a built-environment property? Only papers passing all three survive. Perhaps 30 of the 180 pass.
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:36px 1fr;gap:0 14px;margin-bottom:14px;">
+        <div style="background:var(--amber);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;">4</div>
+        <div>
+          <strong style="color:var(--navy);">VOI Scoring.</strong>
+          Each surviving paper is scored on: (a) does it address a gap in the Atlas? (b) citation count (a proxy for influence), (c) recency, (d) is the PDF freely available? The 30 candidates are ranked. The top 20 are promoted to human review.
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:36px 1fr;gap:0 14px;margin-bottom:14px;">
+        <div style="background:#c62828;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;">5</div>
+        <div>
+          <strong style="color:var(--navy);">HITL Review.</strong>
+          A human (you) looks at the top-20 list on the HITL review page. For each, you see the title, abstract, VOI score, and the system's reasoning. You accept, reject, or flag for discussion. This catches false positives (e.g., a paper on "ceiling effects" in statistics, not architecture) and false negatives the filter missed.
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:36px 1fr;gap:0 14px;margin-bottom:14px;">
+        <div style="background:var(--navy);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;">6</div>
+        <div>
+          <strong style="color:var(--navy);">Metadata Collection &amp; Validation.</strong>
+          For each accepted article, the system collects or verifies: the full APA-7 citation (authors, year, title, journal, volume, pages, DOI), the abstract, and downloads the PDF. It validates that the DOI resolves, the abstract is present and non-empty, and the PDF is machine-readable (not a scan). Everything is inserted into the SQLite database (<code style="background:#f4f0ea;padding:2px 6px;border-radius:4px;font-size:0.85rem;">articles</code> table).
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:36px 1fr;gap:0 14px;">
+        <div style="background:#3949ab;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;">7</div>
+        <div>
+          <strong style="color:var(--navy);">PDF Drop &amp; Handoff.</strong>
+          The validated PDF is placed in the Zotero-compatible drop folder. Article Eater's worker picks it up, runs PDF ingestion (<code style="background:#f4f0ea;padding:2px 6px;border-radius:4px;font-size:0.85rem;">pdf_ingest.py</code>), then LLM extraction with the appropriate template. Structured findings flow into the Atlas.
+          <em>This step is already built. Your job is to feed it well.</em>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SECTION 3: Maturity Assessment ═══════════════ -->
+  <div class="content-section">
+    <h2 class="section-title" id="status">What's Built and What's Not</h2>
+
+    <p>The Article Eater system has been in development since late 2025. Some parts of the pipeline are
+    production-ready; others are skeletal or missing entirely. Understanding this maturity landscape is
+    essential — it tells you where your effort is most needed.</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Maturity</th>
+          <th>What Exists</th>
+          <th>What's Missing</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-weight:600;">Semantic Scholar API</td>
+          <td><span class="badge badge-func">FUNCTIONAL</span></td>
+          <td style="color:var(--muted);">Basic wrapper with rate-limit handling, returns title/abstract/DOI/citations</td>
+          <td style="color:var(--muted);">No caching, no deduplication, no incremental updates</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">OpenAlex Fallback</td>
+          <td><span class="badge badge-prod">PRODUCTION</span></td>
+          <td style="color:var(--muted);">Dual-API discovery with title matching via difflib; handles orphan PDFs</td>
+          <td style="color:var(--muted);">Not yet integrated into the main discovery flow</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">Relevance Filter</td>
+          <td><span class="badge badge-skel">SKELETAL</span></td>
+          <td style="color:var(--muted);">Basic article-type classification (empirical vs. theory) in student routes</td>
+          <td style="color:var(--muted);">No LLM-based abstract screening; no on-topic classifier</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">VOI Scoring</td>
+          <td><span class="badge badge-none">NOT BUILT</span></td>
+          <td style="color:var(--muted);">Citation count and open-access flag stored in DB</td>
+          <td style="color:var(--muted);">No gap-analysis integration, no scoring formula, no ranking</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">HITL Review Page</td>
+          <td><span class="badge badge-none">NOT BUILT</span></td>
+          <td style="color:var(--muted);">Student submission routes exist (5 endpoints)</td>
+          <td style="color:var(--muted);">No review interface for VOI decisions or quality checking</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">Metadata Collection</td>
+          <td><span class="badge badge-prod">PRODUCTION</span></td>
+          <td style="color:var(--muted);">SQLite schema with DOI, abstract, APA fields, corpus ID; unique indexes</td>
+          <td style="color:var(--muted);">APA citation generation is manual; no auto-formatting</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">PDF Ingestion</td>
+          <td><span class="badge badge-func">FUNCTIONAL</span></td>
+          <td style="color:var(--muted);">pdfminer extraction, regex section parsing, sidecar fallback</td>
+          <td style="color:var(--muted);">Brittle on non-standard layouts; needs scispy/ML sectioning</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">LLM Extraction</td>
+          <td><span class="badge badge-prod">PRODUCTION</span></td>
+          <td style="color:var(--muted);">16 article-type templates, 173 findings extracted, Pass 2 enrichment</td>
+          <td style="color:var(--muted);">—</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-amber">
+      <strong style="color:var(--amber);">Where Student Effort is Most Needed</strong>
+      <p style="margin-top:6px;">The extraction engine (Stage 2) is largely built. The discovery pipeline (Stage 1) is where the
+      gaps are: VOI scoring does not exist, the relevance filter is minimal, there is no HITL review page,
+      and the Semantic Scholar wrapper lacks caching and deduplication. These are the problems you will solve.</p>
+    </div>
+
+    <div class="callout callout-info" style="margin-top:16px;">
+      <strong>Staging harvested PDFs.</strong> Once you have candidate PDFs in hand, use the
+      <a href="ka_track2_intake.html" style="font-weight:700;">Track 2 Article Intake page</a>
+      to batch-upload them. The intake runs immediate duplicate + security checks and hands
+      surviving PDFs to the Stage 2 extractor; this is the canonical student-facing entry point for
+      Track 2, distinct from the public <a href="../ka_article_propose.html">propose-an-article</a> form.
+    </div>
+  </div>
+
+  <!-- ═══════════════ SECTION 4: Student Tasks ═══════════════ -->
+  <div class="content-section">
+    <h2 class="section-title" id="tasks">Student Tasks (6 Students × 3 Weeks)</h2>
+
+    <p>Each task below is scoped for one student working over Weeks 3–5 (three weeks). Every task is
+    specified to guide you through the <strong>7-step AI-directed development method</strong> you learned
+    in Week 2: Panel → Spec → Tests → Build → Verify → Diagnose → Iterate. The 7-step scaffolding
+    for each task is given explicitly — follow it.</p>
+
+    <div class="callout callout-info" style="margin-bottom:24px;">
+      <strong>Reminder — The 7 Steps:</strong>
+      <strong>1&nbsp;Panel</strong> (ask AI to simulate domain experts who argue about requirements) →
+      <strong>2&nbsp;Spec</strong> (define inputs, outputs, success conditions, edge cases) →
+      <strong>3&nbsp;Tests</strong> (write 3–5 concrete test cases before any code) →
+      <strong>4&nbsp;Build</strong> (have AI build it against the spec) →
+      <strong>5&nbsp;Verify</strong> (run tests on real data) →
+      <strong>6&nbsp;Diagnose</strong> (when something fails, is the spec wrong or the implementation?) →
+      <strong>7&nbsp;Iterate</strong> (fix and re-verify until all tests pass).
+    </div>
+
+    <!-- ── TASK A ── -->
+    <div class="task-card">
+      <h4>Task A: HITL Review Page (Priority — Week 3 First)</h4>
+      <div class="task-meta">Owner: 1 student · Weeks 3–5 · Deliverable: working web page + API endpoints</div>
+      <p>Build a general-purpose Human-in-the-Loop review page that displays items needing human judgment
+      and records accept/reject/flag decisions. The first use case is VOI candidate review (Task D feeds
+      items here), but the page must be <strong>reusable</strong> — it will later be used for relevance filter
+      validation (Task B), extraction QA, and any future component that needs human checking.</p>
+
+      <p><strong>Design requirements:</strong> Each item shows a title, abstract (or other summary), the
+      system's score/reasoning, and three buttons: Accept, Reject, Flag for Discussion. Decisions are stored
+      with a timestamp and reviewer ID. The page shows agreement statistics (if two reviewers see the same
+      item) and a running accuracy log (how often does the human agree with the system?).</p>
+
+      <table class="steps-mini" style="width:100%;border-collapse:collapse;">
+        <tr><td class="step-num">1</td><td><strong>Panel:</strong> Ask AI to simulate a UX researcher, a data-quality engineer, and an annotation-tool designer. Have them argue about: What metadata should each review item show? How do you handle disagreements between reviewers? Should there be a "not sure" option?</td></tr>
+        <tr><td class="step-num">2</td><td><strong>Spec:</strong> Define the review-item schema (id, type, payload, system_score, system_reasoning, human_decision, reviewer_id, timestamp). Define the API: POST /review-items (create), GET /review-items?status=pending (fetch queue), PATCH /review-items/:id (record decision).</td></tr>
+        <tr><td class="step-num">3</td><td><strong>Tests:</strong> (a) Submit 5 items, verify all appear in queue. (b) Accept 3, reject 2 — verify counts. (c) Two reviewers judge same item differently — verify disagreement is flagged. (d) Fetch accuracy stats — verify percentage calculation. (e) Edge case: empty queue renders correctly.</td></tr>
+        <tr><td class="step-num">4</td><td><strong>Build:</strong> Implement with Flask (matches existing Article Eater stack) + vanilla HTML/JS frontend. Store in SQLite (new <code>review_items</code> table).</td></tr>
+        <tr><td class="step-num">5</td><td><strong>Verify:</strong> Load 20 real Semantic Scholar results as review items. Have a classmate review them. Check that decisions are recorded, stats are correct.</td></tr>
+        <tr><td class="step-num">6</td><td><strong>Diagnose:</strong> If the reviewer finds the abstract too hard to read on-screen, is that a spec problem (need more metadata?) or a UI problem? If agreement stats are wrong, trace the SQL query.</td></tr>
+        <tr><td class="step-num">7</td><td><strong>Iterate:</strong> Incorporate feedback from at least one round of classmate testing. Ship a version that Task B, C, and D owners can use.</td></tr>
+      </table>
+    </div>
+
+    <!-- ── TASK B ── -->
+    <div class="task-card">
+      <h4>Task B: Relevance Filter (LLM-Based Abstract Screening)</h4>
+      <div class="task-meta">Owner: 1 student · Weeks 3–5 · Deliverable: classifier + benchmark report</div>
+      <p>Build an LLM-based classifier that reads an article abstract and answers three questions: (1) Is this
+      an empirical study? (2) Does it study a built-environment factor as IV or context? (3) Does it measure a
+      human cognitive, perceptual, or affective outcome? Articles must pass all three to be accepted. The
+      classifier must produce a confidence score and a one-sentence justification for each decision.</p>
+
+      <table class="steps-mini" style="width:100%;border-collapse:collapse;">
+        <tr><td class="step-num">1</td><td><strong>Panel:</strong> Simulate a systematic-review methodologist, a research librarian, and a cognitive scientist. Debate: How do you distinguish empirical from theoretical? What about mixed-methods papers? What about papers that study "nature exposure" without a built environment?</td></tr>
+        <tr><td class="step-num">2</td><td><strong>Spec:</strong> Input: abstract text (string). Output: {is_empirical: bool, is_env_factor: bool, is_human_outcome: bool, confidence: float, justification: string}. Success: F1 ≥ 0.85 on a 50-article human-labeled test set.</td></tr>
+        <tr><td class="step-num">3</td><td><strong>Tests:</strong> Create a 50-article gold set — 25 true positives (on-topic empirical), 25 true negatives (reviews, off-topic, non-empirical). Label them yourself. Measure precision, recall, F1.</td></tr>
+        <tr><td class="step-num">4</td><td><strong>Build:</strong> Write a prompt that gives the LLM the three questions plus 3 labeled examples. Call via the existing Ollama/Gemini/OpenAI integration. Parse structured output.</td></tr>
+        <tr><td class="step-num">5</td><td><strong>Verify:</strong> Run on the 50-article gold set. Report F1. Send the borderline cases (confidence &lt; 0.7) to the HITL page (Task A) for human arbitration.</td></tr>
+        <tr><td class="step-num">6</td><td><strong>Diagnose:</strong> For each false positive/negative, determine: was the prompt ambiguous? Was the abstract itself ambiguous? Classify errors by type.</td></tr>
+        <tr><td class="step-num">7</td><td><strong>Iterate:</strong> Revise the prompt based on error analysis. Re-run. Document improvement per iteration.</td></tr>
+      </table>
+    </div>
+
+    <!-- ── TASK C ── -->
+    <div class="task-card">
+      <h4>Task C: Semantic Scholar Wrapper Upgrade (Caching, Dedup, Pagination)</h4>
+      <div class="task-meta">Owner: 1 student · Weeks 3–5 · Deliverable: upgraded API module + integration tests</div>
+      <p>The existing Semantic Scholar wrapper (<code>app/services/semantic_scholar.py</code>, 31 lines) works
+      but is minimal. Upgrade it to handle: local caching (don't re-fetch papers already in the DB), deduplication
+      (same paper returned by different queries), pagination (Semantic Scholar returns max 100 per call), and
+      multi-API fallback (if SS is rate-limited, try OpenAlex). The goal is a robust discovery engine that can
+      run 20 queries overnight without hitting rate limits or storing duplicates.</p>
+
+      <table class="steps-mini" style="width:100%;border-collapse:collapse;">
+        <tr><td class="step-num">1</td><td><strong>Panel:</strong> Simulate an API integration engineer, a database architect, and a research librarian. Debate: Cache by DOI or by corpus_id? How do you detect that two APIs returned the same paper with slightly different titles? What's the right rate-limit backoff?</td></tr>
+        <tr><td class="step-num">2</td><td><strong>Spec:</strong> Input: query string + max_results. Output: list of article dicts, each with DOI, title, abstract, year, citation_count, source_api. Constraints: no duplicate DOIs in output; cache hit means zero API calls; pagination fetches all results up to max_results.</td></tr>
+        <tr><td class="step-num">3</td><td><strong>Tests:</strong> (a) Same query twice — second call returns cached results with 0 API calls. (b) Two queries returning overlapping papers — no duplicates in combined results. (c) Query for 250 results — verify pagination fetches 3 pages. (d) SS rate-limited — verify OpenAlex fallback fires. (e) Malformed API response — verify graceful error handling.</td></tr>
+        <tr><td class="step-num">4</td><td><strong>Build:</strong> Extend the existing module. Add SQLite cache table. Add dedup by DOI + fuzzy title match. Add pagination loop. Add OpenAlex fallback from <code>scripts/sync/fetch_orphan_pdfs.py</code>.</td></tr>
+        <tr><td class="step-num">5</td><td><strong>Verify:</strong> Run 5 real queries from the taxonomy topic list. Verify cache, dedup, and pagination all work. Measure total API calls vs. naive approach.</td></tr>
+        <tr><td class="step-num">6</td><td><strong>Diagnose:</strong> If dedup misses a duplicate, is it a matching threshold problem or a missing field? If cache grows too large, is it storing full text when it shouldn't?</td></tr>
+        <tr><td class="step-num">7</td><td><strong>Iterate:</strong> Tune matching threshold on 10 known-duplicate pairs. Document API call savings.</td></tr>
+      </table>
+    </div>
+
+    <!-- ── TASK D ── -->
+    <div class="task-card">
+      <h4>Task D: VOI Scoring Engine</h4>
+      <div class="task-meta">Owner: 1 student · Weeks 3–5 · Deliverable: scoring module + ranked output + evaluation</div>
+      <p>Build the Value of Information scorer that ranks candidate articles by how much they would contribute
+      to the Knowledge Atlas. The score combines: (a) <strong>gap fill</strong> — does this paper address a topic
+      with few existing articles? (b) <strong>citation impact</strong> — how influential is this paper?
+      (c) <strong>recency</strong> — more recent studies use better methods; (d) <strong>accessibility</strong> — is the
+      PDF freely available? The scorer must produce a numeric VOI score plus a human-readable explanation
+      of why it ranked each paper where it did.</p>
+
+      <table class="steps-mini" style="width:100%;border-collapse:collapse;">
+        <tr><td class="step-num">1</td><td><strong>Panel:</strong> Simulate an information theorist, a systematic-review methodologist, and a research librarian. Debate: How do you quantify "gap fill" when the Atlas topic structure is hierarchical? Should citation count be log-scaled? Is a 2024 paper always better than a 2005 classic?</td></tr>
+        <tr><td class="step-num">2</td><td><strong>Spec:</strong> Input: article metadata (title, abstract, DOI, citation_count, year, is_open_access) + current Atlas topic coverage (counts per topic). Output: {voi_score: float 0–1, components: {gap_fill, citation, recency, access}, explanation: string}. Success: top-10 ranked articles have ≥ 80% human agreement (via HITL page).</td></tr>
+        <tr><td class="step-num">3</td><td><strong>Tests:</strong> (a) Paper in empty topic scores higher than paper in saturated topic. (b) 500-citation paper scores higher than 5-citation paper, all else equal. (c) Two identical papers, one open-access — OA scores higher. (d) Explanation string mentions the dominant factor. (e) Score is deterministic for same inputs.</td></tr>
+        <tr><td class="step-num">4</td><td><strong>Build:</strong> Write a scoring function with configurable weights for each component. Gap-fill uses the Atlas topic counts (query the DB). Citation uses log-scaling. Recency uses a decay function. Explanation is template-generated.</td></tr>
+        <tr><td class="step-num">5</td><td><strong>Verify:</strong> Run on 50 real candidates from Task C output. Send the top 20 to the HITL page (Task A). Measure human agreement rate.</td></tr>
+        <tr><td class="step-num">6</td><td><strong>Diagnose:</strong> If humans disagree with ranking, which component is wrong? Is gap-fill miscounting? Is citation over-weighted? Analyze the disagreement cases.</td></tr>
+        <tr><td class="step-num">7</td><td><strong>Iterate:</strong> Adjust component weights based on HITL feedback. Re-run. Document weight changes and their effect on agreement.</td></tr>
+      </table>
+    </div>
+
+    <!-- ── TASK E ── -->
+    <div class="task-card">
+      <h4>Task E: Metadata Validator &amp; APA Citation Generator</h4>
+      <div class="task-meta">Owner: 1 student · Weeks 3–5 · Deliverable: validation pipeline + citation formatter</div>
+      <p>When an article is accepted, five things must be correct before it enters the database: (1) the DOI
+      resolves to an actual page, (2) the abstract is present and non-empty, (3) the APA-7 citation is correctly
+      formatted, (4) the PDF is machine-readable (not a scanned image), and (5) there is no duplicate in the DB.
+      Build the validation pipeline that checks all five, auto-generates the APA citation from CrossRef metadata,
+      and reports any failures clearly so a human can fix them.</p>
+
+      <table class="steps-mini" style="width:100%;border-collapse:collapse;">
+        <tr><td class="step-num">1</td><td><strong>Panel:</strong> Simulate a research librarian, a database engineer, and an APA style expert. Debate: What does "machine-readable" mean exactly — OCR text present, or extractable sections? How do you handle APA edge cases (20+ authors, no DOI, preprint)?</td></tr>
+        <tr><td class="step-num">2</td><td><strong>Spec:</strong> Input: article metadata dict + PDF file path. Output: {valid: bool, checks: {doi_resolves, abstract_present, apa_correct, pdf_readable, no_duplicate}, apa_citation: string, errors: [string]}. The APA citation must follow APA-7 format: Author, A. A., &amp; Author, B. B. (Year). Title. <em>Journal</em>, <em>Volume</em>(Issue), pages. https://doi.org/...</td></tr>
+        <tr><td class="step-num">3</td><td><strong>Tests:</strong> (a) Valid article passes all 5 checks. (b) Bad DOI (typo) → doi_resolves fails, clear error. (c) Scanned PDF with no extractable text → pdf_readable fails. (d) Article already in DB → no_duplicate fails. (e) 23-author paper → APA citation truncates correctly ("Author, A. A., Author, B. B., ... Author, T. T."). </td></tr>
+        <tr><td class="step-num">4</td><td><strong>Build:</strong> DOI check via CrossRef API. Abstract check via string length. APA generation from CrossRef metadata (authors, journal, volume, pages, year). PDF readability via pdfminer text extraction (≥ 80 chars). Duplicate check via DOI index in SQLite.</td></tr>
+        <tr><td class="step-num">5</td><td><strong>Verify:</strong> Run on 20 articles already in the DB (known good) and 5 deliberately broken entries. All should classify correctly.</td></tr>
+        <tr><td class="step-num">6</td><td><strong>Diagnose:</strong> If APA citation is wrong, is it a CrossRef metadata problem (missing fields) or a formatting bug? If PDF readability fails on a good PDF, is the threshold too high?</td></tr>
+        <tr><td class="step-num">7</td><td><strong>Iterate:</strong> Handle the edge cases found in diagnosis. Add fallback for missing CrossRef fields (query Semantic Scholar for metadata instead).</td></tr>
+      </table>
+    </div>
+
+    <!-- ── TASK F ── -->
+    <div class="task-card">
+      <h4>Task F: VOI Query Generator (Taxonomy → Targeted Searches)</h4>
+      <div class="task-meta">Owner: 1 student · Weeks 3–5 · Deliverable: query generator + coverage report</div>
+      <p>The taxonomy (Track 1) defines hundreds of environmental factors and latent variables. The Atlas currently
+      has uneven coverage — some topics have 40 articles, others have zero. Build a system that reads the taxonomy,
+      checks the Atlas's current article counts per topic, identifies the gaps, and generates targeted search
+      queries designed to fill them. The output is a ranked list of queries that Task C's search engine can execute.</p>
+
+      <table class="steps-mini" style="width:100%;border-collapse:collapse;">
+        <tr><td class="step-num">1</td><td><strong>Panel:</strong> Simulate a systematic-review methodologist, a search strategist, and a cognitive scientist. Debate: How do you turn a taxonomy term like "L36 Awe/Grandeur" into a Semantic Scholar query? Should you use MeSH terms? How many synonyms per concept?</td></tr>
+        <tr><td class="step-num">2</td><td><strong>Spec:</strong> Input: taxonomy JSON + Atlas article-count-per-topic table. Output: list of {query_string, target_topic, current_count, expected_yield, priority}. Success: the top-10 queries, when executed, return ≥ 5 relevant papers each (verified by Task B's filter).</td></tr>
+        <tr><td class="step-num">3</td><td><strong>Tests:</strong> (a) Topic with 0 articles generates query ranked above topic with 20 articles. (b) Generated query includes at least 2 synonym variants. (c) Query for "ceiling height" differs from query for "room height" but both map to the same taxonomy node. (d) Coverage report accurately reflects DB counts. (e) No query is a duplicate of another.</td></tr>
+        <tr><td class="step-num">4</td><td><strong>Build:</strong> Parse taxonomy into topic nodes. Query Atlas DB for article counts per topic. For each under-represented topic, use an LLM to generate 3 query variants with synonyms. Rank by gap size. Output as JSON.</td></tr>
+        <tr><td class="step-num">5</td><td><strong>Verify:</strong> Execute the top 10 generated queries through Task C's search engine. Pass results through Task B's relevance filter. Report yield per query.</td></tr>
+        <tr><td class="step-num">6</td><td><strong>Diagnose:</strong> If a query returns many results but few pass the relevance filter, is the query too broad? If a query returns zero results, is the topic too narrow or are the synonyms wrong?</td></tr>
+        <tr><td class="step-num">7</td><td><strong>Iterate:</strong> Refine queries for the bottom-performing topics. Generate a final coverage report showing before/after article counts.</td></tr>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════ SECTION 5: HITL Strategy ═══════════════ -->
+  <div class="content-section">
+    <h2 class="section-title" id="hitl">Human-in-the-Loop Testing Strategy</h2>
+
+    <p>Every automated step in the pipeline can go wrong. The relevance filter might reject good papers
+    or accept irrelevant ones. The VOI scorer might over-weight citation count. The APA generator might
+    mangle author names. You cannot trust any of these systems without measuring their performance against
+    human judgment — and that means building HITL infrastructure from the start.</p>
+
+    <div class="callout callout-amber">
+      <strong style="color:var(--amber);">Week 3 Priority: Ship the HITL Page First</strong>
+      <p style="margin-top:6px;">Task A (the HITL Review Page) should be the first thing built, ideally by the end of Week 3. Every
+      other task depends on it for validation. The student assigned to Task A should treat it as a
+      <strong>week-one sprint</strong> — get a minimal version working in 5 days so that Tasks B, D, E, and F
+      have somewhere to send their outputs for human checking. The minimal version needs only: display item,
+      accept/reject buttons, store decision. Statistics and multi-reviewer features can come in Weeks 4–5.</p>
+    </div>
+
+    <p>The HITL page is designed to be <strong>general-purpose</strong>. Each "review item" has a type field
+    (e.g., <code>voi_candidate</code>, <code>relevance_check</code>, <code>apa_validation</code>,
+    <code>extraction_qa</code>) and a payload field (JSON blob with whatever the source system provides).
+    The frontend renders different layouts based on type. This means every component of the pipeline that
+    needs human validation can use the same infrastructure — you build it once and reuse it for everything.</p>
+
+    <h3 style="font-family:Georgia,serif;font-size:1.05rem;color:var(--navy);margin-top:28px;margin-bottom:12px;">What to HITL-Test and When</h3>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>What the Human Checks</th>
+          <th>When</th>
+          <th>Acceptance Threshold</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-weight:600;">Relevance Filter (Task B)</td>
+          <td style="color:var(--muted);">Is the system's accept/reject decision correct for this abstract?</td>
+          <td style="color:var(--muted);">After each filter run on new queries</td>
+          <td style="color:var(--muted);">F1 ≥ 0.85 on 50-article test set</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">VOI Ranking (Task D)</td>
+          <td style="color:var(--muted);">Do you agree this paper is in the right position in the ranked list?</td>
+          <td style="color:var(--muted);">After each batch ranking</td>
+          <td style="color:var(--muted);">≥ 80% agreement on top-20</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">APA Citation (Task E)</td>
+          <td style="color:var(--muted);">Is the generated citation correct? Check author names, year, journal, DOI.</td>
+          <td style="color:var(--muted);">Spot-check 10% of generated citations</td>
+          <td style="color:var(--muted);">≥ 95% accuracy</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;">Query Quality (Task F)</td>
+          <td style="color:var(--muted);">Does this generated query look like it would find relevant papers?</td>
+          <td style="color:var(--muted);">Before executing queries at scale</td>
+          <td style="color:var(--muted);">≥ 5 relevant results per top-10 query</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ═══════════════ SECTION 6: Weekly Syllabus ═══════════════ -->
+  <div class="content-section">
+    <h2 class="section-title" id="syllabus">Weekly Syllabus</h2>
 
     <table class="milestone-table">
       <thead>
         <tr>
           <th>Weeks</th>
           <th>Phase</th>
-          <th>Activities & Deliverables</th>
+          <th>Activities &amp; Deliverables</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td class="week-col">1–2</td>
           <td class="phase-col">Article Collection (A0)</td>
-          <td class="activity-col">Upload 10 experiment articles + 10 best articles from Google Scholar (everyone does this)</td>
+          <td>Everyone uploads 10 experiment articles + 10 best articles from Google Scholar. Get familiar with Semantic Scholar, DOIs, and APA formatting. Read the taxonomy (Track 1) to understand what topics exist.</td>
         </tr>
         <tr>
-          <td class="week-col">3–4</td>
-          <td class="phase-col">Basic Query Engine</td>
-          <td class="activity-col">Connect to Semantic Scholar API. Build query builder. Retrieve 50 candidate articles for assigned topics. Write data validation spec.</td>
+          <td class="week-col">3</td>
+          <td class="phase-col">Sprint: HITL + Foundations</td>
+          <td><strong>Task A owner ships minimal HITL page by end of week.</strong> All other task owners complete Step 1 (Panel) and Step 2 (Spec) for their task and present specs to the group for feedback. Task C owner begins Semantic Scholar wrapper upgrade.</td>
         </tr>
         <tr>
-          <td class="week-col">5–6</td>
-          <td class="phase-col">RAG & Relevance Scoring</td>
-          <td class="activity-col">Implement RAG using embeddings. Build relevance classifier (experiment vs. theory). Test on 100 articles. Measure F1 score.</td>
+          <td class="week-col">4</td>
+          <td class="phase-col">Build &amp; First Verify</td>
+          <td>All task owners complete Steps 3–5 (Tests → Build → Verify). First outputs are sent to the HITL page for human review. Group meeting: present initial results, discuss failures.</td>
         </tr>
         <tr>
-          <td class="week-col">7–8</td>
-          <td class="phase-col">VOI & Prioritization</td>
-          <td class="activity-col">Integrate Value of Information weighting. Rank articles by likely contribution to gaps. Build automated quality gates. Benchmark against manual selection.</td>
+          <td class="week-col">5</td>
+          <td class="phase-col">Diagnose, Iterate &amp; Integrate</td>
+          <td>Steps 6–7 (Diagnose → Iterate). Integrate components: Task F generates queries → Task C executes them → Task B filters results → Task D scores them → Task A shows top picks → Task E validates and stores accepted articles. End-to-end test on 3 taxonomy topics.</td>
         </tr>
         <tr>
-          <td class="week-col">9–10</td>
-          <td class="phase-col">Final Pipeline & Integration</td>
-          <td class="activity-col">Polish pipeline, write operational documentation, integrate into Fall 160 site. Course-wide debugging.</td>
+          <td class="week-col">6–10</td>
+          <td class="phase-col">Production &amp; Scale</td>
+          <td>Run the full pipeline on all under-represented taxonomy topics. Monitor HITL agreement rates. Produce a coverage report. Write operational documentation. Hand off to Article Eater for extraction.</td>
         </tr>
       </tbody>
     </table>
+  </div>
 
-    <div class="callout callout-info" style="margin-top:28px;">
-      <strong>Key Concepts to Understand:</strong>
+  <!-- ═══════════════ SECTION 7: Connection to Other Tracks ═══════════════ -->
+  <div class="content-section">
+    <div class="callout callout-info">
+      <strong>Connection to Other Tracks:</strong>
       <ul style="margin-top:10px;margin-left:1.2rem;">
-        <li><strong>RAG:</strong> Retrieval-Augmented Generation — combining vector search with LLMs to rank articles contextually</li>
-        <li><strong>Relevance:</strong> Not just "mentions keywords," but "is an empirical study on topic" vs. "is a review or theory paper"</li>
-        <li><strong>Value of Information:</strong> Which articles would fill the most critical gaps in the knowledge base?</li>
-        <li><strong>Semantic Scholar API:</strong> Open-access, powerful tool for academic article retrieval</li>
-        <li><strong>Embedding-based search:</strong> Using language models to understand semantic similarity between papers</li>
+        <li><strong>Track 1 (Image Tagger):</strong> The taxonomy that defines your search targets. When the Tagger team adds new latent variables or environmental factors, you need new queries to find articles studying them.</li>
+        <li><strong>Track 3 (AI &amp; VR):</strong> The articles you find provide the empirical evidence for which architectural factors matter. Track 3 uses your findings to decide what room properties to make modifiable.</li>
+        <li><strong>Track 4 (Interaction Design):</strong> They design the interface through which researchers browse the article collection and see the evidence graph that your pipeline feeds.</li>
       </ul>
     </div>
-
   </div>
 
   <!-- ── Navigation ── -->
-  <div class="track-nav">
-    <a href="ka_student_setup.html" class="cta-button secondary">← Back to Track Overview</a>
-    <a href="ka_track3_vr.html" class="cta-button">View Track 3: VR for Experiments →</a>
+
+  <!-- ── Bottom dual CTA + Join-Track modal ── -->
+  <div class="track-bottom-ctas">
+    <a href="ka_track2_setup.html" class="big-cta big-cta-setup">
+      <div class="big-cta-label">Ready to start?</div>
+      <div class="big-cta-head">Set Up Your Environment →</div>
+      <div class="big-cta-sub">Walk through prerequisites, install commands, and a sanity-check run so you can start contributing this week.</div>
+    </a>
+    <a href="#" class="big-cta big-cta-join" onclick="openJoinModal('2', 'Track 2 — Article Finder'); return false;">
+      <div class="big-cta-label">Commit to this track</div>
+      <div class="big-cta-head">Join this Track →</div>
+      <div class="big-cta-sub">Work on VOI scoring, API crawlers, and the Article Eater handoff.</div>
+    </a>
+    <a href="ka_track3_vr.html" class="big-cta big-cta-next">
+      <div class="big-cta-label">Keep exploring</div>
+      <div class="big-cta-head">Next Track: AI &amp; VR →</div>
+      <div class="big-cta-sub">Move on to Track 3, where the focus shifts from article discovery to building configurable VR environments for controlled experiments.</div>
+    </a>
   </div>
 
+  <div class="jt-modal-backdrop" id="jtModal" onclick="if(event.target===this)closeJoinModal();">
+    <div class="jt-modal" role="dialog" aria-modal="true" aria-labelledby="jtModalTitle">
+      <h3 id="jtModalTitle">Confirm track change</h3>
+      <p id="jtModalBody">You are currently on <span class="cur-track" id="jtCurTrack">(none yet)</span>.
+      Do you want to leave it and join <span class="cur-track" style="background:#E3F4EC;color:#1A5C30;" id="jtNewTrack">Track 2 — Article Finder</span>?
+      Every student is expected to work on only one track at a time. <strong>This button only updates a local preference on your browser</strong> so the site can show you the right default — it does <em>not</em> notify your TA or update any server-side record. Tell your TA in class or on Slack if you are switching tracks for real.</p>
+      <div class="jt-modal-actions">
+        <button class="jt-btn jt-btn-cancel" onclick="closeJoinModal()">Cancel</button>
+        <button class="jt-btn jt-btn-confirm" onclick="confirmJoin()">Confirm &amp; Join</button>
+      </div>
+    </div>
+  </div>
+  <script>
+  (function(){
+    var lastTrigger = null;
+    function focusables(root){
+      return Array.prototype.slice.call(
+        root.querySelectorAll(
+          'a[href],button:not([disabled]),input:not([disabled]),'+
+          'select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
+        )
+      );
+    }
+    var TRACK_LABELS = {
+      '1':'Track 1 — Image Tagging',
+      '2':'Track 2 — Article Finder',
+      '3':'Track 3 — AI & VR',
+      '4':'Track 4 — Interaction Design'
+    };
+    var LABEL_TO_KEY = {
+      'Track 1 — Image Tagging': '1',
+      'Track 1 · Semantic Tagging': '1',
+      'Track 2 — Article Finder': '2',
+      'Track 2 · Article Finder': '2',
+      'Track 3 — AI & VR': '3',
+      'Track 3 · VR': '3',
+      'Track 4 — Interaction Design': '4',
+      'Track 4 · UX': '4'
+    };
+    function normaliseTrackKey(value){
+      return TRACK_LABELS[value] ? value : (LABEL_TO_KEY[value] || '');
+    }
+    function labelFor(key){ return TRACK_LABELS[key] || key; }
+    window.openJoinModal = function(trackKey, trackLabel, ev){
+      if (arguments.length === 1 || (arguments.length === 2 && typeof trackLabel !== 'string')) {
+        ev = trackLabel; trackLabel = trackKey; trackKey = '';
+      }
+      var rawCur = localStorage.getItem('ka_current_track') || '';
+      var cur = normaliseTrackKey(rawCur);
+      if (cur && rawCur !== cur) localStorage.setItem('ka_current_track', cur);
+      document.getElementById('jtCurTrack').textContent = cur ? labelFor(cur) : '(none yet)';
+      document.getElementById('jtNewTrack').textContent = trackLabel;
+      window.__pendingTrackKey   = trackKey;
+      window.__pendingTrackLabel = trackLabel;
+      lastTrigger = (ev && ev.currentTarget) || document.activeElement;
+      var modal = document.getElementById('jtModal');
+      modal.classList.add('open');
+      var f = focusables(modal);
+      if (f.length) f[0].focus();
+    };
+    window.closeJoinModal = function(){
+      document.getElementById('jtModal').classList.remove('open');
+      if (lastTrigger && typeof lastTrigger.focus === 'function') lastTrigger.focus();
+    };
+    window.confirmJoin = function(){
+      var nextKey = normaliseTrackKey(window.__pendingTrackKey) || normaliseTrackKey(window.__pendingTrackLabel);
+      if (nextKey) {
+        localStorage.setItem('ka_current_track', nextKey);
+      } else {
+        localStorage.removeItem('ka_current_track');
+      }
+      closeJoinModal();
+      alert('Local preference updated to ' + window.__pendingTrackLabel + '. This is a browser-local marker only — remember to tell your TA if you are changing tracks.');
+    };
+    document.addEventListener('keydown', function(e){
+      var modal = document.getElementById('jtModal');
+      if (!modal || !modal.classList.contains('open')) return;
+      if (e.key === 'Escape'){ e.preventDefault(); window.closeJoinModal(); return; }
+      if (e.key === 'Tab'){
+        var f = focusables(modal);
+        if (!f.length) return;
+        var first = f[0], last = f[f.length-1];
+        if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+      }
+    });
+    // Backdrop click closes
+    document.addEventListener('click', function(e){
+      var modal = document.getElementById('jtModal');
+      if (modal && e.target === modal){ window.closeJoinModal(); }
+    });
+  })();
+  </script>
 </div>
 
-<div class="version-badge">KA UI · v0.5</div>
+<div class="version-badge">KA UI · v0.6</div>
 
-<script src="../ka_mode_switch.js"></script>
 <script src="../ka_site_shell.js"></script>
 <script src="../ka_data_adapter.js"></script>
-<script src="../ka_live_context.js"></script>
+
 <script>
-window.KA_SHELL.initShell({
-  navContainerSelector: '.nav-center',
-  modeSelectId: 'track2-mode-select',
-  modePillId: 'track2-mode-pill',
-  defaultMode: 'student_explorer'
-});
+/* Reveal the left-hand sub-nav only after the hero banner has scrolled out of
+   view, so the fixed panel never occludes the banner on initial load. Mirrors
+   the pattern already used on ka_track1_tagging.html. */
+(function(){
+  var subnav = document.querySelector('.track-subnav');
+  var hero = document.querySelector('.page-hero');
+  if (!subnav || !hero) return;
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) subnav.classList.remove('revealed');
+        else subnav.classList.add('revealed');
+      });
+    }, { rootMargin: '-52px 0px 0px 0px', threshold: 0 });
+    io.observe(hero);
+  } else {
+    // Fallback: scroll listener.
+    var check = function(){
+      var r = hero.getBoundingClientRect();
+      if (r.bottom <= 52) subnav.classList.add('revealed');
+      else subnav.classList.remove('revealed');
+    };
+    window.addEventListener('scroll', check, { passive: true });
+    check();
+  }
+})();
 </script>
 
 </body>

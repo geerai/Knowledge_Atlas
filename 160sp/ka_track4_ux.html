@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Track FOUR: Interaction Design & Evaluation — COGS 160</title>
+  <title>Track FOUR: Interaction Design — COGS 160</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -172,170 +172,1300 @@
       .track-nav { flex-direction: column; gap: 16px; }
       .user-type-grid { grid-template-columns: 1fr; }
     }
+  
+    /* ── Sticky left-hand sub-nav (injected) ── */
+    /* Hidden until the hero banner scrolls out of view — see IntersectionObserver below. */
+    .track-subnav {
+      position: fixed; left: 14px; top: 76px;
+      width: 200px; max-height: calc(100vh - 100px);
+      overflow-y: auto;
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px 12px;
+      z-index: 200; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      font-size: 0.8rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.18s ease-in-out;
+    }
+    .track-subnav.revealed { opacity: 1; pointer-events: auto; }
+    .track-subnav-title {
+      font-family: Georgia, serif; font-size: 0.72rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;
+      padding-bottom: 6px; border-bottom: 1px solid var(--border);
+    }
+    .track-subnav a {
+      display: block; padding: 5px 8px; color: var(--text);
+      text-decoration: none; border-radius: 4px;
+      line-height: 1.35; margin-bottom: 2px; border-left: 2px solid transparent;
+    }
+    .track-subnav a:hover { background: var(--light); color: var(--navy); border-left-color: var(--amber); }
+    .track-subnav-divider { height: 1px; background: var(--border); margin: 10px -2px; }
+    .track-subnav-cta {
+      display: block !important; text-align: center;
+      background: #B45F14; color: #fff !important;
+      font-weight: 700; padding: 9px 10px; border-radius: 6px;
+      text-decoration: none; margin-top: 4px; font-size: 0.82rem;
+      border-left: none !important;
+    }
+    .track-subnav-cta:hover { background: #8E4A10; color: #fff !important; }
+    @media (max-width: 1280px) { .track-subnav { display: none; } }
+
+    /* ── Bottom dual CTA (Set Up + Join) ── */
+    .track-bottom-ctas {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+      margin-top: 56px; padding: 26px; background: #fff;
+      border: 1px solid var(--border); border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .big-cta {
+      display: block; padding: 22px 24px; border-radius: 10px;
+      text-decoration: none; transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .big-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,0.10); }
+    .big-cta-setup { background: linear-gradient(135deg, #1C3D3A 0%, #163230 100%); color: #fff; }
+    .big-cta-join  { background: linear-gradient(135deg, #B45F14 0%, #8E4A10 100%); color: #fff; }
+    .big-cta-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; opacity: 0.82; margin-bottom: 6px; }
+    .big-cta-head  { font-family: Georgia, serif; font-size: 1.3rem; font-weight: 400;
+      margin-bottom: 6px; line-height: 1.25; }
+    .big-cta-sub   { font-size: 0.85rem; opacity: 0.92; line-height: 1.55; }
+    @media (max-width: 720px) { .track-bottom-ctas { grid-template-columns: 1fr; } }
+
+    /* ── Join-Track modal ── */
+    .jt-modal-backdrop {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+      z-index: 9999; align-items: center; justify-content: center; padding: 24px;
+    }
+    .jt-modal-backdrop.open { display: flex; }
+    .jt-modal {
+      background: #fff; border-radius: 12px; max-width: 480px; width: 100%;
+      padding: 28px 26px; box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+    .jt-modal h3 { font-family: Georgia, serif; font-size: 1.25rem; color: var(--navy);
+      margin-bottom: 10px; line-height: 1.3; }
+    .jt-modal p { font-size: 0.92rem; line-height: 1.6; color: var(--text); }
+    .jt-modal .cur-track { display: inline-block; padding: 2px 10px; border-radius: 4px;
+      background: #FFF0CC; color: #7A4F00; font-weight: 700; font-size: 0.78rem;
+      letter-spacing: 0.06em; text-transform: uppercase; }
+    .jt-modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+    .jt-btn { padding: 9px 18px; border: none; border-radius: 7px; cursor: pointer;
+      font-weight: 600; font-size: 0.9rem; }
+    .jt-btn-cancel  { background: #EDE8E0; color: var(--text); }
+    .jt-btn-confirm { background: #B45F14; color: #fff; }
+    .jt-btn-confirm:hover { background: #8E4A10; }
+  
+    /* Offset anchor jumps so section titles clear the fixed class navbar */
+    :target { scroll-margin-top: 140px; }
+    h1[id], h2[id], h3[id], h4[id], section[id], div[id] { scroll-margin-top: 140px; }
   </style>
 </head>
 <body>
 
 <nav>
-  <a href="../ka_home.html" class="nav-brand">Knowledge Atlas</a>
+  <a href="ka_schedule.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <svg viewBox="0 0 32 32" fill="none" style="width:28px;height:28px;">
+      <circle cx="16" cy="16" r="3.5" fill="#F5A623"/>
+      <circle cx="16" cy="5"  r="2.5" fill="#A8C8BF"/>
+      <circle cx="27" cy="22" r="2.5" fill="#A8C8BF"/>
+      <circle cx="5"  cy="22" r="2.5" fill="#A8C8BF"/>
+      <line x1="16" y1="7.5" x2="16" y2="12.5" stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="24.8" y1="20.2" x2="19.0" y2="17.3" stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="7.2" y1="20.2" x2="13.0" y2="17.3" stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+    </svg>
+    <div style="display:flex;flex-direction:column;line-height:1.1;">
+      <span style="font-size:0.66rem;font-weight:400;letter-spacing:0.24em;text-transform:uppercase;color:#A8C8BF;">Knowledge</span>
+      <span style="font-size:1.05rem;font-weight:700;color:#fff;">At<span style="color:#F5A623;">las</span> · <span style="font-size:0.85rem;color:#A8C8BF;font-weight:400;">COGS 160</span></span>
+    </div>
+  </a>
   <div class="nav-center">
-    <a id="nav-shell-explore" href="../ka_topics.html" class="nav-link">Explore</a>
-    <a id="nav-shell-evidence" href="../ka_evidence.html" class="nav-link">Evidence</a>
-    <a id="nav-shell-gaps" href="../ka_gaps.html" class="nav-link">Gaps</a>
-    <a id="nav-shell-articles" href="../ka_article_search.html" class="nav-link">Articles</a>
-    <a id="nav-shell-contribute" href="../ka_contribute.html" class="nav-link">Contribute</a>
-    <a id="nav-shell-course" href="ka_student_setup.html" class="nav-link active">Course</a>
+    <a href="ka_schedule.html" class="nav-link">160 Syllabus</a>
+    <a href="week2_exercises.html" class="nav-link">A0</a>
+    <a href="week3_agenda.html" class="nav-link">A1</a>
+    <a href="ka_track1_tagging.html" class="nav-link">Track 1</a>
+    <a href="ka_track2_pipeline.html" class="nav-link">Track 2</a>
+    <a href="ka_track3_vr.html" class="nav-link">Track 3</a>
+    <a href="ka_track4_ux.html" class="nav-link active">Track 4</a>
   </div>
   <div class="nav-right">
-    <select class="mode-select" id="track4-mode-select" aria-label="Switch user mode">
-      <option value="student_explorer">Student explorer</option>
-      <option value="researcher">Researcher</option>
-      <option value="contributor">Contributor</option>
-      <option value="instructor">Instructor</option>
-      <option value="practitioner">Practitioner</option>
-      <option value="theory_mechanism_explorer">Theory Explorer</option>
-    </select>
-    <div class="mode-pill" id="track4-mode-pill">STUDENT EXPLORER</div>
+    <a href="ka_student_profile.html" class="nav-link">160 Student Profile</a>
   </div>
 </nav>
 
+<aside class="track-subnav" aria-label="On this page">
+  <div class="track-subnav-title">On this page</div>
+    <a href="#overview">Overview</a>
+    <a href="#persona">§2 Choose a Persona</a>
+    <a href="#panel">§3 Thursday Panel</a>
+    <a href="#chip-mapping">§3.5 Chip Mapping</a>
+    <a href="#journeys">§4 Journeys</a>
+    <a href="#imitation">§5 Imitation</a>
+    <a href="#constraints">§6 Constraints</a>
+    <a href="#protocol">§7 Protocol</a>
+    <a href="#agents">§8 Agents</a>
+    <a href="#syllabus">§9 Syllabus</a>
+    <a href="#refs">§10 References</a>
+  <div class="track-subnav-divider"></div>
+  <a href="ka_track4_setup.html" class="track-subnav-cta">How to Set Up →</a>
+</aside>
+
+
 <div class="page-hero">
   <div class="eyebrow">COGS 160 · Track 4 of 4</div>
-  <h1>Track FOUR: Interaction Design & Evaluation</h1>
+  <h1>Track FOUR: Interaction Design</h1>
   <p>
     Understand how different user types navigate Knowledge Atlas. Analyze their information needs, improve interaction design, and measure whether the system actually works for them.
   </p>
+  <div class="hero-cta-row" style="margin-top:22px;display:flex;gap:12px;flex-wrap:wrap;">
+    <a href="ka_track4_setup.html"
+       style="background:#E8872A;color:#fff;padding:12px 22px;border-radius:8px;
+              text-decoration:none;font-weight:700;font-size:0.95rem;
+              box-shadow:0 3px 10px rgba(0,0,0,0.18);">
+      Start Track 4 Setup →
+    </a>
+    <a href="#overview"
+       style="background:rgba(255,255,255,0.08);color:#F5F0E8;padding:12px 22px;
+              border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem;
+              border:1px solid rgba(168,200,191,0.4);">
+      Learn about Track 4
+    </a>
+  </div>
 </div>
 
 <div class="outer">
 
   <div class="content-section">
-    <h2 class="section-title">Track Overview</h2>
+    <h2 class="section-title" id="overview">Track Overview</h2>
     <p class="section-intro">
-      Knowledge Atlas is complex. We need to personalize it for different user types because a student explorer's journey is very different from an instructor's, or a researcher's, or a theory explorer's.
-      Your track is about understanding those differences and making the system better for each user type.
+      Knowledge Atlas is a working research instrument that will be used by very different kinds of people: a
+      nineteen-year-old undergraduate meeting this literature for the first time, a postdoc hunting for a null
+      finding, an architect with ten minutes between client meetings, a high-school teacher building a lesson
+      plan, a science journalist looking for a defensible quote, a collaborating scientist uploading evidence,
+      and the principal investigator watching the whole epistemic graph. Each of these users wants different
+      things from the same pages, and each of them gets frustrated in different ways. Your job this quarter is
+      to make the site work for <em>all of them</em>, page by page, evidence in hand — not in the abstract and
+      not by personal taste. The rule of the track, which you will hear from me repeatedly, is the one
+      Jakob Nielsen has spent thirty years repeating: you are not the user (Nielsen, 1993).
     </p>
 
     <div class="callout callout-info">
-      <strong>The Goal:</strong> Map out how different user types navigate the K-Atlas system. Identify missing CTAs, dead ends, information overload, and misalignments between user needs and page structure. Then test improvements with real users and measure success.
+      <strong>The shape of the quarter.</strong> Tuesday of Week 3 you set up the site and backend on your
+      own machine and are assigned one user persona you will own for the rest of the quarter. Thursday of
+      Week 3 you work with the conjectured journeys I have drafted for that persona and begin refining them
+      through a structured panel with real exemplars. From Week 4 onward, you work through the site's
+      interactive pages one at a time — an argumentation page, an interpretation page, a question-and-answer
+      page, topic cards, PDF-linked cards, the PI's own page, and so on — and for each page the team that
+      owns it produces a short slide deck that documents the current behaviour, the use cases that test it,
+      and the changes the team proposes. I review those decks with you in person. That is the rhythm of the
+      track.
+    </p>
     </div>
 
-    <h3 style="font-family:Georgia,serif;font-size:1.05rem;color:var(--navy);margin-top:28px;margin-bottom:12px;">User Types We Support</h3>
+    <!-- Setup content moved to ka_track4_setup.html — linked from the left sub-nav and the bottom CTA. -->
 
-    <div class="user-type-grid">
-      <div class="user-type-card">
-        <div class="user-type-name">Student Explorer</div>
-        <div class="user-type-desc">Learning the field. Wants overview of topics, propositions, evidence. Navigates by curiosity.</div>
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- §2: Choose a Persona                                                   -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <h2 class="section-title" style="margin-top:48px;" id="persona">§2. Choose a Persona</h2>
+
+    <p class="section-intro">
+      On Tuesday the TA assigns each of you <em>one</em> persona below. That persona is yours for the rest
+      of the quarter. Every page review you contribute to, every critique you write, every journey you
+      map — all of it is done from <em>your</em> persona's point of view. The point of owning a persona is
+      not to role-play; it is to ensure that the pages, workflows, and journeys you propose actually serve
+      someone whose goals, tools, literacy, and time budget you can describe in concrete terms (Cooper,
+      1999/2014; Pruitt &amp; Adlin, 2006).
+    </p>
+
+    <p class="section-intro" style="margin-top:14px;">
+      Read through all eight personas before Tuesday so you know the landscape you are working in. Then,
+      once the TA assigns you yours, your job for the rest of the quarter is to ensure that the site gives
+      <em>your</em> persona the journeys that meet their user scenarios — not journeys that are plausible in
+      the abstract, and not journeys that fit your own habits.
+    </p>
+
+    <!-- ── Eight deep personas ── -->
+    <h3 style="font-family:Georgia,serif;font-size:1.05rem;color:var(--navy);margin-top:22px;margin-bottom:12px;">The Eight Personas (my first shot — you will refine)</h3>
+
+    <p style="font-size:0.88rem;color:var(--muted);margin-bottom:18px;">
+      These are <em>conjectured</em> personas — my best guess at the users who will actually arrive at the
+      site. They are deliberately specific because, as Cooper insists, "designing for everyone" designs for
+      no one. Your job in Week 3 Thursday's panel (see §3) is to test each of these against at least two real
+      exemplars and revise. If a persona turns out to be wrong, kill it and write a better one — do not
+      patch a fiction. Chip mapping (how each persona sits on the site's six user-type chips) is explained
+      in <a href="#chip-mapping">§3.5 Mapping Persona to the Site's Six User Types</a> below.
+    </p>
+
+    <!-- P1 · Student Explorer -->
+    <div style="background:#fff;border:2px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;">
+        <div>
+          <div style="font-family:Georgia,serif;font-size:1.1rem;color:var(--navy);font-weight:600;">P1 · Maya Chen — Undergraduate Explorer</div>
+          <div style="font-size:0.82rem;color:var(--green);font-weight:600;letter-spacing:0.05em;text-transform:uppercase;">Chip: Student Explorer · Plurality by visit count, shallow by depth</div>
+        </div>
+        <div style="font-size:0.78rem;color:var(--muted);font-style:italic;">3–8 min sessions, 1–2 pages, rare return</div>
       </div>
-      <div class="user-type-card">
-        <div class="user-type-name">Researcher</div>
-        <div class="user-type-desc">Testing hypotheses. Needs deep access to evidence, methodologies, caveats. Searches by topic/methodology.</div>
-      </div>
-      <div class="user-type-card">
-        <div class="user-type-name">Contributor</div>
-        <div class="user-type-desc">Adding to K-Atlas. Needs to understand schema, propose new warrants, upload evidence. Oriented toward creation.</div>
-      </div>
-      <div class="user-type-card">
-        <div class="user-type-name">Instructor</div>
-        <div class="user-type-desc">Teaching with K-Atlas. Needs to understand propositions deeply, curate content for courses, track student engagement.</div>
-      </div>
-      <div class="user-type-card">
-        <div class="user-type-name">Practitioner</div>
-        <div class="user-type-desc">Applying K-Atlas. Wants actionable guidance on built environment design decisions based on evidence.</div>
-      </div>
-      <div class="user-type-card">
-        <div class="user-type-name">Theory Explorer</div>
-        <div class="user-type-desc">Studying epistemology. Interested in warrant structures, evidence dynamics, coherence metrics.</div>
-      </div>
+      <p style="font-size:0.9rem;">Second-year UCSD undergraduate, 19. Daily tools: iPhone, M1 MacBook Air,
+      ChatGPT. Comes to K-Atlas because a COGS class sent her there or she Googled a term paper topic. She
+      does not know what a "latent variable" is, does not read methods sections, and will bail if a page
+      confronts her with jargon in the first five seconds. Mental model: <em>K-Atlas is a better-organised
+      textbook with a search box</em>. <strong>Governing question</strong> (per the site's canonical
+      architecture): "What does the evidence actually say, and where are the gaps?" <strong>Goal on
+      arrival:</strong> complete A0 — collect ten papers on prospect-refuge. <strong>What she needs:</strong>
+      one clear task, one clear next step, and a definition for every word above Grade 11 reading level.
+      Portal page already built: <code>ka_home_student.html</code>.</p>
     </div>
 
-    <h3 style="font-family:Georgia,serif;font-size:1.05rem;color:var(--navy);margin-top:28px;margin-bottom:12px;">Core Skills You'll Develop</h3>
+    <!-- P2 · Researcher – Neuroscience -->
+    <div style="background:#fff;border:2px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;">
+        <div>
+          <div style="font-family:Georgia,serif;font-size:1.1rem;color:var(--navy);font-weight:600;">P2 · Dr. Nia Okafor — Environmental / Cognitive Neuroscientist</div>
+          <div style="font-size:0.82rem;color:var(--green);font-weight:600;letter-spacing:0.05em;text-transform:uppercase;">Chip: Researcher (Neuro sub-persona) · Power user, deep sessions</div>
+        </div>
+        <div style="font-size:0.78rem;color:var(--muted);font-style:italic;">30–120 min sessions, returns weekly</div>
+      </div>
+      <p style="font-size:0.9rem;">41, tenure-track research professor in an environmental-neuroscience
+      programme; runs an fMRI lab, publishes on hippocampal place-cell structure and stress physiology in
+      built environments. Tools: Zotero, BrainVoyager, R, PubMed, Semantic Scholar, a reference-management
+      routine she has kept for fifteen years. Canonical references: Buzsáki, Kandel, O'Keefe, Ulrich-era
+      restorative-environment work, recent predictive-processing accounts. Mental model: <em>K-Atlas is a
+      living meta-analysis I can interrogate at the mechanism level</em>. She wants effect sizes, sample
+      sizes, null results, replication history, and the neural-underpinnings tier of the Ten Tier-1 Neural
+      Frameworks (Predictive Processing, Salience Network, Dopaminergic Pathways, Default Mode Toggle,
+      Neuromodulation, Interoceptive Coupling, Multisensory Integration, Entorhinal–Hippocampal, Cerebellar
+      Timing, Mirror System). <strong>Governing question:</strong> "What does the cumulative evidence say
+      about my hypothesis, and what are the real targets of opportunity?" <strong>Goal on arrival:</strong>
+      find whether a claim about open-plan cortisol is supported by primary evidence or by a single 1970s
+      review. <strong>What she needs:</strong> warrant strength, per-study evidence, DOIs, BibTeX export,
+      neural mechanism chains visible. Portal: <code>ka_home_researcher.html</code>; entry workflow:
+      <code>hypothesis-test</code>.</p>
+    </div>
+
+    <!-- P3 · Researcher – Psychology / CogSci -->
+    <div style="background:#fff;border:2px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;">
+        <div>
+          <div style="font-family:Georgia,serif;font-size:1.1rem;color:var(--navy);font-weight:600;">P3 · Dr. Elena Vasquez — Environmental / Cognitive Psychologist</div>
+          <div style="font-size:0.82rem;color:var(--green);font-weight:600;letter-spacing:0.05em;text-transform:uppercase;">Chip: Researcher (Psych/CogSci sub-persona) · Power user, deep sessions</div>
+        </div>
+        <div style="font-size:0.78rem;color:var(--muted);font-style:italic;">30–120 min sessions, returns weekly</div>
+      </div>
+      <p style="font-size:0.9rem;">39, research professor in cognitive science; works on embodied cognition,
+      affordances, and environmental attention. Tools: Zotero, RStudio, Semantic Scholar, OSF. Canonical
+      references: Gibson, Kaplan &amp; Kaplan, Clark, Barsalou, the ART/SRT controversy, recent ecological
+      perception work. Tolerates theoretical claims with thinner mechanism support than Nia would, but
+      insists that warrant structure and replication status be explicit. Mental model: <em>K-Atlas is a
+      coherentist web of evidence I can enter at the theory layer and drill into data</em>. <strong>Governing
+      question:</strong> shares P2's — but she enters through the Theory Guides and the argumentation layer
+      more often than through Neural Underpinnings. <strong>Goal on arrival:</strong> check whether a claim
+      she is about to cite — "warm colours increase arousal" — has primary evidence or only a review chain.
+      <strong>What she needs:</strong> the same warrant/evidence affordances as P2, plus richer
+      theory-comparison tools and visible interpretive disagreements. Portal:
+      <code>ka_home_researcher.html</code>; entry workflow: <code>lit-synthesis</code>.</p>
+    </div>
+
+    <!-- P4 · Contributor -->
+    <div style="background:#fff;border:2px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;">
+        <div>
+          <div style="font-family:Georgia,serif;font-size:1.1rem;color:var(--navy);font-weight:600;">P4 · Dr. Samira Rao — Contributing Scientist</div>
+          <div style="font-size:0.82rem;color:var(--green);font-weight:600;letter-spacing:0.05em;text-transform:uppercase;">Chip: Contributor · Productive relationship to the site</div>
+        </div>
+        <div style="font-size:0.78rem;color:var(--muted);font-style:italic;">Deep but episodic sessions, tied to submission cycles</div>
+      </div>
+      <p style="font-size:0.9rem;">45, senior researcher in environmental psychology who collaborates with
+      the lab. Has a dataset of 320 environment–affect ratings she wants to add and is angry about a warrant
+      the system currently holds that she thinks misrepresents her 2022 paper. Tools: R, OSF, email threads
+      that become important. Mental model: <em>K-Atlas is a public epistemic commons; my evidence should
+      raise or lower its claims, and the mechanism for that should be visible</em>. <strong>Governing
+      question</strong> (per architecture doc): "How do I find, validate, and submit articles the Atlas can
+      actually use — and how does my contribution fit into the larger system?" <strong>What she needs:</strong>
+      a contributor dashboard, visible submission status, a disagreement-filing interface with threaded
+      replies, and schema documentation she does not have to ask for. Portal:
+      <code>ka_home_contributor.html</code>; entry workflow: <code>evidence-pipeline</code>.</p>
+    </div>
+
+    <!-- P5 · Instructor -->
+    <div style="background:#fff;border:2px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;">
+        <div>
+          <div style="font-family:Georgia,serif;font-size:1.1rem;color:var(--navy);font-weight:600;">P5 · Prof. Marisol Quinn — University Instructor</div>
+          <div style="font-size:0.82rem;color:var(--green);font-weight:600;letter-spacing:0.05em;text-transform:uppercase;">Chip: Instructor · Cohort-oriented</div>
+        </div>
+        <div style="font-size:0.78rem;color:var(--muted);font-style:italic;">Cyclical: spikes at assignment due dates</div>
+      </div>
+      <p style="font-size:0.9rem;">47, associate professor of cognitive science at another R1; teaches a
+      quarter-long course modelled on COGS 160 and uses K-Atlas as the spine of her evidence assignments.
+      Tools: Canvas, Zoom, Zotero groups. <strong>Governing question:</strong> "Are students on track, is
+      the pipeline producing valid contributions, and where do I need to intervene?" Cares about stable
+      URLs, assignable units, and per-student visibility. <strong>What she needs:</strong> an instructor
+      dashboard with enrolment count, articles submitted this week, classification breakdown, pending
+      reviews, and a queue of student work that needs her adjudication. Portal:
+      <code>ka_home_instructor.html</code>.</p>
+    </div>
+
+    <!-- P6 · Practitioner -->
+    <div style="background:#fff;border:2px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;">
+        <div>
+          <div style="font-family:Georgia,serif;font-size:1.1rem;color:var(--navy);font-weight:600;">P6 · Jamal Washington — Licensed Architect</div>
+          <div style="font-size:0.82rem;color:var(--green);font-weight:600;letter-spacing:0.05em;text-transform:uppercase;">Chip: Practitioner · Time-starved, action-oriented</div>
+        </div>
+        <div style="font-size:0.78rem;color:var(--muted);font-style:italic;">Short, purposive sessions; bails fast</div>
+      </div>
+      <p style="font-size:0.9rem;">41, fifteen years in practice at a 60-person firm specialising in
+      healthcare and higher-ed buildings; evidence-based design is the firm's pitch. Tools: Revit, Bluebeam,
+      a meeting-heavy calendar, PDF as the universal artefact. Mental model: <em>K-Atlas is a consultant I
+      can ask a specific question and get a one-paragraph answer with citations</em>. <strong>Governing
+      question</strong> (per architecture doc): "What does the science say I should actually do when
+      designing this space for these people?" His organisational axis is <em>space type</em> (Office,
+      Healthcare, Educational, Residential, Public, Retail, Outdoor) rather than academic taxonomy.
+      <strong>What he needs:</strong> a practitioner-facing summary card per construct, an expandable
+      evidence tray, and a client-ready export. Portal: <code>ka_home_practitioner.html</code>; entry
+      workflow: <code>design-decision</code> or <code>client-brief</code>.</p>
+    </div>
+
+    <!-- P7 · Theory Explorer -->
+    <div style="background:#fff;border:2px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;">
+        <div>
+          <div style="font-family:Georgia,serif;font-size:1.1rem;color:var(--navy);font-weight:600;">P7 · Dr. Hanif Raza — Theory Explorer</div>
+          <div style="font-size:0.82rem;color:var(--green);font-weight:600;letter-spacing:0.05em;text-transform:uppercase;">Chip: Theory Explorer · Epistemic machinery is the product</div>
+        </div>
+        <div style="font-size:0.78rem;color:var(--muted);font-style:italic;">Long, structural sessions</div>
+      </div>
+      <p style="font-size:0.9rem;">52, philosopher of cognitive science with a secondary appointment in
+      psychology; writes on mechanism, underdetermination, and coherentist inference. Tools: Zotero,
+      argument-mapping software, a long drawer of paper. Mental model: <em>K-Atlas is a testbed for
+      Quinean coherentism applied to an actual body of evidence</em>. <strong>Governing question:</strong>
+      "How do competing theoretical accounts explain these effects, and what experiment would distinguish
+      between them?" Most interested in the argumentation layer, the interpretation layer, the warrant
+      structure itself, and the rival-theory comparison view. <strong>What he needs:</strong> theory
+      comparison matrices, mechanism chains, critical-test identification, and a visible underdetermination
+      alert when evidence cannot yet adjudicate. Portal: <code>ka_home_theory.html</code>; entry workflow:
+      <code>mechanism-trace</code>.</p>
+    </div>
+
+    <!-- P8 · PI (off-chip) -->
+    <div style="background:#fff;border:2px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px;border-color:#E8872A;background:#FFF8F0;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;">
+        <div>
+          <div style="font-family:Georgia,serif;font-size:1.1rem;color:#E8872A;font-weight:600;">P8 · Prof. David Kirsh — Principal Investigator / Site Owner</div>
+          <div style="font-size:0.82rem;color:#8a4000;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;">Off-chip · Needs his own page</div>
+        </div>
+        <div style="font-size:0.78rem;color:var(--muted);font-style:italic;">1 user, daily, long sessions</div>
+      </div>
+      <p style="font-size:0.9rem;">The PI. Runs the class, the research programme, the site, and a multi-AI
+      workflow in parallel. Mental model: <em>the site is my laboratory — I need the instrument panel to be
+      honest</em>. Needs visibility into the full epistemic graph: active student contributions across all
+      four tracks, pending HITL reviews, flagged inconsistencies in the Tagging_Contractor registry,
+      extractor reliability trends, warrants that changed state in the past 24 hours, and a queue of things
+      the system wants him to adjudicate. <strong>Goal on arrival:</strong> triage. Is anything broken? Is
+      any student stuck? Is any claim drifting? <strong>What he needs:</strong> a dedicated
+      <code>ka_pi_dashboard.html</code> readable in ninety seconds that tells him what to do next. This page
+      does not exist yet — designing it is one of the quarter's concrete deliverables (§7).</p>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- §3: Panel protocol to refine the personas                             -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <h2 class="section-title" style="margin-top:48px;" id="panel">§3. Thursday Panel — Refining the Personas &amp; Surfacing Better Journeys</h2>
+
+    <p class="section-intro">
+      I have given you a first shot; your Thursday task is to test it against reality and revise it until it
+      is articulate. A persona that has not been tested against real exemplars is a stereotype. You will
+      convene, for your assigned persona, a <em>panel</em> — not a focus group and not a friend interview,
+      but a small structured conversation with people who actually belong to the user type. The technique
+      is Flanagan's critical-incident interview (Flanagan, 1954), the "show-me, don't tell-me" stance of
+      Beyer &amp; Holtzblatt's contextual inquiry (1997), and the open-ended-first discipline of Portigal
+      (2013). Read those three short pieces before Thursday.
+    </p>
+
+    <h3 style="font-family:Georgia,serif;font-size:1.05rem;color:var(--navy);margin-top:22px;margin-bottom:10px;">The right panel</h3>
     <ul>
-      <li><strong>User Research:</strong> Conducting interviews and creating personas for different user types</li>
-      <li><strong>Journey Mapping:</strong> Visualizing the path a user takes through K-Atlas to accomplish their goal</li>
-      <li><strong>Information Architecture:</strong> Understanding what content each user type needs and when</li>
-      <li><strong>Cognitive Load Analysis:</strong> Identifying where pages are overwhelming or confusing</li>
-      <li><strong>Usability Testing:</strong> Running tests with real users, measuring task completion rates</li>
-      <li><strong>Interaction Design:</strong> Improving CTAs, navigation, search, filtering, content structure</li>
+      <li><strong>Three exemplars, not one.</strong> A single interviewee produces a biography, not a persona.
+        Three lets you see what is shared and what is idiosyncratic (Nielsen &amp; Landauer, 1993, on why
+        small samples already reveal most of the usability signal).</li>
+      <li><strong>Real exemplars, not classmates.</strong> If your persona is "AP Psychology Teacher," email
+        three AP Psychology teachers. The TA will help with introductions where needed.</li>
+      <li><strong>Diverse within the persona.</strong> For Maya's panel, recruit a COGS student, a
+      Communication student, and a non-major fulfilling a GE — same persona class, different ways of being
+      it.</li>
+      <li><strong>45 minutes, one at a time.</strong> Group interviews flatten the signal; sequence them.</li>
     </ul>
 
-    <h3 style="font-family:Georgia,serif;font-size:1.05rem;color:var(--navy);margin-top:28px;margin-bottom:12px;">Weekly Syllabus</h3>
+    <h3 style="font-family:Georgia,serif;font-size:1.05rem;color:var(--navy);margin-top:22px;margin-bottom:10px;">The right questions — open first, specific second</h3>
+    <p>
+      Begin with <em>general</em> questions that let the interviewee narrate rather than react. Close-ended
+      questions early in an interview produce the answer the interviewee thinks you want. The purpose of the
+      open phase is to surface <em>scenarios of use</em> — the concrete situations in which your persona
+      comes to a site like K-Atlas, and the questions they arrive with in their head. Those scenarios are
+      what the design/usability/science-writing agents (§8) need in order to have informed biases when they
+      later critique pages for you. Scenario-surfacing matters more than journey-mapping at this stage: you
+      cannot design a journey to satisfy a need you have not yet articulated.
+    </p>
 
-    <table class="milestone-table">
+    <h4 style="font-family:Georgia,serif;font-size:0.98rem;color:var(--navy);margin-top:14px;margin-bottom:8px;">Tier 1 — fully open. Start here.</h4>
+    <ul>
+      <li>"Walk me through the last time you went looking for a research finding — what were you trying to
+        do, and what did you actually do?" (Flanagan's critical-incident technique, 1954.)</li>
+      <li>"Show me the three tabs you had open when you came in today." (Beyer &amp; Holtzblatt's contextual
+        inquiry, 1997 — surfaces the ecology the user works inside.)</li>
+      <li>"If you had thirty seconds to tell me what makes a website trustworthy for your work, what would
+        you say?" (Values surfacing.)</li>
+      <li>"When a page frustrates you, what's the first thing you do?" (Failure repertoire.)</li>
+      <li>"What would make this site something you come back to once a week without being asked?" (Loyalty
+        driver.)</li>
+    </ul>
+
+    <h4 style="font-family:Georgia,serif;font-size:0.98rem;color:var(--navy);margin-top:14px;margin-bottom:8px;">Tier 2 — scenario-seeding. Ask these after Tier 1 has loosened the interview.</h4>
+    <p style="font-size:0.9rem;">
+      These questions probe the <em>scenarios</em> that actually bring people to a literature-organising
+      site. They are the questions I — as a thirty-five-year research professor, P3's class — would expect a
+      Researcher panellist to recognise immediately. Do not ask all of them; ask the three or four that are
+      plausible entry scenarios for <em>your</em> persona class and let the interviewee keep going.
+    </p>
+    <ul>
+      <li><em>(Researcher)</em> "Is there a topic in this field where you think you could make a name for
+        yourself? How would you go looking for it?"</li>
+      <li><em>(Researcher)</em> "When you want to understand the big issues that currently drive this field,
+        where do you turn?"</li>
+      <li><em>(Researcher)</em> "How do you get a sense of how big and how diverse this field is — how many
+        research fronts it has, how they relate?"</li>
+      <li><em>(Researcher — Neuro)</em> "When you want to know the plausible neural underpinnings for a
+        finding, how do you assemble that picture?"</li>
+      <li><em>(Researcher)</em> "How do you decide whether the main findings in this field are robust and
+        well confirmed, or whether you should hold them at arm's length?"</li>
+      <li><em>(Researcher / Theory Explorer)</em> "What are the main theories and mechanisms in this field,
+        and how well substantiated is each? Where would you tell me the real theoretical divide lies?"</li>
+      <li><em>(Researcher)</em> "You have written the first draft of a paper. What are the best papers you
+        would want to cite that support your view? Which ones contradict or challenge it?"</li>
+      <li><em>(Researcher)</em> "You want to fatten your list of references. How do you do it? What makes a
+        reference worth adding?"</li>
+      <li><em>(Researcher)</em> "You have to write the review section of your paper, where you discuss the
+        relevance and implications of other articles. How do you go about that?"</li>
+      <li><em>(Student Explorer)</em> "You have been assigned to write a 1500-word paper on an
+        environmental-cognition topic. What would you do in the first ten minutes?"</li>
+      <li><em>(Contributor)</em> "When you have a paper or dataset you think the field should pay attention
+        to, what is your usual route for getting it seen?"</li>
+      <li><em>(Instructor)</em> "In the middle of a term, what do you actually need to know about what your
+        students are producing, and how often?"</li>
+      <li><em>(Practitioner)</em> "A client asks a question you are not sure about. What is the shortest
+        honest path from that question to an answer you would be willing to sign?"</li>
+      <li><em>(Theory Explorer)</em> "When you evaluate whether a theory is really doing explanatory work,
+        what do you ask it to show you?"</li>
+    </ul>
+    <p style="font-size:0.9rem;">
+      These are <em>scenario questions</em>, not journey questions. A scenario answer looks like "I want to
+      find papers that challenge my view" — a journey answer looks like "I go to Google Scholar, search,
+      copy DOIs into Zotero, then…". Let the scenario crystallise before you ask how the interviewee
+      currently walks through it.
+    </p>
+
+    <h4 style="font-family:Georgia,serif;font-size:0.98rem;color:var(--navy);margin-top:14px;margin-bottom:8px;">Tier 3 — task-on-site. Only in the last third of the interview.</h4>
+    <p>
+      Have the interviewee open K-Atlas on their own machine and think aloud (Van Someren, Barnard &amp;
+      Sandberg, 1994) while attempting a concrete task drawn from their scenarios — not from your goal list.
+      Do not lead. Do not defend the site. Write what you see, not what you wish you were seeing. Plan an
+      hour and expect twenty minutes of useful signal — the well-documented field-UX ratio.
+    </p>
+
+    <h3 style="font-family:Georgia,serif;font-size:1.05rem;color:var(--navy);margin-top:22px;margin-bottom:10px;">Deliverable from the panel (end of Week 3)</h3>
+    <div class="callout callout-info">
+      A two-page, per-persona <em>revised persona sheet</em> committed to
+      <code>docs/personas/&lt;persona-id&gt;_&lt;your-name&gt;.md</code> with: (a) what my first shot got
+      right, (b) what it got wrong, (c) three verbatim quotes from panellists, (d) a revised goal list with
+      three to five ranked goals, and (e) three critical incidents in the panellist's own words. This
+      document is the source of truth for every subsequent week's work.
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- §3.5: Mapping Persona to the Site's Six User Types                    -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <h2 class="section-title" style="margin-top:48px;" id="chip-mapping">§3.5. Mapping Persona to the Site's Six User Types</h2>
+
+    <div class="callout callout-warn" style="margin-bottom:20px;">
+      <strong>Read this before Thursday.</strong> Substantial prior work on user types, scenarios, and
+      journeys already exists in this repository. You are <em>building on</em> that corpus, not replacing
+      it. The authoritative sources are:
+      <ul style="margin-top:8px;">
+        <li><code>docs/USER_TYPE_HOME_PAGES_AND_JOURNEY_ARCHITECTURE_2026-04-03.md</code> — the six user
+          types, their governing questions, their primary concerns, and the five-stage Universal Journey
+          Template (Orient → Inspect → Explain → Evaluate → Act)</li>
+        <li><code>ka_workflows.js</code> — the eight named workflows in production: <code>first-questions</code>,
+          <code>deep-dive</code>, <code>evidence-pipeline</code>, <code>hypothesis-test</code>,
+          <code>lit-synthesis</code>, <code>design-decision</code>, <code>client-brief</code>,
+          <code>mechanism-trace</code></li>
+        <li><code>ka_home_student.html</code>, <code>ka_home_researcher.html</code>,
+          <code>ka_home_contributor.html</code>, <code>ka_home_instructor.html</code>,
+          <code>ka_home_practitioner.html</code>, <code>ka_home_theory.html</code> — all six portal pages
+          are built (Codex, April 2026)</li>
+        <li><code>docs/MODE_SWITCH_COMPONENT_SPEC_2026-03-24.md</code> — adaptive-UI behaviour per mode</li>
+        <li><code>docs/USER_JOURNEY_AUDIT_2026-04-01.md</code> — audit of 9 mapped journeys (2 complete,
+          5 partially broken, 2 fully broken)</li>
+        <li><code>docs/JOURNEY_FIX_ROADMAP.md</code> — the top 10 broken CTAs with fix-level specificity</li>
+        <li><code>docs/CODEX_WORKFLOW_INTELLIGIBILITY_AUDIT_AND_SPRINT_2026-03-31.md</code> — Codex's own
+          critique and proposals for workflow additions</li>
+      </ul>
+      Read these before your Thursday panel. A critique that reinvents what is already written is not a
+      contribution; a critique that engages with what is there and makes it better is.
+    </div>
+
+    <p class="section-intro">
+      The persona classes are the six user-type chips that already appear on <code>ka_home.html</code>:
+      <strong>Student Explorer, Researcher, Contributor, Instructor, Practitioner, Theory Explorer</strong>.
+      Those chips are settled design (§6); your persona must <em>inhabit</em> one of them rather than
+      propose a new class. Cooper's classic account of persona-driven design (Cooper, 1999/2014) and
+      Pruitt &amp; Adlin's handbook (2006) are worth skimming before Thursday — I have put the first
+      chapter of each in <code>docs/ux_reading/</code>.
+    </p>
+
+    <p class="section-intro" style="margin-top:14px;">
+      Two deliberate refinements of the site's six classes: I split <em>Researcher</em> into two sub-personas,
+      one in neuroscience and one in psychology / cognitive science, because the canonical literatures, the
+      tolerance for theoretical argument in the absence of mechanism, and the trusted journals differ enough
+      to produce meaningfully different journeys through the same "Researcher" mode. I also add an eighth,
+      off-chip persona — the PI — because the public site does not serve that mode, but Track 4 still has to
+      design for it (see §7, <code>ka_pi_dashboard.html</code>).
+    </p>
+
+    <p class="section-intro" style="margin-top:14px;">
+      <strong>A note on weighting.</strong> Student Explorers are likely the plurality by <em>visit
+      count</em> — undergraduates bouncing in for a term paper and leaving — but they are the minority by
+      session depth, time-on-page, and return rate. The site's epistemic machinery is built for the deep
+      users: Researchers, Contributors, Theory Explorers, Practitioners. Design decisions must not
+      over-optimise for shallow probers. If a choice helps Maya finish A0 in three clicks but degrades
+      Elena's ability to trace a warrant, Elena wins.
+    </p>
+
+    <p class="section-intro" style="margin-top:14px;">
+      The eight personas shown in <a href="#persona">§2 Choose a Persona</a> are the concrete instantiations
+      of these chips. Each card's header states explicitly which chip the persona inhabits, and — where
+      relevant — which sub-persona (Researcher–Neuro vs. Researcher–Psych/CogSci) or off-chip status (the
+      PI). Keep that mapping in front of you as you move into the scenario and journey work below.
+    </p>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- §4: Journeys and use cases                                            -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <h2 class="section-title" style="margin-top:48px;" id="journeys">§4. Scenarios of Use &amp; Journeys (My First Shot)</h2>
+
+    <p class="section-intro">
+      Three distinct objects get conflated in UX conversation, so a vocabulary note first. A
+      <strong>scenario of use</strong> is <em>where and why</em> a persona is coming to the site — the
+      situation in their working life that produced the impulse to open a browser tab. A scenario is
+      expressed as a question or a task in the persona's own language ("I've written a first draft and I
+      want to find the papers that challenge my view"). A <strong>journey</strong> is the page-by-page path
+      the persona takes once they arrive, in pursuit of a scenario. A journey is expressed as a sequence of
+      URLs and actions. A <strong>use case</strong> is a concrete instantiation of a scenario with specific
+      content ("I want papers that challenge the claim that warm colours increase arousal"). One scenario
+      supports many use cases; one use case is satisfied by one or more journeys.
+    </p>
+
+    <p class="section-intro" style="margin-top:14px;">
+      The five-stage <strong>Universal Journey Template</strong> in
+      <code>docs/USER_TYPE_HOME_PAGES_AND_JOURNEY_ARCHITECTURE_2026-04-03.md</code> already defines the
+      generic arc through which all scenarios resolve: <em>Orient → Inspect → Explain → Evaluate → Act</em>.
+      Your redesigns should stay within that arc unless you have a principled reason to depart from it —
+      and if you do, write that reason in your persona brief.
+    </p>
+
+    <!-- ── §4a. Scenarios of use ── -->
+    <h3 style="font-family:Georgia,serif;font-size:1.05rem;color:var(--navy);margin-top:22px;margin-bottom:10px;" id="scenarios">§4a. Scenarios of use per persona</h3>
+
+    <p style="font-size:0.9rem;">
+      These are the scenarios I conjecture bring each persona to K-Atlas. They are what the design,
+      usability, and science-writing agents (§8) must be primed with if their critique is to be relevant
+      rather than generic. Your Thursday panel (§3) revises this list: confirm, remove, add, re-rank.
+    </p>
+
+    <table class="milestone-table" style="margin-top:12px;">
       <thead>
         <tr>
-          <th>Weeks</th>
-          <th>Phase</th>
-          <th>Activities & Deliverables</th>
+          <th style="width:150px;">Persona</th>
+          <th>Scenarios (why and where they are working on the site)</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td class="week-col">1–2</td>
-          <td class="phase-col">User Type Analysis</td>
-          <td class="activity-col">Interview or create personas for all 6 user types. Document: What questions does each user have? What's their goal? What frustrates them?</td>
+          <td class="week-col">P1 Student Explorer</td>
+          <td>
+            <em>S1.1 Term-paper A0:</em> "I have to write a 1500-word paper and I need a topic I can
+            actually defend." <br>
+            <em>S1.2 Exam prep:</em> "My TA said these three concepts would be on the midterm — what do I
+            need to know?" <br>
+            <em>S1.3 Curiosity probe:</em> "Is there science behind the idea that open-plan offices hurt
+            focus?" (Single visit, unlikely to return.)
+          </td>
         </tr>
         <tr>
-          <td class="week-col">3–4</td>
-          <td class="phase-col">Journey Mapping</td>
-          <td class="activity-col">Map current user journeys for each type. Where do they get stuck? Where are missing CTAs? Review <code>docs/USER_JOURNEY_AUDIT_2026-04-01.md</code>.</td>
+          <td class="week-col">P2 Researcher — Neuro</td>
+          <td>
+            <em>S2.1 Name-making topic:</em> "Is there a research front in this field where I could make a
+            name for myself — a topic where the mechanism question is open?" <br>
+            <em>S2.2 Field-size survey:</em> "How big and diverse is this field — how many research fronts,
+            how do they relate?" <br>
+            <em>S2.3 Neural underpinnings:</em> "What are the plausible neural underpinnings for a given
+            behavioural finding, and how well do they hang together mechanistically?" <br>
+            <em>S2.4 Robustness check:</em> "How robust and well confirmed are the main findings — which
+            are safe to cite, which are contested?" <br>
+            <em>S2.5 Draft-defending:</em> "I have written my first draft; what are the best papers to cite
+            that support my view, and what are the best that challenge it?" <br>
+            <em>S2.6 Reference fattening:</em> "I want to fatten my list of references — what am I
+            missing?" <br>
+            <em>S2.7 Review writing:</em> "I am writing the review section of my paper and need to discuss
+            the relevance and implications of other articles."
+          </td>
         </tr>
         <tr>
-          <td class="week-col">5–6</td>
-          <td class="phase-col">Information Architecture Audit</td>
-          <td class="activity-col">For each user type: What content do they need at each step? Is cognitive load too high? Where are dead ends? Design improvements.</td>
+          <td class="week-col">P3 Researcher — Psych/CogSci</td>
+          <td>
+            Shares S2.1, S2.2, S2.4, S2.5, S2.6, S2.7 with P2. Distinctive: <br>
+            <em>S3.1 Theory landscape:</em> "What are the main theories and mechanisms in this field, and
+            how well substantiated is each? Where are the real theoretical divides?" <br>
+            <em>S3.2 Interpretive disagreement:</em> "Where does the field itself disagree on what the
+            evidence means, and why?" <br>
+            <em>S3.3 Construct validity:</em> "Is the construct being measured here the construct the
+            theory actually claims?" (Cronbach &amp; Meehl, 1955.)
+          </td>
         </tr>
         <tr>
-          <td class="week-col">7–8</td>
-          <td class="phase-col">Prototype & Implement</td>
-          <td class="activity-col">Implement CTA improvements, navigation fixes, content reorganization. Create improved page layouts or features. Commit to git.</td>
+          <td class="week-col">P4 Contributor</td>
+          <td>
+            <em>S4.1 Article contribution:</em> "I have found a high-value paper and want to make sure it
+            reaches the Atlas in a submission-ready state." <br>
+            <em>S4.2 Dataset submission:</em> "I have a dataset the field could use — how do I attach it
+            to the relevant warrants?" <br>
+            <em>S4.3 Formal disagreement:</em> "The Atlas currently holds a warrant I think misrepresents
+            my 2022 paper. Where do I file the disagreement?" <br>
+            <em>S4.4 Pipeline visibility:</em> "Where is my submission right now, who is reviewing it, and
+            what happens next?"
+          </td>
         </tr>
         <tr>
-          <td class="week-col">9–10</td>
-          <td class="phase-col">Usability Testing & Iteration</td>
-          <td class="activity-col">Test with real users (5-8 per user type). Measure task completion rates. Document findings. Iterate on design. Course-wide integration.</td>
+          <td class="week-col">P5 Instructor</td>
+          <td>
+            <em>S5.1 Cohort health:</em> "Are my students on track this week?" <br>
+            <em>S5.2 Pipeline review:</em> "Which of this week's submissions need my adjudication?" <br>
+            <em>S5.3 Assignment design:</em> "I want to build next quarter's assignment from durable
+            URLs — what does the Atlas guarantee will still be at this address in six months?"
+          </td>
+        </tr>
+        <tr>
+          <td class="week-col">P6 Practitioner</td>
+          <td>
+            <em>S6.1 Client question:</em> "A client asks whether ceiling height affects cognitive
+            performance in a classroom — I need a defensible one-paragraph answer by tomorrow." <br>
+            <em>S6.2 Design-decision trace:</em> "If I put daylight on the south façade, what is the likely
+            cognitive/affective consequence, and how confident is the field?" <br>
+            <em>S6.3 Trade-off analysis:</em> "Two design options — which is better supported by evidence
+            for <em>this</em> population and <em>this</em> space type?" <br>
+            <em>S6.4 Client-ready export:</em> "Give me a PDF I can put in a client deck."
+          </td>
+        </tr>
+        <tr>
+          <td class="week-col">P7 Theory Explorer</td>
+          <td>
+            <em>S7.1 Theory comparison:</em> "How do ART and SRT differ empirically — what critical
+            experiment would distinguish them?" <br>
+            <em>S7.2 Mechanism chain:</em> "Trace the causal chain from stimulus to measured outcome, with
+            the evidence at each link." <br>
+            <em>S7.3 Underdetermination audit:</em> "Where is the evidence compatible with multiple
+            theories, and what would it take to decide?" <br>
+            <em>S7.4 Warrant-structure inspection:</em> "Show me the coherentist support/attack graph for
+            this claim."
+          </td>
+        </tr>
+        <tr>
+          <td class="week-col">P8 PI</td>
+          <td>
+            <em>S8.1 Morning triage:</em> "What needs my attention in the next ninety seconds?" <br>
+            <em>S8.2 Student-track health:</em> "Which students on which track are stuck, and why?" <br>
+            <em>S8.3 Registry drift:</em> "Are the Tagging_Contractor fields still internally consistent?"
+            <br>
+            <em>S8.4 Extractor reliability:</em> "Has any extractor's agreement score dropped this week?"
+          </td>
         </tr>
       </tbody>
     </table>
 
-    <div class="callout callout-info" style="margin-top:28px;">
-      <strong>Starting Point:</strong> There's already a user journey audit at <code>docs/USER_JOURNEY_AUDIT_2026-04-01.md</code> in the repo. Start there to see what gaps have already been identified.
+    <!-- ── §4b. Journeys ── -->
+    <h3 style="font-family:Georgia,serif;font-size:1.05rem;color:var(--navy);margin-top:22px;margin-bottom:10px;" id="journeys-list">§4b. Conjectured journeys (per-scenario)</h3>
+
+    <p style="font-size:0.9rem;">
+      A full per-scenario journey map is more work than a single page should carry. The existing
+      <code>docs/USER_JOURNEY_AUDIT_2026-04-01.md</code> already maps nine journeys across five personas and
+      flags which are complete, partially broken, and fully broken; the
+      <code>docs/JOURNEY_FIX_ROADMAP.md</code> gives code-level remedies for the top ten broken CTAs. Start
+      there. Below I give one <em>primary</em> journey per persona as a worked example; your panel's
+      deliverable (§3) is a revised primary journey <em>and</em> a secondary journey in
+      <code>docs/journeys/&lt;persona-id&gt;_&lt;your-name&gt;.md</code>, each in Orient→Inspect→Explain→Evaluate→Act
+      form where applicable.
+    </p>
+
+    <table class="milestone-table" style="margin-top:12px;">
+      <thead>
+        <tr>
+          <th style="width:150px;">Persona · Scenario</th>
+          <th>Primary conjectured journey (page → page → page)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="week-col">P1 · S1.1 (A0)</td>
+          <td><code>ka_home_student</code> → <code>ka_collect_articles</code> →
+          <code>collect-articles-upload</code> (login) → upload PDFs → <code>ka_ai_methodology</code> →
+          <strong>known friction: "qualifying paper" rule is implicit</strong></td>
+        </tr>
+        <tr>
+          <td class="week-col">P2 · S2.5 (draft-defending)</td>
+          <td><code>ka_home_researcher</code> → <code>ka_hypothesis_builder</code> →
+          <code>ka_article_search</code> (filtered by supporting / challenging) → <code>ka_evidence</code> →
+          expand warrant → BibTeX — <strong>roadmap-flagged: hypothesis_builder missing CTA to
+          warrants</strong></td>
+        </tr>
+        <tr>
+          <td class="week-col">P3 · S3.1 (theory landscape)</td>
+          <td><code>ka_home_researcher</code> → Theory Guides → <code>ka_argumentation</code> →
+          <code>ka_interpretation</code> → <code>ka_annotations</code> — <strong>argumentation and
+          interpretation layer pages need critical review (§7)</strong></td>
+        </tr>
+        <tr>
+          <td class="week-col">P4 · S4.1 (submission)</td>
+          <td><code>ka_home_contributor</code> → <code>ka_article_propose</code> →
+          <code>ka_datacapture</code> → <code>ka_tagger</code> → <code>ka_approve</code> —
+          <strong>roadmap-flagged: weak CTA from propose to capture</strong></td>
+        </tr>
+        <tr>
+          <td class="week-col">P5 · S5.1 (cohort health)</td>
+          <td><code>ka_home_instructor</code> → <code>ka_instructor_review</code> (working) → queue of
+          pending — secondary: <code>160sp/ka_schedule</code> → <code>instructor_prep</code>
+          (<strong>roadmap-flagged: CTAs missing</strong>)</td>
+        </tr>
+        <tr>
+          <td class="week-col">P6 · S6.1 (client question)</td>
+          <td><code>ka_home_practitioner</code> → space-type filter (<em>Educational</em>) → topic card
+          <em>Ceiling Height</em> → <strong>missing: practitioner-facing summary card + client-ready
+          export</strong></td>
+        </tr>
+        <tr>
+          <td class="week-col">P7 · S7.1 (theory comparison)</td>
+          <td><code>ka_home_theory</code> → Neural Frameworks → theory-comparison view → mechanism chain →
+          critical-test identification — <strong>theory-comparison and critical-test views partially
+          implemented</strong></td>
+        </tr>
+        <tr>
+          <td class="week-col">P8 · S8.1 (triage)</td>
+          <td><strong>does not exist yet:</strong> <code>ka_pi_dashboard</code> → HITL queue → registry
+          inconsistencies → student contributions → extractor reliability → merge decisions</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="margin-top:14px;font-size:0.88rem;color:var(--muted);">
+      Deliverable (Thursday, end of Week 3, per persona owner): a <code>docs/journeys/&lt;persona&gt;_&lt;your-name&gt;.md</code>
+      with (a) the scenario list revised from the panel, ranked by frequency and criticality; (b) one
+      revised primary journey and one secondary journey, each annotated with the Orient/Inspect/Explain/
+      Evaluate/Act stage; (c) a diff against the prior <code>USER_JOURNEY_AUDIT_2026-04-01.md</code> entry
+      for your persona, explaining what you confirmed, changed, or added.
+    </p>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- §5: Imitating your user type honestly                                 -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <h2 class="section-title" style="margin-top:48px;" id="imitation">§5. How to Imitate Your User Type Honestly</h2>
+
+    <p class="section-intro">
+      Between panel sessions you will stand in for your persona. This is the hardest part of the track: you
+      cannot simulate Maya's confusion if you already know what a latent variable is, and you cannot
+      simulate Jamal's hurry if you have two hours free. Method acting is a useful metaphor, but the
+      discipline is Kelley &amp; Kelley's (2013) "persona empathy" — you inhabit the constraints, you do not
+      invent the feelings. Concrete rules:
+    </p>
+    <ul>
+      <li><strong>Use their tools, not yours.</strong> If your persona uses Chrome on a 2019 Dell, do your
+        critique on Chrome and, if possible, throttle to a 2019 spec. If they are on a phone, test on a
+        phone.</li>
+      <li><strong>Match their time budget.</strong> If Jamal has eight seconds to judge a page, set a timer
+        and bail when it goes off. Do not let yourself read past the deadline.</li>
+      <li><strong>Match their vocabulary.</strong> If Maya does not know "coherence" as a Haack-style
+        technical term, you do not know it either for the duration of the session. The moment you find
+        yourself thinking "well, of course they'd click the warrant tab," you are out of character.</li>
+      <li><strong>Stay in character for at least one task.</strong> Do not break character to take notes;
+        record the session on Zoom to your local drive and watch it back.</li>
+      <li><strong>Triangulate weekly.</strong> Once a week, ask the real exemplar whether your imitation of
+        their behaviour would ring true. If they say no, recalibrate.</li>
+    </ul>
+
+    <p>
+      The failure mode to avoid is the one Nielsen calls "designing for your mother": a persona sketched
+      once, then quietly replaced by the designer's own intuitions. Guard against it by keeping the
+      verbatim panel quotes (§3) visible as you work.
+    </p>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- §6: What you may and may not critique                                 -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <h2 class="section-title" style="margin-top:48px;" id="constraints">§6. Constraints on Critique — What Is Open, What Is Settled</h2>
+
+    <p class="section-intro">
+      Not everything is up for redesign. Some decisions have been made and committing to them frees the
+      track to do deeper work. Other things are still in flux and genuinely open. Here is the current state
+      of play — I will update this table as decisions firm up.
+    </p>
+
+    <table class="milestone-table">
+      <thead>
+        <tr>
+          <th style="width:200px;">Element</th>
+          <th style="width:140px;">Status</th>
+          <th>What this means for you</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="week-col">Top navbar items &amp; order</td>
+          <td style="color:#8a5a00;font-weight:700;">Mostly settled, still in flux</td>
+          <td>The six navbar items (Explore, Evidence, Gaps, Articles, Contribute, Course) are close to
+          final but not frozen. You may <em>think</em> about what the navbar should be for your persona and
+          draft a proposal, but do not change it in code yet. I will open a navbar review session in Week 5.</td>
+        </tr>
+        <tr>
+          <td class="week-col">Brand &amp; colour system</td>
+          <td style="color:#27ae60;font-weight:700;">Settled</td>
+          <td>Navy/amber/cream palette, serif headings, sans body, the network-graph logo — all fixed. Do
+          not re-brand.</td>
+        </tr>
+        <tr>
+          <td class="week-col">Epistemic model (warrants, propositions, evidence)</td>
+          <td style="color:#27ae60;font-weight:700;">Settled</td>
+          <td>The Quinean-coherentist model is the research content of the project. You may critique how
+          <em>presented</em>; you may not change what it is.</td>
+        </tr>
+        <tr>
+          <td class="week-col">Authentication &amp; student login</td>
+          <td style="color:#27ae60;font-weight:700;">Settled</td>
+          <td>The auth flow is a class infrastructure decision; do not touch. If you find bugs, file them
+          and the instructor will triage.</td>
+        </tr>
+        <tr>
+          <td class="week-col">Interactive page layouts</td>
+          <td style="color:#c0392b;font-weight:700;">Open</td>
+          <td>This is where the track works. Layouts, CTAs, content ordering, disclosure patterns,
+          interaction affordances — all fair game, page by page, with the §7 protocol.</td>
+        </tr>
+        <tr>
+          <td class="week-col">Card link behaviour (PDF, topic, article)</td>
+          <td style="color:#c0392b;font-weight:700;">Open</td>
+          <td>How cards link to evidence, to PDFs, to scholar profiles — all open. This is a quarter-long
+          thread; see §7 page inventory.</td>
+        </tr>
+        <tr>
+          <td class="week-col">PI dashboard (<code>ka_pi_dashboard</code>)</td>
+          <td style="color:#c0392b;font-weight:700;">Open — does not exist yet</td>
+          <td>P5 Kirsh's dashboard is a concrete quarterly deliverable; the student assigned to P5 drives it.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-info" style="margin-top:16px;border-left:4px solid #E8872A;background:#FFF8F0;">
+      <strong style="color:#E8872A;">The originals rule.</strong> You may never delete, overwrite, or "fix"
+      an interactive page without keeping an untouched original on disk at
+      <code>160sp/originals/&lt;page&gt;_original_&lt;YYYY-MM-DD&gt;.html</code> and in your own git
+      branch. When two or more of you work on the same page, <em>each of you keeps your own original</em>
+      and your own variant. You reconcile only after the Zoom silent review in §7.
     </div>
 
-    <div class="callout callout-info">
-      <strong>Key Metrics:</strong>
-      <ul style="margin-top:10px;margin-left:1.2rem;">
-        <li><strong>Task Completion Rate:</strong> % of users who complete their goal without getting lost</li>
-        <li><strong>Time to Goal:</strong> How long does it take to accomplish the core task?</li>
-        <li><strong>Cognitive Load:</strong> Do users feel overwhelmed or confused?</li>
-        <li><strong>Information Findability:</strong> Can users find the content they need?</li>
-        <li><strong>CTA Effectiveness:</strong> Do navigation buttons and links guide users to the right place?</li>
-      </ul>
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- §7: Page-by-page protocol                                             -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <h2 class="section-title" style="margin-top:48px;" id="protocol">§7. Page-by-Page Protocol — Starting Week 4</h2>
+
+    <p class="section-intro">
+      From Week 4 on, the track's rhythm is weekly: one interactive page, one team, one slide deck. The
+      team for a page is every student whose persona cares about that page. (A page may have four people on
+      it if four personas depend on it, or one person if only one does.)
+    </p>
+
+    <h3 style="font-family:Georgia,serif;font-size:1.05rem;color:var(--navy);margin-top:22px;margin-bottom:10px;">The weekly cycle</h3>
+
+    <ol>
+      <li><strong>Monday — Individual exploration.</strong> Each team member loads the page on their own
+        machine, in their own persona, and completes the two or three use cases tied to that persona.
+        They record the session (screen capture + think-aloud audio) and take notes on what works, what
+        breaks, what is missing, and what is confusing. Notes land in
+        <code>docs/page_reviews/&lt;page&gt;_&lt;persona&gt;_&lt;name&gt;.md</code>.</li>
+      <li><strong>Tuesday — Individual proposals.</strong> Each member drafts a <em>persona-specific</em>
+        proposal for the page: two to four concrete changes, each tied to a panel quote or a use-case
+        failure. Proposal lives in the member's own git branch; the original is kept untouched.</li>
+      <li><strong>Wednesday — Zoom silent review.</strong> The whole team meets on Zoom with microphones
+        <em>muted</em> and shares each member's variant one at a time, for five minutes each, no
+        commentary. This is a deliberate design choice borrowed from the Nominal Group Technique
+        (Delbecq &amp; Van de Ven, 1971) and the "silent critique" practice of studio architecture reviews.
+        It prevents the loudest voice from anchoring the room. Members mark up each variant in a shared doc
+        as they watch.</li>
+      <li><strong>Wednesday, second half — Sound on, reconciliation.</strong> After the silent round, talk.
+        Decide which features from which variants are keepers and why. Capture the reasoning, not just the
+        decision. Write a one-paragraph <em>reconciliation note</em>.</li>
+      <li><strong>Thursday — Collective slide deck.</strong> The team jointly produces a <code>.pptx</code>
+        for the page with four obligatory sections:
+        <ol style="margin-top:6px;">
+          <li><em>The current page.</em> Screenshot + a sentence on what it does.</li>
+          <li><em>The use cases we tested.</em> One slide per use case, per persona, with the session
+            recording linked.</li>
+          <li><em>Proposed changes.</em> Annotated mockups — what changes and why, one slide per change.</li>
+          <li><em>Justification.</em> Panel quotes and use-case failures that motivated each change, plus
+            any disagreements the team could not reconcile (honest minority reports welcomed).</li>
+        </ol>
+      </li>
+      <li><strong>Friday — In-person review with Kirsh.</strong> The team walks me through the deck in 20
+        minutes. I ask questions, we decide what ships to the main branch and what needs another round.</li>
+    </ol>
+
+    <div class="callout callout-info" style="margin-top:16px;">
+      <strong>Why "Zoom with sound off" matters.</strong> Anchoring is one of the best-documented failures
+      in group design work (Tversky &amp; Kahneman, 1974; Stasser &amp; Titus, 1985, on hidden-profile
+      tasks). Silent review forces every proposal to stand on its own merits before discussion compresses
+      the space. The technique is standard in architecture studios precisely because three-dimensional
+      critiques dominated by the most articulate voice produce worse buildings.
     </div>
+
+    <h3 style="font-family:Georgia,serif;font-size:1.05rem;color:var(--navy);margin-top:28px;margin-bottom:12px;">The page inventory — what we must cover this quarter</h3>
+    <p>
+      The track is not done until every interactive page in the site has been through the §7 cycle. Below
+      is the starting inventory. It will grow; when a new page is created by another track (for example,
+      the Track 2 HITL review page), it is added here.
+    </p>
+
+    <table class="milestone-table">
+      <thead>
+        <tr>
+          <th>Page</th>
+          <th style="width:180px;">Personas that touch it</th>
+          <th style="width:140px;">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><code>ka_home.html</code></td><td>All seven</td><td>Exists — needs review</td></tr>
+        <tr><td><code>ka_topics.html</code> (topic cards)</td><td>Maya, Farida, Kenji, Elena</td><td>Exists — needs review</td></tr>
+        <tr><td><code>ka_article_search.html</code></td><td>Elena, Kenji, Jamal</td><td>Exists — needs review</td></tr>
+        <tr><td><code>ka_evidence.html</code> (per-study + warrant panels)</td><td>Elena, Samira, David</td><td>Exists — needs review</td></tr>
+        <tr><td><code>ka_gaps.html</code></td><td>Elena, Samira, David</td><td>Exists — needs review</td></tr>
+        <tr><td><code>Argumentation layer</code> (warrant debate view)</td><td>Elena, Samira, David</td><td>Skeletal — needs design</td></tr>
+        <tr><td><code>Interpretation layer</code> (proposition ↔ evidence mapping)</td><td>Elena, David, Farida</td><td>Skeletal — needs design</td></tr>
+        <tr><td><code>Question-and-answer page</code></td><td>Jamal, Farida, Maya, Kenji</td><td>Not built — needs design from scratch</td></tr>
+        <tr><td><code>ka_contribute.html</code></td><td>Samira, Maya (A0), Elena</td><td>Needs rebuild — see prior design notes</td></tr>
+        <tr><td><code>ka_pi_dashboard.html</code></td><td>David (only)</td><td>Not built — P5's deliverable</td></tr>
+        <tr><td>PDF &amp; topic-card link behaviour (site-wide)</td><td>All seven, in different ways</td><td>Open thread — see callout below</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-info" style="margin-top:16px;">
+      <strong>On links off cards.</strong> A persistent problem across the site is what happens when a user
+      clicks a link on a PDF card, a topic card, or an article card. Sometimes it opens the full PDF, sometimes
+      a viewer, sometimes a detail page, sometimes nothing. That inconsistency is one of the most reliable
+      sources of user bailout in our pilot sessions. Each team that owns a page that has cards on it must
+      document what <em>their</em> persona expects to happen on each click, and the track will synthesise a
+      site-wide rule at end of Week 6.
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- §8: The design / usability / science-writing agents                   -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <h2 class="section-title" style="margin-top:48px;" id="agents">§8. Using the Lab's Design, Usability, and Science-Writing Agents</h2>
+
+    <p class="section-intro">
+      Three AI agents are available to you and you should use all of them — not to replace your judgement
+      but to multiply it. Each has a specialty and a known failure mode. Treat them as competent junior
+      collaborators: always read their output, always verify.
+    </p>
+
+    <div class="callout callout-warn" style="margin-bottom:16px;">
+      <strong>Prime every agent with the persona + scenarios before use.</strong> An agent asked "critique
+      this page" gives generic output. An agent asked "critique this page from the point of view of P2
+      Nia, who is entering with scenario S2.5 (draft-defending) and whose governing question is <em>does the
+      cumulative evidence support my hypothesis</em>" gives useful output. Paste the persona card from §2
+      and the relevant scenarios from §4a into every agent prompt. The scenarios are where the agent's bias
+      comes from — without them it has none.
+    </div>
+
+    <ul>
+      <li><strong>Design agent.</strong> Given a page's current HTML and a persona card + scenario set,
+        proposes layout, CTA, and affordance changes with rationale. Good for surfacing options you did not
+        consider. Failure mode: over-designs — you do not have to accept all its changes. Use it early in
+        the cycle (Monday/Tuesday) to expand your option set.</li>
+      <li><strong>Usability testing agent.</strong> Simulates a persona's interaction with a page, flags
+        friction points, and produces a short usability report. Good for a fast first pass before you run
+        real panellists. Failure mode: confabulates frustration a real user would not have. Use it as a
+        sanity check, not as evidence on its own.</li>
+      <li><strong>Science writing agent.</strong> Rewrites prose for a target reading level and a target
+        rhetorical stance (e.g., "Maya's Grade-11-accessible summary of a warrant"). Good for testing
+        whether a page's copy works for a non-expert persona. Failure mode: occasionally smooths over
+        technical precision — read its output as if you were P2 Nia or P3 Elena before shipping.</li>
+    </ul>
+
+    <p>
+      Document every agent run in your page-review notes: the prompt you used (including the pasted persona
+      + scenarios), the output you got, and what you changed in response. This matters for replicability and
+      for the end-of-quarter retrospective on which agents are actually useful.
+    </p>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- §9: Weekly syllabus                                                   -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <h2 class="section-title" style="margin-top:48px;" id="syllabus">§9. Weekly Syllabus</h2>
+
+    <table class="milestone-table">
+      <thead>
+        <tr>
+          <th>Week</th>
+          <th>Phase</th>
+          <th>Activities &amp; Deliverables</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="week-col">3 Tue</td>
+          <td class="phase-col">Setup + Persona Assignment</td>
+          <td>Local install of site + backend on Mac or PC (§1). Read my seven persona drafts (§2). TA
+          assigns each student one persona for the quarter. Read Cooper (1999/2014) Ch. 1 and Flanagan
+          (1954).</td>
+        </tr>
+        <tr>
+          <td class="week-col">3 Thu</td>
+          <td class="phase-col">Panel Design &amp; First Interview</td>
+          <td>Each student convenes one panellist for their persona using the §3 protocol. Draft revised
+          persona sheet. Begin conjectured-journey revision.</td>
+        </tr>
+        <tr>
+          <td class="week-col">4</td>
+          <td class="phase-col">Panels + First Page Cycle</td>
+          <td>Complete two more panellists. Revised persona sheet committed. First page-review cycle begins
+          on <code>ka_home.html</code> (all personas touch it).</td>
+        </tr>
+        <tr>
+          <td class="week-col">5</td>
+          <td class="phase-col">Topic Cards &amp; Article Search</td>
+          <td>Cycle 2: <code>ka_topics.html</code>. Cycle 3: <code>ka_article_search.html</code>. Navbar
+          review session mid-week (see §6).</td>
+        </tr>
+        <tr>
+          <td class="week-col">6</td>
+          <td class="phase-col">Evidence &amp; Gaps + Card-Link Rule</td>
+          <td>Cycle 4: <code>ka_evidence.html</code>. Cycle 5: <code>ka_gaps.html</code>. Synthesis of the
+          site-wide card-link rule from the last three cycles.</td>
+        </tr>
+        <tr>
+          <td class="week-col">7</td>
+          <td class="phase-col">Argumentation &amp; Interpretation Layers</td>
+          <td>Cycle 6: argumentation layer (warrant debate view). Cycle 7: interpretation layer. These are
+          skeletal pages and will need design from close to scratch — expect this week to be intense.</td>
+        </tr>
+        <tr>
+          <td class="week-col">8</td>
+          <td class="phase-col">Q&amp;A Page &amp; Contribute Rebuild</td>
+          <td>Cycle 8: the question-and-answer page (does not exist; design from scratch using Jamal,
+          Farida, Maya, Kenji as joint stakeholders). Cycle 9: <code>ka_contribute.html</code> rebuild.</td>
+        </tr>
+        <tr>
+          <td class="week-col">9</td>
+          <td class="phase-col">PI Dashboard + Real User Tests</td>
+          <td>Cycle 10: <code>ka_pi_dashboard.html</code> (Samira's student-owner drives; Kirsh is the
+          user). Real-user usability tests with 5–8 external panellists per persona.</td>
+        </tr>
+        <tr>
+          <td class="week-col">10</td>
+          <td class="phase-col">Integration &amp; Handoff</td>
+          <td>Final reconciliation of all branches to <code>main</code>. Quarter retrospective deck on
+          which personas were confirmed, which journeys changed most, and which pages still need work for
+          fall 2026.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <!-- §10: References                                                       -->
+    <!-- ══════════════════════════════════════════════════════════════════════ -->
+    <h2 class="section-title" style="margin-top:48px;" id="refs">§10. References</h2>
+
+    <p style="font-size:0.82rem;color:var(--muted);">
+      Beyer, H., &amp; Holtzblatt, K. (1997). <em>Contextual design: Defining customer-centered systems</em>.
+      Morgan Kaufmann. [Google Scholar ≈ 4,800] <br>
+      Cooper, A. (1999/2014). <em>The inmates are running the asylum: Why high-tech products drive us crazy
+      and how to restore the sanity</em> (2nd ed.). Sams. [≈ 4,300] <br>
+      Delbecq, A. L., &amp; Van de Ven, A. H. (1971). A group process model for problem identification and
+      program planning. <em>Journal of Applied Behavioral Science, 7</em>(4), 466–492. [≈ 2,900] <br>
+      Flanagan, J. C. (1954). The critical incident technique. <em>Psychological Bulletin, 51</em>(4),
+      327–358. [≈ 14,000] <br>
+      Kelley, T., &amp; Kelley, D. (2013). <em>Creative confidence: Unleashing the creative potential within
+      us all</em>. Crown Business. [≈ 2,100] <br>
+      Nielsen, J. (1993). <em>Usability engineering</em>. Academic Press. [≈ 28,000] <br>
+      Nielsen, J. (2011). How long do users stay on web pages? <em>Nielsen Norman Group</em>. [online] <br>
+      Nielsen, J., &amp; Landauer, T. K. (1993). A mathematical model of the finding of usability problems.
+      <em>Proceedings of INTERCHI '93</em>, 206–213. [≈ 4,500] <br>
+      Portigal, S. (2013). <em>Interviewing users: How to uncover compelling insights</em>. Rosenfeld Media.
+      [≈ 800] <br>
+      Pruitt, J., &amp; Adlin, T. (2006). <em>The persona lifecycle: Keeping people in mind throughout
+      product design</em>. Morgan Kaufmann. [≈ 1,900] <br>
+      Stasser, G., &amp; Titus, W. (1985). Pooling of unshared information in group decision making: Biased
+      information sampling during discussion. <em>Journal of Personality and Social Psychology, 48</em>(6),
+      1467–1478. [≈ 4,200] <br>
+      Tversky, A., &amp; Kahneman, D. (1974). Judgment under uncertainty: Heuristics and biases.
+      <em>Science, 185</em>(4157), 1124–1131. [≈ 97,000] <br>
+      Van Someren, M. W., Barnard, Y. F., &amp; Sandberg, J. A. C. (1994). <em>The think aloud method: A
+      practical guide to modelling cognitive processes</em>. Academic Press. [≈ 3,600]
+    </p>
 
   </div>
 
   <!-- ── Navigation ── -->
-  <div class="track-nav">
-    <a href="ka_student_setup.html" class="cta-button secondary">← Back to Track Overview</a>
-    <a href="ka_schedule.html" class="cta-button">View Course Schedule →</a>
+
+  <!-- ── Bottom dual CTA + Join-Track modal ── -->
+  <div class="track-bottom-ctas">
+    <a href="ka_track4_setup.html" class="big-cta big-cta-setup">
+      <div class="big-cta-label">Ready to start?</div>
+      <div class="big-cta-head">Set Up Your Environment →</div>
+      <div class="big-cta-sub">Walk through prerequisites, install commands, and a sanity-check run so you can start contributing this week.</div>
+    </a>
+    <a href="#" class="big-cta big-cta-join" onclick="openJoinModal('4', 'Track 4 — Interaction Design'); return false;">
+      <div class="big-cta-label">Commit to this track</div>
+      <div class="big-cta-head">Join this Track →</div>
+      <div class="big-cta-sub">Own one persona and drive the page-by-page review cycles.</div>
+    </a>
   </div>
 
+  <div class="jt-modal-backdrop" id="jtModal" onclick="if(event.target===this)closeJoinModal();">
+    <div class="jt-modal" role="dialog" aria-modal="true" aria-labelledby="jtModalTitle">
+      <h3 id="jtModalTitle">Confirm track change</h3>
+      <p id="jtModalBody">You are currently on <span class="cur-track" id="jtCurTrack">(none yet)</span>.
+      Do you want to leave it and join <span class="cur-track" style="background:#E3F4EC;color:#1A5C30;" id="jtNewTrack">Track 4 — Interaction Design</span>?
+      Every student is expected to work on only one track at a time. <strong>This button only updates a local preference on your browser</strong> so the site can show you the right default — it does <em>not</em> notify your TA or update any server-side record. Tell your TA in class or on Slack if you are switching tracks for real.</p>
+      <div class="jt-modal-actions">
+        <button class="jt-btn jt-btn-cancel" onclick="closeJoinModal()">Cancel</button>
+        <button class="jt-btn jt-btn-confirm" onclick="confirmJoin()">Confirm &amp; Join</button>
+      </div>
+    </div>
+  </div>
+  <script>
+  (function(){
+    var lastTrigger = null;
+    function focusables(root){
+      return Array.prototype.slice.call(
+        root.querySelectorAll(
+          'a[href],button:not([disabled]),input:not([disabled]),'+
+          'select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
+        )
+      );
+    }
+    var TRACK_LABELS = {
+      '1':'Track 1 — Image Tagging',
+      '2':'Track 2 — Article Finder',
+      '3':'Track 3 — AI & VR',
+      '4':'Track 4 — Interaction Design'
+    };
+    var LABEL_TO_KEY = {
+      'Track 1 — Image Tagging': '1',
+      'Track 1 · Semantic Tagging': '1',
+      'Track 2 — Article Finder': '2',
+      'Track 2 · Article Finder': '2',
+      'Track 3 — AI & VR': '3',
+      'Track 3 · VR': '3',
+      'Track 4 — Interaction Design': '4',
+      'Track 4 · UX': '4'
+    };
+    function normaliseTrackKey(value){
+      return TRACK_LABELS[value] ? value : (LABEL_TO_KEY[value] || '');
+    }
+    function labelFor(key){ return TRACK_LABELS[key] || key; }
+    window.openJoinModal = function(trackKey, trackLabel, ev){
+      if (arguments.length === 1 || (arguments.length === 2 && typeof trackLabel !== 'string')) {
+        ev = trackLabel; trackLabel = trackKey; trackKey = '';
+      }
+      var rawCur = localStorage.getItem('ka_current_track') || '';
+      var cur = normaliseTrackKey(rawCur);
+      if (cur && rawCur !== cur) localStorage.setItem('ka_current_track', cur);
+      document.getElementById('jtCurTrack').textContent = cur ? labelFor(cur) : '(none yet)';
+      document.getElementById('jtNewTrack').textContent = trackLabel;
+      window.__pendingTrackKey   = trackKey;
+      window.__pendingTrackLabel = trackLabel;
+      lastTrigger = (ev && ev.currentTarget) || document.activeElement;
+      var modal = document.getElementById('jtModal');
+      modal.classList.add('open');
+      var f = focusables(modal);
+      if (f.length) f[0].focus();
+    };
+    window.closeJoinModal = function(){
+      document.getElementById('jtModal').classList.remove('open');
+      if (lastTrigger && typeof lastTrigger.focus === 'function') lastTrigger.focus();
+    };
+    window.confirmJoin = function(){
+      var nextKey = normaliseTrackKey(window.__pendingTrackKey) || normaliseTrackKey(window.__pendingTrackLabel);
+      if (nextKey) {
+        localStorage.setItem('ka_current_track', nextKey);
+      } else {
+        localStorage.removeItem('ka_current_track');
+      }
+      closeJoinModal();
+      alert('Local preference updated to ' + window.__pendingTrackLabel + '. This is a browser-local marker only — remember to tell your TA if you are changing tracks.');
+    };
+    document.addEventListener('keydown', function(e){
+      var modal = document.getElementById('jtModal');
+      if (!modal || !modal.classList.contains('open')) return;
+      if (e.key === 'Escape'){ e.preventDefault(); window.closeJoinModal(); return; }
+      if (e.key === 'Tab'){
+        var f = focusables(modal);
+        if (!f.length) return;
+        var first = f[0], last = f[f.length-1];
+        if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+      }
+    });
+    // Backdrop click closes
+    document.addEventListener('click', function(e){
+      var modal = document.getElementById('jtModal');
+      if (modal && e.target === modal){ window.closeJoinModal(); }
+    });
+  })();
+  </script>
 </div>
 
 <div class="version-badge">KA UI · v0.5</div>
 
 <script src="../ka_mode_switch.js"></script>
 <script src="../ka_site_shell.js"></script>
-<script src="../ka_data_adapter.js"></script>
-<script src="../ka_live_context.js"></script>
-<script>
+<script src="../ka_data_adapter.js"></script><script>
 window.KA_SHELL.initShell({
   navContainerSelector: '.nav-center',
   modeSelectId: 'track4-mode-select',
   modePillId: 'track4-mode-pill',
   defaultMode: 'student_explorer'
 });
+</script>
+
+<script>
+/* Reveal the left-hand sub-nav only after the hero banner has scrolled out
+   of view. Mirrors the pattern on ka_track1_tagging.html. */
+(function(){
+  var subnav = document.querySelector('.track-subnav');
+  var hero = document.querySelector('.page-hero');
+  if (!subnav || !hero) return;
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) subnav.classList.remove('revealed');
+        else subnav.classList.add('revealed');
+      });
+    }, { rootMargin: '-52px 0px 0px 0px', threshold: 0 });
+    io.observe(hero);
+  } else {
+    var check = function(){
+      var r = hero.getBoundingClientRect();
+      if (r.bottom <= 52) subnav.classList.add('revealed');
+      else subnav.classList.remove('revealed');
+    };
+    window.addEventListener('scroll', check, { passive: true });
+    check();
+  }
+})();
 </script>
 
 </body>

@@ -159,32 +159,144 @@
       .bundle-grid { grid-template-columns: 1fr; }
       .track-nav { flex-direction: column; gap: 16px; }
     }
+  
+    /* ── Sticky left-hand sub-nav (injected) ── */
+    /* Hidden until the hero banner scrolls out of view — see IntersectionObserver below. */
+    .track-subnav {
+      position: fixed; left: 14px; top: 76px;
+      width: 200px; max-height: calc(100vh - 100px);
+      overflow-y: auto;
+      background: #fff; border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px 12px;
+      z-index: 200; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      font-size: 0.8rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.18s ease-in-out;
+    }
+    .track-subnav.revealed { opacity: 1; pointer-events: auto; }
+    .track-subnav-title {
+      font-family: Georgia, serif; font-size: 0.72rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;
+      padding-bottom: 6px; border-bottom: 1px solid var(--border);
+    }
+    .track-subnav a {
+      display: block; padding: 5px 8px; color: var(--text);
+      text-decoration: none; border-radius: 4px;
+      line-height: 1.35; margin-bottom: 2px; border-left: 2px solid transparent;
+    }
+    .track-subnav a:hover { background: var(--light); color: var(--navy); border-left-color: var(--amber); }
+    .track-subnav-divider { height: 1px; background: var(--border); margin: 10px -2px; }
+    .track-subnav-cta {
+      display: block !important; text-align: center;
+      background: #B45F14; color: #fff !important;
+      font-weight: 700; padding: 9px 10px; border-radius: 6px;
+      text-decoration: none; margin-top: 4px; font-size: 0.82rem;
+      border-left: none !important;
+    }
+    .track-subnav-cta:hover { background: #8E4A10; color: #fff !important; }
+    @media (max-width: 1280px) { .track-subnav { display: none; } }
+
+    /* ── Bottom dual CTA (Set Up + Join) ── */
+    .track-bottom-ctas {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+      margin-top: 56px; padding: 26px; background: #fff;
+      border: 1px solid var(--border); border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .big-cta {
+      display: block; padding: 22px 24px; border-radius: 10px;
+      text-decoration: none; transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .big-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,0.10); }
+    .big-cta-setup { background: linear-gradient(135deg, #1C3D3A 0%, #163230 100%); color: #fff; }
+    .big-cta-join  { background: linear-gradient(135deg, #B45F14 0%, #8E4A10 100%); color: #fff; }
+    .big-cta-next  { background: linear-gradient(135deg, #2A7868 0%, #1E5A4D 100%); color: #fff; }
+    .big-cta-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; opacity: 0.82; margin-bottom: 6px; }
+    .big-cta-head  { font-family: Georgia, serif; font-size: 1.3rem; font-weight: 400;
+      margin-bottom: 6px; line-height: 1.25; }
+    .big-cta-sub   { font-size: 0.85rem; opacity: 0.92; line-height: 1.55; }
+    @media (max-width: 960px) { .track-bottom-ctas { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 720px) { .track-bottom-ctas { grid-template-columns: 1fr; } }
+
+    /* ── Join-Track modal ── */
+    .jt-modal-backdrop {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+      z-index: 9999; align-items: center; justify-content: center; padding: 24px;
+    }
+    .jt-modal-backdrop.open { display: flex; }
+    .jt-modal {
+      background: #fff; border-radius: 12px; max-width: 480px; width: 100%;
+      padding: 28px 26px; box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+    .jt-modal h3 { font-family: Georgia, serif; font-size: 1.25rem; color: var(--navy);
+      margin-bottom: 10px; line-height: 1.3; }
+    .jt-modal p { font-size: 0.92rem; line-height: 1.6; color: var(--text); }
+    .jt-modal .cur-track { display: inline-block; padding: 2px 10px; border-radius: 4px;
+      background: #FFF0CC; color: #7A4F00; font-weight: 700; font-size: 0.78rem;
+      letter-spacing: 0.06em; text-transform: uppercase; }
+    .jt-modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+    .jt-btn { padding: 9px 18px; border: none; border-radius: 7px; cursor: pointer;
+      font-weight: 600; font-size: 0.9rem; }
+    .jt-btn-cancel  { background: #EDE8E0; color: var(--text); }
+    .jt-btn-confirm { background: #B45F14; color: #fff; }
+    .jt-btn-confirm:hover { background: #8E4A10; }
+  
+    /* Offset anchor jumps so section titles clear the fixed class navbar */
+    /* Leave enough room for the 52px sticky nav plus a comfortable gap so
+       the section title sits clearly below the nav instead of underneath it. */
+    :target { scroll-margin-top: 140px; }
+    h1[id], h2[id], h3[id], h4[id], section[id], div[id] { scroll-margin-top: 140px; }
   </style>
 </head>
 <body>
 
 <nav>
-  <a href="../ka_home.html" class="nav-brand">Knowledge Atlas</a>
+  <a href="ka_schedule.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <svg viewBox="0 0 32 32" fill="none" style="width:28px;height:28px;">
+      <circle cx="16" cy="16" r="3.5" fill="#F5A623"/>
+      <circle cx="16" cy="5"  r="2.5" fill="#A8C8BF"/>
+      <circle cx="27" cy="22" r="2.5" fill="#A8C8BF"/>
+      <circle cx="5"  cy="22" r="2.5" fill="#A8C8BF"/>
+      <line x1="16" y1="7.5" x2="16" y2="12.5" stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="24.8" y1="20.2" x2="19.0" y2="17.3" stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="7.2" y1="20.2" x2="13.0" y2="17.3" stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="16" y1="7.5" x2="25.5" y2="20" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+      <line x1="25.5" y1="20" x2="6.5" y2="20" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+      <line x1="6.5" y1="20" x2="16" y2="7.5" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+    </svg>
+    <div style="display:flex;flex-direction:column;line-height:1.1;">
+      <span style="font-size:0.66rem;font-weight:400;letter-spacing:0.24em;text-transform:uppercase;color:#A8C8BF;">Knowledge</span>
+      <span style="font-size:1.05rem;font-weight:700;color:#fff;">At<span style="color:#F5A623;">las</span> · <span style="font-size:0.85rem;color:#A8C8BF;font-weight:400;">COGS 160</span></span>
+    </div>
+  </a>
   <div class="nav-center">
-    <a id="nav-shell-explore" href="../ka_topics.html" class="nav-link">Explore</a>
-    <a id="nav-shell-evidence" href="../ka_evidence.html" class="nav-link">Evidence</a>
-    <a id="nav-shell-gaps" href="../ka_gaps.html" class="nav-link">Gaps</a>
-    <a id="nav-shell-articles" href="../ka_article_search.html" class="nav-link">Articles</a>
-    <a id="nav-shell-contribute" href="../ka_contribute.html" class="nav-link">Contribute</a>
-    <a id="nav-shell-course" href="ka_student_setup.html" class="nav-link active">Course</a>
+    <a href="ka_schedule.html" class="nav-link">160 Syllabus</a>
+    <a href="week2_exercises.html" class="nav-link">A0</a>
+    <a href="week3_agenda.html" class="nav-link">A1</a>
+    <a href="ka_track1_tagging.html" class="nav-link active">Track 1</a>
+    <a href="ka_track2_pipeline.html" class="nav-link">Track 2</a>
+    <a href="ka_track3_vr.html" class="nav-link">Track 3</a>
+    <a href="ka_track4_ux.html" class="nav-link">Track 4</a>
   </div>
   <div class="nav-right">
-    <select class="mode-select" id="track1-mode-select" aria-label="Switch user mode">
-      <option value="student_explorer">Student explorer</option>
-      <option value="researcher">Researcher</option>
-      <option value="contributor">Contributor</option>
-      <option value="instructor">Instructor</option>
-      <option value="practitioner">Practitioner</option>
-      <option value="theory_mechanism_explorer">Theory Explorer</option>
-    </select>
-    <div class="mode-pill" id="track1-mode-pill">STUDENT EXPLORER</div>
+    <a href="ka_student_profile.html" class="nav-link">160 Student Profile</a>
   </div>
 </nav>
+
+<aside class="track-subnav" aria-label="On this page">
+  <div class="track-subnav-title">On this page</div>
+    <a href="#about">Overview</a>
+    <a href="#status">Current Status</a>
+    <a href="#sprint1">Sprint 1</a>
+    <a href="#sprint2">Sprint 2</a>
+    <a href="#sprint3">Sprint 3</a>
+    <a href="#sprint4">Sprint 4</a>
+    <a href="#further">Further Tasks</a>
+  <div class="track-subnav-divider"></div>
+  <a href="ka_track1_setup.html" class="track-subnav-cta">How to Set Up →</a>
+</aside>
+
 
 <div class="page-hero">
   <div class="eyebrow">COGS 160 · Track 1 of 4</div>
@@ -192,21 +304,904 @@
   <p>
     Develop annotation tools that label architectural and environmental images with evidence-based tags aligned with K-ATLAS propositions. Learn data verification and pipeline architecture.
   </p>
+  <div class="hero-cta-row" style="margin-top:22px;display:flex;gap:12px;flex-wrap:wrap;">
+    <a href="ka_track1_setup.html"
+       style="background:#E8872A;color:#fff;padding:12px 22px;border-radius:8px;
+              text-decoration:none;font-weight:700;font-size:0.95rem;
+              box-shadow:0 3px 10px rgba(0,0,0,0.18);">
+      Start Track 1 Setup →
+    </a>
+    <a href="#about"
+       style="background:rgba(255,255,255,0.08);color:#F5F0E8;padding:12px 22px;
+              border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem;
+              border:1px solid rgba(168,200,191,0.4);">
+      Learn about Track 1
+    </a>
+  </div>
 </div>
 
 <div class="outer">
 
+  <!-- What the Image Tagger Is -->
   <div class="content-section">
-    <h2 class="section-title">Your Tasks This Quarter</h2>
+    <h2 class="section-title" id="about">What the Image Tagger Is</h2>
+    <p style="font-size:0.98rem;line-height:1.75;color:var(--text);margin-bottom:14px;">
+      At its simplest, the Image Tagger is an <strong>image database</strong> that lets scientists
+      see real-life examples of the stimuli their experiments are supposed to tell us about. You
+      can use it to locate ecologically valid photographs of the kinds of rooms, corridors, lobbies,
+      cafés, or outdoor spaces a hypothesis turns on, rather than relying on stylised lab
+      renderings or hand-picked exemplars.
+    </p>
+    <p style="font-size:0.98rem;line-height:1.75;color:var(--text);margin-bottom:14px;">
+      At a deeper level, by running tagging procedures that extract what we believe are the
+      <em>abstract features</em> of an environment — visual complexity, biophilic content,
+      regional fractal dimension, shape, size, openness, material composition, and so on — we
+      can look for commonalities among environments that look superficially very different.
+      Equally important, we can then query images using the <em>properties of the stimuli</em>
+      used in published experiments, rather than searching by everyday folk terms such as
+      "dining room," "corridor," or "wood floors." This is what makes the tagger a bridge
+      between the experimental literature and the visual world the literature is supposed to
+      describe.
+    </p>
+    <p style="font-size:0.95rem;line-height:1.7;color:var(--muted);margin-bottom:24px;">
+      To understand more about this part of the system, read the page describing the image-tagging
+      repo — its function and structure — here:
+      <a href="ka_live_snapshot/Designing_Experiments/docs/student_tracks/image_tagger_guide.html"
+         style="color:#E8872A;font-weight:600;">Image Tagger Guide →</a>.
+      To learn what is implemented, what remains, and where student effort is most needed, see the
+      <a href="Image Tagger Status Report.docx.pdf" target="_blank"
+         style="color:#E8872A;font-weight:600;">Image Tagger Status Report (PDF) →</a>.
+    </p>
+
+    <!-- Annotated room illustration -->
+    <figure style="margin:0;padding:18px;background:#FAFAF4;border:1px solid var(--border);border-radius:8px;">
+      <svg viewBox="0 0 900 560" xmlns="http://www.w3.org/2000/svg"
+           style="width:100%;height:auto;display:block;font-family:Arial,sans-serif;" aria-label="Annotated room with tagger labels">
+        <defs>
+          <pattern id="woodFloor" width="42" height="12" patternUnits="userSpaceOnUse" patternTransform="skewX(-28)">
+            <rect width="42" height="12" fill="#B07B49"/>
+            <line x1="0" y1="0" x2="42" y2="0" stroke="#8C5A30" stroke-width="0.8"/>
+            <line x1="0" y1="6" x2="42" y2="6" stroke="#8C5A30" stroke-width="0.4" stroke-dasharray="2,4"/>
+          </pattern>
+          <pattern id="plasterWall" width="80" height="80" patternUnits="userSpaceOnUse">
+            <rect width="80" height="80" fill="#E8DFCF"/>
+          </pattern>
+          <!-- Fractal-looking stone masonry for fireplace surround -->
+          <pattern id="stoneHearth" width="46" height="34" patternUnits="userSpaceOnUse">
+            <rect width="46" height="34" fill="#9E978B"/>
+            <path d="M0 0 L16 6 L30 2 L46 8 L46 16 L34 20 L22 14 L8 22 L0 18 Z" fill="#857D6F" opacity="0.85"/>
+            <path d="M0 18 L10 24 L22 14 L34 20 L46 16 L46 34 L36 30 L24 34 L12 30 L0 34 Z" fill="#B3ACA0" opacity="0.6"/>
+            <path d="M4 4 L12 10 M20 2 L28 8 M36 14 L42 22 M8 26 L18 30 M28 24 L38 28" stroke="#6B6459" stroke-width="0.5" fill="none"/>
+          </pattern>
+          <!-- Patterned rug (self-similar-ish motif) -->
+          <pattern id="rugPattern" width="60" height="60" patternUnits="userSpaceOnUse">
+            <rect width="60" height="60" fill="#8A2B2B"/>
+            <rect x="6" y="6" width="48" height="48" fill="none" stroke="#D9A54C" stroke-width="1.5"/>
+            <rect x="14" y="14" width="32" height="32" fill="none" stroke="#D9A54C" stroke-width="1"/>
+            <path d="M30 10 L34 22 L46 26 L34 30 L30 42 L26 30 L14 26 L26 22 Z" fill="#D9A54C" opacity="0.8"/>
+            <circle cx="30" cy="30" r="3" fill="#F2D99A"/>
+          </pattern>
+          <marker id="cbHead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 Z" fill="#1C3D3A"/>
+          </marker>
+          <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+            <feOffset dx="1" dy="2" result="off"/>
+            <feComponentTransfer><feFuncA type="linear" slope="0.25"/></feComponentTransfer>
+            <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- Scene background -->
+        <rect x="0" y="0" width="900" height="560" fill="#F4EEE2"/>
+
+        <!-- Back wall (plaster) -->
+        <polygon points="140,70 760,70 720,340 180,340" fill="url(#plasterWall)" stroke="#A89A82" stroke-width="1.2"/>
+        <!-- Left wall -->
+        <polygon points="0,0 140,70 180,340 0,500" fill="#DDD2BC" stroke="#A89A82" stroke-width="1"/>
+        <!-- Right wall -->
+        <polygon points="900,0 760,70 720,340 900,500" fill="#D5C9AE" stroke="#A89A82" stroke-width="1"/>
+        <!-- Ceiling -->
+        <polygon points="0,0 900,0 760,70 140,70" fill="#F9F5EA" stroke="#C8BEA8" stroke-width="1"/>
+        <!-- Wood floor -->
+        <polygon points="180,340 720,340 900,500 0,500" fill="url(#woodFloor)" stroke="#6F4A28" stroke-width="1.2"/>
+
+        <!-- Patterned rug on floor (fractal target #2) -->
+        <polygon points="240,360 600,360 690,470 180,470" fill="url(#rugPattern)" stroke="#5C1E1E" stroke-width="1.2"/>
+
+        <!-- Stone fireplace on back wall (fractal target #1) -->
+        <g>
+          <!-- Fireplace surround (stone) -->
+          <rect x="410" y="110" width="200" height="200" fill="url(#stoneHearth)" stroke="#5C5248" stroke-width="1.5"/>
+          <!-- Firebox opening -->
+          <rect x="450" y="170" width="120" height="110" fill="#1A1410" stroke="#0A0806" stroke-width="1.2"/>
+          <!-- Flames -->
+          <path d="M465 275 Q 475 235 485 270 Q 495 240 505 275 Q 515 245 525 275 Q 535 240 545 275 Q 555 250 565 275 Z"
+                fill="#E8872A"/>
+          <path d="M475 275 Q 482 250 490 275 Q 500 255 510 275 Q 520 252 530 275 Q 540 258 548 275 Z"
+                fill="#F5A623"/>
+          <!-- Mantel -->
+          <rect x="400" y="100" width="220" height="16" fill="#6F4A28" stroke="#3E2A16" stroke-width="1"/>
+          <!-- Hearth slab -->
+          <rect x="395" y="305" width="230" height="14" fill="#6B6459" stroke="#3A342C" stroke-width="1"/>
+        </g>
+
+        <!-- Window with daylight -->
+        <rect x="210" y="130" width="110" height="110" fill="#CFE6F2" stroke="#4C6B78" stroke-width="2"/>
+        <line x1="265" y1="130" x2="265" y2="240" stroke="#4C6B78" stroke-width="2"/>
+        <line x1="210" y1="185" x2="320" y2="185" stroke="#4C6B78" stroke-width="2"/>
+        <polygon points="320,130 390,155 390,255 320,240" fill="#F6E8B8" opacity="0.55"/>
+
+        <!-- Potted plant (biophilic) -->
+        <ellipse cx="670" cy="330" rx="34" ry="10" fill="#3F5A3E" opacity="0.35"/>
+        <rect x="648" y="290" width="44" height="38" rx="4" fill="#9C6B3B" stroke="#6F4A28" stroke-width="1.2"/>
+        <path d="M670 290 Q 642 250 658 225 Q 674 250 670 290" fill="#2F7B46"/>
+        <path d="M670 290 Q 698 252 684 228 Q 668 255 670 290" fill="#3C8A55"/>
+
+        <!-- Two chairs facing each other (sociopetal) -->
+        <g>
+          <rect x="300" y="395" width="40" height="48" rx="4" fill="#3C4A4A" stroke="#1C2A2A" stroke-width="1"/>
+          <rect x="300" y="388" width="40" height="10" rx="3" fill="#2A3636" stroke="#1C2A2A" stroke-width="1"/>
+        </g>
+        <g>
+          <rect x="500" y="395" width="40" height="48" rx="4" fill="#3C4A4A" stroke="#1C2A2A" stroke-width="1"/>
+          <rect x="500" y="388" width="40" height="10" rx="3" fill="#2A3636" stroke="#1C2A2A" stroke-width="1"/>
+        </g>
+        <!-- Small round coffee table between them -->
+        <ellipse cx="420" cy="420" rx="40" ry="10" fill="#8C5A30" stroke="#5C3A1C" stroke-width="1.2"/>
+        <ellipse cx="420" cy="416" rx="40" ry="9" fill="#B07B49" stroke="#6F4A28" stroke-width="1"/>
+
+        <!-- ── Annotation callouts ── -->
+        <g font-size="11" fill="#1C3D3A">
+
+          <!-- Category legend at top -->
+          <g>
+            <rect x="20" y="18" width="18" height="12" fill="#FFF3E0" stroke="#B07B49" stroke-width="1"/>
+            <text x="44" y="29" font-weight="700" fill="#6F4A28">Object / material</text>
+            <rect x="180" y="18" width="18" height="12" fill="#FFF8E8" stroke="#E8872A" stroke-width="1"/>
+            <text x="204" y="29" font-weight="700" fill="#B05E10">Abstract visual statistic</text>
+            <rect x="390" y="18" width="18" height="12" fill="#EAF5EC" stroke="#2A7868" stroke-width="1"/>
+            <text x="414" y="29" font-weight="700" fill="#1E5A44">Latent variable (L-code)</text>
+            <rect x="595" y="16" width="18" height="16" fill="#1C3D3A" stroke="#F5A623" stroke-width="1"/>
+            <text x="619" y="29" font-weight="700" fill="#1C3D3A">Room-type classifier</text>
+          </g>
+
+          <!-- Room-type classification -->
+          <rect x="340" y="50" width="220" height="28" rx="14" fill="#1C3D3A" stroke="#F5A623" stroke-width="1.5"/>
+          <text x="450" y="69" text-anchor="middle" font-weight="700" fill="#F5A623">Room type: Lounge · p = 0.87</text>
+
+          <!-- ABSTRACT VISUAL STATISTIC #1: Fractal Dimension on stone hearth -->
+          <circle cx="510" cy="200" r="3" fill="#E8872A"/>
+          <path d="M510 200 L 810 115" stroke="#1C3D3A" stroke-width="1" marker-end="url(#cbHead)"/>
+          <rect x="670" y="92" width="220" height="46" rx="6" fill="#FFF8E8" stroke="#E8872A" stroke-width="1.2" filter="url(#softShadow)"/>
+          <text x="678" y="110" font-weight="700" fill="#B05E10">Regional Fractal Dim (stone) ≈ 1.48</text>
+          <text x="678" y="126" fill="#4A3A20">box-counting on hearth-surround ROI</text>
+
+          <!-- ABSTRACT VISUAL STATISTIC #2: Fractal Dimension on rug -->
+          <circle cx="420" cy="420" r="3" fill="#E8872A"/>
+          <path d="M420 420 L 120 545" stroke="#1C3D3A" stroke-width="1" marker-end="url(#cbHead)"/>
+          <rect x="20" y="528" width="250" height="28" rx="6" fill="#FFF8E8" stroke="#E8872A" stroke-width="1.2" filter="url(#softShadow)"/>
+          <text x="28" y="548" font-weight="700" fill="#B05E10">Regional Fractal Dim (rug) ≈ 1.72</text>
+
+          <!-- ABSTRACT VISUAL STATISTIC #3: Visual complexity + openness -->
+          <rect x="600" y="515" width="280" height="30" rx="6" fill="#FFF8E8" stroke="#E8872A" stroke-width="1.2"/>
+          <text x="610" y="535" font-weight="700" fill="#B05E10">Visual complexity 0.42 · Openness 0.61</text>
+
+          <!-- ABSTRACT VISUAL STATISTIC #4: Daylight factor -->
+          <circle cx="265" cy="185" r="3" fill="#E8872A"/>
+          <path d="M265 185 L 60 90" stroke="#1C3D3A" stroke-width="1" marker-end="url(#cbHead)"/>
+          <rect x="20" y="52" width="210" height="46" rx="6" fill="#FFF8E8" stroke="#E8872A" stroke-width="1.2" filter="url(#softShadow)"/>
+          <text x="28" y="70" font-weight="700" fill="#B05E10">Daylight factor ≈ 3.1 %</text>
+          <text x="28" y="86" fill="#4A3A20">CCT ~5000 K · south-facing aperture</text>
+
+          <!-- OBJECT/MATERIAL: wood floor -->
+          <circle cx="150" cy="450" r="3" fill="#B07B49"/>
+          <path d="M150 450 L 20 490" stroke="#1C3D3A" stroke-width="1" marker-end="url(#cbHead)"/>
+          <rect x="20" y="480" width="220" height="40" rx="6" fill="#FFF3E0" stroke="#B07B49" stroke-width="1.2" filter="url(#softShadow)"/>
+          <text x="28" y="498" font-weight="700" fill="#6F4A28">Material: wood (oak plank)</text>
+          <text x="28" y="512" fill="#4A3A20">floor segment · COCO "floor-wood"</text>
+
+          <!-- OBJECT/MATERIAL: stone fireplace -->
+          <circle cx="605" cy="150" r="3" fill="#B07B49"/>
+          <path d="M605 150 L 830 200" stroke="#1C3D3A" stroke-width="1" marker-end="url(#cbHead)"/>
+          <rect x="670" y="180" width="220" height="46" rx="6" fill="#FFF3E0" stroke="#B07B49" stroke-width="1.2" filter="url(#softShadow)"/>
+          <text x="678" y="198" font-weight="700" fill="#6F4A28">Object: fireplace (stone surround)</text>
+          <text x="678" y="214" fill="#4A3A20">COCO-133 "fireplace" + material=stone</text>
+
+          <!-- OBJECT/MATERIAL: rug -->
+          <circle cx="300" cy="440" r="3" fill="#B07B49"/>
+          <path d="M300 440 L 20 430" stroke="#1C3D3A" stroke-width="1" marker-end="url(#cbHead)"/>
+          <rect x="20" y="418" width="220" height="28" rx="6" fill="#FFF3E0" stroke="#B07B49" stroke-width="1.2" filter="url(#softShadow)"/>
+          <text x="28" y="438" font-weight="700" fill="#6F4A28">Object: rug (patterned textile)</text>
+
+          <!-- OBJECT/MATERIAL: plant -->
+          <circle cx="670" cy="260" r="3" fill="#B07B49"/>
+          <path d="M670 260 L 840 265" stroke="#1C3D3A" stroke-width="1" marker-end="url(#cbHead)"/>
+          <rect x="670" y="252" width="220" height="28" rx="6" fill="#FFF3E0" stroke="#B07B49" stroke-width="1.2" filter="url(#softShadow)"/>
+          <text x="678" y="271" font-weight="700" fill="#6F4A28">Object: potted plant (live)</text>
+
+          <!-- LATENT: L44 sociopetal seating -->
+          <circle cx="420" cy="440" r="3" fill="#2A7868"/>
+          <path d="M420 440 L 190 400" stroke="#1C3D3A" stroke-width="1" marker-end="url(#cbHead)"/>
+          <rect x="20" y="378" width="250" height="32" rx="6" fill="#EAF5EC" stroke="#2A7868" stroke-width="1.2" filter="url(#softShadow)"/>
+          <text x="28" y="398" font-weight="700" fill="#1E5A44">L44 Sociopetal seating topology</text>
+
+          <!-- LATENT: L53 shared attention anchor (fireplace) -->
+          <circle cx="510" cy="240" r="3" fill="#2A7868"/>
+          <path d="M510 240 L 290 330" stroke="#1C3D3A" stroke-width="1" marker-end="url(#cbHead)"/>
+          <rect x="20" y="305" width="270" height="46" rx="6" fill="#EAF5EC" stroke="#2A7868" stroke-width="1.2" filter="url(#softShadow)"/>
+          <text x="28" y="323" font-weight="700" fill="#1E5A44">L53 Shared-attention anchor</text>
+          <text x="28" y="339" fill="#2A4A3A">fireplace serves as dominant focal feature</text>
+
+          <!-- LATENT: Biophilia (not a numbered L yet but in taxonomy) -->
+          <circle cx="670" cy="230" r="3" fill="#2A7868"/>
+          <path d="M670 230 L 830 315" stroke="#1C3D3A" stroke-width="1" marker-end="url(#cbHead)"/>
+          <rect x="670" y="298" width="220" height="28" rx="6" fill="#EAF5EC" stroke="#2A7868" stroke-width="1.2" filter="url(#softShadow)"/>
+          <text x="678" y="317" font-weight="700" fill="#1E5A44">Biophilic presence (living)</text>
+        </g>
+      </svg>
+      <figcaption style="margin-top:12px;font-size:0.85rem;color:var(--muted);font-style:italic;line-height:1.6;">
+        Illustrative Image-Tagger output on a single room. The tags fall into <strong>three quite different
+        kinds of thing</strong>, colour-coded above. <span style="color:#6F4A28;"><strong>Object / material
+        detections</strong></span> (tan) are the common-sense things the tagger <em>sees</em>: a fireplace,
+        a rug, a wood floor, a plant, a window — mostly COCO-133 segment masks with a material label. These
+        are evidence, not constructs. <span style="color:#B05E10;"><strong>Abstract visual statistics</strong></span>
+        (amber) are scalars computed <em>on</em> regions: box-counting fractal dimension on the stone
+        fireplace surround (≈ 1.48) and on the patterned rug (≈ 1.72), daylight factor, visual complexity,
+        openness. Fractal dimension is only defined for genuinely textured regions — stonework and
+        patterned textiles are natural targets; a smooth painted wall is not. <span style="color:#1E5A44;">
+        <strong>Latent variables (L-codes)</strong></span> (green) are the inferred <em>constructs</em>
+        from the Environment–Cognition Taxonomy — here L44 Sociopetal Seating Topology and L53
+        Shared-Attention Anchor — and they are the thing this class is being asked to implement. Latents
+        do <em>not</em> in general map onto a single common-sense object. L53, for instance, is not "the
+        fireplace"; it is the inferred property that some feature in the room provides a stable shared
+        focus, and the tagger has to argue for it from object, geometry, and gaze-cue evidence. The dark
+        pill at the top is the coarse room-type classifier. In production each of these becomes a
+        structured evidence node the rest of K-ATLAS can reason over.
+      </figcaption>
+    </figure>
+  </div>
+
+  <!-- Current Status & Priorities -->
+  <div class="content-section">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;">
+      <h2 class="section-title" style="margin:0;" id="status">Current Status</h2>
+      <a href="Image Tagger Status Report.docx.pdf" target="_blank"
+         style="display:inline-block;background:#E8872A;color:#fff;font-size:0.82rem;font-weight:700;
+                padding:8px 18px;border-radius:6px;text-decoration:none;white-space:nowrap;">
+        View Full Status Report (PDF) →</a>
+      <a href="docs/Image_Tagger_3.4.74_Module_Executive_Summary_v1.2.docx"
+         style="display:inline-block;background:#1C3D3A;color:#fff;font-size:0.82rem;font-weight:700;
+                padding:8px 18px;border-radius:6px;text-decoration:none;white-space:nowrap;">
+        Executive Summary (v1.2, DOCX) →</a>
+    </div>
+    <p style="font-size:0.92rem;color:var(--muted);line-height:1.7;margin-bottom:20px;">
+      The Image Tagger pipeline currently supports 13 coarse room types, 5 activity affordances (of 130 in the taxonomy),
+      COCO-133 object segmentation, visual complexity and fractal analysis, biophilic and general material detection,
+      and debug-mode localization overlays. The full status report details what is implemented, what remains, and
+      where student effort is most needed. The <em>Executive Summary (v1.2)</em> is a shorter companion
+      piece that explains what the module does, why the design is unusual among computer-vision tools, and how
+      a funded program would develop it further — written for internal collaborators and prospective funders.
+    </p>
+
+    <div class="callout callout-info" style="border-left:4px solid #E8872A;background:#FFF8F0;">
+      <strong style="color:#E8872A;">Prof Kirsh's Current Priorities</strong>
+      <ol style="margin-top:10px;margin-left:1.2rem;font-size:0.9rem;color:var(--text);line-height:1.8;">
+        <li><strong>Additional Affordances for Social Interaction</strong> — The tagger currently supports only
+          L130 (Casual Conversation / Hangout) among social affordances. The taxonomy defines dozens of
+          social-interaction latent variables that need new detection methods. See the latent variable list below.</li>
+        <li><strong>Latent Variables</strong> — L01–L58 in the taxonomy cover broad psychological and contextual
+          constructs (threat, escape efficacy, visibility control, privacy, crowding, restorativeness, fascination,
+          coherence, control/autonomy) that are not yet implemented. These require identifying viable visual proxies
+          and building new extractor families.</li>
+      </ol>
+    </div>
+
+    <h3 style="font-family:Georgia,serif;font-size:1.05rem;color:var(--navy);margin-top:32px;margin-bottom:12px;">
+      Social Interaction Latent Variables (L41–L58)</h3>
+    <p style="font-size:0.88rem;color:var(--muted);margin-bottom:16px;">
+      From Part X of the Environment–Cognition Taxonomy (V2.6). These latent variables describe how environments
+      support or constrain social behavior — even when unoccupied. Each is inferable primarily from furniture topology,
+      openings, focal elements, and circulation geometry. <strong>Tier 1</strong> = reliably judged from still images;
+      <strong>Tier 2</strong> = needs richer stimuli; <strong>Tier 3</strong> = context-dependent.
+    </p>
+
+    <!-- Social-interaction latent variable table -->
+    <div style="overflow-x:auto;margin-bottom:24px;">
+      <table style="width:100%;border-collapse:collapse;font-size:0.84rem;border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+        <thead>
+          <tr style="background:var(--navy);color:#fff;">
+            <th style="padding:10px 12px;text-align:left;font-weight:600;width:50px;">ID</th>
+            <th style="padding:10px 12px;text-align:left;font-weight:600;width:180px;">Latent</th>
+            <th style="padding:10px 12px;text-align:left;font-weight:600;">Definition</th>
+            <th style="padding:10px 12px;text-align:left;font-weight:600;">Observable 2D Cues</th>
+            <th style="padding:10px 12px;text-align:center;font-weight:600;width:50px;">Tier</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;color:var(--navy);">L41</td>
+            <td style="padding:8px 12px;font-weight:600;">Chance-Encounter Potential</td>
+            <td style="padding:8px 12px;color:var(--muted);">Likelihood the layout produces unplanned encounters</td>
+            <td style="padding:8px 12px;color:var(--muted);">Multiple paths crossing; central nodes; visible intersections; shared circulation</td>
+            <td style="padding:8px 12px;text-align:center;">2</td>
+          </tr>
+          <tr style="background:#FAFAF6;border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;color:var(--navy);">L42</td>
+            <td style="padding:8px 12px;font-weight:600;">Interactional Visibility</td>
+            <td style="padding:8px 12px;color:var(--muted);">Mutual awareness: ability to see others and be seen</td>
+            <td style="padding:8px 12px;color:var(--muted);">Open sightlines; low partitions; long views; transparent boundaries</td>
+            <td style="padding:8px 12px;text-align:center;">1</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;color:var(--navy);">L43</td>
+            <td style="padding:8px 12px;font-weight:600;">Approach Invitation</td>
+            <td style="padding:8px 12px;color:var(--muted);">How much the space invites initiating interaction</td>
+            <td style="padding:8px 12px;color:var(--muted);">Front-facing seating; inviting entry; "faceable" edges; absence of barriers</td>
+            <td style="padding:8px 12px;text-align:center;">1</td>
+          </tr>
+          <tr style="background:#FAFAF6;border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;color:var(--navy);">L44</td>
+            <td style="padding:8px 12px;font-weight:600;">Sociopetal Seating Topology</td>
+            <td style="padding:8px 12px;color:var(--muted);">Seating geometry supporting face-to-face talk (F-formations)</td>
+            <td style="padding:8px 12px;color:var(--muted);">Seats facing each other; circular/semicircular arrangements; clustered chairs</td>
+            <td style="padding:8px 12px;text-align:center;">1</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;color:var(--navy);">L45</td>
+            <td style="padding:8px 12px;font-weight:600;">Peripheral Participation</td>
+            <td style="padding:8px 12px;color:var(--muted);">Watching/listening/being nearby without joining</td>
+            <td style="padding:8px 12px;color:var(--muted);">Perches on edges; benches facing flow; café window seating; balcony rails</td>
+            <td style="padding:8px 12px;text-align:center;">1</td>
+          </tr>
+          <tr style="background:#FAFAF6;border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;color:var(--navy);">L46</td>
+            <td style="padding:8px 12px;font-weight:600;">Hosting/Service Script Clarity</td>
+            <td style="padding:8px 12px;color:var(--muted);">Clarity of who serves whom and where to ask for help</td>
+            <td style="padding:8px 12px;color:var(--muted);">Reception desk; service counter; signage; queue rails; "front desk" zone</td>
+            <td style="padding:8px 12px;text-align:center;">1</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;color:var(--navy);">L47</td>
+            <td style="padding:8px 12px;font-weight:600;">Turn-Taking &amp; Queue Support</td>
+            <td style="padding:8px 12px;color:var(--muted);">How well the space scaffolds orderly service interactions</td>
+            <td style="padding:8px 12px;color:var(--muted);">Defined waiting line; stanchions; single-point service; clear next position</td>
+            <td style="padding:8px 12px;text-align:center;">2</td>
+          </tr>
+          <tr style="background:#FAFAF6;border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;color:var(--navy);">L48</td>
+            <td style="padding:8px 12px;font-weight:600;">Dyadic Intimacy Support</td>
+            <td style="padding:8px 12px;color:var(--muted);">Support for two-person private conversation</td>
+            <td style="padding:8px 12px;color:var(--muted);">Two-seat nooks; booth seating; side alcoves; partial screening</td>
+            <td style="padding:8px 12px;text-align:center;">1</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;color:var(--navy);">L49</td>
+            <td style="padding:8px 12px;font-weight:600;">Small-Group Conversation Support</td>
+            <td style="padding:8px 12px;color:var(--muted);">Support for 3–6 person groups (standing or seated)</td>
+            <td style="padding:8px 12px;color:var(--muted);">Clusterable furniture; round tables; open pockets; not too loud-looking</td>
+            <td style="padding:8px 12px;text-align:center;">1</td>
+          </tr>
+          <tr style="background:#FAFAF6;border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;color:var(--navy);">L50</td>
+            <td style="padding:8px 12px;font-weight:600;">Collaborative Work Interaction</td>
+            <td style="padding:8px 12px;color:var(--muted);">Support for task-focused coordination (shared artifacts, co-viewing)</td>
+            <td style="padding:8px 12px;color:var(--muted);">Large shared tables; writable surfaces; shared displays; tool availability</td>
+            <td style="padding:8px 12px;text-align:center;">1</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;color:var(--navy);">L51</td>
+            <td style="padding:8px 12px;font-weight:600;">Large-Group Assembly Support</td>
+            <td style="padding:8px 12px;color:var(--muted);">Support for 7+ gatherings (events, lectures, ceremonies)</td>
+            <td style="padding:8px 12px;color:var(--muted);">Rows of seating; open floor area; stage/focal wall; high-capacity layout</td>
+            <td style="padding:8px 12px;text-align:center;">1</td>
+          </tr>
+          <tr style="background:#FAFAF6;border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;color:var(--navy);">L52</td>
+            <td style="padding:8px 12px;font-weight:600;">One-to-Many Presentation</td>
+            <td style="padding:8px 12px;color:var(--muted);">Presenter→audience configuration and attentional focus</td>
+            <td style="padding:8px 12px;color:var(--muted);">Clear 'front'; screen/board; oriented seating; focal lighting</td>
+            <td style="padding:8px 12px;text-align:center;">1</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;color:var(--navy);">L53</td>
+            <td style="padding:8px 12px;font-weight:600;">Shared Attention Anchor Strength</td>
+            <td style="padding:8px 12px;color:var(--muted);">How strongly the space provides a stable shared focus point</td>
+            <td style="padding:8px 12px;color:var(--muted);">Dominant focal object/wall; central table feature; display zone</td>
+            <td style="padding:8px 12px;text-align:center;">1</td>
+          </tr>
+          <tr style="background:#FAFAF6;border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;color:var(--navy);">L54</td>
+            <td style="padding:8px 12px;font-weight:600;">Boundary Permeability</td>
+            <td style="padding:8px 12px;color:var(--muted);">Ease of entry/exit to join/leave groups</td>
+            <td style="padding:8px 12px;color:var(--muted);">Open thresholds; partial partitions; multiple entrances; "soft" boundaries</td>
+            <td style="padding:8px 12px;text-align:center;">2</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;color:var(--navy);">L55</td>
+            <td style="padding:8px 12px;font-weight:600;">Group Territorial Claimability</td>
+            <td style="padding:8px 12px;color:var(--muted);">Ease with which a group can 'claim' a shared spot</td>
+            <td style="padding:8px 12px;color:var(--muted);">Defined group tables; booths; corners; visual boundaries; coat hooks</td>
+            <td style="padding:8px 12px;text-align:center;">2</td>
+          </tr>
+          <tr style="background:#FAFAF6;border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;color:var(--navy);">L56</td>
+            <td style="padding:8px 12px;font-weight:600;">Mingling Affordance</td>
+            <td style="padding:8px 12px;color:var(--muted);">Support for standing, circulating socializing</td>
+            <td style="padding:8px 12px;color:var(--muted);">Open floor pockets; high tables; clear circulation; distributed perches</td>
+            <td style="padding:8px 12px;text-align:center;">1</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;color:var(--navy);">L57</td>
+            <td style="padding:8px 12px;font-weight:600;">Disengagement Ease</td>
+            <td style="padding:8px 12px;color:var(--muted);">Ease of leaving an interaction without social awkwardness</td>
+            <td style="padding:8px 12px;color:var(--muted);">Multiple exit routes; visible alternate destinations; no dead-ends near seating</td>
+            <td style="padding:8px 12px;text-align:center;">3</td>
+          </tr>
+          <tr style="background:#FAFAF6;">
+            <td style="padding:8px 12px;font-weight:700;color:var(--navy);">L58</td>
+            <td style="padding:8px 12px;font-weight:600;">Interaction Diversity Potential</td>
+            <td style="padding:8px 12px;color:var(--muted);">Support for multiple interaction types in one setting</td>
+            <td style="padding:8px 12px;color:var(--muted);">Mixed seating types; multiple micro-zones; varied postures and distances</td>
+            <td style="padding:8px 12px;text-align:center;">2</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:0.82rem;color:var(--muted);font-style:italic;">
+      Source: Environment_Cognition_Taxonomy V2.6, Part X — Social-Interaction Latent Layer.
+      Full indicator sets (3–6 rating items + 1–2 behavioral proxies) are in the workbook sheet "Latent_Indicators."
+      Most latents are inferable from furniture topology, openings, focal elements, and circulation geometry.
+      References: Altman (1975), Barker (1968), Goffman (1959), Hall (1966), Hillier &amp; Hanson (1984),
+      Kendon (1990), Oldenburg (1989), Whyte (1980).
+    </p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- Sprint 1: Latent Variable Tag Integration (NEW - Added 2026-04-13)    -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <div class="content-section" id="sprint1">
+    <h2 class="section-title">Sprint 1 (Weeks 3–5): Integrate Latent-Variable Tags into <code>Tagging_Contractor</code></h2>
+
+    <p class="section-intro">
+      Before you can <em>detect</em> a latent variable such as <em>Sociopetal Seating Topology</em> (L44) or
+      <em>Prospect</em> (L17), the system has to <em>know about it</em> in a machine-readable, quality-controlled
+      way. That is the job of the <code>Tagging_Contractor</code> registry. Your first sprint is to move the
+      L01–L58 latent variables documented in the Environment–Cognition Taxonomy V2.6 into the registry with the full
+      semantic contract that production extraction requires. This is the single most leveraged activity in the
+      track: every downstream extractor, every BN node, every piece of HITL training data inherits its meaning
+      from what you write here.
+    </p>
+
+    <div class="callout callout-info" style="border-left:4px solid #E8872A;background:#FFF8F0;">
+      <strong style="color:#E8872A;">Why this is not copy-and-paste</strong>
+      <p style="margin-top:8px;font-size:0.9rem;">
+        A taxonomy row in the V2.6 spreadsheet is roughly <em>five</em> fields: ID, name, short definition,
+        a handful of 2D cues, a tier. A production tag entry in <code>Tagging_Contractor</code> is roughly
+        <strong>fifty</strong> fields across seven categories — identity, extractability, extraction method,
+        Bayesian-network role, value type, semantics (aliases, positive/negative examples, scope_includes /
+        scope_excludes, extraction_notes for 2D and 3D, factor_associations), and literature. The registry's
+        semantic gate (<code>./bin/tc doctor --prod</code>) refuses to release a tag until every required
+        field is filled with non-placeholder content. The work is therefore <em>epistemic</em>, not clerical:
+        you are fixing the <em>meaning</em> of each construct well enough that two different annotators,
+        or an LLM and a human, will agree on what counts as a positive case (cf. Krippendorff, 2018, on
+        construct specification as a prerequisite to reliable coding).
+      </p>
+    </div>
+
+    <h3 style="font-family:Georgia,serif;font-size:1.1rem;color:var(--navy);margin-top:28px;margin-bottom:12px;">
+      What a <code>Tagging_Contractor</code> Entry Actually Requires</h3>
+
+    <div style="overflow-x:auto;margin-bottom:24px;">
+      <table style="width:100%;border-collapse:collapse;font-size:0.85rem;border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+        <thead>
+          <tr style="background:var(--navy);color:#fff;">
+            <th style="padding:10px 12px;text-align:left;font-weight:600;width:180px;">Field Group</th>
+            <th style="padding:10px 12px;text-align:left;font-weight:600;">What Must Be Decided</th>
+            <th style="padding:10px 12px;text-align:center;font-weight:600;width:110px;">Panel Needed?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;">Identity</td>
+            <td style="padding:8px 12px;color:var(--muted);">canonical_name, tag_id, category, domain, status</td>
+            <td style="padding:8px 12px;text-align:center;">No — mechanical</td>
+          </tr>
+          <tr style="background:#FAFAF6;border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;">Extractability</td>
+            <td style="padding:8px 12px;color:var(--muted);">from_2d, from_3d_vr, monocular_3d_approx, region_support — can this be recovered from a photo, a scan, or only a walkthrough?</td>
+            <td style="padding:8px 12px;text-align:center;"><strong>Yes</strong></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;">Extraction method</td>
+            <td style="padding:8px 12px;color:var(--muted);">compute_from (which upstream tags), method_family (segmentation, geometry, LLM-VLM, rule-based composite)</td>
+            <td style="padding:8px 12px;text-align:center;"><strong>Yes</strong></td>
+          </tr>
+          <tr style="background:#FAFAF6;border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;">BN role</td>
+            <td style="padding:8px 12px;color:var(--muted);">demand_state (what this node supplies to the Bayesian net), evidence_role (observation / latent / intermediate), consumable (can downstream nodes marginalise it away?)</td>
+            <td style="padding:8px 12px;text-align:center;"><strong>Yes</strong></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;">Value type</td>
+            <td style="padding:8px 12px;color:var(--muted);">boolean, ordinal (5-pt Likert), continuous, categorical, count; range; units</td>
+            <td style="padding:8px 12px;text-align:center;">Partial</td>
+          </tr>
+          <tr style="background:#FAFAF6;border-bottom:1px solid var(--border);">
+            <td style="padding:8px 12px;font-weight:700;">Semantics</td>
+            <td style="padding:8px 12px;color:var(--muted);">aliases, definition_short, definition_long, <strong>examples_positive</strong>, <strong>examples_negative</strong>, scope_includes, scope_excludes, extraction_notes_2d, extraction_notes_3d, factor_associations — the <em>heart</em> of the contract</td>
+            <td style="padding:8px 12px;text-align:center;"><strong>Yes — highest stakes</strong></td>
+          </tr>
+          <tr>
+            <td style="padding:8px 12px;font-weight:700;">Literature</td>
+            <td style="padding:8px 12px;color:var(--muted);">APA-style citations for the definitional source and the empirical evidence base; change_log</td>
+            <td style="padding:8px 12px;text-align:center;">No — research task</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="font-family:Georgia,serif;font-size:1.1rem;color:var(--navy);margin-top:28px;margin-bottom:12px;">
+      Do These Fields Require Panels? (Short Answer: Yes, Four of Them.)</h3>
+
+    <p>
+      A "panel" in this course is not a bureaucratic ceremony; it is the deliberative mechanism we use whenever a
+      decision involves <em>genuine disagreement among reasonable experts</em>. The style we recommend follows
+      the Delphi / modified-nominal-group tradition (Dalkey &amp; Helmer, 1963; Murphy et al., 1998): each panellist
+      writes an independent first pass, the group surfaces disagreements explicitly, and the final wording is the
+      minimum formulation that all panellists can defend in writing. Four of the seven field groups meet this
+      bar and therefore require a panel, even if the panel is only three students plus the TA:
+    </p>
+
+    <ol style="margin-left:1.5rem;margin-bottom:14px;">
+      <li><strong>Extractability.</strong> Whether <em>Prospect</em> is recoverable from a single 2D photo is a contested empirical claim (Stamps, 2014, argues yes with caveats; Dosen &amp; Ostwald, 2016, argue only with floor-plan augmentation). Without panel deliberation the field becomes a guess.</li>
+      <li><strong>Extraction method.</strong> Choice of <em>method_family</em> commits downstream students to months of implementation work. Whether L44 (Sociopetal Seating) is best computed from object-segmentation + pairwise-angle geometry or from a VLM prompt is itself a research question.</li>
+      <li><strong>BN role.</strong> Whether a latent is a true hidden node or an aggregated observation determines whether it can be learned, clamped, or merely reported. Spohn-style ranking-theoretic concerns arise here (Spohn, 2012).</li>
+      <li><strong>Semantics (scope_includes / scope_excludes / examples).</strong> This is where construct validity lives or dies (Cronbach &amp; Meehl, 1955; Flake &amp; Fried, 2020, on the "validity crisis" in psychology caused by under-specified constructs). Two students who write independent scope boundaries for <em>Interactional Visibility</em> (L42) will produce non-overlapping sets of positive examples unless they deliberate.</li>
+    </ol>
+
+    <p>Value type is only <em>partially</em> panel-worthy — the type (boolean / ordinal / continuous) is often
+    dictated by the instrument, but the choice of Likert anchors is a semantic decision. Identity and literature
+    fields do not require panels; they are research tasks one student can do alone.</p>
+
+    <h3 style="font-family:Georgia,serif;font-size:1.1rem;color:var(--navy);margin-top:28px;margin-bottom:12px;">
+      Team Size &amp; Roles (Recommended)</h3>
+
+    <p>
+      This is a <strong>multi-person task</strong>. A single student working alone will either (a) shortcut the
+      semantic contract, producing entries the <code>tc doctor --prod</code> gate rejects, or (b) spend the
+      entire quarter on three tags. We recommend teams of <strong>three</strong>, with the following role
+      division, rotating weekly so everyone touches every role:
+    </p>
+
+    <ul style="margin-left:1.5rem;margin-bottom:14px;">
+      <li><strong>Driver (semantics &amp; examples).</strong> Writes definition_short, definition_long,
+        scope_includes, scope_excludes, examples_positive (≥ 6), examples_negative (≥ 4). Consults the original
+        empirical papers for each latent.</li>
+      <li><strong>Engineer (extractability, method, BN).</strong> Writes from_2d / from_3d_vr / monocular_3d_approx,
+        compute_from, method_family, demand_state, evidence_role. Must be able to sketch the detection
+        pipeline on paper before committing.</li>
+      <li><strong>Auditor (literature, gate, integration).</strong> Fills APA literature, runs
+        <code>./bin/tc doctor --prod</code>, runs <code>./bin/tc audit-semantics</code> and
+        <code>./bin/tc audit-extraction-plan</code>, writes the change_log, drafts the handoff phase bundle.</li>
+    </ul>
+
+    <p>
+      A class-sized cohort of nine Image-Tagger students therefore yields three panel-teams. Each team owns
+      roughly six latent variables in Sprint 1 (18 social-interaction latents L41–L58 divided three ways), then
+      expands to cognition/affect latents from L01–L40 in Sprint 2. This matches the empirical team-size evidence
+      for knowledge-elicitation tasks of this kind: three-person teams outperform both pairs and larger groups
+      on conceptual-definition work (Hackman &amp; Vidmar, 1970; Laughlin et al., 2006).
+    </p>
+
+    <h3 style="font-family:Georgia,serif;font-size:1.1rem;color:var(--navy);margin-top:28px;margin-bottom:12px;">
+      7-Step Scaffold for Sprint 1</h3>
+
+    <p>Each step maps onto the course's AI-directed development method:</p>
+
+    <ol style="margin-left:1.5rem;margin-bottom:14px;">
+      <li><strong>Panel.</strong> Read <code>registry_v0.2.8.json</code> for two existing tags (e.g.,
+        <code>affect.cozy</code> and <code>affordance.isovist_area</code>) to see what a finished entry looks
+        like. Convene your three-person panel. For each of your assigned latents, produce an independent first
+        pass of the four panel-critical field groups (extractability, method, BN role, semantics). Meet to
+        reconcile; minute the disagreements.</li>
+      <li><strong>Spec.</strong> Write a one-page tag-specification document per latent, covering all seven
+        field groups. Use the <em>same</em> schema as <code>registry_v0.2.8.json</code>; write it in Markdown
+        first, not JSON, so your AI assistant can read and critique it.</li>
+      <li><strong>Tests.</strong> Draft <strong>positive</strong> and <strong>negative</strong> image sets (6 + 4
+        minimum) for each latent. These become the gold-set for downstream extractor testing. Record <em>why</em>
+        each image is a positive or negative — this is the construct-validity trail.</li>
+      <li><strong>Build.</strong> Translate the Markdown spec to a JSON patch against
+        <code>registry_v0.2.8.json</code>. Open a feature branch <code>track1/latents/L4x-L5x-your-team</code>.</li>
+      <li><strong>Verify.</strong> Run the registry's validation chain:
+        <code>./bin/tc audit-tags</code> → <code>./bin/tc audit-semantics</code> →
+        <code>./bin/tc audit-extraction-plan</code> → <code>./bin/tc doctor --prod</code>. Fix every gap the
+        gate identifies; do not ship with warnings suppressed.</li>
+      <li><strong>Diagnose.</strong> Have a second panel-team do a <em>blind</em> read of your positive /
+        negative examples without seeing your definition — can they reverse-engineer the intended construct?
+        This is the adversarial-collaboration test (Clark &amp; Tetlock, 2022) and it catches ambiguity that
+        your own team cannot see.</li>
+      <li><strong>Iterate.</strong> Revise based on blind-read failures. Re-run <code>tc doctor --prod</code>.
+        When green, hand off the phase bundle to the Article-Eater track so its HITL reviewers can use the
+        examples as ground truth.</li>
+      <li><strong>Stub.</strong> For every latent you defined, add a one-function extractor stub
+        (<code>def detect_L44(image, segments, depth) -> float: raise NotImplementedError</code>) in
+        <code>tagging_pipeline/extractors/latents/</code>. The stub guarantees that Sprint 2 begins with
+        a code hook per latent, not a fresh scaffolding problem, and it makes the contract between registry
+        entry and production code syntactically enforceable.</li>
+    </ol>
+
+    <div class="callout callout-info" style="margin-top:20px;">
+      <strong>Deliverable for Week 5:</strong> a merged PR against <code>Tagging_Contractor</code> adding
+      <em>at minimum</em> the L41–L58 social-interaction latents to <code>registry_v0.2.8.json</code>,
+      passing <code>./bin/tc doctor --prod</code> with zero errors and zero suppressed warnings, with an
+      accompanying <code>LATENT_INTEGRATION_NOTES_2026-05-04.md</code> that records every panel-level
+      disagreement and its resolution. This document is itself a research artefact — it is the construct-validity
+      provenance for the extractors that follow in Sprints 2–4.
+    </div>
+
+    <p style="font-size:0.82rem;color:var(--muted);font-style:italic;margin-top:18px;">
+      <strong>References for this sprint.</strong>
+      Clark, C. J., &amp; Tetlock, P. E. (2022). Adversarial collaboration: The next science reform. In
+      C. L. Frisby, R. E. Redding, W. T. O'Donohue, &amp; S. O. Lilienfeld (Eds.), <em>Ideological and
+      political bias in psychology</em>. Springer. <br>
+      Cronbach, L. J., &amp; Meehl, P. E. (1955). Construct validity in psychological tests.
+      <em>Psychological Bulletin, 52</em>(4), 281–302. [Google Scholar citations: ≈ 18,900] <br>
+      Dalkey, N., &amp; Helmer, O. (1963). An experimental application of the Delphi method to the use of
+      experts. <em>Management Science, 9</em>(3), 458–467. [≈ 7,400] <br>
+      Dosen, A. S., &amp; Ostwald, M. J. (2016). Evidence for prospect-refuge theory: A meta-analysis of the
+      empirical literature. <em>Journal of Environmental Psychology, 49</em>, 1–14. [≈ 260] <br>
+      Flake, J. K., &amp; Fried, E. I. (2020). Measurement schmeasurement: Questionable measurement practices
+      and how to avoid them. <em>Advances in Methods and Practices in Psychological Science, 3</em>(4),
+      456–465. [≈ 1,100] <br>
+      Hackman, J. R., &amp; Vidmar, N. (1970). Effects of size and task type on group performance and member
+      reactions. <em>Sociometry, 33</em>(1), 37–54. [≈ 600] <br>
+      Krippendorff, K. (2018). <em>Content analysis: An introduction to its methodology</em> (4th ed.). Sage.
+      [≈ 67,000] <br>
+      Laughlin, P. R., Hatch, E. C., Silver, J. S., &amp; Boh, L. (2006). Groups perform better than the best
+      individuals on letters-to-numbers problems. <em>Journal of Personality and Social Psychology, 90</em>(4),
+      644–651. [≈ 450] <br>
+      Murphy, M. K., Black, N. A., Lamping, D. L., McKee, C. M., Sanderson, C. F., Askham, J., &amp;
+      Marteau, T. (1998). Consensus development methods, and their use in clinical guideline development.
+      <em>Health Technology Assessment, 2</em>(3), i–88. [≈ 3,200] <br>
+      Spohn, W. (2012). <em>The laws of belief: Ranking theory and its philosophical applications</em>.
+      Oxford University Press. [≈ 750] <br>
+      Stamps, A. E. (2014). Physical determinants of preferences for residential facades.
+      <em>Environment and Behavior, 46</em>(3), 287–319. [≈ 150]
+    </p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- Sprint 2: Rule-Based Extractors                                        -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <div class="content-section" id="sprint2">
+    <h2 class="section-title">Sprint 2 (Weeks 5–6): Rule-Based Extractors — One Per Latent</h2>
+
+    <p class="section-intro">
+      With the registry written and the stubs in place, Sprint 2 gets each latent producing a value on a real
+      image. The rule is: implement the <em>cheapest viable</em> detector consistent with the
+      <code>method_family</code> your team committed to in Sprint 1. Cheap does not mean sloppy; it means
+      making the computation as transparent as possible so that a failure mode is diagnosable by reading the
+      code, not by probing a neural network. Most of L41–L58 reduce to one of three computations over the
+      tagger's existing intermediate representations:
+    </p>
+
+    <ul style="margin-left:1.5rem;margin-bottom:14px;">
+      <li><strong>Furniture geometry.</strong> L44 Sociopetal Seating, L48 Dyadic Intimacy, L49 Small-Group
+        Support, and L53 Shared Attention Anchor are recoverable from pairwise angles, distances, and
+        cluster counts over the COCO-133 segment masks already produced by the tagger. The classical
+        F-formation geometry (Kendon, 1990; Marquardt et al., 2012) gives the predicate set.</li>
+      <li><strong>Sightlines &amp; isovists.</strong> L42 Interactional Visibility, L54 Boundary Permeability,
+        and L17 Prospect (once Sprint 2 expands into cognition/affect latents) are recoverable from isovist
+        area, maximum viewshed depth, and partition-height ratios computed over the existing monocular
+        depth map (Benedikt, 1979; Wiener et al., 2007).</li>
+      <li><strong>Circulation &amp; apertures.</strong> L41 Chance-Encounter Potential, L47 Turn-Taking
+        Support, and L57 Disengagement Ease reduce to path counts, aperture widths, and dead-end detection
+        over a skeletonised floor mask (Hillier &amp; Hanson, 1984).</li>
+    </ul>
+
+    <h3 style="font-family:Georgia,serif;font-size:1.1rem;color:var(--navy);margin-top:24px;margin-bottom:12px;">
+      7-Step Scaffold for Sprint 2</h3>
+    <ol style="margin-left:1.5rem;margin-bottom:14px;">
+      <li><strong>Panel.</strong> For each of your six latents, write a one-page <em>detector design note</em>
+        that identifies (a) the upstream tags the detector consumes, (b) the geometric / logical predicate
+        that encodes the latent, (c) the failure modes you expect. Panel-critique your teammates' notes
+        before coding begins.</li>
+      <li><strong>Spec.</strong> Convert the design note into a typed function signature and a docstring
+        written in the same vocabulary as the registry's <code>definition_long</code>. The docstring is the
+        contract; if it drifts from the registry, the semantic gate will catch it.</li>
+      <li><strong>Tests.</strong> Write pytest cases against the Sprint 1 gold-set <em>before</em>
+        implementing the detector. At minimum: six passing positives, four passing negatives. Add
+        regression fixtures for every edge case the panel surfaced.</li>
+      <li><strong>Build.</strong> Implement the detector. Keep each detector under 150 lines; if it grows
+        beyond that, the predicate is probably wrong. Commit frequently to
+        <code>track1/extractors/L4x-your-team</code>.</li>
+      <li><strong>Verify.</strong> Wire the detector into the Image-Tagger pipeline as a new extractor
+        stage. Run the full pipeline on a 50-image diagnostic batch. Confirm that output columns match the
+        registry's <code>value_type</code> and <code>range</code> fields.</li>
+      <li><strong>Diagnose.</strong> Plot the per-latent value distribution across the 50-image batch.
+        Distributions that are constant, degenerate, or bimodal in unexpected ways flag a predicate bug.</li>
+      <li><strong>Iterate.</strong> Fix predicates that failed gold-set tests. If a latent <em>cannot</em> be
+        made to pass the gold-set with a defensible rule, this is a scientific finding — downgrade the
+        registry entry's <code>from_2d</code> to <code>false</code> and defer to the VLM backstop in
+        Sprint 3.</li>
+    </ol>
+
+    <div class="callout callout-info" style="margin-top:16px;">
+      <strong>Deliverable for Week 6:</strong> six working rule-based detectors per team, merged into the
+      Image-Tagger pipeline, each passing its pytest gold-set and each producing a non-degenerate value
+      distribution over a 50-image diagnostic batch.
+    </div>
+
+    <div class="callout callout-info" style="margin-top:16px;border-left:4px solid #E8872A;background:#FFF8F0;">
+      <strong style="color:#E8872A;">Mid-Sprint Checkpoint — End of Week 5 (Friday, no timeline slip)</strong>
+      <p style="margin-top:8px;font-size:0.9rem;">
+        Sprint 2 and Sprint 3 sit back-to-back, and a team that loses Week 5 to one unworkable predicate will
+        carry that pain into Sprint 3 when the VLM was meant to be the backstop, not the lifeline. To prevent
+        that without pushing any downstream deliverable, every team holds a 30-minute TA-run checkpoint by end
+        of Week 5 (Friday) in which each of the team's six latents is classified into exactly one of three
+        buckets:
+      </p>
+      <ul style="margin-top:6px;margin-left:1.2rem;font-size:0.9rem;">
+        <li><strong>On track.</strong> Rule-based detector is drafted, at least four of the ten gold-set
+          cases pass, and the team expects to close the remaining cases in Week 6. No action required.</li>
+        <li><strong>Demote to VLM-only for Sprint 3.</strong> The rule-based predicate is defeated by the
+          construct (typical for circulation-graph latents where floor-mask skeletonisation is under-determined
+          from a 2D photo). The team files a one-paragraph <em>Extractability Finding</em> that amends the
+          latent's <code>from_2d</code> field in the registry to <code>false</code> and commits to relying on
+          the VLM backstop in Sprint 3. This is a scientific result, not a concession, and must be logged as
+          such in the team's decision log.</li>
+        <li><strong>Escalate for panel reassignment.</strong> If three or more of a team's six latents land
+          in the "demote" bucket, the TA convenes a short cross-team panel to swap one or two latents with a
+          team that is over-performing. Load is rebalanced rather than deferred.</li>
+      </ul>
+      <p style="margin-top:8px;font-size:0.9rem;">
+        <strong>Why this preserves the timeline.</strong> The checkpoint replaces quiet slippage with an
+        explicit, 30-minute triage. Week 6 ends with six detectors per team either working or formally
+        flagged as VLM-dependent — in both cases the Sprint 2 Week-6 deliverable is met. The Sprint 3
+        bake-off then runs on known terrain rather than discovering the demotion in the middle of its own
+        sprint (Tuckman &amp; Jensen, 1977, on the cost of unacknowledged storming; Edmondson, 1999, on
+        psychological safety as a precondition for surfacing failure early in team work).
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- Sprint 3: VLM Backstop & Bake-Off                                      -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <div class="content-section" id="sprint3">
+    <h2 class="section-title">Sprint 3 (Weeks 7–8): VLM Backstop &amp; Rule-vs-VLM Bake-Off</h2>
+
+    <p class="section-intro">
+      Rule-based detectors are transparent but brittle; vision-language models are opaque but robust to
+      variation the rules never anticipated. Sprint 3 builds the second extractor and pits the two methods
+      against each other on a 200-image held-out batch. The bake-off is not a horse race; it is a
+      construct-validity probe. Where the two methods <em>agree</em>, confidence is high; where they
+      <em>disagree</em>, the registry's semantic contract is probably ambiguous and must be rewritten.
+      This is the Cronbach &amp; Meehl (1955) multitrait-multimethod matrix applied in miniature
+      (see also Campbell &amp; Fiske, 1959).
+    </p>
+
+    <h3 style="font-family:Georgia,serif;font-size:1.1rem;color:var(--navy);margin-top:24px;margin-bottom:12px;">
+      7-Step Scaffold for Sprint 3</h3>
+    <ol style="margin-left:1.5rem;margin-bottom:14px;">
+      <li><strong>Panel.</strong> Draft VLM prompts by copying the Sprint 1
+        <code>definition_long</code> + <code>scope_includes</code> + <code>scope_excludes</code> fields
+        verbatim. The panel's job is to audit that the prompt says nothing the registry does not already
+        commit to — if the prompt "improves" on the definition, the definition is at fault.</li>
+      <li><strong>Spec.</strong> Choose the VLM (GPT-4o-mini or Claude Haiku 4.5 for throughput;
+        Claude Sonnet 4.6 for reliability) and write a thin wrapper that returns the same value type as
+        the rule-based detector for each latent.</li>
+      <li><strong>Tests.</strong> Run the VLM on the Sprint 1 gold-set. Expect ≥ 90% accuracy on positives
+        and ≥ 80% on negatives; a VLM that fails the gold-set is signalling definition ambiguity, not model
+        weakness.</li>
+      <li><strong>Build.</strong> Pull a 200-image held-out batch from the Image-Tagger pool (stratified
+        across the 13 room types so no team's latents are evaluated only on living rooms).</li>
+      <li><strong>Verify.</strong> Run both extractors on the full batch. Compute per-latent precision,
+        recall, and <em>method agreement</em> (Cohen's κ for boolean latents, Krippendorff's α for
+        ordinal / continuous). Log runtime and cost.</li>
+      <li><strong>Diagnose.</strong> For each latent with κ &lt; 0.6 or α &lt; 0.6, pull the disagreement
+        cases and panel-review them. The typical finding is that the definition is silent on some scene
+        configuration the rule and the VLM resolve oppositely.</li>
+      <li><strong>Iterate.</strong> Rewrite the registry's <code>scope_includes</code> /
+        <code>scope_excludes</code> to resolve each disagreement, re-run both extractors, and push the
+        registry update. This is the feedback loop Flake &amp; Fried (2020) call "continuous validity
+        monitoring" — contracts that cannot survive operational contact are revised, not sanctified.</li>
+    </ol>
+
+    <div class="callout callout-info" style="margin-top:16px;">
+      <strong>Deliverable for Week 8:</strong> a <em>Bake-Off Report</em> per team — one page per latent
+      with the rule vs. VLM agreement statistics, runtime / cost accounting, and a short prose section
+      titled "Definition Revisions This Bake-Off Forced" that documents every registry change the
+      disagreement cases induced.
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <!-- Sprint 4: HITL Loop & Production Handoff                               -->
+  <!-- ══════════════════════════════════════════════════════════════════════ -->
+  <div class="content-section" id="sprint4">
+    <h2 class="section-title">Sprint 4 (Weeks 9–10): HITL Reliability &amp; Production Handoff</h2>
+
+    <p class="section-intro">
+      Inter-method agreement (Sprint 3) is necessary but not sufficient. Two extractors can agree with each
+      other and both be wrong against human judgement. Sprint 4 closes the loop by running extractor outputs
+      through the HITL review page that Track 2 will have built by Week 6 (see Task A on the Track 2 page).
+      Each latent earns — or loses — its <code>status: production</code> flag on the strength of its
+      agreement with human reviewers.
+    </p>
+
+    <h3 style="font-family:Georgia,serif;font-size:1.1rem;color:var(--navy);margin-top:24px;margin-bottom:12px;">
+      7-Step Scaffold for Sprint 4</h3>
+    <ol style="margin-left:1.5rem;margin-bottom:14px;">
+      <li><strong>Panel.</strong> Define the HITL rating rubric per latent. Five-point Likert anchors,
+        written in the same vocabulary as the registry. Pilot-test the rubric on two images per latent
+        within the team before releasing it to reviewers.</li>
+      <li><strong>Spec.</strong> Prepare the review queue — for each latent, stratify 40 images into four
+        bins: rule-positive / VLM-positive, rule-positive / VLM-negative, rule-negative / VLM-positive,
+        rule-negative / VLM-negative (10 each). This stratification means reviewer time is spent on
+        informative cases, not redundant ones.</li>
+      <li><strong>Tests.</strong> Recruit <em>three</em> independent reviewers per latent (Track 4 students
+        and TAs). Three is the minimum for Krippendorff's α on ordinal data to be meaningful
+        (Hayes &amp; Krippendorff, 2007).</li>
+      <li><strong>Build.</strong> Run the review. Collect ratings through the Track 2 HITL page; all
+        ratings land in the Article-Eater HITL database table.</li>
+      <li><strong>Verify.</strong> Compute inter-reviewer α (to confirm the rubric is usable) and
+        extractor-vs-consensus α (to confirm the extractor is usable). Both must exceed 0.6 for the tag
+        to graduate to <code>status: production</code>.</li>
+      <li><strong>Diagnose.</strong> For latents that fail either α threshold, panel-review the failure
+        mode. Inter-reviewer failure means the rubric is ambiguous; extractor-vs-consensus failure means
+        the extractor is wrong but the construct is measurable. These are very different problems.</li>
+      <li><strong>Iterate.</strong> Revise rubric or extractor; re-run the review on a smaller 20-image
+        batch; update <code>status</code> in the registry. Write the per-latent <em>Extraction Evidence
+        Report</em> that goes into the registry's <code>literature</code> field as the empirical warrant
+        for the tag's production status.</li>
+    </ol>
+
+    <div class="callout callout-info" style="margin-top:16px;">
+      <strong>Final deliverable for Week 10:</strong> a merged registry where every tag carries an explicit
+      <code>status</code> grounded in measured α, an <em>Extraction Evidence Report</em> per latent, and
+      a fall-2026 handoff document listing which latents graduated to production, which remain skeletal,
+      and which were downgraded in scope after the bake-off forced revision.
+    </div>
+
+    <p style="font-size:0.82rem;color:var(--muted);font-style:italic;margin-top:18px;">
+      <strong>Additional references for Sprints 2–4.</strong>
+      Benedikt, M. L. (1979). To take hold of space: Isovists and isovist fields.
+      <em>Environment and Planning B, 6</em>(1), 47–65. [≈ 1,500] <br>
+      Campbell, D. T., &amp; Fiske, D. W. (1959). Convergent and discriminant validation by the
+      multitrait-multimethod matrix. <em>Psychological Bulletin, 56</em>(2), 81–105. [≈ 35,000] <br>
+      Edmondson, A. (1999). Psychological safety and learning behavior in work teams.
+      <em>Administrative Science Quarterly, 44</em>(2), 350–383. [≈ 28,000] <br>
+      Hayes, A. F., &amp; Krippendorff, K. (2007). Answering the call for a standard reliability measure
+      for coding data. <em>Communication Methods and Measures, 1</em>(1), 77–89. [≈ 8,900] <br>
+      Kendon, A. (1990). <em>Conducting interaction: Patterns of behavior in focused encounters</em>.
+      Cambridge University Press. [≈ 4,200] <br>
+      Marquardt, N., Hinckley, K., &amp; Greenberg, S. (2012). Cross-device interaction via micro-mobility
+      and F-formations. <em>Proceedings of UIST 2012</em>, 13–22. [≈ 340] <br>
+      Tuckman, B. W., &amp; Jensen, M. A. C. (1977). Stages of small-group development revisited.
+      <em>Group &amp; Organization Studies, 2</em>(4), 419–427. [≈ 9,600] <br>
+      Wiener, J. M., Franz, G., Rossmanith, N., Reichelt, A., Mallot, H. A., &amp; Bülthoff, H. H. (2007).
+      Isovist analysis captures properties of space relevant for locomotion and experience.
+      <em>Perception, 36</em>(7), 1066–1083. [≈ 170]
+    </p>
+  </div>
+
+  <div class="content-section">
+    <h2 class="section-title" id="further">Further Tasks This Quarter</h2>
     <p class="section-intro">Here are examples of the tasks students in this track will work on:</p>
 
     <div class="callout callout-info">
       <strong>What you'll learn:</strong> image classification systems, evidence-based annotation schemas, data quality verification, and pipeline architecture. You'll develop a Python tool that helps other students annotate images consistently and verify that annotations align with K-ATLAS propositions.
     </div>
 
-    <h3 style="font-family:Georgia,serif;font-size:1.05rem;color:var(--navy);margin-top:28px;margin-bottom:12px;">Available Tag Bundles to Work On</h3>
+    <h3 style="font-family:Georgia,serif;font-size:1.05rem;color:var(--navy);margin-top:28px;margin-bottom:12px;">Available Latent-Variable Bundles to Work On</h3>
     <p style="font-size:0.9rem;color:var(--muted);margin-bottom:20px;">
-      Choose one or more tag bundles below. Each bundle represents a specific category of architectural/environmental features that students need to label across images.
+      Each bundle below groups two to six latent constructs from the L01–L58 taxonomy that share a
+      theoretical lineage and are typically estimated from overlapping visual cues. Pick one bundle
+      (or, if you are ambitious, propose a cross-bundle pair) and commit to building a rule-based
+      extractor plus a VLM backstop across Sprints 1–4. Social-affordance latents (L130 and adjacent)
+      are included as a fourth bundle to address the gap flagged in Prof Kirsh's Current Priorities.
     </p>
 
     <div class="bundle-grid">
@@ -220,9 +1215,9 @@
             </div>
           </div>
           <div class="bundle-meta">
-            <div class="bundle-name">Lighting Conditions</div>
-            <div class="bundle-category">ENVIRONMENTAL</div>
-            <div class="bundle-desc">Natural light, artificial light, daylighting quality, shadows, glare assessment</div>
+            <div class="bundle-name">Threat &amp; Prospect–Refuge</div>
+            <div class="bundle-category">DEFENSIVE / SAFETY</div>
+            <div class="bundle-desc">Threat, escape efficacy, visibility control, prospect, refuge. Theoretical lineage: Appleton (1975); Fisher &amp; Nasar (1992). Visual cues include sightlines, occlusion, enclosure, and concealment opportunities.</div>
           </div>
         </div>
       </div>
@@ -237,9 +1232,9 @@
             </div>
           </div>
           <div class="bundle-meta">
-            <div class="bundle-name">Spatial Layout</div>
-            <div class="bundle-category">ARCHITECTURAL</div>
-            <div class="bundle-desc">Room configuration, furniture arrangement, wayfinding cues, visual hierarchy</div>
+            <div class="bundle-name">Restoration &amp; Attention</div>
+            <div class="bundle-category">RESTORATIVE</div>
+            <div class="bundle-desc">Restorativeness, fascination, being-away, coherence, compatibility. Theoretical lineage: Kaplan &amp; Kaplan (1989) Attention Restoration Theory; Ulrich (1984). Visual cues include biophilic content, complexity, and softly fascinating patterning.</div>
           </div>
         </div>
       </div>
@@ -254,9 +1249,9 @@
             </div>
           </div>
           <div class="bundle-meta">
-            <div class="bundle-name">Material & Color</div>
-            <div class="bundle-category">AESTHETIC</div>
-            <div class="bundle-desc">Surface textures, color palettes, material properties, aging and wear patterns</div>
+            <div class="bundle-name">Privacy, Crowding &amp; Control</div>
+            <div class="bundle-category">SOCIAL REGULATION</div>
+            <div class="bundle-desc">Privacy, crowding, personal space, control/autonomy, territoriality. Theoretical lineage: Altman (1975); Baum &amp; Valins (1977). Visual cues include density, partitioning, personal-space geometry, and the presence or absence of user-modifiable elements.</div>
           </div>
         </div>
       </div>
@@ -271,49 +1266,183 @@
             </div>
           </div>
           <div class="bundle-meta">
-            <div class="bundle-name">Accessibility Features</div>
-            <div class="bundle-category">FUNCTIONAL</div>
-            <div class="bundle-desc">Ramps, handrails, doorways, circulation paths, clear floor space requirements</div>
+            <div class="bundle-name">Social Affordances (beyond L130)</div>
+            <div class="bundle-category">AFFORDANCE</div>
+            <div class="bundle-desc">Collaborative work, instruction and demonstration, ritual and ceremony, performance-audience, chance encounter. The tagger currently supports only L130 (Casual Conversation / Hangout); this bundle expands social-interaction coverage. Theoretical lineage: Kendon (1990) F-formations; Marquardt, Hinckley, &amp; Greenberg (2012).</div>
           </div>
         </div>
       </div>
     </div>
 
     <div class="callout callout-info" style="margin-top:32px;">
-      <strong>Track Milestones:</strong>
+      <strong>Track Milestones (Four-Sprint Arc):</strong>
       <ul style="margin-top:10px;margin-left:1.2rem;">
-        <li><strong>Weeks 1–2:</strong> Article collection (assignment A0) + tag bundle selection</li>
-        <li><strong>Weeks 3–4:</strong> Build annotation tool prototype + write tag schema documentation</li>
-        <li><strong>Weeks 5–6:</strong> Annotate 100 images, verify consistency, refine tool</li>
-        <li><strong>Weeks 7–8:</strong> Final tool polish, documentation, handoff to fall cohort</li>
-        <li><strong>Weeks 9–10:</strong> Course-wide integration and Fall 160 site debugging</li>
+        <li><strong>Weeks 1–2:</strong> Article collection (A0) + tag bundle selection</li>
+        <li><strong>Weeks 3–5 · Sprint 1:</strong> Latent-variable tag integration into <code>Tagging_Contractor</code>
+          — registry contracts, gold-sets, extractor stubs</li>
+        <li><strong>Weeks 5–6 · Sprint 2:</strong> Rule-based extractors — one working detector per latent,
+          passing gold-set pytests</li>
+        <li><strong>Weeks 7–8 · Sprint 3:</strong> VLM backstop &amp; bake-off — convergent-validity
+          evaluation on 200-image held-out batch, definition revisions where methods disagree</li>
+        <li><strong>Weeks 9–10 · Sprint 4:</strong> HITL reliability &amp; production handoff — Krippendorff's α
+          against human reviewers, per-latent evidence reports, fall-2026 handoff doc</li>
       </ul>
     </div>
 
   </div>
 
   <!-- ── Navigation ── -->
-  <div class="track-nav">
-    <a href="ka_student_setup.html" class="cta-button secondary">← Back to Track Overview</a>
-    <a href="ka_track2_pipeline.html" class="cta-button">View Track 2: AI Article Pipeline →</a>
+
+  <!-- ── Bottom dual CTA + Join-Track modal ── -->
+  <div class="track-bottom-ctas">
+    <a href="ka_track1_setup.html" class="big-cta big-cta-setup">
+      <div class="big-cta-label">Ready to start?</div>
+      <div class="big-cta-head">Set Up Your Environment →</div>
+      <div class="big-cta-sub">Walk through prerequisites, install commands, and a sanity-check run so you can start contributing this week.</div>
+    </a>
+    <a href="#" class="big-cta big-cta-join" onclick="openJoinModal('1', 'Track 1 — Image Tagging'); return false;">
+      <div class="big-cta-label">Commit to this track</div>
+      <div class="big-cta-head">Join this Track →</div>
+      <div class="big-cta-sub">Take ownership of a Sprint 1–4 deliverable in the Image Tagger.</div>
+    </a>
+    <a href="ka_track2_pipeline.html" class="big-cta big-cta-next">
+      <div class="big-cta-label">Keep exploring</div>
+      <div class="big-cta-head">Next Track: Pipeline →</div>
+      <div class="big-cta-sub">Move on to Track 2, where the focus shifts from per-image tagging to the end-to-end article extraction pipeline.</div>
+    </a>
   </div>
 
+  <div class="jt-modal-backdrop" id="jtModal" onclick="if(event.target===this)closeJoinModal();">
+    <div class="jt-modal" role="dialog" aria-modal="true" aria-labelledby="jtModalTitle">
+      <h3 id="jtModalTitle">Confirm track change</h3>
+      <p id="jtModalBody">You are currently on <span class="cur-track" id="jtCurTrack">(none yet)</span>.
+      Do you want to leave it and join <span class="cur-track" style="background:#E3F4EC;color:#1A5C30;" id="jtNewTrack">Track 1 — Image Tagging</span>?
+      Every student is expected to work on only one track at a time. <strong>This button only updates a local preference on your browser</strong> so the site can show you the right default — it does <em>not</em> notify your TA or update any server-side record. Tell your TA in class or on Slack if you are switching tracks for real.</p>
+      <div class="jt-modal-actions">
+        <button class="jt-btn jt-btn-cancel" onclick="closeJoinModal()">Cancel</button>
+        <button class="jt-btn jt-btn-confirm" onclick="confirmJoin()">Confirm &amp; Join</button>
+      </div>
+    </div>
+  </div>
+  <script>
+  (function(){
+    var lastTrigger = null;
+    function focusables(root){
+      return Array.prototype.slice.call(
+        root.querySelectorAll(
+          'a[href],button:not([disabled]),input:not([disabled]),'+
+          'select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
+        )
+      );
+    }
+    // Map numeric track key -> human label for display in the modal.
+    var TRACK_LABELS = {
+      '1':'Track 1 — Image Tagging',
+      '2':'Track 2 — Article Finder',
+      '3':'Track 3 — AI & VR',
+      '4':'Track 4 — Interaction Design'
+    };
+    var LABEL_TO_KEY = {
+      'Track 1 — Image Tagging': '1',
+      'Track 1 · Semantic Tagging': '1',
+      'Track 2 — Article Finder': '2',
+      'Track 2 · Article Finder': '2',
+      'Track 3 — AI & VR': '3',
+      'Track 3 · VR': '3',
+      'Track 4 — Interaction Design': '4',
+      'Track 4 · UX': '4'
+    };
+    function normaliseTrackKey(value){
+      return TRACK_LABELS[value] ? value : (LABEL_TO_KEY[value] || '');
+    }
+    function labelFor(key){ return TRACK_LABELS[key] || key; }
+    window.openJoinModal = function(trackKey, trackLabel, ev){
+      // Backward-compat: if only one arg was passed and it looks like a label,
+      // leave key empty and use the string as label.
+      if (arguments.length === 1 || (arguments.length === 2 && typeof trackLabel !== 'string')) {
+        ev = trackLabel; trackLabel = trackKey; trackKey = '';
+      }
+      var rawCur = localStorage.getItem('ka_current_track') || '';
+      var cur = normaliseTrackKey(rawCur);
+      if (cur && rawCur !== cur) localStorage.setItem('ka_current_track', cur);
+      document.getElementById('jtCurTrack').textContent = cur ? labelFor(cur) : '(none yet)';
+      document.getElementById('jtNewTrack').textContent = trackLabel;
+      window.__pendingTrackKey   = trackKey;
+      window.__pendingTrackLabel = trackLabel;
+      lastTrigger = (ev && ev.currentTarget) || document.activeElement;
+      var modal = document.getElementById('jtModal');
+      modal.classList.add('open');
+      var f = focusables(modal);
+      if (f.length) f[0].focus();
+    };
+    window.closeJoinModal = function(){
+      document.getElementById('jtModal').classList.remove('open');
+      if (lastTrigger && typeof lastTrigger.focus === 'function') lastTrigger.focus();
+    };
+    window.confirmJoin = function(){
+      var nextKey = normaliseTrackKey(window.__pendingTrackKey) || normaliseTrackKey(window.__pendingTrackLabel);
+      if (nextKey) {
+        // Store the numeric key so ka_student_profile.html can resolve it.
+        localStorage.setItem('ka_current_track', nextKey);
+      } else {
+        localStorage.removeItem('ka_current_track');
+      }
+      closeJoinModal();
+      alert('Local preference updated to ' + window.__pendingTrackLabel + '. This is a browser-local marker only — remember to tell your TA if you are changing tracks.');
+    };
+    document.addEventListener('keydown', function(e){
+      var modal = document.getElementById('jtModal');
+      if (!modal || !modal.classList.contains('open')) return;
+      if (e.key === 'Escape'){ e.preventDefault(); window.closeJoinModal(); return; }
+      if (e.key === 'Tab'){
+        var f = focusables(modal);
+        if (!f.length) return;
+        var first = f[0], last = f[f.length-1];
+        if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+      }
+    });
+    // Backdrop click closes
+    document.addEventListener('click', function(e){
+      var modal = document.getElementById('jtModal');
+      if (modal && e.target === modal){ window.closeJoinModal(); }
+    });
+  })();
+  </script>
 </div>
 
-<div class="version-badge">KA UI · v0.5</div>
+<div class="version-badge">KA UI · v0.6</div>
 
-<script src="../ka_mode_switch.js"></script>
+<script>
+  // Show the floating side sub-nav only after the hero banner has scrolled
+  // out of view, so it does not occlude the banner on page load.
+  (function(){
+    var hero = document.querySelector('.page-hero');
+    var subnav = document.querySelector('.track-subnav');
+    if (!hero || !subnav) return;
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting) subnav.classList.remove('revealed');
+          else subnav.classList.add('revealed');
+        });
+      }, { rootMargin: '-52px 0px 0px 0px', threshold: 0 });
+      io.observe(hero);
+    } else {
+      // Fallback: reveal on any scroll past the hero bottom.
+      var onScroll = function(){
+        var r = hero.getBoundingClientRect();
+        if (r.bottom <= 52) subnav.classList.add('revealed');
+        else subnav.classList.remove('revealed');
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    }
+  })();
+</script>
+
 <script src="../ka_site_shell.js"></script>
 <script src="../ka_data_adapter.js"></script>
-<script src="../ka_live_context.js"></script>
-<script>
-window.KA_SHELL.initShell({
-  navContainerSelector: '.nav-center',
-  modeSelectId: 'track1-mode-select',
-  modePillId: 'track1-mode-pill',
-  defaultMode: 'student_explorer'
-});
-</script>
 
 </body>
 </html>

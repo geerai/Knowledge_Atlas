@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>160 Student Profile — COGS 160</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--navy:#1C3D3A;--amber:#E8872A;--amber-dark:#B45F14;--cream:#F7F4EF;--green:#2A7868;--text:#2D2010;--muted:#6A5E50;--border:#DDD6CD;--light:#EDE8E0;}
+    body{font-family:Arial,sans-serif;background:var(--cream);color:var(--text);line-height:1.65;}
+    nav{position:sticky;top:0;z-index:500;background:var(--navy);display:flex;align-items:center;gap:24px;padding:0 28px;min-height:52px;border-bottom:2px solid var(--amber);}
+    .nav-center{display:flex;align-items:center;gap:14px;flex:1;}
+    nav a.nav-link{color:#7AACA0;font-size:0.8rem;text-decoration:none;padding:6px 10px;border-radius:6px;}
+    nav a.nav-link:hover{color:#fff;background:rgba(255,255,255,0.08);}
+    nav a.nav-link.active{color:#F5A623;background:rgba(232,135,42,0.12);}
+    .nav-right{display:flex;align-items:center;gap:12px;}
+    .page-hero{background:linear-gradient(135deg,var(--navy) 0%,#163230 100%);padding:40px 40px 34px;border-bottom:3px solid var(--amber);}
+    .page-hero .eyebrow{font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#7AACA0;margin-bottom:10px;}
+    .page-hero h1{font-family:Georgia,serif;font-size:1.9rem;font-weight:400;color:#F5F0E8;line-height:1.25;margin-bottom:12px;}
+    .page-hero p{font-size:1rem;color:#A8C8BF;line-height:1.65;max-width:720px;}
+    .outer{max-width:980px;margin:0 auto;padding:0 32px 72px;}
+    :target{scroll-margin-top:96px;}
+    h1[id],h2[id],h3[id],h4[id],section[id],div[id]{scroll-margin-top:96px;}
+    .section{margin-top:36px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:22px 24px;}
+    .section h2{font-family:Georgia,serif;font-size:1.2rem;font-weight:500;color:var(--navy);margin-bottom:12px;}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:10px;}
+    .kv{background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
+    .kv .k{font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+    .kv .v{font-size:0.95rem;color:var(--text);font-weight:600;}
+    .pill{display:inline-block;background:var(--green);color:#fff;border-radius:999px;padding:3px 10px;font-size:0.72rem;font-weight:600;letter-spacing:0.06em;}
+    .pill.none{background:var(--muted);}
+    .links{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;}
+    .links a{display:inline-block;padding:8px 14px;border-radius:8px;background:var(--navy);color:#fff;text-decoration:none;font-size:0.85rem;font-weight:600;}
+    .links a.ghost{background:transparent;color:var(--navy);border:1.5px solid var(--navy);}
+    .muted{color:var(--muted);font-size:0.88rem;}
+    .switch{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+    .switch button{padding:8px 14px;border:1.5px solid var(--border);background:#fff;border-radius:8px;font-size:0.82rem;font-weight:600;color:var(--navy);cursor:pointer;}
+    .switch button.active{background:var(--amber-dark);color:#fff;border-color:var(--amber-dark);}
+    .switch button:focus-visible{outline:2px solid var(--navy);outline-offset:2px;}
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="ka_schedule.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <svg viewBox="0 0 32 32" fill="none" style="width:28px;height:28px;" aria-hidden="true">
+      <circle cx="16" cy="16" r="3.5" fill="#F5A623"/>
+      <circle cx="16" cy="5" r="2.5" fill="#A8C8BF"/>
+      <circle cx="27" cy="22" r="2.5" fill="#A8C8BF"/>
+      <circle cx="5" cy="22" r="2.5" fill="#A8C8BF"/>
+      <line x1="16" y1="7.5" x2="16" y2="12.5" stroke="#F5A623" stroke-width="1.5"/>
+      <line x1="24.8" y1="20.2" x2="19.0" y2="17.3" stroke="#F5A623" stroke-width="1.5"/>
+      <line x1="7.2" y1="20.2" x2="13.0" y2="17.3" stroke="#F5A623" stroke-width="1.5"/>
+    </svg>
+    <div style="display:flex;flex-direction:column;line-height:1.1;">
+      <span style="font-size:0.66rem;font-weight:400;letter-spacing:0.24em;text-transform:uppercase;color:#A8C8BF;">Knowledge</span>
+      <span style="font-size:1.05rem;font-weight:700;color:#fff;">At<span style="color:#F5A623;">las</span> &middot; <span style="font-size:0.85rem;color:#A8C8BF;font-weight:400;">COGS 160</span></span>
+    </div>
+  </a>
+  <div class="nav-center">
+    <a href="ka_schedule.html" class="nav-link">160 Syllabus</a>
+    <a href="week2_exercises.html" class="nav-link">A0</a>
+    <a href="week3_agenda.html" class="nav-link">A1</a>
+    <a href="ka_track1_tagging.html" class="nav-link">Track 1</a>
+    <a href="ka_track2_pipeline.html" class="nav-link">Track 2</a>
+    <a href="ka_track3_vr.html" class="nav-link">Track 3</a>
+    <a href="ka_track4_ux.html" class="nav-link">Track 4</a>
+  </div>
+  <div class="nav-right">
+    <a href="ka_student_profile.html" class="nav-link active" aria-current="page">160 Student Profile</a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="eyebrow">COGS 160 &middot; Spring 2026 &middot; Student Profile</div>
+  <h1 id="top">Your 160 Student Profile</h1>
+  <p>A snapshot of your current track membership, setup status, and quick links to assignments.
+  This is a local, browser-side profile: your track and progress are stored in this browser
+  (<code>localStorage</code>) and follow you across class pages on the same machine.</p>
+</div>
+
+<div class="outer">
+
+  <div class="section" id="identity">
+    <h2>Identity</h2>
+    <div class="grid">
+      <div class="kv"><div class="k">Name</div><div class="v" id="k-name">&mdash;</div></div>
+      <div class="kv"><div class="k">Email</div><div class="v" id="k-email">&mdash;</div></div>
+      <div class="kv"><div class="k">PID / Section</div><div class="v" id="k-pid">&mdash;</div></div>
+    </div>
+    <p class="muted" style="margin-top:10px;">Identity fields come from your class login (when available) or from a local cache.
+    If these are empty, sign in on the <a href="../ka_login.html">login page</a>.</p>
+  </div>
+
+  <div class="section" id="track">
+    <h2>Current Track</h2>
+    <p>The track you belong to controls which pipeline pages, assignments, and setup instructions are highlighted for you.
+    You can change tracks at any time during the add/drop window; progress is preserved per track.</p>
+    <div class="grid">
+      <div class="kv"><div class="k">Assigned Track</div><div class="v" id="k-track"><span class="pill none">Not set</span></div></div>
+      <div class="kv"><div class="k">Setup Status</div><div class="v" id="k-setup"><span class="pill none">Not started</span></div></div>
+      <div class="kv"><div class="k">Last Active Page</div><div class="v" id="k-last">&mdash;</div></div>
+    </div>
+
+    <div class="switch" role="group" aria-label="Switch current track">
+      <button type="button" data-track="1">Track 1 &middot; Tagging</button>
+      <button type="button" data-track="2">Track 2 &middot; Article Finder</button>
+      <button type="button" data-track="3">Track 3 &middot; VR</button>
+      <button type="button" data-track="4">Track 4 &middot; UX</button>
+      <button type="button" data-track="" style="color:var(--muted)">Clear</button>
+    </div>
+  </div>
+
+  <div class="section" id="quicklinks">
+    <h2>Quick Links</h2>
+    <div class="links">
+      <a href="ka_schedule.html">160 Syllabus</a>
+      <a href="week2_exercises.html" class="ghost">A0</a>
+      <a href="week3_agenda.html" class="ghost">A1</a>
+      <a href="ka_student_setup.html" class="ghost">Student Setup</a>
+      <a href="ka_github_access.html" class="ghost">GitHub Access</a>
+      <a href="" id="k-track-link" class="ghost">Your Track Page &rarr;</a>
+    </div>
+  </div>
+
+  <div class="section" id="progress">
+    <h2>Progress Notes</h2>
+    <p class="muted">Fine-grained progress tracking (sprints completed, artifacts submitted, VOI scored, etc.)
+    is recorded per-track on each track&rsquo;s pipeline/tagging/vr/ux page. This profile shows only the
+    summary fields above; follow the track page link to see sprint-level detail.</p>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var TRACK_NAMES = {
+    '1':'Track 1 &middot; Semantic Tagging',
+    '2':'Track 2 &middot; Article Finder',
+    '3':'Track 3 &middot; VR',
+    '4':'Track 4 &middot; UX'
+  };
+  var TRACK_PAGES = {
+    '1':'ka_track1_tagging.html',
+    '2':'ka_track2_pipeline.html',
+    '3':'ka_track3_vr.html',
+    '4':'ka_track4_ux.html'
+  };
+
+  // Legacy label -> numeric key fallback (in case older sessions stored the
+  // human-readable label in ka_current_track before the schema was unified).
+  var LABEL_TO_KEY = {
+    'Track 1 — Image Tagging': '1',
+    'Track 1 · Semantic Tagging': '1',
+    'Track 2 — Article Finder': '2',
+    'Track 2 · Article Finder': '2',
+    'Track 3 — AI & VR': '3',
+    'Track 3 · VR': '3',
+    'Track 4 — Interaction Design': '4',
+    'Track 4 · UX': '4'
+  };
+
+  function read(k, d){ try { return localStorage.getItem(k) || d; } catch(e){ return d; } }
+  function write(k, v){ try { if(v===null||v==='') localStorage.removeItem(k); else localStorage.setItem(k, v); } catch(e){} }
+  function readUser(){
+    try {
+      var raw = localStorage.getItem('ka_current_user');
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch(e){ return null; }
+  }
+
+  function render(){
+    // Prefer authenticated identity written by ka_login.html (ka_current_user JSON);
+    // fall back to legacy per-field keys for older sessions.
+    var user = readUser() || {};
+    var name  = user.name  || user.full_name || user.display_name || read('ka_student_name','');
+    var email = user.email || read('ka_student_email','');
+    var pid   = user.pid   || user.student_id || read('ka_student_pid','');
+    document.getElementById('k-name').textContent = name || '—';
+    document.getElementById('k-email').textContent = email || '—';
+    document.getElementById('k-pid').textContent = pid || '—';
+
+    var t = read('ka_current_track','');
+    // Legacy sessions may have stored a human label; normalise to numeric key.
+    if (t && !TRACK_NAMES[t] && LABEL_TO_KEY[t]) {
+      t = LABEL_TO_KEY[t];
+      write('ka_current_track', t);
+    }
+    var trackCell = document.getElementById('k-track');
+    var linkEl = document.getElementById('k-track-link');
+    if (t && TRACK_NAMES[t]) {
+      trackCell.innerHTML = '<span class="pill">'+TRACK_NAMES[t]+'</span>';
+      linkEl.href = TRACK_PAGES[t];
+      linkEl.style.pointerEvents = '';
+      linkEl.style.opacity = '';
+    } else {
+      trackCell.innerHTML = '<span class="pill none">Not set</span>';
+      linkEl.href = '#track';
+      linkEl.style.pointerEvents = 'none';
+      linkEl.style.opacity = '0.5';
+    }
+
+    var setup = read('ka_setup_status','');
+    var setupCell = document.getElementById('k-setup');
+    setupCell.innerHTML = setup
+      ? '<span class="pill">'+setup.replace(/[<>]/g,'')+'</span>'
+      : '<span class="pill none">Not started</span>';
+
+    var last = read('ka_last_page','');
+    document.getElementById('k-last').textContent = last || '—';
+
+    document.querySelectorAll('.switch button').forEach(function(b){
+      b.classList.toggle('active', (b.dataset.track||'') === t);
+    });
+  }
+
+  document.querySelectorAll('.switch button').forEach(function(b){
+    b.addEventListener('click', function(){
+      write('ka_current_track', b.dataset.track || '');
+      render();
+    });
+  });
+
+  // Track "last active" on load
+  try { write('ka_last_page', 'ka_student_profile.html'); } catch(e){}
+  render();
+})();
+</script>
+
+</body>
+</html>
