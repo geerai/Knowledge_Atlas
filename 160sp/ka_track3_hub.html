@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track 3 · AI VR Hub</title>
+<link rel="stylesheet" href="../ka_atlas_shell.css">
+<style>:root { --hub-color: #4A3A78; }</style>
+</head>
+<body data-ka-active="" data-ka-journey="contributor"
+      data-ka-crumbs='[["Home","ka_home.html"],["Tracks","ka_track_picker.html"],["AI VR Hub",""]]'>
+
+<a class="ka-skip" href="#main">Skip to main content</a>
+<div id="ka-navbar-slot"></div>
+<div id="ka-breadcrumb-slot"></div>
+
+<section class="hub-banner">
+  <div class="tag">Track 3 · Team Hub</div>
+  <h1>AI VR — Architectural Cognition in Immersive Environments</h1>
+  <p class="subtitle">
+    Design, build, and instrument VR scenes that test specific hypotheses about how
+    built environments shape attention, affect, and spatial cognition — with AI agents
+    acting as experimental probes or occupants.
+  </p>
+  <p class="roster-count">Spring 2026 roster: 10 enrolled students (largest track)</p>
+</section>
+
+<div class="ka-shell">
+  <aside id="ka-journey-slot"></aside>
+
+  <main id="ka-main">
+
+    <div class="hub-regions">
+
+      <!-- REGION 1 -->
+      <section class="hub-region">
+        <div class="hub-region-head">
+          <div>
+            <div class="hub-region-num">Region 1</div>
+            <div class="hub-region-title">Environment setup</div>
+          </div>
+        </div>
+        <div class="hub-region-body">
+          <p>VR work has a non-trivial stack. Getting it right in week 1 saves weeks of
+          downstream confusion. The instructor-recommended baseline is Unity 2022 LTS
+          with OpenXR; Unreal 5 is acceptable but unsupported.</p>
+
+          <h4>Headset</h4>
+          <ul>
+            <li>Primary target: Meta Quest 3 (class has 4 units on loan via CSE loan cage)</li>
+            <li>Development: Quest Link over USB-C or Air Link over 5 GHz Wi-Fi</li>
+            <li>Desktop fallback for headset-less prototyping: Mock HMD runtime</li>
+          </ul>
+
+          <h4>Software</h4>
+          <ul>
+            <li>Unity 2022.3 LTS + Meta XR SDK + OpenXR</li>
+            <li>Git LFS (scenes and assets are binary; never commit <code>*.unity</code> without LFS)</li>
+            <li>Python 3.11 for post-hoc log analysis and AI-agent scripting</li>
+            <li>Optional: OpenAI / Anthropic API keys for LLM-driven NPCs</li>
+          </ul>
+
+          <h4>First-run checklist</h4>
+          <ol>
+            <li>Install Unity Hub, add Unity 2022.3 LTS with <em>Android Build Support</em>.</li>
+            <li>Clone <code>ucsd-cogs160/vr_scenes</code>, ensure Git LFS pulled all assets.</li>
+            <li>Open the <code>BaselineRoom</code> scene and press Play in Editor.</li>
+            <li>Build to Quest; verify tracking, hand controllers, and frame rate &ge; 72 fps.</li>
+            <li>Run <code>scripts/verify_vr_scene.py BaselineRoom</code>.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- REGION 2 -->
+      <section class="hub-region">
+        <div class="hub-region-head">
+          <div>
+            <div class="hub-region-num">Region 2</div>
+            <div class="hub-region-title">Shared resources</div>
+          </div>
+          <a class="ka-btn" href="ka_track3_resources.html">Open VR Resources →</a>
+        </div>
+        <div class="hub-region-body">
+          <p>Asset libraries, shader packs, sample scenes, and experimental
+          instrumentation scripts live on the Track 3 Resources page. Upload new
+          resources there so the whole team benefits (and so we do not end up with
+          ten slightly different <em>GazeLogger</em> implementations).</p>
+          <ul>
+            <li><a href="ka_track3_resources.html#scenes">Baseline scenes (office, classroom, courtyard)</a></li>
+            <li><a href="ka_track3_resources.html#scripts">Instrumentation scripts (gaze, locomotion, HR via Quest PPG)</a></li>
+            <li><a href="ka_track3_resources.html#assets">Licensed asset packs &amp; attribution notes</a></li>
+            <li><a href="ka_track3_resources.html#agents">AI-agent behaviour prompts &amp; NPC controllers</a></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- REGION 3 -->
+      <section class="hub-region">
+        <div class="hub-region-head">
+          <div>
+            <div class="hub-region-num">Region 3</div>
+            <div class="hub-region-title">Ways of working</div>
+          </div>
+        </div>
+        <div class="hub-region-body">
+          <p>Ten students is a lot for VR; expect pair or triple sub-teams per scene
+          rather than solo builds.</p>
+          <ul>
+            <li>Sub-teams of 2–3; each owns one scene or one instrumentation module.</li>
+            <li>Weekly Monday sub-team stand-up + Friday all-hands scene demo.</li>
+            <li>No scene merges to <code>main</code> without another student running it on
+              their own headset (not just the Editor).</li>
+            <li>Binary assets: commit to LFS, never to the main object database.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- REGION 4 -->
+      <section class="hub-region">
+        <div class="hub-region-head">
+          <div>
+            <div class="hub-region-num">Region 4</div>
+            <div class="hub-region-title">Task context &amp; assignment manifests</div>
+          </div>
+        </div>
+        <div class="hub-region-body">
+          <p>VR tasks are grouped into three streams: (a) scene construction, (b)
+          instrumentation, (c) AI-agent behaviour. Each manifest specifies the
+          measurable outcome the scene or module is supposed to enable.</p>
+
+          <article class="task-manifest">
+            <div class="task-manifest-head" onclick="this.parentElement.classList.toggle('open')">
+              <span class="task-manifest-title">VR-001 · Ceiling-height variant scene</span>
+              <span class="task-manifest-status status-supported">Well-specified</span>
+            </div>
+            <div class="task-manifest-body">
+              <dl>
+                <dt>Goal</dt><dd>Build a single room with three swappable ceiling heights
+                  (2.4 m / 3.0 m / 3.6 m), identical in every other respect.</dd>
+                <dt>Outputs</dt><dd>Unity scene + a config file listing variant IDs and
+                  their exact geometry deltas.</dd>
+                <dt>Acceptance</dt><dd>Runtime ceiling swap via one button. Variant
+                  reports correct height to the logging system.</dd>
+                <dt>Verification</dt><dd>Automated: headless Unity test switches variants
+                  and asserts reported geometry matches config file.</dd>
+              </dl>
+            </div>
+          </article>
+
+          <article class="task-manifest">
+            <div class="task-manifest-head" onclick="this.parentElement.classList.toggle('open')">
+              <span class="task-manifest-title">VR-002 · Gaze logger with 60 Hz sampling</span>
+              <span class="task-manifest-status status-supported">Well-specified</span>
+            </div>
+            <div class="task-manifest-body">
+              <dl>
+                <dt>Goal</dt><dd>Log participant head/eye direction at ≥ 60 Hz to a CSV,
+                  with timestamp, position, forward vector, and currently-fixated object ID.</dd>
+                <dt>Outputs</dt><dd><code>GazeLogger.cs</code> + CSV output schema.</dd>
+                <dt>Acceptance</dt><dd>30-second recording yields ≥ 1800 rows. Object-ID
+                  field non-null ≥ 90 % of frames.</dd>
+                <dt>Verification</dt><dd>Automated: fixture scene + test script loads the
+                  CSV and asserts row count, column completeness, and timestamp monotonicity.</dd>
+              </dl>
+            </div>
+          </article>
+
+          <article class="task-manifest">
+            <div class="task-manifest-head" onclick="this.parentElement.classList.toggle('open')">
+              <span class="task-manifest-title">VR-003 · LLM-driven wayfinding NPC</span>
+              <span class="task-manifest-status status-partial">Partially specified</span>
+            </div>
+            <div class="task-manifest-body">
+              <dl>
+                <dt>Goal</dt><dd>An NPC that answers "how do I get to X?" using an LLM
+                  conditioned on a map prompt.</dd>
+                <dt>Open question</dt><dd>How to functionally verify that the NPC's
+                  directions are correct without a ground-truth router. Current plan: hand-
+                  written scenarios with known answers.</dd>
+                <dt>Acceptance</dt><dd>Passes ≥ 8 of 10 fixture scenarios.</dd>
+              </dl>
+            </div>
+          </article>
+
+          <article class="task-manifest">
+            <div class="task-manifest-head" onclick="this.parentElement.classList.toggle('open')">
+              <span class="task-manifest-title">VR-004 · Daylight / circadian condition shader</span>
+              <span class="task-manifest-status status-speculative">Speculative</span>
+            </div>
+            <div class="task-manifest-body">
+              <dl>
+                <dt>Goal</dt><dd>Simulate melanopic-weighted lux from a configurable
+                  window/sun system.</dd>
+                <dt>Why speculative</dt><dd>Headset photometry is imperfect; we cannot
+                  calibrate melanopic lux accurately. Deliverable may be a <em>relative</em>
+                  index rather than absolute lux.</dd>
+              </dl>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- REGION 5 -->
+      <section class="hub-region">
+        <div class="hub-region-head">
+          <div>
+            <div class="hub-region-num">Region 5</div>
+            <div class="hub-region-title">Functional verification</div>
+          </div>
+        </div>
+        <div class="hub-region-body">
+          <p>VR deliverables are graded by <strong>does it run and instrument correctly</strong>,
+          not by visual polish. Two verification layers:</p>
+          <ol>
+            <li><strong>Headless Unity test runner</strong> — loads the scene in batch
+              mode, exercises the module's API, asserts expected outputs.</li>
+            <li><strong>On-headset smoke test</strong> — another student dons the Quest,
+              runs the build, and confirms the scene is performant (&ge; 72 fps) and
+              interaction works.</li>
+          </ol>
+          <p style="margin-top:8px;">A scene or module that fails layer 1 does not merge
+          regardless of how it looks.</p>
+<pre>scripts/verify_vr_scene.py BaselineRoom
+# → scene loads, logger writes CSV, 3600 rows @60 Hz, schema OK → PASS</pre>
+        </div>
+      </section>
+
+      <!-- REGION 6 -->
+      <section class="hub-region">
+        <div class="hub-region-head">
+          <div>
+            <div class="hub-region-num">Region 6</div>
+            <div class="hub-region-title">Help &amp; queue</div>
+          </div>
+        </div>
+        <div class="hub-region-body">
+          <div class="help-queue">
+            <h5>Where to ask for help</h5>
+            <ul>
+              <li>Unity crash / build failure → <code>#track3-vr</code> with the editor log attached.</li>
+              <li>Headset unavailable → book a Quest in the CSE loan cage.</li>
+              <li>Shader or lighting questions → CSE 167R TAs hold drop-in hours Thursdays.</li>
+              <li>Experimental-design ambiguity → escalate to Friday demo.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<footer class="ka-footer">
+  Knowledge Atlas · UCSD Cognitive Science · COGS 160 Spring 2026
+</footer>
+
+<script src="../ka_canonical_navbar.js" defer></script>
+<script src="../ka_journey_nav.js"      defer></script>
+</body>
+</html>

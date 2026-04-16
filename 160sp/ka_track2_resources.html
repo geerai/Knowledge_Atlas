@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track 2 · Article Finder Resources</title>
+<link rel="stylesheet" href="../ka_atlas_shell.css">
+<style>:root { --hub-color: #2A6A88; }</style>
+</head>
+<body data-ka-active="" data-ka-journey="contributor"
+      data-ka-crumbs='[["Home","ka_home.html"],["Article Finder Hub","ka_track2_hub.html"],["Resources",""]]'>
+
+<a class="ka-skip" href="#main">Skip to main content</a>
+<div id="ka-navbar-slot"></div>
+<div id="ka-breadcrumb-slot"></div>
+
+<section class="hub-banner">
+  <div class="tag">Track 2 · Shared Resources</div>
+  <h1>Article Finder Resources <span class="local-badge">Local preview</span></h1>
+  <p class="subtitle">
+    Query templates, rubrics, exemplars, and glossaries curated by the Article Finder
+    team. The initial set is seeded by the instructor; students can add new items.
+    Persistence is currently local to your browser — a subsequent pass wires this to
+    the course server.
+  </p>
+</section>
+
+<div class="ka-shell">
+  <aside id="ka-journey-slot"></aside>
+  <main id="ka-main">
+
+    <section id="queries" class="hub-region">
+      <div class="hub-region-head"><div>
+        <div class="hub-region-num">Section 1</div>
+        <div class="hub-region-title">Search query templates</div>
+      </div></div>
+      <div class="hub-region-body">
+        <div class="resource-list" id="resources-queries">
+          <div class="resource-item">
+            <div class="rtitle">Daylight &amp; cognitive performance — CrossRef</div>
+            <div class="rmeta">Seeded by instructor · applies to AF-001</div>
+            <div class="rdesc">
+              <code>query=(daylight OR &quot;natural light&quot;) AND (attention OR cognition OR performance)&amp;filter=from-pub-date:2010</code>
+            </div>
+          </div>
+          <div class="resource-item">
+            <div class="rtitle">Semantic Scholar forward citation — Ulrich 1984</div>
+            <div class="rmeta">Seeded by instructor · applies to AF-002</div>
+            <div class="rdesc">API endpoint: <code>graph/v1/paper/DOI:10.1126/science.6143402/citations?fields=authors,title,year,abstract,venue</code></div>
+          </div>
+        </div>
+
+        <form class="resource-add-form" onsubmit="return addResource('queries', this)">
+          <strong>Add a query template</strong>
+          <input name="title"   placeholder="Title (e.g. 'OpenAlex — embodied cognition')" required>
+          <input name="meta"    placeholder="Who/what/when (e.g. 'Added by AH, 2026-04-15')">
+          <textarea name="body" placeholder="Paste the query or describe it" required></textarea>
+          <button class="ka-btn" type="submit">Save locally</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="rubrics" class="hub-region">
+      <div class="hub-region-head"><div>
+        <div class="hub-region-num">Section 2</div>
+        <div class="hub-region-title">Evidentiary-strength rubric (VOI banding)</div>
+      </div></div>
+      <div class="hub-region-body">
+        <div class="resource-list" id="resources-rubrics">
+          <div class="resource-item">
+            <div class="rtitle">VOI banding v0.3</div>
+            <div class="rmeta">Seeded by instructor</div>
+            <div class="rdesc">High = RCT / field study with pre-registration; Medium =
+              quasi-experiment or large correlation; Low = single small lab study; Critical = meta-analysis
+              or multi-site replication.</div>
+          </div>
+        </div>
+        <form class="resource-add-form" onsubmit="return addResource('rubrics', this)">
+          <strong>Propose a rubric revision</strong>
+          <input name="title" placeholder="Title" required>
+          <input name="meta"  placeholder="Author · date">
+          <textarea name="body" placeholder="Proposed wording" required></textarea>
+          <button class="ka-btn" type="submit">Save locally</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="exemplars" class="hub-region">
+      <div class="hub-region-head"><div>
+        <div class="hub-region-num">Section 3</div>
+        <div class="hub-region-title">Gold-standard article records</div>
+      </div></div>
+      <div class="hub-region-body">
+        <div class="resource-list" id="resources-exemplars">
+          <div class="resource-item">
+            <div class="rtitle">Bratman et al. 2019 — exemplar record</div>
+            <div class="rmeta">Instructor-annotated</div>
+            <div class="rdesc">Shows full schema compliance, VOI=High, 4 linked figures,
+              3 theoretical connections annotated.</div>
+          </div>
+        </div>
+        <form class="resource-add-form" onsubmit="return addResource('exemplars', this)">
+          <strong>Add an exemplar</strong>
+          <input name="title" placeholder="Title (e.g. 'Chellappa 2017 exemplar')" required>
+          <input name="meta"  placeholder="Contributor · date">
+          <textarea name="body" placeholder="Why this is a good exemplar (1-3 sentences)" required></textarea>
+          <button class="ka-btn" type="submit">Save locally</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="glossaries" class="hub-region">
+      <div class="hub-region-head"><div>
+        <div class="hub-region-num">Section 4</div>
+        <div class="hub-region-title">Glossaries</div>
+      </div></div>
+      <div class="hub-region-body">
+        <div class="resource-list" id="resources-glossaries">
+          <div class="resource-item">
+            <div class="rtitle">Embodied architecture — scope note</div>
+            <div class="rmeta">Seeded; applies to AF-003</div>
+            <div class="rdesc">Distinguishes philosophical / phenomenological use
+              (Mallgrave, Pallasmaa, Robinson) from empirical sensorimotor-simulation use
+              (Gallese, Jelić, Djebbara).</div>
+          </div>
+        </div>
+        <form class="resource-add-form" onsubmit="return addResource('glossaries', this)">
+          <strong>Add a glossary entry</strong>
+          <input name="title" placeholder="Term" required>
+          <input name="meta"  placeholder="Contributor · date">
+          <textarea name="body" placeholder="Definition / scope note" required></textarea>
+          <button class="ka-btn" type="submit">Save locally</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="ka-footer">
+  Knowledge Atlas · UCSD Cognitive Science · COGS 160 Spring 2026
+</footer>
+
+<script>
+(function () {
+  // Load persisted resources from localStorage and render them.
+  ['queries','rubrics','exemplars','glossaries'].forEach(function (key) {
+    var list = document.getElementById('resources-' + key);
+    if (!list) return;
+    var stored = JSON.parse(localStorage.getItem('ka_t2_res_' + key) || '[]');
+    stored.forEach(function (r) { list.appendChild(renderResource(r)); });
+  });
+})();
+
+function renderResource(r) {
+  var d = document.createElement('div');
+  d.className = 'resource-item';
+  d.innerHTML = '<div class="rtitle">' + escapeHtml(r.title) +
+                ' <span class="local-badge">Local</span></div>' +
+                '<div class="rmeta">' + escapeHtml(r.meta || '') + '</div>' +
+                '<div class="rdesc">' + escapeHtml(r.body).replace(/\n/g,'<br>') + '</div>';
+  return d;
+}
+
+function addResource(key, form) {
+  var r = {
+    title: form.title.value.trim(),
+    meta:  form.meta.value.trim() || ('Added ' + new Date().toISOString().slice(0,10)),
+    body:  form.body.value.trim()
+  };
+  var stored = JSON.parse(localStorage.getItem('ka_t2_res_' + key) || '[]');
+  stored.push(r);
+  localStorage.setItem('ka_t2_res_' + key, JSON.stringify(stored));
+  document.getElementById('resources-' + key).appendChild(renderResource(r));
+  form.reset();
+  return false;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+</script>
+
+<script src="../ka_canonical_navbar.js" defer></script>
+<script src="../ka_journey_nav.js"      defer></script>
+</body>
+</html>

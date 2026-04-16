@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics · Knowledge Atlas</title>
+<link rel="stylesheet" href="ka_atlas_shell.css">
+<style>
+  /* page-local: question card polish */
+  .qcard { cursor: pointer; }
+  .qcard-head {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;
+  }
+  .qcard-text {
+    font-family: Georgia, serif; font-size: 0.98rem; font-weight: 600;
+    color: #1C3D3A; line-height: 1.4; flex: 1;
+  }
+  .qcard-diff {
+    flex-shrink: 0; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 10px;
+  }
+  .diff-easy   { background: #E8F8F2; color: #1A7050; }
+  .diff-medium { background: #FEF3E2; color: #985E0A; }
+  .diff-hard   { background: #FEE4E4; color: #A02020; }
+  .qcard-subtopic {
+    font-size: 0.75rem; color: #7A7060; margin-top: 4px;
+    letter-spacing: 0.04em;
+  }
+  .qcard-desc {
+    font-size: 0.85rem; color: #5A5A5A; line-height: 1.5; margin-top: 6px;
+    display: none;
+  }
+  .qcard.expanded .qcard-desc { display: block; }
+  .qcard-hints {
+    margin-top: 8px; display: none; flex-wrap: wrap; gap: 4px;
+  }
+  .qcard.expanded .qcard-hints { display: flex; }
+  .qcard-hint {
+    font-size: 0.7rem; padding: 2px 8px; background: #E8F0FE; color: #1A56A0;
+    border-radius: 10px;
+  }
+  .qcard-actions {
+    margin-top: 10px; display: none; gap: 6px;
+  }
+  .qcard.expanded .qcard-actions { display: flex; }
+
+  /* filter bar */
+  .filters {
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+    margin: 12px 0;
+  }
+  .filter-label {
+    font-size: 0.74rem; color: #8A9A96; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .filter-pill {
+    padding: 5px 11px; font-size: 0.78rem; font-weight: 600;
+    border-radius: 16px; border: 1.5px solid #C8C0B0; background: #fff;
+    color: #2D2D2D; cursor: pointer; transition: all 0.15s;
+  }
+  .filter-pill:hover { border-color: #2A7868; color: #2A7868; }
+  .filter-pill.active { background: #2A7868; border-color: #2A7868; color: #fff; }
+
+  /* hierarchy leaf detail */
+  .leaf-detail {
+    margin-top: 18px; padding: 16px; background: #fff;
+    border: 1px solid #E0D8CC; border-radius: 10px;
+  }
+  .leaf-detail-title {
+    font-family: Georgia, serif; font-size: 1.2rem; color: #1C3D3A; margin-bottom: 8px;
+  }
+  .leaf-detail-meta {
+    font-size: 0.82rem; color: #7A7060; margin-bottom: 12px;
+  }
+  .leaf-detail-empty {
+    font-size: 0.88rem; color: #8A9A96; font-style: italic;
+  }
+</style>
+</head>
+<body data-ka-active="topics"
+      data-ka-crumbs='[["Home","ka_home.html"],["Topics",""]]'>
+
+<div id="ka-navbar-slot"></div>
+<div id="ka-breadcrumb-slot"></div>
+
+<section class="ka-hero">
+  <div class="ka-hero-tag">Knowledge Atlas · Topic Browser</div>
+  <h1>Three Ways into the Literature</h1>
+  <p class="ka-hero-sub">
+    Start with a research question, search freely, or navigate the taxonomy column by
+    column. Each mode leads to the same underlying articles and evidence, differing
+    only in the vocabulary it hands you at the door.
+  </p>
+</section>
+
+<div class="ka-shell">
+
+  <aside id="ka-journey-slot"></aside>
+
+  <main id="ka-main">
+
+    <div class="ka-tabs" role="tablist">
+      <button class="ka-tab active" data-tab="search"    role="tab">Free Search</button>
+      <button class="ka-tab"        data-tab="hierarchy" role="tab">Hierarchy</button>
+      <button class="ka-tab"        data-tab="questions" role="tab">Questions <span style="font-size:0.62rem;background:#FEE4E4;color:#A02020;padding:1px 6px;border-radius:8px;margin-left:4px;">rebuild</span></button>
+    </div>
+
+    <!-- ─── QUESTIONS MODE (deferred — see banner) ─── -->
+    <section class="ka-tabpanel" id="tab-questions" role="tabpanel">
+      <h2 class="ka-section-title">Research questions</h2>
+      <div style="background:#FEE4E4;border:1px solid #A02020;border-radius:8px;padding:12px 16px;margin-bottom:14px;font-size:0.9rem;color:#8A1A1A;line-height:1.55;">
+        <strong>Under reconstruction.</strong> The current research-questions module
+        is unsatisfactory and has been deferred to the Track 4 (UX/GUI) team for a
+        full rebuild. See <a href="TASKS.md" style="color:#A02020;text-decoration:underline;">
+          TASKS.md item GUI-RQ-001</a>. The cards below remain visible only so that
+        the seed-question structure is testable; do not treat them as a finished
+        feature.
+      </div>
+      <p class="ka-section-intro">
+        These are the questions the field has not yet decisively answered. Each
+        question is tagged with a topic and a difficulty. Click a card to see the
+        framing commentary and suggested search hints; click "see articles" to
+        jump into the literature.
+      </p>
+
+      <div class="filters">
+        <span class="filter-label">Difficulty</span>
+        <button class="filter-pill active" data-filter-diff="">All</button>
+        <button class="filter-pill" data-filter-diff="easy">Easy</button>
+        <button class="filter-pill" data-filter-diff="medium">Medium</button>
+        <button class="filter-pill" data-filter-diff="hard">Hard</button>
+      </div>
+      <div class="filters" id="topic-filter-row">
+        <span class="filter-label">Root topic</span>
+        <button class="filter-pill active" data-filter-topic="">All</button>
+        <!-- root-topic pills populated on load -->
+      </div>
+
+      <div class="ka-card-grid" id="question-grid" style="margin-top:6px;">
+        <!-- populated by JS -->
+      </div>
+      <p id="question-empty" style="display:none;margin-top:18px;color:#8A9A96;">
+        No questions match the current filters.
+      </p>
+    </section>
+
+    <!-- ─── FREE SEARCH MODE (default) ─── -->
+    <section class="ka-tabpanel active" id="tab-search" role="tabpanel">
+      <h2 class="ka-section-title">Free search</h2>
+      <p class="ka-section-intro">
+        Type anything — a construct name, an author, a methodological term, a
+        question fragment. The search looks across question text, topic labels, and
+        article titles/abstracts using fuzzy matching, so near-miss spellings still
+        resolve.
+      </p>
+      <input type="search" class="ka-search" id="free-search"
+             placeholder="Try &quot;attention restoration&quot;, &quot;cortisol&quot;, or &quot;ceiling height&quot;…"
+             aria-label="Free search">
+      <p id="search-status" style="margin-top:8px;font-size:0.8rem;color:#8A9A96;"></p>
+      <div class="ka-card-grid" id="search-grid" style="margin-top:12px;"></div>
+    </section>
+
+    <!-- ─── HIERARCHY MODE ─── -->
+    <section class="ka-tabpanel" id="tab-hierarchy" role="tabpanel">
+      <h2 class="ka-section-title">Hierarchy</h2>
+      <p class="ka-section-intro">
+        Miller-column navigation: choose a domain in the first column, a grouping in
+        the second, and a leaf topic in the third. Only three levels are visible at
+        a time, so the tree does not overwhelm. Selecting a leaf opens a detail
+        panel below with paper counts and a link to matched articles.
+      </p>
+      <div class="ka-miller" id="miller">
+        <div class="ka-miller-col" id="col-root"><h5>Domains</h5></div>
+        <div class="ka-miller-col" id="col-group"><h5>Groupings</h5></div>
+        <div class="ka-miller-col" id="col-leaf"><h5>Topics</h5></div>
+      </div>
+      <div class="leaf-detail" id="leaf-detail" style="display:none;">
+        <div class="leaf-detail-title" id="leaf-title"></div>
+        <div class="leaf-detail-meta"  id="leaf-meta"></div>
+        <div id="leaf-actions"></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="ka-footer">
+  Knowledge Atlas · UCSD Cognitive Science · Spring 2026
+</footer>
+
+<!-- ─── INLINE DATA + BEHAVIOUR ─── -->
+<script>
+(function () {
+  'use strict';
+
+  // ─── Tab switching ───
+  document.querySelectorAll('.ka-tab').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.ka-tab').forEach(function (b) { b.classList.remove('active'); });
+      document.querySelectorAll('.ka-tabpanel').forEach(function (p) { p.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ─── Shared state ───
+  var STATE = {
+    questions: [],
+    hierarchy: null,
+    filterDiff: '',
+    filterTopic: ''
+  };
+
+  function esc(s) {
+    return String(s || '').replace(/[&<>"']/g, function (c) {
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  // ─── QUESTIONS ───
+  function renderQuestionFilters(questions) {
+    var topics = {};
+    questions.forEach(function (q) { topics[q.topic] = (topics[q.topic] || 0) + 1; });
+    var row = document.getElementById('topic-filter-row');
+    var allBtn = row.querySelector('[data-filter-topic=""]');
+    var sorted = Object.keys(topics).sort();
+    sorted.forEach(function (t) {
+      var b = document.createElement('button');
+      b.className = 'filter-pill';
+      b.setAttribute('data-filter-topic', t);
+      b.textContent = t + ' (' + topics[t] + ')';
+      row.appendChild(b);
+    });
+    row.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-filter-topic]');
+      if (!b) return;
+      row.querySelectorAll('.filter-pill').forEach(function (p) { p.classList.remove('active'); });
+      b.classList.add('active');
+      STATE.filterTopic = b.getAttribute('data-filter-topic');
+      renderQuestionGrid();
+    });
+    document.querySelectorAll('[data-filter-diff]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        document.querySelectorAll('[data-filter-diff]').forEach(function (p) { p.classList.remove('active'); });
+        b.classList.add('active');
+        STATE.filterDiff = b.getAttribute('data-filter-diff');
+        renderQuestionGrid();
+      });
+    });
+  }
+
+  function renderQuestionGrid() {
+    var grid = document.getElementById('question-grid');
+    var empty = document.getElementById('question-empty');
+    var matches = STATE.questions.filter(function (q) {
+      if (STATE.filterDiff && q.difficulty !== STATE.filterDiff) return false;
+      if (STATE.filterTopic && q.topic !== STATE.filterTopic) return false;
+      return true;
+    });
+    if (matches.length === 0) { grid.innerHTML = ''; empty.style.display = ''; return; }
+    empty.style.display = 'none';
+    grid.innerHTML = matches.map(function (q) {
+      var hints = (q.search_hints || []).map(function (h) {
+        return '<span class="qcard-hint">' + esc(h) + '</span>';
+      }).join('');
+      return '<article class="ka-card qcard" data-id="' + esc(q.question_id) + '">' +
+        '<div class="qcard-head">' +
+          '<div class="qcard-text">' + esc(q.question_text) + '</div>' +
+          '<span class="qcard-diff diff-' + esc(q.difficulty) + '">' + esc(q.difficulty) + '</span>' +
+        '</div>' +
+        '<div class="qcard-subtopic">' + esc(q.topic) + ' · ' + esc(q.subtopic || '') + '</div>' +
+        '<div class="qcard-desc">' + esc(q.description || '') + '</div>' +
+        '<div class="qcard-hints">' + hints + '</div>' +
+        '<div class="qcard-actions">' +
+          '<a class="ka-btn ka-btn-primary" href="ka_articles.html?q=' + encodeURIComponent(q.topic) + '">See articles</a>' +
+          '<a class="ka-btn ka-btn-secondary" href="ka_question_maker.html?from=' + esc(q.question_id) + '">Refine question</a>' +
+        '</div>' +
+      '</article>';
+    }).join('');
+    grid.querySelectorAll('.qcard').forEach(function (c) {
+      c.addEventListener('click', function (e) {
+        if (e.target.tagName === 'A') return;
+        c.classList.toggle('expanded');
+      });
+    });
+  }
+
+  // ─── HIERARCHY (Miller columns) ───
+  function renderHierarchy(h) {
+    var rootCol = document.getElementById('col-root');
+    var groupCol = document.getElementById('col-group');
+    var leafCol = document.getElementById('col-leaf');
+    rootCol.innerHTML = '<h5>Domains</h5>';
+    (h.roots || []).forEach(function (r) {
+      var b = document.createElement('button');
+      b.className = 'ka-miller-item';
+      b.setAttribute('data-root-id', r.id);
+      b.innerHTML = esc(r.label) + '<span class="count">' + (r.paper_count || 0) + '</span>';
+      rootCol.appendChild(b);
+    });
+
+    rootCol.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-root-id]');
+      if (!b) return;
+      rootCol.querySelectorAll('.ka-miller-item').forEach(function (x) { x.classList.remove('selected'); });
+      b.classList.add('selected');
+      var root = (h.roots || []).find(function (r) { return r.id === b.getAttribute('data-root-id'); });
+      renderGroups(root);
+      leafCol.innerHTML = '<h5>Topics</h5>';
+      document.getElementById('leaf-detail').style.display = 'none';
+    });
+
+    function renderGroups(root) {
+      groupCol.innerHTML = '<h5>Groupings</h5>';
+      (root.children || []).forEach(function (g) {
+        var b = document.createElement('button');
+        b.className = 'ka-miller-item';
+        b.setAttribute('data-group-id', g.id);
+        b.innerHTML = esc(g.label) + '<span class="count">' + (g.paper_count || 0) + '</span>';
+        groupCol.appendChild(b);
+      });
+      // If only one grouping, auto-select it.
+      if ((root.children || []).length === 1) {
+        groupCol.querySelector('.ka-miller-item').click();
+      }
+    }
+
+    groupCol.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-group-id]');
+      if (!b) return;
+      groupCol.querySelectorAll('.ka-miller-item').forEach(function (x) { x.classList.remove('selected'); });
+      b.classList.add('selected');
+      var rootId = rootCol.querySelector('.selected').getAttribute('data-root-id');
+      var root = (h.roots || []).find(function (r) { return r.id === rootId; });
+      var group = (root.children || []).find(function (g) { return g.id === b.getAttribute('data-group-id'); });
+      leafCol.innerHTML = '<h5>Topics</h5>';
+      (group.topics || []).forEach(function (t) {
+        var tb = document.createElement('button');
+        tb.className = 'ka-miller-item';
+        tb.setAttribute('data-leaf-id', t.id);
+        tb.innerHTML = esc(t.label) + '<span class="count">' + (t.paper_count || 0) + '</span>';
+        leafCol.appendChild(tb);
+      });
+      document.getElementById('leaf-detail').style.display = 'none';
+    });
+
+    leafCol.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-leaf-id]');
+      if (!b) return;
+      leafCol.querySelectorAll('.ka-miller-item').forEach(function (x) { x.classList.remove('selected'); });
+      b.classList.add('selected');
+      var lid = b.getAttribute('data-leaf-id');
+      var label = b.textContent.replace(/\d+$/, '').trim();
+      var det = document.getElementById('leaf-detail');
+      document.getElementById('leaf-title').textContent = label;
+      document.getElementById('leaf-meta').textContent = 'Topic ID: ' + lid;
+      document.getElementById('leaf-actions').innerHTML =
+        '<a class="ka-btn ka-btn-primary" href="ka_articles.html?topic=' + encodeURIComponent(lid) + '">See articles</a>' +
+        ' <a class="ka-btn ka-btn-secondary" href="ka_theories.html?topic=' + encodeURIComponent(lid) + '">Relevant theories</a>' +
+        ' <a class="ka-btn ka-btn-secondary" href="ka_mechanisms.html?topic=' + encodeURIComponent(lid) + '">Mechanisms</a>';
+      det.style.display = '';
+    });
+  }
+
+  // ─── FREE SEARCH ───
+  // Simple substring + token scorer; good enough until Fuse.js is wired.
+  function tokenise(s) { return String(s || '').toLowerCase().split(/[^a-z0-9]+/).filter(Boolean); }
+  function scoreEntry(q, entry) {
+    var qt = tokenise(q);
+    if (qt.length === 0) return 0;
+    var text = [entry.question_text, entry.topic, entry.subtopic, entry.description,
+                (entry.search_hints || []).join(' ')].join(' ').toLowerCase();
+    var hits = 0;
+    qt.forEach(function (t) { if (text.indexOf(t) !== -1) hits++; });
+    return hits / qt.length;
+  }
+
+  document.getElementById('free-search').addEventListener('input', function (e) {
+    var q = e.target.value.trim();
+    var grid = document.getElementById('search-grid');
+    var status = document.getElementById('search-status');
+    if (!q) { grid.innerHTML = ''; status.textContent = ''; return; }
+    var scored = STATE.questions.map(function (entry) {
+      return { entry: entry, score: scoreEntry(q, entry) };
+    }).filter(function (x) { return x.score > 0; })
+      .sort(function (a, b) { return b.score - a.score; })
+      .slice(0, 24);
+    status.textContent = scored.length + ' match' + (scored.length === 1 ? '' : 'es');
+    grid.innerHTML = scored.map(function (x) {
+      var entry = x.entry;
+      return '<article class="ka-card qcard">' +
+        '<div class="qcard-head">' +
+          '<div class="qcard-text">' + esc(entry.question_text) + '</div>' +
+          '<span class="qcard-diff diff-' + esc(entry.difficulty) + '">' + esc(entry.difficulty) + '</span>' +
+        '</div>' +
+        '<div class="qcard-subtopic">' + esc(entry.topic) + ' · match: ' + Math.round(x.score * 100) + '%</div>' +
+        '<div class="qcard-desc">' + esc(entry.description || '') + '</div>' +
+        '<div class="qcard-actions">' +
+          '<a class="ka-btn ka-btn-primary" href="ka_articles.html?q=' + encodeURIComponent(q) + '">See articles</a>' +
+        '</div>' +
+      '</article>';
+    }).join('');
+    grid.querySelectorAll('.qcard').forEach(function (c) {
+      c.addEventListener('click', function (e) {
+        if (e.target.tagName === 'A') return;
+        c.classList.toggle('expanded');
+      });
+    });
+  });
+
+  // ─── Load data ───
+  Promise.all([
+    fetch('data/ka_payloads/question_bank.json').then(function (r) { return r.json(); }),
+    fetch('data/ka_payloads/topic_hierarchy.json').then(function (r) { return r.json(); })
+  ]).then(function (results) {
+    var qb = results[0];
+    var h  = results[1];
+    STATE.questions = (qb && qb.questions) || [];
+    STATE.hierarchy = h;
+    renderQuestionFilters(STATE.questions);
+    renderQuestionGrid();
+    renderHierarchy(h);
+  }).catch(function (err) {
+    document.getElementById('question-grid').innerHTML =
+      '<p style="color:#A02020;">Could not load question bank or topic hierarchy: ' + esc(err.message) + '</p>';
+  });
+})();
+</script>
+
+<script src="ka_canonical_navbar.js" defer></script>
+<script src="ka_journey_nav.js"      defer></script>
+</body>
+</html>

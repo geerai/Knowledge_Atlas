@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Orientation — Knowledge Atlas</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #1C3D3A;
+      --amber:  #E8872A;
+      --cream:  #F7F4EF;
+      --green:  #2A7868;
+      --text:   #2D2010;
+      --muted:  #6A5E50;
+      --border: #DDD6CD;
+      --light:  #EDE8E0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky; top: 0; z-index: 500;
+      background: var(--navy); display: flex; align-items: center;
+      gap: 24px; padding: 0 28px; min-height: 52px;
+      border-bottom: 2px solid var(--amber);
+    }
+    .nav-brand { color: #A8C8BF; font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; }
+    .nav-brand:hover { color: var(--amber); }
+    .nav-center { display:flex; align-items:center; gap:14px; flex:1; }
+    nav a.nav-link { color: #7AACA0; font-size: 0.8rem; text-decoration: none;
+      transition: color 0.15s, background 0.15s; padding: 6px 10px; border-radius: 6px; }
+    nav a.nav-link:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    nav a.nav-link.active { color: #F5A623; background: rgba(232,135,42,0.12); }
+    .nav-right { display:flex; align-items:center; gap:12px; }
+    .mode-select {
+      font-size: 0.76rem; padding: 6px 10px; border-radius: 16px;
+      border: 1px solid rgba(168, 200, 191, 0.34); background: rgba(255,255,255,0.05);
+      color: #D8EAE4;
+    }
+    .mode-select option { color: var(--navy); }
+    .mode-pill {
+      background: rgba(42,120,104,0.3); color: #5AC8AA; padding: 4px 12px;
+      border-radius: 20px; font-family: Arial, sans-serif; font-size: 0.75rem;
+      font-weight: 700; letter-spacing: 0.05em;
+    }
+
+    /* ── Hero ── */
+    .page-hero {
+      background: linear-gradient(135deg, var(--navy) 0%, #163230 100%);
+      padding: 56px 40px 48px;
+      border-bottom: 3px solid var(--amber);
+    }
+    .page-hero .eyebrow {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em;
+      text-transform: uppercase; color: #7AACA0; margin-bottom: 12px;
+    }
+    .page-hero h1 {
+      font-family: Georgia, serif; font-size: 2rem; font-weight: 400;
+      color: #F5F0E8; line-height: 1.25; margin-bottom: 14px;
+    }
+    .page-hero p {
+      font-size: 1rem; color: #A8C8BF; line-height: 1.7;
+      max-width: 640px;
+    }
+    .track-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
+    .track-pill {
+      font-family: Arial, sans-serif; font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 4px 12px; border-radius: 4px; cursor: pointer;
+    }
+    .mode-summary {
+      margin-top: 18px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(168,200,191,0.24);
+      border-radius: 8px;
+      max-width: 560px;
+    }
+    .mode-summary-label {
+      font-size: 0.66rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: #7AACA0; margin-bottom: 4px;
+    }
+    .mode-summary-copy {
+      font-size: 0.84rem; color: #D8EAE4; line-height: 1.5;
+    }
+    .t1 { background: #FFF0CC; color: #7A4F00; }
+    .t2 { background: #E3F4EC; color: #1A5C30; }
+    .t3 { background: #E8F0FD; color: #1A3A7A; }
+    .t4 { background: #FDE8F4; color: #7A1A5C; }
+
+    /* ── Layout ── */
+    .outer { max-width: 1000px; margin: 0 auto; padding: 0 32px 72px; }
+
+    /* ── Section ── */
+    .setup-section { margin-top: 48px; }
+    .section-header {
+      display: flex; align-items: flex-start; gap: 16px;
+      margin-bottom: 28px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid var(--border);
+    }
+    .section-num {
+      background: var(--navy); color: #A8C8BF;
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+      padding: 5px 10px; border-radius: 4px; flex-shrink: 0;
+      margin-top: 4px;
+    }
+    .section-header h2 {
+      font-family: Georgia, serif; font-size: 1.4rem; font-weight: 400;
+      color: var(--navy); line-height: 1.3;
+    }
+    .section-header .sh-sub {
+      font-size: 0.85rem; color: var(--muted); margin-top: 4px; line-height: 1.5;
+    }
+
+    /* ── Prose ── */
+    p { margin-bottom: 14px; font-size: 0.95rem; line-height: 1.7; }
+    p:last-child { margin-bottom: 0; }
+
+    /* ── Track grid ── */
+    .track-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 28px;
+    }
+    .track-card {
+      border-radius: 12px; padding: 32px 28px;
+      display: flex; flex-direction: column; gap: 16px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none; color: inherit;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .track-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    .track-card h3 {
+      font-family: Georgia, serif; font-size: 1.2rem; font-weight: 600;
+      margin: 0; line-height: 1.3;
+    }
+    .track-card p {
+      margin: 0; font-size: 0.92rem; line-height: 1.6; opacity: 0.95;
+    }
+    .track-card .tagline {
+      margin-top: auto; font-size: 0.88rem; opacity: 0.85; font-style: italic;
+      padding-top: 8px;
+    }
+    .track-card .cta-button {
+      margin-top: 16px; padding: 12px 16px;
+      border-radius: 8px;
+      font-weight: 700; font-size: 0.88rem;
+      text-align: center;
+      display: inline-block;
+      transition: opacity 0.15s;
+      text-decoration: none;
+    }
+    .track-card:hover .cta-button { opacity: 0.95; }
+
+    /* ── Accordion ── */
+    .accordion {
+      border: 1px solid var(--border); border-radius: 10px;
+      overflow: hidden; margin-top: 20px;
+    }
+    .accordion-header {
+      display: flex; align-items: center; gap: 14px;
+      padding: 18px 20px; background: #fff; cursor: pointer;
+      user-select: none; font-weight: 700; font-size: 0.95rem;
+      color: var(--navy);
+    }
+    .accordion-header:hover { background: var(--light); }
+    .accordion-body {
+      display: none; padding: 22px 20px; background: var(--light);
+      border-top: 1px solid var(--border);
+      font-size: 0.92rem; line-height: 1.7;
+    }
+    .accordion-body.open { display: block; }
+    .accordion-header .chevron { margin-left: auto; font-size: 0.85rem; color: var(--muted); }
+
+    /* ── Callout ── */
+    .callout {
+      border-radius: 8px; padding: 18px 20px;
+      margin: 20px 0; font-size: 0.92rem; line-height: 1.7;
+    }
+    .callout-info {
+      background: #E6F5F0; border-left: 4px solid var(--green);
+      color: #1a4a3f;
+    }
+    .callout strong { color: #1a4a3f; }
+
+    /* ── FAQ ── */
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 22px;
+    }
+    .faq-item {
+      background: #fff; border: 1px solid var(--border); border-radius: 8px;
+      padding: 16px;
+    }
+    .faq-q {
+      font-weight: 700; font-size: 0.88rem; color: var(--navy); margin-bottom: 8px;
+    }
+    .faq-a {
+      font-size: 0.85rem; color: var(--muted); line-height: 1.6;
+    }
+
+    /* ── Code ── */
+    code {
+      background: #EDE8E0; color: #1C3D3A;
+      font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+      font-size: 0.83em; padding: 1px 5px; border-radius: 3px;
+    }
+    pre {
+      background: #1A2E2C; color: #A8C8BF;
+      font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+      font-size: 0.82rem; line-height: 1.7;
+      padding: 14px 16px; border-radius: 6px;
+      overflow-x: auto; margin: 12px 0;
+    }
+    pre code { background: none; color: inherit; padding: 0; font-size: 1em; }
+    .cmd-comment { color: #5AC8AA; }
+
+    /* ── Tab styles ── */
+    .tabs {
+      display: flex; gap: 8px; margin-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab-button {
+      padding: 10px 16px; background: transparent;
+      border: none; cursor: pointer; color: var(--muted);
+      font-size: 0.88rem; font-weight: 600;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .tab-button.active {
+      color: var(--navy); border-bottom-color: var(--amber);
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* ── Breadcrumb ── */
+    .breadcrumb-bar {
+      background: var(--light);
+      padding: 10px 40px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.82rem;
+    }
+    .breadcrumb-bar a {
+      color: var(--green);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .breadcrumb-bar a:hover {
+      text-decoration: underline;
+    }
+    .breadcrumb-bar .sep {
+      color: var(--muted);
+      margin: 0 6px;
+    }
+    .breadcrumb-bar .current {
+      color: var(--navy);
+      font-weight: 700;
+    }
+
+    /* ── Version badge ── */
+    .version-badge {
+      position: fixed; bottom: 14px; left: 24px; z-index: 400;
+      background: rgba(28,61,58,0.7); color: #7AACA0;
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
+      padding: 3px 10px; border-radius: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .track-grid { grid-template-columns: 1fr; }
+      .faq-grid { grid-template-columns: 1fr; }
+      .section-header { flex-direction: column; }
+    }
+  
+.wordmark {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; flex-shrink: 0;
+}
+.wordmark-icon { width: 30px; height: 30px; }
+.wordmark-text { display: flex; flex-direction: column; line-height: 1.1; }
+.wm-top { font-size: 0.66rem; font-weight: 400; letter-spacing: 0.24em; text-transform: uppercase; color: #A8C8BF; }
+.wm-bottom { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.03em; color: #fff; }
+.wm-bottom span { color: #F5A623; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="wordmark" href="../ka_home.html">
+    <svg class="wordmark-icon" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="3.5" fill="#F5A623"/>
+      <circle cx="16" cy="5"  r="2.5" fill="#A8C8BF"/>
+      <circle cx="27" cy="22" r="2.5" fill="#A8C8BF"/>
+      <circle cx="5"  cy="22" r="2.5" fill="#A8C8BF"/>
+      <line x1="16"   y1="7.5"  x2="16"   y2="12.5" stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="24.8" y1="20.2" x2="19.0" y2="17.3"  stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="7.2"  y1="20.2" x2="13.0" y2="17.3"  stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="16" y1="7.5"  x2="25.5" y2="20" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+      <line x1="25.5" y1="20" x2="6.5"   y2="20" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+      <line x1="6.5"  y1="20" x2="16"    y2="7.5" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+    </svg>
+    <div class="wordmark-text">
+      <span class="wm-top">Knowledge</span>
+      <span class="wm-bottom">At<span>las</span></span>
+    </div>
+  </a>
+  <div class="nav-center">
+    <a id="nav-shell-explore" href="../ka_topics.html" class="nav-link">Explore</a>
+    <a id="nav-shell-evidence" href="../ka_evidence.html" class="nav-link">Evidence</a>
+    <a id="nav-shell-gaps" href="../ka_gaps.html" class="nav-link">Gaps</a>
+    <a id="nav-shell-articles" href="../ka_article_search.html" class="nav-link">Articles</a>
+    <a id="nav-shell-contribute" href="../ka_contribute.html" class="nav-link">Contribute</a>
+    <a id="nav-shell-course" href="ka_student_setup.html" class="nav-link active">Course</a>
+    <a id="nav-shell-syllabus" href="ka_schedule.html" class="nav-link">160 Syllabus</a>
+  </div>
+  <div class="nav-right">
+    <select class="mode-select" id="setup-mode-select" aria-label="Switch user mode">
+      <option value="student_explorer">Student explorer</option>
+      <option value="researcher">Researcher</option>
+      <option value="contributor">Contributor</option>
+      <option value="instructor">Instructor</option>
+      <option value="practitioner">Practitioner</option>
+      <option value="theory_mechanism_explorer">Theory Explorer</option>
+    </select>
+    <div class="mode-pill" id="setup-mode-pill">STUDENT EXPLORER</div>
+  </div>
+</nav>
+
+<!-- Breadcrumb -->
+<div class="breadcrumb-bar">
+  <span class="current">COGS160 Start</span>
+</div>
+
+<div class="page-hero">
+  <div class="eyebrow">COGS 160 · Student Setup</div>
+  <h1>Get Started with COGS 160</h1>
+  <p>
+    Welcome to AI-Directed Knowledge System Building. This page has three steps:
+    read about our methodology, collect research articles, and choose your track.
+  </p>
+  <div class="track-pills">
+    <span class="track-pill t1">Track 1</span>
+    <span class="track-pill t2">Track 2</span>
+    <span class="track-pill t3">Track 3</span>
+    <span class="track-pill t4">Track 4</span>
+  </div>
+  <div class="mode-summary">
+    <div class="mode-summary-label">Current orientation mode</div>
+    <div class="mode-summary-copy" id="setup-mode-summary">Student explorer mode is active. Change it from the home page, topics page, dashboard, or registration.</div>
+  </div>
+</div>
+
+<div class="outer">
+
+  <!-- ── SECTION 1: Required Reading ── -->
+  <div class="setup-section">
+    <div class="section-header">
+      <span class="section-num">1</span>
+      <div>
+        <h2>Required Reading: How This Course Uses AI</h2>
+        <div class="sh-sub">Before anything else, read the AI Methodology guide</div>
+      </div>
+    </div>
+
+    <p style="margin-bottom: 1rem;">This course is different from most classes you've taken. We use AI as a development tool, not as cheating or a shortcut. Before you start on any track, you need to understand how this works and what "AI-directed" actually means.</p>
+
+    <div class="callout callout-info" style="background: #E6F5F0; border-left: 4px solid var(--green); color: #1a4a3f; margin-bottom: 1.5rem;">
+      <strong>This is not optional.</strong> The AI Methodology guide explains the philosophy, the workflow, and your responsibility as a student. Read it first.
+    </div>
+
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+      <a href="../ka_ai_methodology.html" style="display:inline-block;padding:0.75rem 1.6rem;background:#1C3D3A;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Read the AI Methodology Guide →</a>
+      <label style="display:flex;align-items:center;gap:8px;font-size:0.9rem;color:var(--text);">
+        <input type="checkbox" id="understand-ai" style="width:16px;height:16px;accent-color:var(--green);">
+        I understand that AI is a tool in this course, not a shortcut
+      </label>
+    </div>
+  </div>
+
+  <!-- ── SECTION 2: Your First Assignment ── -->
+  <div class="setup-section">
+    <div class="section-header">
+      <span class="section-num">2</span>
+      <div>
+        <h2>Your First Assignment: Collect Research Articles</h2>
+        <div class="sh-sub">Every student completes this in Week 1</div>
+      </div>
+    </div>
+
+    <div class="callout" style="background:#fff;border:2px solid var(--border);border-left:4px solid var(--amber);padding:1.2rem;border-radius:8px;margin:1rem 0;">
+      <p style="font-size:0.92rem;line-height:1.7;margin:0 0 0.8rem;">Your assignment is to:</p>
+      <ol style="margin:0;padding-left:1.6rem;font-size:0.92rem;line-height:1.7;">
+        <li style="margin-bottom:0.4rem;"><strong>Upload ten APA citations</strong> for EXPERIMENT ARTICLES — either one at a time copied into the text box, or upload a file with all 10.</li>
+        <li style="margin-bottom:0.4rem;"><strong>Upload the PDFs</strong> that correspond to those citations.</li>
+        <li style="margin-bottom:0.8rem;"><strong>We will verify</strong> that they are articles about experiments (not theory or meta-reviews) and that they are on the topic we assigned you.</li>
+      </ol>
+      <p style="font-size:0.92rem;line-height:1.7;margin:0.8rem 0 0;border-top:2px solid var(--border);padding-top:0.8rem;">Then:</p>
+      <ol style="margin:0.8rem 0 0;padding-left:1.6rem;font-size:0.92rem;line-height:1.7;">
+        <li><strong>Create a question</strong> for Google AI Scholar on one of our CNFA Topics and repeat the same APA + PDF upload process — but this time you can upload the 10 articles you think are the best, regardless of article type.</li>
+      </ol>
+    </div>
+
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.5rem;">
+      <a href="collect-articles-upload.html" style="display:inline-block;padding:0.75rem 1.6rem;background:#1C3D3A;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Go to Article Upload Page →</a>
+      <a href="ka_google_search_guide.html" style="display:inline-block;padding:0.75rem 1.6rem;background:#f0f7f5;color:#1C3D3A;border:1.5px solid #1C3D3A;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem;transition:all 0.15s;" onmouseover="this.style.background='#e8f3f0'" onmouseout="this.style.background='#f0f7f5'">Google Scholar Search Guide</a>
+    </div>
+  </div>
+
+  <!-- ── SECTION 3: Choose Your Track ── -->
+  <div class="setup-section">
+    <div class="section-header">
+      <span class="section-num">3</span>
+      <div>
+        <h2>Choose Your Track</h2>
+        <div class="sh-sub">After completing the article collection, spend the rest of the quarter on one of four specialized tracks</div>
+      </div>
+    </div>
+
+    <div class="track-grid">
+      <!-- Track 1 -->
+      <a href="ka_track1_tagging.html" class="track-card t1">
+        <h3>Track ONE: Image Tagging</h3>
+        <p>
+          Develop annotation tools that label architectural and environmental images with evidence-based tags aligned with K-ATLAS propositions. Learn data verification and pipeline architecture.
+        </p>
+        <div class="tagline">View track overview and syllabus</div>
+        <div class="cta-button">View Track 1 →</div>
+      </a>
+
+      <!-- Track 2 -->
+      <a href="ka_track2_pipeline.html" class="track-card t2">
+        <h3>Track TWO: AI Article Pipeline</h3>
+        <p>
+          Build automated article discovery systems using RAG and AI. Implement relevance scoring, Value of Information prioritization, and quality gates for evidence gathering.
+        </p>
+        <div class="tagline">View track overview and syllabus</div>
+        <div class="cta-button">View Track 2 →</div>
+      </a>
+
+      <!-- Track 3 -->
+      <a href="ka_track3_vr.html" class="track-card t3">
+        <h3>Track THREE: VR for Experiments</h3>
+        <p>
+          Create a library of configurable VR environments for controlled experiments. Build parametric scenes with integrated eye tracking and behavioral measurement.
+        </p>
+        <div class="tagline">View track overview and syllabus</div>
+        <div class="cta-button">View Track 3 →</div>
+      </a>
+
+      <!-- Track 4 -->
+      <a href="ka_track4_ux.html" class="track-card t4">
+        <h3>Track FOUR: Interaction Design & Evaluation</h3>
+        <p>
+          Understand how different user types navigate the K-Atlas system. Analyze journeys, improve information architecture, and measure task completion.
+        </p>
+        <div class="tagline">View track overview and syllabus</div>
+        <div class="cta-button">View Track 4 →</div>
+      </a>
+    </div>
+  </div>
+
+</div><!-- /outer -->
+
+<footer class="ka-page-footer" style="background:#1C3D3A; padding:28px 32px; margin-top:40px; display:flex; justify-content:space-between; align-items:center; border-radius:8px 8px 0 0;">
+  <a href="../ka_home.html" style="color:#A8C8BF; font-size:0.85rem; text-decoration:none;">← Back to Home</a>
+  <div style="display:flex; gap:12px;">
+    <a href="../ka_ai_methodology.html" style="background:#2A7868; color:#F7F4EF; padding:8px 18px; border-radius:6px; text-decoration:none; font-size:0.85rem; font-weight:600;">Read AI Methodology →</a>
+  </div>
+</footer>
+
+<div class="version-badge">KA UI · v0.5</div>
+
+<script>
+function toggleAccordion(header) {
+  var body = header.nextElementSibling;
+  var chevron = header.querySelector('.chevron');
+  if (body.classList.contains('open')) {
+    body.classList.remove('open');
+    chevron.textContent = '▼';
+  } else {
+    body.classList.add('open');
+    chevron.textContent = '▲';
+  }
+}
+
+function switchTab(event, tabId) {
+  // Hide all tab content
+  var contents = event.target.parentElement.parentElement.querySelectorAll('.tab-content');
+  contents.forEach(function(c) { c.classList.remove('active'); });
+
+  // Remove active class from all buttons
+  var buttons = event.target.parentElement.querySelectorAll('.tab-button');
+  buttons.forEach(function(b) { b.classList.remove('active'); });
+
+  // Show selected tab and mark button active
+  document.getElementById(tabId).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+
+<script src="../ka_mode_switch.js"></script>
+<script src="../ka_site_shell.js"></script>
+<script src="../ka_data_adapter.js"></script>
+<script src="../ka_live_context.js"></script>
+<script>
+window.KA_SHELL.initShell({
+  navContainerSelector: '.nav-center',
+  modeSelectId: 'setup-mode-select',
+  modePillId: 'setup-mode-pill',
+  modeNoteId: 'setup-mode-summary',
+  defaultMode: 'student_explorer'
+});
+</script>
+
+<script>
+/* SYSTEM STATE banner suppressed — debug info not for students */
+/* window.KA_LIVE_CONTEXT_CONFIG = {
+  surface: 'auth',
+  title: 'System State',
+  status: 'Local identity prototype',
+  warn: true
+}; */
+</script>
+<script>
+window.KA_PAGE_FUNCTION = {
+  pageId: 'ka_student_setup',
+  title: 'Student Orientation Hub',
+  audience: 'New COGS 160 students on their first day; any contributor starting a new track',
+  purpose: 'A fast, discoverable orientation hub that explains what Knowledge Atlas is, directs students to their track assignment page, covers bare-minimum environment setup, and teaches the AI-directed development methodology. Eliminates the need for verbal onboarding or email instructions.',
+  workflowPos: 'First landing page for students. Should send them to their track page within 1–2 minutes.',
+  notFor: 'Track-specific assignment details, database schema docs, or advanced git operations (those are on track pages).',
+  phase: 'Phase 1 — Student onboarding infrastructure',
+  evalQuestions: [
+    'Can a student pick their track and navigate to the right assignment page in under 1 minute?',
+    'Is the "ask AI" guidance clear enough that a stuck student will actually use it?',
+    'Does the page feel short and inviting, or overwhelming?',
+    'Are the track descriptions compelling enough to help students decide?'
+  ]
+};
+</script>
+<script src="../ka_page_function.js"></script>
+
+<script>
+window.KA_ABOUT_PAGE = {
+  pageId: 'ka_student_setup',
+  objective: 'A concise orientation hub where students land on Day 1, pick their track in a visual grid, and navigate to their assignment page. Covers minimal environment setup (deferred to track pages) and teaches the AI-directed development methodology.',
+  users: 'New COGS 160 students; any contributor joining a track for the first time',
+  uses: [
+    'Understand what Knowledge Atlas is and what the four tracks do',
+    'Pick your track and navigate to the assignment page',
+    'Install Python 3.12, git, and VS Code (with OS-specific tabs)',
+    'Learn to use AI as a development tool, not a shortcut',
+    'Find quick answers to common first-day questions'
+  ]
+};
+</script>
+<script src="../ka_about_page.js"></script>
+<script src="../ka_ui_fixes.js"></script>
+<script src="../ka_auth_widget.js?v=20260407b"></script>
+
+</body>
+</html>

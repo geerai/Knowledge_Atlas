@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COGS160: AI & VR — GUI Track Week 6: Personalization & AI Help System</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+         background:#f5f5f5;padding:20px;color:#222;line-height:1.7}
+    .container{max-width:960px;margin:0 auto;background:#fff;padding:48px;
+               box-shadow:0 2px 10px rgba(0,0,0,.08)}
+    .nav{display:flex;justify-content:space-between;align-items:center;
+         margin-bottom:32px;padding-bottom:16px;border-bottom:2px solid #6b3fa0}
+    .nav a{color:#6b3fa0;text-decoration:none;font-weight:600;font-size:.9rem}
+    .nav a:hover{text-decoration:underline}
+    .track-pill{background:#6b3fa0;color:#fff;padding:4px 14px;border-radius:20px;
+                font-size:.8rem;font-weight:700;letter-spacing:.5px}
+    header{margin-bottom:36px}
+    .week-label{font-size:.85rem;font-weight:700;color:#6b3fa0;text-transform:uppercase;
+                letter-spacing:1px;margin-bottom:6px}
+    h1{font-size:2rem;color:#182B49;font-weight:800;margin-bottom:8px;line-height:1.2}
+    .subtitle{font-size:1.05rem;color:#555;margin-bottom:20px}
+    .meta-row{display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;color:#777}
+    .meta-row span strong{color:#333}
+    h2{font-size:1.3rem;color:#182B49;font-weight:700;margin:40px 0 12px;
+       padding-bottom:6px;border-bottom:2px solid #6b3fa0}
+    h3{font-size:1.05rem;color:#6b3fa0;font-weight:700;margin:24px 0 8px}
+    h4{font-size:.95rem;color:#444;font-weight:700;margin:16px 0 6px}
+    p{margin-bottom:14px;color:#333;font-size:.95rem;line-height:1.7}
+
+    .context-box{background:linear-gradient(135deg,#faf5ff,#f3e8ff);border:1px solid #c4a0e8;
+                 border-left:4px solid #6b3fa0;border-radius:6px;padding:20px 24px;margin-bottom:32px}
+    .context-box p{font-size:.95rem;color:#444;margin-bottom:8px}
+    .context-box p:last-child{margin-bottom:0}
+
+    .story-box{background:#fff8f0;border:1px solid #f5c080;border-left:4px solid #d97706;
+               border-radius:6px;padding:20px 24px;margin:20px 0;font-style:italic}
+    .story-box p{color:#555}
+
+    .insight-box{background:#f0f7ff;border:1px solid #aed0ef;border-left:4px solid #1a6fb5;
+                 border-radius:6px;padding:20px 24px;margin:20px 0}
+    .insight-box h4{color:#1a6fb5;margin-top:0}
+
+    .outcome-list{list-style:none;padding:0}
+    .outcome-list li{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid #ede0f5;font-size:.95rem}
+    .outcome-list li:last-child{border-bottom:none}
+    .outcome-num{min-width:28px;height:28px;background:#6b3fa0;color:#fff;border-radius:50%;
+                 display:flex;align-items:center;justify-content:center;font-weight:700;
+                 font-size:.8rem;flex-shrink:0;margin-top:2px}
+
+    .checkpoint-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+    @media(max-width:640px){.checkpoint-grid{grid-template-columns:1fr}}
+    .checkpoint-card{border:1px solid #ddd;border-radius:8px;overflow:hidden;border-top:4px solid #6b3fa0}
+    .checkpoint-header{background:#f9f5ff;padding:14px 16px}
+    .checkpoint-name{font-weight:800;color:#182B49;font-size:.95rem}
+    .checkpoint-type{font-size:.8rem;color:#6b3fa0;font-weight:600;margin-top:2px}
+    .checkpoint-body{padding:14px 16px;font-size:.85rem;color:#444}
+    .checkpoint-body p{margin-bottom:8px;font-size:.85rem}
+    .checkpoint-body p:last-child{margin-bottom:0}
+    .checkpoint-tag{display:inline-block;background:#ede0f5;color:#6b3fa0;padding:2px 8px;
+                 border-radius:10px;font-size:.72rem;font-weight:700;margin:2px}
+
+    .example-block{background:#f0f7ff;border:1px solid #aed0ef;border-radius:8px;padding:24px;margin:20px 0}
+    .example-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;
+                    padding-bottom:12px;border-bottom:2px solid #aed0ef}
+    .example-badge{background:#182B49;color:#fff;padding:4px 12px;border-radius:4px;
+                   font-size:.78rem;font-weight:700;letter-spacing:.5px}
+    .example-title{font-size:1.05rem;font-weight:700;color:#182B49}
+
+    pre{background:#1e1e2e;color:#cdd6f4;border-radius:6px;padding:20px;
+        font-size:.82rem;line-height:1.6;overflow-x:auto;margin:12px 0;tab-size:2}
+    code{font-family:"JetBrains Mono","Fira Code","Courier New",monospace}
+    .code-label{font-size:.75rem;font-weight:700;color:#888;text-transform:uppercase;
+                letter-spacing:.5px;margin-bottom:4px}
+    .st{color:#a6e3a1}.cm{color:#6c7086;font-style:italic}.kw{color:#cba6f7}
+
+    .step-list{display:flex;flex-direction:column;gap:16px;margin:16px 0}
+    .step{display:flex;gap:16px;align-items:flex-start}
+    .step-num{min-width:36px;height:36px;background:#6b3fa0;color:#fff;border-radius:50%;
+              display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+    .step-body{flex:1;padding-top:6px}
+    .step-body strong{display:block;margin-bottom:4px;font-size:.95rem;color:#182B49}
+    .step-body p{font-size:.9rem;color:#444;margin-top:4px}
+
+    table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.88rem}
+    th{background:#182B49;color:#fff;padding:10px 14px;text-align:left;font-weight:700}
+    td{padding:9px 14px;border-bottom:1px solid #eee}
+    tr:nth-child(even) td{background:#fafafa}
+
+    .tip{background:#f0fff4;border:1px solid #a8d5b5;border-left:4px solid #28a745;
+         border-radius:6px;padding:14px 18px;margin:12px 0;font-size:.9rem}
+    .warn{background:#fff8e6;border:1px solid #e8c87a;border-left:4px solid #C69214;
+          border-radius:6px;padding:14px 18px;margin:12px 0;font-size:.9rem}
+    .tip strong,.warn strong{display:block;margin-bottom:4px}
+
+    .ref-list{list-style:none;padding:0}
+    .ref-list li{padding:10px 0;border-bottom:1px solid #eee;font-size:.88rem;color:#444;display:flex;gap:12px}
+    .ref-list li:last-child{border-bottom:none}
+    .ref-num{min-width:28px;font-weight:700;color:#6b3fa0}
+    .ref-text{flex:1}
+
+    .deliverable-banner{background:#182B49;color:#fff;border-radius:8px;padding:20px 24px;margin:24px 0}
+    .deliverable-banner h3{color:#C69214;margin:0 0 8px}
+    .deliverable-banner p{font-size:.9rem;opacity:.9;margin-bottom:4px}
+    .deliverable-banner .grade{font-size:1.4rem;font-weight:800;color:#C69214}
+
+    .checklist{list-style:none;padding:0}
+    .checklist li{padding:8px 0;border-bottom:1px solid #eee;font-size:.9rem;display:flex;gap:10px}
+    .checklist li::before{content:"☐";font-size:1.1rem;color:#6b3fa0;flex-shrink:0}
+
+    .spec-box{background:#f9f9f9;border:1px solid #ddd;border-radius:6px;padding:20px 24px;margin:16px 0}
+    .spec-grid{display:grid;grid-template-columns:140px 1fr;gap:8px 16px;font-size:.9rem}
+    .spec-label{font-weight:700;color:#555}
+    .spec-value{color:#222}
+
+    footer{margin-top:48px;padding-top:20px;border-top:1px solid #eee;font-size:.82rem;color:#999;text-align:center}
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="nav">
+    <a href="index.html">← Course Home</a>
+    <span class="track-pill">🖥 GUI Evaluation Track</span>
+    <a href="gui_track_overview.html">Track Overview →</a>
+  </nav>
+
+  <header>
+    <div class="week-label">Week 6 — Deliverable D4</div>
+    <h1>Personalization & AI Help System Proposal</h1>
+    <p class="subtitle">Shifting from topic-based to context-sensitive, adaptive help</p>
+    <div class="meta-row">
+      <span><strong>Due:</strong> Friday, Week 6 (11:59 PM)</span>
+      <span><strong>Weight:</strong> 11% of GUI track</strong></span>
+      <span><strong>Team:</strong> Pair 2</strong></span>
+      <span><strong>Deliverable Type:</strong> Proposal + Prototype</strong></span>
+    </div>
+  </header>
+
+  <div class="deliverable-banner">
+    <h3>Intellectual Challenge</h3>
+    <p>Most help systems are designed as if all users have identical questions at identical moments. Real users don't. An enrolled biology student asking "How do I compare species using this tool?" needs different help than a guest scientist asking "What datasets are available?" at the same interface location. The intellectual core of this deliverable is recognizing that help must be <em>context-sensitive</em> — determined not just by what button the user pressed, but by who they are, what task they are performing, and where they stand in their task progression.</p>
+  </div>
+
+  <div class="story-box">
+    <p><strong>The Design Failure Behind the Question Mark.</strong> The help button on most software is a last resort — a button users press after they have already given up trying to figure something out themselves. This is a design failure, not a user failure. Help that arrives <em>after the user has given up</em> serves only as confirmation that the task was theoretically possible. Help that arrives <em>at the moment of decision</em> — before the user commits to the wrong action, at the precise checkpoint where confusion is most likely — changes outcomes. Your task is to design a help system that knows when decision points arrive.</p>
+  </div>
+
+  <h2>Core Design Question</h2>
+
+  <p>You have two weeks of empirical data from D1 (user type profiles and checkpoint moments of confusion) and D3 (expert panel assessment of AI capability). The question now becomes: <strong>How can we deploy adaptive help that intercepts confusion before it becomes failure?</strong></p>
+
+  <p>This requires three architectural decisions: (1) what triggers help to appear (the detection layer), (2) who gets which help message (the personalization layer), and (3) what the message says (the content layer). Most help systems skip (1) and (2) entirely — they assume a generic user at a generic moment — and focus only on (3).</p>
+
+  <h2>What You Must Deliver</h2>
+
+  <div class="step-list">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Usability Issues Matrix (from D1 & D3)</strong>
+        <p>Create a ranked table of the top 5–8 usability problems you documented in D1, augmented with the expert assessments from D3. For each issue, specify: (a) which user type(s) encounter it, (b) at what checkpoint moment, (c) estimated severity (frequency × impact), and (d) whether AI-assisted help could mitigate it. Format as a table with explicit severity scoring (e.g., High: affects 50%+ of a user type at a critical decision point).</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Context-Sensitive Help Architecture</strong>
+        <p>Design and document the triggering logic for your help system. Specify: (a) what observable user behaviors or interface states should trigger help (e.g., "cursor hovers on VOI query input for >3 seconds without typing" or "user clicks 'submit' with invalid parameters"), (b) how your system will identify the user type (from session metadata, prior interactions, or explicit self-identification), and (c) how message content will be selected based on user type × checkpoint combination. Diagram this as a decision tree or flowchart.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Personalization Rules (Content Mapping)</strong>
+        <p>For each of your top 5–8 issues, write three versions of the help message: (a) generic (one-size-fits-all, topic-based), (b) user-type-sensitive (tailored to one specific user type's mental model), and (c) context-sensitive (tailored to the specific checkpoint moment AND the user type). Document these in a structured table showing before/after comparisons. For example, help for the "VOI query" checkpoint should differ for an enrolled biology student (task-focused: "to compare two species, enter their names in...") vs. a guest scientist (system-focused: "VOI queries compare value-of-information scores; to run a query, use this syntax...").</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>Interactive Prototype (HTML/JS)</strong>
+        <p>Build a clickable mockup showing your help system in action at one specific checkpoint. Choose the highest-severity usability issue you identified in step 1. Create an HTML page showing: (a) the interface state at that checkpoint (you may use wireframe graphics or screenshots from D1), (b) the triggering condition that causes help to appear (e.g., "cursor dwell on input"), (c) the personalized help message appearing as an overlay or sidebar panel, and (d) documentation of what would happen if the user were a different user type (show alternative message in comments or a toggle). Include CSS animations or subtle interactions to make the help feel integrated, not intrusive.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <strong>Feature Branch & Implementation (Optional but Recommended)</strong>
+        <p>If you have capacity, implement one or more of your proposed help improvements in an actual feature branch of the Article_Eater codebase. Create before/after screenshots showing your change. This becomes the input for Pair 3's UI evaluation in Week 7. Include at least one complete HTML or UI component that could be integrated into the live system. Document the implementation in brief comments so Pair 3 understands what they are evaluating.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <strong>Handoff Documentation for Pair 3</strong>
+        <p>Write a 1–2 page summary document explaining: (a) which help improvements were implemented, (b) which checkpoint moments and user types they address, and (c) what specific UI evaluation questions Pair 3 should answer (e.g., "Did the proactive help reduce the frequency of invalid VOI queries?" or "Did users notice the help message, and did they find it relevant?").</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Design Principles from Research</h2>
+
+  <p>Your help system should reflect principles from human-computer interaction research. Norman (2013) distinguished between two barriers to usability: the <em>gulf of execution</em> (difficulty expressing intentions) and the <em>gulf of evaluation</em> (difficulty interpreting feedback). Context-sensitive help targets the gulf of execution by making the correct action obvious at the moment of decision. Card, Moran, and Newell's (1983) GOMS model emphasizes that expert users and novices have fundamentally different task decompositions for the same interface action. Your help system should recognize this: a routine task for one user type is a novel problem for another.</p>
+
+  <p>Fischer (2001) noted that user modeling in human-computer interaction succeeds only when the system makes assumptions about the user <em>visible and revisable</em>. If your system decides "this user is a student," the interface should make that assumption transparent so the user can correct it if the system is wrong. Horvitz (1999) developed design principles for mixed-initiative UI — systems that combine human and computer agency — and emphasized that proactive help works only when its cost (annoyance, interruption) is lower than its benefit (clarification, error prevention). Help that appears too often becomes invisible; help that appears at the exact moment of decision is noticed and remembered.</p>
+
+  <h2>Worked Example: The VOI Query Checkpoint</h2>
+
+  <div class="example-block">
+    <div class="example-header">
+      <span class="example-badge">WORKED EXAMPLE</span>
+      <span class="example-title">Context-Sensitive Help at the VOI Query Input</span>
+    </div>
+
+    <h4>The Checkpoint Moment</h4>
+    <p>From your D1 research, you identified that the VOI query panel is a moment of confusion for several user types. New students don't understand what "VOI" means. Guest scientists understand VOI but don't know how it's implemented in <em>this</em> system. Let's design help for these two moments.</p>
+
+    <h4>Generic (Topic-Based) Help</h4>
+    <p style="font-family:monospace;background:#f5f5f5;padding:12px;border-radius:4px;margin:8px 0">
+      <strong>Help: Value of Information (VOI)</strong><br/>
+      Value of information (VOI) is a decision-theoretic measure of the expected utility of acquiring information before making a decision. To run a VOI query, enter two species names or two environmental conditions in the input fields. Click "Submit" to calculate their information values.
+    </p>
+    <p><em>Problem:</em> This explanation assumes the user already knows what "utility" means and why they would want "information value." It treats the user as a passive recipient of a definition rather than someone trying to accomplish a goal.</p>
+
+    <h4>User-Type-Sensitive Help (Student)</h4>
+    <p style="font-family:monospace;background:#f5f5f5;padding:12px;border-radius:4px;margin:8px 0">
+      <strong>Comparing which species would teach you more?</strong><br/>
+      This tool helps you pick between two species to study by calculating which one would answer more of your open questions. Enter the two species you're deciding between, and this tool will score them on how much new information comparing them would give you. Higher score = more learning opportunity.
+    </p>
+    <p><em>Improvement:</em> Grounded in the student's actual task (deciding what to study), uses their vocabulary ("learn," "discover"), and explains the <em>outcome</em> they care about (making a better decision about what to research).</p>
+
+    <h4>Context-Sensitive Help (Student + Data Entry Trigger)</h4>
+    <p style="font-family:monospace;background:#f5f5f5;padding:12px;border-radius:4px;margin:8px 0">
+      <strong>🎯 Tip for this step:</strong><br/>
+      You're about to compare two species to see which study would teach you more. This tool calculates how much new information you'd gain from each comparison. <br/><br/>
+      <strong>How to use it:</strong> Type any two species names (e.g., "wolf, moose"), and we'll score which comparison would answer more of your research questions. Try it with organisms you're actually comparing for your project.
+    </p>
+    <p><em>Improvement:</em> Appears at the exact moment the user is about to enter data (after hovering/focusing on the input field). Uses first-person language ("you're about to"). Connects the action to the user's real project. Reduces cognitive load by telling them exactly what to type.</p>
+
+    <h4>Triggering Logic</h4>
+    <pre><code>if (user_type == "student"
+    && interface_location == "voi_query_input"
+    && user_action == "focus") {
+  show_help_message("context_sensitive_student_voi");
+  set_display_duration(10_seconds_or_until_dismissed);
+}</code></pre>
+  </div>
+
+  <h2>Evaluation Criteria</h2>
+
+  <p>Your deliverable will be assessed on: (1) the quality of your usability diagnosis (how well you identified the real problems from D1), (2) the coherence of your help architecture (do the triggering rules, personalization rules, and message content all align?), (3) the realism of your prototype (does it show genuine understanding of how the interface works?), and (4) the sophistication of your personalization (have you genuinely differentiated help for different user types, or just written different versions of the same message?).</p>
+
+  <p>A weak deliverable treats help as content variation: writing different words for different users. A strong deliverable treats help as architecture: designing when help should trigger, who should receive it, and why those decisions matter for outcomes.</p>
+
+  <h2>References</h2>
+
+  <ul class="ref-list">
+    <li>
+      <span class="ref-num">[1]</span>
+      <span class="ref-text">Card, S. K., Moran, T. P., & Newell, A. (1983). <em>The psychology of human-computer interaction.</em> Lawrence Erlbaum Associates. — Foundational work on GOMS modeling and task decomposition differences between user expertise levels.</span>
+    </li>
+    <li>
+      <span class="ref-num">[2]</span>
+      <span class="ref-text">Fischer, G. (2001). User modeling in human-computer interaction. <em>User Modeling and User-Adapted Interaction, 11</em>(1), 65–86. — Discusses transparency in user model assumptions and why invisible modeling fails.</span>
+    </li>
+    <li>
+      <span class="ref-num">[3]</span>
+      <span class="ref-text">Horvitz, E. (1999). Principles of mixed-initiative user interfaces. In <em>Proceedings of the SIGCHI Conference on Human Factors in Computing Systems</em> (pp. 159–166). ACM. — Design principles for deciding when AI should act proactively vs. waiting for explicit instruction.</span>
+    </li>
+    <li>
+      <span class="ref-num">[4]</span>
+      <span class="ref-text">Norman, D. A. (2013). <em>The design of everyday things: Revised and expanded edition.</em> Basic Books. — Chapter on feedback, the gulf of execution, and why most help systems fail to target decision moments.</span>
+    </li>
+    <li>
+      <span class="ref-num">[5]</span>
+      <span class="ref-text">Amershi, S., Weld, D., Vorvoreanu, M., Fourney, A., Nushi, B., Collisson, P., ... & Horvitz, E. (2019). Guidelines for human-AI interaction. In <em>Proceedings of the 2019 CHI Conference on Human Factors in Computing Systems</em> (pp. 1–13). — Contemporary guidelines for AI-assisted UIs, including when to trigger AI help and how to signal AI agency.</span>
+    </li>
+  </ul>
+
+  <h2>Submission Format</h2>
+
+  <div class="spec-box">
+    <div class="spec-grid">
+      <div class="spec-label">Usability Matrix</div>
+      <div class="spec-value">Markdown table (can be in .md file or HTML) with ≥5 issues, severity scores, and user-type mapping</div>
+      <div class="spec-label">Help Architecture Doc</div>
+      <div class="spec-value">1–2 pages describing triggers, personalization rules, and decision trees</div>
+      <div class="spec-label">Message Variants</div>
+      <div class="spec-value">Table comparing generic vs. user-sensitive vs. context-sensitive versions</div>
+      <div class="spec-label">Interactive Prototype</div>
+      <div class="spec-value">Clickable HTML file demonstrating help at one checkpoint, with at least 3 message variants</div>
+      <div class="spec-label">Feature Branch (Optional)</div>
+      <div class="spec-value">If implemented: screenshots, code comments, implementation notes</div>
+      <div class="spec-label">Handoff for Pair 3</div>
+      <div class="spec-value">1–2 page summary and evaluation questions</div>
+    </div>
+  </div>
+
+  <div class="tip">
+    <strong>Collaboration Tip:</strong> Coordinate with Pair 3 early. Let them know which checkpoint you're focusing on and which UI changes you plan to implement. That gives them time to design an evaluation protocol that can measure whether your help system actually reduces confusion (not just whether it looks good).
+  </div>
+
+  <footer>
+    <p>COGS160: AI & VR — Designing Experiments in Human-Computer Interaction</p>
+    <p>Last updated: 2026-03-28</p>
+  </footer>
+
+</div>
+</body>
+</html>

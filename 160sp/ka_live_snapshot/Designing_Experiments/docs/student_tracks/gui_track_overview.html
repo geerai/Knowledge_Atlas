@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track 4: GUI Evaluation | COGS160: AI & VR</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #6b3fa0 0%, #8b5fbf 100%);
+            color: white;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            margin-bottom: 0.25rem;
+        }
+
+        header .track-context {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .breadcrumb {
+            padding: 1rem 2rem;
+            background-color: white;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .breadcrumb a {
+            color: #6b3fa0;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            border-left: 4px solid #6b3fa0;
+        }
+
+        .section h2 {
+            color: #6b3fa0;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .section h3 {
+            color: #333;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            border-bottom: 2px solid #6b3fa0;
+            padding-bottom: 0.5rem;
+        }
+
+        .section h4 {
+            color: #555;
+            margin-top: 1rem;
+            margin-bottom: 0.75rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        .learning-objectives {
+            background: linear-gradient(135deg, #f0ebf8 0%, #f5f0fa 100%);
+            padding: 1.5rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+        }
+
+        .learning-objectives h4 {
+            color: #6b3fa0;
+            margin-top: 0;
+        }
+
+        .learning-objectives li {
+            color: #333;
+        }
+
+        .team-assignments {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .team-card {
+            background: #fafafa;
+            border: 2px solid #e8d5f2;
+            border-radius: 6px;
+            padding: 1.5rem;
+        }
+
+        .team-card h4 {
+            color: #6b3fa0;
+            margin-top: 0;
+            border-bottom: 2px solid #6b3fa0;
+            padding-bottom: 0.5rem;
+        }
+
+        .team-card p {
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .deliverables-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .deliverables-table th {
+            background-color: #6b3fa0;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .deliverables-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .deliverables-table tbody tr:nth-child(even) {
+            background-color: #f9f7fc;
+        }
+
+        .deliverables-table tbody tr:hover {
+            background-color: #f3eaf8;
+        }
+
+        .task-box {
+            background: #fafafa;
+            border-left: 4px solid #6b3fa0;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .task-box h4 {
+            color: #6b3fa0;
+            margin-top: 0;
+        }
+
+        .task-box p {
+            margin-bottom: 0.75rem;
+        }
+
+        .task-box ul {
+            margin-left: 1.5rem;
+        }
+
+        .ai-guidance {
+            background: linear-gradient(135deg, #fff8dc 0%, #fffacd 100%);
+            border-left: 4px solid #b8860b;
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .ai-guidance h4 {
+            color: #8b6b00;
+            margin-top: 0;
+        }
+
+        .ai-guidance p {
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        .code-example {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: "Courier New", monospace;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+            line-height: 1.4;
+        }
+
+        .section-divider {
+            margin: 2.5rem 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #6b3fa0, transparent);
+        }
+
+        .faq-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .faq-item {
+            background: #fafafa;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .faq-question {
+            cursor: pointer;
+            padding: 1rem;
+            background-color: #f0ebf8;
+            border-left: 4px solid #6b3fa0;
+            font-weight: 600;
+            color: #333;
+            border-radius: 4px;
+        }
+
+        .faq-question:hover {
+            background-color: #ebe4f0;
+        }
+
+        .faq-answer {
+            padding: 1rem;
+            color: #555;
+            display: none;
+        }
+
+        .faq-answer.active {
+            display: block;
+        }
+
+        .highlight {
+            background-color: #fff8dc;
+            padding: 0.2rem 0.4rem;
+            border-radius: 2px;
+            font-weight: 500;
+        }
+
+        .success-criteria {
+            background: linear-gradient(135deg, #e6f7f5 0%, #d4f1ed 100%);
+            border-left: 4px solid #1a7a5e;
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .success-criteria h4 {
+            color: #1a7a5e;
+            margin-top: 0;
+        }
+
+        .git-workflow {
+            background: #f0f0f0;
+            padding: 1.5rem;
+            border-radius: 6px;
+            margin: 1.5rem 0;
+            border: 1px solid #ddd;
+        }
+
+        .git-workflow h4 {
+            color: #333;
+            margin-top: 0;
+        }
+
+        footer {
+            margin-top: 3rem;
+            padding: 2rem;
+            text-align: center;
+            color: #999;
+            font-size: 0.85rem;
+            border-top: 1px solid #ddd;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.6rem;
+            }
+
+            .team-assignments {
+                grid-template-columns: 1fr;
+            }
+
+            .deliverables-table {
+                font-size: 0.85rem;
+            }
+
+            .deliverables-table th,
+            .deliverables-table td {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Track 4: GUI Evaluation & Improvement</h1>
+        <div class="subtitle">Evaluating ATLAS for All User Types and the Fall 2026 Classroom</div>
+        <div class="track-context">COGS160: AI & VR Spring 2026 | Team Size: 3 Pairs (6 Students)</div>
+    </header>
+
+    <div class="breadcrumb">
+        <a href="index.html">← Back to All Tracks</a>
+    </div>
+
+    <div class="container">
+        <!-- SECTION 1: OVERVIEW & LEARNING OBJECTIVES -->
+        <div class="section">
+            <h2>1. Track Overview & Learning Objectives</h2>
+
+            <p><strong>Big Picture</strong>: The ATLAS system is built for multiple user types—researchers, architects, domain experts, administrators, students, and the general public. But not all of them experience the interface well. Your job is to systematically evaluate ATLAS for usability across all these user types, identify the pain points, propose improvements, and prototype AI-powered help systems that make the interface more effective. By the end of this track, you'll deliver a comprehensive usability evaluation and improvement roadmap that will guide development for the Fall 2026 COGS160: AI & VR course.</p>
+
+            <div class="learning-objectives">
+                <h4>Learning Objectives</h4>
+                <ul>
+                    <li><strong>User-centered design thinking</strong>: Understand how to design for multiple user archetypes, not just the "expert" user</li>
+                    <li><strong>Usability evaluation methods</strong>: Conduct think-aloud protocols, analyze video transcripts for confusion points, and synthesize findings into actionable recommendations</li>
+                    <li><strong>Human-AI interaction</strong>: Design context-sensitive AI help systems that augment human understanding without creating dependency</li>
+                    <li><strong>Iterative design</strong>: Use simulation and critique to propose improvements, implement them on Git branches, and validate using UI evaluation agents</li>
+                    <li><strong>Classroom-scale system design</strong>: Design for a specific learning context (COGS160: AI & VR Fall) with constraints on time, background knowledge, and motivation</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SECTION 2: TEAM ASSIGNMENTS -->
+        <div class="section">
+            <h2>2. Team Assignments (3 Pairs)</h2>
+
+            <div class="team-assignments">
+                <div class="team-card">
+                    <h4>Pair 1: User Type Evaluation & Personas</h4>
+                    <p><strong>Primary Focus</strong>: Identify all user types of ATLAS, create detailed personas for each, and conduct simulated first-time user walkthroughs via Zoom screen-share.</p>
+                    <p><strong>Key Deliverable</strong>: "Refined User Type Profiles & Use-Case Matrix" (Week 3, D1)</p>
+                    <p><strong>Tasks</strong>: Enumerate user types from system design docs; build personas with names, faces (AI-generated), goals, and frustrations; recruit and record simulated users; transcribe recordings; identify confusion hot spots with Claude's help.</p>
+                </div>
+
+                <div class="team-card">
+                    <h4>Pair 2: AI Help System & GUI Improvements</h4>
+                    <p><strong>Primary Focus</strong>: Design context-sensitive AI help, prototype a demo, propose specific GUI/workflow improvements, and implement changes on Git branches.</p>
+                    <p><strong>Key Deliverable</strong>: "Personalization & Help System Proposal" (Week 6, D4); "Full Usability Evaluation Report" (Week 7, D5)</p>
+                    <p><strong>Tasks</strong>: Analyze user needs from Pair 1 data; design AI help architecture; write prompts and examples; prototype in HTML/JS; propose GUI changes; commit to feature branches for before/after comparison.</p>
+                </div>
+
+                <div class="team-card">
+                    <h4>Pair 3: UI Eval Agent Critique & System Viewers Assessment</h4>
+                    <p><strong>Primary Focus</strong>: Find and analyze the existing UI evaluation agent, test it against user types, critique its deficiencies, and evaluate admin viewers for clarity and pedagogical value.</p>
+                    <p><strong>Key Deliverable</strong>: "Simulated Expert Panel Critique" (Week 5, D3); contributions to D5 on system viewers</p>
+                    <p><strong>Tasks</strong>: Locate UI eval agent code; run it on simulated user tasks; write deficiency report; improve the agent with Claude's help; evaluate admin viewers (VOI streams, annotation types, interpretation monitor, EN graph); propose visualization improvements.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 3: DELIVERABLES TIMELINE -->
+        <div class="section">
+            <h2>3. Deliverables Timeline (Weeks 3–7)</h2>
+
+            <table class="deliverables-table">
+                <thead>
+                    <tr>
+                        <th>Week</th>
+                        <th>Deliverable</th>
+                        <th>Weight</th>
+                        <th>Lead Pair(s)</th>
+                        <th>Key Components</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>3</strong></td>
+                        <td><strong><a href="gui_wk03_user_profiles.html" style="color:#6b3fa0">D1: Refined User Type Profiles &amp; Use-Case Matrix</a></strong></td>
+                        <td>12%</td>
+                        <td>Pair 1</td>
+                        <td>8 user type personas; think-aloud recordings; confusion hot spots; use-case matrix; priority ranking</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4</strong></td>
+                        <td><strong><a href="gui_wk04_ai_capability.html" style="color:#6b3fa0">D2: AI Capability Boundary Assessment</a></strong></td>
+                        <td>12%</td>
+                        <td>Pair 2</td>
+                        <td>Failure mode taxonomy; boundary probe tasks; context-sensitive help architecture; capability scope document</td>
+                    </tr>
+                    <tr>
+                        <td><strong>5</strong></td>
+                        <td><strong><a href="gui_wk05_expert_panel.html" style="color:#6b3fa0">D3: Simulated Expert Panel Critique</a></strong></td>
+                        <td>15%</td>
+                        <td>Pair 3</td>
+                        <td>UI eval agent analysis, deficiency report, system viewer assessments, improvement recommendations</td>
+                    </tr>
+                    <tr>
+                        <td><strong>6</strong></td>
+                        <td><strong><a href="gui_wk06_ai_help.html" style="color:#6b3fa0">D4: Personalization &amp; AI Help System Proposal</a></strong></td>
+                        <td>11%</td>
+                        <td>Pair 2</td>
+                        <td>Context-sensitive help triggering architecture; user-type-specific messages; HTML/JS prototype; feature-branch GUI improvements; before/after evaluation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>7</strong></td>
+                        <td><strong><a href="gui_wk07_report.html" style="color:#6b3fa0">D5: Full Usability Evaluation Report</a></strong></td>
+                        <td>20%</td>
+                        <td>All Pairs</td>
+                        <td>Unified usability narrative; use-case matrix; Fall readiness assessment; ranked priority recommendations; before/after impact analysis</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- SECTION 4: DETAILED TASK BREAKDOWN -->
+        <div class="section">
+            <h2>4. Detailed Task Breakdown</h2>
+
+            <!-- 4a -->
+            <h3>4a. User Type Identification & Persona Creation</h3>
+
+            <div class="task-box">
+                <h4>What You're Building</h4>
+                <p>A comprehensive catalog of all ATLAS user archetypes, with rich personas that make them vivid and understandable. This is not a generic list—each persona should have a name, face (AI-generated avatar), background, specific goals, frustrations, and critical use cases.</p>
+
+                <h4>Step 1: Identify All User Types</h4>
+                <p>From the ATLAS system design documentation, enumerate every distinct user archetype:</p>
+                <ul>
+                    <li><strong>Admin</strong>: Manages the ATLAS instance, configures databases, monitors system health</li>
+                    <li><strong>Researcher</strong>: Uses ATLAS to find and organize evidence for a meta-analysis or review</li>
+                    <li><strong>Architect/Designer</strong>: Uses ATLAS to find design precedents and environmental psychology principles for a project</li>
+                    <li><strong>Student (COGS160: AI & VR Fall)</strong>: Encounters ATLAS for the first time with limited prior knowledge; must complete assignments</li>
+                    <li><strong>Domain Expert</strong>: Academic specialist in environmental psychology, cognition, or related field</li>
+                    <li><strong>ANFA Member</strong>: Architect/designer from a professional organization seeking applied guidance</li>
+                    <li><strong>Curious Public</strong>: General interest in environment and psychology; no prior training</li>
+                    <li><strong>KA Builder/Developer</strong>: Contributes evidence or builds features within ATLAS</li>
+                </ul>
+
+                <h4>Step 2: Create Vivid Personas</h4>
+                <p>For each user type, create a persona document with:</p>
+                <ul>
+                    <li><strong>Name & Avatar</strong> (AI-generated image for visual reference)</li>
+                    <li><strong>Background</strong>: Education, experience, domain familiarity</li>
+                    <li><strong>Goals</strong>: What they want to accomplish with ATLAS (2–3 primary goals)</li>
+                    <li><strong>Frustrations</strong>: What might confuse or block them</li>
+                    <li><strong>Technical Comfort</strong>: Comfort with databases, academic search interfaces, coding</li>
+                    <li><strong>Time Budget</strong>: How much time do they have to learn the system?</li>
+                    <li><strong>Critical Use Cases</strong>: Specific workflows they must complete</li>
+                </ul>
+
+                <div class="ai-guidance">
+                    <h4>AI Help: Persona Generation Prompt</h4>
+                    <p><strong>Prompt for Claude:</strong></p>
+                    <div class="code-example">You are helping design personas for the ATLAS system.
+I will give you a user type. Generate a vivid persona with:
+- Name and brief background (2-3 sentences)
+- 3-4 specific goals they want to accomplish with ATLAS
+- 3-4 likely frustrations or confusion points
+- What they already know vs. what is new to them
+Make it realistic and memorable, not generic.</div>
+                </div>
+
+                <h4>Step 3: Conduct Simulated First-Time User Walkthroughs (Think-Aloud Protocol)</h4>
+                <p>This is critical: for each user type, recruit ONE person (from other tracks or friends) who matches that persona, and record them using the ATLAS site for the first time. <span class="highlight">No prior instructions</span>—they should come in cold.</p>
+                <ul>
+                    <li><strong>Setup</strong>: Zoom recording with screen share + audio. User is in their own environment.</li>
+                    <li><strong>Script</strong>: "You are [PERSONA]. You need to [TASK]. Go ahead and try to complete it. Talk out loud about what you see, what you're thinking, where you're clicking, and whether things make sense to you."</li>
+                    <li><strong>Example Task Scenarios</strong>:
+                        <ul>
+                            <li>Architect: "Find evidence about how window size affects cognitive performance in office buildings"</li>
+                            <li>Student: "Find 3 studies about color and mood, then summarize their main findings"</li>
+                            <li>Curious Public: "I want to learn about how plants affect mental health. Where would you go on this site?"</li>
+                            <li>Admin: "Check the system's current data ingestion rate and verify the annotation pipeline is running"</li>
+                        </ul>
+                    </li>
+                    <li><strong>Record</strong>: Save the Zoom recording; transcribe it (AI-assisted transcription is fine)</li>
+                </ul>
+
+                <h4>Step 4: Identify Confusion Hot Spots</h4>
+                <p>Once you have the transcript, feed it to Claude:</p>
+                <div class="ai-guidance">
+                    <h4>AI Help: Confusion Point Identification Prompt</h4>
+                    <p><strong>Prompt for Claude:</strong></p>
+                    <div class="code-example">Below is a transcript of a user trying ATLAS for the first time.
+Analyze it and identify:
+1. Every moment where the user seemed confused, uncertain, or stuck
+2. What they were trying to do at that moment
+3. What about the interface or workflow made it unclear
+4. What they needed to know that wasn't visible
+
+Format as a table: [Timestamp] | [Action] | [Confusion] | [Root Cause] | [Needed Info]</div>
+                </div>
+
+                <p>Aggregate the confusion findings across all your user recordings into a <strong>"Confusion Hot Spots" table</strong>. Prioritize by frequency.</p>
+            </div>
+
+            <!-- 4b -->
+            <h3>4b. COGS160: AI & VR Fall Class Usability</h3>
+
+            <div class="task-box">
+                <h4>What You're Solving For</h4>
+                <p>In Fall 2026, 30 students will use ATLAS for the first time. They will have no prior context, about 50 minutes to get oriented, and 8 weeks to use the system for coursework. Your job: anticipate what will confuse them.</p>
+
+                <h4>Key Question</h4>
+                <p><strong>What will block a Fall 2026 COGS160: AI & VR student in their first week on the system?</strong></p>
+
+                <ul>
+                    <li>What is the onboarding flow? Is it clear?</li>
+                    <li>What workflows are critical for Fall assignments? Are they discoverable?</li>
+                    <li>What terminology is non-obvious?</li>
+                    <li>What features exist but are hidden?</li>
+                </ul>
+
+                <h4>Method</h4>
+                <p>Recruit classmates from OTHER tracks (Image Tagger, Article Finder, VR) and have them simulate a "naïve first-timer" on ATLAS. You spring students will have forgotten your first experience—your classmates haven't.</p>
+
+                <p>Run the same think-aloud protocol, but focus the task on Fall-specific workflows:</p>
+                <ul>
+                    <li>"You are a COGS160: AI & VR student in Fall. Your assignment is to find 5 studies about lighting and mood, then write a one-paragraph summary of what the evidence says. Try that now on ATLAS."</li>
+                    <li>"You need to compare two different effect sizes from two different studies. Can you do that? How would you?"</li>
+                    <li>"Your prof said ATLAS has information about what phenomena are well-supported vs. speculative. Where would you look for that?"</li>
+                </ul>
+
+                <h4>Deliverable for D1</h4>
+                <p>Include in your D1 a <strong>"Fall Readiness Assessment"</strong> section noting: expected friction points, recommended onboarding improvements, and critical workflows that need to be visible/intuitive.</p>
+            </div>
+
+            <!-- 4c -->
+            <h3>4c. AI Help System Prototype</h3>
+
+            <div class="task-box">
+                <h4>What You're Building</h4>
+                <p>A design document and working prototype showing how Claude (or another LLM) can provide context-sensitive help on the ATLAS site. The help system should know: what page the user is on, what they just clicked, what they typed, and what they seem to be trying to do. Then it offers relevant guidance in real time.</p>
+
+                <h4>Step 1: Design the AI Help Architecture</h4>
+                <ul>
+                    <li><strong>Context Tracking</strong>: What information should the help system track?
+                        <ul>
+                            <li>Current page/URL</li>
+                            <li>Last user action (click, form submission, search query)</li>
+                            <li>User type (if known from login)</li>
+                            <li>What the user typed (search query, filter values, etc.)</li>
+                            <li>Error messages encountered</li>
+                        </ul>
+                    </li>
+                    <li><strong>Help Triggers</strong>: When should help appear?
+                        <ul>
+                            <li>User clicks a help icon</li>
+                            <li>User pauses for 10+ seconds on a page</li>
+                            <li>User triggers an error</li>
+                            <li>User is on a page that historically causes confusion</li>
+                        </ul>
+                    </li>
+                    <li><strong>Response Generation</strong>: How does Claude formulate the response?
+                        <ul>
+                            <li>Feed context (page, action, user type) to Claude</li>
+                            <li>Claude generates a short, task-focused explanation</li>
+                            <li>Response includes: "What you're trying to do", "How to do it here", "Related features"</li>
+                            <li>Keep responses under 150 words</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h4>Step 2: Write Example Prompts</h4>
+                <p>Create concrete prompts that show how Claude should behave in different contexts:</p>
+
+                <div class="ai-guidance">
+                    <h4>AI Help: Context-Sensitive Help Prompts</h4>
+                    <p><strong>Example 1 — User on Image Tagger Page, Searching by Tag:</strong></p>
+                    <div class="code-example">User context:
+- Page: /images/tagger
+- Last action: User clicked on "biophilic_richness" tag
+- User type: Student
+- Error: None visible
+
+Generate a short help response explaining:
+1. What "biophilic_richness" means in this context
+2. How to use this tag to search for images
+3. What they can do next (e.g., combine with other tags)</div>
+
+                    <p><strong>Example 2 — User on VOI Page, Confused:</strong></p>
+                    <div class="code-example">User context:
+- Page: /evidence/voi-matrix
+- Last action: User hovered over a gap cell for 3+ seconds
+- User type: Architect
+- Search query from page: "window size cognitive"
+
+Generate a help response explaining:
+1. What a "VOI gap" is and why it matters
+2. How to interpret the color coding
+3. What to do next (e.g., find literature, propose research)</div>
+                </div>
+
+                <h4>Step 3: Build a Prototype</h4>
+                <p>Create a simple, static HTML/JavaScript prototype showing the help system in action. You don't need a backend—this is a mock-up showing the UX flow.</p>
+                <ul>
+                    <li>Display a fake ATLAS page</li>
+                    <li>Include a "Help" button (or trigger on hover)</li>
+                    <li>Show context information (page, last action, user type)</li>
+                    <li>Display Claude's response in a help panel (you can use a made-up response or actual Claude-generated text)</li>
+                    <li>Show how help updates when user clicks different areas</li>
+                </ul>
+
+                <h4>Step 4: Synthesize Pair Reports</h4>
+                <p>Both Pair 2 and Pair 3 should contribute to a collective <strong>"AI Help & System Improvements Synthesis"</strong> document that you present to Prof. Kirsh. This document should include:</p>
+                <ul>
+                    <li>The help system architecture and example prompts</li>
+                    <li>Projected impact: which user types benefit most?</li>
+                    <li>Limitations and failure modes</li>
+                    <li>Implementation roadmap</li>
+                </ul>
+
+                <div class="ai-guidance">
+                    <h4>AI Help: Help System Evaluation Prompt</h4>
+                    <p><strong>Prompt for Claude:</strong></p>
+                    <div class="code-example">I'm designing a context-sensitive AI help system for ATLAS. Here are the user types and their likely pain points.
+
+[List pain points from your D1]
+
+For each pain point, generate:
+1. A sample context state (page, action, error)
+2. The AI help response Claude should generate
+3. How this help addresses the root cause
+
+Then assess: which user types gain the most benefit?</div>
+                </div>
+            </div>
+
+            <!-- 4d -->
+            <h3>4d. GUI & Workflow Improvement Proposals</h3>
+
+            <div class="task-box">
+                <h4>What You're Building</h4>
+                <p>Specific, actionable proposals for improving the ATLAS interface based on usability findings. Each proposal should: identify a pain point, propose a solution, and show a before/after comparison on a Git branch.</p>
+
+                <h4>Step 1: Prioritize Pain Points from User Testing</h4>
+                <p>From your D1 and D3 findings, list the top 5–8 usability issues. For each, rate:</p>
+                <ul>
+                    <li><strong>Frequency</strong>: How often did users encounter this?</li>
+                    <li><strong>Severity</strong>: How much did it block them?</li>
+                    <li><strong>Fixability</strong>: Can it be fixed with reasonable effort?</li>
+                </ul>
+
+                <h4>Step 2: Consult the atlas_viz_design_service</h4>
+                <p>Before designing any GUI changes, you MUST read the <span class="highlight">atlas_viz_design_service</span> SKILL.md (located in `Article_Eater_PostQuinean_v1_recovery/services/atlas_viz_design_service/SKILL.md`).</p>
+
+                <p>This service encodes design best practices. Find out:</p>
+                <ul>
+                    <li>What input format does the design agent expect?</li>
+                    <li>What design principles does it enforce?</li>
+                    <li>How do you request a redesign of a component?</li>
+                </ul>
+
+                <h4>Step 3: Generate Improvement Proposals</h4>
+                <p>For each top pain point, create:</p>
+                <ul>
+                    <li><strong>Problem Statement</strong>: What's broken? Who does it affect?</li>
+                    <li><strong>Root Cause</strong>: Why is it broken? (e.g., information architecture, visual hierarchy, missing context)</li>
+                    <li><strong>Proposed Solution</strong>: Concrete design change (with wireframe or mockup if possible)</li>
+                    <li><strong>Success Criteria</strong>: How will you know if the fix works?</li>
+                </ul>
+
+                <h4>Step 4: Implement on Git Branches</h4>
+                <p>For each proposal you can implement:</p>
+                <ul>
+                    <li>Create a feature branch: <code>feature/gui-{improvement-name}-{pair-initials}</code>
+                        <ul>
+                            <li>Example: <code>feature/gui-searchfilter-clarity-jk</code></li>
+                        </ul>
+                    </li>
+                    <li>Commit your changes with clear, descriptive commit messages</li>
+                    <li>Take screenshots of the change (before and after)</li>
+                    <li>Push to the repo so Prof. Kirsh can review and compare</li>
+                </ul>
+
+                <h4>Step 5: Validate with the UI Eval Agent (Pair 3 leads)</h4>
+                <p>Once your changes are implemented, have Pair 3 run the UI evaluation agent on your new design. Does it find fewer usability issues? Does it find new ones? Document the before/after comparison in your D4 and D5 reports.</p>
+
+                <div class="success-criteria">
+                    <h4>Success Criteria for GUI Improvements</h4>
+                    <ul>
+                        <li>Each improvement addresses a real pain point identified in user testing</li>
+                        <li>Changes follow the atlas_viz_design_service guidelines</li>
+                        <li>Before/after comparison is visible via Git branches or screenshots</li>
+                        <li>Improvements are validated by the UI eval agent or follow-up user testing</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 4e -->
+            <h3>4e. UI Evaluation Agent Critique</h3>
+
+            <div class="task-box">
+                <h4>What You're Solving For</h4>
+                <p>The ATLAS system may already have a UI evaluation agent (or similar tool) that simulates user interactions and identifies usability issues. Your job: understand what it does, test it critically, identify its blind spots, and improve it if possible.</p>
+
+                <h4>Step 1: Locate & Understand the UI Eval Agent</h4>
+                <ul>
+                    <li>Search the codebase for UI evaluation agent code (look in `services/`, `agents/`, or `tools/`)</li>
+                    <li>Read its documentation: What does it measure? What user types does it simulate? What issues can it detect?</li>
+                    <li>Review its architecture: How does it interact with ATLAS? What is the output format?</li>
+                </ul>
+
+                <h4>Step 2: Test the Agent Against Your User Personas</h4>
+                <p>Run the agent on simulated tasks for each user type:</p>
+                <ul>
+                    <li><strong>Task for Admin</strong>: "Monitor the system's data ingestion pipeline"</li>
+                    <li><strong>Task for Researcher</strong>: "Find all studies on biophilic design and mental health"</li>
+                    <li><strong>Task for Student</strong>: "Complete the Week 3 assignment: find 5 studies on color and mood"</li>
+                    <li><strong>Task for Architect</strong>: "Find design precedents for a high-restorativeness office environment"</li>
+                </ul>
+
+                <p>For each task, capture:</p>
+                <ul>
+                    <li>What issues did the agent identify?</li>
+                    <li>Were those issues real and important?</li>
+                    <li>Did the agent miss any issues YOU noticed in user testing?</li>
+                </ul>
+
+                <h4>Step 3: Write a Deficiency Report</h4>
+                <p>Assess the agent honestly:</p>
+                <ul>
+                    <li><strong>What the agent does well</strong>: List genuine strengths</li>
+                    <li><strong>Blind spots</strong>: What kinds of usability issues does it miss?
+                        <ul>
+                            <li>Does it miss context-dependent confusion? (e.g., students vs. researchers have different mental models)</li>
+                            <li>Does it miss workflow issues? (e.g., the task is technically doable but requires 10 clicks instead of 2)</li>
+                            <li>Does it miss aesthetic issues? (e.g., visual hierarchy, color contrast)</li>
+                            <li>Does it miss accessibility issues?</li>
+                        </ul>
+                    </li>
+                    <li><strong>Suggested improvements</strong>: How could the agent be better?</li>
+                </ul>
+
+                <h4>Step 4: Improve the Agent (Optional, High-Impact)</h4>
+                <p>If the agent has clear deficiencies, propose and implement improvements:</p>
+                <div class="ai-guidance">
+                    <h4>AI Help: Agent Improvement Prompt</h4>
+                    <p><strong>Prompt for Claude:</strong></p>
+                    <div class="code-example">I have a UI evaluation agent that tests ATLAS for usability.
+It's missing these kinds of issues: [list blind spots]
+
+Here's the current agent code: [paste code]
+
+Generate improvements that would help it detect:
+1. Context-dependent confusion (user type matters)
+2. Workflow efficiency issues
+3. Visual hierarchy problems
+4. Accessibility issues
+
+Show me specific code changes or architectural additions.</div>
+                </div>
+
+                <p>Test your improved agent: does it now find issues the old one missed?</p>
+
+                <h4>Step 5: Deliverable for D3</h4>
+                <p>Your "Simulated Expert Panel Critique" should include:</p>
+                <ul>
+                    <li>Summary of the UI eval agent's capabilities and limitations</li>
+                    <li>Evidence from your testing (sample output, example issues it found vs. missed)</li>
+                    <li>Your deficiency report</li>
+                    <li>If applicable: the improved agent and comparison (old vs. new)</li>
+                </ul>
+            </div>
+
+            <!-- 4f -->
+            <h3>4f. System Viewers Evaluation</h3>
+
+            <div class="task-box">
+                <h4>What You're Solving For</h4>
+                <p>ATLAS has several "admin viewers" and data visualization tools for understanding how the system works. These are meant to be transparent—they show you what's happening under the hood. But are they actually understandable? Would a student in Fall be able to use them to learn about the system?</p>
+
+                <h4>Key Question</h4>
+                <p><strong>If a Fall 2026 COGS160: AI & VR student looked at these viewers, would they understand what they're seeing?</strong></p>
+
+                <h4>Step 1: Identify All System Viewers</h4>
+                <p>Look at the Streamlit app (or web interface). Pages 11–14 typically include:</p>
+                <ul>
+                    <li><strong>VOI Stream Viewer</strong>: Live feed of new evidence being added to the system</li>
+                    <li><strong>Annotation Types Viewer</strong>: What kinds of annotations are users making? Statistics.</li>
+                    <li><strong>Interpretation Monitor</strong>: How interpretations are being rated and voted on</li>
+                    <li><strong>EN Graph Viewer</strong>: The Evidential Network (how evidence interconnects)</li>
+                    <li>Any others you find</li>
+                </ul>
+
+                <h4>Step 2: For Each Viewer, Assess:</h4>
+                <ul>
+                    <li><strong>Clarity</strong>: Do you understand what you're looking at on first glance?
+                        <ul>
+                            <li>Are axes labeled? Are colors explained?</li>
+                            <li>Is there a legend or explanatory text?</li>
+                            <li>What is the purpose of this visualization?</li>
+                        </ul>
+                    </li>
+                    <li><strong>Pedagogical Value</strong>: What can a student learn from this?
+                        <ul>
+                            <li>Does it show system health?</li>
+                            <li>Does it show user activity and engagement?</li>
+                            <li>Does it show the quality or type of contributions?</li>
+                            <li>Does it help students understand the ATLAS design?</li>
+                        </ul>
+                    </li>
+                    <li><strong>Scaffolding</strong>: Is there enough explanatory support?
+                        <ul>
+                            <li>Is there a caption explaining what you're seeing?</li>
+                            <li>Are there example interpretations or scenarios?</li>
+                            <li>Could a student answer questions like "what does this spike mean?" just by looking?</li>
+                        </ul>
+                    </li>
+                    <li><strong>Interaction</strong>: Can students explore the data or are they just passive observers?
+                        <ul>
+                            <li>Can they hover for details?</li>
+                            <li>Can they filter or zoom?</li>
+                            <li>Can they compare time periods or user segments?</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h4>Step 3: Improvement Proposals</h4>
+                <p>For each viewer, propose specific improvements:</p>
+                <ul>
+                    <li><strong>Add captions</strong>: 2-3 sentence explanation of what the viewer shows and why it matters</li>
+                    <li><strong>Add legends/color keys</strong>: Ensure all visual encodings are explained</li>
+                    <li><strong>Add example scenarios</strong>: Show what different patterns would look like (e.g., "a healthy system looks like this; a problem state looks like this")</li>
+                    <li><strong>Add interactivity</strong>: Hover tooltips, filters, comparison tools</li>
+                    <li><strong>Restructure the layout</strong>: Maybe the most important information isn't visible first</li>
+                </ul>
+
+                <h4>Step 4: Deliverable for D3 & D5</h4>
+                <p>Your "System Viewers Assessment" should be part of the D3 "Simulated Expert Panel Critique" and expanded in D5. Include:</p>
+                <ul>
+                    <li>A table assessing each viewer on the four criteria above</li>
+                    <li>Specific improvement proposals with mockups or before/after designs (if possible)</li>
+                    <li>Priority ranking: which viewers need the most help?</li>
+                </ul>
+
+                <div class="success-criteria">
+                    <h4>Success Criteria</h4>
+                    <ul>
+                        <li>All major system viewers have been evaluated</li>
+                        <li>Each viewer has been assessed on clarity, pedagogical value, scaffolding, and interactivity</li>
+                        <li>Improvement proposals are concrete and implementable</li>
+                        <li>Assessment reflects realistic expectations for Fall students</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 4g -->
+            <h3>4g. Final Deliverable: Comprehensive Usability Report & Fall Readiness</h3>
+
+            <div class="task-box">
+                <h4>What You're Producing (Week 7, D5)</h4>
+                <p>A comprehensive, professional usability evaluation report that synthesizes findings from all three pairs and provides actionable recommendations for improving ATLAS for all user types and specifically for Fall 2026 deployment.</p>
+
+                <h4>Structure</h4>
+                <ul>
+                    <li><strong>Executive Summary</strong>: Top findings and recommendations (1 page)</li>
+                    <li><strong>User Type Profiles & Pain Points</strong>: Your refined personas from D1 + confusion hot spots table</li>
+                    <li><strong>Usability Findings by User Type</strong>: What each user type struggled with, supported by video transcript excerpts and direct quotes</li>
+                    <li><strong>AI Help System Design</strong>: From D2 and D4, the prototype and proposed architecture</li>
+                    <li><strong>GUI Improvements Implemented</strong>: Screenshots and links to Git branches showing before/after</li>
+                    <li><strong>UI Evaluation Agent Analysis</strong>: From D3, the agent's strengths and deficiencies, improved version if applicable</li>
+                    <li><strong>System Viewers Assessment</strong>: From D3, detailed evaluation of admin viewers with improvement proposals</li>
+                    <li><strong>Fall 2026 Readiness Assessment</strong>: Specific steps to prepare ATLAS for classroom use
+                        <ul>
+                            <li>Critical onboarding improvements (must do before Fall)</li>
+                            <li>Nice-to-have improvements (can defer)</li>
+                            <li>Recommended class schedule and pacing for introducing students to ATLAS</li>
+                            <li>Anticipated student confusion and mitigation strategies</li>
+                        </ul>
+                    </li>
+                    <li><strong>Appendix</strong>: Full user testing transcripts, quantitative data (frequency tables), persona documents</li>
+                </ul>
+
+                <h4>Format & Quality</h4>
+                <ul>
+                    <li>Professional academic report (use the <span class="highlight">docx</span> skill if producing Word, or quality HTML)</li>
+                    <li>Clear visual hierarchy, headings, and navigation</li>
+                    <li>Data presented as tables, charts, or summarized statistics where appropriate</li>
+                    <li>Every recommendation supported by evidence (quote from transcript, frequency count, expert consensus)</li>
+                    <li>All findings attributed to source (which pair discovered it? what testing method?)</li>
+                </ul>
+
+                <h4>Impact & Presentation</h4>
+                <p>This report will guide development and inform the Prof. Kirsh's decisions about what to prioritize before Fall. Present it clearly and compellingly—your work should directly improve the system for students.</p>
+            </div>
+        </div>
+
+        <!-- SECTION 5: AI TOOL GUIDE -->
+        <div class="section">
+            <h2>5. AI Tool Guide for GUI Evaluation Students</h2>
+
+            <p>You will use Claude extensively in this track. Here are key prompt templates for different tasks:</p>
+
+            <h3>Prompt Category 1: Persona Creation & Elaboration</h3>
+            <div class="ai-guidance">
+                <h4>Persona Generation Starter</h4>
+                <div class="code-example">I'm designing personas for a system called ATLAS that organizes environmental psychology evidence.
+
+One user type is [USER TYPE: architect/designer]. Generate a vivid persona including:
+- Name and brief background (education, current role, years of experience)
+- 3-4 goals they want to accomplish in ATLAS
+- 3-4 likely frustrations or moments of confusion
+- What they already know (probably) vs. what's new
+- Technical comfort level (0-10)
+
+Make it realistic and specific, not generic.</div>
+            </div>
+
+            <h3>Prompt Category 2: Use-Case Generation</h3>
+            <div class="ai-guidance">
+                <h4>Use-Case Elaboration</h4>
+                <div class="code-example">Here's a persona for ATLAS: [PERSONA DETAILS]
+
+Generate 5 realistic use cases for this person. For each, include:
+1. Specific goal (what are they trying to accomplish?)
+2. Starting point (where on the site do they begin?)
+3. Task steps (what would they need to do?)
+4. Success criteria (how do they know they succeeded?)
+5. Likely confusion points (where might they get stuck?)
+
+Example format:
+Use Case: "Find precedents for a biophilic office redesign"
+- Goal: ...
+- Starting point: ...
+- Task steps: ...
+- Success: ...
+- Confusion points: ...</div>
+            </div>
+
+            <h3>Prompt Category 3: Transcript Analysis & Confusion Identification</h3>
+            <div class="ai-guidance">
+                <h4>Confusion Hot Spot Identification</h4>
+                <div class="code-example">Below is a transcript of a user trying ATLAS for the first time (user type: [TYPE]).
+
+I'll mark key moments with [TIMESTAMP]. Analyze and identify:
+1. Every moment where the user seemed confused, stuck, or uncertain
+2. What specifically triggered the confusion?
+3. What information or affordance was missing?
+4. How severe was it? (Recovered quickly? Still stuck? Gave up?)
+
+Format as table:
+| Time | Action | Confusion Type | Root Cause | Severity |
+
+[TRANSCRIPT HERE]</div>
+            </div>
+
+            <h3>Prompt Category 4: UI Critique & Improvement Suggestions</h3>
+            <div class="ai-guidance">
+                <h4>GUI Problem → Solution Generation</h4>
+                <div class="code-example">Here's a usability problem from our testing:
+
+Problem: [DESCRIBE THE PROBLEM + USER TYPE + FREQUENCY]
+
+Generate a prioritized list of possible solutions. For each:
+1. How would you change the UI?
+2. What's the expected benefit?
+3. How would you know if it worked?
+4. What's the implementation effort (quick mockup? full build)?
+5. Any risks or downsides?
+
+Order by impact/feasibility tradeoff.</div>
+            </div>
+
+            <h3>Prompt Category 5: Context-Sensitive Help Design</h3>
+            <div class="ai-guidance">
+                <h4>AI Help Response Generation</h4>
+                <div class="code-example">User context:
+- Page: [PAGE NAME / URL]
+- User type: [e.g., student]
+- Last action: [e.g., clicked "biophilic_richness" tag]
+- Visible error: [if any]
+- User task: [what are they trying to accomplish?]
+
+Generate a concise, task-focused help response (max 150 words) that:
+1. Confirms what they're trying to do
+2. Explains the concept or feature in 1-2 sentences
+3. Walks through the next step or two
+4. Suggests related features if helpful
+5. Is written for the user's technical level</div>
+            </div>
+
+            <h3>Prompt Category 6: System Viewer Assessment</h3>
+            <div class="ai-guidance">
+                <h4>Viewer Clarity & Pedagogical Evaluation</h4>
+                <div class="code-example">I'm evaluating a data visualization in an educational system. Here's a description:
+
+[DESCRIBE THE VIEWER: what it shows, how it looks, what the axes/colors represent]
+
+Assess it on these criteria:
+1. **Clarity** (0-10): Would someone unfamiliar with the system understand what they're looking at?
+2. **Pedagogical value** (0-10): What can a student learn from this?
+3. **Scaffolding** (0-10): Is there enough explanatory support (captions, legends, examples)?
+4. **Interactivity** (0-10): Can viewers explore or just passively view?
+
+For each low score, suggest specific improvements (e.g., "Add a caption explaining what each color means").</div>
+            </div>
+        </div>
+
+        <!-- SECTION 6: GIT BRANCH SETUP -->
+        <div class="section">
+            <h2>6. Git Branch Setup for GUI Track</h2>
+
+            <div class="git-workflow">
+                <h4>Branch Naming Convention</h4>
+                <p>All GUI improvements should be implemented on feature branches with consistent naming:</p>
+                <div class="code-example">feature/gui-{improvement-name}-{pair-initials}
+
+Examples:
+feature/gui-searchfilter-clarity-jk
+feature/gui-helpicon-redesign-ab
+feature/gui-viewerslegend-expansion-mn</div>
+
+                <h4>Workflow: Before/After Comparison</h4>
+                <ol>
+                    <li>Create the feature branch from main: <code>git checkout -b feature/gui-{name}-{initials}</code></li>
+                    <li>Make your changes (UI modifications, CSS updates, new components)</li>
+                    <li>Take a screenshot of the "before" state (on main) and "after" state (on your branch)</li>
+                    <li>Commit with clear messages:
+                        <div class="code-example">git commit -m "gui: improve search filter clarity
+
+Add explanatory text below filter buttons describing
+what each filter does. Add hover tooltips for all filter options.
+
+Addresses user confusion hot spot #3 from Week 3 testing."</div>
+                    </li>
+                    <li>Push to remote: <code>git push origin feature/gui-{name}-{initials}</code></li>
+                    <li>Create a Pull Request with before/after screenshots in the description</li>
+                </ol>
+
+                <h4>Documentation in PR</h4>
+                <p>When you open a Pull Request, include:</p>
+                <ul>
+                    <li><strong>Before screenshot</strong>: The old UI</li>
+                    <li><strong>After screenshot</strong>: Your improved UI</li>
+                    <li><strong>Problem statement</strong>: What was confusing or broken?</li>
+                    <li><strong>Solution</strong>: What you changed and why</li>
+                    <li><strong>Testing notes</strong>: Did the UI eval agent find fewer issues? Did user testing improve?</li>
+                    <li><strong>Review checklist</strong>: Did you follow atlas_viz_design_service guidelines?</li>
+                </ul>
+
+                <h4>Reviewing & Comparing Changes</h4>
+                <p>Prof. Kirsh can:</p>
+                <ol>
+                    <li>Check out your feature branch locally: <code>git checkout feature/gui-{name}-{initials}</code></li>
+                    <li>View the implemented change</li>
+                    <li>Compare visually to the "before" screenshots in your PR</li>
+                    <li>Merge to main if approved, or request revisions</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- SECTION 7: FAQs -->
+        <div class="section">
+            <h2>7. Frequently Asked Questions</h2>
+
+            <div class="faq-section">
+                <div class="faq-item">
+                    <div class="faq-question" onclick="this.nextElementSibling.classList.toggle('active')">
+                        ❓ How do I recruit people to simulate user types if I only know spring COGS160: AI & VR classmates?
+                    </div>
+                    <div class="faq-answer">
+                        Great question. You have options:
+                        (1) Ask classmates from OTHER tracks (Image Tagger, Article Finder, VR). They have similar preparation to you but can act as "first-timers" if they haven't tried ATLAS yet.
+                        (2) Ask friends outside the course who match the persona (e.g., a friend who's an architecture major for the architect persona, a grad student in psychology for the domain expert, etc.).
+                        (3) Recruit via UCSD research participation boards or ask your TA for suggestions.
+                        The key: find people who genuinely haven't used ATLAS before and can give honest first reactions. Paying them $10-15 as thank-you for 30 min of their time is often worth it.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="this.nextElementSibling.classList.toggle('active')">
+                        ❓ What if I can't implement the GUI improvements I propose? Can I just submit mockups or designs?
+                    </div>
+                    <div class="faq-answer">
+                        Absolutely. If implementation is blocked (you don't know the tech stack, it's too complex), you can submit:
+                        (1) Detailed wireframe or mockup (Figma, hand-drawn scans, or HTML sketches)
+                        (2) Pseudocode or a description of the code changes needed
+                        (3) A note on what would be required to implement it (e.g., "requires React component refactor")
+                        The point is to demonstrate you've identified real problems and thought through solutions, even if you can't code them all. Prof. Kirsh values the analysis and design thinking as much as the finished implementation.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="this.nextElementSibling.classList.toggle('active')">
+                        ❓ How long should each user testing session be? And how many users per persona do I need?
+                    </div>
+                    <div class="faq-answer">
+                        Guidelines:
+                        **Duration**: 20-30 minutes per session. Give them a clear task and let them work through it.
+                        **Number of users per persona**: Ideally 2-3 per persona. This gives you statistical power (you'll see repeated patterns) without requiring massive recruiting effort. For 8 personas, that's 16-24 sessions total—manageable if split across your pair over 2-3 weeks.
+                        **If you only get 1 per persona**: That's okay, but note the limitation. Your findings are suggestive, not definitive.
+                        **Red flag**: If you only test with your close friends or classmates, you'll get biased results (they're likely similar to you). Try to get some demographic/background diversity.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="this.nextElementSibling.classList.toggle('active')">
+                        ❓ The "AI Help System" sounds complex. Do I really need to build a backend?
+                    </div>
+                    <div class="faq-answer">
+                        No. You can—and probably should—mock this up first:
+                        (1) Build a static HTML prototype showing ATLAS + a help panel
+                        (2) Use JavaScript to track simulated "user actions" (clicks, form inputs)
+                        (3) Paste in example Claude responses for different contexts (you can generate these once, then reuse)
+                        (4) Show how the help panel updates as the user "interacts" with the fake site
+                        This demonstrates the UX and the prompt design without needing a real backend. If Prof. Kirsh wants a backend integration later, that's phase 2. For Week 6 D4, a polished mockup is perfect.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="this.nextElementSibling.classList.toggle('active')">
+                        ❓ What if the UI evaluation agent doesn't exist or I can't find it?
+                    </div>
+                    <div class="faq-answer">
+                        Good catch. If the agent doesn't exist:
+                        (1) Build a simple one yourself. You can write a Python script that:
+                            - Takes a user task as input
+                            - Simulates a user clicking through the site
+                            - Records what they successfully completed vs. where they got stuck
+                            - Outputs a report of usability issues
+                        (2) Or write a text-based agent using Claude's API:
+                            - Give Claude the ATLAS site structure
+                            - Ask it to simulate a user of type X trying task Y
+                            - Have it output issues found
+                        This becomes a nice deliverable even if it's your own creation. Pair it with a critique explaining what a production UI agent should do.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="this.nextElementSibling.classList.toggle('active')">
+                        ❓ How do I balance being critical of ATLAS while not being unfairly harsh?
+                    </div>
+                    <div class="faq-answer">
+                        This is the heart of good evaluation. Best practices:
+                        (1) **Ground criticism in evidence**: Don't say "this is confusing." Say "User 4 and User 5 both got stuck here; the transcript shows they spent 3+ minutes looking for X."
+                        (2) **Separate the interface from the system**: A design problem doesn't mean the underlying system is bad. ATLAS's information model might be great; the UI might just need help.
+                        (3) **Acknowledge context**: A feature that's confusing for a student might make perfect sense to a researcher. Document that nuance.
+                        (4) **Celebrate what works**: In your findings, note what's working well too. Don't let problems overshadow strengths.
+                        (5) **Propose solutions**: Criticism without solutions is not useful. Always pair a problem with 2-3 possible fixes.
+                        Prof. Kirsh wants honest evaluation, but framed constructively.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="this.nextElementSibling.classList.toggle('active')">
+                        ❓ Can I use Claude to help analyze the user testing transcripts? Or does that "cheat"?
+                    </div>
+                    <div class="faq-answer">
+                        **Absolutely use Claude.** In fact, the system-wide guidance requires it. Here's the distinction:
+                        **Your job**: Watch the videos, take notes, notice patterns, form hypotheses.
+                        **Claude's job**: Accelerate the analysis. Feed it the transcript and ask structured questions (confusion points, root causes, missing information). Use Claude to organize and summarize your observations, not replace them.
+                        **What would be cheating**: Handing Claude a transcript, skimming Claude's output without verification, and claiming that as your finding.
+                        **What's good practice**: Watch the video yourself, note key moments, then ask Claude to systematically extract confusion points. Verify Claude's output against the video. Iterate.
+                        This is AI-augmented analysis, which is exactly what this course is training you for.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="section">
+            <h3>Key Takeaways for GUI Evaluation Students</h3>
+
+            <ul>
+                <li><strong>User type matters</strong>: The same feature that's intuitive for a researcher might confuse a student. Design for heterogeneous users.</li>
+                <li><strong>Think-aloud protocol is gold</strong>: Video transcripts of real users reveal blind spots no amount of hypotheticals can match.</li>
+                <li><strong>AI helps, but human judgment decides</strong>: Claude can generate personas, analyze transcripts, and propose improvements. You interpret what matters and why.</li>
+                <li><strong>Fall readiness is the north star</strong>: Every recommendation should connect back to: "Will this help Fall students succeed?"</li>
+                <li><strong>Before/after is powerful</strong>: Screenshots and Git branches make your improvements tangible and reviewable.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Track Reference Materials -->
+    <div style="max-width:960px;margin:0 auto 3rem;padding:0 2rem">
+      <h2 style="font-size:1.4rem;color:#3d1f6e;border-bottom:2px solid #6b3fa0;padding-bottom:0.5rem;margin-bottom:1.5rem">📚 Track Reference Materials</h2>
+      <p style="color:#555;margin-bottom:1.5rem">The following reference documents support your work across all four phases of this track. They synthesise expert guidance in a form you can consult while working — not just read once and shelve.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+
+        <a href="gui_design_experts_reference.html" style="text-decoration:none;display:block;border:2px solid #6b3fa0;border-radius:10px;padding:1.5rem;background:#faf5ff;transition:box-shadow 0.2s" onmouseover="this.style.boxShadow='0 4px 16px rgba(107,63,160,0.2)'" onmouseout="this.style.boxShadow='none'">
+          <div style="font-size:2rem;margin-bottom:0.5rem">🧑‍🏫</div>
+          <div style="font-weight:700;color:#3d1f6e;margin-bottom:0.4rem">Design Experts Reference</div>
+          <div style="font-size:0.85rem;color:#666;line-height:1.5">Verbatim expert-panel advice from Norman, Nielsen, Cooper, Shneiderman, Walter, Wroblewski, Spool, Clark, and Kennedy — each stated in their own framework. Includes a design-decision trace table mapping every ATLAS UI choice to the expert principle that motivated it.</div>
+          <div style="margin-top:1rem;font-size:0.8rem;color:#6b3fa0;font-weight:600">→ Open reference guide</div>
+        </a>
+
+        <a href="gui_visualization_guide.html" style="text-decoration:none;display:block;border:2px solid #0e7490;border-radius:10px;padding:1.5rem;background:#f0fdff;transition:box-shadow 0.2s" onmouseover="this.style.boxShadow='0 4px 16px rgba(14,116,144,0.2)'" onmouseout="this.style.boxShadow='none'">
+          <div style="font-size:2rem;margin-bottom:0.5rem">📊</div>
+          <div style="font-weight:700;color:#0e7490;margin-bottom:0.4rem">Visualization Design Guide</div>
+          <div style="font-size:0.85rem;color:#666;line-height:1.5">Practical chart-choice guidance for ATLAS data types, drawn from Tufte, Cleveland, Cairo, and Knaflic. Includes an eight-entry anti-patterns gallery and separate audit checklists for the dashboard, evidence cards, and argument maps.</div>
+          <div style="margin-top:1rem;font-size:0.8rem;color:#0e7490;font-weight:600">→ Open visualization guide</div>
+        </a>
+
+      </div>
+    </div>
+
+    <footer>
+        <p>Track 4: GUI Evaluation | COGS160: AI & VR Spring 2026</p>
+        <p>For questions, contact: Prof. David Kirsh or your Track 4 TA</p>
+        <p style="margin-top: 1rem;">Last updated: March 29, 2026</p>
+    </footer>
+
+    <script>
+        // Simple FAQ toggle functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const answer = this.nextElementSibling;
+                answer.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>

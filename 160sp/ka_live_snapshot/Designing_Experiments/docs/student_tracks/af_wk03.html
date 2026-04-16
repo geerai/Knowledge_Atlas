@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COGS160: AF Track — Week 3 · D1: Pipeline Orientation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.7;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        .header {
+            background: linear-gradient(135deg, #182B49 0%, #1a4d7a 100%);
+            color: white;
+            padding: 2.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-bottom: 4px solid #1a7a5e;
+        }
+        .header h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 0.4rem; }
+        .header .subtitle { font-size: 1.05rem; opacity: 0.9; }
+        .header .badge {
+            display: inline-block;
+            background: #1a7a5e;
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 0.75rem;
+        }
+        nav.top-nav {
+            background: #182B49;
+            padding: 0.9rem 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #1a7a5e;
+        }
+        nav.top-nav a {
+            color: #7addb9;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        nav.top-nav a:hover { color: white; }
+        .container { max-width: 1050px; margin: 2rem auto; padding: 0 1.5rem; }
+        section {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            padding: 2rem 2.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.09);
+        }
+        section h2 {
+            color: #182B49;
+            font-size: 1.65rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 3px solid #1a7a5e;
+        }
+        section h3 {
+            color: #1a7a5e;
+            font-size: 1.2rem;
+            margin: 1.75rem 0 0.8rem;
+        }
+        section h4 {
+            color: #2c3e50;
+            font-size: 1rem;
+            margin: 1.25rem 0 0.5rem;
+            font-weight: 700;
+        }
+        p { margin-bottom: 1rem; }
+        ul, ol { padding-left: 2rem; margin-bottom: 1rem; }
+        li { margin: 0.45rem 0; }
+        .context-box {
+            background: linear-gradient(135deg, #e8f8f3, #f0fcf9);
+            border-left: 4px solid #1a7a5e;
+            padding: 1.5rem 1.75rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+        }
+        .context-box p { margin-bottom: 0.75rem; }
+        .context-box p:last-child { margin-bottom: 0; }
+        .deliverable {
+            background: linear-gradient(135deg, #fff9e6, #fffaed);
+            border-left: 4px solid #f39c12;
+            padding: 1.25rem 1.5rem;
+            margin: 1.25rem 0;
+            border-radius: 4px;
+        }
+        .deliverable h4 { color: #d68910; margin-top: 0; }
+        .timeline-box {
+            background: linear-gradient(135deg, #e8f8f3, #f0fcf9);
+            border-left: 4px solid #1a7a5e;
+            padding: 1.25rem 1.5rem;
+            margin: 1.25rem 0;
+            border-radius: 4px;
+        }
+        .component-box {
+            background: #fafbfc;
+            border: 1.5px solid #dde3e9;
+            border-radius: 6px;
+            padding: 1.4rem 1.6rem;
+            margin: 1.25rem 0;
+        }
+        .component-box h4 { color: #182B49; margin-top: 0; font-size: 1rem; }
+        .file-ref {
+            display: inline-block;
+            background: #1e2d3a;
+            color: #7addb9;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+            font-size: 0.82rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            margin: 0 0.1rem;
+            vertical-align: middle;
+        }
+        .architecture-diagram {
+            background: #1e2d3a;
+            color: #d4e6ef;
+            font-family: 'SFMono-Regular', Consolas, monospace;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            padding: 1.5rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1.25rem 0;
+        }
+        .architecture-diagram .comment { color: #6a9fb5; }
+        .architecture-diagram .label { color: #7addb9; font-weight: 600; }
+        .architecture-diagram .arrow { color: #f39c12; }
+        .contract-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.25rem 0;
+            font-size: 0.87rem;
+        }
+        .contract-table th {
+            background: #182B49;
+            color: white;
+            padding: 0.65rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.82rem;
+        }
+        .contract-table td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid #edf0f3;
+            vertical-align: top;
+        }
+        .contract-table tr:hover { background: #f5fbf8; }
+        .contract-table code {
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #1a4d7a;
+            background: #e8f0f8;
+            padding: 0.1rem 0.35rem;
+            border-radius: 3px;
+        }
+        .task-step {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            align-items: flex-start;
+        }
+        .task-step .step-num {
+            background: #182B49;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 0.15rem;
+        }
+        .task-step .step-body { flex: 1; }
+        .task-step .step-body h4 { margin-top: 0; color: #1a7a5e; }
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #f39c12;
+            padding: 1rem 1.25rem;
+            margin: 1.25rem 0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        .faq-item { margin-bottom: 1.25rem; }
+        .faq-q {
+            font-weight: 700;
+            color: #182B49;
+            margin-bottom: 0.3rem;
+            font-size: 0.95rem;
+        }
+        .refs { font-size: 0.87rem; line-height: 1.5; }
+        .refs li { margin-bottom: 0.6rem; padding-left: 2rem; text-indent: -2rem; }
+        .objectives-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .objective-card {
+            background: #f8fcfb;
+            border: 1.5px solid #c8e6da;
+            border-radius: 6px;
+            padding: 1rem 1.2rem;
+        }
+        .objective-card .obj-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #1a7a5e;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.35rem;
+        }
+        .objective-card p { margin: 0; font-size: 0.9rem; }
+        .grading-table { width: 100%; border-collapse: collapse; font-size: 0.87rem; margin: 1rem 0; }
+        .grading-table th { background: #182B49; color: white; padding: 0.6rem 0.9rem; text-align: left; font-size: 0.82rem; }
+        .grading-table td { padding: 0.55rem 0.9rem; border-bottom: 1px solid #edf0f3; vertical-align: top; }
+        .grading-table tr:hover { background: #f5fbf8; }
+        footer {
+            background: #182B49;
+            color: #9ab5c8;
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.82rem;
+            margin-top: 3rem;
+        }
+        footer a { color: #7addb9; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Week 3 — D1: Pipeline Orientation</h1>
+    <div class="subtitle">Article Finder Track · COGS 160: AI &amp; VR</div>
+    <div class="badge">D1 · 5% of final grade · Due end of Week 3</div>
+</div>
+
+<nav class="top-nav">
+    <a href="af_track_planning.html">← AF Track Overview</a>
+    <a href="af_setup_guide.html">Setup Guide</a>
+    <a href="af_wk04.html">Week 4 →</a>
+</nav>
+
+<div class="container">
+
+<!-- CONTEXT -->
+<section>
+    <div class="context-box">
+        <p>ATLAS is a question-answering system for neuroarchitecture — it answers questions like "Does biophilic design reduce cortisol levels?" by synthesizing evidence from dozens of scientific papers. But ATLAS can only answer questions about evidence it has already extracted. When a researcher asks about a topic that the corpus doesn't cover, ATLAS doesn't say "I don't know" — it gives a low-confidence answer based on whatever loosely related beliefs it holds. That answer can mislead.</p>
+
+        <p>The Article Finder track exists because the solution to that problem is not better AI reasoning — it is more evidence. Your team's job is to build the pipeline that finds new articles, evaluates their relevance, and routes them into the ATLAS extraction workflow. Before you can build it, you need to understand exactly what the pipeline already does, where its knowledge gaps are, and what it expects from incoming articles.</p>
+
+        <p>D1 is that orientation. By the end of this week, you will have read the six key source files that define the AF pipeline, traced one query end-to-end through the system, and written a report that your team will use as a shared reference for the next seven weeks.</p>
+    </div>
+</section>
+
+<!-- LEARNING OBJECTIVES -->
+<section>
+    <h2>You Will Know How to Do These Five Things</h2>
+    <div class="objectives-grid">
+        <div class="objective-card">
+            <div class="obj-label">Navigate</div>
+            <p>Trace any natural-language query through QueryParser → QueryEngine → WebOfBelief and identify where it succeeds or fails.</p>
+        </div>
+        <div class="objective-card">
+            <div class="obj-label">Identify gaps</div>
+            <p>Use GapDetector and VOICalculator to extract the current list of under-evidenced beliefs — the real inputs to your search pipeline.</p>
+        </div>
+        <div class="objective-card">
+            <div class="obj-label">Read contracts</div>
+            <p>Parse a dataclass interface (ArticleReference, AutomatedTargetRun) and explain what each field requires from any article you submit.</p>
+        </div>
+        <div class="objective-card">
+            <div class="obj-label">Run a query</div>
+            <p>Execute AutomatedQueueSearcher.run_once() on a real VOI gap and interpret the AutomatedTargetRun output.</p>
+        </div>
+        <div class="objective-card">
+            <div class="obj-label">Write a system description</div>
+            <p>Explain the AF module's purpose, structure, and key contracts to a new team member in plain English, with specific file references.</p>
+        </div>
+    </div>
+</section>
+
+<!-- AF MODULE ARCHITECTURE -->
+<section>
+    <h2>The AF Module: Function, Structure, and Key Contracts</h2>
+
+    <p>The Article Finder module sits at the intake end of the ATLAS pipeline. Its job is to answer one question: <em>given a belief that ATLAS holds with insufficient evidence, what papers should we read to improve that evidence?</em> The module translates that question into database queries, executes those queries against academic search APIs, scores the results for relevance, and returns a ranked list of candidate papers for human or automated review.</p>
+
+    <p>The module is not a web scraper, not a PDF downloader, and not a citation manager. It is specifically a <strong>gap-driven retrieval system</strong>: it starts from a belief the system already holds (or wants to hold) and works backward to find the evidence that would change its credence. This architecture distinguishes it from a general-purpose literature search tool, and it is the first thing students must understand before evaluating any of the search platforms in D2 and D3.</p>
+
+    <h3>The Six Core Files</h3>
+
+    <p>The pipeline is spread across six source files, each responsible for a distinct stage. The path prefix for all of them is <span class="file-ref">Article_Eater_PostQuinean_v1_recovery/</span>:</p>
+
+    <div class="architecture-diagram">
+<span class="comment"># AF Pipeline — data flow</span>
+
+<span class="label">1. Query enters as natural language</span>
+   <span class="arrow">↓</span>  src/services/query_parser.py → QueryParser.parse()
+      <span class="comment"># Classifies query type (WHAT_IS, DOES_AFFECT, WHAT_UNKNOWN...)</span>
+      <span class="comment"># Extracts cause/effect terms, causal level (Pearl's ladder)</span>
+      <span class="comment"># Returns: ParseResult with QueryIntent</span>
+   <span class="arrow">↓</span>
+<span class="label">2. Query executes against Web of Belief</span>
+   <span class="arrow">↓</span>  src/services/query_engine.py → QueryEngine.query()
+      <span class="comment"># Orchestrates: parse → belief lookup → response generation</span>
+      <span class="comment"># If result is weak: activates gap detection</span>
+      <span class="comment"># Returns: ae.query_response.v1 schema dict</span>
+   <span class="arrow">↓</span>
+<span class="label">3. Gaps scored by expected epistemic gain</span>
+   <span class="arrow">↓</span>  src/services/voi_search.py → VOICalculator + GapDetector
+      <span class="comment"># VOICalculator.calculate_voi(): structural + epistemic + uncertainty</span>
+      <span class="comment"># GapDetector.detect_gaps(): returns List[EpistemicGap]</span>
+      <span class="comment"># EpistemicGap.gap_type: VALIDATION / MECHANISM / DIRECTION / BOUNDARY</span>
+   <span class="arrow">↓</span>
+<span class="label">4. Gaps registered in discovery funnel queue</span>
+   <span class="arrow">↓</span>  src/services/voi_search.py → VOISearchCoordinator.identify_search_priorities()
+      <span class="comment"># Top-K gaps enter the search queue as targets</span>
+      <span class="comment"># StrategySelector picks query strategy (epsilon-greedy, Sprint I)</span>
+   <span class="arrow">↓</span>
+<span class="label">5. Automated searcher claims a target, runs queries</span>
+   <span class="arrow">↓</span>  src/queue/automated_searcher.py → AutomatedQueueSearcher.run_once()
+      <span class="comment"># Claims next open target from queue</span>
+      <span class="comment"># Executes queries via Semantic Scholar API</span>
+      <span class="comment"># Returns: List[AutomatedTargetRun]</span>
+   <span class="arrow">↓</span>
+<span class="label">6. Results enriched with causal identification check</span>
+   <span class="arrow">↓</span>  src/services/identification_voi_pipeline.py → IdentificationVOIPipeline.analyze()
+      <span class="comment"># Applies Pearl's backdoor/frontdoor criterion</span>
+      <span class="comment"># If effect is identifiable: returns effect estimate</span>
+      <span class="comment"># If not: generates ranked VOIRecommendation list</span>
+   <span class="arrow">↓</span>
+<span class="label">7. Integrated response with article grounding</span>
+   <span class="arrow">↓</span>  src/services/integrated_query_service.py → IntegratedQueryService
+      <span class="comment"># Adds extracted claims from articles (Web of Belief grounding)</span>
+      <span class="comment"># Adds T1 expert panel voices (PP, SN, EC, ...)</span>
+      <span class="comment"># Returns: full enriched QueryResponse</span></div>
+
+    <h3>Key Data Contracts</h3>
+
+    <p>Every file in the pipeline communicates through Python dataclasses. These dataclasses are the contracts: changing one field requires changing every consumer that reads it. The three contracts students must understand for D1 are <code>EpistemicGap</code>, <code>ArticleReference</code>, and <code>AutomatedTargetRun</code>.</p>
+
+    <table class="contract-table">
+        <thead>
+            <tr>
+                <th>Dataclass</th>
+                <th>Source file</th>
+                <th>Key fields</th>
+                <th>What it represents</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>EpistemicGap</code></td>
+                <td><code>voi_search.py</code></td>
+                <td><code>belief_id</code>, <code>gap_type</code>, <code>voi_score</code>, <code>belief_content</code>, <code>credence_value</code></td>
+                <td>A belief the system holds whose evidence is insufficient. The <code>voi_score</code> is the expected gain in epistemic state from resolving this gap — not classical value of information but Expected Epistemic Gain. The gap enters the search queue as a retrieval target.</td>
+            </tr>
+            <tr>
+                <td><code>ArticleReference</code></td>
+                <td><code>src/queue/models.py</code></td>
+                <td><code>doi</code>, <code>title</code>, <code>authors</code>, <code>year</code>, <code>relevance_score</code>, <code>addresses_gap</code>, <code>gap_closure_estimate</code></td>
+                <td>A candidate article returned by a search. The <code>relevance_score</code> is computed from abstract presence (0.55 weight) and citation count (0.45 weight). The <code>gap_closure_estimate</code> is how much this article would reduce uncertainty in the target gap — currently set equal to relevance_score, which is a known simplification.</td>
+            </tr>
+            <tr>
+                <td><code>AutomatedTargetRun</code></td>
+                <td><code>automated_searcher.py</code></td>
+                <td><code>target_id</code>, <code>status</code>, <code>n_candidates</code>, <code>top_titles</code>, <code>message</code></td>
+                <td>The result of one automated search run on one gap target. Status values are FOUND_RELEVANT, NOT_FOUND, ALREADY_COVERED, and NEEDS_REVIEW. A NOT_FOUND result with is_research_opportunity=True means this gap may be a genuine research frontier — no indexed papers exist yet.</td>
+            </tr>
+            <tr>
+                <td><code>SearchResult</code></td>
+                <td><code>src/queue/models.py</code></td>
+                <td><code>result_type</code>, <code>queries_used</code>, <code>databases_searched</code>, <code>confidence</code>, <code>articles_found</code>, <code>is_research_opportunity</code></td>
+                <td>The report the searcher files when it completes a target run. The confidence value is 0.6 for found results and 0.35 for not-found — hardcoded in the current implementation. The <code>is_research_opportunity</code> flag is one of the system's most important outputs: it means the gap is real and unstudied.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>The Four Gap Types</h3>
+
+    <p>The <code>GapType</code> enum in <span class="file-ref">voi_search.py</span> defines four categories of epistemic gap. Understanding these categories is essential because each gap type requires a different search strategy — which is exactly what the <code>StrategySelector</code> class encodes, and which your D4 proposal will need to evaluate:</p>
+
+    <div class="component-box">
+        <h4>GapType taxonomy (src/services/voi_search.py, lines 64–84)</h4>
+        <table class="contract-table">
+            <thead><tr><th>Type</th><th>Meaning</th><th>Typical query strategy</th><th>Example in neuroarchitecture</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><code>VALIDATION</code></td>
+                    <td>A claim exists but its credence is low — it needs replication evidence</td>
+                    <td>Systematic keyword search across multiple databases; look for meta-analyses</td>
+                    <td>"High ceilings improve creative thinking" — has one study, needs five</td>
+                </tr>
+                <tr>
+                    <td><code>MECHANISM</code></td>
+                    <td>An effect is known but its causal mechanism is unexplored</td>
+                    <td>Process-focused queries: "neural mechanism," "mediating pathway"</td>
+                    <td>"Biophilic design reduces cortisol" — known, but why? HPA axis? Attention restoration?</td>
+                </tr>
+                <tr>
+                    <td><code>DIRECTION</code></td>
+                    <td>Contradictory evidence exists and the direction of effect is unclear</td>
+                    <td>Comparative search: find studies on both sides; look for moderators</td>
+                    <td>"Open-plan offices improve collaboration" — conflicts with "open plans harm focus"</td>
+                </tr>
+                <tr>
+                    <td><code>BOUNDARY</code></td>
+                    <td>An effect exists in some populations/contexts but its scope is unknown</td>
+                    <td>Moderator search: "age," "culture," "individual differences," "effect size heterogeneity"</td>
+                    <td>"Fractal patterns preferred at D≈1.3" — does this hold cross-culturally?</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Where the Current Implementation Falls Short</h3>
+
+    <p>Understanding the gaps in the current implementation is part of what D1 asks you to report on. Three limitations stand out and directly motivate D2–D5:</p>
+
+    <ul>
+        <li><strong>Semantic Scholar only.</strong> The <code>AutomatedQueueSearcher</code> currently calls only the Semantic Scholar API (see <span class="file-ref">automated_searcher.py</span>, line 29: <code>from app.services.semantic_scholar import search as semantic_scholar_search</code>). The five platforms you will evaluate in D2 are not yet integrated.</li>
+        <li><strong>Relevance scoring ignores content.</strong> The <code>_row_to_reference()</code> method computes relevance from abstract presence and citation count — it does not read the abstract. A highly-cited paper that is irrelevant to the gap gets the same score as a highly-cited paper that directly addresses it.</li>
+        <li><strong>No persistence for warrant assignment.</strong> The <code>gap_closure_estimate</code> field exists in <code>ArticleReference</code> but is never used to update the belief's credence in the Web of Belief. The feedback loop between finding a paper and improving the system's confidence is currently broken.</li>
+    </ul>
+</section>
+
+<!-- D1 TASKS -->
+<section>
+    <h2>D1 Task Sequence — What to Do This Week</h2>
+
+    <div class="timeline-box">
+        <strong>Team structure:</strong> 6 students, 3 pairs. Pair 1 leads D1 but all pairs must complete the source-code reading. Schedule a 90-minute joint session mid-week to share notes and resolve disagreements about system architecture.
+    </div>
+
+    <div class="task-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+            <h4>Clone and set up the repository (all students)</h4>
+            <p>Follow <a href="af_setup_guide.html">the AF Setup Guide</a> to clone <code>Article_Eater_PostQuinean_v1_recovery</code>, install dependencies, and run the test suite. You need a working local environment before you can read and trace the code.</p>
+            <p><strong>Success criterion:</strong> <code>python3 -m pytest tests/ -x -q</code> exits with fewer than 5 failures (some pre-existing failures are expected). If you see import errors, the Setup Guide covers the fix.</p>
+        </div>
+    </div>
+
+    <div class="task-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+            <h4>Read the six source files and annotate your copy</h4>
+            <p>Each pair takes two files as their primary responsibility and reads all six. As you read, annotate: what does each class do? What does it take as input? What does it return? Where does it make assumptions that could be wrong?</p>
+            <p><strong>Required annotations:</strong> For each of the three key dataclasses (EpistemicGap, ArticleReference, AutomatedTargetRun), write a one-paragraph explanation in your own words — no code, no jargon. Your D1 report's system description section draws directly from these annotations.</p>
+        </div>
+    </div>
+
+    <div class="task-step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+            <h4>Trace one end-to-end query</h4>
+            <p>Choose a research question from neuroarchitecture — for example, "Does exposure to natural light improve sustained attention in office workers?" — and trace it manually through the pipeline:</p>
+            <ol>
+                <li>What would <code>QueryParser.parse()</code> classify this as? (QueryType? CausalLevel?)</li>
+                <li>Which beliefs in the Web of Belief would it match? (Run <code>QueryEngine.query()</code> if your environment is working, or trace the matching logic by hand using the code.)</li>
+                <li>If the result confidence is low (say, credence &lt; 0.45), which gap type would the GapDetector assign? Why?</li>
+                <li>What query strings would <code>QueryGenerator.generate_queries()</code> produce for this gap?</li>
+                <li>What would a successful <code>AutomatedTargetRun</code> look like? Sketch the expected output.</li>
+            </ol>
+            <p>Write this trace up as a 1–2 page walk-through in your D1 report. It should be readable by someone who has not seen the code.</p>
+        </div>
+    </div>
+
+    <div class="task-step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+            <h4>Identify the top 5 open gaps in the current corpus</h4>
+            <p>Run the gap detection script or trace the GapDetector logic manually to find the five beliefs with the highest VOI scores. For each gap, record: belief content, gap type, current credence, voi_score. These five gaps become your test cases for D2 and D3.</p>
+            <p>If the script isn't runnable in your environment, examine <code>data/web_persistence_v2.db</code> directly (SQLite browser or Python sqlite3) — the beliefs and their credence values are there.</p>
+        </div>
+    </div>
+
+    <div class="task-step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+            <h4>Write the D1 Pipeline Orientation Report</h4>
+            <p>See the deliverable specification below. The report is the team's shared reference document for the rest of the quarter — write it clearly.</p>
+        </div>
+    </div>
+
+</section>
+
+<!-- DELIVERABLE SPEC -->
+<section>
+    <h2>D1 Deliverable: Pipeline Orientation Report</h2>
+
+    <div class="deliverable">
+        <h4>📋 Due: End of Week 3 · 5% of final grade · 6–8 pages</h4>
+        <p>Submit one PDF per team. File naming: <code>COGS160_AF_D1_[TeamName]_W3.pdf</code></p>
+    </div>
+
+    <h3>Required Sections</h3>
+
+    <div class="component-box">
+        <h4>1. System Overview (1–1.5 pages)</h4>
+        <p>Explain what the AF module does and why it exists. Write for a new team member who understands Python but has never seen this codebase. Cover: the problem it solves (belief gaps in ATLAS), the six-stage pipeline, and the three things the current implementation cannot yet do. Use a diagram if it helps — but no diagram should replace prose explanation.</p>
+    </div>
+
+    <div class="component-box">
+        <h4>2. Key Contracts (1–1.5 pages)</h4>
+        <p>Describe the three key dataclasses in plain English. For each: what is it, what fields matter, and what happens downstream if a field is wrong or missing? This is not a code listing — it is an explanation of what the system requires from its inputs and guarantees about its outputs.</p>
+    </div>
+
+    <div class="component-box">
+        <h4>3. End-to-End Query Trace (1.5–2 pages)</h4>
+        <p>The full trace from Task 3 above: your chosen research question, what the pipeline does at each stage, what the expected output looks like, and where the pipeline currently fails to give a satisfying answer.</p>
+    </div>
+
+    <div class="component-box">
+        <h4>4. Top 5 Open Gaps (0.75–1 page)</h4>
+        <p>The five beliefs with the highest VOI scores, formatted as a table: Belief content · Gap type · Current credence · VOI score · Why this gap matters for neuroarchitecture. These are your test cases for D2–D5.</p>
+    </div>
+
+    <div class="component-box">
+        <h4>5. Current Limitations and What D2–D5 Will Address (0.75–1 page)</h4>
+        <p>The three limitations listed in the architecture section above, plus any additional limitations your team discovered during the source-code reading. For each limitation, state which deliverable (D2, D3, D4, or D5) will address it, and how.</p>
+    </div>
+
+    <div class="component-box">
+        <h4>6. References (APA, not counted in page limit)</h4>
+        <p>At minimum: Sackett et al. (1996) on levels of evidence, Pearl (2009) Chapter 1 (causal reasoning), and one paper relevant to one of your top 5 gaps.</p>
+    </div>
+
+    <h3>What "Done" Looks Like</h3>
+    <p>A reader who has never seen the codebase can, after reading Section 1–3, explain to a colleague what the AF module does and what kind of paper it expects to receive. The top-5 gap table in Section 4 is complete enough to serve as input for the D2 platform evaluation. The limitations in Section 5 match the actual limitations in the code, not generic complaints about AI systems.</p>
+</section>
+
+<!-- GRADING -->
+<section>
+    <h2>Grading Criteria</h2>
+
+    <table class="grading-table">
+        <thead>
+            <tr>
+                <th>Criterion</th>
+                <th>Weight</th>
+                <th>Excellent</th>
+                <th>Satisfactory</th>
+                <th>Needs improvement</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Accuracy of system description</td>
+                <td>35%</td>
+                <td>All six pipeline stages described correctly; no misattributions of function; dataclass fields explained accurately</td>
+                <td>Four or more stages described correctly; minor errors in dataclass field explanations</td>
+                <td>Description contradicts what the code actually does; relies on guesswork rather than reading</td>
+            </tr>
+            <tr>
+                <td>Quality of end-to-end trace</td>
+                <td>30%</td>
+                <td>Trace follows actual code logic, not a generic description; specific field values given at each stage; failure points identified</td>
+                <td>Trace follows general pipeline structure; some stages vague or missing</td>
+                <td>Trace is generic ("the system processes the query") with no code-level specifics</td>
+            </tr>
+            <tr>
+                <td>Top-5 gap table</td>
+                <td>20%</td>
+                <td>Gaps sourced from actual system output or direct DB inspection; gap types correctly classified; VOI scores reported</td>
+                <td>Gaps plausible and gap types reasonable, but not confirmed from system data</td>
+                <td>Gaps invented or copied from course slides without reference to the system state</td>
+            </tr>
+            <tr>
+                <td>Writing quality</td>
+                <td>15%</td>
+                <td>Clear, direct prose; headings state conclusions; no throat-clearing; a non-specialist could follow it</td>
+                <td>Readable but some passive voice, vague transitions, or technical jargon unexplained</td>
+                <td>Dense, hard to follow; relies on bullet lists rather than explanation</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- FAQ -->
+<section>
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+        <div class="faq-q">The code imports from modules that don't seem to exist. Is the setup broken?</div>
+        <p>Several imports in the AF source files use optional try/except blocks — if a module isn't installed, the system logs a warning and continues with reduced functionality. The Setup Guide lists the mandatory vs. optional dependencies. Focus on the six core files; ignore optional integrations (sentence-transformers, discovery funnel) for D1.</p>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-q">The database file (web_persistence_v2.db) is missing or empty. How do we get the top-5 gaps?</div>
+        <p>If the database isn't populated, you have two options. First, run the seeding scripts described in the Setup Guide — they load a sample corpus. Second, read the <code>GapDetector.detect_gaps()</code> method (voi_search.py, ~line 935) and trace through what it would return for hypothetical beliefs from the neuroarchitecture literature. For D1, a hand-traced example is acceptable; for D3, you need real data.</p>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-q">What is "Pearl's ladder of causation" and why does the QueryParser care about it?</div>
+        <p>Pearl (2009) distinguishes three levels of causal reasoning: (1) association ("what is correlated with X?"), (2) intervention ("what would happen if we changed X?"), and (3) counterfactual ("what would have happened if we had changed X?"). The QueryParser classifies queries to these levels because different question types require different kinds of evidence — an associational question can be answered from observational data, but an interventional question requires an experiment. The classification affects which beliefs the QueryEngine searches and how confidently it answers.</p>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-q">The relevance scoring seems too simple — abstract presence and citation count only. Can we improve it for D5?</div>
+        <p>Yes, and it is one of the most important improvements D5 can make. The current scoring is in <code>_row_to_reference()</code> in <code>automated_searcher.py</code>. Your D4 proposal should specify a better relevance model (e.g., semantic similarity between abstract and gap description using sentence-transformers). The existing code has a comment noting this as a known simplification.</p>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-q">The StrategySelector uses epsilon-greedy. What does that mean for us?</div>
+        <p>Epsilon-greedy means the system usually picks the best-known query strategy for a given gap type, but with probability epsilon it tries a random strategy instead. The epsilon decays over time (see <code>StrategySelector._update_epsilon()</code>, voi_search.py ~line 1239). This is a reinforcement-learning exploration/exploitation trade-off: without occasional random exploration, the system might never discover that a strategy it hasn't tried yet works better. You will evaluate whether this approach is appropriate for a student-operated system in D4.</p>
+    </div>
+</section>
+
+<!-- REFERENCES -->
+<section>
+    <h2>References</h2>
+    <ul class="refs">
+        <li>Pearl, J. (2009). <em>Causality: Models, Reasoning, and Inference</em> (2nd ed.). Cambridge University Press. [Chapter 1: Introduction to Probabilities, Graphs, and Causal Models]</li>
+        <li>Sackett, D. L., Rosenberg, W. M. C., Gray, J. A. M., Haynes, R. B., &amp; Richardson, W. S. (1996). Evidence based medicine: What it is and what it isn't. <em>British Medical Journal, 312</em>(7023), 71–72. https://doi.org/10.1136/bmj.312.7023.71</li>
+        <li>Bates, M. J. (1989). The design of browsing and berrypicking techniques for the online search interface. <em>Online Review, 13</em>(5), 407–424. https://doi.org/10.1108/eb024320</li>
+        <li>Ericsson, K. A., &amp; Simon, H. A. (1993). <em>Protocol Analysis: Verbal Reports as Data</em> (rev. ed.). MIT Press.</li>
+        <li>Simon, H. A. (1956). Rational choice and the structure of the environment. <em>Psychological Review, 63</em>(2), 129–138. https://doi.org/10.1037/h0042769</li>
+    </ul>
+</section>
+
+</div>
+
+<footer>
+    <p>COGS 160: AI &amp; VR · University of California San Diego · Department of Cognitive Science</p>
+    <p style="margin-top:0.5rem;"><a href="af_track_planning.html">AF Track Overview</a> · <a href="af_setup_guide.html">Setup Guide</a> · <a href="af_wk04.html">Week 4: Platform Evaluation →</a></p>
+</footer>
+
+</body>
+</html>

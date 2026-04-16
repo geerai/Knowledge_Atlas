@@ -1,0 +1,7 @@
+# Enable CORS for K-ATLAS data payloads
+# Allows student code running locally to fetch JSON data
+# Added: 2026-04-08 for COGS 160 Week 2 exercises
+
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET, OPTIONS"
+Header set Access-Control-Allow-Headers "Content-Type"

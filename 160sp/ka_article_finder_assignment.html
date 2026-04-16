@@ -604,7 +604,8 @@ git push -u origin track/2-staging/your-ucsd-username</div>
     </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
       <button class="add-row-btn" onclick="addCorpusRow()">+ Add article to corpus</button>
-      <a class="btn-link" href="../ka_article_propose.html" style="padding:7px 16px;font-size:0.83rem;">Propose new article to KA →</a>
+      <a class="btn-link" href="ka_track2_intake.html" style="padding:7px 16px;font-size:0.83rem;">Stage PDFs in Track 2 Intake →</a>
+      <a class="btn-link" href="../ka_article_propose.html" style="padding:7px 16px;font-size:0.83rem;background:transparent;color:var(--muted);border:1px solid var(--border)">Public propose form →</a>
     </div>
 
     <div class="callout callout-rose">
@@ -848,7 +849,7 @@ function addCorpusRow() {
     <td><input type="text" placeholder="Cluster name" style="width:100%;border:1px solid var(--border);border-radius:4px;padding:5px;font-size:0.78rem;background:var(--cream)"></td>
     <td><select style="width:100%;border:1px solid var(--border);border-radius:4px;padding:4px;font-size:0.78rem;background:var(--cream)"><option>—</option><option>Yes</option><option>No</option></select></td>
     <td><select style="width:100%;border:1px solid var(--border);border-radius:4px;padding:4px;font-size:0.78rem;background:var(--cream)"><option>—</option><option>Yes</option><option>Probably</option><option>No</option></select></td>
-    <td><a href="../ka_article_propose.html" style="font-size:0.78rem;color:var(--teal)">Propose →</a></td>`;
+    <td><a href="ka_track2_intake.html" style="font-size:0.78rem;color:var(--teal)">Stage →</a></td>`;
   tbody.appendChild(tr);
 }
 
@@ -875,9 +876,7 @@ window.KA_SHELL.initShell({
 });
 window.KA_SHELL_USER.applyUser({ avatarId: 'af-track-avatar', avatarFallback: 'JL' });
 </script>
-<script src="../ka_page_function.js"></script>
-<script src="../ka_demo_wiring.js"></script>
-<script>
+<script src="../ka_page_function.js"></script><script>
 window.KA_ABOUT_PAGE = {
   pageId: 'ka_article_finder_assignment',
   objective: "The Track 2 assignment workbook guiding students through a structured 5-phase article-finding pipeline over Weeks 3–8, from query building to citation report.",

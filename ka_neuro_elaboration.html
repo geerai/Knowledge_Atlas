@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PNU Elaboration · Knowledge Atlas</title>
+<link rel="stylesheet" href="ka_atlas_shell.css">
+<style>
+  .pnu-shell { max-width: 920px; margin: 0 auto; padding: 24px; }
+  .pnu-shell h1 {
+    font-family: Georgia, serif; font-size: 1.7rem; color: #1C3D3A;
+    margin-bottom: 4px;
+  }
+  .pnu-shell .subtitle { color: #5A5A5A; font-size: 0.94rem; margin-bottom: 18px; }
+  .naked-chain {
+    background: #F9F5EE; border: 1px solid #E0D8CC; border-radius: 10px;
+    padding: 16px 20px; font-family: Georgia, serif; font-size: 1.05rem;
+    color: #1C3D3A; margin-bottom: 24px;
+  }
+  .pnu-step {
+    background: #fff; border: 1px solid #E0D8CC; border-left: 4px solid #2A7868;
+    border-radius: 8px; padding: 14px 18px; margin-bottom: 14px;
+  }
+  .pnu-step h3 {
+    font-family: Georgia, serif; font-size: 1.05rem; color: #1C3D3A;
+    margin-bottom: 6px;
+  }
+  .pnu-step .role {
+    font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #8A9A96; font-weight: 700; margin-bottom: 2px;
+  }
+  .pnu-step p { font-size: 0.93rem; line-height: 1.6; color: #2D2D2D; }
+  .pnu-step .confidence {
+    display: inline-block; padding: 2px 8px; border-radius: 10px;
+    font-size: 0.7rem; font-weight: 700; margin-top: 8px;
+    background: #E8F8F2; color: #1A7050;
+  }
+  .pnu-step .confidence.partial { background: #FEF3E2; color: #985E0A; }
+  .pnu-step .confidence.speculative { background: #FEE4E4; color: #A02020; }
+  .open-work {
+    background: #FEF7EC; border: 1px dashed #E8872A; border-radius: 8px;
+    padding: 14px 18px; margin-top: 24px; font-size: 0.9rem;
+    color: #4A4A4A; line-height: 1.6;
+  }
+  .open-work h3 {
+    color: #985E0A; font-family: Georgia, serif; font-size: 1.05rem;
+    margin-bottom: 8px;
+  }
+  .meta-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; margin: 10px 0 24px; }
+  .meta-table th, .meta-table td {
+    text-align: left; padding: 8px 12px; border-bottom: 1px solid #E0D8CC;
+  }
+  .meta-table th {
+    background: #F9F5EE; color: #5A5A5A; font-size: 0.72rem;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+</style>
+</head>
+<body data-ka-active="neural"
+      data-ka-crumbs='[["Home","ka_home.html"],["Articles","ka_articles.html"],["Article","ka_article.html"],["Neural elaboration",""]]'>
+
+<div id="ka-navbar-slot"></div>
+<div id="ka-breadcrumb-slot"></div>
+
+<main class="pnu-shell" id="ka-main">
+
+  <h1>Plausible Neural Underpinning — Common-Sense Walk-through</h1>
+  <p class="subtitle">
+    For Boyce, Hunter &amp; Howlett (2003), <em>The Benefits of Daylight through
+    Windows</em> · paper_id: <code>PDF-0011</code> · PNU id:
+    <code>PNU-DAYLIGHT-CIRCADIAN-001</code>
+  </p>
+
+  <h2 style="font-family:Georgia,serif;color:#1C3D3A;font-size:1.15rem;">The naked sequence</h2>
+  <p style="font-size:0.9rem;color:#5A5A5A;margin-bottom:8px;">
+    This is the same compact chain shown on the article page. We restate it here so
+    that the elaboration can hang directly off it.
+  </p>
+  <div class="naked-chain">
+    daylight at the eye
+    &nbsp;→&nbsp; melanopsin-bearing retinal ganglion cells (ipRGCs)
+    &nbsp;→&nbsp; suprachiasmatic nucleus (SCN)
+    &nbsp;→&nbsp; locus coeruleus / pineal
+    &nbsp;→&nbsp; cortical arousal &amp; circadian phase
+    &nbsp;→&nbsp; alertness, mood, sleep
+  </div>
+
+  <h2 style="font-family:Georgia,serif;color:#1C3D3A;font-size:1.15rem;">PNU metadata</h2>
+  <table class="meta-table">
+    <tr><th>PNU id</th><td>PNU-DAYLIGHT-CIRCADIAN-001</td></tr>
+    <tr><th>Proposed by</th><td>K-ATLAS PNU panel · 2026 cycle (provisional record)</td></tr>
+    <tr><th>Source articles</th><td>Boyce, Hunter &amp; Howlett (2003) · Berson et al. (2002) · Brainard et al. (2001)</td></tr>
+    <tr><th>Pipeline stage</th><td>13 — <code>pnu_generation</code></td></tr>
+    <tr><th>Last reviewed</th><td>(not yet panel-reviewed; auto-generated chain)</td></tr>
+    <tr><th>Common-sense gloss</th><td><em>Missing — to be authored. See "Open work" below.</em></td></tr>
+  </table>
+
+  <h2 style="font-family:Georgia,serif;color:#1C3D3A;font-size:1.15rem;">Step-by-step (draft)</h2>
+  <p style="font-size:0.9rem;color:#5A5A5A;margin-bottom:14px;">
+    The walk-through below is a first-pass draft. It will be replaced once the
+    PNU panel writes the canonical common-sense explanation.
+  </p>
+
+  <article class="pnu-step">
+    <div class="role">Step 1 · Input</div>
+    <h3>Daylight reaches the eye</h3>
+    <p>
+      The relevant feature is not just brightness. It is the <em>spectral content</em>
+      of daylight: a broad, blue-shifted spectrum that peaks near 480 nm. Electric
+      lighting can match daylight on visible brightness but typically delivers a
+      different spectrum, with much less power at 480 nm.
+    </p>
+    <span class="confidence">Well established</span>
+  </article>
+
+  <article class="pnu-step">
+    <div class="role">Step 2 · Receptor</div>
+    <h3>Melanopsin-bearing retinal ganglion cells (ipRGCs)</h3>
+    <p>
+      A small population of retinal ganglion cells contains melanopsin, a
+      photopigment that responds maximally near 480 nm. Unlike the rods and cones
+      that drive image-forming vision, ipRGCs project directly to non-visual
+      structures and signal "ambient brightness in the blue band". Berson et al.
+      (2002) was the first clean demonstration.
+    </p>
+    <span class="confidence">Well established</span>
+  </article>
+
+  <article class="pnu-step">
+    <div class="role">Step 3 · Master clock</div>
+    <h3>Suprachiasmatic nucleus (SCN)</h3>
+    <p>
+      ipRGCs project to the SCN, a small hypothalamic nucleus that maintains the
+      body's roughly-24-hour circadian rhythm. Light input here resets the clock —
+      morning daylight advances the phase, late-evening light delays it. This is
+      the link that makes "office daylight" matter for sleep at night.
+    </p>
+    <span class="confidence">Well established</span>
+  </article>
+
+  <article class="pnu-step">
+    <div class="role">Step 4 · Effectors</div>
+    <h3>Locus coeruleus and pineal gland</h3>
+    <p>
+      The SCN modulates two downstream systems relevant to alertness. The locus
+      coeruleus is the brain's main source of noradrenaline and is a principal
+      driver of cortical arousal. The pineal gland's melatonin output is suppressed
+      by daytime light via the SCN. Both effects feed forward into how alert and
+      task-engaged a person feels during the day.
+    </p>
+    <span class="confidence partial">Established, with quantitative gaps</span>
+  </article>
+
+  <article class="pnu-step">
+    <div class="role">Step 5 · Cortex</div>
+    <h3>Cortical arousal and circadian phase</h3>
+    <p>
+      The combined effect of higher noradrenergic tone and suppressed daytime
+      melatonin is a small but reliable lift in cortical arousal — visible in EEG
+      indices and self-reported alertness. The phase effects are slower and only
+      visible across days.
+    </p>
+    <span class="confidence partial">Mechanism plausible; effect-size variable</span>
+  </article>
+
+  <article class="pnu-step">
+    <div class="role">Step 6 · Outcomes</div>
+    <h3>Alertness, mood, and sleep</h3>
+    <p>
+      The end-of-chain occupant outcomes — alertness during the workday, lower
+      depressive symptomatology over weeks, better sleep at night — are the
+      outcomes the Boyce et al. review tabulates. The chain above is the proposed
+      mechanism that links those outcomes to the architectural input (a window).
+    </p>
+    <span class="confidence partial">Supported in aggregate; modest effect sizes</span>
+  </article>
+
+  <div class="open-work">
+    <h3>Open work — what it would take to finish this PNU</h3>
+    <p>
+      Two things are missing, and both are tracked as TODOs in
+      <code>TASKS.md</code>:
+    </p>
+    <ol>
+      <li><strong>A science-writer pass.</strong> The drafted steps above are
+        compact, but they are not yet at the standard a non-specialist undergraduate
+        could read and trust. The science-writer service should be asked: <em>what
+        would it take to render this chain in everyday language without losing the
+        constraints?</em> The expected answer involves analogies, concrete examples,
+        and numeric anchors (e.g., "matching the brightness of an overcast sky for
+        thirty minutes").</li>
+      <li><strong>A panel-of-record pass.</strong> The PNU was assembled by the
+        automated <code>pnu_generation</code> stage on the strength of the cited
+        articles. We do not yet know whether the panel that originally introduced
+        this sequence (Berson, Brainard, Hattar) wrote anything more about its
+        edges that would constrain or extend our draft. <em>An agent should be
+        dispatched to check whether the panel's later papers refine any of the six
+        links above.</em></li>
+    </ol>
+    <p style="margin-top:8px;">
+      Once both passes complete, the common-sense explanation should be persisted
+      on the PNU itself — not only as a sibling document. That requires a new
+      column in the PNU database (TASKS.md item PNU-001).
+    </p>
+  </div>
+
+</main>
+
+<footer class="ka-footer">
+  Knowledge Atlas · UCSD Cognitive Science · Spring 2026
+</footer>
+
+<script src="ka_canonical_navbar.js" defer></script>
+</body>
+</html>

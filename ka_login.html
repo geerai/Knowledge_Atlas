@@ -36,35 +36,16 @@
         .nav-brand {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             text-decoration: none;
         }
 
-        .ka-icon {
-            width: 28px;
-            height: 28px;
-        }
-
-        .ka-wordmark {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .ka-wordmark-top {
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: #A8C8BF;
-            line-height: 1;
-        }
-
-        .ka-wordmark-bottom {
-            font-size: 13px;
-            font-weight: 700;
-            color: #F5A623;
-            line-height: 1;
-        }
+        .wordmark-icon { width: 30px; height: 30px; }
+        .wordmark-text { display: flex; flex-direction: column; line-height: 1.1; }
+        .wm-top { font-size: 0.66rem; font-weight: 400; letter-spacing: 0.24em; text-transform: uppercase; color: #A8C8BF; }
+        .wm-bottom { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.03em; color: #fff; }
+        .wm-bottom span { color: #F5A623; }
+        .wm-sub { font-size: 0.6rem; font-weight: 600; color: #7a9bbf; letter-spacing: 0.08em; }
 
         .nav-right {
             display: flex;
@@ -91,14 +72,6 @@
         .nav-link:hover {
             color: #F5A623;
             background-color: rgba(232,135,42,0.1);
-        }
-        .mode-select {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(168,200,191,0.35);
-            color: #E6EFE9;
-            border-radius: 18px;
-            padding: 5px 10px;
-            font-size: 12px;
         }
         .mode-pill {
             background: rgba(42, 120, 104, 0.3);
@@ -184,6 +157,52 @@
             color: #4A3E32;
             background-color: #fff;
             transition: all 0.2s ease;
+        }
+
+        .password-input-wrapper input[type="password"] {
+            padding-right: 40px;
+        }
+
+        .password-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-toggle-btn {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8A7A68;
+            transition: all 0.2s ease;
+        }
+
+        .password-toggle-btn:hover {
+            color: #E8872A;
+        }
+
+        .email-hint {
+            font-size: 12px;
+            color: #8A7A68;
+            margin-top: 4px;
+            font-weight: normal;
+        }
+
+        .recovery-callout {
+            background-color: #FFF3E0;
+            border-left: 4px solid #E8872A;
+            padding: 14px 16px;
+            border-radius: 4px;
+            margin-bottom: 28px;
+            font-size: 13px;
+            color: #4A3E32;
+            line-height: 1.5;
         }
 
         input[type="email"]:focus,
@@ -336,48 +355,36 @@
 <script src="ka_config.js"></script>
 </head>
 <body>
-    <!-- Navigation -->
+    <!-- Navigation — COGS 160 course regime -->
     <nav>
-        <a href="/" class="nav-brand">
-            <svg class="ka-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#F5A623;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#A8C8BF;stop-opacity:1" />
-                    </linearGradient>
-                </defs>
-                <circle cx="50" cy="50" r="40" fill="url(#grad1)" opacity="0.1"/>
-                <circle cx="30" cy="30" r="4" fill="#F5A623"/>
-                <circle cx="70" cy="30" r="4" fill="#A8C8BF"/>
-                <circle cx="50" cy="70" r="4" fill="#2A7868"/>
-                <line x1="30" y1="30" x2="70" y2="30" stroke="#F5A623" stroke-width="1.5" opacity="0.6"/>
-                <line x1="30" y1="30" x2="50" y2="70" stroke="#A8C8BF" stroke-width="1.5" opacity="0.6"/>
-                <line x1="70" y1="30" x2="50" y2="70" stroke="#2A7868" stroke-width="1.5" opacity="0.6"/>
-                <circle cx="50" cy="50" r="3" fill="#2A7868"/>
+        <a href="160sp/ka_schedule.html" class="nav-brand">
+            <svg class="wordmark-icon" viewBox="0 0 32 32" fill="none">
+                <circle cx="16" cy="16" r="3.5" fill="#F5A623"/>
+                <circle cx="16" cy="5"  r="2.5" fill="#A8C8BF"/>
+                <circle cx="27" cy="22" r="2.5" fill="#A8C8BF"/>
+                <circle cx="5"  cy="22" r="2.5" fill="#A8C8BF"/>
+                <line x1="16" y1="7.5"  x2="16"   y2="12.5" stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+                <line x1="24.8" y1="20.2" x2="19.0" y2="17.3" stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+                <line x1="7.2"  y1="20.2" x2="13.0" y2="17.3" stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+                <line x1="16" y1="7.5"  x2="25.5" y2="20" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+                <line x1="25.5" y1="20" x2="6.5"  y2="20" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+                <line x1="6.5"  y1="20" x2="16"   y2="7.5" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
             </svg>
-            <div class="ka-wordmark">
-                <div class="ka-wordmark-top">KNOWLEDGE</div>
-                <div class="ka-wordmark-bottom">Atla<span style="color: #A8C8BF;">s</span></div>
+            <div class="wordmark-text">
+                <span class="wm-top">Knowledge</span>
+                <span class="wm-bottom">At<span>las</span></span>
+                <span class="wm-sub">COGS 160</span>
             </div>
         </a>
         <div class="nav-center">
-            <a href="ka_topics.html" class="nav-link" id="nav-shell-explore">Explore</a>
-            <a href="ka_evidence.html" class="nav-link" id="nav-shell-evidence">Evidence</a>
-            <a href="ka_gaps.html" class="nav-link" id="nav-shell-gaps">Gaps</a>
-            <a href="ka_article_search.html" class="nav-link" id="nav-shell-articles">Articles</a>
-            <a href="ka_contribute.html" class="nav-link" id="nav-shell-contribute">Contribute</a>
-            <a href="160sp/ka_student_setup.html" class="nav-link" id="nav-shell-course">Course</a>
+            <a href="160sp/ka_schedule.html" class="nav-link">Syllabus</a>
+            <a href="160sp/collect-articles-upload.html" class="nav-link">A0</a>
+            <a href="160sp/ka_track1_tagging.html" class="nav-link">Track 1</a>
+            <a href="160sp/ka_track2_pipeline.html" class="nav-link">Track 2</a>
+            <a href="160sp/ka_track3_vr.html" class="nav-link">Track 3</a>
+            <a href="160sp/ka_track4_ux.html" class="nav-link">Track 4</a>
         </div>
         <div class="nav-right">
-            <select id="login-mode-select" class="mode-select" aria-label="Choose user mode">
-                <option value="student_explorer">Student explorer</option>
-                <option value="researcher">Researcher</option>
-                <option value="contributor">Contributor</option>
-                <option value="instructor">Instructor</option>
-                <option value="practitioner">Practitioner</option>
-                <option value="theory_mechanism_explorer">Theory Explorer</option>
-            </select>
-            <span class="mode-pill" id="login-mode-pill">STUDENT EXPLORER</span>
             <a href="ka_register.html" class="nav-link">Register</a>
         </div>
     </nav>
@@ -387,25 +394,17 @@
         <div class="login-container">
             <!-- Header -->
             <div class="login-header">
-                <svg class="ka-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#F5A623;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#A8C8BF;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <circle cx="50" cy="50" r="40" fill="url(#grad2)" opacity="0.2"/>
-                    <circle cx="30" cy="30" r="4" fill="#F5A623"/>
-                    <circle cx="70" cy="30" r="4" fill="#A8C8BF"/>
-                    <circle cx="50" cy="70" r="4" fill="#F5A623"/>
-                    <circle cx="20" cy="70" r="3" fill="#A8C8BF"/>
-                    <circle cx="80" cy="70" r="3" fill="#A8C8BF"/>
-                    <line x1="30" y1="30" x2="70" y2="30" stroke="#F5A623" stroke-width="2" opacity="0.7"/>
-                    <line x1="30" y1="30" x2="50" y2="70" stroke="#A8C8BF" stroke-width="2" opacity="0.7"/>
-                    <line x1="70" y1="30" x2="50" y2="70" stroke="#F5A623" stroke-width="2" opacity="0.7"/>
-                    <line x1="50" y1="70" x2="20" y2="70" stroke="#A8C8BF" stroke-width="1.5" opacity="0.6"/>
-                    <line x1="50" y1="70" x2="80" y2="70" stroke="#A8C8BF" stroke-width="1.5" opacity="0.6"/>
-                    <circle cx="50" cy="50" r="3" fill="#F5A623"/>
+                <svg class="wordmark-icon" style="width:48px;height:48px;" viewBox="0 0 32 32" fill="none">
+                    <circle cx="16" cy="16" r="3.5" fill="#F5A623"/>
+                    <circle cx="16" cy="5"  r="2.5" fill="#A8C8BF"/>
+                    <circle cx="27" cy="22" r="2.5" fill="#A8C8BF"/>
+                    <circle cx="5"  cy="22" r="2.5" fill="#A8C8BF"/>
+                    <line x1="16" y1="7.5"  x2="16"   y2="12.5" stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+                    <line x1="24.8" y1="20.2" x2="19.0" y2="17.3" stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+                    <line x1="7.2"  y1="20.2" x2="13.0" y2="17.3" stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+                    <line x1="16" y1="7.5"  x2="25.5" y2="20" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+                    <line x1="25.5" y1="20" x2="6.5"  y2="20" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+                    <line x1="6.5"  y1="20" x2="16"   y2="7.5" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
                 </svg>
             </div>
 
@@ -414,15 +413,30 @@
                 <h1>Welcome back</h1>
                 <p class="subtitle">Sign in to Knowledge Atlas</p>
 
+                <!-- Recovery note callout -->
+                <div class="recovery-callout">
+                    <strong>Already registered?</strong> Do not register again. Sign in with your existing account. If your password does not work, use the "Forgot password?" link below or contact Prof Kirsh with the email address you registered with.
+                </div>
+
                 <form id="loginForm">
                     <div class="form-group">
                         <label for="email">Email address</label>
                         <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                        <div class="email-hint">Use the email address you registered with — this is your username.</div>
                     </div>
 
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" id="password" name="password" placeholder="••••••••" required>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="password" name="password" placeholder="••••••••" required>
+                            <button type="button" class="password-toggle-btn" id="passwordToggle" aria-label="Toggle password visibility">
+                                <svg id="passwordToggleIcon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <!-- Eye icon (shown initially) -->
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
                         <div class="forgot-password-wrapper">
                             <a href="ka_forgot_password.html" class="forgot-password">Forgot password?</a>
                         </div>
@@ -430,12 +444,6 @@
 
                     <button type="submit" class="btn btn-primary">Sign In</button>
                 </form>
-
-                <div class="divider">or</div>
-
-                <div class="register-link">
-                    <a href="ka_register.html">Register as a contributor →</a>
-                </div>
             </div>
 
             <!-- Footer -->
@@ -472,6 +480,23 @@
       if (el) el.style.display = 'none';
     }
 
+    // Password visibility toggle
+    document.getElementById('passwordToggle').addEventListener('click', function(e) {
+      e.preventDefault();
+      const passwordInput = document.getElementById('password');
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+      // Update icon: eye for password, eye-slash for visible
+      const icon = document.getElementById('passwordToggleIcon');
+      if (isPassword) {
+        // Show eye-off icon (password is now visible)
+        icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+      } else {
+        // Show eye icon (password is hidden)
+        icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+      }
+    });
+
     document.getElementById('loginForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       clearLoginError();
@@ -496,9 +521,8 @@
           return;
         }
 
-        // Store tokens and user info in localStorage
+        // Store the short-lived access token and user info in localStorage.
         localStorage.setItem('ka_access_token',  data.access_token);
-        localStorage.setItem('ka_refresh_token', data.refresh_token);
         localStorage.setItem('ka_current_user',  JSON.stringify(data.user));
         localStorage.setItem('ka_logged_in', '1');
         sessionStorage.setItem('ka_logged_in', '1');
@@ -509,27 +533,12 @@
         // Route by role
         const role = data.user.role || 'student';
         if (role === 'instructor' || role === 'admin') {
-          window.location.href = 'ka_approve.html';
+          window.location.href = '160sp/ka_approve.html';
         } else {
-          // For students: check A0 completion status
-          try {
-            const progressRes = await fetch('/api/student/progress/' + encodeURIComponent(data.user.user_id || data.user.email));
-            if (progressRes.ok) {
-              const progress = await progressRes.json();
-              if (progress.a0_complete) {
-                window.location.href = '160sp/ka_schedule.html';
-              } else {
-                window.location.href = '160sp/ka_student_setup.html';
-              }
-            } else {
-              // API not available, default to setup page
-              window.location.href = '160sp/ka_student_setup.html';
-            }
-          } catch(e) {
-            // Progress check failed, default to setup page
-            console.warn('[KA] Could not check A0 progress:', e);
-            window.location.href = '160sp/ka_student_setup.html';
-          }
+          // All students — returning or new — land on the Student Setup page.
+          // Sections 1 (AI Methodology) and 2 (A0 upload) are accordion-collapsed for
+          // returners; Section 3 (Choose Your Track) is front-and-centre.
+          window.location.href = '160sp/ka_student_setup.html';
         }
 
       } catch(ex) {
@@ -546,8 +555,10 @@
           localStorage.setItem('ka_logged_in', '1');
           sessionStorage.setItem('ka_logged_in', '1');
           if (window.KA_WORKFLOW_STORE) window.KA_WORKFLOW_STORE.setLoggedIn(true);
+          // Route demo students to the same setup flow as the live auth path,
+          // so the demo fallback does not bypass onboarding.
           const dest = email.includes('instructor') || email.includes('prof')
-            ? 'ka_approve.html' : 'ka_user_home.html';
+            ? '160sp/ka_approve.html' : '160sp/ka_student_setup.html';
           window.location.href = dest;
         };
       }
@@ -572,21 +583,10 @@ window.KA_PAGE_FUNCTION = {
   ]
 };
 </script>
-<script src="ka_page_function.js"></script>
-<script src="ka_demo_wiring.js"></script>
-<script src="ka_mode_switch.js"></script>
+<script src="ka_page_function.js"></script><script src="ka_mode_switch.js"></script>
 <script src="ka_site_shell.js"></script>
 <script src="ka_data_adapter.js"></script>
-<script src="ka_live_context.js"></script>
 
-<script>
-window.KA_LIVE_CONTEXT_CONFIG = {
-  surface: 'auth',
-  title: 'System State',
-  status: 'Local identity prototype',
-  warn: true
-};
-</script>
 <script>
 window.KA_ABOUT_PAGE = {
   pageId: 'ka_login',

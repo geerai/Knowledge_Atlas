@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track 3 Setup — AI &amp; VR — COGS 160</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--navy:#1C3D3A;--amber:#E8872A;--cream:#F7F4EF;--green:#2A7868;--text:#2D2010;--muted:#6A5E50;--border:#DDD6CD;--light:#EDE8E0;}
+    body{font-family:Arial,sans-serif;background:var(--cream);color:var(--text);line-height:1.65;}
+    nav{position:sticky;top:0;z-index:500;background:var(--navy);display:flex;align-items:center;gap:24px;padding:0 28px;min-height:52px;border-bottom:2px solid var(--amber);}
+    .nav-center{display:flex;align-items:center;gap:14px;flex:1;}
+    nav a.nav-link{color:#7AACA0;font-size:0.8rem;text-decoration:none;padding:6px 10px;border-radius:6px;}
+    nav a.nav-link:hover{color:#fff;background:rgba(255,255,255,0.08);}
+    nav a.nav-link.active{color:#F5A623;background:rgba(232,135,42,0.12);}
+    .nav-right{display:flex;align-items:center;gap:12px;}
+    .page-hero{background:linear-gradient(135deg,var(--navy) 0%,#163230 100%);padding:48px 40px 40px;border-bottom:3px solid var(--amber);}
+    .page-hero .eyebrow{font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#7AACA0;margin-bottom:10px;}
+    .page-hero h1{font-family:Georgia,serif;font-size:1.9rem;font-weight:400;color:#F5F0E8;line-height:1.25;margin-bottom:12px;}
+    .page-hero p{font-size:1rem;color:#A8C8BF;line-height:1.65;max-width:720px;}
+    .outer{max-width:920px;margin:0 auto;padding:0 32px 72px;}
+    .content-section{margin-top:44px;}
+    .section-title{font-family:Georgia,serif;font-size:1.35rem;font-weight:400;color:var(--navy);margin-bottom:18px;line-height:1.3;}
+    p{margin-bottom:14px;font-size:0.95rem;line-height:1.7;}
+    ul,ol{margin-left:1.5rem;margin-bottom:14px;}
+    li{margin-bottom:8px;}
+    strong{color:var(--text);}
+    code{background:#f1ece4;padding:1px 5px;border-radius:3px;font-family:Menlo,Consolas,monospace;font-size:0.88em;color:#5A3F1A;}
+    pre{background:#1C3D3A;color:#E8DFCF;padding:14px 16px;border-radius:8px;overflow-x:auto;font-family:Menlo,Consolas,monospace;font-size:0.85rem;line-height:1.55;margin:12px 0 18px;}
+    .callout{border-radius:8px;padding:16px 18px;margin:18px 0;font-size:0.92rem;line-height:1.65;}
+    .callout-info{background:#E6F5F0;border-left:4px solid var(--green);color:#1a4a3f;}
+    .callout-warn{background:#FFF3DD;border-left:4px solid var(--amber);color:#6a4614;}
+    .step-num{display:inline-block;width:28px;height:28px;background:var(--amber);color:#fff;border-radius:50%;text-align:center;font-weight:700;font-size:0.9rem;line-height:28px;margin-right:8px;vertical-align:middle;}
+    .step-head{font-family:Georgia,serif;font-size:1.1rem;color:var(--navy);margin:26px 0 10px;display:flex;align-items:center;}
+    .cta-button{display:inline-block;padding:11px 22px;background:var(--navy);color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.92rem;margin-top:10px;}
+    .cta-button.secondary{background:transparent;color:var(--navy);border:1.5px solid var(--navy);}
+    .track-nav{display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:2px solid var(--border);}
+  
+    /* Offset anchor jumps so section titles clear the fixed class navbar */
+    :target { scroll-margin-top: 96px; }
+    h1[id], h2[id], h3[id], h4[id], section[id], div[id] { scroll-margin-top: 96px; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="ka_schedule.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <svg viewBox="0 0 32 32" fill="none" style="width:28px;height:28px;">
+      <circle cx="16" cy="16" r="3.5" fill="#F5A623"/>
+      <circle cx="16" cy="5" r="2.5" fill="#A8C8BF"/>
+      <circle cx="27" cy="22" r="2.5" fill="#A8C8BF"/>
+      <circle cx="5" cy="22" r="2.5" fill="#A8C8BF"/>
+      <line x1="16" y1="7.5" x2="16" y2="12.5" stroke="#F5A623" stroke-width="1.5"/>
+      <line x1="24.8" y1="20.2" x2="19.0" y2="17.3" stroke="#F5A623" stroke-width="1.5"/>
+      <line x1="7.2" y1="20.2" x2="13.0" y2="17.3" stroke="#F5A623" stroke-width="1.5"/>
+    </svg>
+    <div style="display:flex;flex-direction:column;line-height:1.1;">
+      <span style="font-size:0.66rem;font-weight:400;letter-spacing:0.24em;text-transform:uppercase;color:#A8C8BF;">Knowledge</span>
+      <span style="font-size:1.05rem;font-weight:700;color:#fff;">At<span style="color:#F5A623;">las</span> · <span style="font-size:0.85rem;color:#A8C8BF;font-weight:400;">COGS 160</span></span>
+    </div>
+  </a>
+  <div class="nav-center">
+    <a href="ka_schedule.html" class="nav-link">160 Syllabus</a>
+    <a href="week2_exercises.html" class="nav-link">A0</a>
+    <a href="week3_agenda.html" class="nav-link">A1</a>
+    <a href="ka_track1_tagging.html" class="nav-link">Track 1</a>
+    <a href="ka_track2_pipeline.html" class="nav-link">Track 2</a>
+    <a href="ka_track3_vr.html" class="nav-link active">Track 3</a>
+    <a href="ka_track4_ux.html" class="nav-link">Track 4</a>
+  </div>
+  <div class="nav-right">
+    <a href="ka_student_profile.html" class="nav-link">160 Student Profile</a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="eyebrow">COGS 160 · Track 3 · How to Set Up</div>
+  <h1>Track 3 Setup — AI &amp; VR Room Builder</h1>
+  <p>Install Unreal Engine 5, the class's room-template starter project, and the AI room-modification
+  harness. This is the heaviest setup of the four tracks — plan for an hour on a fast machine, longer
+  if Unreal needs to compile shaders.</p>
+</div>
+
+<div class="outer">
+
+  <div class="content-section">
+    <h2 class="section-title">Prerequisites</h2>
+    <ul>
+      <li><strong>Windows 10/11 or macOS 13+</strong>. Linux is technically supported but unsupported for
+      the class. Ask a TA if you need a loaner machine.</li>
+      <li><strong>Discrete GPU</strong> with at least 6 GB VRAM (RTX 2060 / M1 Pro / equivalent). Intel
+      integrated graphics will not render the template scenes at an interactive frame rate.</li>
+      <li><strong>80 GB free disk.</strong> Unreal plus the starter content is large.</li>
+      <li><strong>Epic Games account</strong> — free; sign up at
+        <a href="https://www.epicgames.com/account/" style="color:var(--amber);font-weight:600;">epicgames.com</a>.</li>
+      <li><strong>Python 3.11+, Git</strong> as in the other tracks.</li>
+      <li><strong>Quest 2/3, Valve Index, or equivalent headset</strong> if you are on the VR-authoring
+      sub-team. Not required for the AI-harness sub-team.</li>
+      <li><strong>Blender 4.x</strong> (free) — used as a neutral staging ground for meshes that come
+      out of text-to-3D services before they are imported into Unreal. Download from
+      <a href="https://www.blender.org/download/" style="color:var(--amber);font-weight:600;">blender.org</a>.
+      Choose the LTS build if you prefer stability over the newest features.</li>
+      <li><strong>A text-to-3D account</strong> — either <a href="https://www.meshy.ai/"
+        style="color:var(--amber);font-weight:600;">Meshy</a> or
+        <a href="https://www.tripo3d.ai/" style="color:var(--amber);font-weight:600;">Tripo3D</a>.
+        Both services take a prompt (or an image) and return a textured mesh in a few minutes. Free
+        tiers are enough for classwork; pick one and stay with it so your asset provenance is consistent.</li>
+    </ul>
+  </div>
+
+  <div class="content-section">
+    <h2 class="section-title">Step-by-Step</h2>
+
+    <div class="step-head"><span class="step-num">1</span>Install Epic Games Launcher &amp; Unreal Engine 5.4</div>
+    <p>Download the Epic Games Launcher, sign in, and install Unreal Engine 5.4 from the "Unreal Engine"
+    tab. Accept the default components; the install is 30–50 GB.</p>
+
+    <div class="step-head"><span class="step-num">2</span>Clone the KA-Rooms starter project</div>
+    <pre>git clone git@github.com:kirsh-lab/KA-Rooms.git
+cd KA-Rooms
+git lfs pull   # pulls the base-room .uasset files</pre>
+    <div class="callout callout-info">
+      <strong>Git LFS</strong> is required — install once with <code>brew install git-lfs</code> (macOS)
+      or from <a href="https://git-lfs.com" style="color:#1a4a3f;font-weight:600;">git-lfs.com</a> on Windows,
+      then run <code>git lfs install</code>.
+    </div>
+
+    <div class="step-head"><span class="step-num">3</span>Open the project and let Unreal compile shaders</div>
+    <p>Double-click <code>KA_Rooms.uproject</code>. The first open triggers a shader compile that can
+    take 15–40 minutes. Let it finish before touching anything.</p>
+
+    <div class="step-head"><span class="step-num">4</span>Install the AI room-modification harness</div>
+    <pre>cd ai_harness
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+# Edit .env: ANTHROPIC_API_KEY=...</pre>
+
+    <div class="step-head"><span class="step-num">5</span>Run the harness against a base room</div>
+    <pre>python -m ka_rooms.ai_harness \
+    --room living_room_v1 \
+    --instruction "raise the ceiling to 3.6 m and curve the back wall"</pre>
+    <p>The harness writes a modified <code>.uasset</code> into <code>KA-Rooms/Content/Generated/</code>;
+    reload the Unreal editor to see the result.</p>
+
+    <div class="step-head"><span class="step-num">6</span>Set up your asset-generation pipeline</div>
+    <p>Most of the Week 3–5 rooms will need one or two custom props that the Unreal Marketplace does not
+    cover (a particular chair shape, a specific artefact on a shelf, a culturally distinctive light
+    fixture). The class uses a three-step pipeline:</p>
+    <ol>
+      <li><strong>Generate</strong> a textured mesh in Meshy or Tripo3D from a short prompt ("a round
+      wooden side-table, 45 cm tall, mid-century style") or a reference image. Export as
+      <code>.glb</code> or <code>.fbx</code>.</li>
+      <li><strong>Clean up</strong> in Blender: check scale against a reference cube, delete stray
+      geometry, consolidate materials, and bake down texture atlases if the mesh arrived with several
+      overlapping UV islands. Re-export as <code>.fbx</code>.</li>
+      <li><strong>Import</strong> into Unreal through the <em>Content Drawer → Import</em> button and
+      drop into <code>Content/Generated/props/</code>. Check collision and lightmap UVs before
+      saving.</li>
+    </ol>
+    <div class="callout callout-info">
+      <strong>Why Blender sits in the middle.</strong> Meshes that come out of text-to-3D services
+      are rarely clean enough to import straight into Unreal — scales are off by a factor of ten, UV
+      seams are visible, and materials are sometimes duplicated. Blender is the neutral editor where
+      you correct these issues once, so the Unreal import is predictable. Skipping this step is the
+      most common reason a generated prop looks "wrong" in the headset.
+    </div>
+
+    <div class="step-head"><span class="step-num">7</span>(VR sub-team only) Pair your headset</div>
+    <p>Quest users: install <em>Meta Quest Link</em>, enable developer mode on the headset, and follow
+    Epic's <em>VR preview</em> quick-start. Index users: use SteamVR with OpenXR runtime set to SteamVR.</p>
+  </div>
+
+  <div class="content-section">
+    <h2 class="section-title">Common Snags</h2>
+    <ul>
+      <li><strong>Unreal crashes on first open</strong> — usually GPU driver. Update to the latest NVIDIA
+      or AMD drivers and retry.</li>
+      <li><strong>LFS files missing</strong> — re-run <code>git lfs install</code> then
+      <code>git lfs pull</code>. If the repo has old clone metadata, delete the checkout and clone afresh.</li>
+      <li><strong>Harness writes succeed but Unreal shows nothing</strong> — Unreal caches assets. Right-click
+      the <code>Generated</code> folder in the Content Browser and choose <em>Refresh</em>.</li>
+    </ul>
+    <div class="callout callout-warn">
+      <strong>Branching rule.</strong> Create <code>track3/&lt;your-handle&gt;/&lt;room-name&gt;</code> for
+      every new room. Large binary commits go through Git LFS only.
+    </div>
+  </div>
+
+  <div class="track-nav">
+    <a href="ka_track3_vr.html" class="cta-button secondary">← Back to Track 3</a>
+    <a href="ka_technical_setup.html" class="cta-button">Full Technical Setup →</a>
+  </div>
+</div>
+
+</body>
+</html>

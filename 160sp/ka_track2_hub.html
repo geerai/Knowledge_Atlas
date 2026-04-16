@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track 2 · Article Finder Hub</title>
+<link rel="stylesheet" href="../ka_atlas_shell.css">
+<style>:root { --hub-color: #2A6A88; }</style>
+</head>
+<body data-ka-active="" data-ka-journey="contributor"
+      data-ka-crumbs='[["Home","ka_home.html"],["Tracks","ka_track_picker.html"],["Article Finder Hub",""]]'>
+
+<a class="ka-skip" href="#main">Skip to main content</a>
+<div id="ka-navbar-slot"></div>
+<div id="ka-breadcrumb-slot"></div>
+
+<section class="hub-banner">
+  <div class="tag">Track 2 · Team Hub</div>
+  <h1>Article Finder</h1>
+  <p class="subtitle">
+    Hunt down high-value primary sources on architectural cognition, triage them by
+    evidentiary strength, and deliver structured, verifiable article records to the
+    Knowledge Atlas pipeline.
+  </p>
+  <p class="roster-count">Spring 2026 roster: 4 enrolled students</p>
+</section>
+
+<div class="ka-shell">
+  <aside id="ka-journey-slot"></aside>
+
+  <main id="ka-main">
+
+    <div class="hub-regions">
+
+      <!-- REGION 1 ───────────── -->
+      <section class="hub-region">
+        <div class="hub-region-head">
+          <div>
+            <div class="hub-region-num">Region 1</div>
+            <div class="hub-region-title">Environment setup</div>
+          </div>
+        </div>
+        <div class="hub-region-body">
+          <p>Before claiming any task, every Article Finder needs a working local
+          environment. The pipeline assumes Python 3.11+, a Zotero library pointed at the
+          shared group, and a GitHub account linked to the course organisation.</p>
+
+          <h4>Required tooling</h4>
+          <ul>
+            <li><strong>Python 3.11+</strong> (verify with <code>python3 --version</code>)</li>
+            <li><strong>Zotero 7</strong> desktop + <strong>Zotero Connector</strong> browser extension</li>
+            <li><strong>Git</strong> and a GitHub account enrolled in the course org</li>
+            <li><strong>DOI/CrossRef access</strong> via your UCSD VPN for closed-access PDFs</li>
+          </ul>
+
+          <h4>One-shot bootstrap</h4>
+<pre>git clone https://github.com/ucsd-cogs160/article_finder.git
+cd article_finder
+python3 -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env     # fill in ZOTERO_API_KEY, ZOTERO_GROUP_ID
+python3 scripts/verify_env.py</pre>
+          <p><code>verify_env.py</code> returns <code>OK</code> only when Zotero, CrossRef,
+          and the course DB are all reachable. If any line prints <code>FAIL</code>,
+          post in Region 6 (Help &amp; queue) before trying to claim tasks.</p>
+        </div>
+      </section>
+
+      <!-- REGION 2 ───────────── -->
+      <section class="hub-region">
+        <div class="hub-region-head">
+          <div>
+            <div class="hub-region-num">Region 2</div>
+            <div class="hub-region-title">Shared resources</div>
+          </div>
+          <a class="ka-btn" href="ka_track2_resources.html">Open full library →</a>
+        </div>
+        <div class="hub-region-body">
+          <p>Shared prompts, query templates, field-tested search strings, and reference
+          sets live on the Team Resources page. Upload new items there so the whole team
+          benefits.</p>
+          <ul>
+            <li><a href="ka_track2_resources.html#queries">Canonical CrossRef / Semantic Scholar / OpenAlex query templates</a></li>
+            <li><a href="ka_track2_resources.html#rubrics">Evidentiary-strength rubric (VOI banding)</a></li>
+            <li><a href="ka_track2_resources.html#exemplars">Exemplar article records (gold standard)</a></li>
+            <li><a href="ka_track2_resources.html#glossaries">Architectural-cognition glossary (Mallgrave, Robinson, Pallasmaa…)</a></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- REGION 3 ───────────── -->
+      <section class="hub-region">
+        <div class="hub-region-head">
+          <div>
+            <div class="hub-region-num">Region 3</div>
+            <div class="hub-region-title">Ways of working</div>
+          </div>
+        </div>
+        <div class="hub-region-body">
+          <p>The team operates on a weekly cadence with one synchronous check-in and
+          asynchronous pair review in between.</p>
+
+          <h4>Weekly rhythm</h4>
+          <ol>
+            <li><strong>Monday:</strong> claim a task from the queue (one at a time; complete
+            before claiming another).</li>
+            <li><strong>Wed/Thu:</strong> submit a draft article record, assign a pair reviewer.</li>
+            <li><strong>Friday:</strong> 30-minute stand-up; defended records merge to the
+            staging branch; contested records discussed with instructor.</li>
+          </ol>
+
+          <h4>Pair-review rule</h4>
+          <p>No article record merges on a solo review. A second Finder must load the
+          record, run the verification recipe, and sign off. This is
+          <em>structured peripheral participation</em> (Lave &amp; Wenger, 1991): every
+          record is a small apprenticeship event.</p>
+
+          <h4>Communication channels</h4>
+          <ul>
+            <li><code>#track2-article-finder</code> Slack — quick questions, daily status</li>
+            <li>GitHub Issues — anything that blocks a merge</li>
+            <li>Weekly office hours — Thursdays 2–3 pm, CSB 155</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- REGION 4 ───────────── TASK CONTEXT (HEAVY) -->
+      <section class="hub-region">
+        <div class="hub-region-head">
+          <div>
+            <div class="hub-region-num">Region 4 · Most important</div>
+            <div class="hub-region-title">Task context &amp; assignment manifests</div>
+          </div>
+        </div>
+        <div class="hub-region-body">
+          <p>Each Article Finder task is specified by a <strong>manifest</strong>: a
+          small, testable contract stating what goes in, what comes out, and what
+          counts as "done." Click any task below to expand its manifest.</p>
+
+          <article class="task-manifest">
+            <div class="task-manifest-head" onclick="this.parentElement.classList.toggle('open')">
+              <span class="task-manifest-title">AF-001 · Seed search for "daylight and cognitive performance"</span>
+              <span class="task-manifest-status status-supported">Well-specified</span>
+            </div>
+            <div class="task-manifest-body">
+              <dl>
+                <dt>Goal</dt>
+                <dd>Produce a 25-item seed corpus of empirical studies on daylight
+                  exposure and cognitive/attentional outcomes, 2010–present.</dd>
+                <dt>Inputs</dt>
+                <dd>Query templates in <code>resources/queries/daylight_cognition.md</code>;
+                  inclusion rubric in <code>rubrics/voi_banding.md</code>.</dd>
+                <dt>Outputs</dt>
+                <dd><code>data/af/af001_daylight_cognition.json</code> — 25 records with
+                  DOI, title, authors, venue, year, abstract, VOI band, and inclusion
+                  justification (&lt;80 words).</dd>
+                <dt>Acceptance</dt>
+                <dd>Pair reviewer runs <code>scripts/verify_af_record.py af001</code> →
+                  exit 0. At least 18 of 25 records have full-text PDFs in Zotero group.
+                  VOI-band distribution is plausible (not all "high", not all "low").</dd>
+                <dt>Estimated effort</dt>
+                <dd>6–8 hours spread over a week.</dd>
+                <dt>Verification</dt>
+                <dd>Functional: the record file loads, schema validates, all DOIs
+                  resolve via CrossRef, ≥70 % have full text attached. No prose scoring.</dd>
+              </dl>
+            </div>
+          </article>
+
+          <article class="task-manifest">
+            <div class="task-manifest-head" onclick="this.parentElement.classList.toggle('open')">
+              <span class="task-manifest-title">AF-002 · Backward citation sweep for Ulrich (1984)</span>
+              <span class="task-manifest-status status-supported">Well-specified</span>
+            </div>
+            <div class="task-manifest-body">
+              <dl>
+                <dt>Goal</dt>
+                <dd>Enumerate all articles citing Ulrich (1984, <em>Science</em>) that
+                  themselves contain a measured occupant outcome.</dd>
+                <dt>Inputs</dt>
+                <dd>Seed DOI <code>10.1126/science.6143402</code>; Semantic Scholar API key.</dd>
+                <dt>Outputs</dt>
+                <dd><code>data/af/af002_ulrich_forward.json</code> with ≥ 60 records.</dd>
+                <dt>Acceptance</dt>
+                <dd><code>verify_af_record.py af002</code> passes; at least 40 records
+                  carry a measured outcome (not review / theory-only).</dd>
+                <dt>Verification</dt>
+                <dd>Automated: count records flagged <code>has_outcome: true</code> and
+                  whose <code>measurement_field</code> is one of the approved vocabulary terms.</dd>
+              </dl>
+            </div>
+          </article>
+
+          <article class="task-manifest">
+            <div class="task-manifest-head" onclick="this.parentElement.classList.toggle('open')">
+              <span class="task-manifest-title">AF-003 · Scope note for "embodied architecture" (disambiguation)</span>
+              <span class="task-manifest-status status-partial">Partially specified</span>
+            </div>
+            <div class="task-manifest-body">
+              <dl>
+                <dt>Goal</dt>
+                <dd>Separate the philosophical / phenomenological strand (Pallasmaa,
+                  Mallgrave, Robinson) from the empirical sensorimotor-simulation strand
+                  (Gallese, Jelić, Djebbara) into two corpora, with a scope note explaining
+                  the boundary.</dd>
+                <dt>Inputs</dt>
+                <dd>Glossary entries in <code>resources/glossaries/embodied.md</code>.</dd>
+                <dt>Outputs</dt>
+                <dd>Two record files + a 400-word scope note (markdown).</dd>
+                <dt>Acceptance</dt>
+                <dd>Scope note reviewed by instructor; corpora each have ≥ 15 records
+                  passing schema validation.</dd>
+                <dt>Verification</dt>
+                <dd>Functional on the record files; instructor sign-off on the note.
+                  <em>Open question for this task: how to functionally verify the
+                  disambiguation itself. Currently under discussion with Prof. Kirsh.</em></dd>
+              </dl>
+            </div>
+          </article>
+
+          <article class="task-manifest">
+            <div class="task-manifest-head" onclick="this.parentElement.classList.toggle('open')">
+              <span class="task-manifest-title">AF-004 · Negative-result / failed-replication pass</span>
+              <span class="task-manifest-status status-speculative">Speculative</span>
+            </div>
+            <div class="task-manifest-body">
+              <dl>
+                <dt>Goal</dt>
+                <dd>Actively seek failed replications and negative findings in
+                  architectural-cognition studies (e.g., ceiling-height / construal,
+                  thermal priming).</dd>
+                <dt>Why speculative</dt>
+                <dd>Negative results are under-published; the yield from a single week
+                  of search is unknown. This is an exploratory task — low-yield outcomes
+                  are themselves informative.</dd>
+                <dt>Outputs</dt>
+                <dd>Whatever is found + a short note on search strategies that did /
+                  did not surface results.</dd>
+                <dt>Verification</dt>
+                <dd>Procedural: queries logged; records schema-valid. No
+                  minimum-count target.</dd>
+              </dl>
+            </div>
+          </article>
+
+          <h4>Manifest schema (reference)</h4>
+<pre>{
+  "task_id":        "AF-XXX",
+  "goal":           "one-sentence purpose",
+  "inputs":         ["query templates", "rubrics", "seed DOIs"],
+  "outputs":        ["file paths produced"],
+  "acceptance":     ["bullet criteria"],
+  "verification":   { "type": "functional|procedural",
+                      "recipe": "scripts/verify_af_record.py &lt;task_id&gt;" },
+  "effort_hours":   "6-8",
+  "status":         "supported|partial|speculative"
+}</pre>
+        </div>
+      </section>
+
+      <!-- REGION 5 ───────────── -->
+      <section class="hub-region">
+        <div class="hub-region-head">
+          <div>
+            <div class="hub-region-num">Region 5</div>
+            <div class="hub-region-title">Functional verification</div>
+          </div>
+        </div>
+        <div class="hub-region-body">
+          <p>Every Article Finder deliverable is graded by <strong>whether it works</strong>,
+          not by prose quality. The verification harness is a Python script that loads
+          your output file, validates schema, resolves every DOI, and runs task-specific
+          checks.</p>
+
+          <h4>Run locally before submitting</h4>
+<pre>python3 scripts/verify_af_record.py af001
+# → AF-001: 25 records, schema OK, 24/25 DOIs resolve, 19/25 have PDFs
+#   VOI bands: high=8 medium=13 low=4  → PASS</pre>
+
+          <h4>What the harness checks</h4>
+          <ul>
+            <li>JSON schema validity against <code>contracts/af_record.schema.json</code></li>
+            <li>Every DOI resolves on CrossRef (HTTP 200, metadata returned)</li>
+            <li>Task-specific minima (record count, full-text coverage, VOI distribution)</li>
+            <li>No duplicate DOIs across records</li>
+            <li>Dates, venues, and author strings are well-formed</li>
+          </ul>
+
+          <p style="margin-top:10px;">A record that passes the harness is considered
+          mergeable. Prose review is advisory, not gating. This is deliberate: the
+          Knowledge Atlas needs reliable structured data, and the grader needs to be
+          able to say "yes, this works" without reading 60 pages of JSON.</p>
+        </div>
+      </section>
+
+      <!-- REGION 6 ───────────── -->
+      <section class="hub-region">
+        <div class="hub-region-head">
+          <div>
+            <div class="hub-region-num">Region 6</div>
+            <div class="hub-region-title">Help &amp; queue</div>
+          </div>
+        </div>
+        <div class="hub-region-body">
+          <div class="help-queue">
+            <h5>Where to ask for help</h5>
+            <ul>
+              <li>Stuck on environment? → <code>#track2-article-finder</code>, tag
+                <code>@instructor</code>.</li>
+              <li>Task manifest feels under-specified? → file a GitHub Issue with
+                label <code>manifest-gap</code>.</li>
+              <li>Uncertain whether a paper "counts"? → escalate to the Friday stand-up.</li>
+              <li>Tooling crashes → paste the verify-env output in the channel.</li>
+            </ul>
+          </div>
+          <p style="margin-top:10px;font-size:0.82rem;color:#8A9A96;">
+            <em>Open task queue is the list of manifests above whose status is
+            "Well-specified" and that have not been claimed. Claim via GitHub Issue
+            assignment.</em>
+          </p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<footer class="ka-footer">
+  Knowledge Atlas · UCSD Cognitive Science · COGS 160 Spring 2026
+</footer>
+
+<script src="../ka_canonical_navbar.js" defer></script>
+<script src="../ka_journey_nav.js"      defer></script>
+</body>
+</html>

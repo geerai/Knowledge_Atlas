@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Theory · Knowledge Atlas</title>
+<link rel="stylesheet" href="ka_atlas_shell.css">
+<style>
+  /* ─── Theory page layout ─── */
+  .theory-shell {
+    max-width: 1180px; margin: 0 auto; padding: 24px;
+    display: grid; grid-template-columns: 1fr 280px; gap: 32px;
+  }
+  @media (max-width: 900px) { .theory-shell { grid-template-columns: 1fr; } }
+
+  .theory-main > section { margin-bottom: 30px; }
+  .theory-main h2.tsec {
+    font-family: Georgia, serif; font-size: 1.35rem; color: #1C3D3A;
+    border-bottom: 2px solid #E0D8CC; padding-bottom: 6px;
+    margin-bottom: 12px;
+  }
+  .theory-main h2.tsec .tnum {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase; color: #8A9A96; margin-right: 8px;
+  }
+
+  /* Hero / identity block */
+  .theory-hero {
+    background: linear-gradient(135deg, #F4FAF8 0%, #F9F5EE 100%);
+    border: 1px solid #E0D8CC; border-radius: 12px;
+    padding: 22px 24px; margin-bottom: 24px;
+  }
+  .theory-name {
+    font-family: Georgia, serif; font-size: 1.9rem; font-weight: 700;
+    color: #1C3D3A; line-height: 1.25; margin-bottom: 6px;
+  }
+  .theory-aka {
+    font-size: 0.86rem; color: #7A7060; font-style: italic;
+    margin-bottom: 10px;
+  }
+  .theory-meta-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px; margin-top: 12px;
+  }
+  .theory-meta-item {
+    background: #fff; border: 1px solid #E0D8CC; border-radius: 8px;
+    padding: 8px 10px;
+  }
+  .theory-meta-item .label {
+    font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #8A9A96; font-weight: 700;
+  }
+  .theory-meta-item .value {
+    font-size: 0.92rem; color: #1C3D3A; font-weight: 600; margin-top: 2px;
+  }
+
+  /* Core claims list */
+  .claim-card {
+    background: #fff; border: 1px solid #E0D8CC; border-radius: 8px;
+    padding: 12px 14px; margin-bottom: 8px;
+  }
+  .claim-card .claim-id {
+    font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: #8A9A96; font-weight: 700;
+  }
+  .claim-card .claim-text {
+    font-size: 0.95rem; color: #1C3D3A; margin-top: 3px; line-height: 1.55;
+  }
+  .claim-card .claim-status {
+    display: inline-block; font-size: 0.66rem; padding: 2px 8px;
+    border-radius: 10px; font-weight: 600; margin-top: 6px;
+  }
+  .status-well-established { background: #d4edda; color: #155724; }
+  .status-supported { background: #E8F0FE; color: #1A56A0; }
+  .status-contested { background: #FEF3E2; color: #985E0A; }
+  .status-speculative { background: #FEE4E4; color: #A02020; }
+
+  /* PNU section */
+  .pnu-chain-box {
+    background: #F9F5EE; border: 1px solid #E0D8CC; border-radius: 8px;
+    padding: 14px 18px; font-family: Georgia, serif; font-size: 0.95rem;
+    color: #1C3D3A; margin-bottom: 12px;
+  }
+  .pnu-chain-box .pnu-id {
+    font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #8A9A96; font-weight: 700; margin-bottom: 6px; display: block;
+  }
+  .pnu-none-banner {
+    background: #FEF7EC; border: 1px dashed #E8872A; border-radius: 6px;
+    padding: 8px 12px; font-size: 0.82rem; color: #985E0A;
+  }
+
+  /* Reference list */
+  .ref-list { list-style: none; padding: 0; }
+  .ref-list li {
+    font-size: 0.9rem; color: #2D2D2D; line-height: 1.6;
+    padding: 8px 0; border-bottom: 1px solid #F0EBE2;
+  }
+  .ref-list li:last-child { border-bottom: none; }
+  .ref-tag {
+    display: inline-block; font-size: 0.6rem; padding: 1px 6px;
+    border-radius: 8px; font-weight: 600; margin-left: 6px;
+  }
+  .ref-tag.canonical { background: #d4edda; color: #155724; }
+  .ref-tag.review { background: #E8F0FE; color: #1A56A0; }
+  .ref-tag.critique { background: #FEE4E4; color: #A02020; }
+
+  /* Corpus articles table */
+  .corpus-table {
+    width: 100%; border-collapse: collapse; font-size: 0.88rem;
+  }
+  .corpus-table th, .corpus-table td {
+    text-align: left; padding: 8px 10px; border-bottom: 1px solid #E0D8CC;
+    vertical-align: top;
+  }
+  .corpus-table th {
+    font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: #8A9A96; font-weight: 700; background: #F9F5EE;
+    position: sticky; top: 0;
+  }
+  .corpus-table td a { color: #2A7868; text-decoration: none; }
+  .corpus-table td a:hover { text-decoration: underline; }
+
+  /* Development banner */
+  .dev-banner {
+    background: #FEF7EC; border: 1px dashed #E8872A; border-radius: 6px;
+    padding: 10px 14px; font-size: 0.82rem; color: #985E0A;
+    margin-bottom: 14px;
+  }
+
+  /* Right rail / TOC */
+  .theory-rail {
+    position: sticky; top: 76px; align-self: start;
+    max-height: calc(100vh - 100px); overflow-y: auto;
+    background: #fff; border: 1px solid #E0D8CC; border-radius: 10px;
+    padding: 14px 12px; font-size: 0.86rem;
+  }
+  .theory-rail h4 {
+    font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #8A9A96; margin-bottom: 8px;
+  }
+  .theory-rail a {
+    display: block; padding: 5px 8px; color: #2D2D2D; text-decoration: none;
+    border-left: 2px solid transparent; font-size: 0.84rem;
+  }
+  .theory-rail a:hover { background: #F9F5EE; border-left-color: #F5A623; }
+  .theory-rail a.active { border-left-color: #F5A623; color: #1C3D3A; font-weight: 600; }
+
+  /* Corpus count badge */
+  .corpus-count {
+    display: inline-block; background: #2A7868; color: #fff;
+    font-size: 0.72rem; font-weight: 700; padding: 2px 8px;
+    border-radius: 10px; margin-left: 6px;
+  }
+</style>
+</head>
+<body data-ka-active="articles"
+      data-ka-crumbs='[["Home","ka_home.html"],["Articles","ka_articles.html"],["Theory",""]]'>
+
+<div id="ka-navbar-slot"></div>
+<div id="ka-breadcrumb-slot"></div>
+
+<div class="theory-shell">
+  <!-- ─── MAIN ─── -->
+  <article class="theory-main" id="ka-main">
+
+    <div class="dev-banner">
+      <strong>Living page.</strong> This theory profile is auto-generated from the
+      K-ATLAS extraction pipeline and will grow as the corpus expands. Sections
+      marked <em>TODO</em> are queued for development — see
+      <a href="160sp/TASKS.md" style="color:#985E0A;">TASKS.md</a>.
+    </div>
+
+    <!-- ═══ HERO ═══ -->
+    <div class="theory-hero" id="sec-hero">
+      <div class="theory-name" id="theory-name">
+        Attention Restoration Theory
+      </div>
+      <div class="theory-aka" id="theory-aka">
+        Also known as: ART &middot; Kaplan's restorative-environment framework
+      </div>
+      <p style="font-size:0.95rem;color:#2D2D2D;line-height:1.6;" id="theory-oneliner">
+        Directed attention is a finite cognitive resource that becomes fatigued with
+        sustained use; environments rich in "soft fascination" (natural scenes,
+        flowing water, rustling leaves) allow that resource to replenish without
+        voluntary effort.
+      </p>
+      <div class="theory-meta-grid">
+        <div class="theory-meta-item">
+          <div class="label">Originator(s)</div>
+          <div class="value" id="theory-originators">Rachel &amp; Stephen Kaplan</div>
+        </div>
+        <div class="theory-meta-item">
+          <div class="label">Year introduced</div>
+          <div class="value" id="theory-year">1989</div>
+        </div>
+        <div class="theory-meta-item">
+          <div class="label">Domain</div>
+          <div class="value" id="theory-domain">Environmental Psychology / Cognitive Science</div>
+        </div>
+        <div class="theory-meta-item">
+          <div class="label">In our corpus</div>
+          <div class="value"><span id="theory-corpus-count">31</span> articles</div>
+        </div>
+        <div class="theory-meta-item">
+          <div class="label">Status</div>
+          <div class="value" id="theory-status">Well-established, actively debated</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- §1 Core claims -->
+    <section id="sec-claims">
+      <h2 class="tsec"><span class="tnum">§1</span>Core claims</h2>
+      <p style="font-size:0.9rem;color:#5A5A5A;margin-bottom:10px;">
+        The load-bearing propositions of the theory, each with an empirical-status tag.
+      </p>
+
+      <div class="claim-card">
+        <div class="claim-id">C1 — Directed-attention fatigue</div>
+        <div class="claim-text">
+          Sustained use of directed (voluntary) attention produces a measurable
+          fatigue state that degrades performance on tasks requiring concentration,
+          inhibition, and working-memory maintenance.
+        </div>
+        <span class="claim-status status-well-established">Well-established</span>
+      </div>
+
+      <div class="claim-card">
+        <div class="claim-id">C2 — Four properties of restorative environments</div>
+        <div class="claim-text">
+          Restoration occurs in environments that offer four properties:
+          <strong>being away</strong> (psychological distance from the depleting
+          task), <strong>extent</strong> (rich enough to sustain exploration),
+          <strong>fascination</strong> (attention-holding features that do not
+          require directed effort), and <strong>compatibility</strong> (fit between
+          the environment and the person's inclinations).
+        </div>
+        <span class="claim-status status-well-established">Well-established</span>
+      </div>
+
+      <div class="claim-card">
+        <div class="claim-id">C3 — Nature as privileged source of soft fascination</div>
+        <div class="claim-text">
+          Natural environments are a particularly reliable source of soft
+          fascination because their features (foliage, water, clouds, birdsong)
+          capture involuntary attention gently, without demanding cognitive effort —
+          unlike urban environments whose stimuli (traffic, signage, crowds) tend
+          to require directed-attention processing.
+        </div>
+        <span class="claim-status status-supported">Supported, with caveats</span>
+      </div>
+
+      <div class="claim-card">
+        <div class="claim-id">C4 — Measurable restoration after nature exposure</div>
+        <div class="claim-text">
+          Brief exposure to natural settings (or images/sounds of nature) produces
+          measurable improvements on cognitive tasks that depend on directed
+          attention, including backward digit span, Trail Making Test B, and the
+          Attention Network Test.
+        </div>
+        <span class="claim-status status-supported">Supported, with caveats</span>
+      </div>
+
+      <div class="claim-card">
+        <div class="claim-id">C5 — Nature-specificity of restoration</div>
+        <div class="claim-text">
+          Restoration is specific to natural environments and cannot be fully
+          achieved by visually complex or interesting urban scenes, because the
+          mechanism is soft fascination specifically — not mere stimulus diversity
+          or aesthetic pleasure.
+        </div>
+        <span class="claim-status status-contested">Contested</span>
+      </div>
+    </section>
+
+    <!-- §2 How the theory works (narrative) -->
+    <section id="sec-mechanism">
+      <h2 class="tsec"><span class="tnum">§2</span>How the theory works</h2>
+      <div style="font-size:0.95rem;color:#2D2D2D;line-height:1.7;">
+        <p>
+          The central mechanism in ART is a resource model of voluntary attention.
+          Kaplan and Kaplan (1989) drew on William James's distinction between
+          <em>voluntary</em> (directed) and <em>involuntary</em> (fascination-driven)
+          attention. Directed attention is required whenever a person must focus on
+          information that is not inherently interesting, suppress competing stimuli,
+          or maintain a goal in working memory against distraction. Because this
+          capacity is finite, sustained demands on it produce a fatigue state — akin
+          to muscular fatigue — characterised by increased distractibility, impulsivity,
+          irritability, and reduced performance on tasks requiring executive control.
+        </p>
+        <p>
+          Restoration is the process by which directed-attention capacity recovers.
+          The Kaplans argued that restoration occurs most efficiently in environments
+          that engage <em>involuntary</em> attention — what they termed "fascination" —
+          without making demands on the directed system. Natural environments are
+          theorised to be particularly effective because they offer a distinctive
+          combination of the four restorative properties: they take the person
+          psychologically away from the depleting task, they are spatially and
+          temporally rich enough to sustain engagement (extent), they offer soft
+          fascination through gently attention-holding features, and they are
+          compatible with a wide range of human inclinations.
+        </p>
+        <p>
+          The theory generates a clear experimental prediction: after performing a
+          depleting task, subjects who spend time in (or viewing images of) natural
+          environments should show greater recovery on directed-attention measures
+          than subjects exposed to urban or indoor environments matched for novelty
+          and visual complexity. This prediction has been tested in dozens of studies
+          since 1989, with generally positive but variable effect sizes (see §5 below).
+        </p>
+      </div>
+    </section>
+
+    <!-- §3 Plausible Neural Underpinning (PNU) -->
+    <section id="sec-pnu">
+      <h2 class="tsec"><span class="tnum">§3</span>Plausible neural underpinning</h2>
+
+      <div class="pnu-chain-box">
+        <span class="pnu-id">PNU-ART-DIRECTED-ATTN-001 (generated)</span>
+        soft-fascination stimulus (natural scene)
+        &nbsp;→&nbsp; ventral attention network (involuntary orienting)
+        &nbsp;→&nbsp; reduced demand on dorsal attention network (goal-directed focus)
+        &nbsp;→&nbsp; prefrontal cortex recovery (dlPFC, ACC workload decreases)
+        &nbsp;→&nbsp; restoration of directed-attention capacity
+      </div>
+
+      <div style="font-size:0.92rem;color:#2D2D2D;line-height:1.65;">
+        <p>
+          The neural story that most plausibly underlies ART maps onto the
+          dorsal-vs-ventral attention network distinction established by Corbetta
+          and Shulman (2002). Directed attention corresponds broadly to the
+          <em>dorsal attention network</em> (intraparietal sulcus, frontal eye
+          fields, dorsolateral prefrontal cortex), which is engaged during
+          goal-directed, top-down attentional control. "Soft fascination" stimuli
+          are hypothesised to engage the <em>ventral attention network</em>
+          (temporoparietal junction, ventral frontal cortex), which handles
+          stimulus-driven, bottom-up orienting to salient but non-threatening
+          events.
+        </p>
+        <p>
+          When the ventral system carries the attentional load — as it does in a
+          natural scene filled with gently interesting features — the dorsal system
+          and its prefrontal control regions are released from sustained
+          recruitment. This period of reduced demand allows metabolic recovery
+          (glucose and oxygen replenishment) in the prefrontal circuits that were
+          fatigued during the depleting task. The result is measurable improvement
+          on tasks that recruit directed attention.
+        </p>
+        <p>
+          Evidence for this interpretation comes from fMRI studies showing reduced
+          subgenual prefrontal activity after nature walks (Bratman et al., 2015)
+          and EEG studies showing increased alpha-band power (a marker of relaxed
+          wakefulness and reduced top-down control) during exposure to natural
+          scenes (e.g., Grassini et al., 2019).
+        </p>
+      </div>
+
+      <p class="dev-banner" style="margin-top:12px;">
+        <strong>Open work:</strong> This PNU chain is editorially generated from the
+        literature, not yet validated by the pipeline's PNU-generation module
+        (stage 13). When PNU-generation covers theory-level chains (not just
+        article-level), this section will be auto-populated. See TASKS.md item
+        THEORY-PNU-001.
+      </p>
+    </section>
+
+    <!-- §4 Principal references -->
+    <section id="sec-refs">
+      <h2 class="tsec"><span class="tnum">§4</span>Principal references</h2>
+      <p style="font-size:0.9rem;color:#5A5A5A;margin-bottom:10px;">
+        The canonical papers and major reviews for this theory.
+      </p>
+      <ul class="ref-list">
+        <li>
+          Kaplan, R., &amp; Kaplan, S. (1989). <em>The Experience of Nature: A
+          Psychological Perspective.</em> Cambridge University Press.
+          <span class="ref-tag canonical">Canonical</span>
+        </li>
+        <li>
+          Kaplan, S. (1995). The restorative benefits of nature: Toward an
+          integrative framework. <em>Journal of Environmental Psychology, 15</em>(3),
+          169–182. <a href="https://doi.org/10.1016/0272-4944(95)90001-2"
+          style="color:#2A7868;">doi:10.1016/0272-4944(95)90001-2</a>
+          <span class="ref-tag canonical">Canonical</span>
+        </li>
+        <li>
+          Berman, M. G., Jonides, J., &amp; Kaplan, S. (2008). The cognitive
+          benefits of interacting with nature. <em>Psychological Science,
+          19</em>(12), 1207–1212.
+          <a href="https://doi.org/10.1111/j.1467-9280.2008.02225.x"
+          style="color:#2A7868;">doi:10.1111/j.1467-9280.2008.02225.x</a>
+          <span class="ref-tag canonical">Canonical</span>
+        </li>
+        <li>
+          Ohly, H., White, M. P., Wheeler, B. W., Bethel, A., Ukoumunne, O. C.,
+          Nikolaou, V., &amp; Garside, R. (2016). Attention Restoration Theory: A
+          systematic review of the attention restoration potential of exposure to
+          natural environments. <em>Journal of Toxicology and Environmental
+          Health, Part B, 19</em>(7), 305–343.
+          <a href="https://doi.org/10.1080/10937404.2016.1196155"
+          style="color:#2A7868;">doi:10.1080/10937404.2016.1196155</a>
+          <span class="ref-tag review">Systematic review</span>
+        </li>
+        <li>
+          Stevenson, M. P., Schilhab, T., &amp; Bentsen, P. (2018). Attention
+          Restoration Theory II: A systematic review to clarify attention processes
+          affected by exposure to natural environments. <em>Journal of Toxicology
+          and Environmental Health, Part B, 21</em>(4), 227–268.
+          <a href="https://doi.org/10.1080/10937404.2018.1505571"
+          style="color:#2A7868;">doi:10.1080/10937404.2018.1505571</a>
+          <span class="ref-tag review">Systematic review</span>
+        </li>
+        <li>
+          Joye, Y., &amp; Dewitte, S. (2018). Nature's broken path to restoration.
+          A critical look at Attention Restoration Theory. <em>Journal of
+          Environmental Psychology, 59</em>, 1–8.
+          <a href="https://doi.org/10.1016/j.jenvp.2018.08.006"
+          style="color:#2A7868;">doi:10.1016/j.jenvp.2018.08.006</a>
+          <span class="ref-tag critique">Critique</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- §5 Articles in our corpus -->
+    <section id="sec-corpus">
+      <h2 class="tsec">
+        <span class="tnum">§5</span>Articles in our corpus
+        <span class="corpus-count" id="corpus-badge">31</span>
+      </h2>
+      <p style="font-size:0.9rem;color:#5A5A5A;margin-bottom:10px;">
+        Every article in the K-ATLAS database whose extraction pipeline flagged
+        this theory — meaning the article actively engages with the theory in its
+        text, not merely lists it in the bibliography.
+      </p>
+      <div style="max-height:420px;overflow-y:auto;border:1px solid #E0D8CC;border-radius:8px;">
+        <table class="corpus-table" id="corpus-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Year</th>
+              <th>Role in article</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Populated below by inline data; in production, fetched from API -->
+            <tr><td><a href="ka_article.html?id=PDF-0011">PDF-0011</a></td>
+                <td>The Benefits of Daylight through Windows</td>
+                <td>2003</td>
+                <td>Cited framework — perceptual channel</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0014">PDF-0014</a></td>
+                <td>Cognition, Wayfinding, and Learning in the Built Environment</td>
+                <td></td>
+                <td>Cites ART for restorative-wayfinding link</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0034">PDF-0034</a></td>
+                <td>Creating a Psychologically Supportive Environment through Aural Architecture</td>
+                <td>2025</td>
+                <td>Extends ART to auditory restoration</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0045">PDF-0045</a></td>
+                <td>Biophilic Architecture for Restoration and Therapy within the Built Environment</td>
+                <td>2020</td>
+                <td>ART as theoretical backbone for biophilic design</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0051">PDF-0051</a></td>
+                <td>Perceptions of Lighting, Perceived Restorativeness, Preference and Fear in Outdoor Spaces</td>
+                <td></td>
+                <td>Tests ART predictions for outdoor lighting</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0109">PDF-0109</a></td>
+                <td>Mental Health and the Built Environment</td>
+                <td></td>
+                <td>ART as one of several theoretical lenses</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0180">PDF-0180</a></td>
+                <td>Historical / foundational reference</td>
+                <td>1955</td>
+                <td>Early precursor work on attention fatigue</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0186">PDF-0186</a></td>
+                <td>The Psychological Benefits of Indoor Plants: A Critical Review</td>
+                <td></td>
+                <td>Applies ART to indoor-plant restoration</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0201">PDF-0201</a></td>
+                <td>Open-Plan Office Noise: Cognitive Performance and Restoration</td>
+                <td></td>
+                <td>Uses ART to frame noise-vs-restoration trade-off</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0285">PDF-0285</a></td>
+                <td>A Landscape Analysis: Investigating Restorative Features within Urban Greening</td>
+                <td></td>
+                <td>Operationalises ART's four properties as landscape metrics</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0345">PDF-0345</a></td>
+                <td>Eye Movements in Response to Restorative Environments</td>
+                <td></td>
+                <td>Tests soft-fascination via eye-tracking fixation patterns</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0355">PDF-0355</a></td>
+                <td>Window View and Relaxation: Viewing Green Space from a High-Rise</td>
+                <td></td>
+                <td>ART + SRT compared for window-view restoration</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0404">PDF-0404</a></td>
+                <td>Assessing Restorative Effects of Soundscapes in VR through EEG and HRV</td>
+                <td></td>
+                <td>Extends ART to auditory modality in VR</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0537">PDF-0537</a></td>
+                <td>Effects of Topography, Pavement Material and Green View Rate on Mitigation</td>
+                <td></td>
+                <td>ART invoked for green-view restorative mechanism</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0545">PDF-0545</a></td>
+                <td>Psikologi dan Komunikasi Arsitektur dalam Mendesain Tata Letak Ruang</td>
+                <td></td>
+                <td>Reviews ART in architectural psychology context</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0654">PDF-0654</a></td>
+                <td>PDF-0654</td>
+                <td></td>
+                <td>Tags ART as theoretical framework</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0676">PDF-0676</a></td>
+                <td>Architectural Design Strategies That Promote Attention to Foster Mindfulness</td>
+                <td></td>
+                <td>Links ART-based restoration to mindfulness design</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0682">PDF-0682</a></td>
+                <td>Biophilic Office Design: Exploring the Impact of a Multisensory Approach</td>
+                <td></td>
+                <td>ART as mechanism for biophilic office benefits</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0688">PDF-0688</a></td>
+                <td>Enhancing Cognitive Performance and Physiological Benefit in Workspaces</td>
+                <td></td>
+                <td>Workspace restoration framed via ART</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0702">PDF-0702</a></td>
+                <td>Going beyond Quietness: Determining the Emotionally Restorative Effect of Acoustics</td>
+                <td></td>
+                <td>Tests ART's fascination construct with acoustic stimuli</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0705">PDF-0705</a></td>
+                <td>Mental Fatigue and the Designed Environment</td>
+                <td></td>
+                <td>Direct application of ART to designed interiors</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0744">PDF-0744</a></td>
+                <td>When Buildings Don't Work: The Role of Architecture in Human Health</td>
+                <td></td>
+                <td>ART as one framework for health-promoting architecture</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0746">PDF-0746</a></td>
+                <td>Environmental Influences on Affect and Cognition</td>
+                <td></td>
+                <td>Tests ART predictions: natural vs. commercial environments</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0780">PDF-0780</a></td>
+                <td>Biophilic Design Strategies Applied to Built Environments</td>
+                <td></td>
+                <td>ART grounds biophilic design recommendations</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0783">PDF-0783</a></td>
+                <td>Indoor Plants in Workplace Settings</td>
+                <td></td>
+                <td>ART-based restoration via desk plants and green walls</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0835">PDF-0835</a></td>
+                <td>On How Natural and Urban Soundscapes Alter Brain Activity during Cognitive Performance</td>
+                <td></td>
+                <td>EEG evidence for ART-predicted attentional shift</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0863">PDF-0863</a></td>
+                <td>Wooden Indoor Environments' Restorativeness</td>
+                <td></td>
+                <td>Applies ART to material perception — wood as natural proxy</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0868">PDF-0868</a></td>
+                <td>PDF-0868</td>
+                <td></td>
+                <td>Tags ART as theoretical framework</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0880">PDF-0880</a></td>
+                <td>Waterscapes for Promoting Mental Health in the General Population</td>
+                <td></td>
+                <td>ART applied to blue-space (water) restoration</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0881">PDF-0881</a></td>
+                <td>Human Physiological Benefits of Viewing Nature: EEG Responses</td>
+                <td></td>
+                <td>Physiological test of ART using exact vs. statistical fractals</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-0892">PDF-0892</a></td>
+                <td>A Measure of Restorative Quality in Environments</td>
+                <td></td>
+                <td>Develops a scale to operationalise ART's four properties</td></tr>
+            <tr><td><a href="ka_article.html?id=PDF-1025">PDF-1025</a></td>
+                <td>Physiological and Psychological Responses with a Window</td>
+                <td></td>
+                <td>Window restoration experiment grounded in ART</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- §6 Competing / companion theories -->
+    <section id="sec-related-theories">
+      <h2 class="tsec"><span class="tnum">§6</span>Competing and companion theories</h2>
+      <p style="font-size:0.9rem;color:#5A5A5A;margin-bottom:10px;">
+        Theories that predict overlapping phenomena, compete for the same
+        explanatory territory, or extend ART into adjacent domains.
+      </p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;">
+        <div class="claim-card">
+          <div class="claim-id">Competing</div>
+          <div class="claim-text" style="font-weight:700;font-size:0.92rem;">
+            <a href="ka_theory.html?theory=stress_recovery_theory" style="color:#1C3D3A;">
+              Stress Recovery Theory (Ulrich, 1991)
+            </a>
+          </div>
+          <div style="font-size:0.82rem;color:#5A5A5A;margin-top:4px;">
+            Predicts similar restoration from nature but via an
+            <em>affective</em> pathway (autonomic stress reduction) rather
+            than a <em>cognitive</em> one (directed-attention recovery).
+          </div>
+        </div>
+        <div class="claim-card">
+          <div class="claim-id">Companion</div>
+          <div class="claim-text" style="font-weight:700;font-size:0.92rem;">
+            <a href="ka_theory.html?theory=biophilia_hypothesis" style="color:#1C3D3A;">
+              Biophilia Hypothesis (Wilson, 1984)
+            </a>
+          </div>
+          <div style="font-size:0.82rem;color:#5A5A5A;margin-top:4px;">
+            Provides the evolutionary backstory — an innate affiliative response
+            to life and life-like processes — that ART operationalises at the
+            cognitive level.
+          </div>
+        </div>
+        <div class="claim-card">
+          <div class="claim-id">Extension</div>
+          <div class="claim-text" style="font-weight:700;font-size:0.92rem;">
+            <a href="ka_theory.html?theory=prospect_refuge_theory" style="color:#1C3D3A;">
+              Prospect-Refuge Theory (Appleton, 1975)
+            </a>
+          </div>
+          <div style="font-size:0.82rem;color:#5A5A5A;margin-top:4px;">
+            Addresses <em>which</em> spatial configurations feel restorative
+            (open prospect + sheltered refuge), complementing ART's account of
+            <em>why</em> they restore.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- §7 Open questions / development roadmap -->
+    <section id="sec-roadmap">
+      <h2 class="tsec"><span class="tnum">§7</span>Open questions &amp; development roadmap</h2>
+      <div class="dev-banner">
+        This theory page is a <strong>v0.1 template</strong>. The following
+        sections are planned:
+      </div>
+      <ul style="font-size:0.9rem;color:#2D2D2D;line-height:1.7;padding-left:20px;">
+        <li><strong>Empirical status dashboard</strong> — aggregate effect sizes
+            across the 31 corpus articles, with funnel plot for publication bias
+            (TODO: THEORY-DASH-001).</li>
+        <li><strong>Auto-generated PNU chains</strong> — when the pipeline's
+            PNU module (stage 13) covers theory-level chains, this section will
+            pull them automatically (TODO: THEORY-PNU-001).</li>
+        <li><strong>Full-text mention extraction</strong> — currently, "articles
+            in our corpus" uses the <code>theories</code> metadata tag. A future
+            pass will search OCR full text for active engagement vs. passing
+            citation and add a "mention type" column (TODO: THEORY-MENTION-001).</li>
+        <li><strong>Student annotations</strong> — a space for COGS 160 students
+            to post their critical commentary on the theory, linked to their
+            article analyses (TODO: THEORY-ANNOT-001).</li>
+        <li><strong>Cross-theory network visualisation</strong> — a graph showing
+            how this theory connects to others in the corpus via shared articles
+            (TODO: THEORY-NET-001).</li>
+      </ul>
+    </section>
+
+  </article>
+
+  <!-- ─── RIGHT RAIL / TOC ─── -->
+  <aside class="theory-rail" aria-label="Theory page sections">
+    <h4>On this page</h4>
+    <a href="#sec-hero">Identity</a>
+    <a href="#sec-claims">§1 Core claims</a>
+    <a href="#sec-mechanism">§2 How it works</a>
+    <a href="#sec-pnu">§3 Neural underpinning</a>
+    <a href="#sec-refs">§4 Principal references</a>
+    <a href="#sec-corpus">§5 Corpus articles (31)</a>
+    <a href="#sec-related-theories">§6 Related theories</a>
+    <a href="#sec-roadmap">§7 Roadmap</a>
+  </aside>
+</div>
+
+<footer class="ka-footer">
+  Knowledge Atlas · UCSD Cognitive Science · Spring 2026
+</footer>
+
+<script>
+// TOC active-section highlighting
+(function () {
+  var links = document.querySelectorAll('.theory-rail a');
+  var sections = Array.prototype.map.call(links, function (a) {
+    return document.querySelector(a.getAttribute('href'));
+  });
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        var id = entry.target.id;
+        links.forEach(function (a) {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { rootMargin: '-60px 0px -60% 0px' });
+  sections.forEach(function (s) { if (s) io.observe(s); });
+})();
+</script>
+
+<script src="ka_canonical_navbar.js" defer></script>
+</body>
+</html>

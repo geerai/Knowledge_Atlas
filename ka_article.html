@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Article · Knowledge Atlas</title>
+<link rel="stylesheet" href="ka_atlas_shell.css">
+<style>
+  /* ─── Article-specific layout ─── */
+  .article-shell {
+    max-width: 1180px; margin: 0 auto; padding: 24px;
+    display: grid; grid-template-columns: 1fr 280px; gap: 32px;
+  }
+  @media (max-width: 900px) { .article-shell { grid-template-columns: 1fr; } }
+
+  .article-main > section { margin-bottom: 30px; }
+  .article-main h2.asec {
+    font-family: Georgia, serif; font-size: 1.35rem; color: #1C3D3A;
+    border-bottom: 2px solid #E0D8CC; padding-bottom: 6px;
+    margin-bottom: 12px;
+  }
+  .article-main h2.asec .anum {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase; color: #8A9A96; margin-right: 8px;
+  }
+
+  /* Title block */
+  .article-title {
+    font-family: Georgia, serif; font-size: 1.8rem; font-weight: 700;
+    color: #1C3D3A; line-height: 1.25; margin-bottom: 6px;
+  }
+  .article-authors {
+    font-size: 0.96rem; color: #4A4A4A; margin-bottom: 4px;
+  }
+  .article-venue {
+    font-size: 0.86rem; color: #7A7060; font-style: italic;
+  }
+
+  /* EN credibility band */
+  .en-band {
+    background: linear-gradient(90deg, #FEF7EC 0%, #F9F5EE 100%);
+    border: 1px solid #E0D8CC; border-radius: 10px;
+    padding: 16px 18px; display: grid; grid-template-columns: 110px 1fr;
+    gap: 18px; align-items: center; margin-top: 14px;
+  }
+  .en-score {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; text-align: center;
+    background: #fff; border: 2px solid #E8872A; border-radius: 12px;
+    padding: 10px 0;
+  }
+  .en-score .num {
+    font-family: Georgia, serif; font-size: 2.2rem; font-weight: 700;
+    color: #E8872A; line-height: 1;
+  }
+  .en-score .lbl {
+    font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #8A9A96; font-weight: 700; margin-top: 4px;
+  }
+  .en-explanation {
+    font-size: 0.9rem; color: #2D2D2D; line-height: 1.55;
+  }
+  .en-explanation .why-label {
+    font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: #8A9A96; font-weight: 700; display: block; margin-bottom: 4px;
+  }
+
+  /* Figures */
+  .fig-gallery {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .fig-card {
+    background: #fff; border: 1px solid #E0D8CC; border-radius: 8px;
+    padding: 10px; text-align: center;
+  }
+  .fig-card img {
+    width: 100%; height: auto; border-radius: 4px;
+    background: #F0EBE2;
+  }
+  .fig-card .fig-caption {
+    font-size: 0.78rem; color: #5A5A5A; margin-top: 6px; line-height: 1.45;
+    text-align: left;
+  }
+  .fig-card .fig-num {
+    font-size: 0.66rem; color: #8A9A96; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; display: block;
+    margin-bottom: 2px;
+  }
+
+  /* Science summary block */
+  .summary-prose {
+    font-size: 0.98rem; line-height: 1.7; color: #2D2D2D;
+  }
+  .summary-prose p + p { margin-top: 12px; }
+
+  /* Expandable sub-blocks */
+  .panel {
+    background: #fff; border: 1px solid #E0D8CC; border-radius: 10px;
+    margin-bottom: 10px; overflow: hidden;
+  }
+  .panel-head {
+    padding: 12px 16px; cursor: pointer; display: flex;
+    align-items: center; justify-content: space-between;
+    background: #F9F5EE;
+    user-select: none;
+  }
+  .panel-head:hover { background: #F0EBE2; }
+  .panel-title {
+    font-weight: 700; color: #1C3D3A; font-size: 0.96rem;
+  }
+  .panel-twisty { color: #8A9A96; font-size: 0.85rem; transition: transform 0.15s; }
+  .panel.open .panel-twisty { transform: rotate(90deg); }
+  .panel-body {
+    display: none; padding: 14px 16px; font-size: 0.92rem; line-height: 1.6;
+    border-top: 1px dashed #E0D8CC;
+  }
+  .panel.open .panel-body { display: block; }
+
+  /* Connections grid */
+  .connect-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .connect-card {
+    background: #fff; border: 1px solid #E0D8CC; border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .connect-card .tag {
+    font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: #8A9A96; font-weight: 700;
+  }
+  .connect-card .ttl {
+    font-weight: 700; color: #1C3D3A; font-size: 0.9rem; margin: 3px 0 4px;
+  }
+  .connect-card .rel {
+    font-size: 0.78rem; color: #5A5A5A; line-height: 1.4;
+  }
+
+  /* Value-of-work card */
+  .vow-card {
+    background: linear-gradient(135deg, #FEF3E2 0%, #F9F5EE 100%);
+    border: 1px solid #E8872A; border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .vow-row {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
+  }
+  .vow-dot-group { display: inline-flex; gap: 3px; }
+  .vow-dot { width: 10px; height: 10px; border-radius: 50%; background: #E0D8CC; }
+  .vow-dot.lit { background: #E8872A; }
+
+  /* Argumentation structure */
+  .arg-table {
+    width: 100%; border-collapse: collapse; font-size: 0.9rem;
+  }
+  .arg-table th, .arg-table td {
+    text-align: left; padding: 8px 10px; border-bottom: 1px solid #E0D8CC;
+    vertical-align: top;
+  }
+  .arg-table th {
+    font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: #8A9A96; font-weight: 700; background: #F9F5EE;
+  }
+
+  /* Right rail / TOC */
+  .article-rail {
+    position: sticky; top: 76px; align-self: start;
+    max-height: calc(100vh - 100px); overflow-y: auto;
+    background: #fff; border: 1px solid #E0D8CC; border-radius: 10px;
+    padding: 14px 12px; font-size: 0.86rem;
+  }
+  .article-rail h4 {
+    font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #8A9A96; margin-bottom: 8px;
+  }
+  .article-rail a {
+    display: block; padding: 5px 8px; color: #2D2D2D; text-decoration: none;
+    border-left: 2px solid transparent; font-size: 0.84rem;
+  }
+  .article-rail a:hover { background: #F9F5EE; border-left-color: #F5A623; }
+  .article-rail a.active { border-left-color: #F5A623; color: #1C3D3A; font-weight: 600; }
+
+  /* Status banner for speculative sections */
+  .spec-banner {
+    background: #FEF7EC; border: 1px dashed #E8872A; border-radius: 6px;
+    padding: 8px 12px; font-size: 0.82rem; color: #985E0A;
+    margin-bottom: 10px;
+  }
+
+  /* Related articles list */
+  .rel-list {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .rel-item {
+    border: 1px solid #E0D8CC; border-radius: 8px; padding: 10px 12px;
+    background: #fff;
+  }
+  .rel-item .rel-title {
+    font-weight: 700; color: #1C3D3A; font-size: 0.92rem;
+  }
+  .rel-item .rel-why {
+    font-size: 0.8rem; color: #5A5A5A; margin-top: 3px;
+  }
+  .rel-item .rel-pill {
+    display: inline-block; font-size: 0.66rem; padding: 2px 8px;
+    border-radius: 10px; background: #E8F0FE; color: #1A56A0;
+    font-weight: 600; margin-top: 4px;
+  }
+</style>
+</head>
+<body data-ka-active="articles"
+      data-ka-crumbs='[["Home","ka_home.html"],["Articles","ka_articles.html"],["This article",""]]'>
+
+<div id="ka-navbar-slot"></div>
+<div id="ka-breadcrumb-slot"></div>
+
+<div class="article-shell">
+  <!-- ─── MAIN ARTICLE ─── -->
+  <article class="article-main" id="ka-main">
+
+    <!-- §1 Title + EN band -->
+    <section id="sec-title">
+      <h1 class="article-title" id="art-title">
+        The Benefits of Daylight through Windows
+      </h1>
+      <div class="article-authors" id="art-authors">
+        Boyce, P., Hunter, C., &amp; Howlett, O.
+      </div>
+      <div class="article-venue" id="art-venue">
+        Lighting Research Center, Rensselaer Polytechnic Institute · 2003 ·
+        <em>Capturing the Daylight Dividend Program</em>
+        · paper_id: PDF-0011
+      </div>
+
+      <div class="en-band" aria-label="Evidence Number credibility">
+        <div class="en-score">
+          <div class="num" id="en-num">6.4</div>
+          <div class="lbl">EN score</div>
+          <div style="font-size:0.62rem;color:#8A9A96;margin-top:3px;">
+            <a href="ka_en_warrants.html?id=PDF-0011" style="color:#E8872A;text-decoration:none;">
+              ★ 71<sup>st</sup> percentile
+            </a>
+          </div>
+        </div>
+        <div class="en-explanation">
+          <span class="why-label">Why this number?</span>
+          Comprehensive literature review (not a primary study) covering daylight,
+          attention, mood, alertness, and circadian effects. Strong on synthesis and
+          breadth; loses points for being a narrative review without meta-analytic
+          aggregation, and for resting on a small primary sample
+          (<em>n</em>&nbsp;=&nbsp;22) for some quantitative claims. Effect-size
+          estimate for the headline daylight-on-performance link is small
+          (<em>d</em>&nbsp;≈&nbsp;0.16) but consistently positive across the cited
+          studies. <a href="ka_en_warrants.html?id=PDF-0011" style="color:#2A7868;">
+            See the full warrant breakdown →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- §2 Science summary -->
+    <section id="sec-summary">
+      <h2 class="asec"><span class="anum">§1</span>Science summary</h2>
+      <div class="summary-prose">
+        <p>
+          The paper begins from a tension that defines the daylighting literature:
+          treating daylight as a substitute for electric lighting cannot, on its own,
+          justify the architectural cost of large or carefully-placed windows. The
+          authors therefore reframe the question. The relevant payoff is not energy
+          saved, it is human performance gained — attention, alertness, mood,
+          satisfaction, and the long-arc circadian outcomes that show up as sleep,
+          health, and absenteeism in the buildings whose occupants spend their days
+          inside them.
+        </p>
+        <p>
+          With that framing in place, Boyce, Hunter, and Howlett conduct a
+          structured review of the empirical evidence for four channels through
+          which daylight can plausibly affect occupants. The first is the
+          <em>visual</em> channel: daylight as a high-quality light source whose
+          spectrum, distribution, and modulation differ from electric lighting in
+          ways that change visual comfort and task performance. The second is the
+          <em>circadian</em> channel: short-wavelength daylight reaching the
+          melanopic receptors entrains and stabilises the sleep–wake cycle, with
+          downstream effects on alertness during the day and sleep quality at night.
+          The third is the <em>perceptual</em> channel: a window connects the
+          interior to time, weather, and view, all of which carry restorative and
+          motivational weight beyond luminance per se. The fourth is the
+          <em>affective</em> channel: occupants reliably prefer daylit spaces and
+          report higher satisfaction, with secondary effects on engagement and
+          retention.
+        </p>
+        <p>
+          The aggregated empirical picture is mixed but directionally positive.
+          Office and school studies cited by the authors show small positive effects
+          of daylight on performance (effect sizes around <em>d</em>&nbsp;=&nbsp;0.16
+          in the better-controlled cases), with stronger effects on satisfaction,
+          alertness, and visual comfort. The authors are explicit that daylight is
+          neither necessary nor sufficient for any of these outcomes — a well-tuned
+          electric system can match the visual channel, and indoor lighting can
+          deliver melanopic dose if engineers choose to. The argument for daylight
+          rests on the bundle: a single design move (a window) simultaneously serves
+          the visual, circadian, perceptual, and affective channels in ways that
+          electric systems achieve, if at all, only piecemeal.
+        </p>
+        <p>
+          The review's main conclusion is methodological as much as substantive: to
+          justify daylighting at the level of a building budget, the field needs
+          studies that link the four channels to financial impact at the
+          organisational scale (productivity, absenteeism, retention) rather than
+          stopping at psychophysical performance metrics measured over hours.
+        </p>
+        <p style="font-size:0.82rem;color:#7A7060;font-style:italic;margin-top:14px;">
+          Source pipeline: this summary is generated at stage 10 (<em>summary_generation</em>)
+          of the K-ATLAS extraction pipeline by the Article_Eater science-writer
+          module, using the OCR'd full text plus structural-analysis output from
+          stage 4. Figures below are produced at stages 11 (<em>image_render</em>,
+          page-level rasterisation at 200 DPI) and 12 (<em>visual_cropping</em>,
+          automatic figure/table/stimulus segmentation by the Macro_Crop_Pipeline).
+          When the Article Finder team (Track 2) onboards a new PDF, all 26 stages
+          run end-to-end; the summary you are reading and the figures you see are
+          the persistent outputs of stages 10–12.
+        </p>
+      </div>
+    </section>
+
+    <!-- §3 Figures -->
+    <section id="sec-figs">
+      <h2 class="asec"><span class="anum">§2</span>Science figures</h2>
+      <p style="font-size:0.84rem;color:#5A5A5A;margin-bottom:10px;">
+        Eight figures cropped automatically from the source PDF by the Macro_Crop
+        pipeline (stage 12). Cutouts live at
+        <code>data/ka_payloads/article_visuals/PDF-0011/</code>; the captions below
+        are placeholder labels and will be replaced with the OCR-derived figure
+        captions in the next pass of the extraction pipeline.
+      </p>
+      <div class="fig-gallery" id="fig-gallery">
+        <figure class="fig-card">
+          <span class="fig-num">Fig. 1 (p. 1)</span>
+          <img src="data/ka_payloads/article_visuals/PDF-0011/PDF-0011_p1_img1.jpeg"
+               alt="Figure 1 from Boyce, Hunter & Howlett (2003)"
+               onerror="this.style.background='#F0EBE2';this.style.height='140px';this.alt='(figure unavailable)';">
+          <figcaption class="fig-caption">
+            Cover figure / framing image from page 1.
+          </figcaption>
+        </figure>
+        <figure class="fig-card">
+          <span class="fig-num">Fig. 2 (p. 9)</span>
+          <img src="data/ka_payloads/article_visuals/PDF-0011/PDF-0011_p9_img2.png"
+               alt="Figure from page 9"
+               onerror="this.style.background='#F0EBE2';this.style.height='140px';this.alt='(figure unavailable)';">
+          <figcaption class="fig-caption">Diagram, page 9.</figcaption>
+        </figure>
+        <figure class="fig-card">
+          <span class="fig-num">Fig. 3 (p. 10)</span>
+          <img src="data/ka_payloads/article_visuals/PDF-0011/PDF-0011_p10_img3.jpeg"
+               alt="Figure from page 10"
+               onerror="this.style.background='#F0EBE2';this.style.height='140px';this.alt='(figure unavailable)';">
+          <figcaption class="fig-caption">Photographic illustration, page 10.</figcaption>
+        </figure>
+        <figure class="fig-card">
+          <span class="fig-num">Fig. 4 (p. 13)</span>
+          <img src="data/ka_payloads/article_visuals/PDF-0011/PDF-0011_p13_img4.jpeg"
+               alt="Figure from page 13"
+               onerror="this.style.background='#F0EBE2';this.style.height='140px';this.alt='(figure unavailable)';">
+          <figcaption class="fig-caption">Spectral / photometric chart, page 13.</figcaption>
+        </figure>
+        <figure class="fig-card">
+          <span class="fig-num">Fig. 5 (p. 14)</span>
+          <img src="data/ka_payloads/article_visuals/PDF-0011/PDF-0011_p14_img5.png"
+               alt="Figure from page 14"
+               onerror="this.style.background='#F0EBE2';this.style.height='140px';this.alt='(figure unavailable)';">
+          <figcaption class="fig-caption">Diagram, page 14.</figcaption>
+        </figure>
+        <figure class="fig-card">
+          <span class="fig-num">Fig. 6 (p. 15)</span>
+          <img src="data/ka_payloads/article_visuals/PDF-0011/PDF-0011_p15_img6.jpeg"
+               alt="Figure from page 15"
+               onerror="this.style.background='#F0EBE2';this.style.height='140px';this.alt='(figure unavailable)';">
+          <figcaption class="fig-caption">Photographic illustration, page 15.</figcaption>
+        </figure>
+        <figure class="fig-card">
+          <span class="fig-num">Fig. 7 (p. 21)</span>
+          <img src="data/ka_payloads/article_visuals/PDF-0011/PDF-0011_p21_img7.jpeg"
+               alt="Figure from page 21"
+               onerror="this.style.background='#F0EBE2';this.style.height='140px';this.alt='(figure unavailable)';">
+          <figcaption class="fig-caption">Performance-results figure, page 21.</figcaption>
+        </figure>
+        <figure class="fig-card">
+          <span class="fig-num">Fig. 8 (p. 23)</span>
+          <img src="data/ka_payloads/article_visuals/PDF-0011/PDF-0011_p23_img8.png"
+               alt="Figure from page 23"
+               onerror="this.style.background='#F0EBE2';this.style.height='140px';this.alt='(figure unavailable)';">
+          <figcaption class="fig-caption">Summary diagram, page 23.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- §3 Interpretation commentary (moved up per editorial direction 2026-04-15) -->
+    <section id="sec-interpretation">
+      <h2 class="asec"><span class="anum">§3</span>Interpretation commentary</h2>
+      <p class="spec-banner">
+        The editor's reading of the figures and summary above. Treat as opinion, not
+        consensus.
+      </p>
+      <div class="summary-prose" style="font-size:0.92rem;">
+        <p>
+          The paper is more interesting as a <em>framing</em> intervention than as a
+          new empirical contribution. Its persistent legacy in the architectural-
+          cognition literature is the four-channel taxonomy (visual / circadian /
+          perceptual / affective). That taxonomy turns out to be the right scaffold
+          for nearly every subsequent daylight-and-cognition study: it tells you
+          which dependent measure your design needs to register if you want to claim
+          a daylight effect specifically rather than a luminance or view effect.
+        </p>
+        <p>
+          The empirical effect sizes are modest, and that should be reported
+          honestly. A <em>d</em>&nbsp;≈&nbsp;0.16 effect on office performance is
+          real but small relative to the variance contributed by task design,
+          fatigue, and individual differences. The authors' instinct — that the case
+          for daylight has to be made at the building-financial scale, not the
+          single-task scale — is well placed and remains, twenty-three years later,
+          the unfilled empirical gap in the area.
+        </p>
+      </div>
+    </section>
+
+    <!-- §4 Theoretical connections (cited + unstated) -->
+    <section id="sec-theory-connect">
+      <h2 class="asec"><span class="anum">§4</span>Theoretical connections</h2>
+
+      <h3 style="font-family:Georgia,serif;font-size:1.02rem;color:#1C3D3A;margin-bottom:6px;">
+        Theories cited and used in the article
+      </h3>
+      <p style="font-size:0.88rem;color:#5A5A5A;margin-bottom:10px;">
+        Frameworks the authors explicitly invoke or whose predictions they rely on.
+      </p>
+      <div class="connect-grid" style="margin-bottom:20px;">
+        <div class="connect-card" style="border-left:3px solid #2A7868;">
+          <div class="tag">Cited theory</div>
+          <div class="ttl"><a href="ka_theory.html?theory=circadian_photobiology" style="color:#1C3D3A;text-decoration:none;">Circadian Photobiology (Brainard, Berson)</a></div>
+          <div class="rel">The paper's core explanatory framework for the
+            alertness and sleep channel: short-wavelength daylight reaches
+            melanopsin-bearing retinal ganglion cells and entrains the circadian
+            pacemaker. The authors treat this as the primary mechanism linking
+            window daylight to occupant performance.</div>
+        </div>
+        <div class="connect-card" style="border-left:3px solid #2A7868;">
+          <div class="tag">Cited theory</div>
+          <div class="ttl"><a href="ka_theory.html?theory=attention_restoration_theory" style="color:#1C3D3A;text-decoration:none;">Attention Restoration Theory (Kaplan, 1995)</a></div>
+          <div class="rel">Invoked to explain why views through windows carry
+            restorative weight beyond luminance: natural scenes supply the "soft
+            fascination" that allows directed-attention fatigue to dissipate. The
+            perceptual channel of the four-channel taxonomy draws on ART directly.</div>
+        </div>
+      </div>
+
+      <h3 style="font-family:Georgia,serif;font-size:1.02rem;color:#1C3D3A;margin-bottom:6px;">
+        Unstated theoretical connections
+      </h3>
+      <p style="font-size:0.88rem;color:#5A5A5A;margin-bottom:10px;">
+        Theories the article does not cite but whose predictions are implicated by
+        its findings.
+      </p>
+      <div class="connect-grid">
+        <div class="connect-card">
+          <div class="tag">Unstated</div>
+          <div class="ttl"><a href="ka_theory.html?theory=prospect_refuge_theory" style="color:#1C3D3A;text-decoration:none;">Prospect-Refuge Theory (Appleton, 1975)</a></div>
+          <div class="rel">A window's "view out" carries an adaptive prospect
+            signal — the ability to survey the environment from a sheltered
+            position — independently of any photometric or circadian variable.
+            The satisfaction and preference data in the affective channel are
+            consistent with prospect-refuge predictions, but the authors do not
+            invoke this framework.</div>
+        </div>
+        <div class="connect-card">
+          <div class="tag">Unstated</div>
+          <div class="ttl"><a href="ka_theory.html?theory=stress_recovery_theory" style="color:#1C3D3A;text-decoration:none;">Stress Recovery Theory (Ulrich, 1991)</a></div>
+          <div class="rel">SRT predicts that natural visual content triggers
+            rapid affective recovery from stress — a parallel mechanism to ART
+            operating through affect rather than attention. The mood and
+            satisfaction effects the review documents sit squarely in SRT's
+            domain, though the authors frame them in ART terms only.</div>
+        </div>
+        <div class="connect-card">
+          <div class="tag">Unstated</div>
+          <div class="ttl"><a href="ka_theory.html?theory=biophilia_hypothesis" style="color:#1C3D3A;text-decoration:none;">Biophilia Hypothesis (Wilson, 1984)</a></div>
+          <div class="rel">The consistent occupant preference for daylight and
+            natural views reported across the studies reviewed is predicted by
+            biophilia — an evolved affiliative response to living systems and
+            natural processes — but the review stays at the psychophysical level
+            and does not invoke evolutionary frameworks.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- §5 Neural underpinning (TEASER + link to elaboration) -->
+    <section id="sec-neural">
+      <h2 class="asec"><span class="anum">§5</span>Plausible neural underpinning</h2>
+      <p style="font-size:0.86rem;color:#5A5A5A;margin-bottom:8px;">
+        The naked sequence (PNU mechanism chain, generated at pipeline stage 13):
+      </p>
+      <div style="background:#F9F5EE;border:1px solid #E0D8CC;border-radius:8px;padding:12px 16px;font-family:Georgia,serif;font-size:0.95rem;color:#1C3D3A;">
+        daylight at the eye
+        &nbsp;→&nbsp; melanopsin-bearing retinal ganglion cells
+        &nbsp;→&nbsp; suprachiasmatic nucleus
+        &nbsp;→&nbsp; locus coeruleus / pineal
+        &nbsp;→&nbsp; cortical arousal &amp; circadian phase
+        &nbsp;→&nbsp; alertness, mood, sleep
+      </div>
+      <p style="margin-top:10px;font-size:0.86rem;color:#5A5A5A;">
+        The chain above is the compact form. A common-sense walk-through — what each
+        node means, how confident we are in the link, who first proposed it, and what
+        would falsify it — lives on the elaboration page.
+      </p>
+      <div style="margin-top:10px;font-size:0.82rem;">
+        <a class="ka-btn"
+           href="ka_neuro_elaboration.html?article=PDF-0011">
+          Read the common-sense PNU explanation →
+        </a>
+      </div>
+      <p class="spec-banner" style="margin-top:10px;">
+        <strong>Open work:</strong> the PNU database currently stores only the naked
+        sequence and a citation. Common-sense explanations and provenance (who
+        authored each link, on what evidence) are an upcoming column. See
+        <a href="TASKS.md" style="color:#985E0A;">TASKS.md</a> item PNU-001.
+      </p>
+    </section>
+
+    <!-- §6 Argumentation structure for challenging -->
+    <section id="sec-arg">
+      <h2 class="asec"><span class="anum">§6</span>How would you challenge this?</h2>
+      <p class="spec-banner">
+        The premises below are the load-bearing assumptions of the paper. Attacking
+        any one of them produces a reviewable counterclaim.
+      </p>
+      <table class="arg-table">
+        <thead>
+          <tr><th>Premise</th><th>Counter-angle</th><th>Example</th><th>What evidence would settle it</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Daylight is a bundle — one window simultaneously serves
+                visual, circadian, perceptual, and affective channels.</td>
+            <td>The "bundle" framing inflates the apparent benefit by counting
+                the same occupant outcome under multiple headings. Satisfaction
+                could be driven entirely by the view, with circadian effects
+                negligible in a well-lit office.</td>
+            <td><em>Example:</em> An open-plan office with floor-to-ceiling
+                windows faces north (minimal direct sun). Occupants report
+                high satisfaction (view channel) but show no circadian
+                improvement over the windowless control floor — the "bundle"
+                collapses to a single active channel.</td>
+            <td>A factorial design that independently manipulates view
+                (window/no window) and spectrum (melanopic-enriched electric
+                light vs. standard), measuring satisfaction and actigraphy
+                separately.</td>
+          </tr>
+          <tr>
+            <td>The small positive effect on performance
+                (<em>d</em>&nbsp;≈&nbsp;0.16) is real and attributable to
+                daylight specifically.</td>
+            <td>An effect that small is within the range of publication bias
+                and confound leakage. Daylit offices tend to be newer, better
+                maintained, and occupied by higher-status workers.</td>
+            <td><em>Example:</em> A company moves its executive team from a
+                windowless basement to a renovated daylit floor. Productivity
+                rises 6%. But the new floor also has better HVAC, new
+                furniture, and a barista station — daylight is confounded with
+                a package of upgrades.</td>
+            <td>A within-subjects crossover in a single building with
+                automated blinds that alternate daylight admission weeks,
+                controlling for all other variables.</td>
+          </tr>
+          <tr>
+            <td>Electric lighting cannot replicate daylight's circadian
+                benefits because it lacks the spectral and temporal variation
+                of natural light.</td>
+            <td>Modern tuneable LED systems (e.g., 17,000 K melanopic-enriched
+                panels) can deliver equivalent or greater melanopic lux than
+                a north-facing window. The circadian channel may be fully
+                substitutable.</td>
+            <td><em>Example:</em> A hospital installs a circadian-tuneable
+                LED ceiling in a ward with sealed windows. Patients' cortisol
+                rhythms and sleep onset times match those of patients in a
+                daylit ward — the "daylight advantage" disappears when the
+                electric system is properly specified.</td>
+            <td>A randomised trial comparing tuneable LEDs at matched melanopic
+                EDI against real daylight, with actigraphy, cortisol sampling,
+                and subjective alertness as primary outcomes.</td>
+          </tr>
+          <tr>
+            <td>The review's cited studies generalise across building types,
+                climates, and populations.</td>
+            <td>Almost all cited studies come from temperate-climate, Northern
+                Hemisphere office buildings with Western occupants. Tropical,
+                arid, or high-latitude settings — where daylight can mean
+                glare, overheating, or seasonal extremes — are unrepresented.</td>
+            <td><em>Example:</em> A school in Phoenix, Arizona (33°N, 300+
+                sunny days/year) maximises window area per the review's
+                recommendation. The result is chronic glare on screens, HVAC
+                overload, and students pulling blinds permanently shut — the
+                "daylight benefit" becomes a net negative.</td>
+            <td>A multi-climate replication spanning tropical, arid,
+                and sub-arctic sites, with comparable instrumentation and
+                outcome measures.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- §7 Current challenges -->
+    <section id="sec-challenges">
+      <h2 class="asec"><span class="anum">§7</span>Current challenges to this article</h2>
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-title">2 published challenges · 1 preprint</span>
+          <span class="panel-twisty">▸</span>
+        </div>
+        <div class="panel-body">
+          <ul style="padding-left:18px;">
+            <li><strong>Jimenez et&nbsp;al. (2023), <em>Environmental Research</em>.</strong>
+                Meta-analysis finds the sgPFC effect is present only in
+                baseline-high-rumination subjects.
+                <a href="ka_article.html?id=jimenez2023">View article</a></li>
+            <li><strong>Schertz &amp; Berman (2022) preprint.</strong> Argues the
+                dissociation is a statistical ceiling artefact from using HRV as a
+                null outcome.
+                <a href="ka_article.html?id=schertz2022">View article</a></li>
+            <li><strong>de Kort (2024), <em>Landscape &amp; Urban Planning</em>.</strong>
+                Urban "restorative" environments (waterfront, park-adjacent) produce
+                the same sgPFC decrement, narrowing the nature-specificity claim.
+                <a href="ka_article.html?id=dekort2024">View article</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- §8 Value-of-work -->
+    <section id="sec-value">
+      <h2 class="asec"><span class="anum">§8</span>How valuable is it to work on this topic?</h2>
+      <div class="vow-card">
+        <div class="vow-row">
+          <strong>Theoretical leverage:</strong>
+          <span class="vow-dot-group">
+            <span class="vow-dot lit"></span><span class="vow-dot lit"></span>
+            <span class="vow-dot lit"></span><span class="vow-dot lit"></span>
+            <span class="vow-dot"></span>
+          </span>
+          <span style="font-size:0.82rem;color:#6A5A4A;">The ART/SRT separation is a
+          load-bearing unresolved question.</span>
+        </div>
+        <div class="vow-row">
+          <strong>Replication need:</strong>
+          <span class="vow-dot-group">
+            <span class="vow-dot lit"></span><span class="vow-dot lit"></span>
+            <span class="vow-dot lit"></span><span class="vow-dot lit"></span>
+            <span class="vow-dot lit"></span>
+          </span>
+          <span style="font-size:0.82rem;color:#6A5A4A;">Single-site; strong multi-site
+          replication would be field-moving.</span>
+        </div>
+        <div class="vow-row">
+          <strong>Applied stakes:</strong>
+          <span class="vow-dot-group">
+            <span class="vow-dot lit"></span><span class="vow-dot lit"></span>
+            <span class="vow-dot lit"></span>
+            <span class="vow-dot"></span><span class="vow-dot"></span>
+          </span>
+          <span style="font-size:0.82rem;color:#6A5A4A;">Directly informs
+          restorative-urban-design guidance.</span>
+        </div>
+        <div class="vow-row">
+          <strong>Tractability for a student project:</strong>
+          <span class="vow-dot-group">
+            <span class="vow-dot lit"></span><span class="vow-dot lit"></span>
+            <span class="vow-dot"></span>
+            <span class="vow-dot"></span><span class="vow-dot"></span>
+          </span>
+          <span style="font-size:0.82rem;color:#6A5A4A;">fMRI is not, but a VR
+          replication of the visual manipulation is.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- §9 Related articles -->
+    <section id="sec-related">
+      <h2 class="asec"><span class="anum">§9</span>Related articles</h2>
+
+      <div class="panel open">
+        <div class="panel-head">
+          <span class="panel-title">Methodologically similar</span>
+          <span class="panel-twisty">▸</span>
+        </div>
+        <div class="panel-body">
+          <div class="rel-list">
+            <div class="rel-item">
+              <div class="rel-title">Berman et&nbsp;al. (2012) — Nature exposure and cognitive performance in a depressed sample</div>
+              <div class="rel-why">Same pre/post exposure design; self-report + cognitive battery only.</div>
+              <span class="rel-pill">EN 6.8</span>
+            </div>
+            <div class="rel-item">
+              <div class="rel-title">Kotabe et&nbsp;al. (2016) — Restoration from low-level visual statistics of natural scenes</div>
+              <div class="rel-why">Deconstructs the manipulation into image statistics; complements §3 above.</div>
+              <span class="rel-pill">EN 7.1</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-title">Theoretical siblings</span>
+          <span class="panel-twisty">▸</span>
+        </div>
+        <div class="panel-body">
+          <div class="rel-list">
+            <div class="rel-item">
+              <div class="rel-title">Kaplan (1995) — ART canonical statement</div>
+            </div>
+            <div class="rel-item">
+              <div class="rel-title">Ulrich (1991) — Stress recovery through natural and urban environments</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-title">Downstream applications</span>
+          <span class="panel-twisty">▸</span>
+        </div>
+        <div class="panel-body">
+          <div class="rel-list">
+            <div class="rel-item">
+              <div class="rel-title">White et&nbsp;al. (2019) — Dose-response: 120 min/week of nature exposure predicts wellbeing</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </article>
+
+  <!-- ─── RIGHT RAIL / TOC ─── -->
+  <aside class="article-rail" aria-label="Article sections">
+    <h4>On this page</h4>
+    <a href="#sec-summary">§1 Science summary</a>
+    <a href="#sec-figs">§2 Science figures</a>
+    <a href="#sec-interpretation">§3 Interpretation commentary</a>
+    <a href="#sec-theory-connect">§4 Theoretical connections (cited + unstated)</a>
+    <a href="#sec-neural">§5 Neural underpinning</a>
+    <a href="#sec-arg">§6 How to challenge</a>
+    <a href="#sec-challenges">§7 Current challenges</a>
+    <a href="#sec-value">§8 Value of work</a>
+    <a href="#sec-related">§9 Related articles</a>
+  </aside>
+</div>
+
+<footer class="ka-footer">
+  Knowledge Atlas · UCSD Cognitive Science · Spring 2026
+</footer>
+
+<script>
+// Expandable panels
+document.addEventListener('click', function (e) {
+  var h = e.target.closest('.panel-head');
+  if (!h) return;
+  h.parentElement.classList.toggle('open');
+});
+
+// TOC active-section highlighting
+(function () {
+  var links = document.querySelectorAll('.article-rail a');
+  var sections = Array.prototype.map.call(links, function (a) {
+    return document.querySelector(a.getAttribute('href'));
+  });
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        var id = entry.target.id;
+        links.forEach(function (a) {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { rootMargin: '-60px 0px -60% 0px' });
+  sections.forEach(function (s) { if (s) io.observe(s); });
+})();
+</script>
+
+<script src="ka_canonical_navbar.js" defer></script>
+</body>
+</html>

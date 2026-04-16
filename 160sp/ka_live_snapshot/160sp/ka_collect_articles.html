@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collect Articles — K-ATLAS · COGS 160</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f4f6f8; color: #1a1a1a; font-size: 16px; line-height: 1.65;
+    }
+
+    /* ── Hero ─────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(145deg, #1C3D3A 0%, #152e2b 100%);
+      color: #fff; padding: 3rem 2rem 2.5rem; text-align: center;
+    }
+    .hero-eyebrow {
+      font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: #E8872A; font-weight: 600; margin-bottom: 0.6rem;
+    }
+    .hero h1 {
+      font-size: clamp(1.7rem, 3.5vw, 2.6rem);
+      font-weight: 800; line-height: 1.15; margin-bottom: 0.5rem; color: #fff;
+    }
+    .hero h1 span { color: #E8872A; }
+    .hero-sub {
+      font-size: 1rem; color: rgba(255,255,255,0.75); max-width: 640px; margin: 0 auto 1.4rem;
+    }
+    .badge-row { display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.4rem; }
+    .badge {
+      display: inline-block; padding: 0.3rem 0.9rem; border-radius: 20px;
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    .badge-gold { background: #E8872A; color: #fff; }
+    .badge-navy { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+    .badge-amber { background: #e67e22; color: #fff; }
+
+    /* ── Layout ───────────────────────────────────────── */
+    .page-wrap { display: flex; max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; gap: 2rem; }
+    .sidebar {
+      width: 220px; flex-shrink: 0;
+      position: sticky; top: 1rem; align-self: flex-start;
+    }
+    .sidebar-nav { background: #fff; border-radius: 10px; padding: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .sidebar-nav h4 {
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em;
+      color: #888; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid #eee;
+    }
+    .sidebar-nav a {
+      display: block; padding: 0.35rem 0.5rem; color: #444; text-decoration: none;
+      font-size: 0.85rem; border-radius: 5px; margin-bottom: 0.15rem; transition: all 0.15s;
+    }
+    .sidebar-nav a:hover, .sidebar-nav a.active { background: #f0f7f5; color: #1C3D3A; font-weight: 600; }
+    .sidebar-login {
+      background: #1C3D3A; color: #fff; border-radius: 10px; padding: 1.2rem;
+      margin-top: 1rem; text-align: center;
+    }
+    .sidebar-login p { font-size: 0.82rem; color: rgba(255,255,255,0.75); margin-bottom: 0.75rem; }
+    .btn-login {
+      display: block; background: #E8872A; color: #fff; text-decoration: none;
+      padding: 0.6rem 1.2rem; border-radius: 6px; font-weight: 700; font-size: 0.9rem;
+      transition: background 0.15s;
+    }
+    .btn-login:hover { background: #c06820; }
+
+    .main-content { flex: 1; min-width: 0; }
+
+    /* ── Sections ─────────────────────────────────────── */
+    .section {
+      background: #fff; border-radius: 12px; padding: 2rem;
+      margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    .section-header {
+      display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem; border-bottom: 2px solid #f0f0f0;
+    }
+    .section-num {
+      width: 2rem; height: 2rem; border-radius: 50%;
+      background: #1C3D3A; color: #E8872A; font-weight: 800; font-size: 0.9rem;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .section h2 { font-size: 1.25rem; font-weight: 700; color: #1C3D3A; }
+
+    p { margin-bottom: 0.9rem; }
+    p:last-child { margin-bottom: 0; }
+    strong { color: #1C3D3A; }
+
+    /* ── Callout boxes ─────────────────────────────────── */
+    .callout {
+      border-left: 4px solid; border-radius: 0 8px 8px 0;
+      padding: 1rem 1.2rem; margin: 1rem 0; font-size: 0.93rem;
+    }
+    .callout-navy { border-color: #1C3D3A; background: #f0f7f5; }
+    .callout-gold { border-color: #E8872A; background: #fff5ed; }
+    .callout-green { border-color: #27ae60; background: #f0fff4; }
+    .callout-amber { border-color: #e67e22; background: #fff8f0; }
+    .callout-title { font-weight: 700; margin-bottom: 0.4rem; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em; }
+    .callout-navy .callout-title { color: #1C3D3A; }
+    .callout-gold .callout-title { color: #b06020; }
+    .callout-green .callout-title { color: #1a7a3f; }
+    .callout-amber .callout-title { color: #b05a00; }
+
+    /* ── Steps ─────────────────────────────────────────── */
+    .steps { counter-reset: step; list-style: none; }
+    .steps li {
+      counter-increment: step;
+      display: flex; gap: 1rem; margin-bottom: 1rem; align-items: flex-start;
+    }
+    .steps li::before {
+      content: counter(step);
+      width: 1.8rem; height: 1.8rem; border-radius: 50%;
+      background: #E8872A; color: #fff; font-weight: 800; font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 0.1rem;
+    }
+    .steps li .step-body { flex: 1; }
+    .steps li .step-title { font-weight: 700; color: #1C3D3A; margin-bottom: 0.2rem; }
+
+    /* ── Question type cards ────────────────────────────── */
+    .q-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.2rem 0; }
+    .q-card {
+      border-radius: 10px; padding: 1.2rem;
+      border: 2px solid;
+    }
+    .q-card-exp { border-color: #e67e22; background: #fff8f0; }
+    .q-card-mixed { border-color: #27ae60; background: #f0fff4; }
+    .q-card-label {
+      font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em;
+      padding: 0.25rem 0.7rem; border-radius: 20px; display: inline-block; margin-bottom: 0.75rem;
+    }
+    .q-card-exp .q-card-label { background: #e67e22; color: #fff; }
+    .q-card-mixed .q-card-label { background: #27ae60; color: #fff; }
+    .q-card h3 { font-size: 0.95rem; font-weight: 700; color: #1C3D3A; margin-bottom: 0.4rem; }
+    .q-card p { font-size: 0.88rem; color: #444; margin-bottom: 0.5rem; }
+    .q-card p:last-child { margin-bottom: 0; }
+
+    /* ── Google AI Citation teaching module ─────────────── */
+    .gai-section { background: #f5f9f7; border-radius: 10px; padding: 1.5rem; margin: 1.2rem 0; }
+    .gai-section h3 { font-size: 1.1rem; font-weight: 700; color: #1C3D3A; margin-bottom: 0.75rem; }
+
+    .query-anatomy {
+      font-family: "SFMono-Regular", "Consolas", "Courier New", monospace;
+      font-size: 0.88rem; background: #1C3D3A; color: #fff;
+      border-radius: 8px; padding: 1.1rem 1.4rem; margin: 0.8rem 0; line-height: 1.9;
+      white-space: pre-wrap; overflow-x: auto;
+    }
+    .qa-ev { color: #7ec8e3; }   /* evidence type */
+    .qa-mech { color: #E8872A; } /* mechanism */
+    .qa-env { color: #7ddc7d; }  /* environment */
+    .qa-pop { color: #f0a0f0; }  /* population */
+    .qa-th { color: #ffb347; }   /* theory */
+
+    .gai-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 0.8rem 0; }
+    .gai-table th {
+      background: #1C3D3A; color: #E8872A; text-align: left;
+      padding: 0.5rem 0.75rem; font-weight: 700; font-size: 0.8rem; text-transform: uppercase;
+    }
+    .gai-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #eee; vertical-align: top; }
+    .gai-table tr:hover td { background: #f5f9f7; }
+    .gai-table .col-ev td:nth-child(1) { color: #1a6fa0; }
+    .gai-table code {
+      background: #f0f7f5; padding: 0.1rem 0.4rem; border-radius: 3px;
+      font-size: 0.82rem; color: #1C3D3A;
+    }
+
+    .example-block {
+      background: #fff; border: 1px solid #dde4f0; border-radius: 8px;
+      padding: 1rem 1.2rem; margin: 0.8rem 0;
+    }
+    .example-label {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+      color: #888; margin-bottom: 0.4rem;
+    }
+    .example-q { font-size: 0.92rem; font-style: italic; color: #1C3D3A; margin-bottom: 0.3rem; }
+    .example-why { font-size: 0.82rem; color: #555; }
+
+    /* ── Brownie ─────────────────────────────────────────── */
+    .brownie-card {
+      background: linear-gradient(135deg, #fff5ed, #ffe8d0);
+      border: 2px solid #E8872A; border-radius: 12px; padding: 1.4rem;
+      display: flex; gap: 1rem; align-items: flex-start;
+    }
+    .brownie-star { font-size: 2.5rem; flex-shrink: 0; }
+    .brownie-text h3 { font-size: 1.05rem; font-weight: 700; color: #1C3D3A; margin-bottom: 0.4rem; }
+    .brownie-text p { font-size: 0.9rem; color: #444; }
+
+    /* ── Deliverables table ─────────────────────────────── */
+    .deliv-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .deliv-table th {
+      background: #1C3D3A; color: #E8872A; text-align: left;
+      padding: 0.6rem 0.9rem; font-weight: 700; font-size: 0.8rem; text-transform: uppercase;
+    }
+    .deliv-table td { padding: 0.55rem 0.9rem; border-bottom: 1px solid #eee; }
+    .deliv-table tr:hover td { background: #f5f9f7; }
+    .pts { font-weight: 700; color: #1C3D3A; }
+    .pts-total { background: #1C3D3A; color: #E8872A; font-weight: 800; }
+
+    /* ── Checklist ──────────────────────────────────────── */
+    .checklist { list-style: none; }
+    .checklist li {
+      display: flex; align-items: flex-start; gap: 0.6rem;
+      padding: 0.4rem 0; border-bottom: 1px solid #f0f0f0; font-size: 0.9rem;
+    }
+    .checklist li::before {
+      content: "☐"; font-size: 1rem; color: #1C3D3A; flex-shrink: 0; margin-top: 0.05rem;
+    }
+
+    /* ── CTA button ─────────────────────────────────────── */
+    .cta-block { text-align: center; padding: 2rem 0; }
+    .btn-cta {
+      display: inline-block; background: #1C3D3A; color: #E8872A; text-decoration: none;
+      padding: 0.9rem 2.5rem; border-radius: 8px; font-weight: 800; font-size: 1.05rem;
+      letter-spacing: 0.03em; transition: background 0.15s;
+    }
+    .btn-cta:hover { background: #152e2b; }
+    .btn-cta span { color: #fff; font-weight: 400; font-size: 0.85rem; display: block; margin-top: 0.2rem; }
+
+    /* ── Responsive ─────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .page-wrap { flex-direction: column; }
+      .sidebar { width: 100%; position: static; }
+      .q-cards { grid-template-columns: 1fr; }
+    }
+  
+.wordmark {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; flex-shrink: 0;
+}
+.wordmark-icon { width: 30px; height: 30px; }
+.wordmark-text { display: flex; flex-direction: column; line-height: 1.1; }
+.wm-top { font-size: 0.66rem; font-weight: 400; letter-spacing: 0.24em; text-transform: uppercase; color: #A8C8BF; }
+.wm-bottom { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.03em; color: #fff; }
+.wm-bottom span { color: #F5A623; }
+</style>
+</head>
+<body>
+
+<!-- ── KA Nav Bar ──────────────────────────────────────────── -->
+<nav style="background:#1C3D3A;padding:0 28px;display:flex;align-items:center;gap:24px;min-height:52px;border-bottom:2px solid #E8872A;">
+  <a class="wordmark" href="../ka_home.html">
+    <svg class="wordmark-icon" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="3.5" fill="#F5A623"/>
+      <circle cx="16" cy="5"  r="2.5" fill="#A8C8BF"/>
+      <circle cx="27" cy="22" r="2.5" fill="#A8C8BF"/>
+      <circle cx="5"  cy="22" r="2.5" fill="#A8C8BF"/>
+      <line x1="16"   y1="7.5"  x2="16"   y2="12.5" stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="24.8" y1="20.2" x2="19.0" y2="17.3"  stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="7.2"  y1="20.2" x2="13.0" y2="17.3"  stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="16" y1="7.5"  x2="25.5" y2="20" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+      <line x1="25.5" y1="20" x2="6.5"   y2="20" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+      <line x1="6.5"  y1="20" x2="16"    y2="7.5" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+    </svg>
+    <div class="wordmark-text">
+      <span class="wm-top">Knowledge</span>
+      <span class="wm-bottom">At<span>las</span></span>
+    </div>
+  </a>
+  <div style="display:flex;align-items:center;gap:14px;flex:1;">
+    <a href="../ka_topics.html" style="color:#7AACA0;font-size:0.8rem;text-decoration:none;padding:6px 10px;border-radius:6px;">Explore</a>
+    <a href="../ka_evidence.html" style="color:#7AACA0;font-size:0.8rem;text-decoration:none;padding:6px 10px;border-radius:6px;">Evidence</a>
+    <a href="../ka_gaps.html" style="color:#7AACA0;font-size:0.8rem;text-decoration:none;padding:6px 10px;border-radius:6px;">Gaps</a>
+    <a href="../ka_article_search.html" style="color:#7AACA0;font-size:0.8rem;text-decoration:none;padding:6px 10px;border-radius:6px;">Articles</a>
+    <a href="../ka_contribute.html" style="color:#7AACA0;font-size:0.8rem;text-decoration:none;padding:6px 10px;border-radius:6px;">Contribute</a>
+    <a href="ka_student_setup.html" style="color:#F5A623;font-size:0.8rem;text-decoration:none;padding:6px 10px;border-radius:6px;background:rgba(232,135,42,0.12);">Course</a>
+    <a href="ka_schedule.html" style="color:#7AACA0;font-size:0.8rem;text-decoration:none;padding:6px 10px;border-radius:6px;">160 Syllabus</a>
+  </div>
+</nav>
+<div style="background:#EDE8E0;padding:8px 28px;font-size:0.78rem;color:#6A5E50;display:flex;align-items:center;gap:6px;">
+  <a href="../ka_home.html" style="color:#1C3D3A;text-decoration:none;font-weight:600;">Home</a> <span style="color:#B0A898;">/</span>
+  <a href="ka_student_setup.html" style="color:#1C3D3A;text-decoration:none;font-weight:600;">COGS 160 Start</a> <span style="color:#B0A898;">/</span>
+  <span>A0: Collect Articles</span>
+</div>
+
+<!-- ── Hero ──────────────────────────────────────────────── -->
+<header class="hero">
+  <p class="hero-eyebrow">COGS 160 · Week 1 · Universal Assignment</p>
+  <h1>Collect <span>Articles</span></h1>
+  <p class="hero-sub">
+    Build K-ATLAS's empirical foundation — ten papers per question, returned with PDFs, citations, and abstracts.
+    Every student contributes. The corpus grows together.
+  </p>
+  <div class="badge-row">
+    <span class="badge badge-gold">2 Questions Assigned</span>
+    <span class="badge badge-navy">10 Papers Each</span>
+    <span class="badge badge-navy">PDF + APA + DOI</span>
+    <span class="badge badge-amber">Brownie Points Available</span>
+  </div>
+</header>
+
+<!-- ── Page layout ────────────────────────────────────────── -->
+<div class="page-wrap">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <nav class="sidebar-nav">
+      <h4>On this page</h4>
+      <a href="#overview">Overview</a>
+      <a href="#your-questions">Your Questions</a>
+      <a href="#how-to-search">How to Search</a>
+      <a href="#gai-citation">Google AI Scholar</a>
+      <a href="#upload">Uploading Papers</a>
+      <a href="#brownie">Brownie Points</a>
+      <a href="#deliverables">Deliverables</a>
+      <a href="#checklist">Pre-Submit Checklist</a>
+    </nav>
+    <div class="sidebar-login">
+      <p>Ready to upload your papers?</p>
+      <a href="../ka_contribute.html" class="btn-login">Go to Contribute Page →</a>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main-content">
+
+    <!-- ── 1. Overview ──────────────────────────────────── -->
+    <section class="section" id="overview">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <h2>Overview — What You Are Doing and Why It Matters</h2>
+      </div>
+
+      <p>
+        K-ATLAS — the Knowledge Architecture for Translating Life-science and Affective-environment Science — is a
+        living knowledge base for COGS 160. It is not a pre-built database. It is built by you, this quarter,
+        from primary literature. Every paper you collect becomes part of the corpus that future students, TAs,
+        and the ATLAS reasoning engine draw on when answering questions about how built environments affect human
+        cognition, affect, and wellbeing.
+      </p>
+
+      <p>
+        This assignment is universal: <strong>every student in the class completes it in Week 1</strong>.
+        There is no long research phase, no elaborate method selection, no coding. The task is straightforward:
+        find good empirical papers, upload them with proper citations, and let the system classify and store them.
+        The design principle is <em>no makework</em> — the system handles abstract retrieval, duplicate checking,
+        article-type classification, and corpus logging automatically.
+      </p>
+
+      <div class="callout callout-navy">
+        <div class="callout-title">Your contribution</div>
+        If 35 students each submit 20 papers across 2 questions, K-ATLAS gains roughly 700 new articles in a
+        single week — with DOIs, abstracts, and article-type classifications already attached. This is the
+        foundation everything else builds on.
+      </div>
+
+      <p>
+        You are assigned <strong>two questions</strong> drawn from the K-ATLAS question bank (130 questions
+        across 34 topics). The questions are written in a format specifically designed for Google AI Scholar —
+        you will learn exactly why below. For each question, you find and upload ten qualifying papers.
+        The definition of "qualifying" differs between your two questions.
+      </p>
+    </section>
+
+    <!-- ── 2. Your Two Questions ────────────────────────── -->
+    <section class="section" id="your-questions">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <h2>Your Two Assigned Questions</h2>
+      </div>
+
+      <p>
+        When you log in, K-ATLAS automatically assigns you two questions. The assignment is personalised:
+        no two students receive the same pair, and the system prioritises questions that have the fewest
+        prior completions, ensuring the corpus grows as broadly as possible.
+      </p>
+
+      <div class="q-cards">
+        <div class="q-card q-card-exp">
+          <span class="q-card-label">Question 1 — 10-EXP</span>
+          <h3>Experimental Focus</h3>
+          <p>
+            You must find <strong>ten papers classified as experimental</strong> for this question.
+            Papers of other types (reviews, theoretical papers, case studies) are <em>accepted and stored</em>
+            — they contribute to the corpus — but they do not count toward your requirement of ten.
+          </p>
+          <p>
+            Keep searching until you have ten papers that the system marks
+            <strong style="color:#e67e22">Experimental ✓</strong>.
+          </p>
+        </div>
+        <div class="q-card q-card-mixed">
+          <span class="q-card-label">Question 2 — Mixed</span>
+          <h3>Open Corpus</h3>
+          <p>
+            All article types count toward your ten papers for this question.
+            Experimental, review, theoretical, and other types are all welcome.
+          </p>
+          <p>
+            Find <strong>any ten papers</strong> relevant to your assigned question.
+          </p>
+        </div>
+      </div>
+
+      <div class="callout callout-gold">
+        <div class="callout-title">Where to see your questions</div>
+        Your specific questions (with the full query text) appear on your personal upload page after login.
+        Each question is pre-formatted as a ready-to-paste Google AI Scholar query.
+      </div>
+    </section>
+
+    <!-- ── 3. How to Search ──────────────────────────────── -->
+    <section class="section" id="how-to-search">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <h2>How to Search for Papers</h2>
+      </div>
+
+      <p>
+        The fastest and highest-quality approach for this assignment is <strong>Google AI Scholar</strong>.
+        Your K-ATLAS questions are written specifically to take advantage of Google's AI Overview feature,
+        which synthesises results from multiple sources and surfaces the most relevant papers for
+        natural-language academic queries. Section 4 below teaches you exactly how to use this feature.
+      </p>
+
+      <ol class="steps">
+        <li>
+          <div class="step-body">
+            <div class="step-title">Copy your assigned question from your upload page</div>
+            The question is pre-formatted as a Google AI Citation query — a complete sentence describing
+            evidence type, mechanism, environment, and population. No Boolean operators needed.
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <div class="step-title">Paste into Google Scholar (scholar.google.com)</div>
+            Make sure you are in Scholar (not regular Google). If Google's AI Overview appears above the
+            results, read it — it often identifies the most-cited papers directly. Click "All X results"
+            to see the full list.
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <div class="step-title">Download PDFs for papers you want to include</div>
+            Many papers are available open-access via DOI links. For gated papers, use UCSD Library
+            (VPN + library proxy) or Unpaywall (browser extension). You do not need to read the papers
+            in full — scan the abstract and methods section to judge relevance.
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <div class="step-title">Note the APA citation and DOI for each paper</div>
+            Google Scholar provides a citation export button (⋮ → Cite → APA). The DOI appears in the
+            paper header or at doi.org. If you cannot find the DOI, leave the field blank — the system
+            will attempt to extract it from the PDF.
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <div class="step-title">Upload to your personal page and click "Fetch Abstracts &amp; Classify"</div>
+            The system retrieves abstracts via DOI API (CrossRef), classifies article type, checks whether
+            each paper is already in the K-ATLAS corpus, and shows you your progress toward ten qualifying papers.
+          </div>
+        </li>
+      </ol>
+
+      <div class="callout callout-green">
+        <div class="callout-title">No duplicate work</div>
+        If a paper is already in the K-ATLAS corpus, the system flags it as "In Corpus" and still counts it
+        toward your ten — you found it independently, which is evidence it is relevant.
+        The corpus does not grow from duplicates, but your progress does.
+      </div>
+    </section>
+
+    <!-- ── 4. Google AI Scholar Teaching Module ─────────── -->
+    <section class="section" id="gai-citation">
+      <div class="section-header">
+        <div class="section-num">4</div>
+        <h2>Google AI Scholar — Why K-ATLAS Questions Are Already Optimised for It</h2>
+      </div>
+
+      <div class="callout callout-gold" style="margin-bottom:1.2rem;">
+        <div class="callout-title">Full Guide Available</div>
+        <p style="margin:0;">For a deep-dive on query anatomy, worked examples, and common mistakes, see the
+        <a href="ka_google_search_guide.html" style="color:#1C3D3A;font-weight:700;">complete Google AI Citation Guide</a>.</p>
+      </div>
+
+      <p>
+        Standard academic search uses Boolean operators: <code>AND</code>, <code>OR</code>, <code>NOT</code>,
+        proximity operators, field tags. This approach treats search as a keyword-matching problem. Google's
+        AI Overview treats search as a <em>question-answering</em> problem. It uses large language models to
+        interpret your query semantically, cross-reference multiple indexed sources, and surface papers that
+        address the specific intersection of concepts you describe — even if those papers do not contain your
+        exact keywords.
+      </p>
+
+      <p>
+        K-ATLAS questions are written in <strong>Google AI Citation format</strong>: complete natural-language
+        sentences that encode five components simultaneously. This is the optimal input format for Google AI
+        Overview. You do not need to reformulate the question — paste it as-is.
+      </p>
+
+      <!-- Five-component framework -->
+      <div class="gai-section">
+        <h3>The Five-Component Framework</h3>
+        <p style="font-size:0.88rem; color:#444; margin-bottom:0.8rem;">
+          Every K-ATLAS question contains these five components. Google AI Scholar's language model
+          recognises each component and retrieves papers that address the specified intersection.
+        </p>
+        <table class="gai-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Component</th>
+              <th>What it specifies</th>
+              <th>Example phrase</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="color:#7ec8e3; font-weight:700">1</td>
+              <td><strong>Evidence type</strong></td>
+              <td>Study design or methodology</td>
+              <td><code>experimental evidence</code>, <code>neuroimaging studies</code></td>
+            </tr>
+            <tr>
+              <td style="color:#E8872A; font-weight:700">2</td>
+              <td><strong>Mechanism / measure</strong></td>
+              <td>The cognitive or physiological process being studied</td>
+              <td><code>attention restoration</code>, <code>cortisol reduction</code></td>
+            </tr>
+            <tr>
+              <td style="color:#7ddc7d; font-weight:700">3</td>
+              <td><strong>Environmental condition</strong></td>
+              <td>The built or natural environment feature</td>
+              <td><code>natural light exposure</code>, <code>open-plan offices</code></td>
+            </tr>
+            <tr>
+              <td style="color:#f0a0f0; font-weight:700">4</td>
+              <td><strong>Population</strong></td>
+              <td>Participants or affected group</td>
+              <td><code>office workers</code>, <code>hospital patients</code>, <code>children</code></td>
+            </tr>
+            <tr>
+              <td style="color:#ffb347; font-weight:700">5</td>
+              <td><strong>Theoretical anchor</strong></td>
+              <td>Framework or theory linking environment to outcome</td>
+              <td><code>Attention Restoration Theory</code>, <code>stress-recovery hypothesis</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Color-coded anatomy -->
+      <div class="gai-section" style="margin-top:1rem;">
+        <h3>Anatomy of a K-ATLAS Query</h3>
+        <p style="font-size:0.88rem; color:#444; margin-bottom:0.8rem;">
+          Below is a sample K-ATLAS question with each component color-coded.
+          Your assigned question follows this same structure.
+        </p>
+        <div class="query-anatomy"><span class="qa-ev">What experimental evidence</span> shows that <span class="qa-mech">directed attention fatigue is restored</span> by <span class="qa-env">exposure to natural or fractal-complexity environments</span> in <span class="qa-pop">knowledge workers or students</span>, as predicted by <span class="qa-th">Attention Restoration Theory</span>?</div>
+        <div style="display:flex; flex-wrap:wrap; gap:0.5rem; font-size:0.8rem; margin-top:0.5rem;">
+          <span style="background:#1a3a4a; color:#7ec8e3; padding:0.2rem 0.6rem; border-radius:4px;">■ Evidence type</span>
+          <span style="background:#3a2a00; color:#E8872A; padding:0.2rem 0.6rem; border-radius:4px;">■ Mechanism</span>
+          <span style="background:#1a3a1a; color:#7ddc7d; padding:0.2rem 0.6rem; border-radius:4px;">■ Environment</span>
+          <span style="background:#3a1a3a; color:#f0a0f0; padding:0.2rem 0.6rem; border-radius:4px;">■ Population</span>
+          <span style="background:#3a2a00; color:#ffb347; padding:0.2rem 0.6rem; border-radius:4px;">■ Theory</span>
+        </div>
+      </div>
+
+      <!-- Why this beats Boolean -->
+      <div class="gai-section" style="margin-top:1rem;">
+        <h3>Why This Format Outperforms Boolean Search</h3>
+
+        <div class="example-block">
+          <div class="example-label">Boolean approach (traditional)</div>
+          <div class="example-q">"attention restoration" AND "built environment" AND (workers OR employees) AND experiment*</div>
+          <div class="example-why">
+            Retrieves papers containing these exact tokens. Misses papers that use "directed attention fatigue,"
+            "restorative environments," "occupational stress," or related terminology. Precision depends entirely
+            on term choice. Requires multiple query variants to achieve coverage.
+          </div>
+        </div>
+
+        <div class="example-block" style="border-color:#27ae60;">
+          <div class="example-label">Google AI Citation format (K-ATLAS)</div>
+          <div class="example-q">What experimental evidence shows that directed attention fatigue is restored by natural or fractal-complexity environments in knowledge workers, as predicted by Attention Restoration Theory?</div>
+          <div class="example-why">
+            Google's language model recognises the conceptual relationships — restoration, attention, environment,
+            workplace setting, ART — and retrieves papers that address this intersection regardless of specific
+            terminology. A single query achieves broader semantic coverage than multiple Boolean variants.
+            The AI Overview often identifies the three to five most-cited papers directly in the first paragraph
+            of its summary.
+          </div>
+        </div>
+      </div>
+
+      <!-- Worked examples from the corpus -->
+      <div class="gai-section" style="margin-top:1rem;">
+        <h3>Three Worked Examples from the K-ATLAS Question Bank</h3>
+        <p style="font-size:0.88rem; color:#444; margin-bottom:0.8rem;">
+          These show the range of topics and how the five-component structure varies across question types.
+        </p>
+
+        <div class="example-block">
+          <div class="example-label">Neural mechanisms / IC→DC (SQ-037)</div>
+          <div class="example-q">What neuroimaging evidence demonstrates that default mode network deactivation during spatial navigation tasks is modulated by the visual complexity and wayfinding legibility of indoor architectural environments?</div>
+          <div class="example-why">Components: neuroimaging (evidence) · DMN deactivation (mechanism) · indoor architectural complexity (environment) · navigation tasks (implicitly all populations) · no single theory anchored but cognitively grounded.</div>
+        </div>
+
+        <div class="example-block">
+          <div class="example-label">Social interaction / SQ-032</div>
+          <div class="example-q">What experimental or observational evidence shows that informal social interaction frequency among office workers is modulated by proximity and visibility afforded by open-plan versus cellular office layouts?</div>
+          <div class="example-why">Components: experimental or observational (evidence) · social interaction frequency (mechanism) · open-plan vs. cellular office (environment) · office workers (population) · proxemics / affordance theory (theory).</div>
+        </div>
+
+        <div class="example-block">
+          <div class="example-label">Restorative environments / SQ-043</div>
+          <div class="example-q">What EEG or physiological evidence shows that exposure to biophilic design features — living walls, water features, natural materials — reduces sympathetic nervous system arousal in hospital patients or medical staff?</div>
+          <div class="example-why">Components: EEG/physiological (evidence) · SNS arousal reduction (mechanism) · biophilic design features (environment) · hospital patients or medical staff (population) · biophilic design theory / stress recovery (theory).</div>
+        </div>
+      </div>
+
+      <div class="callout callout-navy" style="margin-top:1rem;">
+        <div class="callout-title">Practical tip — reading the AI Overview</div>
+        When Google shows an AI Overview paragraph above your results, read it carefully.
+        It typically names the two or three most-cited papers on the topic, often with author names.
+        These are your highest-priority targets. Use them as seeds for forward/backward citation chaining
+        to find additional papers.
+      </div>
+    </section>
+
+    <!-- ── 5. Uploading Papers ────────────────────────────── -->
+    <section class="section" id="upload">
+      <div class="section-header">
+        <div class="section-num">5</div>
+        <h2>Uploading Papers — Step by Step</h2>
+      </div>
+
+      <p>
+        Your personal upload page (linked in the sidebar) shows your name, your assigned questions,
+        and your progress toward each requirement. The interface has two tabs — one per question — and
+        a third brownie-point tab that unlocks after you complete both.
+      </p>
+
+      <ol class="steps">
+        <li>
+          <div class="step-body">
+            <div class="step-title">Select your question tab (Q1 or Q2)</div>
+            Each tab shows the question text, the requirement (10-exp or mixed), and your current progress bar.
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <div class="step-title">Upload PDFs</div>
+            Drag and drop one or more PDFs onto the upload zone, or click to browse. You can upload multiple
+            files at once. PDFs are stored immediately; classification happens when you click the Fetch button.
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <div class="step-title">Enter APA citation and DOI for each paper</div>
+            For each uploaded PDF, a row appears in the form below the upload zone. Paste the APA citation
+            (from Google Scholar's cite button) and the DOI if you have it. The DOI field accepts both raw
+            DOIs (<code>10.1016/...</code>) and full URLs (<code>https://doi.org/...</code>).
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <div class="step-title">Click "Fetch Abstracts &amp; Classify"</div>
+            The system calls the CrossRef API for each DOI, retrieves the abstract, classifies the article type,
+            and checks whether the paper is already in the K-ATLAS corpus. This takes 10–30 seconds depending
+            on batch size. A spinner shows progress.
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <div class="step-title">Review the results table</div>
+            Each row shows: <strong>Title · Article Type · Abstract · PDF Present · In Corpus · Qualifies</strong>.
+            Papers that qualify increment your progress bar automatically. Papers that do not qualify (for Q1:
+            non-experimental) are stored but shown with a grey "Does not count" note.
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <div class="step-title">Repeat until your progress bar reaches 10</div>
+            Search again, download more papers, upload, fetch, review. Repeat as needed.
+            The system remembers all previous submissions — you never re-enter papers you have already uploaded.
+          </div>
+        </li>
+      </ol>
+
+      <div class="callout callout-amber">
+        <div class="callout-title">If the abstract is unavailable</div>
+        CrossRef does not have abstracts for all papers. If a paper returns "Abstract not available,"
+        a text field appears. You may paste the abstract manually (copy from the publisher's page or from
+        the PDF). This is optional — the paper is stored and classified regardless.
+      </div>
+    </section>
+
+    <!-- ── 6. Brownie Points ───────────────────────────────── -->
+    <section class="section" id="brownie">
+      <div class="section-header">
+        <div class="section-num">6</div>
+        <h2>Brownie Points — Extra Credit</h2>
+      </div>
+
+      <div class="brownie-card">
+        <div class="brownie-star">⭐</div>
+        <div class="brownie-text">
+          <h3>After completing both required questions, you can earn brownie points</h3>
+          <p>
+            Once your Q2 submission is complete, the system offers you an additional question from the
+            K-ATLAS bank. Each additional question you complete earns one brownie point. Brownie points
+            are taken into account when the final grade is assigned — they can tip a grade up, but they
+            are not required and cannot tip a grade down.
+          </p>
+        </div>
+      </div>
+
+      <p style="margin-top:1.2rem;">
+        Brownie-point questions follow the <strong>mixed</strong> format (all article types count) to keep the
+        extra work manageable. You can accept as many brownie questions as you like. The system assigns them
+        in the same priority order as required questions, ensuring that under-represented topics continue to
+        receive coverage.
+      </p>
+
+      <div class="callout callout-gold">
+        <div class="callout-title">How brownie points appear in your record</div>
+        Each completed brownie question is logged with a timestamp and question ID. The instructor's admin
+        dashboard shows each student's brownie count alongside their required completion status.
+        There is no cap on brownie points, but each one requires the same ten-paper standard.
+      </div>
+    </section>
+
+    <!-- ── 7. Deliverables ────────────────────────────────── -->
+    <section class="section" id="deliverables">
+      <div class="section-header">
+        <div class="section-num">7</div>
+        <h2>Deliverables and Grading</h2>
+      </div>
+
+      <table class="deliv-table">
+        <thead>
+          <tr>
+            <th>Deliverable</th>
+            <th>Requirement</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Q1 — Experimental papers</strong></td>
+            <td>10 papers classified Experimental (others stored but not counted)</td>
+            <td class="pts">40</td>
+          </tr>
+          <tr>
+            <td><strong>Q2 — Open corpus papers</strong></td>
+            <td>10 papers of any article type</td>
+            <td class="pts">40</td>
+          </tr>
+          <tr>
+            <td><strong>Citations</strong></td>
+            <td>APA citation provided for every uploaded paper</td>
+            <td class="pts">10</td>
+          </tr>
+          <tr>
+            <td><strong>PDFs</strong></td>
+            <td>PDF uploaded for at least 80% of submitted papers</td>
+            <td class="pts">10</td>
+          </tr>
+          <tr class="pts-total">
+            <td><strong>Total</strong></td>
+            <td></td>
+            <td class="pts" style="color:#E8872A">100</td>
+          </tr>
+          <tr>
+            <td><strong>Brownie points</strong> (extra credit)</td>
+            <td>Each additional completed question (10 papers, mixed) = 1 brownie point</td>
+            <td class="pts" style="color:#888">+EC</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p style="margin-top:1rem; font-size:0.88rem; color:#555;">
+        The system tracks all deliverables automatically. There is nothing to submit separately.
+        When your upload page shows both progress bars at 10/10 with green checkmarks,
+        the assignment is complete.
+      </p>
+    </section>
+
+    <!-- ── 8. Pre-Submit Checklist ───────────────────────── -->
+    <section class="section" id="checklist">
+      <div class="section-header">
+        <div class="section-num">8</div>
+        <h2>Pre-Submit Checklist</h2>
+      </div>
+
+      <ul class="checklist">
+        <li>I have logged in and can see my two assigned questions on my upload page.</li>
+        <li>I have read this assignment page and understand the difference between Q1 (experimental required) and Q2 (all types count).</li>
+        <li>I have copied my Q1 query and searched Google Scholar with it.</li>
+        <li>I have uploaded at least one batch of PDFs for Q1 and clicked "Fetch Abstracts &amp; Classify."</li>
+        <li>My Q1 progress bar shows 10 or more papers classified as Experimental.</li>
+        <li>I have done the same for Q2 (any article type counts) until my Q2 progress bar shows 10 or more papers.</li>
+        <li>Every uploaded paper has an APA citation entered (even if DOI was unavailable).</li>
+        <li>PDFs are uploaded for at least 8 out of every 10 papers I submitted.</li>
+        <li>Both progress bars show green checkmarks — assignment complete.</li>
+        <li>(Optional) I have accepted and completed at least one brownie-point question after Q2 completion.</li>
+      </ul>
+    </section>
+
+    <!-- ── CTA ────────────────────────────────────────────── -->
+    <div class="cta-block">
+      <a href="collect-articles-upload.html" class="btn-cta">
+        Open My Upload Page
+        <span>Log in to see your assigned questions and begin uploading papers</span>
+      </a>
+    </div>
+
+  </main>
+</div>
+
+<!-- Sidebar active state -->
+<script>
+  const sections = document.querySelectorAll('section[id], div[id]');
+  const links = document.querySelectorAll('.sidebar-nav a');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`.sidebar-nav a[href="#${e.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => obs.observe(s));
+</script>
+<script src="../ka_auth_widget.js?v=20260407b"></script>
+
+</body>
+</html>

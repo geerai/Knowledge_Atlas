@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COGS160: AI & VR — GUI Track Week 7: Full Usability Evaluation Report</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+         background:#f5f5f5;padding:20px;color:#222;line-height:1.7}
+    .container{max-width:960px;margin:0 auto;background:#fff;padding:48px;
+               box-shadow:0 2px 10px rgba(0,0,0,.08)}
+    .nav{display:flex;justify-content:space-between;align-items:center;
+         margin-bottom:32px;padding-bottom:16px;border-bottom:2px solid #6b3fa0}
+    .nav a{color:#6b3fa0;text-decoration:none;font-weight:600;font-size:.9rem}
+    .nav a:hover{text-decoration:underline}
+    .track-pill{background:#6b3fa0;color:#fff;padding:4px 14px;border-radius:20px;
+                font-size:.8rem;font-weight:700;letter-spacing:.5px}
+    header{margin-bottom:36px}
+    .week-label{font-size:.85rem;font-weight:700;color:#6b3fa0;text-transform:uppercase;
+                letter-spacing:1px;margin-bottom:6px}
+    h1{font-size:2rem;color:#182B49;font-weight:800;margin-bottom:8px;line-height:1.2}
+    .subtitle{font-size:1.05rem;color:#555;margin-bottom:20px}
+    .meta-row{display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;color:#777}
+    .meta-row span strong{color:#333}
+    h2{font-size:1.3rem;color:#182B49;font-weight:700;margin:40px 0 12px;
+       padding-bottom:6px;border-bottom:2px solid #6b3fa0}
+    h3{font-size:1.05rem;color:#6b3fa0;font-weight:700;margin:24px 0 8px}
+    h4{font-size:.95rem;color:#444;font-weight:700;margin:16px 0 6px}
+    p{margin-bottom:14px;color:#333;font-size:.95rem;line-height:1.7}
+
+    .context-box{background:linear-gradient(135deg,#faf5ff,#f3e8ff);border:1px solid #c4a0e8;
+                 border-left:4px solid #6b3fa0;border-radius:6px;padding:20px 24px;margin-bottom:32px}
+    .context-box p{font-size:.95rem;color:#444;margin-bottom:8px}
+    .context-box p:last-child{margin-bottom:0}
+
+    .story-box{background:#fff8f0;border:1px solid #f5c080;border-left:4px solid #d97706;
+               border-radius:6px;padding:20px 24px;margin:20px 0;font-style:italic}
+    .story-box p{color:#555}
+
+    .insight-box{background:#f0f7ff;border:1px solid #aed0ef;border-left:4px solid #1a6fb5;
+                 border-radius:6px;padding:20px 24px;margin:20px 0}
+    .insight-box h4{color:#1a6fb5;margin-top:0}
+
+    .outcome-list{list-style:none;padding:0}
+    .outcome-list li{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid #ede0f5;font-size:.95rem}
+    .outcome-list li:last-child{border-bottom:none}
+    .outcome-num{min-width:28px;height:28px;background:#6b3fa0;color:#fff;border-radius:50%;
+                 display:flex;align-items:center;justify-content:center;font-weight:700;
+                 font-size:.8rem;flex-shrink:0;margin-top:2px}
+
+    .example-block{background:#f0f7ff;border:1px solid #aed0ef;border-radius:8px;padding:24px;margin:20px 0}
+    .example-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;
+                    padding-bottom:12px;border-bottom:2px solid #aed0ef}
+    .example-badge{background:#182B49;color:#fff;padding:4px 12px;border-radius:4px;
+                   font-size:.78rem;font-weight:700;letter-spacing:.5px}
+    .example-title{font-size:1.05rem;font-weight:700;color:#182B49}
+
+    pre{background:#1e1e2e;color:#cdd6f4;border-radius:6px;padding:20px;
+        font-size:.82rem;line-height:1.6;overflow-x:auto;margin:12px 0;tab-size:2}
+    code{font-family:"JetBrains Mono","Fira Code","Courier New",monospace}
+    .code-label{font-size:.75rem;font-weight:700;color:#888;text-transform:uppercase;
+                letter-spacing:.5px;margin-bottom:4px}
+
+    .step-list{display:flex;flex-direction:column;gap:16px;margin:16px 0}
+    .step{display:flex;gap:16px;align-items:flex-start}
+    .step-num{min-width:36px;height:36px;background:#6b3fa0;color:#fff;border-radius:50%;
+              display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+    .step-body{flex:1;padding-top:6px}
+    .step-body strong{display:block;margin-bottom:4px;font-size:.95rem;color:#182B49}
+    .step-body p{font-size:.9rem;color:#444;margin-top:4px}
+
+    table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.88rem}
+    th{background:#182B49;color:#fff;padding:10px 14px;text-align:left;font-weight:700}
+    td{padding:9px 14px;border-bottom:1px solid #eee}
+    tr:nth-child(even) td{background:#fafafa}
+
+    .tip{background:#f0fff4;border:1px solid #a8d5b5;border-left:4px solid #28a745;
+         border-radius:6px;padding:14px 18px;margin:12px 0;font-size:.9rem}
+    .warn{background:#fff8e6;border:1px solid #e8c87a;border-left:4px solid #C69214;
+          border-radius:6px;padding:14px 18px;margin:12px 0;font-size:.9rem}
+    .tip strong,.warn strong{display:block;margin-bottom:4px}
+
+    .ref-list{list-style:none;padding:0}
+    .ref-list li{padding:10px 0;border-bottom:1px solid #eee;font-size:.88rem;color:#444;display:flex;gap:12px}
+    .ref-list li:last-child{border-bottom:none}
+    .ref-num{min-width:28px;font-weight:700;color:#6b3fa0}
+    .ref-text{flex:1}
+
+    .deliverable-banner{background:#182B49;color:#fff;border-radius:8px;padding:20px 24px;margin:24px 0}
+    .deliverable-banner h3{color:#C69214;margin:0 0 8px}
+    .deliverable-banner p{font-size:.9rem;opacity:.9;margin-bottom:4px}
+    .deliverable-banner .grade{font-size:1.4rem;font-weight:800;color:#C69214}
+
+    .checklist{list-style:none;padding:0}
+    .checklist li{padding:8px 0;border-bottom:1px solid #eee;font-size:.9rem;display:flex;gap:10px}
+    .checklist li::before{content:"☐";font-size:1.1rem;color:#6b3fa0;flex-shrink:0}
+
+    .spec-box{background:#f9f9f9;border:1px solid #ddd;border-radius:6px;padding:20px 24px;margin:16px 0}
+    .spec-grid{display:grid;grid-template-columns:140px 1fr;gap:8px 16px;font-size:.9rem}
+    .spec-label{font-weight:700;color:#555}
+    .spec-value{color:#222}
+
+    .comparison-box{background:#f5f5f5;border:1px solid #ddd;border-radius:6px;padding:20px;margin:16px 0}
+    .comparison-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+    .comparison-row:last-child{margin-bottom:0}
+    .comparison-column{padding:12px;border-radius:4px}
+    .comparison-column.weak{background:#fef3f3;border:1px solid #f5c5c5}
+    .comparison-column.strong{background:#f3fef5;border:1px solid #c5f5d5}
+
+    footer{margin-top:48px;padding-top:20px;border-top:1px solid #eee;font-size:.82rem;color:#999;text-align:center}
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="nav">
+    <a href="index.html">← Course Home</a>
+    <span class="track-pill">🖥 GUI Evaluation Track</span>
+    <a href="gui_track_overview.html">Track Overview →</a>
+  </nav>
+
+  <header>
+    <div class="week-label">Week 7 — Deliverable D5</div>
+    <h1>Full Usability Evaluation Report</h1>
+    <p class="subtitle">Synthesis of five weeks of user research into a coherent argument</p>
+    <div class="meta-row">
+      <span><strong>Due:</strong> Friday, Week 7 (11:59 PM)</span>
+      <span><strong>Weight:</strong> 20% of GUI track</strong></span>
+      <span><strong>Team:</strong> All Pairs (Coordinated)</strong></span>
+      <span><strong>Deliverable Type:</strong> Research Report</strong></span>
+    </div>
+  </header>
+
+  <div class="deliverable-banner">
+    <h3>Intellectual Challenge</h3>
+    <p>Three pairs have worked in parallel over five weeks, each seeing different slices of the system. Pair 1 documented user types and their moments of confusion. Pair 2 evaluated what AI could add. Pair 3 modeled expert judgment. You—all three pairs together—must now construct a unified argument from these fragments. A report that lists findings is a catalog. A report that explains what the findings mean, why they occurred, and what they predict about user behavior in future enrollment cycles is an argument. This deliverable demands the latter.</p>
+  </div>
+
+  <div class="story-box">
+    <p><strong>From Data to Understanding.</strong> Usability testing produces observations: "Six students entered invalid VOI queries." Raw observations are useless without interpretation. Why did they fail? Because they misunderstood VOI as a button to press rather than a comparison framework? Because the interface labels were ambiguous? Because they were rushing? Because they had never seen a Bayesian utility function before? The same observation (six failed queries) generates different redesigns depending on which explanation is true. Your job is to use all four deliverables from the past five weeks to build the most credible explanation you can, and to use that explanation to predict what new students will face in the fall semester.</p>
+  </div>
+
+  <h2>What This Report Is NOT</h2>
+
+  <p>This report is not a recapitulation of earlier deliverables. Do not write a summary of D1, then D2, then D3, then D4. That is four mini-reports stapled together. Instead, use D1–D4 as evidence in support of a central argument about the system's usability.</p>
+
+  <p>Nor is this a list of findings. A finding-based report reads: "Finding 1: Users were confused by VOI. Finding 2: Help text was too technical. Finding 3: Students did not know how to interpret results." These are observations without causal connection. They could all be addressed by separate fixes. But they may actually stem from a single root cause (e.g., the system assumes users already understand Bayesian inference), in which case fixing one would cascade improvement across all three.</p>
+
+  <h2>What This Report Is</h2>
+
+  <p>This report is a forensic analysis. It assembles evidence from five weeks of research to build and defend a coherent account of how the system works, who it serves, who it fails, and why. Rubin and Chisnell (2008) distinguish between summative and formative usability evaluation. Summative evaluation answers "Is this system usable?" (verdict). Formative evaluation answers "Why is this system not as usable as it should be, and what would fix it?" (diagnosis). This report is formative. Your task is diagnosis.</p>
+
+  <p>The structure Dumas and Redish (1999) recommend for usability reports emphasizes narrative coherence: build a story around your findings, not a filing cabinet of them. Tullis and Albert (2013) show that usability reports have measurably greater impact on design decisions when they present findings as causal chains ("because X, users experienced Y, which caused Z") rather than as independent observations.</p>
+
+  <h2>Core Sections</h2>
+
+  <div class="step-list">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Unified Usability Narrative (2–3 pages)</strong>
+        <p>Write a coherent narrative describing: (a) what kind of system this is and what tasks it supports, (b) which user types experience the system as intuitive and why, (c) which user types experience friction and why, (d) what mental models or prior knowledge students bring (and how the system meets or violates those expectations), and (e) what the underlying design tradeoffs are. This is not a list. It is a story with characters (user types), conflict (misalignment between interface design and user models), and explanation.</p>
+
+        <div class="example-block" style="margin-top:12px">
+          <div class="example-header">
+            <span class="example-badge">WEAK vs. STRONG NARRATIVE</span>
+            <span class="example-title">Comparing List-Based vs. Story-Based Reporting</span>
+          </div>
+
+          <h4 style="margin-top:0">Weak (List-Based)</h4>
+          <div class="comparison-box">
+            <div class="comparison-row">
+              <div class="comparison-column weak">
+                <strong style="display:block;margin-bottom:8px">Finding 1: Help System</strong>
+                Six students (40%) did not notice the help tooltip on the VOI input. Three users (20%) noticed but did not find it relevant. Implementation: Increase visibility with larger font and color contrast.
+              </div>
+            </div>
+            <div class="comparison-row">
+              <div class="comparison-column weak">
+                <strong style="display:block;margin-bottom:8px">Finding 2: Query Results</strong>
+                Students misinterpreted results as grades ("80% similarity = I did well"). Expert interpretation: similarity is not an achievement metric. Implementation: Reframe output as "information gained" rather than percentage.
+              </div>
+            </div>
+          </div>
+
+          <p style="margin-top:12px;font-size:.9rem"><em>Problem:</em> These findings are disconnected. Improving help visibility is a separate task from reframing output language. But they may address the same root cause: the system teaches users an incorrect mental model of what "similarity" and "information" mean. Separate fixes would be piecemeal.</p>
+
+          <h4>Strong (Narrative-Based)</h4>
+          <div class="comparison-box">
+            <div class="comparison-column strong">
+              <p><strong>The Mental Model Mismatch.</strong> Students arrive with a grading-based mental model: 80% is a good score, 40% is failure. The system violates this model by using "similarity" and "information gain" as technical quantities rather than achievement scores. Because the system never makes this mismatch explicit, students invent explanations. We observed three outcomes: (1) students ignored help because it used unfamiliar terms (increasing their confidence in the wrong mental model), (2) students reframed results as grades despite the interface language, and (3) advanced students who understood Bayesian inference experienced no friction because their prior mental model aligned with the system's.</p>
+
+              <p style="margin-top:8px;margin-bottom:0"><strong>Design implication:</strong> Surface-level visibility fixes (larger help fonts) will fail because the help text itself teaches the wrong mental model. Effective intervention requires scaffolding: teach students what "information gain" means in plain language <em>before</em> they encounter technical output. One fix (early scaffolding) addresses both the help visibility and the result interpretation problems.</p>
+            </div>
+          </div>
+
+          <p style="margin-top:12px;font-size:.9rem"><em>Improvement:</em> The narrative version identifies a root cause (mental model mismatch) that explains multiple surface-level observations. It predicts that fixing only symptoms (font size, result labels) will not solve the underlying problem. It guides redesign toward intervention at a deeper level (student education, not just interface cosmetics).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Use-Case Matrix: Which Pairs Succeed, Which Fail</strong>
+        <p>Create a matrix with user types as rows and key workflows as columns (e.g., "compare two species," "explore dataset," "generate VOI query," "interpret results"). For each cell, mark whether that user type completes that workflow successfully, with difficulty, or with failure. Include evidence sources from D1 (observed behavior), D3 (expert judgment), and D4 (help system interventions). This makes explicit where the system's design assumptions align with real users and where they break down.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Fall Readiness Assessment (1 page, Critical)</strong>
+        <p>This section is mandatory and high-stakes. Specify: (a) which friction points will new students encounter immediately upon enrollment, (b) which require prior domain knowledge (biology, statistics, Bayesian inference) that students may lack, (c) which are features/content gaps vs. UI/education gaps, and (d) what should be fixed <em>before</em> fall enrollment vs. what can be deferred post-launch. Be specific about user type: "Enrolled students will struggle with VOI unless they have completed STATS 160 or equivalent" is actionable. "Some users find the system hard to use" is not. Grade your readiness on a scale: <em>Ready (deploy now)</em>, <em>Needs Scaffolding (deploy with prerequisite education)</em>, or <em>Not Ready (defer to next cycle)</em>.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>Ranked Priority Recommendations (1–2 pages)</strong>
+        <p>List 5–8 concrete improvements, ranked by expected impact and feasibility. For each, specify: (a) the usability problem it addresses, (b) which user type(s) benefit, (c) the estimated magnitude of improvement ("affects 30% of enrolled students" is better than "significantly improves usability"), (d) implementation complexity, and (e) why this fix targets root causes rather than symptoms. Use Nielsen's (1994) severity ratings (cosmetic, minor, major, catastrophic) if helpful. Feasibility should account for effort and technical debt.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <strong>Before/After Impact Analysis (if D4 improvements were implemented)</strong>
+        <p>For any UI improvements implemented in D4, document whether the UI evaluation agent (Pair 3's work) found fewer problems, new problems, or the same problems after the changes. Did the help system actually reduce VOI query confusion, or did it just make help more visible without addressing root cause? This closes the loop: research → design → evaluation → learning. Include concrete before/after metrics where possible (% of users completing workflows, average task time, error rates).</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <strong>Integration Across Pairs (Transparent Disagreement)</strong>
+        <p>If Pair 1, 2, and 3 reached different conclusions about the same problem, name the disagreement explicitly. Example: "Pair 1 observed that users were confused about the 'information gain' metric. Pair 3's expert panel split: two panelists thought the confusion was fundamental (students lack Bayesian intuition), and one thought it was fixable with better labels. We recommend the scaffolding-first approach (investing in early education) because it aligns with how students learn statistics elsewhere on campus." Homogenizing disagreements into false consensus is worse than acknowledging them.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">7</div>
+      <div class="step-body">
+        <strong>Appendices</strong>
+        <p><strong>Appendix A:</strong> Consolidated list of all usability issues identified across D1–D4, with severity ratings and sources. <strong>Appendix B:</strong> Summary of AI capabilities and limitations (from D2) as they affect help system design. <strong>Appendix C:</strong> Expert panel summary (from D3) — what specific design questions did experts weigh in on? <strong>Appendix D:</strong> Implementation status — which D4 proposals were built, which remain prototypes, which were deferred?</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Writing Standards</h2>
+
+  <p>This report should meet the highest standard of academic and professional writing. Use Krug's (2014) principles: avoid jargon where plain language serves, show evidence not just claims, and never assume readers have seen your earlier deliverables. Each major claim should be traceable to one of D1–D4.</p>
+
+  <p>Employ causal reasoning. Rather than "students were confused," write "students interpreted X as Y because [mechanism]. We observed this in [evidence]. It likely caused Z behavior." This pattern—mechanism, observation, prediction—makes your argument stronger and more actionable.</p>
+
+  <p>Be honest about uncertainty. If the data supports multiple interpretations, say so. Krug emphasizes that usability professionals have an ethical obligation to acknowledge what they don't know, not to overstate confidence. Distinguish between findings from small samples ("One advanced student easily completed the task, suggesting the interface may be intuitive for domain experts") and findings from systematic observation ("7 of 9 novice students failed the first VOI query without guidance").</p>
+
+  <h2>Research Foundation</h2>
+
+  <p>Your report should reflect current best practices in usability evaluation. Dumas and Redish (1999) provide the most widely adopted framework for structuring usability findings—moving from observation to interpretation to recommendation. Rubin and Chisnell (2008) emphasize the importance of sampling and generalization: your sample of 9–12 users can illuminate how the system <em>might</em> fail for a class of 100, but cannot guarantee those failures will occur. Acknowledge this uncertainty.</p>
+
+  <p>Nielsen (1994) developed the concept of usability heuristics—general principles for good design—which can anchor your recommendations. Tullis and Albert (2013) provide metrics for quantifying usability (task success rate, error rate, time on task, user satisfaction). If you have data on these metrics, include them. If not, be honest about what you can and cannot conclude.</p>
+
+  <p>Krug (2014) distills these frameworks into practical advice: keep the report short, use visuals, lead with the worst problems, and structure recommendations around user impact not complexity.</p>
+
+  <h2>Length and Format</h2>
+
+  <div class="spec-box">
+    <div class="spec-grid">
+      <div class="spec-label">Core Report</div>
+      <div class="spec-value">8–12 pages (1.5 spacing, 11pt, standard margins)</div>
+      <div class="spec-label">Narrative Section</div>
+      <div class="spec-value">2–3 pages of unified story (not summarizing prior sections)</div>
+      <div class="spec-label">Use-Case Matrix</div>
+      <div class="spec-value">Visual table (can be embedded or appendix)</div>
+      <div class="spec-label">Fall Readiness</div>
+      <div class="spec-value">1 page, explicit decisions (Ready / Needs Scaffolding / Not Ready)</div>
+      <div class="spec-label">Recommendations</div>
+      <div class="spec-value">1–2 pages, 5–8 items, ranked by impact</div>
+      <div class="spec-label">Appendices</div>
+      <div class="spec-value">Issue log, AI summary, expert panel notes, implementation status</div>
+      <div class="spec-label">Total</div>
+      <div class="spec-value">12–18 pages including appendices</div>
+    </div>
+  </div>
+
+  <h2>Collaboration: How Pairs Work Together</h2>
+
+  <p>All three pairs contribute to this report. Suggested division of labor:</p>
+
+  <ul class="outcome-list">
+    <li>
+      <span class="outcome-num">1</span>
+      <span><strong>Pair 1:</strong> Lead the Unified Narrative section. You documented user types and checkpoint confusions; frame the story around those findings.</span>
+    </li>
+    <li>
+      <span class="outcome-num">2</span>
+      <span><strong>Pair 2:</strong> Lead the Before/After Impact Analysis and Help System sections. You prototyped the AI-assisted help; evaluate whether it worked.</span>
+    </li>
+    <li>
+      <span class="outcome-num">3</span>
+      <span><strong>Pair 3:</strong> Lead the Use-Case Matrix and Ranked Recommendations. Your evaluation work synthesizes all findings into actionable priorities.</span>
+    </li>
+    <li>
+      <span class="outcome-num">4</span>
+      <span><strong>All Pairs:</strong> Co-author Fall Readiness Assessment and Integration across Pairs. These sections require perspective from all three viewpoints.</span>
+    </li>
+  </ul>
+
+  <p>Assign one person as lead editor to ensure coherence and consistent voice across sections. Use shared document tools (Google Docs, Overleaf) so all three pairs can iterate together. Aim for 2–3 rounds of revision minimum.</p>
+
+  <h2>References</h2>
+
+  <ul class="ref-list">
+    <li>
+      <span class="ref-num">[1]</span>
+      <span class="ref-text">Dumas, J. S., & Redish, J. C. (1999). <em>A practical guide to usability testing.</em> Revised edition. Intellect Ltd. — The canonical framework for structuring usability research reports; emphasizes moving from observation to interpretation to actionable recommendation.</span>
+    </li>
+    <li>
+      <span class="ref-num">[2]</span>
+      <span class="ref-text">Krug, S. (2014). <em>Don't make me think, revisited: A common sense approach to web usability.</em> Third edition. New Riders. — Practical principles for making usability reports concise, visual, and action-oriented.</span>
+    </li>
+    <li>
+      <span class="ref-num">[3]</span>
+      <span class="ref-text">Nielsen, J. (1994). Usability inspection methods. In <em>Proceedings of the SIGCHI Conference on Human Factors in Computing Systems</em> (pp. 413–414). ACM. — Foundational work on heuristic evaluation and severity ratings for usability problems.</span>
+    </li>
+    <li>
+      <span class="ref-num">[4]</span>
+      <span class="ref-text">Rubin, J., & Chisnell, D. (2008). <em>Handbook of usability testing: How to plan, design, and conduct effective tests.</em> Second edition. Wiley. — Comprehensive treatment of sampling, generalization, and the relationship between small-sample usability studies and large-population deployment.</span>
+    </li>
+    <li>
+      <span class="ref-num">[5]</span>
+      <span class="ref-text">Tullis, T., & Albert, B. (2013). <em>Measuring the user experience: Collecting, analyzing, and presenting usability metrics.</em> Second edition. Morgan Kaufmann. — Guidance on quantitative usability metrics (success rate, error rate, task time) and how to present them in reports.</span>
+    </li>
+  </ul>
+
+  <h2>Evaluation Criteria</h2>
+
+  <p>This deliverable will be graded on: (1) <strong>Synthesis</strong> — have you integrated D1–D4 into a single coherent argument, or produced four separate summaries? (2) <strong>Narrative Quality</strong> — does the unified narrative explain causation (why users failed) or just list failures? (3) <strong>Actionability</strong> — are your recommendations specific enough that a developer could implement them, or so general as to be useless? (4) <strong>Evidence Tracing</strong> — can you point to which earlier deliverable supports each major claim? (5) <strong>Fall Readiness</strong> — have you made an explicit, defensible decision about whether the system is ready to deploy or needs preparation? and (6) <strong>Professional Presentation</strong> — does the report reflect the writing and thinking standards of academic/professional research?</p>
+
+  <div class="warn">
+    <strong>Common Failure Mode:</strong> Producing a report that is structurally sound but intellectually shallow — all sections present, but the Unified Narrative reads like four mini-summaries rather than a single argument with through-line. Avoid this by writing the narrative first (before you organize findings into sections), then building the report structure around the narrative logic.
+  </div>
+
+  <div class="tip">
+    <strong>Success Indicator:</strong> A strong report will explain not just what students struggled with, but why — and will make specific, evidence-based predictions about what the next cohort of students will encounter. If a reader can take your Fall Readiness section and immediately know whether to deploy, scaffold, or defer, you've succeeded.
+  </div>
+
+  <footer>
+    <p>COGS160: AI & VR — Designing Experiments in Human-Computer Interaction</p>
+    <p>Last updated: 2026-03-28</p>
+  </footer>
+
+</div>
+</body>
+</html>

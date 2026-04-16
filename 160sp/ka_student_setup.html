@@ -155,16 +155,34 @@
       margin-top: auto; font-size: 0.88rem; opacity: 0.85; font-style: italic;
       padding-top: 8px;
     }
+    .card-cta-row {
+      margin-top: auto;
+      display: flex; flex-direction: column; gap: 8px;
+      padding-top: 14px;
+    }
     .track-card .cta-button {
-      margin-top: 16px; padding: 12px 16px;
+      padding: 11px 16px;
       border-radius: 8px;
       font-weight: 700; font-size: 0.88rem;
       text-align: center;
       display: inline-block;
-      transition: opacity 0.15s;
+      transition: transform 0.12s, box-shadow 0.12s, opacity 0.15s;
       text-decoration: none;
     }
-    .track-card:hover .cta-button { opacity: 0.95; }
+    .track-card .cta-primary {
+      background: #1C3D3A; color: #fff;
+      box-shadow: 0 2px 6px rgba(28,61,58,0.18);
+    }
+    .track-card .cta-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 14px rgba(28,61,58,0.26);
+    }
+    .track-card .cta-secondary {
+      background: transparent; color: inherit;
+      border: 1.5px solid currentColor;
+      font-weight: 600; opacity: 0.9;
+    }
+    .track-card .cta-secondary:hover { opacity: 1; }
 
     /* ── Accordion ── */
     .accordion {
@@ -173,18 +191,39 @@
     }
     .accordion-header {
       display: flex; align-items: center; gap: 14px;
-      padding: 18px 20px; background: #fff; cursor: pointer;
-      user-select: none; font-weight: 700; font-size: 0.95rem;
+      padding: 14px 18px; background: #fff; cursor: pointer;
+      user-select: none; font-weight: 700; font-size: 0.92rem;
       color: var(--navy);
+      transition: background 0.15s;
     }
-    .accordion-header:hover { background: var(--light); }
+    .accordion-header:hover { background: #FFF6E6; }
+    .accordion-header:focus-visible {
+      outline: 2px solid var(--amber); outline-offset: 2px;
+    }
     .accordion-body {
-      display: none; padding: 22px 20px; background: var(--light);
+      display: none; padding: 20px 20px; background: var(--light);
       border-top: 1px solid var(--border);
       font-size: 0.92rem; line-height: 1.7;
     }
     .accordion-body.open { display: block; }
-    .accordion-header .chevron { margin-left: auto; font-size: 0.85rem; color: var(--muted); }
+    .accordion-header .chevron {
+      margin-left: auto;
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--amber); color: #fff;
+      font-size: 0.72rem; font-weight: 700;
+      transition: transform 0.18s;
+    }
+    .accordion-header[aria-expanded="true"] .chevron { transform: rotate(180deg); }
+    .accordion-hint {
+      display: inline-block;
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-left: 10px;
+      padding: 2px 8px; border-radius: 10px;
+      background: #FFF3DD; border: 1px solid #F3D9A5;
+    }
 
     /* ── Callout ── */
     .callout {
@@ -291,25 +330,32 @@
 <body>
 
 <nav>
-  <a href="../ka_home.html" class="nav-brand">Knowledge Atlas</a>
+  <a href="../ka_home.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <svg viewBox="0 0 32 32" fill="none" style="width:28px;height:28px;">
+      <circle cx="16" cy="16" r="3.5" fill="#F5A623"/>
+      <circle cx="16" cy="5" r="2.5" fill="#A8C8BF"/>
+      <circle cx="27" cy="22" r="2.5" fill="#A8C8BF"/>
+      <circle cx="5" cy="22" r="2.5" fill="#A8C8BF"/>
+      <line x1="16" y1="7.5" x2="16" y2="12.5" stroke="#F5A623" stroke-width="1.5"/>
+      <line x1="24.8" y1="20.2" x2="19.0" y2="17.3" stroke="#F5A623" stroke-width="1.5"/>
+      <line x1="7.2" y1="20.2" x2="13.0" y2="17.3" stroke="#F5A623" stroke-width="1.5"/>
+    </svg>
+    <div style="display:flex;flex-direction:column;line-height:1.1;">
+      <span style="font-size:0.66rem;font-weight:400;letter-spacing:0.24em;text-transform:uppercase;color:#A8C8BF;">Knowledge</span>
+      <span style="font-size:1.05rem;font-weight:700;color:#fff;">At<span style="color:#F5A623;">las</span> · <span style="font-size:0.85rem;color:#A8C8BF;font-weight:400;">COGS 160</span></span>
+    </div>
+  </a>
   <div class="nav-center">
-    <a id="nav-shell-explore" href="../ka_topics.html" class="nav-link">Explore</a>
-    <a id="nav-shell-evidence" href="../ka_evidence.html" class="nav-link">Evidence</a>
-    <a id="nav-shell-gaps" href="../ka_gaps.html" class="nav-link">Gaps</a>
-    <a id="nav-shell-articles" href="../ka_article_search.html" class="nav-link">Articles</a>
-    <a id="nav-shell-contribute" href="../ka_contribute.html" class="nav-link">Contribute</a>
-    <a id="nav-shell-course" href="ka_student_setup.html" class="nav-link active">Course</a>
+    <a href="ka_schedule.html" class="nav-link">160 Syllabus</a>
+    <a href="week2_exercises.html" class="nav-link">A0</a>
+    <a href="week3_agenda.html" class="nav-link">A1</a>
+    <a href="ka_track1_tagging.html" class="nav-link">Track 1</a>
+    <a href="ka_track2_pipeline.html" class="nav-link">Track 2</a>
+    <a href="ka_track3_vr.html" class="nav-link">Track 3</a>
+    <a href="ka_track4_ux.html" class="nav-link">Track 4</a>
   </div>
   <div class="nav-right">
-    <select class="mode-select" id="setup-mode-select" aria-label="Switch user mode">
-      <option value="student_explorer">Student explorer</option>
-      <option value="researcher">Researcher</option>
-      <option value="contributor">Contributor</option>
-      <option value="instructor">Instructor</option>
-      <option value="practitioner">Practitioner</option>
-      <option value="theory_mechanism_explorer">Theory Explorer</option>
-    </select>
-    <div class="mode-pill" id="setup-mode-pill">STUDENT EXPLORER</div>
+    <a href="ka_student_profile.html" class="nav-link">160 Student Profile</a>
   </div>
 </nav>
 
@@ -322,8 +368,10 @@
   <div class="eyebrow">COGS 160 · Student Setup</div>
   <h1>Get Started with COGS 160</h1>
   <p>
-    Welcome to AI-Directed Knowledge System Building. This page has three steps:
-    read about our methodology, collect research articles, and choose your track.
+    Welcome to AI-Directed Knowledge System Building. Most of this page is <strong>your track
+    picker</strong> — scroll to the four cards below and pick the track you will spend the rest
+    of the quarter on. The two collapsed panels above the picker cover the readings and the
+    first assignment from Week 1; open them only if you still need to review or re-upload.
   </p>
   <div class="track-pills">
     <span class="track-pill t1">Track 1</span>
@@ -331,70 +379,67 @@
     <span class="track-pill t3">Track 3</span>
     <span class="track-pill t4">Track 4</span>
   </div>
-  <div class="mode-summary">
-    <div class="mode-summary-label">Current orientation mode</div>
-    <div class="mode-summary-copy" id="setup-mode-summary">Student explorer mode is active. Change it from the home page, topics page, dashboard, or registration.</div>
-  </div>
 </div>
 
 <div class="outer">
 
-  <!-- ── SECTION 1: Required Reading ── -->
-  <div class="setup-section">
-    <div class="section-header">
-      <span class="section-num">1</span>
-      <div>
-        <h2>Required Reading: How This Course Uses AI</h2>
-        <div class="sh-sub">Before anything else, read the AI Methodology guide</div>
+  <!-- ── SECTION 1: Required Reading (collapsed — done in an earlier week) ── -->
+  <div class="accordion" style="margin-top:28px;">
+    <div class="accordion-header" onclick="toggleAccordion(this)">
+      <span class="section-num" style="background:var(--green);color:#fff;">1 · DONE</span>
+      <div style="flex:1;">
+        <div>Required Reading: How This Course Uses AI <span class="accordion-hint">Click to open</span></div>
+        <div style="font-weight:400;font-size:0.82rem;color:var(--muted);margin-top:2px;">Completed in Week 1 — open only if you need to review</div>
       </div>
+      <span class="chevron">▾</span>
     </div>
-
-    <p style="margin-bottom: 1rem;">This course is different from most classes you've taken. We use AI as a development tool, not as cheating or a shortcut. Before you start on any track, you need to understand how this works and what "AI-directed" actually means.</p>
-
-    <div class="callout callout-info" style="background: #E6F5F0; border-left: 4px solid var(--green); color: #1a4a3f; margin-bottom: 1.5rem;">
-      <strong>This is not optional.</strong> The AI Methodology guide explains the philosophy, the workflow, and your responsibility as a student. Read it first.
-    </div>
-
-    <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
-      <a href="../ka_ai_methodology.html" style="display:inline-block;padding:0.75rem 1.6rem;background:#1C3D3A;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Read the AI Methodology Guide →</a>
-      <label style="display:flex;align-items:center;gap:8px;font-size:0.9rem;color:var(--text);">
-        <input type="checkbox" id="understand-ai" style="width:16px;height:16px;accent-color:var(--green);">
-        I understand that AI is a tool in this course, not a shortcut
-      </label>
+    <div class="accordion-body">
+      <p style="margin-bottom:1rem;">This course is different from most classes you've taken. We use AI as a development tool, not as cheating or a shortcut. Before you start on any track, you need to understand how this works and what "AI-directed" actually means.</p>
+      <div class="callout callout-info" style="background:#E6F5F0;border-left:4px solid var(--green);color:#1a4a3f;margin-bottom:1.2rem;">
+        <strong>This is not optional.</strong> The AI Methodology guide explains the philosophy, the workflow, and your responsibility as a student.
+      </div>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+        <a href="../ka_ai_methodology.html" style="display:inline-block;padding:0.7rem 1.4rem;background:#1C3D3A;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.9rem;">Read the AI Methodology Guide →</a>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.88rem;color:var(--text);">
+          <input type="checkbox" id="understand-ai" style="width:16px;height:16px;accent-color:var(--green);">
+          I understand that AI is a tool in this course, not a shortcut
+        </label>
+      </div>
     </div>
   </div>
 
-  <!-- ── SECTION 2: Your First Assignment ── -->
-  <div class="setup-section">
-    <div class="section-header">
-      <span class="section-num">2</span>
-      <div>
-        <h2>Your First Assignment: Collect Research Articles</h2>
-        <div class="sh-sub">Every student completes this in Week 1</div>
+  <!-- ── SECTION 2: Your First Assignment (collapsed — done in Week 1) ── -->
+  <div class="accordion" style="margin-top:16px;">
+    <div class="accordion-header" onclick="toggleAccordion(this)">
+      <span class="section-num" style="background:var(--green);color:#fff;">2 · DONE</span>
+      <div style="flex:1;">
+        <div>Your First Assignment: Collect Research Articles <span class="accordion-hint">Click to open</span></div>
+        <div style="font-weight:400;font-size:0.82rem;color:var(--muted);margin-top:2px;">Completed in Week 1 — open only to review or re-upload</div>
       </div>
+      <span class="chevron">▾</span>
     </div>
-
-    <div class="callout" style="background:#fff;border:2px solid var(--border);border-left:4px solid var(--amber);padding:1.2rem;border-radius:8px;margin:1rem 0;">
-      <p style="font-size:0.92rem;line-height:1.7;margin:0 0 0.8rem;">Your assignment is to:</p>
-      <ol style="margin:0;padding-left:1.6rem;font-size:0.92rem;line-height:1.7;">
-        <li style="margin-bottom:0.4rem;"><strong>Upload ten APA citations</strong> for EXPERIMENT ARTICLES — either one at a time copied into the text box, or upload a file with all 10.</li>
-        <li style="margin-bottom:0.4rem;"><strong>Upload the PDFs</strong> that correspond to those citations.</li>
-        <li style="margin-bottom:0.8rem;"><strong>We will verify</strong> that they are articles about experiments (not theory or meta-reviews) and that they are on the topic we assigned you.</li>
-      </ol>
-      <p style="font-size:0.92rem;line-height:1.7;margin:0.8rem 0 0;border-top:2px solid var(--border);padding-top:0.8rem;">Then:</p>
-      <ol style="margin:0.8rem 0 0;padding-left:1.6rem;font-size:0.92rem;line-height:1.7;">
-        <li><strong>Create a question</strong> for Google AI Scholar on one of our CNFA Topics and repeat the same APA + PDF upload process — but this time you can upload the 10 articles you think are the best, regardless of article type.</li>
-      </ol>
-    </div>
-
-    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.5rem;">
-      <a href="collect-articles-upload.html" style="display:inline-block;padding:0.75rem 1.6rem;background:#1C3D3A;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Go to Article Upload Page →</a>
-      <a href="ka_google_search_guide.html" style="display:inline-block;padding:0.75rem 1.6rem;background:#f0f7f5;color:#1C3D3A;border:1.5px solid #1C3D3A;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem;transition:all 0.15s;" onmouseover="this.style.background='#e8f3f0'" onmouseout="this.style.background='#f0f7f5'">Google Scholar Search Guide</a>
+    <div class="accordion-body">
+      <div class="callout" style="background:#fff;border:2px solid var(--border);border-left:4px solid var(--amber);padding:1.1rem;border-radius:8px;margin:0 0 1rem;">
+        <p style="font-size:0.92rem;line-height:1.7;margin:0 0 0.7rem;">Your assignment was to:</p>
+        <ol style="margin:0;padding-left:1.6rem;font-size:0.92rem;line-height:1.7;">
+          <li style="margin-bottom:0.4rem;"><strong>Upload ten APA citations</strong> for EXPERIMENT ARTICLES.</li>
+          <li style="margin-bottom:0.4rem;"><strong>Upload the PDFs</strong> that correspond to those citations.</li>
+          <li style="margin-bottom:0.6rem;"><strong>We verified</strong> that they are experiment articles on the topic we assigned you.</li>
+        </ol>
+        <p style="font-size:0.92rem;line-height:1.7;margin:0.7rem 0 0;border-top:2px solid var(--border);padding-top:0.7rem;">Then:</p>
+        <ol style="margin:0.6rem 0 0;padding-left:1.6rem;font-size:0.92rem;line-height:1.7;">
+          <li><strong>Create a question</strong> for Google AI Scholar on one of our CNFA Topics and repeat the APA + PDF upload process — this time uploading the 10 articles you think are best, regardless of article type.</li>
+        </ol>
+      </div>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+        <a href="collect-articles-upload.html" style="display:inline-block;padding:0.7rem 1.4rem;background:#1C3D3A;color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.9rem;">Go to Article Upload Page →</a>
+        <a href="ka_google_search_guide.html" style="display:inline-block;padding:0.7rem 1.4rem;background:#f0f7f5;color:#1C3D3A;border:1.5px solid #1C3D3A;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.9rem;">Google Scholar Search Guide</a>
+      </div>
     </div>
   </div>
 
   <!-- ── SECTION 3: Choose Your Track ── -->
-  <div class="setup-section">
+  <div class="setup-section" id="track-choice">
     <div class="section-header">
       <span class="section-num">3</span>
       <div>
@@ -405,44 +450,52 @@
 
     <div class="track-grid">
       <!-- Track 1 -->
-      <a href="ka_track1_tagging.html" class="track-card t1">
+      <div class="track-card t1">
         <h3>Track ONE: Image Tagging</h3>
         <p>
           Develop annotation tools that label architectural and environmental images with evidence-based tags aligned with K-ATLAS propositions. Learn data verification and pipeline architecture.
         </p>
-        <div class="tagline">View track overview and syllabus</div>
-        <div class="cta-button">View Track 1 →</div>
-      </a>
+        <div class="card-cta-row">
+          <a href="ka_track1_setup.html" class="cta-button cta-primary">Start Track 1 Setup →</a>
+          <a href="ka_track1_tagging.html" class="cta-button cta-secondary">Learn about Track 1</a>
+        </div>
+      </div>
 
       <!-- Track 2 -->
-      <a href="ka_track2_pipeline.html" class="track-card t2">
-        <h3>Track TWO: AI Article Pipeline</h3>
+      <div class="track-card t2">
+        <h3>Track TWO: Article Finder</h3>
         <p>
           Build automated article discovery systems using RAG and AI. Implement relevance scoring, Value of Information prioritization, and quality gates for evidence gathering.
         </p>
-        <div class="tagline">View track overview and syllabus</div>
-        <div class="cta-button">View Track 2 →</div>
-      </a>
+        <div class="card-cta-row">
+          <a href="ka_track2_setup.html" class="cta-button cta-primary">Start Track 2 Setup →</a>
+          <a href="ka_track2_pipeline.html" class="cta-button cta-secondary">Learn about Track 2</a>
+        </div>
+      </div>
 
       <!-- Track 3 -->
-      <a href="ka_track3_vr.html" class="track-card t3">
-        <h3>Track THREE: VR for Experiments</h3>
+      <div class="track-card t3">
+        <h3>Track THREE: AI & VR</h3>
         <p>
           Create a library of configurable VR environments for controlled experiments. Build parametric scenes with integrated eye tracking and behavioral measurement.
         </p>
-        <div class="tagline">View track overview and syllabus</div>
-        <div class="cta-button">View Track 3 →</div>
-      </a>
+        <div class="card-cta-row">
+          <a href="ka_track3_setup.html" class="cta-button cta-primary">Start Track 3 Setup →</a>
+          <a href="ka_track3_vr.html" class="cta-button cta-secondary">Learn about Track 3</a>
+        </div>
+      </div>
 
       <!-- Track 4 -->
-      <a href="ka_track4_ux.html" class="track-card t4">
-        <h3>Track FOUR: Interaction Design & Evaluation</h3>
+      <div class="track-card t4">
+        <h3>Track FOUR: Interaction Design</h3>
         <p>
           Understand how different user types navigate the K-Atlas system. Analyze journeys, improve information architecture, and measure task completion.
         </p>
-        <div class="tagline">View track overview and syllabus</div>
-        <div class="cta-button">View Track 4 →</div>
-      </a>
+        <div class="card-cta-row">
+          <a href="ka_track4_setup.html" class="cta-button cta-primary">Start Track 4 Setup →</a>
+          <a href="ka_track4_ux.html" class="cta-button cta-secondary">Learn about Track 4</a>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -461,14 +514,32 @@
 function toggleAccordion(header) {
   var body = header.nextElementSibling;
   var chevron = header.querySelector('.chevron');
-  if (body.classList.contains('open')) {
-    body.classList.remove('open');
-    chevron.textContent = '▼';
-  } else {
-    body.classList.add('open');
-    chevron.textContent = '▲';
-  }
+  var isOpen = body.classList.toggle('open');
+  chevron.textContent = isOpen ? '▾' : '▾';
+  header.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 }
+
+// Accessibility upgrade: make accordion headers behave like real buttons
+// (role, aria-expanded, keyboard path for Enter/Space). The visual markup
+// remains <div class="accordion-header">, but screen readers and keyboard
+// users now see/use it as a disclosure button.
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.accordion-header').forEach(function(h){
+    if (!h.hasAttribute('role')) h.setAttribute('role', 'button');
+    if (!h.hasAttribute('tabindex')) h.setAttribute('tabindex', '0');
+    var body = h.nextElementSibling;
+    var isOpen = body && body.classList.contains('open');
+    h.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    if (body && body.id === '') body.id = 'acc-body-' + Math.random().toString(36).slice(2,8);
+    if (body) h.setAttribute('aria-controls', body.id);
+    h.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar'){
+        e.preventDefault();
+        toggleAccordion(h);
+      }
+    });
+  });
+});
 
 function switchTab(event, tabId) {
   // Hide all tab content
@@ -487,26 +558,18 @@ function switchTab(event, tabId) {
 
 <script src="../ka_mode_switch.js"></script>
 <script src="../ka_site_shell.js"></script>
-<script src="../ka_data_adapter.js"></script>
-<script src="../ka_live_context.js"></script>
-<script>
+<script src="../ka_data_adapter.js"></script><script>
 window.KA_SHELL.initShell({
   navContainerSelector: '.nav-center',
   modeSelectId: 'setup-mode-select',
   modePillId: 'setup-mode-pill',
-  modeNoteId: 'setup-mode-summary',
   defaultMode: 'student_explorer'
 });
 </script>
 
 <script>
 /* SYSTEM STATE banner suppressed — debug info not for students */
-/* window.KA_LIVE_CONTEXT_CONFIG = {
-  surface: 'auth',
-  title: 'System State',
-  status: 'Local identity prototype',
-  warn: true
-}; */
+/* */
 </script>
 <script>
 window.KA_PAGE_FUNCTION = {

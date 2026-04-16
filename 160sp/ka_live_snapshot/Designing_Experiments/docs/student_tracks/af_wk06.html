@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 6: Recall/Precision Analysis – Article Finder Track | COGS160</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #182B49 0%, #1a4d7a 100%);
+            color: white;
+            padding: 2.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .accent-teal {
+            color: #1a7a5e;
+        }
+
+        nav.top-nav {
+            background: #182B49;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            border-bottom: 3px solid #1a7a5e;
+        }
+
+        nav.top-nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav.top-nav a:hover {
+            color: #1a7a5e;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        section {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        section h2 {
+            color: #182B49;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid #1a7a5e;
+        }
+
+        section h3 {
+            color: #1a7a5e;
+            font-size: 1.3rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        section h4 {
+            color: #2c3e50;
+            font-size: 1.1rem;
+            margin: 1.25rem 0 0.75rem 0;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        .subsection {
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: #f8fbf9;
+            border-left: 4px solid #1a7a5e;
+            border-radius: 4px;
+        }
+
+        .subsection h4 {
+            color: #1a7a5e;
+            margin-top: 0;
+        }
+
+        .task-box {
+            background: linear-gradient(135deg, #fff9e6 0%, #fffaed 100%);
+            border-left: 4px solid #f39c12;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .task-box h4 {
+            color: #d68910;
+            margin-top: 0;
+        }
+
+        .deliverable {
+            background: linear-gradient(135deg, #fff9e6 0%, #fffaed 100%);
+            border-left: 4px solid #f39c12;
+            padding: 1.25rem;
+            margin: 1.25rem 0;
+            border-radius: 4px;
+        }
+
+        .deliverable h4 {
+            color: #d68910;
+            margin-top: 0;
+        }
+
+        .timeline-box {
+            background: linear-gradient(135deg, #e8f8f3 0%, #f0fcf9 100%);
+            border-left: 4px solid #1a7a5e;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .highlight-box {
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .highlight-box strong {
+            color: #7d6608;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        table th {
+            background: linear-gradient(135deg, #e8f8f3 0%, #f0fcf9 100%);
+            color: #182B49;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid #1a7a5e;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        table tr:hover {
+            background: #fafbfc;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+            line-height: 1.4;
+        }
+
+        .component-box {
+            background: #fafbfc;
+            border: 1px solid #e0e6ed;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 1.25rem 0;
+        }
+
+        .component-box h4 {
+            color: #182B49;
+            margin-top: 0;
+        }
+
+        .resource-block {
+            background: linear-gradient(135deg, #e8f8f3 0%, #f0fcf9 100%);
+            border: 1px solid #1a7a5e;
+            border-radius: 6px;
+            padding: 1.25rem;
+            margin: 1rem 0;
+        }
+
+        .resource-block h4 {
+            color: #1a7a5e;
+            margin-top: 0;
+        }
+
+        .resource-block a {
+            color: #1a7a5e;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .resource-block a:hover {
+            color: #0d4738;
+        }
+
+        .faq-section {
+            margin: 1.5rem 0;
+        }
+
+        .faq-item {
+            margin-bottom: 1.25rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            color: #182B49;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .faq-question:before {
+            content: "Q";
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: #1a7a5e;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .faq-answer {
+            color: #2c3e50;
+            padding-left: 2.5rem;
+            line-height: 1.7;
+        }
+
+        .grading-criteria {
+            background: linear-gradient(135deg, #e8f8f3 0%, #f0fcf9 100%);
+            border-left: 4px solid #1a7a5e;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .grading-criteria h4 {
+            color: #1a7a5e;
+            margin-top: 0;
+        }
+
+        .grading-criteria ul {
+            list-style: disc;
+            padding-left: 2rem;
+        }
+
+        footer {
+            background: #182B49;
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .reference-list {
+            background: #f8fbf9;
+            padding: 1.5rem;
+            border-radius: 4px;
+            border-left: 4px solid #1a7a5e;
+            margin: 1.5rem 0;
+        }
+
+        .reference-list h4 {
+            color: #1a7a5e;
+            margin-top: 0;
+        }
+
+        .reference-list ol {
+            list-style: decimal;
+            padding-left: 2rem;
+        }
+
+        .reference-list li {
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            nav.top-nav {
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+
+            table th, table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Week 6: A Platform That Misses <span class="accent-teal">Half the Evidence</span></h1>
+        <p>Isn't Neutral — It's Wrong</p>
+    </div>
+
+    <nav class="top-nav">
+        <a href="af_track_planning.html">← AF Track Overview</a>
+        <a href="index.html">All Tracks</a>
+        <a href="#tasks">Tasks</a>
+        <a href="#grading">Grading</a>
+        <a href="#faq">FAQ</a>
+    </nav>
+
+    <div class="container">
+        <!-- Section 1: Context & Complication -->
+        <section id="context">
+            <h2>The Complication: Invisible Gaps in Evidence</h2>
+
+            <p>You search for papers on "attention restoration" and find 47 results. You think you have the evidence. But an expert researcher, conducting the same search manually on Google Scholar and citation networks, finds 73 papers—26 of which the platform missed entirely. Those 26 papers include critical boundary conditions (restoration works better in certain landscapes), mechanism studies (why attention recovers), and contradictions (environments that fail to restore).</p>
+
+            <p>ATLAS doesn't know those papers exist. When ATLAS estimates the strength of evidence for "exposure to natural light improves office worker attention," it calculates from the 47 papers you found. If the 26 missing papers show weaker or contradictory results, ATLAS arrives at an inflated confidence estimate. The platform did not change the evidence. The platform determined what counts as evidence.</p>
+
+            <p>This week moves you from qualitative observation (Week 5: "Scite is harder to use than Consensus") to quantitative measurement. You will build a gold-standard reference set of papers that a domain expert agrees are relevant to three core questions. Then you will measure how many of those gold papers each platform actually finds. This number—recall—is the answer to a simple question: <strong>Does this platform tell us when evidence is missing?</strong></p>
+
+            <div class="timeline-box">
+                <h4>What You Will Know By Friday</h4>
+                <p>Which platform leaves the most evidence undiscovered. Which gaps are systematic (certain platforms always miss design studies, for example) versus random (only one platform missed a particular paper). Whether a VOI (Value of Information gap) is genuinely hard to answer with the literature, or whether your chosen platforms simply don't index the right sources. How confident ATLAS can be when it reports "the evidence for this belief is weak."</p>
+            </div>
+        </section>
+
+        <!-- Section 2: Learning Outcomes -->
+        <section id="outcomes">
+            <h2>Learning Outcomes</h2>
+
+            <p>By completing this week's work, you will:</p>
+
+            <ul>
+                <li><strong>Build a reproducible gold standard:</strong> Instead of trusting one platform's results, you will construct a reference set using human expert judgment (Google Scholar + citation chains + ATLAS knowledge base). This gold set becomes the ground truth.</li>
+                <li><strong>Distinguish recall from precision:</strong> Precision asks: "Of the papers this platform found, how many are actually relevant?" Recall asks: "Of all relevant papers in the literature, how many did this platform find?" Both matter; they reveal different platform weaknesses.</li>
+                <li><strong>Measure systematic gaps:</strong> You will discover not just "Platform A missed papers" but "Platform A consistently misses papers older than 2010" or "Platform A never finds gray literature." These patterns inform design.</li>
+                <li><strong>Recognize the ATLAS integration challenge:</strong> ATLAS uses <code>GapDetector</code> to find beliefs with insufficient evidence. But "insufficient" is meaningless if the platform searching for evidence is fundamentally incomplete. Your measurements quantify that incompleteness.</li>
+                <li><strong>Connect evaluation to causation:</strong> High recall ≠ finding the truth. But low recall guarantees you will miss relevant perspectives, alternative explanations, and boundary conditions. Your numbers make this concrete.</li>
+            </ul>
+        </section>
+
+        <!-- Section 3: Conceptual Framework -->
+        <section id="framework">
+            <h2>Recall & Precision: Conceptual Framework</h2>
+
+            <h3>Recall: What Percentage of Known Evidence Does the Platform Find?</h3>
+
+            <p><strong>Recall = (Papers found by platform ∩ Papers in gold set) / (Total papers in gold set)</strong></p>
+
+            <p>Example: Your gold set for "natural light exposure → attention" contains 28 papers. Semantic Scholar finds 22 of them in its top 50 results. Recall = 22/28 = 79%.</p>
+
+            <ul>
+                <li><strong>High recall (>80%):</strong> The platform is finding most of the evidence you know exists. You can trust it to surface the landscape.</li>
+                <li><strong>Medium recall (50–80%):</strong> The platform is missing meaningful portions of the evidence. Systematic gaps likely exist.</li>
+                <li><strong>Low recall (<50%):</strong> The platform is unreliable for comprehensive literature synthesis. You cannot confidently report "the evidence shows X" based on its results alone.</li>
+            </ul>
+
+            <h3>Precision: Of What This Platform Found, How Much Is Actually Relevant?</h3>
+
+            <p><strong>Precision = (Relevant papers in top 20 results) / 20</strong></p>
+
+            <p>Example: Consensus returns 20 papers ranked by synthesis confidence. You and a second rater judge 18 as genuinely relevant to the question. Precision = 18/20 = 90%.</p>
+
+            <ul>
+                <li><strong>High precision (>80%):</strong> Most of the platform's results are relevant. Users will waste little time sorting wheat from chaff.</li>
+                <li><strong>Medium precision (50–80%):</strong> The platform returns noise alongside signal. Users must invest effort in filtering.</li>
+                <li><strong>Low precision (<50%):</strong> The platform is unreliable. Users will abandon it quickly.</li>
+            </ul>
+
+            <h3>The Trade-Off: Why Both Matter</h3>
+
+            <p>A platform could have 95% precision (all results are relevant) but only 40% recall (it's missing most of the literature). That's useless for ATLAS. Conversely, high recall with low precision wastes researcher time. Your job: measure both and surface which platforms are worth ATLAS integration and which have fundamental limitations.</p>
+        </section>
+
+        <!-- Section 4: Tasks -->
+        <section id="tasks">
+            <h2>Week 6 Task Sequence (5 Days)</h2>
+
+            <h3>Monday & Tuesday: Build the Gold Set</h3>
+
+            <div class="task-box">
+                <h4>Task 1: Define Your Three Test VOIs</h4>
+
+                <p>From Week 3's deliverable, you identified evidence gaps in ATLAS. Pick three of those gaps as your test cases. They should span different complexity levels:</p>
+
+                <ul>
+                    <li><strong>Simple VOI (clear keywords):</strong> Example: "biophilic design reduces stress in office workers" → keywords: <code>biophilic design stress office</code></li>
+                    <li><strong>Moderate VOI (compound concept):</strong> Example: "exposure to natural light improves cognitive function in older adults with age-related macular degeneration" → requires literature on the condition, the intervention, and the outcome</li>
+                    <li><strong>Complex VOI (methodological nuance):</strong> Example: "meta-analytic evidence on effect-size heterogeneity in biophilic design studies before/after 2015" → requires you to search not just for papers, but for papers that review other papers</li>
+                </ul>
+
+                <p>Document your three VOIs in a spreadsheet with columns: VOI Statement, Domain (neuroarchitecture/psychology/design), Keywords (3–5 most important), Expected Literature Scope (estimate of how many papers exist).</p>
+            </div>
+
+            <div class="task-box">
+                <h4>Task 2: Construct the Gold Set for Each VOI (18–30 papers per VOI)</h4>
+
+                <p>A gold set is a reference collection of papers that domain experts agree are relevant to a research question. It is not "every paper ever published on the topic." It is "papers a researcher would include in a literature review if time were unlimited." Use three sources in tandem:</p>
+
+                <ul>
+                    <li><strong>Source A: Manual Google Scholar search (6–8 papers).</strong> For each VOI, conduct a careful Google Scholar search (scholar.google.com). Read the first 3–4 pages of results (typically 30–40 papers). Note which ones are genuinely relevant vs. keyword-matching noise. Aim for 6–8 high-quality papers.</li>
+
+                    <li><strong>Source B: Citation chains (8–12 papers).</strong> Pick 3 seed papers from Source A (ideally one recent review, one foundational theory paper, one recent empirical study). In Semantic Scholar or Google Scholar, examine the "Cited by" section. Which papers cite your seed AND are citing them for results relevant to your VOI? Extract 8–12 papers this way. This finds papers you might miss with keywords alone.</li>
+
+                    <li><strong>Source C: ATLAS knowledge base (5–8 papers).</strong> Look up the VOI in Article_Eater's <code>QueryEngine</code> or run a test search using the system's integrated search (Article_Eater_PostQuinean_v1_recovery/src/services/integrated_query_service.py → IntegratedQueryService). This reveals what ATLAS already knows about your VOI. Extract 5–8 candidate papers from ATLAS results, verify they're relevant via abstract, and add to the gold set.</li>
+                </ul>
+
+                <p><strong>Gold Set Assembly Protocol:</strong> Combine results from A + B + C (likely 19–28 papers total). Remove duplicates (same paper from multiple sources). For each unique paper, create one row in your gold set spreadsheet: DOI, Title, Authors, Year, Source (Google Scholar / Citation chain / ATLAS), Relevance Note (why this paper belongs in a literature review of the VOI).</p>
+
+                <p><strong>Quality Check:</strong> Before locking in your gold set, have one team member read the title + abstract of each paper and flag any that don't belong. Discuss disagreements. Aim for consensus: you should feel confident explaining to an expert why each paper is in the set.</p>
+            </div>
+
+            <h3>Wednesday: Query Optimization & Platform Search</h3>
+
+            <div class="task-box">
+                <h4>Task 3: Design Platform-Specific Queries</h4>
+
+                <p>Different platforms have different query languages and search strategies. Before you measure recall, optimize your search for each platform. Use the <code>QueryGenerator</code> class in Article_Eater_PostQuinean_v1_recovery/src/services/voi_search.py (lines ~722–920) as a reference for multi-field vocabulary expansion.</p>
+
+                <p>For each VOI and each platform, construct a query string:</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Platform</th>
+                            <th>Query Type</th>
+                            <th>Example for "Natural Light ∩ Attention"</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Consensus</strong></td>
+                            <td>Keyword + filters</td>
+                            <td><code>"natural light" OR daylight attention cognition</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Elicit</strong></td>
+                            <td>Structured question</td>
+                            <td><code>Does exposure to natural light improve attention or cognitive function?</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Scite</strong></td>
+                            <td>Keywords (no boolean)</td>
+                            <td><code>natural light attention</code> (search retrieves top results, no filtering)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Semantic Scholar</strong></td>
+                            <td>Fielded search or keywords</td>
+                            <td><code>title:"natural light" AND abstract:attention</code> or simple keywords</td>
+                        </tr>
+                        <tr>
+                            <td><strong>OpenAlex</strong></td>
+                            <td>API query with filters</td>
+                            <td><code>search="natural light attention" AND type=journal-article</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p><strong>Optimization strategy:</strong> For each platform, start with your core keywords. Run a test search. If you get >100 results, add specificity (e.g., include outcome measures). If you get <5 results, broaden (e.g., drop methodology qualifiers). Document the final query you use for measurement—this is essential for reproducibility.</p>
+            </div>
+
+            <div class="task-box">
+                <h4>Task 4: Execute Searches & Record Top 50 Results</h4>
+
+                <p>For each VOI × platform combination (3 VOIs × 5 platforms = 15 searches):</p>
+
+                <ol>
+                    <li>Execute the optimized query on the platform</li>
+                    <li>Export or record the top 50 results (or all results if <50)</li>
+                    <li>For each result, capture: Rank (1–50), Title, DOI (if available), Year, Platform</li>
+                    <li>Save to a CSV: <code>recall_data_voi1_platform1.csv</code> etc.</li>
+                </ol>
+
+                <p><strong>Platform-specific notes:</strong></p>
+                <ul>
+                    <li><strong>Consensus, Elicit, Scite, Semantic Scholar:</strong> Use the browser interface. Export results if available (CSV, BibTeX); otherwise, manually copy titles + DOIs from the top 50.</li>
+                    <li><strong>OpenAlex:</strong> Use the free API (openalex.org/works) with your query. Write a small Python script to fetch and export top 50 results as CSV.</li>
+                </ul>
+            </div>
+
+            <h3>Thursday & Friday: Measure Recall & Precision</h3>
+
+            <div class="task-box">
+                <h4>Task 5: Calculate Recall@50 for Each Platform</h4>
+
+                <p>For each VOI × platform combination:</p>
+
+                <ol>
+                    <li>Load your gold set (all papers)</li>
+                    <li>Load the platform's top 50 results (CSV from Task 4)</li>
+                    <li>For each gold paper, check: Does it appear in the platform's top 50? (Match by DOI or title if DOI is unavailable.)</li>
+                    <li>Count matches. Recall = (Matches) / (Gold set size)</li>
+                    <li>Record in your Recall/Precision Matrix: Platform X, VOI Y, Recall = Z%</li>
+                </ol>
+
+                <p><strong>Example calculation:</strong> VOI = "natural light → attention." Gold set = 24 papers. Semantic Scholar top 50 contains 19 of those 24 papers. Recall@50 = 19/24 = 79.2%.</p>
+            </div>
+
+            <div class="task-box">
+                <h4>Task 6: Measure Precision@20 for Each Platform</h4>
+
+                <p>For each VOI × platform combination:</p>
+
+                <ol>
+                    <li>Load the platform's top 20 results</li>
+                    <li><strong>Two-rater relevance judgment:</strong> Have two team members (independently) read each paper's title + abstract and judge: Is this paper relevant to the VOI (Yes/No/Unclear)?</li>
+                    <li>For unclear cases, discuss until agreement. (Disagreements are data: document them.)</li>
+                    <li>Count relevant papers in top 20. Precision = (Relevant papers) / 20</li>
+                    <li>Record inter-rater agreement (Cohen's kappa or simple percent agreement)</li>
+                    <li>Record in your Recall/Precision Matrix: Platform X, VOI Y, Precision = Z%</li>
+                </ol>
+
+                <p><strong>Example calculation:</strong> VOI = "biophilic design → stress reduction." Consensus top 20: Rater 1 judges 17 relevant; Rater 2 judges 16 relevant. After discussion, they agree: 17 papers are relevant. Precision@20 = 17/20 = 85%.</p>
+            </div>
+
+            <div class="task-box">
+                <h4>Task 7: Identify Systematic Gaps</h4>
+
+                <p>After you've filled in your Recall/Precision Matrix (5 platforms × 3 VOIs = 15 cells), look for patterns:</p>
+
+                <ul>
+                    <li><strong>Platform gaps:</strong> Does one platform consistently show lower recall (e.g., OpenAlex recall always <60%)? This suggests indexing or ranking problems specific to that platform.</li>
+                    <li><strong>VOI gaps:</strong> Do all platforms struggle with one VOI (e.g., recall <50% across all platforms)? This suggests the literature on that topic is scattered across sources the platforms don't index well (e.g., design journals, gray literature, interdisciplinary venues).</li>
+                    <li><strong>Precision/recall trade-offs:</strong> Does the platform with the highest precision have the lowest recall? (Common pattern: platforms rank by quality/citation count, missing newer research.)</li>
+                </ul>
+
+                <p>Document 3–5 key gaps in a brief narrative. Example: "All five platforms show <50% recall for 'computational modeling + restoration' (VOI 2), suggesting design and computer science literature is not well-represented in academic search engines."</p>
+            </div>
+        </section>
+
+        <!-- Section 5: Deliverable Specification -->
+        <section id="deliverable">
+            <h2>Deliverable: D3 – Recall/Precision Analysis Report</h2>
+
+            <div class="deliverable">
+                <h4>What You Submit (Due: Friday EOD)</h4>
+                <p><strong>Part A: Recall/Precision Matrix (Excel or CSV)</strong></p>
+                <p>A 5 × 3 table (5 platforms, 3 VOIs) with columns: VOI, Platform, Gold Set Size, Recall@50, Precision@20, Inter-Rater Agreement (%).</p>
+
+                <p><strong>Part B: Report (5–7 pages, single-spaced, 11pt)</strong></p>
+                <p>Structure:</p>
+                <ul>
+                    <li><strong>Methods (1.5 pages):</strong>
+                        <ul>
+                            <li>Gold set construction: How did you select your three VOIs? What sources did you use (Google Scholar, citation chains, ATLAS)? How did you ensure gold set quality?</li>
+                            <li>Query design: What was your query for each platform? How did you adapt for platform-specific query languages?</li>
+                            <li>Measurement: How did you match papers (DOI? title similarity?)? How did you resolve disagreements between raters on precision judgments?</li>
+                        </ul>
+                    </li>
+                    <li><strong>Results (1.5–2 pages):</strong>
+                        <ul>
+                            <li>Present the matrix with visual formatting (highlight highest/lowest recall/precision).</li>
+                            <li>For each VOI: one paragraph summarizing recall across platforms (which platform was best? why might that be?)</li>
+                            <li>Overall precision findings: which platforms returned cleanest top 20 results?</li>
+                        </ul>
+                    </li>
+                    <li><strong>Discussion (1.5–2 pages):</strong>
+                        <ul>
+                            <li>Systematic gaps: What literature is consistently missed? (Old papers? Design literature? Regional studies?)</li>
+                            <li>Platform design implications: Why might Semantic Scholar show 79% recall on VOI 1 but 43% on VOI 3? What does this suggest about its indexing strategy?</li>
+                            <li>ATLAS integration implications: If ATLAS uses Platform X to search for evidence on a belief, what's the maximum confidence it should report? (Low recall → high uncertainty.)</li>
+                            <li>Trade-offs: Is there a platform with both high recall AND high precision? Or is this impossible given the platform designs?</li>
+                        </ul>
+                    </li>
+                    <li><strong>Implications for ATLAS (0.5–1 page):</strong>
+                        <ul>
+                            <li>Recommend which platform(s) ATLAS should integrate based on your data.</li>
+                            <li>Identify VOIs that are fundamentally hard to answer with current platforms (suggest why and what sources might help).</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 6: Codebase Connection -->
+        <section id="codebase">
+            <h2>Codebase Connections: What You're Measuring</h2>
+
+            <div class="component-box">
+                <h4>GapDetector Class (Article_Eater_PostQuinean_v1_recovery/src/services/voi_search.py)</h4>
+                <p>This class identifies beliefs in the ATLAS knowledge base that have insufficient evidence. It returns a list of VOIs (e.g., "executive function recovery in natural light exposure"). Your D3 work measures whether the search systems ATLAS uses to fill those gaps are actually comprehensive. Low recall on a VOI means GapDetector correctly identified a gap—but the search system might not find enough evidence to properly evaluate it.</p>
+            </div>
+
+            <div class="component-box">
+                <h4>QueryGenerator Class (Article_Eater_PostQuinean_v1_recovery/src/services/voi_search.py, lines ~722–920)</h4>
+                <p>This class takes a gap description and generates search queries for different platforms. It implements cross-field vocabulary expansion (synonyms, related terms). Your Task 3 (optimizing queries per platform) is doing manually what QueryGenerator aims to automate. Compare your queries to the patterns in QueryGenerator: Does it expand "natural light" to include "daylight," "sunlight," "window exposure"? Your measurement reveals whether that expansion is sufficient.</p>
+            </div>
+
+            <div class="component-box">
+                <h4>VOISearchCoordinator (Article_Eater_PostQuinean_v1_recovery/src/services/voi_search.py)</h4>
+                <p>This class orchestrates end-to-end evidence search for a gap: detect the gap (GapDetector) → generate queries (QueryGenerator) → execute searches (IntegratedQueryService) → evaluate results (not yet built). Your recall/precision measurements will inform what the "evaluate results" step should do. If recall is low, should the system flag this to the user? Alert that more searching is needed?</p>
+            </div>
+
+            <div class="component-box">
+                <h4>IntegratedQueryService (Article_Eater_PostQuinean_v1_recovery/src/services/integrated_query_service.py)</h4>
+                <p>This class integrates multiple search platforms (Consensus, Elicit, Semantic Scholar, OpenAlex, Scite). It dispatches a query to all five platforms and aggregates results. Your recall measurements directly assess how comprehensive the aggregate result set is. D3 answers: "If we ask IntegratedQueryService to find evidence for a belief, will it find it?"</p>
+            </div>
+
+            <div class="component-box">
+                <h4>AutomatedQueueSearcher (Article_Eater_PostQuinean_v1_recovery/src/queue/automated_searcher.py)</h4>
+                <p>This class runs scheduled searches on the queue of gaps. Each search produces an <code>AutomatedTargetRun</code> output (papers found, relevance scores, platform provenance). Your precision measurements test whether those papers are actually relevant. Your recall measurements test whether the system is missing papers it should find.</p>
+            </div>
+        </section>
+
+        <!-- Section 7: Grading Rubric -->
+        <section id="grading">
+            <h2>Grading Rubric: D3 (15% of course grade)</h2>
+
+            <div class="grading-criteria">
+                <h4>Methodological Rigor (40% of D3 grade)</h4>
+                <ul>
+                    <li><strong>Gold set quality (15%):</strong> Gold set is drawn from credible sources (peer-reviewed literature, Google Scholar, citation chains, ATLAS knowledge base). Set size is appropriate (18–30 papers per VOI). Each paper has documented relevance to the VOI. Team can explain why each paper belongs.</li>
+                    <li><strong>Query optimization (10%):</strong> Queries are platform-specific and intentional (not copy-paste across platforms). Optimization strategy is documented (e.g., "Started with 3 keywords, got 2000 results, added study design filter to get 87 results"). Final queries are reproducible.</li>
+                    <li><strong>Measurement protocol (15%):</strong> Recall and precision are calculated correctly. Matching papers to gold set is reproducible (clear matching rules: DOI match, title similarity threshold if DOI unavailable). Inter-rater agreement on precision judgments is documented (Cohen's kappa or agreement %).</li>
+                </ul>
+            </div>
+
+            <div class="grading-criteria">
+                <h4>Results Quality (30% of D3 grade)</h4>
+                <ul>
+                    <li><strong>Matrix accuracy (15%):</strong> Recall/Precision Matrix is complete (all 15 cells filled). Values are calculated correctly. Matrix is clearly formatted (easy to compare platforms and VOIs).</li>
+                    <li><strong>Analysis of findings (15%):</strong> Report identifies meaningful patterns: Which platform excels? Which VOI is hardest? Where do systematic gaps emerge? Analysis is grounded in data (e.g., "Platform A's average recall is 73%, suggesting it misses niche literature" rather than "Platform A seems good").</li>
+                </ul>
+            </div>
+
+            <div class="grading-criteria">
+                <h4>Discussion & Implications (30% of D3 grade)</h4>
+                <ul>
+                    <li><strong>Understanding platform limitations (10%):</strong> Report articulates WHY gaps exist. Example: "Semantic Scholar shows 43% recall on VOI 3 (computational + restoration) because it indexes primarily peer-reviewed journals and misses design conference proceedings where this interdisciplinary work appears." Not just "it's low."</li>
+                    <li><strong>ATLAS integration implications (10%):</strong> Report recommends specific actions for ATLAS based on data. Examples: "Use Platform B for architecture/design VOIs (higher recall), Platform C for neuroscience VOIs (higher precision)." Or: "VOI 3 cannot be reliably answered with current platforms; recommend incorporating gray literature sources (dissertations, technical reports)."</li>
+                    <li><strong>Clarity & evidence-based reasoning (10%):</strong> Discussion is grounded in the data. Claims are supported by recall/precision numbers or specific platform behaviors. No unsupported assertions.</li>
+                </ul>
+            </div>
+
+            <div class="grading-criteria">
+                <h4>Presentation (No separate grade—quality affects overall impression)</h4>
+                <ul>
+                    <li>Report is well-organized (Methods → Results → Discussion flow is clear)</li>
+                    <li>Writing is clear and avoids jargon when precision allows</li>
+                    <li>Figures/tables are labeled and referenced in text</li>
+                    <li>References are complete (you should cite Manning et al. 2008 on evaluation, Voorhees 1994 on TREC methodology, etc.)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 8: FAQ -->
+        <section id="faq">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="faq-section">
+                <div class="faq-item">
+                    <div class="faq-question">How do I match a gold-set paper to a platform result if the DOI is missing?</div>
+                    <div class="faq-answer">Use title similarity. If 80% or more of the title words match (ignoring articles and prepositions), treat it as a match. For edge cases, check the author names and year. If you're uncertain, it's safer to mark it as no match (conservative estimate of recall). Document your matching threshold in the Methods section so results are reproducible.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What if a platform returns fewer than 50 results?</div>
+                    <div class="faq-answer">That's fine—and informative. Record all results the platform returns. In the recall calculation, you're measuring "how many gold papers appear in the platform's full result set?" If a platform returns only 12 results total, and 10 are in your gold set, recall is 10/28 = 36%—which suggests the platform found some relevant work but is sparse on this VOI.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Should I build one gold set for all three VOIs, or three separate gold sets?</div>
+                    <div class="faq-answer">Three separate gold sets, one per VOI. Each VOI is a distinct research question. Papers relevant to "natural light → stress reduction" may not be relevant to "biophilic design → cognitive function in older adults." Separate gold sets let you measure recall/precision for each question independently—which is what you need for ATLAS integration.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">I found disagreement between my two raters on precision judgments. How do I resolve it?</div>
+                    <div class="faq-answer">Discuss the paper. Read the abstract together. Ask: Is this paper about the VOI, or does it only tangentially mention the keywords? If you still disagree, mark it as "unclear" and discuss with the course instructor before the deadline. For the precision calculation, use the agreement you reached after discussion (not your independent judgments). Document the discussion in your Methods section—disagreements are valuable data about the VOI's definition.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What if one of my platforms is down or has an API outage on the day I'm measuring?</div>
+                    <div class="faq-answer">Reach out to the course instructor immediately. We can extend your deadline for that platform or accept data from a nearby date. Do not skip the platform—it's essential to get complete 5-platform coverage.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 9: References -->
+        <section id="references">
+            <div class="reference-list">
+                <h4>References</h4>
+                <ol>
+                    <li>Manning, C. D., Raghavan, P., & Schütze, H. (2008). <em>Introduction to information retrieval.</em> Cambridge University Press. Chapter 8: Evaluation in information retrieval.</li>
+                    <li>Voorhees, E. M. (1994). TREC: Lessons learned in building a text retrieval evaluation benchmark. <em>Journal of the American Society for Information Science, 46</em>(2), 80–93.</li>
+                    <li>Saracevic, T. (1995). Evaluation of evaluation of information retrieval systems. <em>Proceedings of the 18th Annual International ACM SIGIR Conference on Research and Development in Information Retrieval</em> (pp. 138–146).</li>
+                    <li>Harman, D. K. (2011). The TREC test collections. <em>SIGIR Forum, 45</em>(1), 5–20.</li>
+                    <li>Bates, M. J. (1989). The design of browsing and berrypicking techniques for the online search interface. <em>Online Information Review, 13</em>(5), 407–424.</li>
+                </ol>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>COGS160: AI & VR at UCSD | Article Finder Track | Week 6 (D3)</p>
+        <p>Last updated: March 2026 | David Kirsh, Cognitive Science Department</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COGS160: AI & VR Student Tracks | UC San Diego</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #002d5b 0%, #00508f 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            margin-bottom: 0.25rem;
+        }
+
+        header .term {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .intro-section {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            border-left: 4px solid #002d5b;
+        }
+
+        .intro-section h2 {
+            color: #002d5b;
+            margin-bottom: 1rem;
+            font-size: 1.6rem;
+        }
+
+        .intro-section p {
+            margin-bottom: 0.8rem;
+            color: #555;
+        }
+
+        .timeline-overview {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+
+        .timeline-overview h3 {
+            color: #002d5b;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .timeline-bar {
+            display: flex;
+            gap: 2px;
+            height: 40px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .timeline-segment {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: opacity 0.3s;
+        }
+
+        .timeline-segment:hover {
+            opacity: 0.85;
+        }
+
+        .timeline-segment.shared {
+            background-color: #002d5b;
+        }
+
+        .timeline-segment.active {
+            background-color: #00a699;
+        }
+
+        .timeline-segment.future {
+            background-color: #d0d0d0;
+        }
+        .timeline-segment.phase3 {
+            background-color: #166534;
+            color: #fff;
+        }
+        .timeline-segment.phase3:hover {
+            background-color: #0e4a25;
+        }
+
+        .timeline-legend {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+
+        .tracks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .track-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .track-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .track-header {
+            padding: 1.5rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .track-header.track1 {
+            background-color: #d4620f;
+        }
+
+        .track-header.track2 {
+            background-color: #1a7a5e;
+        }
+
+        .track-header.track3 {
+            background-color: #b8860b;
+        }
+
+        .track-header.track4 {
+            background-color: #6b3fa0;
+        }
+
+        .track-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            opacity: 0.3;
+        }
+
+        .track-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .track-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .track-description {
+            margin-bottom: 1.5rem;
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .track-deliverables {
+            margin-bottom: 1.5rem;
+        }
+
+        .track-deliverables h4 {
+            color: #333;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .deliverables-list {
+            list-style: none;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .deliverables-list li {
+            padding: 0.35rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .deliverables-list li:last-child {
+            border-bottom: none;
+        }
+
+        .track-link {
+            margin-top: auto;
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+            text-align: center;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .track-card:hover .track-link {
+            background-color: #e8e8e8;
+            border-color: #999;
+        }
+
+        .shared-weeks-box {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e6f7f5 100%);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+            border-left: 4px solid #002d5b;
+        }
+
+        .shared-weeks-box h3 {
+            color: #002d5b;
+            margin-bottom: 0.75rem;
+            font-size: 1.2rem;
+        }
+
+        .shared-weeks-box p {
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+
+        .quick-links {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+
+        .quick-links h3 {
+            color: #002d5b;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .quick-link {
+            padding: 1rem;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            text-decoration: none;
+            color: #002d5b;
+            font-weight: 500;
+            transition: background-color 0.3s, border-color 0.3s;
+            text-align: center;
+        }
+
+        .quick-link:hover {
+            background-color: #e8f0f7;
+            border-color: #002d5b;
+        }
+
+        footer {
+            margin-top: 4rem;
+            padding: 2rem;
+            text-align: center;
+            color: #999;
+            font-size: 0.85rem;
+            border-top: 1px solid #ddd;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .tracks-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-bar {
+                height: 30px;
+            }
+
+            .timeline-segment {
+                font-size: 0.65rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>COGS160: AI & VR</h1>
+        <div class="subtitle">Student Tracks and Deliverables</div>
+        <div class="term">Spring 2026 | Professor David Kirsh | UC San Diego</div>
+    </header>
+
+    <div class="container">
+        <div class="intro-section">
+            <h2>About the Tracks</h2>
+            <p>COGS160: AI & VR is organized around four complementary research tracks that together build and validate the ATLAS system — a web-based platform for organizing and analyzing evidence from environmental psychology. Each track involves 3 pairs of students (6 students per track) working on distinct but interconnected challenges over Weeks 3–7.</p>
+            <p>The tracks are: <strong>Image Tagger</strong> (scientific tagging of architectural interiors), <strong>Article Finder</strong> (evaluating the evidence pipeline), <strong>VR Stimulus</strong> (designing validated experimental stimuli), and <strong>GUI Evaluation</strong> (improving the interface for all user types).</p>
+            <p>Each track has its own learning objectives, team assignments, and deliverable timeline. Click on any track below to view the full planning document.</p>
+        </div>
+
+        <div class="timeline-overview">
+            <h3>Course Timeline Overview</h3>
+            <div class="timeline-bar">
+                <div class="timeline-segment shared">Week 1</div>
+                <div class="timeline-segment shared" style="font-style:italic;">D0 due Mon↗</div>
+                <div class="timeline-segment active">Week 3</div>
+                <div class="timeline-segment active">Week 4</div>
+                <div class="timeline-segment active">Week 5</div>
+                <div class="timeline-segment active">Week 6</div>
+                <div class="timeline-segment active">Week 7</div>
+                <div class="timeline-segment phase3">Week 8</div>
+                <div class="timeline-segment phase3">Week 9</div>
+                <div class="timeline-segment phase3">Week 10</div>
+            </div>
+            <div class="timeline-legend">
+                <div class="legend-item">
+                    <div class="legend-box" style="background-color: #002d5b;"></div>
+                    <span>Shared (All tracks)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="background-color: #00a699;"></div>
+                    <span>Track Deliverables</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="background-color: #d0d0d0;"></div>
+                    <span>Future</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="background-color: #166534;"></div>
+                    <span>Phase 3: Site Audit</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="shared-weeks-box">
+            <h3>Week 1: Shared Foundation — D0 due Mon night Week 2 (All Tracks)</h3>
+            <p><strong>Manual Literature Search (D0)</strong>: All students across all four tracks spend <strong>Week 1</strong> on a systematic manual literature search for evidence on environmental psychology topics. D0 (Query Diary + 500-word reflection) is due <strong>Monday night of Week 2</strong> — before track-specific work begins. This one-week sprint establishes the baseline evidence corpus and calibrates everyone's understanding of what counts as high-quality evidence.</p>
+            <p>By the D0 deadline, all students will understand: the evidence landscape in environmental psychology, the ATLAS system's role in organizing that evidence, and the quality standards their track will apply for the rest of the semester.</p>
+        </div>
+
+        <div class="tracks-grid">
+            <a href="image_track_overview.html" class="track-card">
+                <div class="track-header track1">
+                    <div>
+                        <div class="track-title">Image Tagger</div>
+                        <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.25rem;">Scientific Tagging & Validation</div>
+                    </div>
+                    <div class="track-number">1</div>
+                </div>
+                <div class="track-body">
+                    <div class="track-description">
+                        Build and validate the CNFA scientific image tagging system. Implement deterministic and VLM-based extractors for 424 environmental psychology constructs (e.g., biophilic richness, spatial openness). Create spatial bounding, tag validation tests, and connect image libraries to experimental stimuli.
+                    </div>
+                    <div class="track-deliverables">
+                        <h4>Key Deliverables (Weeks 3–7)</h4>
+                        <ul class="deliverables-list">
+                            <li><strong>D1 (Week 3, 10%)</strong>: Triage Table of Feasible Tags</li>
+                            <li><strong>D2 (Week 5, 15%)</strong>: Known-Case Tests & Math Implementations</li>
+                            <li><strong>D3 (Week 7, 20%)</strong>: Interim Validation Report</li>
+                        </ul>
+                    </div>
+                    <div class="track-link">View Track 1 Overview →</div>
+                </div>
+            </a>
+
+            <a href="af_track_planning.html" class="track-card">
+                <div class="track-header track2">
+                    <div>
+                        <div class="track-title">Article Finder</div>
+                        <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.25rem;">Article Finding & Corpus Expansion</div>
+                    </div>
+                    <div class="track-number">2</div>
+                </div>
+                <div class="track-body">
+                    <div class="track-description">
+                        Evaluate and improve the article search and filtering pipeline. Test discovery methods across 5 source types, assess evidence quality rubrics, develop ranking algorithms, and create filtering interfaces. Optimize the pipeline for researcher workflows and evidence reliability.
+                    </div>
+                    <div class="track-deliverables">
+                        <h4>Key Deliverables (Weeks 3–7)</h4>
+                        <ul class="deliverables-list">
+                            <li><strong>D1 (Week 3, 10%)</strong>: Source Coverage Analysis</li>
+                            <li><strong>D2 (Week 4–5, 15%)</strong>: Quality Rubric & Ranking Prototype</li>
+                            <li><strong>D3 (Week 7, 25%)</strong>: Full Pipeline Report</li>
+                        </ul>
+                    </div>
+                    <div class="track-link">View Track 2 Overview →</div>
+                </div>
+            </a>
+
+            <a href="vr_track_overview.html" class="track-card">
+                <div class="track-header track3">
+                    <div>
+                        <div class="track-title">VR Stimulus Design</div>
+                        <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.25rem;">Experimental Environment Validation</div>
+                    </div>
+                    <div class="track-number">3</div>
+                </div>
+                <div class="track-body">
+                    <div class="track-description">
+                        Design and validate VR scenes for environmental psychology experiments. Map visual properties to psychological constructs, implement spatial configurations, validate perceptual realism and construct validity, and create reproducible scene specifications. Ensure VR stimuli align with ATLAS evidence.
+                    </div>
+                    <div class="track-deliverables">
+                        <h4>Key Deliverables (Weeks 3–7)</h4>
+                        <ul class="deliverables-list">
+                            <li><strong>D1 (Week 3, 12%)</strong>: Visual Property Map</li>
+                            <li><strong>D2 (Week 5, 13%)</strong>: Scene Specification & Realism Test</li>
+                            <li><strong>D3 (Week 7, 20%)</strong>: Validation Report</li>
+                        </ul>
+                    </div>
+                    <div class="track-link">View Track 3 Overview →</div>
+                </div>
+            </a>
+
+            <a href="gui_track_overview.html" class="track-card">
+                <div class="track-header track4">
+                    <div>
+                        <div class="track-title">GUI Evaluation</div>
+                        <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 0.25rem;">Interface & Usability</div>
+                    </div>
+                    <div class="track-number">4</div>
+                </div>
+                <div class="track-body">
+                    <div class="track-description">
+                        Systematically evaluate ATLAS's interface for usability across all user types (researchers, students, architects, domain experts, admins). Conduct user testing with personas, identify pain points, prototype AI help systems, propose GUI improvements, and prepare the system for Fall 2026 COGS160: AI & VR use.
+                    </div>
+                    <div class="track-deliverables">
+                        <h4>Key Deliverables (Weeks 3–7)</h4>
+                        <ul class="deliverables-list">
+                            <li><strong>D1 (Week 3, 12%)</strong>: Refined User Profiles</li>
+                            <li><strong>D2 (Week 4, 12%)</strong>: AI Capability Assessment</li>
+                            <li><strong>D3 (Week 5, 15%)</strong>: Simulated Expert Panel Critique</li>
+                            <li><strong>D4 (Week 6, 11%)</strong>: Personalization Proposal</li>
+                            <li><strong>D5 (Week 7, 20%)</strong>: Full Usability Report</li>
+                        </ul>
+                    </div>
+                    <div class="track-link">View Track 4 Overview →</div>
+                </div>
+            </a>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             PHASE 3 · WEEKS 8–10 · SITE AUDIT & HAND-OFF
+             ═══════════════════════════════════════════════════════════ -->
+        <div style="margin-top:3rem;border:2px solid #166534;border-radius:12px;overflow:hidden">
+          <div style="background:#166534;color:#fff;padding:20px 28px">
+            <div style="font-size:.8rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;opacity:.85;margin-bottom:4px">Phase 3 · Weeks 8–10 · All Tracks</div>
+            <h2 style="font-size:1.6rem;font-weight:800;margin:0">Site Audit &amp; Hand-Off</h2>
+            <p style="margin:8px 0 0;font-size:.97rem;opacity:.9">Teams audit a section of this site they did not build, fix what they can, write formal success conditions, and produce a hand-off report for the Fall instructor. Work is conducted in the <strong>Tag-UCSD/Designing_Experiments</strong> repository.</p>
+          </div>
+          <div style="background:#f0fff4;padding:24px 28px">
+            <p style="font-size:.93rem;color:#0e3d20;margin-bottom:20px">Each team is assigned one of the four site sections (Image, Article Finder, VR, GUI) they did <em>not</em> build. The cross-assignment ensures genuine naivety in the student walkthrough. Work is submitted as a Pull Request to the upstream repo.</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+
+              <a href="phase3_wk08.html" style="display:block;background:#fff;border:1.5px solid #86efac;border-radius:8px;padding:18px 20px;text-decoration:none;color:inherit;transition:.2s" onmouseover="this.style.borderColor='#166534'" onmouseout="this.style.borderColor='#86efac'">
+                <div style="font-size:.75rem;font-weight:700;color:#166534;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Week 8</div>
+                <div style="font-size:1.05rem;font-weight:700;color:#182B49;margin-bottom:8px">Site Assignment &amp; Walkthrough</div>
+                <p style="font-size:.88rem;color:#555;margin:0">Fork the Designing_Experiments repo, set up your Phase 3 branch, and conduct a structured student-simulation walkthrough. Log every observation with severity ratings (BLOCKING / MAJOR / MINOR / MISSING).</p>
+                <div style="margin-top:12px;font-size:.85rem;font-weight:700;color:#166534">View Week 8 Assignment →</div>
+              </a>
+
+              <a href="phase3_wk09.html" style="display:block;background:#fff;border:1.5px solid #86efac;border-radius:8px;padding:18px 20px;text-decoration:none;color:inherit;transition:.2s" onmouseover="this.style.borderColor='#166534'" onmouseout="this.style.borderColor='#86efac'">
+                <div style="font-size:.75rem;font-weight:700;color:#166534;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Week 9</div>
+                <div style="font-size:1.05rem;font-weight:700;color:#182B49;margin-bottom:8px">Bug Fixes &amp; Success Conditions</div>
+                <p style="font-size:.88rem;color:#555;margin:0">Triage your walkthrough log: fix what you can, open GitHub issues for upstream changes, flag out-of-scope items. Write formal success conditions (SC-[Section]-[NN]) for every page function.</p>
+                <div style="margin-top:12px;font-size:.85rem;font-weight:700;color:#166534">View Week 9 Assignment →</div>
+              </a>
+
+              <a href="phase3_wk10.html" style="display:block;background:#fff;border:1.5px solid #86efac;border-radius:8px;padding:18px 20px;text-decoration:none;color:inherit;transition:.2s" onmouseover="this.style.borderColor='#166534'" onmouseout="this.style.borderColor='#86efac'">
+                <div style="font-size:.75rem;font-weight:700;color:#166534;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Week 10 · Final</div>
+                <div style="font-size:1.05rem;font-weight:700;color:#182B49;margin-bottom:8px">Re-Walkthrough, Hand-Off &amp; Presentation</div>
+                <p style="font-size:.88rem;color:#555;margin:0">Re-run the simulation from scratch to measure what changed. Write the hand-off report for the Fall 2026 instructor. Open your Pull Request. Present your findings in class (5–8 min).</p>
+                <div style="margin-top:12px;font-size:.85rem;font-weight:700;color:#166534">View Week 10 Assignment →</div>
+              </a>
+
+            </div>
+            <!-- Section assignments summary -->
+            <div style="margin-top:20px;background:#fff;border:1px solid #d1fae5;border-radius:8px;padding:16px 20px">
+              <div style="font-size:.8rem;font-weight:700;color:#166534;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Section Assignments (Teams audit a section they did not build)</div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;font-size:.87rem">
+                <div><strong style="color:#182B49">Section A</strong> — Image Tagger pages</div>
+                <div><strong style="color:#182B49">Section B</strong> — Article Finder pages</div>
+                <div><strong style="color:#182B49">Section C</strong> — VR Stimulus pages</div>
+                <div><strong style="color:#182B49">Section D</strong> — GUI Evaluation pages</div>
+              </div>
+            </div>
+            <!-- Grade weight note -->
+            <div style="margin-top:14px;font-size:.85rem;color:#555">
+              <strong>Grade weight:</strong> Phase 3 is worth 50 points total (20% of course grade) — 10 pts (W8 walkthrough) + 15 pts (W9 fixes + success conditions) + 25 pts (W10 re-walkthrough + hand-off + presentation).
+            </div>
+          </div>
+        </div>
+
+        <div class="quick-links">
+            <h3>Quick Links & Resources</h3>
+            <div class="links-grid">
+                <a href="#" class="quick-link">ATLAS System</a>
+                <a href="#" class="quick-link">Course Syllabus</a>
+                <a href="#" class="quick-link">Git Repository</a>
+                <a href="#" class="quick-link">Zotero Library</a>
+                <a href="#" class="quick-link">Evidence Rubric</a>
+                <a href="#" class="quick-link">Track Contacts</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>COGS160: AI & VR Spring 2026 | Cognitive Science Department | UC San Diego</p>
+        <p style="margin-top: 0.5rem;">Last updated: March 29, 2026</p>
+    </footer>
+</body>
+</html>

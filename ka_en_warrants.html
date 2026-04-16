@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EN Warrants — Plain-English Breakdown</title>
+<link rel="stylesheet" href="ka_atlas_shell.css">
+<style>
+  .en-shell { max-width: 920px; margin: 0 auto; padding: 24px; }
+  .en-hero {
+    background: linear-gradient(135deg, #FEF7EC 0%, #F9F5EE 100%);
+    border: 1px solid #E0D8CC; border-radius: 12px;
+    padding: 22px 26px; display: grid; grid-template-columns: 130px 1fr;
+    gap: 22px; align-items: center; margin-bottom: 24px;
+  }
+  .en-big {
+    background: #fff; border: 3px solid #E8872A; border-radius: 14px;
+    padding: 14px 0; text-align: center;
+  }
+  .en-big .num {
+    font-family: Georgia, serif; font-size: 2.6rem; color: #E8872A;
+    font-weight: 700; line-height: 1;
+  }
+  .en-big .pct {
+    font-size: 0.78rem; color: #985E0A; margin-top: 6px; font-weight: 700;
+  }
+  .en-hero h1 {
+    font-family: Georgia, serif; font-size: 1.5rem; color: #1C3D3A;
+    margin-bottom: 4px;
+  }
+  .en-hero .subtitle { color: #5A5A5A; font-size: 0.92rem; }
+  .warrant {
+    background: #fff; border: 1px solid #E0D8CC; border-radius: 8px;
+    padding: 14px 18px; margin-bottom: 12px;
+    display: grid; grid-template-columns: 1fr 90px; gap: 14px; align-items: center;
+  }
+  .warrant h3 {
+    font-family: Georgia, serif; font-size: 1.02rem; color: #1C3D3A;
+    margin-bottom: 4px;
+  }
+  .warrant .role {
+    font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #8A9A96; font-weight: 700;
+  }
+  .warrant p { font-size: 0.9rem; color: #4A4A4A; line-height: 1.55; }
+  .warrant .d-bar {
+    background: #F9F5EE; border: 1px solid #E0D8CC; border-radius: 6px;
+    padding: 8px 6px; text-align: center;
+  }
+  .warrant .d-bar .d-val {
+    font-family: Georgia, serif; font-size: 1.3rem; color: #2A7868;
+    font-weight: 700; line-height: 1;
+  }
+  .warrant .d-bar .d-lbl {
+    font-size: 0.62rem; color: #8A9A96; letter-spacing: 0.08em;
+    text-transform: uppercase; margin-top: 4px;
+  }
+  .pct-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 18px 0; }
+  .pct-table th, .pct-table td {
+    padding: 8px 12px; border-bottom: 1px solid #E0D8CC; text-align: left;
+  }
+  .pct-table th {
+    background: #F9F5EE; font-size: 0.72rem; text-transform: uppercase;
+    letter-spacing: 0.08em; color: #5A5A5A;
+  }
+  .pct-row.you td { background: #FEF7EC; font-weight: 700; }
+</style>
+</head>
+<body data-ka-active="articles"
+      data-ka-crumbs='[["Home","ka_home.html"],["Articles","ka_articles.html"],["Article","ka_article.html"],["EN warrants",""]]'>
+
+<div id="ka-navbar-slot"></div>
+<div id="ka-breadcrumb-slot"></div>
+
+<main class="en-shell" id="ka-main">
+
+  <div class="en-hero">
+    <div class="en-big">
+      <div class="num">6.4</div>
+      <div class="pct">71<sup>st</sup> percentile</div>
+    </div>
+    <div>
+      <h1>Why this article scores 6.4</h1>
+      <p class="subtitle">
+        Boyce, Hunter &amp; Howlett (2003) · paper_id <code>PDF-0011</code><br>
+        EN 6.4 means this article is judged more credible than 71 % of the 760
+        articles currently in the K-ATLAS corpus. The percentile is computed against
+        the live distribution of EN scores; it shifts as the corpus grows.
+      </p>
+    </div>
+  </div>
+
+  <p style="font-size:0.92rem;color:#4A4A4A;line-height:1.65;">
+    The Evidence Number (EN) is not a single judgment. It is the combination of
+    seven typed warrants, each contributing a credibility weight (<em>d</em>)
+    between 0.25 and 1.0. The weights below describe what each warrant adds (or
+    subtracts) for this specific article. The full warrant taxonomy is documented in
+    <code>contracts/web_of_belief.md</code>; the per-article values are persisted at
+    pipeline stage 17 (<em>warrant_assignment</em>).
+  </p>
+
+  <h2 style="font-family:Georgia,serif;color:#1C3D3A;font-size:1.15rem;margin-top:18px;">
+    The seven warrants, in plain English
+  </h2>
+
+  <div class="warrant">
+    <div>
+      <div class="role">Source warrant</div>
+      <h3>Source quality</h3>
+      <p>Where was it published, and who reviewed it? This article is a
+        sponsored research-centre report, not a peer-reviewed journal article.
+        Credible source, but not the strongest tier.</p>
+    </div>
+    <div class="d-bar"><div class="d-val">d = 0.65</div><div class="d-lbl">moderate</div></div>
+  </div>
+
+  <div class="warrant">
+    <div>
+      <div class="role">Method warrant</div>
+      <h3>Method quality</h3>
+      <p>Is the design appropriate to the claim? The paper is a structured
+        narrative review of empirical evidence rather than a primary study or a
+        formal meta-analysis — strong for synthesis, weaker for causal precision.</p>
+    </div>
+    <div class="d-bar"><div class="d-val">d = 0.55</div><div class="d-lbl">moderate</div></div>
+  </div>
+
+  <div class="warrant">
+    <div>
+      <div class="role">Statistical warrant</div>
+      <h3>Statistical strength</h3>
+      <p>How large and how stable is the headline effect? The cited studies
+        report effect sizes around <em>d</em>&nbsp;=&nbsp;0.16 with sample
+        <em>n</em>&nbsp;=&nbsp;22 in some cases — small effects, modest power, but
+        directionally consistent across studies.</p>
+    </div>
+    <div class="d-bar"><div class="d-val">d = 0.45</div><div class="d-lbl">low–moderate</div></div>
+  </div>
+
+  <div class="warrant">
+    <div>
+      <div class="role">Replication warrant</div>
+      <h3>Replication breadth</h3>
+      <p>Has the effect been seen in independent settings? Yes — daylight effects
+        on alertness and satisfaction replicate across office, school, and
+        residential contexts.</p>
+    </div>
+    <div class="d-bar"><div class="d-val">d = 0.80</div><div class="d-lbl">strong</div></div>
+  </div>
+
+  <div class="warrant">
+    <div>
+      <div class="role">Mechanism warrant</div>
+      <h3>Mechanism plausibility</h3>
+      <p>Is there a credible story for <em>why</em> the effect occurs? Yes — the
+        ipRGC → SCN → arousal chain (see the article's PNU page) is well
+        established and ties the architectural input directly to the outcome
+        measures.</p>
+    </div>
+    <div class="d-bar"><div class="d-val">d = 0.85</div><div class="d-lbl">strong</div></div>
+  </div>
+
+  <div class="warrant">
+    <div>
+      <div class="role">Coherence warrant</div>
+      <h3>Coherence with the rest of the corpus</h3>
+      <p>Does the claim cohere with what other articles say? Yes — the conclusion
+        sits comfortably inside Attention Restoration Theory and Circadian
+        Photobiology, both of which the K-ATLAS corpus represents heavily.</p>
+    </div>
+    <div class="d-bar"><div class="d-val">d = 0.75</div><div class="d-lbl">strong</div></div>
+  </div>
+
+  <div class="warrant">
+    <div>
+      <div class="role">Defeater warrant</div>
+      <h3>Live defeaters</h3>
+      <p>Are there published challenges that undercut or rebut the claim? Some
+        — null results in highly-controlled office studies — but these mostly
+        narrow rather than reject the claim. No fatal counter-evidence currently
+        in the corpus.</p>
+    </div>
+    <div class="d-bar"><div class="d-val">d = 0.55</div><div class="d-lbl">moderate (one minor defeater)</div></div>
+  </div>
+
+  <h2 style="font-family:Georgia,serif;color:#1C3D3A;font-size:1.15rem;margin-top:24px;">
+    What the percentile means
+  </h2>
+  <table class="pct-table">
+    <thead>
+      <tr><th>EN range</th><th>Approx. percentile in this corpus</th><th>Interpretation</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>≥ 8.0</td><td>top 10 %</td><td>Strong primary or meta-analytic evidence on a well-mechanised claim.</td></tr>
+      <tr><td>7.0 – 7.9</td><td>top 25 %</td><td>Solid empirical work; minor gaps.</td></tr>
+      <tr class="pct-row you"><td>6.0 – 6.9</td><td>top 30–35 % &nbsp;<em>(this article: 71<sup>st</sup>)</em></td><td>Useful, well-grounded; consequential gaps in design or scale.</td></tr>
+      <tr><td>5.0 – 5.9</td><td>middle</td><td>Cited but not load-bearing; treat with care.</td></tr>
+      <tr><td>&lt; 5.0</td><td>bottom 30 %</td><td>Weak warrants on multiple axes; do not rely without corroboration.</td></tr>
+    </tbody>
+  </table>
+
+  <p style="font-size:0.84rem;color:#7A7060;font-style:italic;">
+    EN scores and warrant weights are versioned with the corpus. As articles are
+    added or re-evaluated, both the absolute score and the percentile may shift.
+    The numbers above were computed against the snapshot of articles.json shipped
+    with this build of the site.
+  </p>
+
+</main>
+
+<footer class="ka-footer">
+  Knowledge Atlas · UCSD Cognitive Science · Spring 2026
+</footer>
+
+<script src="ka_canonical_navbar.js" defer></script>
+</body>
+</html>

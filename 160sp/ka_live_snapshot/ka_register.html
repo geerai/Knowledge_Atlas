@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Knowledge Atlas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F7F4EF;
+            color: #4A3E32;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background-color: #1C3D3A;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .ka-icon {
+            width: 28px;
+            height: 28px;
+        }
+
+        .ka-wordmark {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .ka-wordmark-top {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #A8C8BF;
+            line-height: 1;
+        }
+
+        .ka-wordmark-bottom {
+            font-size: 13px;
+            font-weight: 700;
+            color: #F5A623;
+            line-height: 1;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .nav-center {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-left: auto;
+            margin-right: 20px;
+        }
+
+        .nav-link {
+            color: #A8C8BF;
+            text-decoration: none;
+            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: #F5A623;
+            background-color: rgba(232,135,42,0.1);
+        }
+
+        .nav-link.active {
+            color: #F5A623;
+            background-color: rgba(232,135,42,0.14);
+        }
+
+        .mode-select {
+            font-size: 0.76rem;
+            padding: 6px 10px;
+            border-radius: 16px;
+            border: 1px solid rgba(168, 200, 191, 0.34);
+            background: rgba(255, 255, 255, 0.05);
+            color: #D8EAE4;
+        }
+
+        .mode-select option {
+            color: #1C3D3A;
+        }
+
+        .mode-pill {
+            background-color: rgba(42, 120, 104, 0.3);
+            color: #5AC8AA;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-family: Arial, sans-serif;
+            font-size: 0.75rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main content */
+        main {
+            margin-top: 56px;
+            padding: 40px 32px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .register-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: start;
+        }
+
+        .left-panel {
+            background: linear-gradient(135deg, #2A7868 0%, #1C3D3A 100%);
+            border-radius: 12px;
+            padding: 48px;
+            color: white;
+            height: fit-content;
+            position: sticky;
+            top: 96px;
+        }
+
+        .left-panel .ka-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 24px;
+            filter: brightness(1.2);
+        }
+
+        .left-panel h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .left-panel .subtitle {
+            font-size: 14px;
+            color: #A8C8BF;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .left-panel ul {
+            list-style: none;
+        }
+
+        .left-panel li {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 14px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .left-panel li:before {
+            content: "✓";
+            color: #F5A623;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* Form */
+        .form-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            border: 1px solid #E0DAD3;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+        }
+
+        .form-section:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .form-section h2 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1C3D3A;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #4A3E32;
+        }
+
+        label.optional:after {
+            content: " (optional)";
+            font-weight: 400;
+            color: #8A7A68;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #E0DAD3;
+            border-radius: 6px;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            color: #4A3E32;
+            background-color: #fff;
+            transition: all 0.2s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #E8872A;
+            box-shadow: 0 0 0 3px rgba(232,135,42,0.14);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        textarea::placeholder,
+        input::placeholder {
+            color: #8A7A68;
+        }
+
+        /* Radio buttons as chips */
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .radio-chip {
+            position: relative;
+        }
+
+        .radio-chip input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .radio-chip label {
+            display: inline-block;
+            padding: 10px 16px;
+            border: 1px solid #E0DAD3;
+            border-radius: 20px;
+            background-color: #fff;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            margin: 0;
+        }
+
+        .radio-chip input:checked + label {
+            background-color: #E8872A;
+            color: white;
+            border-color: #E8872A;
+        }
+
+        .radio-chip label:hover {
+            border-color: #E8872A;
+        }
+
+        /* Callout box */
+        .callout {
+            background-color: #FFF4E6;
+            border-left: 4px solid #E8872A;
+            border-radius: 4px;
+            padding: 16px;
+            margin-bottom: 24px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #4A3E32;
+        }
+
+        /* Checkboxes */
+        .checkbox-group {
+            margin-bottom: 16px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: #E8872A;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background-color: #E8872A;
+            color: white;
+            margin-top: 8px;
+        }
+
+        .btn-primary:hover {
+            background-color: #C05A1F;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(232,135,42,0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        /* Footer link */
+        .login-link {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 13px;
+            color: #8A7A68;
+        }
+
+        .login-link a {
+            color: #E8872A;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Inline field errors */
+        .field-error {
+            display: none;
+            font-size: 11px;
+            color: #C0392B;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+        .field-error.visible { display: block; }
+        input.input-error, select.input-error, textarea.input-error {
+            border-color: #E74C3C !important;
+            box-shadow: 0 0 0 3px rgba(231,76,60,0.12) !important;
+        }
+        input.input-ok {
+            border-color: #27AE60 !important;
+        }
+
+        /* Password strength */
+        .pw-strength-wrap {
+            margin-top: 5px;
+            height: 4px;
+            background: #EEE8E0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .pw-strength-bar {
+            height: 4px;
+            width: 0%;
+            border-radius: 2px;
+            transition: width .25s, background .25s;
+        }
+        .pw-hint { font-size: 11px; color: #8A7A68; margin-top: 4px; }
+
+        /* Success screen */
+        .success-screen {
+            display: none;
+            text-align: center;
+            padding: 56px 40px;
+        }
+        .success-screen.visible { display: block; }
+        .success-icon {
+            width: 64px; height: 64px; background: #2A7868;
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; margin: 0 auto 24px; font-size: 28px;
+        }
+        .success-screen h2 {
+            font-family: Georgia, serif; font-size: 1.4rem;
+            color: #1C3D3A; font-weight: 400; margin-bottom: 10px;
+        }
+        .success-screen p {
+            font-size: 0.9rem; color: #6B6B6B; line-height: 1.65;
+            max-width: 360px; margin: 0 auto 24px;
+        }
+        .success-detail {
+            background: #E6F5F0; border-radius: 8px;
+            padding: 14px 18px; font-size: 0.85rem;
+            color: #1a4a3f; text-align: left; margin-bottom: 28px;
+        }
+        .success-detail strong { color: #1C3D3A; }
+        .auth-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(16, 28, 27, 0.62);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 1200;
+        }
+        .auth-modal.visible { display: flex; }
+        .auth-modal-card {
+            position: relative;
+            width: 100%;
+            max-width: 460px;
+            background: #fff;
+            border-radius: 16px;
+            padding: 32px 28px 28px;
+            box-shadow: 0 18px 52px rgba(0, 0, 0, 0.24);
+        }
+        .auth-modal-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 34px;
+            height: 34px;
+            border-radius: 999px;
+            border: 1px solid #E0DAD3;
+            background: #fff;
+            color: #4A3E32;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .auth-modal-close:hover {
+            border-color: #E8872A;
+            color: #E8872A;
+        }
+        .auth-modal h3 {
+            font-size: 1.35rem;
+            color: #1C3D3A;
+            margin-bottom: 10px;
+        }
+        .auth-modal p {
+            font-size: 0.9rem;
+            color: #6B6B6B;
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+        .auth-modal-note {
+            background: #FFF8F0;
+            border: 1px solid #F0D1AC;
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: 0.84rem;
+            color: #7A4B1D;
+            margin-bottom: 18px;
+            line-height: 1.55;
+        }
+        .auth-modal-msg {
+            display: none;
+            margin-top: 14px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 0.84rem;
+            font-weight: 600;
+        }
+        .auth-modal-msg.error {
+            display: block;
+            background: #FDECEC;
+            color: #9F2D20;
+        }
+        .auth-modal-msg.success {
+            display: block;
+            background: #E6F5F0;
+            color: #1A4A3F;
+        }
+        .auth-modal-links {
+            margin-top: 16px;
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+            flex-wrap: wrap;
+            font-size: 0.84rem;
+        }
+        .auth-modal-links a {
+            color: #1C3D3A;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .auth-modal-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Version badge */
+        .version-badge {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            background-color: #1C3D3A;
+            color: #A8C8BF;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            z-index: 100;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .register-wrapper {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .left-panel {
+                position: relative;
+                top: auto;
+            }
+
+            main {
+                padding: 24px 16px;
+            }
+
+            .form-card {
+                padding: 32px;
+            }
+
+            .form-group-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            nav {
+                padding: 0 16px;
+            }
+
+            main {
+                padding: 16px 12px;
+            }
+
+            .form-card {
+                padding: 24px;
+            }
+
+            .left-panel {
+                padding: 32px;
+            }
+
+            .version-badge {
+                bottom: 16px;
+                left: 16px;
+            }
+        }
+    
+.wordmark {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; flex-shrink: 0;
+}
+.wordmark-icon { width: 30px; height: 30px; }
+.wordmark-text { display: flex; flex-direction: column; line-height: 1.1; }
+.wm-top { font-size: 0.66rem; font-weight: 400; letter-spacing: 0.24em; text-transform: uppercase; color: #A8C8BF; }
+.wm-bottom { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.03em; color: #fff; }
+.wm-bottom span { color: #F5A623; }
+</style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a class="wordmark" href="ka_home.html">
+    <svg class="wordmark-icon" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="3.5" fill="#F5A623"/>
+      <circle cx="16" cy="5"  r="2.5" fill="#A8C8BF"/>
+      <circle cx="27" cy="22" r="2.5" fill="#A8C8BF"/>
+      <circle cx="5"  cy="22" r="2.5" fill="#A8C8BF"/>
+      <line x1="16"   y1="7.5"  x2="16"   y2="12.5" stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="24.8" y1="20.2" x2="19.0" y2="17.3"  stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="7.2"  y1="20.2" x2="13.0" y2="17.3"  stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="16" y1="7.5"  x2="25.5" y2="20" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+      <line x1="25.5" y1="20" x2="6.5"   y2="20" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+      <line x1="6.5"  y1="20" x2="16"    y2="7.5" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+    </svg>
+    <div class="wordmark-text">
+      <span class="wm-top">Knowledge</span>
+      <span class="wm-bottom">At<span>las</span></span>
+    </div>
+  </a>
+        <div class="nav-center">
+            <a id="nav-shell-explore" href="ka_topics.html" class="nav-link">Explore</a>
+            <a id="nav-shell-evidence" href="ka_evidence.html" class="nav-link">Evidence</a>
+            <a id="nav-shell-gaps" href="ka_gaps.html" class="nav-link">Gaps</a>
+            <a id="nav-shell-articles" href="ka_article_search.html" class="nav-link">Articles</a>
+            <a id="nav-shell-contribute" href="ka_contribute.html" class="nav-link active">Contribute</a>
+            <a id="nav-shell-course" href="160sp/ka_student_setup.html" class="nav-link">Course</a>
+            <a id="nav-shell-syllabus" href="160sp/ka_schedule.html" class="nav-link">160 Syllabus</a>
+        </div>
+        <div class="nav-right">
+            <select class="mode-select" id="register-mode-select" aria-label="Switch user mode">
+                <option value="student_explorer">Student explorer</option>
+                <option value="researcher">Researcher</option>
+                <option value="contributor">Contributor</option>
+                <option value="instructor">Instructor</option>
+                <option value="practitioner">Practitioner</option>
+                <option value="theory_mechanism_explorer">Theory Explorer</option>
+            </select>
+            <div class="mode-pill" id="register-mode-pill">CONTRIBUTOR</div>
+            <a href="ka_login.html" class="nav-link">Log in</a>
+        </div>
+    </nav>
+
+    <!-- Main content -->
+    <main>
+        <div class="container">
+            <div class="register-wrapper">
+                <!-- Left panel -->
+                <div class="left-panel">
+                    <svg class="ka-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#F5A623;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#A8C8BF;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="50" cy="50" r="40" fill="url(#grad2)" opacity="0.2"/>
+                        <circle cx="30" cy="30" r="4" fill="#F5A623"/>
+                        <circle cx="70" cy="30" r="4" fill="#A8C8BF"/>
+                        <circle cx="50" cy="70" r="4" fill="#F5A623"/>
+                        <circle cx="20" cy="70" r="3" fill="#A8C8BF"/>
+                        <circle cx="80" cy="70" r="3" fill="#A8C8BF"/>
+                        <line x1="30" y1="30" x2="70" y2="30" stroke="#F5A623" stroke-width="2" opacity="0.7"/>
+                        <line x1="30" y1="30" x2="50" y2="70" stroke="#A8C8BF" stroke-width="2" opacity="0.7"/>
+                        <line x1="70" y1="30" x2="50" y2="70" stroke="#F5A623" stroke-width="2" opacity="0.7"/>
+                        <line x1="50" y1="70" x2="20" y2="70" stroke="#A8C8BF" stroke-width="1.5" opacity="0.6"/>
+                        <line x1="50" y1="70" x2="80" y2="70" stroke="#A8C8BF" stroke-width="1.5" opacity="0.6"/>
+                        <circle cx="50" cy="50" r="3" fill="#F5A623"/>
+                    </svg>
+                    <h1>Join Knowledge Atlas</h1>
+                    <p class="subtitle">Contribute to a living knowledge model built on propositions, warrants, and evidence.</p>
+                    <ul>
+                        <li>Tag images with cognitive science concepts</li>
+                        <li>Find and recommend peer-reviewed articles</li>
+                        <li>Capture data from cognitive science research</li>
+                    </ul>
+                </div>
+
+                <!-- Registration form -->
+                <div class="form-card">
+                    <!-- Success screen (shown on submit) -->
+                    <div class="success-screen" id="successScreen">
+                        <div class="success-icon">✓</div>
+                        <h2>You're registered!</h2>
+                        <p>Your account is active and ready to go. You can sign in now and start exploring the Atlas.</p>
+                        <div class="success-detail" id="successDetail"></div>
+                        <a href="ka_login.html" class="btn btn-primary" style="text-decoration:none;display:inline-block;width:auto;padding:12px 32px">Sign In Now →</a>
+                    </div>
+
+                    <div class="auth-modal" id="duplicateLoginModal">
+                        <div class="auth-modal-card">
+                            <button type="button" class="auth-modal-close" id="duplicateLoginClose" aria-label="Close sign-in dialog">×</button>
+                            <h3>You are already registered</h3>
+                            <p id="duplicateLoginLead">That email already has a K-ATLAS account. Sign in here instead of registering again.</p>
+                            <div class="auth-modal-note">
+                                If you no longer remember the password, use password help. That page will tell you whether the email is registered.
+                            </div>
+                            <form id="duplicateLoginForm" autocomplete="on">
+                                <div class="form-group">
+                                    <label for="duplicateLoginEmail">Email address</label>
+                                    <input type="email" id="duplicateLoginEmail" autocomplete="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="duplicateLoginPassword">Password</label>
+                                    <div style="position:relative;">
+                                        <input type="password" id="duplicateLoginPassword" autocomplete="current-password" required style="padding-right:2.5rem;">
+                                        <button type="button" class="pwd-eye-btn" aria-label="Show password" style="position:absolute;right:10px;top:12px;background:none;border:none;cursor:pointer;font-size:1.1rem;color:#888;padding:4px;" tabindex="-1">&#128065;</button>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary" id="duplicateLoginSubmit">Sign In</button>
+                            </form>
+                            <div class="auth-modal-msg" id="duplicateLoginMsg"></div>
+                            <div class="auth-modal-links">
+                                <a href="ka_forgot_password.html" id="duplicateForgotLink">Forgot password?</a>
+                                <a href="ka_login.html" id="duplicateLoginPageLink">Open full Sign In page</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form id="registerForm">
+                        <!-- Section 1: Account -->
+                        <div class="form-section">
+                            <h2>Create your account</h2>
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label for="firstName">First name</label>
+                                    <input type="text" id="firstName" name="firstName" required>
+                                    <span class="field-error" id="err-firstName">Please enter your first name.</span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Last name</label>
+                                    <input type="text" id="lastName" name="lastName" required>
+                                    <span class="field-error" id="err-lastName">Please enter your last name.</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email address</label>
+                                <input type="email" id="email" name="email" required>
+                                <span class="field-error" id="err-email">Please enter a valid email address.</span>
+                            </div>
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <div style="position:relative;">
+                                        <input type="password" id="password" name="password" required autocomplete="new-password" style="padding-right:2.5rem;">
+                                        <button type="button" class="pwd-eye-btn" aria-label="Show password" style="position:absolute;right:10px;top:12px;background:none;border:none;cursor:pointer;font-size:1.1rem;color:#888;padding:4px;" tabindex="-1">&#128065;</button>
+                                    </div>
+                                    <div class="pw-strength-wrap"><div class="pw-strength-bar" id="pwBar"></div></div>
+                                    <div class="pw-hint" id="pwHint">At least 8 characters</div>
+                                    <span class="field-error" id="err-password">Password must be at least 8 characters.</span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirmPassword">Confirm password</label>
+                                    <div style="position:relative;">
+                                        <input type="password" id="confirmPassword" name="confirmPassword" required autocomplete="new-password" style="padding-right:2.5rem;">
+                                        <button type="button" class="pwd-eye-btn" aria-label="Show password" style="position:absolute;right:10px;top:12px;background:none;border:none;cursor:pointer;font-size:1.1rem;color:#888;padding:4px;" tabindex="-1">&#128065;</button>
+                                    </div>
+                                    <span class="field-error" id="err-confirmPassword">Passwords do not match.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- COGS 160 student checkbox -->
+                        <div class="form-section" id="cogs160Section">
+                            <div class="checkbox-group">
+                                <div class="checkbox-item" style="background:#FFF8F0;border:1.5px solid #E8872A;border-radius:10px;padding:14px 16px;">
+                                    <input type="checkbox" id="is160Student" name="is160Student">
+                                    <label for="is160Student" style="font-weight:700;color:#1C3D3A;">I am a COGS 160 student <span style="font-weight:400;color:#7A6E62;">(Spring 2026)</span></label>
+                                </div>
+                            </div>
+                            <p id="cogs160Note" style="display:none;font-size:0.82rem;color:#7A6E62;margin-top:8px;line-height:1.5;">
+                                Your account will be set up for COGS 160 with the A0 article-collection assignment. You can choose your track after orientation.
+                            </p>
+                        </div>
+
+                        <!-- Section 2: Profile -->
+                        <div class="form-section">
+                            <h2>Your academic profile</h2>
+                            <div class="form-group">
+                                <label for="institution">Institution / University</label>
+                                <input type="text" id="institution" name="institution" placeholder="e.g., University of California, San Diego">
+                            </div>
+                            <div class="form-group">
+                                <label for="department">Department</label>
+                                <input type="text" id="department" name="department" placeholder="e.g., Cognitive Science, Psychology">
+                            </div>
+                            <div class="form-group">
+                                <label for="orcid" class="optional">ORCID iD</label>
+                                <input type="text" id="orcid" name="orcid" placeholder="0000-0000-0000-0000">
+                            </div>
+                            <div class="form-group">
+                                <label>Role</label>
+                                <div class="radio-group">
+                                    <div class="radio-chip">
+                                        <input type="radio" id="roleUG" name="role" value="undergrad">
+                                        <label for="roleUG">Undergraduate</label>
+                                    </div>
+                                    <div class="radio-chip">
+                                        <input type="radio" id="roleGrad" name="role" value="grad">
+                                        <label for="roleGrad">Graduate Student</label>
+                                    </div>
+                                    <div class="radio-chip">
+                                        <input type="radio" id="rolePostdoc" name="role" value="postdoc">
+                                        <label for="rolePostdoc">Postdoc</label>
+                                    </div>
+                                    <div class="radio-chip">
+                                        <input type="radio" id="roleFaculty" name="role" value="faculty">
+                                        <label for="roleFaculty">Faculty</label>
+                                    </div>
+                                    <div class="radio-chip">
+                                        <input type="radio" id="roleOther" name="role" value="other">
+                                        <label for="roleOther">Other</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="bio" class="optional">Brief bio</label>
+                                <textarea id="bio" name="bio" placeholder="Optional: tell us about your research interests"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Section 3: Track Request -->
+                        <div class="form-section">
+                            <h2>Request a track</h2>
+                            <div class="callout">
+                                Track assignment is not guaranteed. Describe your relevant skills and we will review your request. You may list a second choice.
+                            </div>
+                            <div class="form-group">
+                                <label for="userTypeChoice">Preferred KA orientation</label>
+                                <select id="userTypeChoice" name="userTypeChoice">
+                                    <option value="student_explorer">Student explorer</option>
+                                    <option value="researcher">Researcher</option>
+                                    <option value="contributor">Contributor</option>
+                                    <option value="instructor">Instructor</option>
+                                    <option value="practitioner">Practitioner</option>
+                                    <option value="theory_mechanism_explorer">Theory Explorer</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="trackChoice1">First choice track</label>
+                                <select id="trackChoice1" name="trackChoice1" required>
+                                    <option value="">Select a track</option>
+                                    <option value="track1">Track 1 — Image Tagging (CNFA Tags)</option>
+                                    <option value="track2">Track 2 — Article Finding Pipeline</option>
+                                    <option value="track3">Track 3 — VR Environment Production</option>
+                                    <option value="track4">Track 4 — GUI Evaluation &amp; Experiment Design</option>
+                                </select>
+                                <span class="field-error" id="err-trackChoice1">Please select a first-choice track.</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="skills1" id="skills1Label">Relevant skills for your first-choice track</label>
+                                <textarea id="skills1" name="skills1" placeholder="Describe any relevant skills, experience, or reasons this track suits you."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="trackChoice2">Second choice track <span style="font-weight:400;color:#8A7A68">(optional)</span></label>
+                                <select id="trackChoice2" name="trackChoice2">
+                                    <option value="">No second choice</option>
+                                    <option value="track1">Track 1 — Image Tagging (CNFA Tags)</option>
+                                    <option value="track2">Track 2 — Article Finding Pipeline</option>
+                                    <option value="track3">Track 3 — VR Environment Production</option>
+                                    <option value="track4">Track 4 — GUI Evaluation &amp; Experiment Design</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="interest">Why are you interested in contributing to KA?</label>
+                                <textarea id="interest" name="interest" placeholder="What draws you to this project? Any relevant coursework, research experience, or goals?"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Section 4: Acknowledgments -->
+                        <div class="form-section">
+                            <h2>Prerequisites acknowledgment</h2>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="ack1" name="ack1" required>
+                                    <label for="ack1">I understand that track assignment is subject to instructor approval and is not guaranteed by registration.</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="ack2" name="ack2" required>
+                                    <label for="ack2">I agree to the Knowledge Atlas contributor guidelines and data use policy.</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Submit Registration Request →</button>
+                        <div class="login-link">
+                            Already have an account? <a href="ka_login.html">Log in →</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Version badge -->
+    <div class="version-badge">KA UI · v0.4</div>
+
+    <script>
+    // Password show/hide toggle (event listener, not inline onclick)
+    document.querySelectorAll('.pwd-eye-btn').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var inp = this.parentElement.querySelector('input');
+        if (inp.type === 'password') { inp.type = 'text'; this.innerHTML = '&#128064;'; }
+        else { inp.type = 'password'; this.innerHTML = '&#128065;'; }
+      });
+    });
+    (function() {
+      const NAV_PREFERENCE_BY_TYPE = {
+        student_explorer: 'explore_literature',
+        researcher: 'explore_literature',
+        contributor: 'contribute_atlas',
+        instructor: 'build_test_experiments',
+        practitioner: 'explore_literature',
+        theory_mechanism_explorer: 'theory_mechanisms'
+      };
+
+      // ── Track label names ────────────────────────────────────────────
+      const TRACK_NAMES = {
+        track1: 'Track 1 — Image Tagging',
+        track2: 'Track 2 — Article Finding',
+        track3: 'Track 3 — VR Production',
+        track4: 'Track 4 — GUI Evaluation & Experiment Design'
+      };
+      const KA_AUTH_API = window.__KA_CONFIG__?.apiBase ?? '';
+      const duplicateLoginModal = document.getElementById('duplicateLoginModal');
+      const duplicateLoginLead = document.getElementById('duplicateLoginLead');
+      const duplicateLoginForm = document.getElementById('duplicateLoginForm');
+      const duplicateLoginEmail = document.getElementById('duplicateLoginEmail');
+      const duplicateLoginPassword = document.getElementById('duplicateLoginPassword');
+      const duplicateLoginSubmit = document.getElementById('duplicateLoginSubmit');
+      const duplicateLoginMsg = document.getElementById('duplicateLoginMsg');
+      const duplicateForgotLink = document.getElementById('duplicateForgotLink');
+      const duplicateLoginPageLink = document.getElementById('duplicateLoginPageLink');
+
+      function showDuplicateLoginMessage(message, kind) {
+        duplicateLoginMsg.className = 'auth-modal-msg ' + (kind || 'error');
+        duplicateLoginMsg.textContent = message;
+      }
+
+      function clearDuplicateLoginMessage() {
+        duplicateLoginMsg.className = 'auth-modal-msg';
+        duplicateLoginMsg.textContent = '';
+      }
+
+      function openDuplicateLoginModal(email, leadText) {
+        duplicateLoginEmail.value = email || '';
+        duplicateLoginPassword.value = '';
+        duplicateLoginLead.textContent = leadText || 'That email already has a K-ATLAS account. Sign in here instead of registering again.';
+        duplicateForgotLink.href = 'ka_forgot_password.html' + (email ? ('?email=' + encodeURIComponent(email)) : '');
+        duplicateLoginPageLink.href = 'ka_login.html' + (email ? ('?email=' + encodeURIComponent(email)) : '');
+        clearDuplicateLoginMessage();
+        duplicateLoginModal.classList.add('visible');
+        duplicateLoginPassword.focus();
+      }
+
+      function closeDuplicateLoginModal() {
+        duplicateLoginModal.classList.remove('visible');
+        duplicateLoginPassword.value = '';
+        clearDuplicateLoginMessage();
+      }
+
+      duplicateLoginForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const email = duplicateLoginEmail.value.trim();
+        const password = duplicateLoginPassword.value;
+        if (!email || !password) return;
+
+        duplicateLoginSubmit.disabled = true;
+        duplicateLoginSubmit.textContent = 'Signing In…';
+        clearDuplicateLoginMessage();
+
+        try {
+          const res = await fetch(KA_AUTH_API + '/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email, password: password })
+          });
+          const data = await res.json();
+
+          if (!res.ok) {
+            showDuplicateLoginMessage(data.detail || 'Sign-in failed. Check your password or use password help.', 'error');
+            return;
+          }
+
+          localStorage.removeItem('katlas_token');
+          localStorage.removeItem('katlas_user');
+          localStorage.setItem('ka_access_token', data.access_token);
+          localStorage.setItem('ka_refresh_token', data.refresh_token);
+          localStorage.setItem('ka_current_user', JSON.stringify(data.user));
+          localStorage.setItem('ka_logged_in', '1');
+          sessionStorage.setItem('ka_logged_in', '1');
+          showDuplicateLoginMessage('Sign-in successful. Redirecting…', 'success');
+          window.location.href = '160sp/ka_student_setup.html';
+        } catch (err) {
+          showDuplicateLoginMessage('Could not reach the authentication server. Please try again or use the full sign-in page.', 'error');
+        } finally {
+          duplicateLoginSubmit.disabled = false;
+          duplicateLoginSubmit.textContent = 'Sign In';
+        }
+      });
+
+      document.getElementById('duplicateLoginClose').addEventListener('click', closeDuplicateLoginModal);
+      duplicateLoginModal.addEventListener('click', function(e) {
+        if (e.target === duplicateLoginModal) closeDuplicateLoginModal();
+      });
+
+      const storedMode = sessionStorage.getItem('ka_active_mode') || localStorage.getItem('ka_user_type');
+      if (storedMode && document.getElementById('userTypeChoice')) {
+        document.getElementById('userTypeChoice').value = storedMode;
+      }
+
+      // ── COGS 160 student checkbox ───────────────────────────────────
+      const is160Checkbox = document.getElementById('is160Student');
+      const cogs160Note   = document.getElementById('cogs160Note');
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('student') === '1') {
+        is160Checkbox.checked = true;
+        cogs160Note.style.display = 'block';
+      }
+      is160Checkbox.addEventListener('change', function() {
+        cogs160Note.style.display = this.checked ? 'block' : 'none';
+        if (this.checked) {
+          document.getElementById('institution').value = document.getElementById('institution').value || 'UC San Diego';
+          document.getElementById('department').value = 'COGS 160';
+          document.getElementById('roleUG').checked = true;
+          document.getElementById('userTypeChoice').value = 'student_explorer';
+        }
+      });
+      // Fire change if pre-checked from URL
+      if (is160Checkbox.checked) is160Checkbox.dispatchEvent(new Event('change'));
+
+      // ── Password strength ────────────────────────────────────────────
+      const pwInput = document.getElementById('password');
+      const pwBar   = document.getElementById('pwBar');
+      const pwHint  = document.getElementById('pwHint');
+
+      pwInput.addEventListener('input', function() {
+        const v = this.value;
+        let score = 0;
+        if (v.length >= 8)  score++;
+        if (v.length >= 12) score++;
+        if (/[A-Z]/.test(v)) score++;
+        if (/[0-9]/.test(v)) score++;
+        if (/[^A-Za-z0-9]/.test(v)) score++;
+        const pct = Math.min(100, score * 20);
+        pwBar.style.width  = pct + '%';
+        const colors = ['#E74C3C','#E74C3C','#E8872A','#F5A623','#2A7868','#2A7868'];
+        const labels = ['Too short','Too short','Weak','Fair','Strong','Very strong'];
+        pwBar.style.background = colors[score];
+        pwHint.textContent = v.length === 0 ? 'At least 8 characters' : labels[score];
+        if (v.length > 0 && v.length < 8) {
+          showErr('password','Password must be at least 8 characters.');
+        } else {
+          clearErr('password');
+        }
+      });
+
+      // ── Inline validation helpers ────────────────────────────────────
+      function showErr(id, msg) {
+        const el = document.getElementById('err-' + id);
+        const inp = document.getElementById(id);
+        if (el) { el.textContent = msg; el.classList.add('visible'); }
+        if (inp) inp.classList.add('input-error');
+      }
+      function clearErr(id) {
+        const el = document.getElementById('err-' + id);
+        const inp = document.getElementById(id);
+        if (el) el.classList.remove('visible');
+        if (inp) { inp.classList.remove('input-error'); inp.classList.add('input-ok'); }
+      }
+      function markClean(id) {
+        const inp = document.getElementById(id);
+        if (inp) { inp.classList.remove('input-error'); inp.classList.add('input-ok'); }
+      }
+
+      // ── Real-time blur validation ────────────────────────────────────
+      ['firstName','lastName'].forEach(id => {
+        document.getElementById(id).addEventListener('blur', function() {
+          if (!this.value.trim()) showErr(id, 'This field is required.');
+          else clearErr(id);
+        });
+      });
+
+      document.getElementById('email').addEventListener('blur', function() {
+        if (!this.value.trim()) { showErr('email','Email is required.'); return; }
+        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(this.value)) {
+          showErr('email','Please enter a valid email address.');
+        } else {
+          // Check duplicate in localStorage
+          const regs = window.KA_WORKFLOW_STORE ? window.KA_WORKFLOW_STORE.pendingRegistrations() : JSON.parse(localStorage.getItem('ka_pending_registrations') || '[]');
+          const dup = regs.find(r => r.email.toLowerCase() === this.value.toLowerCase());
+          if (dup) showErr('email', 'An account with this email already exists. Submit once and the sign-in window will open.');
+          else clearErr('email');
+        }
+      });
+
+      document.getElementById('confirmPassword').addEventListener('blur', function() {
+        const pw = document.getElementById('password').value;
+        if (this.value && this.value !== pw) showErr('confirmPassword','Passwords do not match.');
+        else if (this.value) clearErr('confirmPassword');
+      });
+
+      document.getElementById('trackChoice1').addEventListener('change', function() {
+        const name = TRACK_NAMES[this.value] || 'your first-choice track';
+        document.getElementById('skills1Label').textContent = 'Relevant skills for ' + name;
+        if (this.value) clearErr('trackChoice1');
+      });
+
+      // ── Form submission ──────────────────────────────────────────────
+      document.getElementById('registerForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        let ok = true;
+
+        // Required text fields
+        ['firstName','lastName'].forEach(id => {
+          const val = document.getElementById(id).value.trim();
+          if (!val) { showErr(id, 'This field is required.'); ok = false; }
+          else clearErr(id);
+        });
+
+        // Email
+        const email = document.getElementById('email').value.trim();
+        if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+          showErr('email','Please enter a valid email address.'); ok = false;
+        } else {
+          const regs = window.KA_WORKFLOW_STORE ? window.KA_WORKFLOW_STORE.pendingRegistrations() : JSON.parse(localStorage.getItem('ka_pending_registrations') || '[]');
+          if (regs.find(r => r.email.toLowerCase() === email.toLowerCase())) {
+            showErr('email','An account with this email already exists. Use the sign-in window instead.');
+            openDuplicateLoginModal(email, 'That email is already registered. Sign in here instead of creating a second account.');
+            return;
+          } else clearErr('email');
+        }
+
+        // Password
+        const pw = document.getElementById('password').value;
+        if (pw.length < 8) { showErr('password','Password must be at least 8 characters.'); ok = false; }
+        else clearErr('password');
+
+        // Confirm password
+        const cpw = document.getElementById('confirmPassword').value;
+        if (cpw !== pw) { showErr('confirmPassword','Passwords do not match.'); ok = false; }
+        else if (cpw) clearErr('confirmPassword');
+
+        // Track choice
+        const track1 = document.getElementById('trackChoice1').value;
+        if (!track1) { showErr('trackChoice1','Please select a first-choice track.'); ok = false; }
+        else clearErr('trackChoice1');
+
+        if (!ok) {
+          // Scroll to first visible error
+          const firstErr = document.querySelector('.field-error.visible');
+          if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return;
+        }
+
+        // ── All valid: register with the auth server ────────────────────
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName  = document.getElementById('lastName').value.trim();
+        const department = document.getElementById('department').value.trim();
+
+        const userData = {
+          firstName: firstName,
+          lastName:  lastName,
+          email:     email,
+          role:      document.querySelector('input[name="role"]:checked')?.value || 'undergrad',
+          institution: document.getElementById('institution').value.trim(),
+          department:  department,
+          userType: document.getElementById('userTypeChoice').value,
+          navPreference: NAV_PREFERENCE_BY_TYPE[document.getElementById('userTypeChoice').value] || 'explore_literature',
+          trackChoice1: track1,
+          trackChoice2: document.getElementById('trackChoice2').value,
+          timestamp: new Date().toISOString(),
+          status: 'approved'
+        };
+
+        // POST to auth server so the account exists in SQLite for login
+        let serverRegistered = false;
+        let duplicateAccount = false;
+        try {
+          const is160 = document.getElementById('is160Student').checked;
+          const regBody = {
+            email:      email,
+            password:   pw,
+            first_name: firstName,
+            last_name:  lastName,
+            department: is160 ? 'COGS 160' : department,
+            track:      track1
+          };
+          if (is160) regBody.question_id = 'A0';
+          const regRes = await fetch(KA_AUTH_API + '/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(regBody)
+          });
+          const regData = await regRes.json();
+          if (regRes.ok) {
+            serverRegistered = true;
+            userData.id = regData.user_id;
+          } else if (regRes.status === 409) {
+            duplicateAccount = true;
+          } else {
+            console.warn('[KA] Server registration returned error:', regData.detail);
+          }
+        } catch (e) {
+          console.warn('[KA] Auth server not reachable, saving locally only:', e);
+        }
+
+        if (duplicateAccount) {
+          showErr('email','An account with this email already exists. Use the sign-in window instead.');
+          openDuplicateLoginModal(email, 'That email is already registered. Sign in with it now, or use password help if you have forgotten the password.');
+          return;
+        }
+
+        // Fallback: also persist to localStorage for offline/demo use
+        if (!userData.id) userData.id = 'student_' + Date.now();
+        if (window.KA_WORKFLOW_STORE) {
+          window.KA_WORKFLOW_STORE.addPendingRegistration(userData);
+          if (window.KA_WORKFLOW_STORE.approveRegistration) {
+            window.KA_WORKFLOW_STORE.approveRegistration(userData.id, userData.trackChoice1);
+          }
+        } else {
+          const regs = JSON.parse(localStorage.getItem('ka_pending_registrations') || '[]');
+          regs.push(userData);
+          localStorage.setItem('ka_pending_registrations', JSON.stringify(regs));
+        }
+
+        // Registration does not create an authenticated session.
+        if (window.KA_WORKFLOW_STORE) {
+          window.KA_WORKFLOW_STORE.setCurrentUser(null);
+          window.KA_WORKFLOW_STORE.setLoggedIn(false);
+        }
+        localStorage.removeItem('ka_access_token');
+        localStorage.removeItem('ka_refresh_token');
+        localStorage.removeItem('ka_current_user');
+        localStorage.removeItem('ka_logged_in');
+        localStorage.removeItem('katlas_token');
+        localStorage.removeItem('katlas_user');
+        sessionStorage.removeItem('ka_logged_in');
+        localStorage.setItem('ka_user_type', userData.userType);
+        sessionStorage.setItem('ka_active_mode', userData.userType);
+
+        // ── Show success screen ──────────────────────────────────────────
+        const is160Success = document.getElementById('is160Student').checked;
+        document.getElementById('registerForm').style.display = 'none';
+        const screen = document.getElementById('successScreen');
+        screen.classList.add('visible');
+        const statusMsg = serverRegistered
+          ? 'Active — ready to sign in'
+          : 'Saved locally (auth server offline) — sign in when server is running';
+        document.getElementById('successDetail').innerHTML =
+          '<strong>Name:</strong> ' + userData.firstName + ' ' + userData.lastName + '<br>' +
+          '<strong>Email:</strong> ' + userData.email + '<br>' +
+          '<strong>Track requested:</strong> ' + (TRACK_NAMES[track1] || track1) + '<br>' +
+          '<strong>Status:</strong> ' + statusMsg;
+
+        // 160 students: redirect to sign-in after brief pause
+        if (is160Success && serverRegistered) {
+          document.getElementById('successDetail').innerHTML +=
+            '<br><br>Redirecting to Sign In\u2026';
+          setTimeout(function() { window.location.href = 'ka_login.html'; }, 2000);
+        }
+        screen.scrollIntoView({ behavior: 'smooth' });
+      });
+    })();
+    </script>
+
+<script src="ka_mode_switch.js"></script>
+<script src="ka_site_shell.js"></script>
+<script src="ka_data_adapter.js"></script>
+<script src="data/ka_payloads/workflow.js"></script>
+<script src="ka_workflow_store.js"></script>
+<script src="ka_live_context.js"></script>
+<script>
+    (function() {
+      function syncRegisterMode(mode) {
+        const userTypeChoice = document.getElementById('userTypeChoice');
+        if (userTypeChoice) {
+          userTypeChoice.value = mode;
+        }
+      }
+
+      window.KA_SHELL.initShell({
+        navContainerSelector: '.nav-center',
+        modeSelectId: 'register-mode-select',
+        modePillId: 'register-mode-pill',
+        defaultMode: 'student_explorer',
+        onModeApplied: syncRegisterMode
+      });
+
+      const userTypeChoice = document.getElementById('userTypeChoice');
+      if (userTypeChoice) {
+        userTypeChoice.addEventListener('change', function() {
+          const shellSelect = document.getElementById('register-mode-select');
+          if (shellSelect) {
+            shellSelect.value = this.value;
+            shellSelect.dispatchEvent(new Event('change'));
+          }
+        });
+      }
+    })();
+</script>
+<script>
+window.KA_LIVE_CONTEXT_CONFIG = {
+  surface: 'auth',
+  title: 'System State',
+  status: 'Local identity prototype',
+  warn: true
+};
+</script>
+<script>
+window.KA_PAGE_FUNCTION = {
+  pageId: 'ka_register',
+  title: 'Contributor Registration',
+  audience: 'New students and researchers seeking to join KA as contributors',
+  purpose: 'Collects account information, academic profile, and track preference. The walkthrough now starts from a SQLite-backed workflow export and writes in-session changes to a browser overlay. In production this would POST to a live backend; an instructor would review via ka_approve.html.',
+  workflowPos: 'Onboarding gate — must be completed before access to any track assignment page. Follows from ka_home.html or any "Join" call-to-action.',
+  notFor: 'Returning users (send to ka_login.html), track work itself, browsing KA content without an account.',
+  phase: 'Phase 1 — Foundation Infrastructure',
+  evalQuestions: [
+    'Is the 4-track description in the dropdown sufficient for students to make an informed choice?',
+    'Are the field error messages clear and placed where the eye naturally goes?',
+    'Does the skills textarea prompt update when you change your track selection?',
+    'Is the success screen reassuring and does it give enough information about next steps?',
+    'Can a user recover easily if they enter the wrong email format?'
+  ]
+};
+</script>
+<script src="ka_page_function.js"></script>
+<!-- ka_demo_wiring.js removed: real auth backend is now live -->
+<script>
+window.KA_ABOUT_PAGE = {
+  pageId: 'ka_register',
+  objective: "Allows new contributors to apply for a KA account, declare a preferred track, and describe relevant skills for instructor review.",
+  users: "New COGS 160 students and any researcher seeking contributor access",
+  uses: [
+    "Submit a registration request with track preference and skills statement",
+    "Receive immediate confirmation and await instructor approval",
+    "Choose between Track 1 (Image Tagging), Track 2 (Article Finding), Track 3 (VR Production), and Track 4 (GUI Evaluation)"
+  ]
+};
+</script>
+<script src="ka_about_page.js"></script>
+<script src="ka_ui_fixes.js"></script>
+
+<script src="ka_auth_widget.js"></script>
+</body>
+</html>

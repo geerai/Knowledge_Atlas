@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COGS160 — Image Tagger: System Architecture, Contracts, and Student Workflow</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+         background:#f5f5f5;padding:20px;color:#222;line-height:1.65}
+    .container{max-width:980px;margin:0 auto;background:#fff;padding:48px;
+               box-shadow:0 2px 10px rgba(0,0,0,.08)}
+    .nav{display:flex;justify-content:space-between;align-items:center;
+         margin-bottom:32px;padding-bottom:16px;border-bottom:2px solid #d4620f}
+    .nav a{color:#d4620f;text-decoration:none;font-weight:600;font-size:.9rem}
+    .nav a:hover{text-decoration:underline}
+    .track-pill{background:#d4620f;color:#fff;padding:4px 14px;border-radius:20px;
+                font-size:.8rem;font-weight:700;letter-spacing:.5px}
+    header{margin-bottom:36px}
+    .week-label{font-size:.85rem;font-weight:700;color:#d4620f;text-transform:uppercase;
+                letter-spacing:1px;margin-bottom:6px}
+    h1{font-size:2rem;color:#182B49;font-weight:800;margin-bottom:8px;line-height:1.2}
+    .subtitle{font-size:1.05rem;color:#555;margin-bottom:20px}
+    .meta-row{display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;color:#777}
+    .meta-row span strong{color:#333}
+    h2{font-size:1.3rem;color:#182B49;font-weight:700;margin:40px 0 12px;
+       padding-bottom:6px;border-bottom:2px solid #d4620f}
+    h3{font-size:1.05rem;color:#d4620f;font-weight:700;margin:24px 0 8px}
+    h4{font-size:.95rem;color:#444;font-weight:700;margin:16px 0 6px}
+    p{margin-bottom:12px;color:#333;font-size:.95rem}
+    ul,ol{margin-left:1.4rem;margin-bottom:12px}
+    li{margin-bottom:5px;color:#333;font-size:.95rem}
+
+    .context-box{background:linear-gradient(135deg,#fff8f5,#fff3ee);border:1px solid #f0b090;
+                 border-left:4px solid #d4620f;border-radius:6px;padding:20px 24px;margin-bottom:32px}
+    .context-box p{font-size:.95rem;color:#444;margin-bottom:8px}
+    .context-box p:last-child{margin-bottom:0}
+
+    .insight-box{background:#f0f7ff;border:1px solid #aed0ef;border-left:4px solid #1a6fb5;
+                 border-radius:6px;padding:20px 24px;margin:20px 0}
+    .insight-box h4{color:#1a6fb5;margin-top:0}
+    .insight-box p{margin-bottom:6px}
+
+    .warning-box{background:#fff8e1;border:1px solid #ffc107;border-left:4px solid #e65100;
+                 border-radius:6px;padding:16px 20px;margin:16px 0}
+    .warning-box p{margin:0;font-size:.9rem;color:#555}
+    .warning-box strong{color:#e65100}
+
+    .success-box{background:#f0fff4;border:1px solid #86efac;border-left:4px solid #166534;
+                 border-radius:6px;padding:16px 20px;margin:16px 0}
+    .success-box p{margin:0;font-size:.9rem;color:#555}
+    .success-box strong{color:#166534}
+
+    pre{background:#1e1e2e;color:#cdd6f4;border-radius:6px;padding:20px;
+        font-size:.82rem;line-height:1.6;overflow-x:auto;margin:12px 0;tab-size:2}
+    code{font-family:"JetBrains Mono","Fira Code","Courier New",monospace}
+    code.inline{background:#f0ece8;color:#c0392b;padding:2px 6px;border-radius:3px;
+                font-size:.85rem;font-family:"JetBrains Mono","Fira Code","Courier New",monospace}
+    .code-label{font-size:.75rem;font-weight:700;color:#888;text-transform:uppercase;
+                letter-spacing:.5px;margin-bottom:4px}
+    .kw{color:#cba6f7}.fn{color:#89b4fa}.st{color:#a6e3a1}
+    .cm{color:#6c7086;font-style:italic}.nm{color:#fab387}
+    .jk{color:#89dceb}.jv{color:#a6e3a1}.ja{color:#f38ba8}
+    .prompt{color:#7addb9}.comment-c{color:#6a9fb5}
+
+    table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.88rem}
+    th{background:#182B49;color:#fff;padding:10px 14px;text-align:left;font-weight:700}
+    td{padding:9px 14px;border-bottom:1px solid #eee;color:#333;vertical-align:top}
+    tr:nth-child(even) td{background:#fafafa}
+    tr:hover td{background:#fff8f5}
+
+    .arch-diagram{background:#182B49;border-radius:10px;padding:28px;margin:20px 0;
+                  font-family:"JetBrains Mono","Fira Code","Courier New",monospace;
+                  font-size:.82rem;line-height:1.8;color:#cdd6f4;overflow-x:auto}
+    .arch-label{color:#fab387;font-weight:700}
+    .arch-arrow{color:#6c7086}
+    .arch-box{color:#a6e3a1}
+    .arch-note{color:#89b4fa;font-style:italic}
+
+    .step-box{border:1.5px solid #dde3e9;border-radius:6px;margin:1.25rem 0;overflow:hidden}
+    .step-header{background:#182B49;color:#fff;padding:10px 16px;
+                 font-size:.85rem;font-weight:700;display:flex;align-items:center;gap:10px}
+    .step-num{background:#d4620f;color:#fff;width:24px;height:24px;border-radius:50%;
+              display:flex;align-items:center;justify-content:center;font-size:.75rem;
+              font-weight:800;flex-shrink:0}
+    .step-body{padding:16px 20px;background:#fafafa}
+
+    .track-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0}
+    .track-card{border:2px solid #d4620f;border-radius:8px;overflow:hidden}
+    .track-card-header{background:#d4620f;color:#fff;padding:12px 16px}
+    .track-card-header h4{color:#fff;margin:0;font-size:1rem}
+    .track-card-body{padding:16px;background:#fff}
+    .track-card-body p{font-size:.88rem;margin-bottom:8px}
+    .track-card-body ul{font-size:.88rem}
+
+    .badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.75rem;
+           font-weight:700;margin:0 2px}
+    .badge-math{background:#dbeafe;color:#1d4ed8}
+    .badge-vlm{background:#fce7f3;color:#9d174d}
+    .badge-stub{background:#f3f4f6;color:#6b7280}
+    .badge-active{background:#d1fae5;color:#065f46}
+    .badge-computed{background:#ede9fe;color:#5b21b6}
+
+    .phase-row{display:flex;gap:0;margin:20px 0;border:1px solid #ddd;border-radius:8px;overflow:hidden}
+    .phase-cell{flex:1;padding:14px;border-right:1px solid #ddd;text-align:center}
+    .phase-cell:last-child{border-right:none}
+    .phase-cell .phase-num{font-size:1.5rem;font-weight:800;color:#d4620f;display:block;margin-bottom:4px}
+    .phase-cell .phase-name{font-size:.78rem;font-weight:700;color:#182B49;text-transform:uppercase;
+                            letter-spacing:.5px;display:block;margin-bottom:4px}
+    .phase-cell .phase-desc{font-size:.78rem;color:#666}
+
+    .toc{background:#f8f9fa;border:1px solid #dee2e6;border-radius:6px;
+         padding:20px 24px;margin-bottom:32px}
+    .toc h4{color:#182B49;margin-top:0;margin-bottom:12px;font-size:1rem}
+    .toc ol{margin-left:1.2rem}
+    .toc li{margin-bottom:4px;font-size:.9rem}
+    .toc a{color:#d4620f;text-decoration:none}
+    .toc a:hover{text-decoration:underline}
+
+    @media(max-width:680px){
+      .container{padding:24px}
+      .track-grid{grid-template-columns:1fr}
+      .phase-row{flex-direction:column}
+      .phase-cell{border-right:none;border-bottom:1px solid #ddd}
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Navigation -->
+  <div class="nav">
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <a href="index.html">← All Tracks</a>
+      <a href="image_track_overview.html">Image Track Overview</a>
+      <a href="af_setup_guide.html">Setup Guide</a>
+      <a href="image_tag_table.html">Tag Browser (424 tags)</a>
+      <a href="image_wk03_triage.html">Wk 3: Triage</a>
+      <a href="image_wk03_registry.html">Wk 3: Registry</a>
+    </div>
+    <span class="track-pill">IMAGE TAGGER</span>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="week-label">Reference Guide · Tag-UCSD/image-tagger v3.4.75</div>
+    <h1>Image Tagger: Architecture, Contracts, and Student Workflow</h1>
+    <p class="subtitle">A complete account of the image-tagger repository — what it does, how it is organized, what contracts it enforces, and how students work with it on GitHub and locally.</p>
+    <div class="meta-row">
+      <span><strong>Course:</strong> COGS160: AI &amp; VR</span>
+      <span><strong>Repo:</strong> github.com/Tag-UCSD/image-tagger</span>
+      <span><strong>Version:</strong> 3.4.75</span>
+      <span><strong>Updated:</strong> 2026-03-29</span>
+    </div>
+  </header>
+
+  <!-- Table of Contents -->
+  <div class="toc">
+    <h4>Contents</h4>
+    <ol>
+      <li><a href="#purpose">What the Image Tagger Is and Why It Exists</a></li>
+      <li><a href="#github-workflow">How to Get the Repo: Fork, Clone, and Branch</a></li>
+      <li><a href="#student-tracks">Two Student Tracks: Docker vs. Colab</a></li>
+      <li><a href="#architecture">System Architecture: Four Apps, One Backend</a></li>
+      <li><a href="#science-pipeline">The Science Pipeline: Analyzers and Feature Keys</a></li>
+      <li><a href="#vlm">VLM Integration: Cognitive and Affective Dimensions</a></li>
+      <li><a href="#contracts">Key Contracts: Analyzer Protocol and Observation Schema</a></li>
+      <li><a href="#database">Database Models: What Gets Stored</a></li>
+      <li><a href="#governance">Governance: The Drift Shield and Locked Modules</a></li>
+      <li><a href="#onboarding">Five-Phase Onboarding Sequence</a></li>
+      <li><a href="#contribution">Safe Contribution: What Students May and May Not Modify</a></li>
+    </ol>
+  </div>
+
+  <!-- Section 1: Purpose -->
+  <h2 id="purpose">1. What the Image Tagger Is and Why It Exists</h2>
+
+  <div class="context-box">
+    <p><strong>The central research question</strong> driving the Image Tagger is: <em>can we reliably extract features from photographs of built environments that predict cognitive and affective responses?</em> The system operationalises this question by running a battery of scientific analyzers over each image, producing a structured observation document that ATLAS can then query.</p>
+    <p>Within the COGS160 course, the Image Tagger track asks students to understand, validate, and extend this measurement infrastructure — not to build a viewer or a website, but to engage critically with the scientific pipeline that transforms raw photographs into evidence.</p>
+  </div>
+
+  <p>The Tag-UCSD/image-tagger is a full production application (version 3.4.75) that manages the complete lifecycle of image tagging: upload → automated feature extraction → VLM semantic annotation → human review → validated observation export. It is composed of a Python FastAPI backend, a PostgreSQL database, four React micro-frontend applications, and an Nginx reverse proxy, all coordinated via Docker Compose.</p>
+
+  <p>The application is <em>not</em> a toy prototype. It implements a governance layer that detects drift in critical modules, a tiered analyzer architecture that controls computational cost, and a formal output contract that specifies exactly what any consuming system (such as ATLAS) can expect from a tagged image. Students encounter it because it is the canonical source of image-level evidence for the ATLAS knowledge base.</p>
+
+  <div class="insight-box">
+    <h4>Relationship to the CNFA Registry</h4>
+    <p>The CNFA Tag Registry (Tagging_Contractor repo, registry_v0.2.8.json, 424 tags) defines <em>what</em> should be measured. The Image Tagger defines <em>how</em> to measure it — the code that actually runs analyzers and produces values. The two systems are linked by tag_id: a tag such as <code class="inline">luminance_mean</code> appears in the registry with its extractability and method_family fields, and in the image tagger's science pipeline as the key produced by a specific analyzer.</p>
+    <p>See the <a href="image_tag_table.html" style="color:#1a6fb5">Tag Browser (424 tags)</a> to explore the registry and understand which tags are phase_0 (measurable from 2D photographs) versus which require 3D capture or computational derivation.</p>
+  </div>
+
+
+  <!-- Section 2: GitHub Workflow -->
+  <h2 id="github-workflow">2. How to Get the Repo: Fork, Clone, and Branch</h2>
+
+  <p>The image-tagger repo is publicly hosted at <strong>github.com/Tag-UCSD/image-tagger</strong>. Students do not clone this repo directly for development — they <em>fork</em> it first. The distinction matters: a fork creates a copy under your own GitHub account that you control, so you can push commits freely and then submit a Pull Request (PR) to the upstream Tag-UCSD organisation when your work is ready for review.</p>
+
+  <h3>Step-by-step: First-Time Setup</h3>
+
+  <div class="step-box">
+    <div class="step-header"><span class="step-num">1</span> Fork the repository on GitHub</div>
+    <div class="step-body">
+      <p>Go to <strong>github.com/Tag-UCSD/image-tagger</strong> in your browser. Click the <strong>Fork</strong> button in the upper-right corner. GitHub will ask which account to fork into — choose your personal account. After a few seconds you will have a copy at <code class="inline">github.com/YOUR-USERNAME/image-tagger</code>.</p>
+      <p>This fork is yours. Commits you push here do not affect the upstream repo until you open a PR.</p>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-header"><span class="step-num">2</span> Clone your fork to your local machine</div>
+    <div class="step-body">
+      <div class="code-label">Terminal</div>
+      <pre><span class="prompt">$</span> git clone https://github.com/YOUR-USERNAME/image-tagger.git
+<span class="prompt">$</span> cd image-tagger</pre>
+      <p>Replace <code class="inline">YOUR-USERNAME</code> with your actual GitHub username. This downloads the repository to a folder named <code class="inline">image-tagger</code> on your machine.</p>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-header"><span class="step-num">3</span> Add the upstream remote (important for syncing)</div>
+    <div class="step-body">
+      <div class="code-label">Terminal</div>
+      <pre><span class="prompt">$</span> git remote add upstream https://github.com/Tag-UCSD/image-tagger.git
+<span class="prompt">$</span> git remote -v
+<span class="comment-c"># You should see:
+#   origin    https://github.com/YOUR-USERNAME/image-tagger.git (fetch/push)
+#   upstream  https://github.com/Tag-UCSD/image-tagger.git (fetch/push)</span></pre>
+      <p>The <code class="inline">upstream</code> remote lets you pull in updates from the main repo whenever the instructors push changes:</p>
+      <pre><span class="prompt">$</span> git fetch upstream
+<span class="prompt">$</span> git merge upstream/main</pre>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-header"><span class="step-num">4</span> Create a feature branch for your deliverable</div>
+    <div class="step-body">
+      <div class="code-label">Terminal</div>
+      <pre><span class="prompt">$</span> git checkout -b image-track/D1-team-name
+<span class="comment-c"># Branch naming convention: image-track/[deliverable]-[team-name]
+# Examples:
+#   image-track/D1-mesa-group
+#   image-track/D2-hillcrest-team</span></pre>
+      <p><strong>Always work on a feature branch, never directly on <code class="inline">main</code>.</strong> This keeps your changes isolated and makes it easy to open a clean PR when you're done.</p>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-header"><span class="step-num">5</span> Commit and push your work</div>
+    <div class="step-body">
+      <div class="code-label">Terminal</div>
+      <pre><span class="prompt">$</span> git add src/science/analyzers/my_analyzer.py
+<span class="prompt">$</span> git commit -m "feat(D1): add luminance_variance analyzer"
+<span class="prompt">$</span> git push origin image-track/D1-team-name</pre>
+    </div>
+  </div>
+
+  <div class="step-box">
+    <div class="step-header"><span class="step-num">6</span> Open a Pull Request to the upstream repo</div>
+    <div class="step-body">
+      <p>Go to your fork on GitHub. GitHub will show a yellow banner: "This branch is ahead of Tag-UCSD/image-tagger:main." Click <strong>Compare &amp; pull request</strong>. In the PR form:</p>
+      <ul>
+        <li><strong>Base repository:</strong> Tag-UCSD/image-tagger | base: main</li>
+        <li><strong>Head repository:</strong> YOUR-USERNAME/image-tagger | compare: your branch</li>
+        <li>Title: <code class="inline">[COGS160 D1] Team name — brief description</code></li>
+        <li>Description: what you built, which tags it covers, test results</li>
+      </ul>
+      <p>The teaching team reviews and merges. PRs that touch locked modules (see §9 Governance) will be automatically flagged.</p>
+    </div>
+  </div>
+
+  <div class="warning-box">
+    <p><strong>Do not push to Tag-UCSD/image-tagger directly.</strong> Only the course staff have write access to the upstream repository. Your fork is your sandbox — all development happens there, and your work reaches the upstream only via approved PRs.</p>
+  </div>
+
+
+  <!-- Section 3: Student Tracks -->
+  <h2 id="student-tracks">3. Two Student Tracks: Docker vs. Colab</h2>
+
+  <p>The image-tagger supports two distinct modes of student engagement, defined in <code class="inline">STUDENT_START_HERE.md</code> at the root of the repository. The choice between them depends on your assignment deliverable and your local computing setup.</p>
+
+  <div class="track-grid">
+    <div class="track-card">
+      <div class="track-card-header">
+        <h4>Track A — Full Docker Application</h4>
+      </div>
+      <div class="track-card-body">
+        <p><strong>What it is:</strong> The complete production system running locally via Docker Compose — FastAPI backend, PostgreSQL, all four React micro-frontends, Nginx gateway.</p>
+        <p><strong>Use when:</strong> Your deliverable requires interacting with the full application UI, querying the database, or modifying the backend science pipeline.</p>
+        <p><strong>Requirements:</strong></p>
+        <ul>
+          <li>Docker Desktop installed (Mac/Windows/Linux)</li>
+          <li>~4 GB RAM available for containers</li>
+          <li>~8 GB disk space</li>
+        </ul>
+        <p><strong>Quick start:</strong></p>
+        <pre style="font-size:.78rem;margin:8px 0"><span class="prompt">$</span> docker compose up --build
+<span class="comment-c"># Access at http://localhost:3000</span></pre>
+        <p><strong>Persistent:</strong> Image data and annotations survive container restarts (PostgreSQL volume).</p>
+      </div>
+    </div>
+    <div class="track-card">
+      <div class="track-card-header">
+        <h4>Track B — Google Colab VLM Health Lab</h4>
+      </div>
+      <div class="track-card-body">
+        <p><strong>What it is:</strong> A self-contained Python notebook that imports the science pipeline modules and runs VLM analysis on sample images, without Docker or a local database.</p>
+        <p><strong>Use when:</strong> Your deliverable focuses on the science pipeline, VLM integration, or analyzer validation — not the web UI.</p>
+        <p><strong>Requirements:</strong></p>
+        <ul>
+          <li>Google account (for Colab)</li>
+          <li>VLM API key (Gemini or OpenAI; Anthropic optional)</li>
+          <li>No local installation required</li>
+        </ul>
+        <p><strong>Quick start:</strong> Find the Colab link in <code class="inline">docs/ops/Student_Quickstart_v3.4.73.md</code> → "VLM Health Lab Notebook".</p>
+        <p><strong>Ephemeral:</strong> Results exist only in the notebook session unless you explicitly save them.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight-box">
+    <h4>Which track is right for your COGS160 deliverable?</h4>
+    <p>Deliverables D1 and D2 (registry triage and augmentation) do not require the running application — they work with the registry JSON files. Deliverables D3 and D4 (analyzer validation and implementation) are best done with Track B (Colab) or Track A with the backend running. Check your weekly assignment page for specific guidance.</p>
+  </div>
+
+
+  <!-- Section 4: Architecture -->
+  <h2 id="architecture">4. System Architecture: Four Apps, One Backend</h2>
+
+  <p>The image-tagger follows a micro-frontend architecture: instead of a single monolithic React application, it deploys four specialised React apps that each serve a distinct user role. All four apps communicate with a single FastAPI backend through an Nginx reverse proxy that routes requests based on URL path.</p>
+
+  <div class="arch-diagram">
+    <div><span class="arch-label">┌─ USER BROWSER ─────────────────────────────────────────────┐</span></div>
+    <div><span class="arch-label">│</span>  http://localhost:3000  (or class server URL)</div>
+    <div><span class="arch-label">└──────────────────────────────┬─────────────────────────────┘</span></div>
+    <div>                               <span class="arch-arrow">↓</span></div>
+    <div><span class="arch-label">┌─ NGINX GATEWAY ─────────────────────────────────────────────┐</span></div>
+    <div><span class="arch-label">│</span>  Routes by URL prefix:</div>
+    <div><span class="arch-label">│</span>  /workbench → <span class="arch-box">Workbench App</span>    (tagger, annotator)</div>
+    <div><span class="arch-label">│</span>  /monitor   → <span class="arch-box">Monitor App</span>      (job status, queue)</div>
+    <div><span class="arch-label">│</span>  /admin     → <span class="arch-box">Admin/Cockpit App</span> (users, config)</div>
+    <div><span class="arch-label">│</span>  /explore   → <span class="arch-box">Explorer App</span>     (browse, search)</div>
+    <div><span class="arch-label">│</span>  /api       → FastAPI Backend</div>
+    <div><span class="arch-label">└──────────────────────────────┬─────────────────────────────┘</span></div>
+    <div>                               <span class="arch-arrow">↓</span></div>
+    <div><span class="arch-label">┌─ FastAPI BACKEND ────────────────────────────────────────────┐</span></div>
+    <div><span class="arch-label">│</span>  Python 3.10+  ·  Science Pipeline  ·  Job Queue</div>
+    <div><span class="arch-label">│</span>  Analyzer Registry (145 feature keys)</div>
+    <div><span class="arch-label">│</span>  VLM Integration (Gemini / OpenAI / Anthropic / stub)</div>
+    <div><span class="arch-label">│</span>  Guardian (governance.lock drift detection)</div>
+    <div><span class="arch-label">└───────────────────────┬──────────────────────────────────────┘</span></div>
+    <div>                          <span class="arch-arrow">↓</span></div>
+    <div><span class="arch-label">┌─ PostgreSQL DATABASE ────────────────────────────────────────┐</span></div>
+    <div><span class="arch-label">│</span>  Tables: images, annotations, attributes, jobs, users, usage</div>
+    <div><span class="arch-label">│</span>  Seed data: google_image_data.json (initial image corpus)</span></div>
+    <div><span class="arch-label">└─────────────────────────────────────────────────────────────┘</span></div>
+  </div>
+
+  <h3>The Four React Micro-Frontends</h3>
+
+  <table>
+    <tr>
+      <th>App</th>
+      <th>URL Prefix</th>
+      <th>Primary User</th>
+      <th>Core Functions</th>
+    </tr>
+    <tr>
+      <td><strong>Workbench</strong></td>
+      <td><code class="inline">/workbench</code></td>
+      <td>Annotator / tagger</td>
+      <td>Upload images, run analyzers, review auto-tags, add manual annotations, export observation JSON</td>
+    </tr>
+    <tr>
+      <td><strong>Monitor</strong></td>
+      <td><code class="inline">/monitor</code></td>
+      <td>Researcher</td>
+      <td>View job queue, track analysis status, inspect per-image progress, see error logs</td>
+    </tr>
+    <tr>
+      <td><strong>Admin / Cockpit</strong></td>
+      <td><code class="inline">/admin</code></td>
+      <td>Course staff</td>
+      <td>User management, system configuration, API key management, governance reports</td>
+    </tr>
+    <tr>
+      <td><strong>Explorer</strong></td>
+      <td><code class="inline">/explore</code></td>
+      <td>Researcher / student</td>
+      <td>Browse images by tag, filter by feature value range, compare images side-by-side, export filtered sets</td>
+    </tr>
+  </table>
+
+  <div class="insight-box">
+    <h4>Where are the images?</h4>
+    <p>The application ships with a seed dataset defined in <code class="inline">backend/database/google_image_data.json</code> and <code class="inline">google_images_import.json</code>. These are photographs of built environments collected from Google Street View and similar sources. When you run <code class="inline">docker compose up</code>, the seed data is imported into PostgreSQL automatically. There is no separate image download step.</p>
+  </div>
+
+  <h3>Directory Structure (top level)</h3>
+
+  <table>
+    <tr><th>Path</th><th>Contents</th></tr>
+    <tr><td><code class="inline">backend/</code></td><td>FastAPI application: routes, models, science pipeline, VLM integration, governance</td></tr>
+    <tr><td><code class="inline">backend/science/</code></td><td>Analyzer classes and the AnalyzerRegistry; this is where students add new feature extractors</td></tr>
+    <tr><td><code class="inline">backend/models/</code></td><td>SQLAlchemy ORM models: annotation.py, assets.py, attribute.py, config.py, jobs.py, usage.py, users.py</td></tr>
+    <tr><td><code class="inline">backend/database/</code></td><td>Database session, mixins, seed data JSON files</td></tr>
+    <tr><td><code class="inline">frontend/</code></td><td>Four Vite + React + Tailwind CSS apps (workbench/, monitor/, admin/, explorer/)</td></tr>
+    <tr><td><code class="inline">docs/</code></td><td>Science overview, VLM integration guide, student quickstart, tag map, onboarding guide</td></tr>
+    <tr><td><code class="inline">docs/ops/</code></td><td>Operational runbooks, Docker setup guides, environment configuration</td></tr>
+    <tr><td><code class="inline">contracts.py</code></td><td>The canonical Analyzer protocol and AnalyzerRegistry (see §7)</td></tr>
+    <tr><td><code class="inline">governance.lock</code></td><td>SHA256 hashes of locked modules; guardian.py checks these on startup (see §9)</td></tr>
+    <tr><td><code class="inline">docker-compose.yml</code></td><td>Orchestrates all services: backend, db, nginx, four frontend builds</td></tr>
+    <tr><td><code class="inline">STUDENT_START_HERE.md</code></td><td>Entry point — read this first before anything else</td></tr>
+  </table>
+
+  <p>Note: much of the application code lives inside <code class="inline">Image_Tagger_3.4.74_vlm_lab_TL_runbook_full/</code> at the repo root — this is the full bundled application directory. The file <code class="inline">deconcat.py</code> at the repo root can reconstruct the complete file tree from this bundle if needed. When you clone the repo and run Docker, this layout is handled transparently.</p>
+
+
+  <!-- Section 5: Science Pipeline -->
+  <h2 id="science-pipeline">5. The Science Pipeline: Analyzers and Feature Keys</h2>
+
+  <p>The science pipeline is the intellectual heart of the system. It is a tiered sequence of analyzer objects, each of which reads an <code class="inline">AnalysisFrame</code> (an input container holding the raw image and any previously computed features), runs a measurement, and writes new feature keys back into the frame. The pipeline terminates when all registered analyzers have run, producing a complete dictionary of feature values that becomes the basis for the observation JSON.</p>
+
+  <h3>The AnalysisFrame</h3>
+  <p>Every image enters the pipeline wrapped in an <code class="inline">AnalysisFrame</code>:</p>
+  <div class="code-label">backend/science/contracts.py (simplified)</div>
+  <pre><span class="kw">@dataclass</span>
+<span class="kw">class</span> <span class="fn">AnalysisFrame</span>:
+    image_id: <span class="nm">str</span>            <span class="cm"># UUID from PostgreSQL</span>
+    image_path: <span class="nm">str</span>          <span class="cm"># local filesystem path to the image file</span>
+    image_array: <span class="nm">np.ndarray</span>  <span class="cm"># decoded pixel array (H×W×C, uint8)</span>
+    features: <span class="nm">dict</span>           <span class="cm"># accumulates computed values as pipeline runs</span>
+    metadata: <span class="nm">dict</span>           <span class="cm"># exif, source URL, capture date, etc.</span></pre>
+
+  <h3>145 Feature Keys: Three Populations</h3>
+
+  <p>The science pipeline currently defines 145 feature keys in total (<code class="inline">docs/SCIENCE_TAG_MAP.md</code>). These fall into three distinct populations, which differ in their implementation status:</p>
+
+  <table>
+    <tr>
+      <th>Population</th>
+      <th>Count</th>
+      <th>Status</th>
+      <th>Examples</th>
+    </tr>
+    <tr>
+      <td><span class="badge badge-math">Mathematical / Deterministic</span></td>
+      <td>61</td>
+      <td>Implemented</td>
+      <td>luminance_mean, glcm_contrast, fractal_dimension_fd, edge_density</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-stub">Stub / Planned</span></td>
+      <td>69</td>
+      <td>Not yet implemented — return NaN</td>
+      <td>symmetry_bilateral, depth_cue_strength, material_roughness_est</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-vlm">VLM Semantic</span></td>
+      <td>14</td>
+      <td>Implemented via VLM prompt</td>
+      <td>spatial_clarity, sensory_richness, symbolic_density, valence, arousal</td>
+    </tr>
+    <tr>
+      <td><span class="badge badge-computed">VLM Cognitive</span></td>
+      <td>1</td>
+      <td>Implemented via VLM prompt</td>
+      <td>attention_capture</td>
+    </tr>
+  </table>
+
+  <h3>Primitive and Composite Measurements</h3>
+
+  <p>The 61 mathematical analyzers build up from primitive measurements to composite scores:</p>
+
+  <table>
+    <tr>
+      <th>Measurement Family</th>
+      <th>Feature Keys</th>
+      <th>What It Captures</th>
+    </tr>
+    <tr>
+      <td><strong>Color statistics</strong></td>
+      <td>luminance_mean, luminance_variance, saturation_mean, hue_diversity</td>
+      <td>Pixel-level colour distribution in HSV/Lab space</td>
+    </tr>
+    <tr>
+      <td><strong>GLCM texture</strong></td>
+      <td>glcm_contrast, glcm_dissimilarity, glcm_homogeneity, glcm_energy, glcm_correlation (×4 orientations)</td>
+      <td>Grey-level co-occurrence matrix — captures surface texture regularity</td>
+    </tr>
+    <tr>
+      <td><strong>Fractal dimension</strong></td>
+      <td>fractal_dimension_fd, box_count_slope, lacunarity</td>
+      <td>Self-similarity across scales; related to Kaplan et al. biophilic complexity work</td>
+    </tr>
+    <tr>
+      <td><strong>Spatial complexity</strong></td>
+      <td>edge_density, contour_count, region_count, clutter_index</td>
+      <td>Canny edge detection and region segmentation; visual information load</td>
+    </tr>
+    <tr>
+      <td><strong>Visual richness</strong> (composite)</td>
+      <td>visual_richness_score</td>
+      <td>Weighted combination of saturation, texture, and edge density</td>
+    </tr>
+    <tr>
+      <td><strong>Organised complexity</strong> (composite)</td>
+      <td>organised_complexity_score</td>
+      <td>Fractal dimension × inverse clutter — high scores indicate structured rather than random complexity</td>
+    </tr>
+  </table>
+
+  <p>Validation tables track whether each computed value falls within the expected range for the image corpus; out-of-range values trigger a warning in the Monitor app.</p>
+
+
+  <!-- Section 6: VLM Integration -->
+  <h2 id="vlm">6. VLM Integration: Cognitive and Affective Dimensions</h2>
+
+  <p>The VLM (Vision-Language Model) integration layer submits the image plus a structured prompt to a large multimodal model and parses the response into numerical scores. It is defined in <code class="inline">docs/VLM_INTEGRATION.md</code> and implemented in <code class="inline">backend/science/vlm/</code>.</p>
+
+  <h3>Supported Providers</h3>
+
+  <table>
+    <tr><th>Provider</th><th>Models</th><th>Notes</th></tr>
+    <tr>
+      <td>Google Gemini</td>
+      <td>gemini-1.5-flash, gemini-1.5-pro</td>
+      <td>Default recommendation for Track B (cost-efficient, fast)</td>
+    </tr>
+    <tr>
+      <td>OpenAI</td>
+      <td>gpt-4o-mini, gpt-4o, gpt-4.1</td>
+      <td>gpt-4o-mini recommended for cost; gpt-4o for highest accuracy</td>
+    </tr>
+    <tr>
+      <td>Anthropic</td>
+      <td>claude-3.5-sonnet</td>
+      <td>Optional; requires ANTHROPIC_API_KEY environment variable</td>
+    </tr>
+    <tr>
+      <td>Stub</td>
+      <td>—</td>
+      <td>Returns fixed values (0.5 for all dimensions); use for testing pipeline without API calls</td>
+    </tr>
+  </table>
+
+  <h3>The Ten VLM Dimensions</h3>
+
+  <p>Each VLM call produces scores on ten dimensions (0.0–1.0 continuous scale), split into two groups:</p>
+
+  <div class="track-grid">
+    <div>
+      <h4>Cognitive Dimensions (5)</h4>
+      <table>
+        <tr><th>Key</th><th>Definition</th></tr>
+        <tr><td>attention_capture</td><td>Degree to which the scene immediately draws and holds visual attention</td></tr>
+        <tr><td>spatial_clarity</td><td>How legibly the 3D layout of the space is communicated</td></tr>
+        <tr><td>sensory_richness</td><td>Density and diversity of sensory information (visual texture, colour variety)</td></tr>
+        <tr><td>symbolic_density</td><td>Presence of signs, text, cultural artefacts, or other symbolic content</td></tr>
+        <tr><td>temporal_resonance</td><td>Sense of historical depth or temporal layering conveyed by the scene</td></tr>
+      </table>
+    </div>
+    <div>
+      <h4>Affective Dimensions (5)</h4>
+      <table>
+        <tr><th>Key</th><th>Definition</th></tr>
+        <tr><td>valence</td><td>Hedonic quality: 1.0 = strongly positive, 0.0 = strongly negative</td></tr>
+        <tr><td>arousal</td><td>Activation level: 1.0 = highly stimulating, 0.0 = calm/sedating</td></tr>
+        <tr><td>awe</td><td>Sense of vastness or transcendence that challenges existing schemas</td></tr>
+        <tr><td>tranquility</td><td>Peacefulness and restorative quality (related to Kaplan ART)</td></tr>
+        <tr><td>unease</td><td>Discomfort, threat, or anxiety evoked by the scene</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="warning-box">
+    <p><strong>Cost safety</strong>: Each VLM call costs real money. The system enforces rate limits and a daily budget cap configurable in <code class="inline">config.py</code>. For Track B Colab sessions, use the <strong>stub provider</strong> during development and switch to a real provider only for final validation runs.</p>
+  </div>
+
+  <div class="insight-box">
+    <h4>What does "VLM reliability" mean here?</h4>
+    <p>The VLM dimensions are not ground truth — they are one model's interpretation of the image. The image tagger's VLM Health Lab (Track B) is specifically designed to test inter-rater reliability across providers and across prompt variations. Deliverable D3 asks you to quantify this reliability, which is a genuine open research question: how consistently do different VLMs score the same image, and does inter-model agreement predict human rater agreement?</p>
+  </div>
+
+
+  <!-- Section 7: Key Contracts -->
+  <h2 id="contracts">7. Key Contracts: The Analyzer Protocol and the Observation Schema</h2>
+
+  <p>Two contracts govern everything students interact with in the science pipeline. Both are enforced at runtime: code that violates them will fail with a descriptive error rather than silently producing wrong output.</p>
+
+  <h3>Contract 1: The Analyzer Protocol (<code class="inline">contracts.py</code>)</h3>
+
+  <p>Every feature extractor in the system must be an instance of a class that satisfies the Analyzer protocol. The protocol is defined in <code class="inline">contracts.py</code> at the root of the application:</p>
+
+  <div class="code-label">contracts.py — Analyzer Protocol (Python Protocol class)</div>
+  <pre><span class="kw">class</span> <span class="fn">Analyzer</span>(<span class="nm">Protocol</span>):
+    <span class="cm">"""All science analyzers must implement this interface."""</span>
+
+    name: <span class="nm">str</span>
+    <span class="cm"># Unique identifier for this analyzer.
+    # Must match the key used in AnalyzerRegistry.
+    # Example: "glcm_texture_analyzer"</span>
+
+    tier: <span class="nm">int</span>
+    <span class="cm"># Computational tier: L0 (fastest, no API) → L5 (VLM call, expensive)
+    # L0: pure math, milliseconds
+    # L1: numpy/scipy, &lt;1 second
+    # L2: scikit-image, 1–5 seconds
+    # L3: deep features (no VLM), 5–30 seconds
+    # L4: local VLM inference
+    # L5: remote VLM API call</span>
+
+    requires: <span class="nm">list</span>[<span class="nm">str</span>]
+    <span class="cm"># Feature keys that must already be present in frame.features
+    # before this analyzer runs. Pipeline scheduling honours these
+    # dependencies automatically.</span>
+
+    provides: <span class="nm">list</span>[<span class="nm">str</span>]
+    <span class="cm"># Feature keys this analyzer writes into frame.features.
+    # Must be a subset of keys declared in the CNFA registry.</span>
+
+    <span class="kw">def</span> <span class="fn">analyze</span>(self, frame: <span class="nm">AnalysisFrame</span>) -> <span class="nm">dict</span>[<span class="nm">str</span>, <span class="nm">Any</span>]:
+        <span class="cm">"""
+        Run the analysis and return a dict mapping feature keys to values.
+        Return value is merged into frame.features by the pipeline runner.
+        Raise AnalyzerError (not bare Exception) on failure.
+        """</span>
+        ...</pre>
+
+  <p>Students implementing new analyzers (Deliverable D4) must satisfy all five fields. The <code class="inline">provides</code> list is especially important: the keys listed there must be registered in the CNFA registry, and the pipeline runner will reject any analyzer that claims to provide an unregistered key.</p>
+
+  <h3>The AnalyzerRegistry</h3>
+
+  <div class="code-label">contracts.py — AnalyzerRegistry</div>
+  <pre><span class="kw">class</span> <span class="fn">AnalyzerRegistry</span>:
+    <span class="cm">"""Central dictionary of all registered analyzers."""</span>
+    _registry: <span class="nm">dict</span>[<span class="nm">str</span>, <span class="fn">Analyzer</span>] = {}
+
+    <span class="kw">def</span> <span class="fn">register</span>(self, analyzer: <span class="fn">Analyzer</span>) -> <span class="nm">None</span>:
+        <span class="cm"># Validates Analyzer protocol compliance before registering</span>
+        ...
+
+    <span class="kw">def</span> <span class="fn">get_ordered_pipeline</span>(self) -> <span class="nm">list</span>[<span class="fn">Analyzer</span>]:
+        <span class="cm"># Topological sort by tier and requires → produces run order</span>
+        ...</pre>
+
+  <h3>Contract 2: The Observation Output Schema</h3>
+
+  <p>Every image that completes the pipeline produces an observation JSON document. The schema is defined in <code class="inline">Tagging_Contractor/core/trs-core/v0.2.8/schemas/json_schema/observations/image_tagger_observation.schema.json</code>. This is the document that ATLAS ingests when it asks "what features does this photograph have?"</p>
+
+  <div class="code-label">image_tagger_observation.schema.json — Required structure</div>
+  <pre>{
+  <span class="jk">"contract_version"</span>: <span class="jv">"0.2.8"</span>,          <span class="cm">// Must match registry version</span>
+  <span class="jk">"image_id"</span>:        <span class="jv">"uuid-string"</span>,      <span class="cm">// PostgreSQL image primary key</span>
+  <span class="jk">"run_id"</span>:          <span class="jv">"uuid-string"</span>,      <span class="cm">// Analysis job identifier</span>
+  <span class="jk">"tags"</span>: [
+    {
+      <span class="jk">"tag_id"</span>:    <span class="jv">"luminance_mean"</span>,   <span class="cm">// Must be registered in CNFA registry</span>
+      <span class="jk">"value_type"</span>: <span class="jv">"continuous"</span>,     <span class="cm">// binary | ordinal | continuous | categorical | region_map</span>
+      <span class="jk">"value"</span>:     <span class="jv">0.734</span>,
+      <span class="jk">"confidence"</span>: <span class="jv">0.98</span>,             <span class="cm">// 0.0–1.0; math analyzers use 1.0</span>
+      <span class="jk">"status"</span>:    <span class="jv">"computed"</span>,        <span class="cm">// computed | manual | stub | error</span>
+      <span class="jk">"evidence"</span>:  <span class="jv">"GLCM L2-norm measurement on 256×256 patch"</span>
+    },
+    ...
+  ]
+}</pre>
+
+  <p>Notice the <code class="inline">confidence</code> field: mathematical analyzers report 1.0 (deterministic); VLM analyzers report a lower value reflecting prompt variability. The <code class="inline">evidence</code> field is a human-readable explanation of how the value was computed — required for all non-stub tags.</p>
+
+
+  <!-- Section 8: Database Models -->
+  <h2 id="database">8. Database Models: What Gets Stored</h2>
+
+  <p>The PostgreSQL database is the persistent layer of the image tagger. Its schema is defined via SQLAlchemy ORM models in <code class="inline">backend/models/</code>. Understanding these models matters for Deliverable D3 (validation analysis) and for any work that queries the database directly.</p>
+
+  <table>
+    <tr><th>Model file</th><th>Table(s)</th><th>Key fields</th></tr>
+    <tr>
+      <td><code class="inline">assets.py</code></td>
+      <td>images</td>
+      <td>id (UUID), source_url, filename, upload_date, metadata (JSONB), processing_status</td>
+    </tr>
+    <tr>
+      <td><code class="inline">attribute.py</code></td>
+      <td>attributes</td>
+      <td>image_id (FK), tag_id, value, value_type, confidence, status, evidence, run_id, computed_at</td>
+    </tr>
+    <tr>
+      <td><code class="inline">annotation.py</code></td>
+      <td>annotations</td>
+      <td>image_id (FK), annotator_id, tag_id, value, annotation_type (human/vlm), created_at</td>
+    </tr>
+    <tr>
+      <td><code class="inline">jobs.py</code></td>
+      <td>analysis_jobs</td>
+      <td>job_id, image_id, status (queued/running/complete/failed), started_at, finished_at, error_msg</td>
+    </tr>
+    <tr>
+      <td><code class="inline">users.py</code></td>
+      <td>users</td>
+      <td>id, username, role (admin/annotator/viewer), api_key_hash</td>
+    </tr>
+    <tr>
+      <td><code class="inline">usage.py</code></td>
+      <td>api_usage</td>
+      <td>user_id, model_provider, tokens_used, cost_usd, called_at</td>
+    </tr>
+    <tr>
+      <td><code class="inline">config.py</code></td>
+      <td>system_config</td>
+      <td>key, value, updated_at — runtime configuration (VLM provider, budget cap, rate limit)</td>
+    </tr>
+  </table>
+
+  <p>The initial image corpus is seeded from <code class="inline">backend/database/google_image_data.json</code>, which defines image records with source URLs, filenames, and metadata. This gives students a working dataset from day one — no manual image upload is required.</p>
+
+  <div class="insight-box">
+    <h4>The attributes table is the key output table</h4>
+    <p>The <code class="inline">attributes</code> table is where computed feature values live after the pipeline runs. Each row is one (image, tag) pair. A full analysis run for one image with all 145 feature keys would ideally produce 145 rows in this table (in practice, stubs produce no row, and error tags produce an error-status row). When ATLAS asks "what is the luminance_mean of image X?", it queries this table and reads the <code class="inline">value</code> field.</p>
+  </div>
+
+
+  <!-- Section 9: Governance -->
+  <h2 id="governance">9. Governance: The Drift Shield and Locked Modules</h2>
+
+  <p>The governance system exists because the image tagger is collaborative infrastructure: student contributions could inadvertently break the pipeline for the entire class. Two mechanisms prevent this.</p>
+
+  <h3>governance.lock</h3>
+
+  <p>The file <code class="inline">governance.lock</code> at the repo root contains a JSON map from file paths to SHA256 hashes. Every file listed in this map is a <em>locked module</em> — a component so central to the system's integrity that it must not change without explicit approval:</p>
+
+  <div class="code-label">governance.lock (example structure)</div>
+  <pre>{
+  <span class="jk">"contracts.py"</span>:                     <span class="jv">"sha256:a3f4..."</span>,
+  <span class="jk">"backend/science/contracts.py"</span>:     <span class="jv">"sha256:b7c2..."</span>,
+  <span class="jk">"backend/database/core.py"</span>:         <span class="jv">"sha256:d1e9..."</span>,
+  <span class="jk">"backend/database/mixins.py"</span>:       <span class="jv">"sha256:f2a8..."</span>
+}</pre>
+
+  <h3>guardian.py</h3>
+
+  <p>The file <code class="inline">guardian.py</code> is imported at FastAPI startup. It computes the SHA256 hash of every locked module and compares it against <code class="inline">governance.lock</code>. If any hash does not match — meaning the file has been modified — the application refuses to start and prints which file has drifted:</p>
+
+  <div class="code-label">Terminal output when drift detected</div>
+  <pre><span class="ja">GOVERNANCE VIOLATION: contracts.py has drifted from locked state.
+Expected: sha256:a3f4...  Got: sha256:9b12...
+The application cannot start. Revert the locked module or obtain admin approval
+to update governance.lock.</span></pre>
+
+  <div class="warning-box">
+    <p><strong>Do not modify locked modules.</strong> If your analyzer implementation requires a change to <code class="inline">contracts.py</code> (for example, to add a new tier or a new field to AnalysisFrame), open a PR with a clear rationale and wait for staff approval. Modifying a locked module and committing it will cause the application to refuse to start for everyone running your branch.</p>
+  </div>
+
+  <h3>Where Students May Safely Contribute</h3>
+
+  <table>
+    <tr><th>Location</th><th>Status</th><th>What you can do</th></tr>
+    <tr><td><code class="inline">backend/science/analyzers/</code></td><td><span class="badge badge-active">OPEN</span></td><td>Add new analyzer classes; implement stub feature keys</td></tr>
+    <tr><td><code class="inline">docs/</code></td><td><span class="badge badge-active">OPEN</span></td><td>Fix errors, add examples, improve explanations</td></tr>
+    <tr><td><code class="inline">frontend/explorer/</code></td><td><span class="badge badge-active">OPEN</span></td><td>UI improvements to the Explorer app</td></tr>
+    <tr><td><code class="inline">contracts.py</code></td><td><span class="badge badge-stub">LOCKED</span></td><td>Read-only for students; propose changes via PR with written justification</td></tr>
+    <tr><td><code class="inline">backend/database/core.py</code></td><td><span class="badge badge-stub">LOCKED</span></td><td>Read-only; changes require course staff approval</td></tr>
+    <tr><td><code class="inline">governance.lock</code></td><td><span class="badge badge-stub">LOCKED</span></td><td>Never modify directly; updated only by guardian.py update procedure</td></tr>
+    <tr><td><code class="inline">docker-compose.yml</code></td><td><span class="badge badge-computed">CAUTION</span></td><td>Modifications are okay for local development but should not be submitted in PRs without discussion</td></tr>
+  </table>
+
+
+  <!-- Section 10: Onboarding -->
+  <h2 id="onboarding">10. Five-Phase Student Onboarding Sequence</h2>
+
+  <p>The file <code class="inline">docs/STUDENT_ONBOARDING.md</code> defines a structured five-phase sequence for engaging with the system. The phases are cumulative: each one builds the knowledge and trust required to proceed safely to the next.</p>
+
+  <div class="phase-row">
+    <div class="phase-cell">
+      <span class="phase-num">0</span>
+      <span class="phase-name">Read</span>
+      <span class="phase-desc">Read the "constitution": STUDENT_START_HERE.md, docs/, contracts.py. No code changes.</span>
+    </div>
+    <div class="phase-cell">
+      <span class="phase-num">1</span>
+      <span class="phase-name">Orient</span>
+      <span class="phase-desc">Run the system (Track A or B). Browse the Explorer. Identify 5 images and record their attribute values.</span>
+    </div>
+    <div class="phase-cell">
+      <span class="phase-num">2</span>
+      <span class="phase-name">Verify</span>
+      <span class="phase-desc">Run the full test suite. Run health checks. Compare stub vs. computed attributes for 3 images.</span>
+    </div>
+    <div class="phase-cell">
+      <span class="phase-num">3</span>
+      <span class="phase-name">Experiment</span>
+      <span class="phase-desc">Modify only files in backend/science/analyzers/. Test your changes against the seed corpus.</span>
+    </div>
+    <div class="phase-cell">
+      <span class="phase-num">4</span>
+      <span class="phase-name">Contribute</span>
+      <span class="phase-desc">Implement a stub analyzer. Write tests. Pass governance checks. Open a PR.</span>
+    </div>
+  </div>
+
+  <div class="insight-box">
+    <h4>Phase 0 is not optional</h4>
+    <p>The documents in <code class="inline">docs/</code> are written by the system architects specifically for students. They contain design rationale, known limitations, and gotchas that are not obvious from the code alone. Reading them before touching the code is the fastest path to productive work — not the slowest.</p>
+  </div>
+
+  <h3>Running the Test Suite</h3>
+
+  <div class="code-label">Terminal (from repo root)</div>
+  <pre><span class="prompt">$</span> python3 -m pytest backend/tests/ -x -q
+<span class="comment-c"># -x: stop on first failure
+# -q: quiet output (one dot per test)</span>
+
+<span class="comment-c"># To run only science pipeline tests:</span>
+<span class="prompt">$</span> python3 -m pytest backend/tests/test_science_pipeline.py -v
+
+<span class="comment-c"># To test your new analyzer in isolation:</span>
+<span class="prompt">$</span> python3 -m pytest backend/tests/test_science_pipeline.py::test_analyzer_registration -v</pre>
+
+
+  <!-- Section 11: Contribution -->
+  <h2 id="contribution">11. Safe Contribution: The Anatomy of a New Analyzer</h2>
+
+  <p>For students working on Deliverable D4 (implementing a stub feature key), the following template shows the correct structure for a new analyzer. This example implements <code class="inline">luminance_variance</code>, one of the phase_0 mathematical keys that is currently a stub.</p>
+
+  <div class="code-label">backend/science/analyzers/luminance_variance_analyzer.py (template)</div>
+  <pre><span class="kw">from</span> <span class="fn">__future__</span> <span class="kw">import</span> annotations
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> <span class="fn">contracts</span> <span class="kw">import</span> AnalysisFrame, AnalyzerError
+
+
+<span class="kw">class</span> <span class="fn">LuminanceVarianceAnalyzer</span>:
+    <span class="cm">"""
+    Computes luminance_variance: the standard deviation of per-pixel
+    luminance values in the Y channel of YCbCr colour space.
+
+    Tier: L1 (numpy only, deterministic, &lt;0.1 seconds per image)
+    Provides: luminance_variance
+    Requires: nothing (operates on raw image_array)
+    """</span>
+
+    name     = <span class="st">"luminance_variance_analyzer"</span>
+    tier     = <span class="nm">1</span>
+    requires: <span class="nm">list</span>[<span class="nm">str</span>] = []
+    provides: <span class="nm">list</span>[<span class="nm">str</span>] = [<span class="st">"luminance_variance"</span>]
+
+    <span class="kw">def</span> <span class="fn">analyze</span>(self, frame: <span class="fn">AnalysisFrame</span>) -> <span class="nm">dict</span>:
+        <span class="kw">try</span>:
+            img = frame.image_array  <span class="cm"># H×W×3, uint8, RGB</span>
+            <span class="cm"># Convert to float YCbCr; Y channel is luminance</span>
+            r, g, b = img[..., <span class="nm">0</span>], img[..., <span class="nm">1</span>], img[..., <span class="nm">2</span>]
+            y = (<span class="nm">0.299</span> * r + <span class="nm">0.587</span> * g + <span class="nm">0.114</span> * b) / <span class="nm">255.0</span>
+            variance = <span class="nm">float</span>(np.var(y))
+            <span class="kw">return</span> {
+                <span class="st">"luminance_variance"</span>: {
+                    <span class="st">"value"</span>:      variance,
+                    <span class="st">"confidence"</span>: <span class="nm">1.0</span>,
+                    <span class="st">"status"</span>:     <span class="st">"computed"</span>,
+                    <span class="st">"evidence"</span>:   <span class="st">"np.var on Y channel of YCbCr"</span>,
+                }
+            }
+        <span class="kw">except</span> Exception <span class="kw">as</span> e:
+            <span class="kw">raise</span> <span class="fn">AnalyzerError</span>(f<span class="st">"luminance_variance failed: {e}"</span>) <span class="kw">from</span> e</pre>
+
+  <p>Then register the analyzer in the application's startup file so the pipeline runner discovers it:</p>
+
+  <div class="code-label">backend/main.py (where analyzers are registered)</div>
+  <pre><span class="kw">from</span> <span class="fn">backend.science.analyzers.luminance_variance_analyzer</span> <span class="kw">import</span> LuminanceVarianceAnalyzer
+<span class="comment-c"># ... after other imports ...</span>
+registry.register(LuminanceVarianceAnalyzer())</pre>
+
+  <h3>Required Tests for a New Analyzer</h3>
+
+  <p>Every new analyzer must ship with at least three tests:</p>
+
+  <ol>
+    <li><strong>Registration test</strong>: the analyzer is discoverable by name in the AnalyzerRegistry</li>
+    <li><strong>Output schema test</strong>: <code class="inline">analyze()</code> returns a dict with all keys in <code class="inline">provides</code>, each with value, confidence, status, and evidence sub-fields</li>
+    <li><strong>Range test</strong>: the returned value falls within the expected range for the tag (as specified in the CNFA registry's <code class="inline">semantics.range</code> field)</li>
+  </ol>
+
+  <div class="code-label">backend/tests/test_luminance_variance_analyzer.py (template)</div>
+  <pre><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> pytest
+<span class="kw">from</span> <span class="fn">backend.science.analyzers.luminance_variance_analyzer</span> <span class="kw">import</span> LuminanceVarianceAnalyzer
+<span class="kw">from</span> <span class="fn">contracts</span> <span class="kw">import</span> AnalysisFrame
+
+<span class="kw">def</span> <span class="fn">make_frame</span>(h=<span class="nm">64</span>, w=<span class="nm">64</span>):
+    img = np.random.randint(<span class="nm">0</span>, <span class="nm">255</span>, (h, w, <span class="nm">3</span>), dtype=np.uint8)
+    <span class="kw">return</span> AnalysisFrame(image_id=<span class="st">"test"</span>, image_path=<span class="st">""</span>, image_array=img, features={}, metadata={})
+
+<span class="kw">def</span> <span class="fn">test_provides_correct_keys</span>():
+    result = LuminanceVarianceAnalyzer().analyze(make_frame())
+    assert <span class="st">"luminance_variance"</span> <span class="kw">in</span> result
+
+<span class="kw">def</span> <span class="fn">test_output_schema</span>():
+    entry = LuminanceVarianceAnalyzer().analyze(make_frame())[<span class="st">"luminance_variance"</span>]
+    <span class="kw">for</span> field <span class="kw">in</span> (<span class="st">"value"</span>, <span class="st">"confidence"</span>, <span class="st">"status"</span>, <span class="st">"evidence"</span>):
+        assert field <span class="kw">in</span> entry, f<span class="st">"Missing field: {field}"</span>
+
+<span class="kw">def</span> <span class="fn">test_value_in_range</span>():
+    result = LuminanceVarianceAnalyzer().analyze(make_frame())
+    v = result[<span class="st">"luminance_variance"</span>][<span class="st">"value"</span>]
+    assert <span class="nm">0.0</span> &lt;= v &lt;= <span class="nm">0.25</span>, f<span class="st">"Variance {v} out of expected range [0, 0.25]"</span></pre>
+
+  <div class="success-box">
+    <p><strong>Before opening your PR</strong>: run <code class="inline">python3 -m pytest backend/tests/ -x -q</code> and confirm all tests pass. Confirm <code class="inline">python3 guardian.py --check</code> reports no governance violations. Include the test output in your PR description.</p>
+  </div>
+
+  <hr style="margin:40px 0;border:none;border-top:1px solid #eee">
+
+  <p style="color:#777;font-size:.85rem;text-align:center">
+    COGS160: AI &amp; VR · University of California San Diego · Prof. David Kirsh<br>
+    Image Tagger guide v1.0 · 2026-03-29 · Based on Tag-UCSD/image-tagger v3.4.75
+  </p>
+
+</div>
+</body>
+</html>

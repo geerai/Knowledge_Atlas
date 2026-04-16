@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COGS160: AI & VR — Image Track Week 3: Registry Augmentation</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+         background:#f5f5f5;padding:20px;color:#222;line-height:1.65}
+    .container{max-width:960px;margin:0 auto;background:#fff;padding:48px;
+               box-shadow:0 2px 10px rgba(0,0,0,.08)}
+    .nav{display:flex;justify-content:space-between;align-items:center;
+         margin-bottom:32px;padding-bottom:16px;border-bottom:2px solid #d4620f}
+    .nav a{color:#d4620f;text-decoration:none;font-weight:600;font-size:.9rem}
+    .nav a:hover{text-decoration:underline}
+    .track-pill{background:#d4620f;color:#fff;padding:4px 14px;border-radius:20px;
+                font-size:.8rem;font-weight:700;letter-spacing:.5px}
+    header{margin-bottom:36px}
+    .week-label{font-size:.85rem;font-weight:700;color:#d4620f;text-transform:uppercase;
+                letter-spacing:1px;margin-bottom:6px}
+    h1{font-size:2rem;color:#182B49;font-weight:800;margin-bottom:8px;line-height:1.2}
+    .subtitle{font-size:1.05rem;color:#555;margin-bottom:20px}
+    .meta-row{display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;color:#777}
+    .meta-row span strong{color:#333}
+    h2{font-size:1.3rem;color:#182B49;font-weight:700;margin:40px 0 12px;
+       padding-bottom:6px;border-bottom:2px solid #d4620f}
+    h3{font-size:1.05rem;color:#d4620f;font-weight:700;margin:24px 0 8px}
+    h4{font-size:.95rem;color:#444;font-weight:700;margin:16px 0 6px}
+    p{margin-bottom:12px;color:#333;font-size:.95rem}
+
+    .context-box{background:linear-gradient(135deg,#fff8f5,#fff3ee);border:1px solid #f0b090;
+                 border-left:4px solid #d4620f;border-radius:6px;padding:20px 24px;margin-bottom:32px}
+    .context-box p{font-size:.95rem;color:#444;margin-bottom:8px}
+    .context-box p:last-child{margin-bottom:0}
+    .insight-box{background:#f0f7ff;border:1px solid #aed0ef;border-left:4px solid #1a6fb5;
+                 border-radius:6px;padding:20px 24px;margin:20px 0}
+    .insight-box h4{color:#1a6fb5;margin-top:0}
+    .outcome-list{list-style:none;padding:0}
+    .outcome-list li{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid #f0ece8;font-size:.95rem}
+    .outcome-list li:last-child{border-bottom:none}
+    .outcome-num{min-width:28px;height:28px;background:#d4620f;color:#fff;border-radius:50%;
+                 display:flex;align-items:center;justify-content:center;font-weight:700;
+                 font-size:.8rem;flex-shrink:0;margin-top:1px}
+
+    /* Two-column vocab comparison */
+    .vocab-compare{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:20px 0;
+                   border:1px solid #ddd;border-radius:8px;overflow:hidden}
+    .vocab-col{padding:20px}
+    .vocab-col h4{margin-top:0;margin-bottom:12px}
+    .vocab-col ul{list-style:none;padding:0}
+    .vocab-col li{padding:6px 0;border-bottom:1px solid #eee;font-size:.88rem}
+    .vocab-col li:last-child{border-bottom:none}
+    .vocab-col-sci{background:#f0f7ff;border-right:1px solid #ddd}
+    .vocab-col-sci h4{color:#1a6fb5}
+    .vocab-col-cs{background:#f0fff4}
+    .vocab-col-cs h4{color:#166534}
+    .vocab-bridge{text-align:center;padding:10px 16px;font-size:.82rem;color:#666;font-style:italic;
+                  background:#fafafa;border-top:1px solid #ddd;grid-column:1/-1}
+
+    /* JSON schema view */
+    pre{background:#1e1e2e;color:#cdd6f4;border-radius:6px;padding:20px;
+        font-size:.82rem;line-height:1.6;overflow-x:auto;margin:12px 0;tab-size:2}
+    code{font-family:"JetBrains Mono","Fira Code","Courier New",monospace}
+    .code-label{font-size:.75rem;font-weight:700;color:#888;text-transform:uppercase;
+                letter-spacing:.5px;margin-bottom:4px}
+    .kw{color:#cba6f7}.fn{color:#89b4fa}.st{color:#a6e3a1}
+    .cm{color:#6c7086;font-style:italic}.nm{color:#fab387}
+    .jk{color:#89dceb}.jv{color:#a6e3a1}.ja{color:#f38ba8}
+
+    /* Example block */
+    .example-block{background:#f0f7ff;border:1px solid #aed0ef;border-radius:8px;padding:24px;margin:20px 0}
+    .example-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;
+                    padding-bottom:12px;border-bottom:2px solid #aed0ef}
+    .example-badge{background:#182B49;color:#fff;padding:4px 12px;border-radius:4px;
+                   font-size:.78rem;font-weight:700;letter-spacing:.5px}
+    .example-title{font-size:1.05rem;font-weight:700;color:#182B49}
+
+    table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.88rem}
+    th{background:#182B49;color:#fff;padding:10px 14px;text-align:left;font-weight:700}
+    td{padding:9px 14px;border-bottom:1px solid #eee}
+    tr:nth-child(even) td{background:#fafafa}
+
+    .tip{background:#f0fff4;border:1px solid #a8d5b5;border-left:4px solid #28a745;
+         border-radius:6px;padding:14px 18px;margin:12px 0;font-size:.9rem}
+    .warn{background:#fff8e6;border:1px solid #e8c87a;border-left:4px solid #C69214;
+          border-radius:6px;padding:14px 18px;margin:12px 0;font-size:.9rem}
+    .tip strong,.warn strong{display:block;margin-bottom:4px}
+
+    .step-list{display:flex;flex-direction:column;gap:16px;margin:16px 0}
+    .step{display:flex;gap:16px;align-items:flex-start}
+    .step-num{min-width:36px;height:36px;background:#182B49;color:#fff;border-radius:50%;
+              display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+    .step-body{flex:1;padding-top:6px}
+    .step-body strong{display:block;margin-bottom:4px;font-size:.95rem;color:#182B49}
+    .step-body p{font-size:.9rem;color:#444;margin-top:4px}
+
+    .faq-item{border:1px solid #e8e0d8;border-radius:6px;margin-bottom:10px;overflow:hidden}
+    .faq-q{padding:14px 18px;cursor:pointer;font-weight:700;font-size:.9rem;color:#182B49;
+           background:#fdf9f6;display:flex;justify-content:space-between;align-items:center;
+           user-select:none}
+    .faq-q:hover{background:#f5ede4}
+    .faq-a{padding:0 18px;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s}
+    .faq-a.open{max-height:700px;padding:14px 18px}
+    .faq-a p{font-size:.9rem;color:#444;margin-bottom:8px}
+    .faq-a p:last-child{margin-bottom:0}
+    .faq-a pre{font-size:.78rem}
+    .faq-chevron{font-size:.8rem;transition:transform .3s}
+    .faq-chevron.open{transform:rotate(180deg)}
+
+    .ref-list{list-style:none;padding:0}
+    .ref-list li{padding:10px 0;border-bottom:1px solid #eee;font-size:.88rem;color:#444;display:flex;gap:12px}
+    .ref-list li:last-child{border-bottom:none}
+    .ref-num{min-width:28px;font-weight:700;color:#d4620f}
+    .ref-text{flex:1}
+
+    .deliverable-banner{background:#182B49;color:#fff;border-radius:8px;padding:20px 24px;margin:24px 0}
+    .deliverable-banner h3{color:#C69214;margin:0 0 8px}
+    .deliverable-banner p{font-size:.9rem;opacity:.9;margin-bottom:4px}
+    .deliverable-banner .grade{font-size:1.4rem;font-weight:800;color:#C69214}
+
+    .checklist{list-style:none;padding:0}
+    .checklist li{padding:8px 0;border-bottom:1px solid #eee;font-size:.9rem;display:flex;gap:10px}
+    .checklist li::before{content:"☐";font-size:1.1rem;color:#d4620f;flex-shrink:0}
+
+    /* Bilingual card */
+    .bilingual-card{display:grid;grid-template-columns:1fr 1fr;gap:0;border:2px solid #d4620f;
+                    border-radius:8px;overflow:hidden;margin:16px 0}
+    .bilingual-card .sci-side{background:#182B49;color:#e0e8f0;padding:20px}
+    .bilingual-card .cs-side{background:#fdf6ee;padding:20px}
+    .bilingual-card h4{margin:0 0 10px;font-size:.9rem;text-transform:uppercase;letter-spacing:.5px}
+    .bilingual-card .sci-side h4{color:#C69214}
+    .bilingual-card .cs-side h4{color:#d4620f}
+    .bilingual-card p{font-size:.88rem;margin-bottom:8px}
+    .bilingual-card p:last-child{margin-bottom:0}
+    .bilingual-card .sci-side p{color:#cdd6f4}
+    .bilingual-card .cs-side p{color:#444}
+    .bilingual-divider{grid-column:1/-1;background:#d4620f;color:#fff;text-align:center;
+                       padding:6px;font-size:.8rem;font-weight:700}
+
+    footer{margin-top:48px;padding-top:20px;border-top:1px solid #eee;font-size:.82rem;color:#999;text-align:center}
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="nav">
+    <a href="index.html">← Course Home</a>
+    <span class="track-pill">🖼 Image Tagger Track</span>
+    <a href="image_track_overview.html">Track Overview</a>
+    <a href="af_setup_guide.html">⚙️ Setup Guide</a>
+    <a href="image_tagger_guide.html">🏗 Tagger Architecture</a>
+    <a href="image_tag_table.html">📋 Tag Browser (424 tags)</a>
+    <a href="image_wk03_triage.html">← D1a: Tag Triage</a>
+  </nav>
+
+  <header>
+    <div class="week-label">Week 3 · Assignment D1b</div>
+    <h1>The Registry Speaks One Language. You Will Add a Second.</h1>
+    <p class="subtitle">Every scientific tag in the CNFA registry has a precise technical definition. None of them carry the plain-English words a participant uses when describing what they see — the words a vision model was trained on. This assignment builds that bridge.</p>
+    <div class="meta-row">
+      <span><strong>Due:</strong> Sunday, Week 3 (11:59 PM)</span>
+      <span><strong>Weight:</strong> 5% of course grade</span>
+      <span><strong>Team size:</strong> 2 students</span>
+      <span><strong>Deliverable:</strong> Augmented registry entries (10 tags) as JSON + one visual mapping diagram</span>
+    </div>
+  </header>
+
+  <div class="context-box">
+    <p>Ask a study participant to look at a photograph and describe it, and they will say something like "it feels cramped in there" or "there's a nice calm quality to it" or "it's a bit busy." They will not say "this image has a luminance variance of 0.62 and a fractal dimension of 1.34." The registry was built by researchers who speak the second language. Participants — and the vision models trained on human-generated descriptions — speak the first. For the tagging system to produce values that predict how people actually experience environments, both languages must live in the same registry entry.</p>
+    <p>There is also a validation reason. The pipeline checks each scientific extractor against VLM common-sense ratings: does a high <code>fractal_dimension</code> score correlate with images that VLMs call "complex" or "intricate"? That comparison is only possible if you know in advance which natural-language words a VLM would use to describe high values of each tag. The bilingual fields you add this week are what make that correlation study possible.</p>
+  </div>
+
+  <h2>Learning Outcomes</h2>
+  <ul class="outcome-list">
+    <li><span class="outcome-num">1</span><span>Articulate the difference between scientific tag vocabulary and common-sense perceptual vocabulary, and explain why both are needed.</span></li>
+    <li><span class="outcome-num">2</span><span>Add bilingual fields to 10 registry entries following the augmentation schema.</span></li>
+    <li><span class="outcome-num">3</span><span>Identify synonyms, near-misses, and antonyms for each tag that will be useful for VLM convergent validation.</span></li>
+    <li><span class="outcome-num">4</span><span>Produce a visual mapping diagram showing the relationship between three or more tags and their common-sense vocabulary clusters.</span></li>
+  </ul>
+
+  <!-- Part 1 -->
+  <h2>Part 1 — Two Languages Describing the Same Photograph</h2>
+
+  <p>Scientific tag vocabulary is written for precision and reproducibility. The phrase <em>fractal dimension of edge structure computed via box-counting at scales 4–128 px</em> is unambiguous to someone who knows the field. It is meaningless to most people looking at a photograph, and it is not the register in which a vision-language model was trained. Ask GPT-4V to rate an image and it responds: "this scene feels complex and intricate, with lots of fine detail at multiple scales." That is useful. It is also not "this scene has a fractal dimension of 1.7." Both descriptions are about the same photograph. Your job is to map the territory between them.</p>
+
+  <p>The gap matters. Here is an illustration:</p>
+
+  <div class="vocab-compare">
+    <div class="vocab-col vocab-col-sci">
+      <h4>🔬 Scientific vocabulary</h4>
+      <ul>
+        <li><code>fractal_dimension</code> — D ≈ 1.0–1.9 via box-counting</li>
+        <li><code>spatial_openness</code> — visual penetration, low occlusion</li>
+        <li><code>color_entropy</code> — Shannon entropy of HSV hue channel</li>
+        <li><code>edge_density</code> — Canny edge pixels per unit area</li>
+        <li><code>luminance_variance</code> — σ² of photometric luminance</li>
+        <li><code>bilateral_symmetry</code> — mirror-image correlation score</li>
+      </ul>
+    </div>
+    <div class="vocab-col vocab-col-cs">
+      <h4>🗣 Common-sense vocabulary</h4>
+      <ul>
+        <li>complex, intricate, organic, detailed, natural-looking, busy</li>
+        <li>open, spacious, airy, expansive, unenclosed, breathing room</li>
+        <li>colorful, varied, vivid, rainbow-like, muted, dull, grey</li>
+        <li>busy, sharp, crisp, textured, rough, fine-grained</li>
+        <li>bright, contrasty, high-key, dark, moody, flat, even</li>
+        <li>balanced, formal, regular, ordered, harmonious, centered</li>
+      </ul>
+    </div>
+    <div class="vocab-bridge">
+      The bilingual layer maps each scientific construct to its natural-language neighbors — and documents where the mapping breaks down.
+    </div>
+  </div>
+
+  <div class="insight-box">
+    <h4>Why the mapping can break down</h4>
+    <p>The common-sense words for a construct are not always what you would expect. Consider <code>fractal_dimension</code>. High fractal dimension means geometrically complex self-similar structure — trees, coastlines, ferns. In everyday language, people say such images look "natural," "organic," or "complex." But they also say some highly fractal scenes look "chaotic" while others look "peaceful." The emotional valence is not determined by the fractal dimension alone; it depends on what is generating the fractal structure. A carefully validated tag needs to know which common-sense words correlate reliably with the scientific measure and which are confounded by other factors.</p>
+  </div>
+
+  <!-- Part 2 — Schema -->
+  <h2>Part 2 — The Augmentation Schema</h2>
+
+  <p>The current registry entry format looks like this (simplified):</p>
+
+  <div class="code-label">Current registry entry (before augmentation)</div>
+  <pre><code>{
+  <span class="jk">"id"</span>: <span class="jv">"fractal_dimension"</span>,
+  <span class="jk">"phase"</span>: <span class="jv">"phase_0"</span>,
+  <span class="jk">"definition"</span>: <span class="jv">"Hausdorff-Besicovitch fractal dimension of edge structure, computed via box-counting at multiple scales."</span>,
+  <span class="jk">"range"</span>: [<span class="nm">0.0</span>, <span class="nm">1.0</span>],
+  <span class="jk">"normalization"</span>: <span class="jv">"(D - 1.0) / 1.0 where D is the raw log-log slope"</span>
+}</code></pre>
+
+  <p>You will add a <code>"bilingual"</code> block to each entry containing the following fields:</p>
+
+  <div class="code-label">Augmented entry format (with bilingual block)</div>
+  <pre><code>{
+  <span class="jk">"id"</span>: <span class="jv">"fractal_dimension"</span>,
+  <span class="jk">"phase"</span>: <span class="jv">"phase_0"</span>,
+  <span class="jk">"definition"</span>: <span class="jv">"Hausdorff-Besicovitch fractal dimension..."</span>,
+  <span class="jk">"range"</span>: [<span class="nm">0.0</span>, <span class="nm">1.0</span>],
+  <span class="jk">"normalization"</span>: <span class="jv">"(D - 1.0) / 1.0..."</span>,
+
+  <span class="cm">// ← NEW BLOCK</span>
+  <span class="jk">"bilingual"</span>: {
+    <span class="jk">"common_name"</span>: <span class="jv">"visual complexity / naturalness"</span>,
+    <span class="jk">"lay_definition"</span>: <span class="jv">"How geometrically intricate a scene looks — the degree to which small details repeat and branch at multiple scales, the way tree branches or coastlines do."</span>,
+    <span class="jk">"synonyms_high"</span>: [<span class="jv">"complex"</span>, <span class="jv">"intricate"</span>, <span class="jv">"organic"</span>, <span class="jv">"detailed"</span>, <span class="jv">"natural-looking"</span>, <span class="jv">"textured"</span>],
+    <span class="jk">"synonyms_low"</span>:  [<span class="jv">"smooth"</span>, <span class="jv">"simple"</span>, <span class="jv">"minimal"</span>, <span class="jv">"geometric"</span>, <span class="jv">"man-made"</span>, <span class="jv">"clean"</span>],
+    <span class="jk">"antonyms"</span>:      [<span class="jv">"monotonous"</span>, <span class="jv">"uniform"</span>, <span class="jv">"plain"</span>, <span class="jv">"featureless"</span>],
+    <span class="jk">"near_misses"</span>: [
+      {<span class="jk">"word"</span>: <span class="jv">"busy"</span>,   <span class="jk">"note"</span>: <span class="jv">"Correlates with high fractal_dimension but also with high object count — confounded."</span>},
+      {<span class="jk">"word"</span>: <span class="jv">"chaotic"</span>, <span class="jk">"note"</span>: <span class="jv">"Implies disorder; fractal_dimension is neutral on disorder — a forest is high-fractal but not chaotic."</span>}
+    ],
+    <span class="jk">"vlm_prompt_positive"</span>: <span class="jv">"Does this image have complex, intricate, self-similar visual structure at multiple scales — like a forest, a fern, or a rough coastline?"</span>,
+    <span class="jk">"vlm_prompt_negative"</span>: <span class="jv">"Is this image visually smooth, uniform, or geometrically simple — like a blank wall, a calm sea, or a flat sky?"</span>,
+    <span class="jk">"participant_probe"</span>:   <span class="jv">"If you were describing this scene to a friend over the phone, would you say it looks complex and detailed, or simple and clean?"</span>,
+    <span class="jk">"validation_status"</span>:   <span class="jv">"supported"</span>,
+    <span class="jk">"validation_notes"</span>:    <span class="jv">"Hagerhall (2004) r=0.69 with preference ratings in natural scenes. Taylor (1999) confirms fractal D distinguishes natural from man-made at D≈1.3 boundary."</span>
+  }
+}</code></pre>
+
+  <h3>Field definitions</h3>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td><code>common_name</code></td><td>string</td><td>1–4 word plain English label — what you'd call this tag in conversation</td></tr>
+    <tr><td><code>lay_definition</code></td><td>string</td><td>30–60 word definition without jargon; use concrete analogies</td></tr>
+    <tr><td><code>synonyms_high</code></td><td>string[]</td><td>Words that describe a scene with a <em>high</em> value of this tag</td></tr>
+    <tr><td><code>synonyms_low</code></td><td>string[]</td><td>Words that describe a scene with a <em>low</em> value of this tag</td></tr>
+    <tr><td><code>antonyms</code></td><td>string[]</td><td>Words directly opposed to the high-value sense of the tag</td></tr>
+    <tr><td><code>near_misses</code></td><td>object[]</td><td>Words that seem like synonyms but capture something subtly different — explain the distinction</td></tr>
+    <tr><td><code>vlm_prompt_positive</code></td><td>string</td><td>Question you would ask a VLM to probe the high end of this tag (binary yes/no format)</td></tr>
+    <tr><td><code>vlm_prompt_negative</code></td><td>string</td><td>Matching question probing the low end</td></tr>
+    <tr><td><code>participant_probe</code></td><td>string</td><td>Natural-language question you could ask a study participant to indirectly elicit ratings on this dimension</td></tr>
+    <tr><td><code>validation_status</code></td><td>enum</td><td>One of: <code>provisional</code> / <code>supported</code> / <code>contested</code> / <code>deprecated</code></td></tr>
+    <tr><td><code>validation_notes</code></td><td>string</td><td>1–2 sentence summary of the evidence for the validation status</td></tr>
+  </table>
+
+  <!-- Part 3 — Worked example -->
+  <h2>Part 3 — Worked Example: Two Contrasting Tags</h2>
+
+  <p>We show one entry that is relatively clean (the scientific-to-common-sense mapping is tight) and one that is messy (the mapping is contested). Notice how the <code>near_misses</code> and <code>validation_notes</code> fields do the intellectual heavy lifting in the messy case.</p>
+
+  <div class="example-block">
+    <div class="example-header">
+      <span class="example-badge">EXAMPLE A — CLEAN MAPPING</span>
+      <span class="example-title"><code>color_entropy</code> — Colorfulness / Variety</span>
+    </div>
+
+    <div class="bilingual-card">
+      <div class="sci-side">
+        <h4>🔬 Scientific layer</h4>
+        <p><strong>Definition:</strong> Shannon entropy of the hue-channel histogram in HSV color space. High entropy = many distinct hues present in roughly equal proportions. Low entropy = dominated by one or two hues.</p>
+        <p><strong>Range:</strong> 0.0 (monochrome) to 1.0 (maximally varied hue distribution)</p>
+        <p><strong>Normalization:</strong> H_raw / log₂(256) where H_raw is histogram entropy in bits</p>
+      </div>
+      <div class="cs-side">
+        <h4>🗣 Common-sense layer</h4>
+        <p><strong>Common name:</strong> colorfulness / hue variety</p>
+        <p><strong>Lay definition:</strong> How many different colors appear in the image, and how evenly they are distributed — a rainbow garden scores high; a grey concrete wall scores near zero.</p>
+        <p><strong>High synonyms:</strong> colorful, vivid, varied, rainbow-like, rich, polychromatic</p>
+        <p><strong>Low synonyms:</strong> monochrome, muted, grey, bleached, washed-out, dull</p>
+        <p><strong>Near miss:</strong> "saturated" — high saturation means intense colors, not varied colors. A deep red monochrome is saturated but has low color entropy.</p>
+      </div>
+      <div class="bilingual-divider">Validation status: SUPPORTED (r = 0.77 with human colorfulness ratings in Hasler &amp; Süsstrunk, 2003)</div>
+    </div>
+  </div>
+
+  <div class="example-block">
+    <div class="example-header">
+      <span class="example-badge">EXAMPLE B — CONTESTED MAPPING</span>
+      <span class="example-title"><code>spatial_openness</code> — Spaciousness / Expansiveness</span>
+    </div>
+
+    <div class="bilingual-card">
+      <div class="sci-side">
+        <h4>🔬 Scientific layer</h4>
+        <p><strong>Definition:</strong> Degree to which a scene affords visual penetration to distance without occlusion — operationalized as sky-pixel fraction in top third + inverse of vertical occluder density in mid-ground band.</p>
+        <p><strong>Range:</strong> 0.0 (completely enclosed) to 1.0 (panoramic outdoor)</p>
+        <p><strong>Phase note:</strong> PROXY — the photographic proxy captures outdoor openness well but misses large interior spaces.</p>
+      </div>
+      <div class="cs-side">
+        <h4>🗣 Common-sense layer</h4>
+        <p><strong>Common name:</strong> spaciousness / room to breathe</p>
+        <p><strong>Lay definition:</strong> How open and uncrowded the space looks — whether you can see far into the distance without things blocking your view, and whether you'd feel you have room to move.</p>
+        <p><strong>High synonyms:</strong> open, spacious, airy, expansive, unenclosed, wide, vast</p>
+        <p><strong>Low synonyms:</strong> enclosed, cramped, narrow, hemmed-in, tunnel-like, confined</p>
+        <p><strong>Near misses:</strong> "vast" (implies scale as well as openness), "empty" (lack of objects, not absence of enclosure), "cozy" (low openness but positively valenced)</p>
+      </div>
+      <div class="bilingual-divider">Validation status: CONTESTED — proxy valid for outdoor scenes only; interior scope unresolved</div>
+    </div>
+  </div>
+
+  <div class="tip">
+    <strong>What the examples teach you</strong>
+    Example A shows a tag where the bilingual mapping is almost a one-to-one translation — the scientific measure directly captures what people mean by "colorful." Example B shows a tag where the mapping requires qualification: the scientific proxy captures <em>outdoor</em> spatial openness, and the <code>near_misses</code> field documents exactly where the everyday words go in a different direction. Your augmentations should reflect this level of nuance.
+  </div>
+
+  <!-- Part 4 — Assignment -->
+  <h2>Part 4 — Your Assignment</h2>
+
+  <h3>Step 1: Select 10 tags to augment</h3>
+  <p>Choose 10 tags from the registry. At least 6 must be from the phase_0 list. At least 2 must be from the stub list (where you will need to propose a bilingual framing even though the scientific definition is not yet finalized). The remaining 2 can be phase_1 tags of your choosing.</p>
+
+  <div class="step-list">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Generate synonym lists using AI + your own judgment</strong>
+        <p>For each tag, start with an AI-generated list of synonyms. Ask Claude: <em>"List 10 words a person might use to describe a scene that is high on [tag name]. List another 10 for a scene that is low on [tag name]. Then identify 3 words that seem like synonyms but actually capture something subtly different."</em> Then revise this list based on your own experience with the images. The AI will get most of the obvious ones; the near-misses require your judgment.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Write the VLM prompts carefully</strong>
+        <p>The <code>vlm_prompt_positive</code> and <code>vlm_prompt_negative</code> fields will be used in the validation pipeline. A VLM will be asked these questions for every image in the corpus, and the binary yes/no responses will be correlated against your scientific extractor. This means the prompts must be (a) answerable from a photograph, (b) specific enough to avoid confounds, and (c) phrased in the natural register that VLMs respond reliably to. Test your prompts on 5 images before finalizing them.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Write the augmented JSON entries</strong>
+        <p>Add your <code>"bilingual"</code> block to each of the 10 entries. Save your output as <code>data/registry_v0.2.8_bilingual_[TeamName].json</code> — do not overwrite the original. Your file should contain only the 10 augmented entries (not all 424 tags), each as a complete JSON object in an array.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>Produce the vocabulary mapping diagram</strong>
+        <p>Choose 3 of your 10 tags and draw a vocabulary cluster diagram showing how common-sense words group around the scientific constructs. Tags that share vocabulary should have overlapping clusters; near-misses should appear at the edge of a cluster with a dotted connection. The diagram can be a hand-drawn scan, a Miro/FigJam export, or a simple HTML/SVG file — format does not matter, but it should be legible and labeled.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Example output -->
+  <div class="example-block">
+    <div class="example-header">
+      <span class="example-badge">EXAMPLE OUTPUT</span>
+      <span class="example-title">Partial augmented JSON for <code>edge_density</code></span>
+    </div>
+    <pre><code>[
+  {
+    <span class="jk">"id"</span>: <span class="jv">"edge_density"</span>,
+    <span class="jk">"phase"</span>: <span class="jv">"phase_0"</span>,
+    <span class="jk">"definition"</span>: <span class="jv">"Proportion of pixels classified as edges by Canny detector at sigma=1.0."</span>,
+    <span class="jk">"bilingual"</span>: {
+      <span class="jk">"common_name"</span>: <span class="jv">"sharpness / busyness"</span>,
+      <span class="jk">"lay_definition"</span>: <span class="jv">"How many distinct edges, outlines, and boundaries are visible in the image — a dense city street is high; a calm sea or empty sky is low."</span>,
+      <span class="jk">"synonyms_high"</span>: [<span class="jv">"busy"</span>, <span class="jv">"sharp"</span>, <span class="jv">"crisp"</span>, <span class="jv">"textured"</span>, <span class="jv">"detailed"</span>, <span class="jv">"cluttered"</span>],
+      <span class="jk">"synonyms_low"</span>:  [<span class="jv">"smooth"</span>, <span class="jv">"soft"</span>, <span class="jv">"blurry"</span>, <span class="jv">"diffuse"</span>, <span class="jv">"serene"</span>, <span class="jv">"empty"</span>],
+      <span class="jk">"antonyms"</span>: [<span class="jv">"featureless"</span>, <span class="jv">"plain"</span>, <span class="jv">"uniform"</span>],
+      <span class="jk">"near_misses"</span>: [
+        {
+          <span class="jk">"word"</span>: <span class="jv">"complex"</span>,
+          <span class="jk">"note"</span>: <span class="jv">"Complexity involves both edge density and multi-scale structure (fractal dimension). A scene can be edge-dense but not complex (a grid of parallel lines)."</span>
+        },
+        {
+          <span class="jk">"word"</span>: <span class="jv">"noisy"</span>,
+          <span class="jk">"note"</span>: <span class="jv">"Image noise produces false edges; high edge_density from noise does not mean visually busy. Preprocessing is required."</span>
+        }
+      ],
+      <span class="jk">"vlm_prompt_positive"</span>: <span class="jv">"Does this image contain many sharp, distinct edges and outlines — like a city street, a crowded market, or a dense forest canopy?"</span>,
+      <span class="jk">"vlm_prompt_negative"</span>: <span class="jv">"Is this image dominated by smooth, unbroken regions with few visible edges — like a calm sea, a blank wall, or an overcast sky?"</span>,
+      <span class="jk">"participant_probe"</span>:   <span class="jv">"Would you say this image looks sharp and busy, or soft and simple?"</span>,
+      <span class="jk">"validation_status"</span>:   <span class="jv">"supported"</span>,
+      <span class="jk">"validation_notes"</span>:    <span class="jv">"Rosenholtz et al. (2007) clutter model uses edge density as a primary component; r=0.71 with crowding ratings."</span>
+    }
+  }
+]</code></pre>
+  </div>
+
+  <!-- Deliverable -->
+  <div class="deliverable-banner">
+    <h3>D1b — Deliverable</h3>
+    <p><strong>What to submit:</strong></p>
+    <p>1. <code>registry_v0.2.8_bilingual_[TeamName].json</code> — 10 augmented entries, all bilingual fields populated.</p>
+    <p>2. Vocabulary cluster diagram (any format) for 3 of your 10 tags.</p>
+    <p>3. Brief validation report (≤1 page): for each of your VLM prompts, describe what you observed when you tested it on 5 images. Did the VLM interpret the question as you intended?</p>
+    <div class="grade">5% of course grade</div>
+    <p style="margin-top:8px;font-size:.82rem;opacity:.7">Submit as a ZIP to the course portal. File naming: <code>COGS160_ImageD1b_[TeamName].zip</code></p>
+  </div>
+
+  <h2>Submission Checklist</h2>
+  <ul class="checklist">
+    <li>JSON file contains exactly 10 entries; all bilingual fields are present and non-empty.</li>
+    <li>At least 6 entries are from phase_0 tags; at least 2 are from stub tags.</li>
+    <li>Every entry has ≥5 synonyms_high and ≥5 synonyms_low.</li>
+    <li>Every entry has ≥2 near_misses entries, each with a <code>note</code> explaining the distinction.</li>
+    <li>VLM prompts are phrased as binary yes/no questions answerable from a photograph.</li>
+    <li>Validation report covers all 10 VLM prompts tested on ≥5 images each.</li>
+    <li>Vocabulary cluster diagram covers ≥3 tags and shows vocabulary overlap between tags where it exists.</li>
+    <li>validation_status is one of: provisional / supported / contested / deprecated (no other values).</li>
+  </ul>
+
+  <h2>Frequently Asked Questions</h2>
+
+  <div class="faq-item">
+    <div class="faq-q">Can we use AI to generate all 10 bilingual blocks automatically? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>AI can generate the first draft of synonyms, the lay definition, and the VLM prompts. But the near_misses and validation_notes must come from you. The near_misses field requires you to understand what the scientific tag is actually measuring and how it differs from nearby constructs — that understanding comes from reading the primary literature (even briefly) and looking at real images. The validation_notes field requires you to cite actual empirical evidence.</p>
+      <p>A practical workflow: use AI to draft the lay_definition and synonyms, then read the primary reference for the tag (often one paper is enough), then revise the draft based on what the paper actually says the construct correlates with. That revision process is where the intellectual work happens.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">What counts as a "near miss" — how different does the word have to be? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>A near miss is a word that a naive person would reasonably use as a synonym but that fails in at least one identifiable condition. The test is: can you describe a specific type of image where the near-miss word applies but your tag value is not high (or vice versa)? If yes, it is a near miss and worth documenting. If you cannot construct such an example, the word is probably a genuine synonym.</p>
+      <p>For example: "bright" for <code>luminance_variance</code>. A bright image (high mean luminance) is not the same as a high-contrast image (high luminance variance). A foggy scene can be quite bright (high mean luminance) while having low variance. That is the specific counterexample that makes "bright" a near miss for luminance_variance.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">How do we test our VLM prompts on 5 images? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>Open Claude or GPT-4V, upload 5 images from <code>data/corpus_sample/</code>, and send your prompt as a message. You want to cover the range: pick 2 images you expect the model to answer "yes," 2 you expect "no," and 1 ambiguous case. Check: (a) does the model answer yes/no cleanly, or does it hedge? (b) does it explain its reasoning in terms you recognize as relevant to your scientific construct? (c) does the ambiguous image produce a hedged answer or a confident wrong answer?</p>
+      <p>If the model consistently gives confident wrong answers on your ground-truth known cases, your prompt is not working. Common fixes: add more context about what the tag means, mention a concrete example image type, or rephrase from a binary question to a rating question and then threshold the rating yourself.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">What should the vocabulary cluster diagram look like? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>Think of it as a Venn-diagram-style layout where each scientific tag is a labeled circle, and the common-sense words float around the circle in proportion to how strongly they associate with that tag. Words that appear in multiple tags' synonym lists appear in the overlap region between circles. Near-miss words appear at the periphery of a circle with a dashed connection line.</p>
+      <p>The diagram does not need to be beautiful. The requirement is that it makes the vocabulary relationships visible: which tags share common-sense vocabulary, and which are distinct. A hand-drawn version with labeled bubbles is entirely acceptable. If you use Miro, FigJam, or a draw.io file, export as a PNG or PDF for submission.</p>
+    </div>
+  </div>
+
+  <h2>Key References</h2>
+  <ul class="ref-list">
+    <li>
+      <span class="ref-num">1</span>
+      <span class="ref-text">Hasler, D., &amp; Süsstrunk, S. E. (2003). Measuring colourfulness in natural images. <em>Human Vision and Electronic Imaging VIII, 5007</em>, 87–95. <a href="https://doi.org/10.1117/12.477378" style="color:#d4620f" target="_blank">https://doi.org/10.1117/12.477378</a></span>
+    </li>
+    <li>
+      <span class="ref-num">2</span>
+      <span class="ref-text">Rosenholtz, R., Li, Y., &amp; Nakano, L. (2007). Measuring visual clutter. <em>Journal of Vision, 7</em>(2), 17. <a href="https://doi.org/10.1167/7.2.17" style="color:#d4620f" target="_blank">https://doi.org/10.1167/7.2.17</a></span>
+    </li>
+    <li>
+      <span class="ref-num">3</span>
+      <span class="ref-text">Oliva, A., &amp; Torralba, A. (2001). Modeling the shape of the scene: A holistic representation of the spatial envelope. <em>International Journal of Computer Vision, 42</em>(3), 145–175. <a href="https://doi.org/10.1023/A:1011139631724" style="color:#d4620f" target="_blank">https://doi.org/10.1023/A:1011139631724</a></span>
+    </li>
+    <li>
+      <span class="ref-num">4</span>
+      <span class="ref-text">Hagerhall, C. M., Purcell, T., &amp; Taylor, R. (2004). Fractal dimension of landscape silhouette outlines as a predictor of landscape preference. <em>Journal of Environmental Psychology, 24</em>(2), 247–255. <a href="https://doi.org/10.1016/j.jenvp.2003.12.004" style="color:#d4620f" target="_blank">https://doi.org/10.1016/j.jenvp.2003.12.004</a></span>
+    </li>
+    <li>
+      <span class="ref-num">5</span>
+      <span class="ref-text">Tversky, B., &amp; Hemenway, K. (1983). Categories of environmental scenes. <em>Cognitive Psychology, 15</em>(1), 121–149. (Foundational work on how people categorize environments using natural language.) <a href="https://doi.org/10.1016/0010-0285(83)90006-3" style="color:#d4620f" target="_blank">https://doi.org/10.1016/0010-0285(83)90006-3</a></span>
+    </li>
+  </ul>
+
+  <footer>
+    COGS160: AI &amp; VR · Image Tagger Track · Week 3 · D1b — Registry Augmentation<br>
+    Department of Cognitive Science, UC San Diego · Prof. David Kirsh
+  </footer>
+
+</div>
+
+<script>
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+      const a = q.nextElementSibling;
+      const chevron = q.querySelector('.faq-chevron');
+      a.classList.toggle('open');
+      chevron.classList.toggle('open');
+    });
+  });
+</script>
+</body>
+</html>

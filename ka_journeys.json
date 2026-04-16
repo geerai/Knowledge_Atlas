@@ -1,0 +1,65 @@
+{
+  "_notes": "Edit this file to reshape the left-hand journey sub-nav. Each journey is an ordered list of steps. 'audience' scopes the journey to a user type when provided; omit to show to all. 'progress' is computed at runtime from localStorage keys 'ka_journey_<id>_step'.",
+  "journeys": [
+    {
+      "id": "student_explorer",
+      "label": "160 Student · Explore",
+      "audience": ["student", "student_explorer"],
+      "steps": [
+        { "label": "Register & join a track", "href": "ka_login.html" },
+        { "label": "Technical setup",        "href": "160sp/ka_technical_setup.html" },
+        { "label": "Browse topics",           "href": "ka_topics.html" },
+        { "label": "Browse articles",         "href": "ka_articles.html" },
+        { "label": "Track assignments",       "href": "160sp/ka_schedule.html" },
+        { "label": "Your profile",            "href": "160sp/ka_student_profile.html" }
+      ]
+    },
+    {
+      "id": "researcher",
+      "label": "Researcher · Literature Sweep",
+      "audience": ["researcher"],
+      "steps": [
+        { "label": "Articles",      "href": "ka_articles.html" },
+        { "label": "Evidence",      "href": "ka_evidence.html" },
+        { "label": "Gaps",          "href": "ka_gaps.html" },
+        { "label": "Topics",        "href": "ka_topics.html" },
+        { "label": "Theories",      "href": "ka_theories.html" },
+        { "label": "Mechanisms",    "href": "ka_mechanisms.html" }
+      ]
+    },
+    {
+      "id": "theorist",
+      "label": "Theorist · Model the Field",
+      "audience": ["theorist", "theory_mechanism_explorer"],
+      "steps": [
+        { "label": "Theories",            "href": "ka_theories.html" },
+        { "label": "Mechanisms",          "href": "ka_mechanisms.html" },
+        { "label": "Neural underpinnings","href": "ka_neuro_perspective.html" },
+        { "label": "Argumentation",       "href": "ka_argumentation.html" },
+        { "label": "Topics",              "href": "ka_topics.html" }
+      ]
+    },
+    {
+      "id": "contributor",
+      "label": "Contributor · Add & Curate",
+      "audience": ["contributor"],
+      "steps": [
+        { "label": "Propose an article", "href": "ka_article_propose.html" },
+        { "label": "Annotate",           "href": "ka_annotations.html" },
+        { "label": "Evidence",           "href": "ka_evidence.html" },
+        { "label": "My contributions",   "href": "ka_my_work.html" }
+      ]
+    },
+    {
+      "id": "practitioner",
+      "label": "Practitioner · Apply",
+      "audience": ["practitioner"],
+      "steps": [
+        { "label": "Topics",        "href": "ka_topics.html" },
+        { "label": "Articles",      "href": "ka_articles.html" },
+        { "label": "Evidence",      "href": "ka_evidence.html" },
+        { "label": "Mechanisms",    "href": "ka_mechanisms.html" }
+      ]
+    }
+  ]
+}

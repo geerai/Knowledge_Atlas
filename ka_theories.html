@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Theories · Knowledge Atlas</title>
+<link rel="stylesheet" href="ka_atlas_shell.css">
+</head>
+<body data-ka-active="theories"
+      data-ka-crumbs='[["Home","ka_home.html"],["Theories",""]]'>
+
+<div id="ka-navbar-slot"></div>
+<div id="ka-breadcrumb-slot"></div>
+
+<section class="ka-hero">
+  <div class="ka-hero-tag">Knowledge Atlas · Theories</div>
+  <h1>Theories in Architectural Cognition</h1>
+  <p class="ka-hero-sub">
+    Theories are large-scale explanatory frameworks that organise findings across many
+    experiments. Each card gives the theory's core claim, its predictive scope, the
+    evidence that supports or challenges it, and the mechanisms and neural substrates
+    through which it operates.
+  </p>
+</section>
+
+<div class="ka-shell">
+
+  <aside id="ka-journey-slot"></aside>
+
+  <main id="ka-main">
+    <h2 class="ka-section-title">Browse theories</h2>
+    <p class="ka-section-intro">
+      Click any theory to expand its full card in place. Use the search box to filter
+      by keyword. Each theory links outward to its supporting articles, proposed
+      mechanisms, and candidate neural underpinnings.
+    </p>
+
+    <input type="search" class="ka-search" id="theory-search"
+           placeholder="Search theories by name, construct, or author…"
+           aria-label="Search theories">
+
+    <div class="ka-card-grid" id="theory-grid" style="margin-top:18px;">
+      <!-- Stub cards; populate from topic_ontology.json in the next pass. -->
+      <article class="ka-card" data-theory="art">
+        <div class="ka-card-title">Attention Restoration Theory (ART)</div>
+        <div class="ka-card-meta">
+          <span><span class="voi-dot voi-high"></span> High VOI</span>
+          <span>Kaplan &amp; Kaplan · 1989</span>
+        </div>
+        <div class="ka-card-pills">
+          <span class="ka-pill">Cognition</span>
+          <span class="ka-pill ka-pill-cool">Nature exposure</span>
+          <span class="ka-pill ka-pill-neuro">DMN engagement</span>
+        </div>
+        <div class="ka-card-body">
+          <p><strong>Core claim:</strong> Natural environments passively engage
+          involuntary attention and allow directed attention to replenish, producing
+          measurable recovery on executive-function tasks after exposure.</p>
+          <p style="margin-top:8px;"><strong>Where to look next:</strong>
+          <a href="ka_articles.html?filter=art">Articles (14)</a> ·
+          <a href="ka_mechanisms.html?theory=art">Mechanisms (3)</a> ·
+          <a href="ka_neuro_perspective.html?theory=art">Neural underpinnings (2)</a></p>
+        </div>
+      </article>
+
+      <article class="ka-card" data-theory="sbt">
+        <div class="ka-card-title">Stress Reduction Theory (SRT)</div>
+        <div class="ka-card-meta">
+          <span><span class="voi-dot voi-high"></span> High VOI</span>
+          <span>Ulrich · 1983</span>
+        </div>
+        <div class="ka-card-pills">
+          <span class="ka-pill">Physiology</span>
+          <span class="ka-pill ka-pill-warn">Autonomic</span>
+        </div>
+        <div class="ka-card-body">
+          <p><strong>Core claim:</strong> Exposure to natural settings produces a rapid,
+          affect-mediated decrement in autonomic arousal, independent of cognitive
+          appraisal.</p>
+        </div>
+      </article>
+
+      <article class="ka-card" data-theory="prospect">
+        <div class="ka-card-title">Prospect-Refuge Theory</div>
+        <div class="ka-card-meta">
+          <span><span class="voi-dot voi-medium"></span> Medium VOI</span>
+          <span>Appleton · 1975</span>
+        </div>
+        <div class="ka-card-pills">
+          <span class="ka-pill ka-pill-cool">Spatial</span>
+          <span class="ka-pill">Affective</span>
+        </div>
+        <div class="ka-card-body">
+          <p><strong>Core claim:</strong> Environments that afford both broad outward
+          view (prospect) and sheltered vantage (refuge) are preferred because they
+          satisfy evolved vigilance-and-safety heuristics.</p>
+        </div>
+      </article>
+
+      <article class="ka-card" data-theory="environmental-affordance">
+        <div class="ka-card-title">Environmental Affordance Theory</div>
+        <div class="ka-card-meta">
+          <span><span class="voi-dot voi-medium"></span> Medium VOI</span>
+          <span>Gibson · 1979 (ext. Heft, 2010)</span>
+        </div>
+        <div class="ka-card-pills">
+          <span class="ka-pill ka-pill-cool">Perception</span>
+          <span class="ka-pill">Action</span>
+        </div>
+        <div class="ka-card-body">
+          <p><strong>Core claim:</strong> Perceived action possibilities of a setting
+          are recovered directly from its geometry and material properties, without
+          intervening cognitive inference.</p>
+        </div>
+      </article>
+
+      <article class="ka-card" data-theory="embodied-cognition">
+        <div class="ka-card-title">Embodied Cognition in Architecture</div>
+        <div class="ka-card-meta">
+          <span><span class="voi-dot voi-medium"></span> Medium VOI</span>
+          <span>Mallgrave · 2013; Robinson · 2021</span>
+        </div>
+        <div class="ka-card-pills">
+          <span class="ka-pill ka-pill-neuro">Sensorimotor</span>
+          <span class="ka-pill">Metaphor</span>
+        </div>
+        <div class="ka-card-body">
+          <p><strong>Core claim:</strong> Architectural experience is scaffolded by
+          sensorimotor simulations of the body moving through and acting on the built
+          environment; spatial meaning is not primarily symbolic.</p>
+        </div>
+      </article>
+
+      <article class="ka-card" data-theory="thermal-alliesthesia">
+        <div class="ka-card-title">Thermal Alliesthesia</div>
+        <div class="ka-card-meta">
+          <span><span class="voi-dot voi-low"></span> Low VOI</span>
+          <span>de Dear · 2011</span>
+        </div>
+        <div class="ka-card-pills">
+          <span class="ka-pill ka-pill-warn">Thermal</span>
+          <span class="ka-pill">Pleasure</span>
+        </div>
+        <div class="ka-card-body">
+          <p><strong>Core claim:</strong> Thermal pleasure depends on the body's current
+          thermal state, so oscillating rather than constant conditions maximise
+          occupant satisfaction.</p>
+        </div>
+      </article>
+    </div>
+    <!-- End grid -->
+
+    <p style="margin-top:24px;font-size:0.85rem;color:#8A9A96;">
+      <em>Placeholder data. A subsequent pass will replace these cards with records
+      drawn from <code>data/ka_payloads/topic_ontology.json</code>.</em>
+    </p>
+  </main>
+</div>
+
+<footer class="ka-footer">
+  Knowledge Atlas · UCSD Cognitive Science · Spring 2026
+</footer>
+
+<script>
+// Expand-in-place on card click.
+document.addEventListener('click', function (e) {
+  var card = e.target.closest('.ka-card');
+  if (!card) return;
+  card.classList.toggle('expanded');
+});
+// Simple client-side filter.
+document.getElementById('theory-search').addEventListener('input', function (e) {
+  var q = (e.target.value || '').toLowerCase().trim();
+  document.querySelectorAll('.ka-card').forEach(function (c) {
+    var hit = c.textContent.toLowerCase().indexOf(q) !== -1;
+    c.style.display = hit || !q ? '' : 'none';
+  });
+});
+</script>
+
+<script src="ka_canonical_navbar.js" defer></script>
+<script src="ka_journey_nav.js"      defer></script>
+</body>
+</html>

@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 5: Recall/Precision & D2 Completion – Article Finder Track | COGS160</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #182B49 0%, #1a4d7a 100%);
+            color: white;
+            padding: 2.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .accent-teal {
+            color: #1a7a5e;
+        }
+
+        nav.top-nav {
+            background: #182B49;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            border-bottom: 3px solid #1a7a5e;
+        }
+
+        nav.top-nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav.top-nav a:hover {
+            color: #1a7a5e;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        section {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        section h2 {
+            color: #182B49;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid #1a7a5e;
+        }
+
+        section h3 {
+            color: #1a7a5e;
+            font-size: 1.3rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        section h4 {
+            color: #2c3e50;
+            font-size: 1.1rem;
+            margin: 1.25rem 0 0.75rem 0;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        .subsection {
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: #f8fbf9;
+            border-left: 4px solid #1a7a5e;
+            border-radius: 4px;
+        }
+
+        .subsection h4 {
+            color: #1a7a5e;
+            margin-top: 0;
+        }
+
+        .task-box {
+            background: linear-gradient(135deg, #fff9e6 0%, #fffaed 100%);
+            border-left: 4px solid #f39c12;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .task-box h4 {
+            color: #d68910;
+            margin-top: 0;
+        }
+
+        .deliverable {
+            background: linear-gradient(135deg, #fff9e6 0%, #fffaed 100%);
+            border-left: 4px solid #f39c12;
+            padding: 1.25rem;
+            margin: 1.25rem 0;
+            border-radius: 4px;
+        }
+
+        .deliverable h4 {
+            color: #d68910;
+            margin-top: 0;
+        }
+
+        .timeline-box {
+            background: linear-gradient(135deg, #e8f8f3 0%, #f0fcf9 100%);
+            border-left: 4px solid #1a7a5e;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .highlight-box {
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .highlight-box strong {
+            color: #7d6608;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        table th {
+            background: linear-gradient(135deg, #e8f8f3 0%, #f0fcf9 100%);
+            color: #182B49;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid #1a7a5e;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        table tr:hover {
+            background: #fafbfc;
+        }
+
+        .code-example {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+            line-height: 1.4;
+        }
+
+        .component-box {
+            background: #fafbfc;
+            border: 1px solid #e0e6ed;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 1.25rem 0;
+        }
+
+        .component-box h4 {
+            color: #182B49;
+            margin-top: 0;
+        }
+
+        .resource-block {
+            background: linear-gradient(135deg, #e8f8f3 0%, #f0fcf9 100%);
+            border: 1px solid #1a7a5e;
+            border-radius: 6px;
+            padding: 1.25rem;
+            margin: 1rem 0;
+        }
+
+        .resource-block h4 {
+            color: #1a7a5e;
+            margin-top: 0;
+        }
+
+        .resource-block a {
+            color: #1a7a5e;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .resource-block a:hover {
+            color: #0d4738;
+        }
+
+        .faq-section {
+            margin: 1.5rem 0;
+        }
+
+        .faq-item {
+            margin-bottom: 1.25rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            color: #182B49;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .faq-question:before {
+            content: "Q";
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: #1a7a5e;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .faq-answer {
+            color: #2c3e50;
+            padding-left: 2.5rem;
+            line-height: 1.7;
+        }
+
+        .grading-criteria {
+            background: linear-gradient(135deg, #e8f8f3 0%, #f0fcf9 100%);
+            border-left: 4px solid #1a7a5e;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .grading-criteria h4 {
+            color: #1a7a5e;
+            margin-top: 0;
+        }
+
+        .grading-criteria ul {
+            list-style: disc;
+            padding-left: 2rem;
+        }
+
+        footer {
+            background: #182B49;
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .reference-list {
+            background: #f8fbf9;
+            padding: 1.5rem;
+            border-radius: 4px;
+            border-left: 4px solid #1a7a5e;
+            margin: 1.5rem 0;
+        }
+
+        .reference-list h4 {
+            color: #1a7a5e;
+            margin-top: 0;
+        }
+
+        .reference-list ol {
+            list-style: decimal;
+            padding-left: 2rem;
+        }
+
+        .reference-list li {
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .coderef {
+            background: #f5f5f5;
+            padding: 0.2rem 0.4rem;
+            border-radius: 2px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            nav.top-nav {
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+
+            table th, table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Week 5: The Platform You Trust <span class="accent-teal">Shapes What ATLAS Believes</span></h1>
+        <p>Citation Intersection, Recall Analysis & Consensus Validation</p>
+    </div>
+
+    <nav class="top-nav">
+        <a href="af_track_planning.html">← AF Track Overview</a>
+        <a href="af_wk04.html">← Week 4</a>
+        <a href="index.html">All Tracks</a>
+        <a href="#tasks">Tasks</a>
+        <a href="#d2-report">D2 Full Report</a>
+    </nav>
+
+    <div class="container">
+        <!-- Section 1: Context -->
+        <section id="context">
+            <h2>The Insight: Platform Choice Is Epistemological Choice</h2>
+
+            <p>Last week you tested interfaces. This week you test what the platforms actually find. A claim can have strong evidence in Scite (many papers support it, few dispute it) while appearing weaker in Elicit (fewer high-quality studies meet the inclusion criteria) simultaneously. Neither platform is wrong. They index and rank differently. When ATLAS chooses to integrate Semantic Scholar instead of Consensus, ATLAS is not choosing a tool. It is choosing which evidence gets counted as evidence.</p>
+
+            <p>This week's work makes that choice deliberate and defensible. You will measure each platform's recall (did it find the papers we know exist?) and precision (when it returned results, how many were actually relevant?). You will test the Consensus confidence meter: when it says 70% of studies support a claim, does the citation distribution actually show 70% support? You will identify papers that one platform finds and another misses entirely, and ask: what indexing decision explains that gap?</p>
+
+            <p>By Friday, you will have the data needed to write D2, the full Usability Evaluation Report (8–10 pages). This report will sit at the center of ATLAS's platform selection decision. It is not just a class assignment. It is a research document that will be read by engineers building the production system.</p>
+
+            <div class="timeline-box">
+                <h4>What You Will Know By Friday</h4>
+                <p>How many of the 10 papers you know are relevant does each platform actually retrieve? How does Consensus's consensus meter compare to actual citation evidence? Which papers are "hidden" from which platforms? And most importantly: which two platforms would you recommend ATLAS integrate first, and what is your reasoning?</p>
+            </div>
+        </section>
+
+        <!-- Section 2: Learning Outcomes -->
+        <section id="outcomes">
+            <h2>Learning Outcomes</h2>
+
+            <p>By completing this week's work, you will:</p>
+
+            <ul>
+                <li><strong>Measure search quality quantitatively:</strong> Recall and precision are not feelings; they are computed metrics. You will calculate them, interpret them, and use them to rank platforms objectively.</li>
+                <li><strong>Detect indexing biases:</strong> When a paper is cited 50 times in Scite but never appears in Elicit, that is not random. It reflects indexing choices. You will learn to ask: what data does each platform have access to?</li>
+                <li><strong>Validate AI-generated claims:</strong> Consensus shows a "consensus meter." You will check whether that meter's claim (72% of studies support X) matches the actual distribution of citations in supporting vs. disputing papers.</li>
+                <li><strong>Synthesize evidence across multiple sources:</strong> No single platform tells the whole story. You will learn how to integrate findings from multiple sources and communicate the gaps and overlaps.</li>
+                <li><strong>Write research-quality technical prose:</strong> The D2 report is not a summary of what you did. It is a research argument about which platform should be trusted for what purpose. You will write like a computer scientist or engineer, not a student.</li>
+            </ul>
+        </section>
+
+        <!-- Section 3: Core Concepts -->
+        <section id="concepts">
+            <h2>Three Core Concepts: Recall, Precision, and Citation Context</h2>
+
+            <h3>Recall: Did the Platform Find It?</h3>
+
+            <p><strong>Recall</strong> = (# of relevant papers the platform returned) / (# of relevant papers that exist)</p>
+
+            <p>You create a "gold set" of papers you know are relevant to biophilic design research. This gold set is your ground truth. You run a search query on each platform and count how many gold-set papers it retrieves. If your gold set has 10 papers and Semantic Scholar returns 7 of them, Semantic Scholar's recall is 70%.</p>
+
+            <p>Recall answers: "Can I trust this platform to NOT make me miss important evidence?" High recall means the platform is thorough. Low recall means you might be working with incomplete information.</p>
+
+            <h3>Precision: When It Found Something, Was It Right?</h3>
+
+            <p><strong>Precision</strong> = (# of relevant papers the platform returned) / (# of papers the platform returned, total)</p>
+
+            <p>If OpenAlex returns 200 results for "biophilic design" but only 30 of them are actually relevant (the rest are about other topics), precision is 30/200 = 15%. Precision answers: "When this platform says a paper is relevant, can I trust that judgment?"</p>
+
+            <p>High precision means fewer false positives (wasted time reading irrelevant papers). Low precision means the platform returns a lot of noise.</p>
+
+            <h3>Citation Context: How Is a Paper Actually Used?</h3>
+
+            <p>Scite classifies how papers are cited: as <strong>supporting</strong> (the citing paper agrees with or builds on the cited paper), <strong>disputing</strong> (the citing paper challenges or contradicts the cited paper), or <strong>neutral</strong> (the citing paper mentions it without taking a stance). This matters. A paper can have 100 citations but be cited 90 times as a warning ("this study is flawed") and only 10 times as support. Scite shows this; most other platforms hide it.</p>
+        </section>
+
+        <!-- Section 4: Tasks -->
+        <section id="tasks">
+            <h2>Week 5 Task Sequence (5 Days)</h2>
+
+            <h3>Monday: Build the Gold Set & Design Recall Experiment</h3>
+
+            <div class="task-box">
+                <h4>Task 1: Create a 10-Paper Gold Set</h4>
+                <p>A "gold set" is a curated list of papers you know are relevant to your topic. This is your ground truth for measuring recall. To build it:</p>
+
+                <ol>
+                    <li><strong>Start with D1 (Week 3) papers:</strong> Your Pipeline Orientation report identified key papers in biophilic design research. Use your D1 reference list as the starting point (aim for 5–7 papers).</li>
+                    <li><strong>Add 2–3 additional papers</strong> by asking your instructor or checking the top citations in your D1 papers (cited-by relationships).</li>
+                    <li><strong>Document your gold set:</strong> For each paper, record:
+                        <ul>
+                            <li>Full APA citation</li>
+                            <li>DOI (if available)</li>
+                            <li>Why it is relevant to biophilic design (1–2 sentences)</li>
+                            <li>Whether you have access to the full text (yes/no)</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p>This gold set is your measurement stick. Every platform will be evaluated against it. Total of 10 papers = your ground truth.</p>
+            </div>
+
+            <div class="task-box">
+                <h4>Task 2: Design the Recall Measurement Plan</h4>
+                <p>Create a spreadsheet template for recording recall data:</p>
+
+                <div class="component-box">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Gold Set Paper</th>
+                                <th>DOI</th>
+                                <th>Consensus: Found? (Y/N)</th>
+                                <th>Elicit: Found? (Y/N)</th>
+                                <th>Scite: Found? (Y/N)</th>
+                                <th>Semantic Scholar: Found? (Y/N)</th>
+                                <th>OpenAlex: Found? (Y/N)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>[Paper 1 short title]</td>
+                                <td>10.xxxx/xxxxx</td>
+                                <td style="text-align: center;">—</td>
+                                <td style="text-align: center;">—</td>
+                                <td style="text-align: center;">—</td>
+                                <td style="text-align: center;">—</td>
+                                <td style="text-align: center;">—</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>For each platform, you will search using your best query ("biophilic design" or "natural elements workplace stress") and check whether each gold-set paper appears in the results. This directly measures whether the platform retrieved known-relevant papers.</p>
+            </div>
+
+            <h3>Tuesday: Recall Testing (Monday continued)</h3>
+
+            <div class="task-box">
+                <h4>Task 3: Run Recall Searches on All Five Platforms</h4>
+                <p>For each platform, run 2–3 variations of your query:</p>
+
+                <ul>
+                    <li>Query A: "biophilic design stress" (short)</li>
+                    <li>Query B: "biophilic design psychological well-being workplace" (longer)</li>
+                    <li>Query C: Your best query from Week 4 testing</li>
+                </ul>
+
+                <p>For each query-platform combination, download or record the first 50 results (or all results, if fewer than 50). Search for your 10 gold-set papers in those results. Record whether found: Yes or No.</p>
+
+                <p><strong>How to find papers:</strong> You can search by title, author, DOI, or year. Use whatever method is fastest for each platform. Some platforms have a DOI search field; use it. Others require title search; use that.</p>
+
+                <p><strong>Divide work:</strong> Pair 1 tests Consensus + Elicit, Pair 2 tests Scite + Semantic Scholar, Pair 3 validates and tests OpenAlex. Complete by Wednesday morning.</p>
+            </div>
+
+            <div class="task-box">
+                <h4>Task 4: Calculate Recall@50 for Each Platform</h4>
+                <p>Once all searches are done, calculate: (# of gold-set papers found in top 50 results) / 10 = recall.</p>
+
+                <p>Example: Semantic Scholar found 8 of your 10 gold papers in its top 50 results for "biophilic design stress." Recall@50 = 8/10 = 80%.</p>
+
+                <p><strong>Summary table (fill in by Wednesday EOD):</strong></p>
+
+                <div class="component-box">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Platform</th>
+                                <th>Query A Recall@50</th>
+                                <th>Query B Recall@50</th>
+                                <th>Query C Recall@50</th>
+                                <th>Average Recall</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Consensus</td>
+                                <td style="text-align: center;">7/10</td>
+                                <td style="text-align: center;">8/10</td>
+                                <td style="text-align: center;">7/10</td>
+                                <td style="text-align: center;"><strong>73%</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <h3>Wednesday: Citation Intersection & Consensus Validation</h3>
+
+            <div class="task-box">
+                <h4>Task 5: Citation Intersection Analysis</h4>
+                <p>For each of your 10 gold-set papers, record which platforms found it:</p>
+
+                <div class="component-box">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Gold Set Paper</th>
+                                <th>Consensus</th>
+                                <th>Elicit</th>
+                                <th>Scite</th>
+                                <th>Semantic Scholar</th>
+                                <th>OpenAlex</th>
+                                <th>Found by N Platforms</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Smith et al. (2020) on green spaces</td>
+                                <td style="text-align: center;">✓</td>
+                                <td style="text-align: center;">✓</td>
+                                <td style="text-align: center;">✓</td>
+                                <td style="text-align: center;">✗</td>
+                                <td style="text-align: center;">✓</td>
+                                <td style="text-align: center;"><strong>4/5</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>Papers found by all 5 platforms are "universally discovered." Papers found by only 1 platform reveal indexing gaps. Document these gaps: Why might Semantic Scholar miss a paper that Scite finds?</p>
+            </div>
+
+            <div class="task-box">
+                <h4>Task 6: Validate Consensus's Confidence Meter</h4>
+                <p>Consensus displays a "consensus meter" for some claims (e.g., "72% of studies found that biophilic design reduces stress"). Test whether this matches reality:</p>
+
+                <ol>
+                    <li>Find a claim in Consensus that shows a consensus percentage (try a few searches).</li>
+                    <li>Note the percentage claimed (e.g., "71% positive," "19% negative").</li>
+                    <li>Go to Scite and search for the same papers on that topic.</li>
+                    <li>In Scite, use the citation classification: count supporting vs. disputing vs. neutral citations.</li>
+                    <li>Compare: Does Scite's citation distribution match Consensus's percentage?</li>
+                </ol>
+
+                <p><strong>Example:</strong></p>
+                <ul>
+                    <li>Consensus says: "72% of studies agree that biophilic design reduces stress."</li>
+                    <li>You go to Scite and check 50 citing papers: 38 are supporting (76%), 7 are disputing (14%), 5 are neutral (10%).</li>
+                    <li>Scite shows 76% support; Consensus claimed 72%. Close enough? You note: "Consensus meter is reasonably calibrated but slightly optimistic."</li>
+                </ul>
+
+                <p>Document your findings: Is the Consensus meter reliable?</p>
+            </div>
+
+            <h3>Thursday: Precision & Gap Analysis</h3>
+
+            <div class="task-box">
+                <h4>Task 7: Estimate Precision on Your Best Query</h4>
+                <p>Pick your best-performing query from Week 4 (e.g., "Does biophilic design reduce stress?"). Run it on all five platforms. Take the top 20 results from each platform and rate whether each result is relevant to your topic.</p>
+
+                <p><strong>Relevance scale:</strong> Clearly relevant (1) / Somewhat relevant (0.5) / Not relevant (0).</p>
+
+                <p>Precision = (sum of relevance scores) / 20.</p>
+
+                <p>Example: Semantic Scholar returns 20 papers for "biophilic design stress." You rate 15 as clearly relevant (15 points), 3 as somewhat relevant (1.5 points), 2 as not relevant (0 points). Precision = 16.5/20 = 82.5%.</p>
+
+                <p>Record precision for all five platforms.</p>
+            </div>
+
+            <div class="task-box">
+                <h4>Task 8: Gap Analysis – Papers Missed by Platforms</h4>
+                <p>For any paper in your gold set that was NOT found by a platform, try to understand why:</p>
+
+                <ul>
+                    <li>Is the paper indexed at all in that platform's database? (Try searching the author name.)</li>
+                    <li>Is the paper's DOI available in that platform?</li>
+                    <li>Does the platform's search simply not match the paper's keywords?</li>
+                </ul>
+
+                <p>Document 2–3 examples: "Paper X was found by Semantic Scholar but not Consensus. When I search [full title] in Consensus, it returns no results, suggesting Consensus lacks this paper's full-text or metadata."</p>
+            </div>
+
+            <h3>Friday: Synthesis & D2 Report Writing</h3>
+
+            <div class="task-box">
+                <h4>Task 9: Create Your Final Comparative Data Summary</h4>
+                <p>Aggregate all data into a single summary table (this will be Table 1 in your D2 report):</p>
+
+                <div class="component-box">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Consensus</th>
+                                <th>Elicit</th>
+                                <th>Scite</th>
+                                <th>Semantic Scholar</th>
+                                <th>OpenAlex</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Avg. Recall@50</strong></td>
+                                <td>73%</td>
+                                <td>60%</td>
+                                <td>82%</td>
+                                <td>85%</td>
+                                <td>70%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Precision (top 20)</strong></td>
+                                <td>88%</td>
+                                <td>75%</td>
+                                <td>80%</td>
+                                <td>72%</td>
+                                <td>65%</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Avg. Time to Results (sec)</strong></td>
+                                <td>3.2</td>
+                                <td>5.1</td>
+                                <td>8.4</td>
+                                <td>2.1</td>
+                                <td>1.8</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Abstracts Visible?</strong></td>
+                                <td>Yes</td>
+                                <td>Yes</td>
+                                <td>Partial</td>
+                                <td>No (click to view)</td>
+                                <td>No (API only)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>PDF Access</strong></td>
+                                <td>Limited</td>
+                                <td>Some</td>
+                                <td>Good</td>
+                                <td>Good</td>
+                                <td>Limited</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>This table will anchor your D2 report. Every number here should be defensible and measured, not estimated.</p>
+            </div>
+
+            <div class="task-box">
+                <h4>Task 10: Write D2 – Full Usability Evaluation Report</h4>
+                <p>This is your final deliverable for D2. See the D2 spec below for detailed outline and requirements.</p>
+            </div>
+        </section>
+
+        <!-- Section 5: D2 Full Report Specification -->
+        <section id="d2-report">
+            <h2>D2 Deliverable: Full Usability Evaluation Report (8–10 Pages)</h2>
+
+            <p>This report synthesizes all work from Weeks 4–5. It is a technical document written for engineers who will decide which platforms ATLAS integrates.</p>
+
+            <div class="deliverable">
+                <h4>Required Structure</h4>
+
+                <p><strong>1. Executive Summary (1 page)</strong></p>
+                <ul>
+                    <li>Key finding: Which platform(s) excelled? Which underperformed?</li>
+                    <li>Overall recommendation: Which 2 platforms should ATLAS integrate first? Why?</li>
+                    <li>Trade-offs: What are you giving up by choosing platform A over B?</li>
+                </ul>
+
+                <p><strong>2. Methods (1–1.5 pages)</strong></p>
+                <ul>
+                    <li>Evaluation criteria (usability, recall, precision, citation context).</li>
+                    <li>Gold set construction: what papers, why these 10?</li>
+                    <li>Query selection: what did you search for? Why?</li>
+                    <li>Recall and precision measurement: how did you define "found" and "relevant"?</li>
+                    <li>Think-aloud protocol: how many users, how were they selected?</li>
+                </ul>
+
+                <p><strong>3. Results (3–4 pages)</strong></p>
+                <ul>
+                    <li><strong>3a. Usability Results (from Week 4)</strong>: Think-aloud findings, interface confusions, positive aspects. Include quotes from users.</li>
+                    <li><strong>3b. Recall Analysis (from Week 5)</strong>: Your recall table. Which papers were universally found? Which were "hidden" from certain platforms?</li>
+                    <li><strong>3c. Precision Analysis (from Week 5)</strong>: Your precision scores. Interpretation: what does 72% precision mean for researchers using that platform?</li>
+                    <li><strong>3d. Consensus Meter Validation (from Week 5)</strong>: Is Consensus's confidence meter accurate?</li>
+                    <li><strong>3e. Citation Context Findings (from Week 5)</strong>: How does Scite's support/dispute classification compare to other platforms' simple "relevant/not relevant" labels?</li>
+                </ul>
+
+                <p><strong>4. Discussion (2–2.5 pages)</strong></p>
+                <ul>
+                    <li><strong>4a. Trade-off Analysis:</strong> Consensus has high precision (88%) but lower recall (73%). Semantic Scholar has high recall (85%) but lower precision (72%). What does ATLAS gain/lose with each choice?</li>
+                    <li><strong>4b. Platform Strengths & Weaknesses:</strong> For each platform, one paragraph:
+                        <ul>
+                            <li>When this platform is the right choice (e.g., "Use Consensus when you want high confidence in reported findings")</li>
+                            <li>When this platform falls short (e.g., "Consensus misses papers because its full-text index is incomplete")</li>
+                        </ul>
+                    </li>
+                    <li><strong>4c. Integration Implications:</strong> If ATLAS integrates Semantic Scholar, what does that epistemological choice mean? (You are choosing citation-weighted ranking over consensus-meter ranking.) What are the consequences?</li>
+                    <li><strong>4d. Unresolved Questions:</strong> What would you test next if you had more time? (e.g., citation impact of false negatives: "If we miss Paper X, how many downstream findings are weakened?")</li>
+                </ul>
+
+                <p><strong>5. Recommendation (0.5–1 page)</strong></p>
+                <ul>
+                    <li>Your top two platforms for ATLAS integration: which two, and why?</li>
+                    <li>Rationale: cite specific recall/precision/usability data.</li>
+                    <li>Phase 2 suggestion: once those two are integrated, which platform should be integrated next?</li>
+                </ul>
+
+                <p><strong>6. References & Appendices</strong></p>
+                <ul>
+                    <li>All references in APA format (include papers cited in your Methods and Discussion).</li>
+                    <li>Appendix A: Gold set (all 10 papers with APA citations)</li>
+                    <li>Appendix B: Full recall matrix (all 10 papers × 5 platforms)</li>
+                    <li>Appendix C: Raw think-aloud protocol notes (verbatim quotes from users)</li>
+                </ul>
+            </div>
+
+            <h3>Evaluation Rubric for D2</h3>
+
+            <div class="grading-criteria">
+                <h4>Excellent (90–100%)</h4>
+                <ul>
+                    <li>All recall/precision measurements are precise and defensible (numbers can be traced to raw data)</li>
+                    <li>Think-aloud protocol is rigorous with direct user quotes supporting findings</li>
+                    <li>Discussion section deeply engages with epistemological implications (platform choice = knowledge choice)</li>
+                    <li>Recommendation is evidence-based and considers ATLAS's long-term goals</li>
+                    <li>Prose is clear, professional, research-quality (not a summary of student work)</li>
+                    <li>Appendices are complete and well-organized</li>
+                </ul>
+            </div>
+
+            <div class="grading-criteria">
+                <h4>Good (80–89%)</h4>
+                <ul>
+                    <li>Recall/precision measurements are mostly precise with minor gaps</li>
+                    <li>Think-aloud protocol well-documented with mostly direct quotes</li>
+                    <li>Discussion addresses epistemological questions but with limited depth</li>
+                    <li>Recommendation is data-driven but could consider more trade-offs</li>
+                    <li>Prose is clear and mostly professional</li>
+                    <li>Appendices present with minor issues</li>
+                </ul>
+            </div>
+
+            <div class="grading-criteria">
+                <h4>Satisfactory (70–79%)</h4>
+                <ul>
+                    <li>Recall/precision measurements present but with some approximations</li>
+                    <li>Think-aloud protocol partially documented, some paraphrasing of user feedback</li>
+                    <li>Discussion addresses platforms but avoids epistemological depth</li>
+                    <li>Recommendation clear but not strongly justified</li>
+                    <li>Prose is generally clear but may read like a student summary</li>
+                    <li>Appendices incomplete or disorganized</li>
+                </ul>
+            </div>
+
+            <div class="grading-criteria">
+                <h4>Needs Improvement (<70%)</h4>
+                <ul>
+                    <li>Measurements missing or vague</li>
+                    <li>Think-aloud protocol absent or poorly documented</li>
+                    <li>Discussion does not engage with trade-offs</li>
+                    <li>Recommendation unjustified</li>
+                    <li>Appendices missing</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 6: Critical Architecture Context -->
+        <section id="architecture">
+            <h2>Why This Matters: Connection to ATLAS Architecture</h2>
+
+            <p>Your D2 report directly informs a critical architectural decision in ATLAS. The system contains a component called <span class="coderef">SourceSelector</span> in <span class="coderef">Article_Eater_PostQuinean_v1_recovery/src/services/voi_search.py</span> (lines ~648–720). This class implements the logic that decides which search backend to use for a given research question.</p>
+
+            <p>Currently, the <span class="coderef">SourceSelector</span> makes this decision based on heuristics: if the query is short (< 10 words), use OpenAlex; if the query mentions consensus-seeking language ("Do most studies agree..."), use Consensus. These are educated guesses. Your D2 report provides evidence to replace those guesses with measured data.</p>
+
+            <p>When engineers implement VOI-to-Query bridge in Week 7 (D4), they will reference your D2 report. They will read: "Semantic Scholar has 85% recall on biophilic design queries, while Consensus has 73%—but Consensus returns results 2.3x faster and with higher precision (88% vs. 72%)." From that evidence, they will decide: when should a VOI question be routed to Semantic Scholar (for completeness) vs. Consensus (for speed and confidence)?</p>
+
+            <p><strong>Your D2 report is not optional context. It is load-bearing infrastructure for ATLAS.</strong></p>
+        </section>
+
+        <!-- Section 7: FAQ -->
+        <section id="faq">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="faq-section">
+                <div class="faq-item">
+                    <div class="faq-question">What counts as "found" in recall measurement?</div>
+                    <div class="faq-answer">A paper is "found" if the platform returns it in the top 50 results for your query. You must be able to identify it by title, DOI, or author—either as a clickable result or in metadata you can extract. If you have to click and read the abstract to confirm it is your gold paper, that still counts as "found."</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">My gold set is all papers from Week 3. That's too narrow.</div>
+                    <div class="faq-answer">Then add 2–3 additional papers from the references of those papers. Use Semantic Scholar's "cited by" feature to find papers that cite your D1 papers—pick a few that seem relevant. Your gold set should represent the breadth of biophilic design research: some on stress, some on cognitive performance, some on physical health. Diversity helps.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Should I count a paper "found" if it appears in a sidebar or "related papers" section?</div>
+                    <div class="faq-answer">Only if it appears in the main results list for your query. Sidebars and recommendations don't count—they are separate features. You are measuring search effectiveness, not recommendation quality.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What if a platform doesn't let me see 50 results?</div>
+                    <div class="faq-answer">Use whatever limit the platform allows (e.g., if it shows 20, record Recall@20 instead of Recall@50). Note this in your Methods section. Some platforms paginate results; if you can page through, go to 50. If not, use what you can access.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">For precision, how do I decide if a paper is "relevant"?</div>
+                    <div class="faq-answer">Clearly relevant = the paper directly addresses one of your research questions (e.g., "Does biophilic design reduce stress?"). If the paper is about biophilic design but studies something unrelated to your focus (e.g., cost-benefit of biophilic design for real estate), it is somewhat relevant (0.5). If it is not about biophilic design at all, it is not relevant (0). Be consistent: create a rubric before rating and stick to it.</div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Should I include my D2 Part 1 (Week 4 usability matrix) data in my D2 final report?</div>
+                    <div class="faq-answer">Yes. Your D2 report should include a section (or subsection) summarizing Week 4 usability findings (think-aloud notes, interface observations), then build on that with Week 5 recall/precision data. Think of D2 Part 1 as your data collection; D2 final is your research synthesis.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 8: References -->
+        <section id="references">
+            <div class="reference-list">
+                <h4>References & Recommended Reading</h4>
+                <ol>
+                    <li>Jadad, A. R., & Gagliardi, A. (1998). Rating health information on the Internet: Navigating to knowledge or to Babel? <em>Journal of the American Medical Association, 279</em>(8), 611–614. — Foundational framework for evaluating health information quality; principles apply to all scientific literature evaluation.</li>
+                    <li>Jacso, P. (2005). Google Scholar: The pros and the cons. <em>Online Information Review, 29</em>(2), 208–214. — Critical examination of free academic search quality and bias; directly relevant to understanding Semantic Scholar limitations.</li>
+                    <li>Bates, M. J. (1989). The design of browsing and berrypicking techniques for the online search interface. <em>Online Information Review, 13</em>(5), 407–424. — Essential reading on how platform design shapes search behavior and information discovery.</li>
+                    <li>Priem, J., Piwowar, H., & Orr, R. (2022). OpenAlex: A fully-open index of scholarly communication. <em>arXiv preprint arXiv:2205.01833</em>. — Technical background on OpenAlex's indexing strategy and coverage; explains why it finds papers others miss.</li>
+                    <li>Harzing, A. W., & Alakangas, S. (2016). Google Scholar, Scopus and the Web of Science: A longitudinal and cross-disciplinary comparison. <em>Scientometrics, 106</em>(2), 787–804. — Comprehensive comparison of academic search platforms; shows how platform choice affects research findings.</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Section 9: Epistemic Insight -->
+        <section id="epistemic">
+            <h2>The Deeper Question: Platform Selection as Epistemology</h2>
+
+            <div class="highlight-box">
+                <p><strong>This week's work forces a crucial realization: when ATLAS chooses to query Semantic Scholar instead of Consensus, ATLAS is not just choosing a tool. It is choosing a theory of knowledge.</strong></p>
+
+                <p>Semantic Scholar assumes that papers with more citations are more important. Consensus assumes that papers published more recently reflect current evidence. Scite assumes that how a paper is cited matters more than how many times it is cited. Each embeds a philosophical claim about what counts as valid evidence.</p>
+
+                <p>In Week 7, when you design the VOI-to-Query bridge, you will make this choice explicit. You will write logic like: "If the VOI question asks about current practice ('What is the state of the art?'), route to Semantic Scholar for recency. If it asks about consensus ('Do researchers agree?'), route to Consensus." This is not just smart engineering. This is epistemic design—intentionally choosing which theory of knowledge governs each query.</p>
+
+                <p>Your D2 report documents the evidence for these choices. It will sit in the codebase as a comment above the <span class="coderef">SourceSelector</span> class, explaining to future engineers: this is why we made this decision, and this is what evidence supports it.</p>
+            </div>
+        </section>
+
+        <!-- Section 10: Submission & Next Steps -->
+        <section id="submission">
+            <h2>Submission & What Comes Next</h2>
+
+            <p><strong>D2 Due: Friday, 5 PM</strong></p>
+            <p>Submit as a single PDF document (Google Docs → Download as PDF). Include all appendices. Share the link to your raw data spreadsheet (Week 4 + Week 5 combined) in your document's header (one line: "Raw data: [link to shared Google Sheets]").</p>
+
+            <p><strong>Week 6 Preview (D3: Recall/Precision Analysis)</strong></p>
+            <p>In Week 6, you will expand this work. You will create a larger benchmark dataset (15–20 research questions + ground-truth relevant papers) and run comprehensive recall/precision analyses. D3 (15% of final grade) will be data-heavy—statistical comparisons, visualization of trade-offs, and recommendations for platform selection at scale.</p>
+
+            <p>Keep all your raw data well-organized. You will reuse much of it in Week 6.</p>
+        </section>
+    </div>
+
+    <footer>
+        <p><strong>Article Finder Track, Week 5</strong> | COGS160: AI & VR | UCSD Cognitive Science | Spring 2026</p>
+        <p>Questions? Consult the <a href="af_track_planning.html" style="color: white; text-decoration: underline;">AF Track Overview</a> or ask during office hours.</p>
+    </footer>
+</body>
+</html>

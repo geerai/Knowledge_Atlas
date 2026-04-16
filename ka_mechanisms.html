@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mechanisms · Knowledge Atlas</title>
+<link rel="stylesheet" href="ka_atlas_shell.css">
+</head>
+<body data-ka-active="mechanisms"
+      data-ka-crumbs='[["Home","ka_home.html"],["Mechanisms",""]]'>
+
+<div id="ka-navbar-slot"></div>
+<div id="ka-breadcrumb-slot"></div>
+
+<section class="ka-hero">
+  <div class="ka-hero-tag">Knowledge Atlas · Mechanisms</div>
+  <h1>Causal Mechanisms</h1>
+  <p class="ka-hero-sub">
+    Mechanisms are the proposed causal chains that link an environmental condition to
+    a measured outcome. Each card specifies the condition, the intervening variables,
+    the outcome, and the evidentiary status of every link in the chain.
+  </p>
+</section>
+
+<div class="ka-shell">
+
+  <aside id="ka-journey-slot"></aside>
+
+  <main id="ka-main">
+    <h2 class="ka-section-title">Browse mechanisms</h2>
+    <p class="ka-section-intro">
+      Mechanisms are indexed by the outcome they explain. A mechanism whose first
+      causal step is well-supported but whose downstream steps are speculative shows a
+      partial-support indicator: you can see where the chain strengthens and where it
+      weakens.
+    </p>
+
+    <input type="search" class="ka-search" id="mech-search"
+           placeholder="Search mechanisms by outcome, construct, or pathway…"
+           aria-label="Search mechanisms">
+
+    <div class="ka-card-grid" id="mech-grid" style="margin-top:18px;">
+
+      <article class="ka-card">
+        <div class="ka-card-title">Noise → cortisol → cognitive performance</div>
+        <div class="ka-card-meta">
+          <span><span class="voi-dot voi-high"></span> Well-supported</span>
+          <span>Open-plan offices; classrooms</span>
+        </div>
+        <div class="ka-card-pills">
+          <span class="ka-pill">Acoustic</span>
+          <span class="ka-pill ka-pill-warn">Stress</span>
+        </div>
+        <div class="ka-card-body">
+          <p><strong>Chain:</strong> Chronic background noise &gt; 55 dBA → sustained
+          cortisol elevation → hippocampal-dependent memory decrement.</p>
+          <p style="margin-top:6px;"><strong>Evidentiary status:</strong> Steps 1–2
+          supported by multiple RCTs and field studies; step 3 supported but
+          effect-size contested.</p>
+        </div>
+      </article>
+
+      <article class="ka-card">
+        <div class="ka-card-title">Daylight → circadian entrainment → alertness</div>
+        <div class="ka-card-meta">
+          <span><span class="voi-dot voi-high"></span> Well-supported</span>
+          <span>Office and residential</span>
+        </div>
+        <div class="ka-card-pills">
+          <span class="ka-pill ka-pill-cool">Luminous</span>
+          <span class="ka-pill ka-pill-neuro">Melanopsin</span>
+        </div>
+        <div class="ka-card-body">
+          <p><strong>Chain:</strong> Morning exposure to ≥ 250 melanopic lux →
+          intrinsically-photosensitive retinal ganglion cell activation →
+          suprachiasmatic nucleus phase advance → daytime alertness gains.</p>
+        </div>
+      </article>
+
+      <article class="ka-card">
+        <div class="ka-card-title">Ceiling height → construal level → creativity</div>
+        <div class="ka-card-meta">
+          <span><span class="voi-dot voi-medium"></span> Partial support</span>
+          <span>Meyers-Levy &amp; Zhu · 2007</span>
+        </div>
+        <div class="ka-card-pills">
+          <span class="ka-pill ka-pill-cool">Spatial</span>
+          <span class="ka-pill">Cognition</span>
+        </div>
+        <div class="ka-card-body">
+          <p><strong>Chain:</strong> High ceiling → activation of "freedom" construct
+          → abstract construal → creative idea generation.</p>
+          <p style="margin-top:6px;"><strong>Evidentiary status:</strong> Original
+          finding replicates in some laboratory contexts and fails in others; real-world
+          field effect is modest.</p>
+        </div>
+      </article>
+
+      <article class="ka-card">
+        <div class="ka-card-title">Thermal comfort → affect → prosocial behaviour</div>
+        <div class="ka-card-meta">
+          <span><span class="voi-dot voi-low"></span> Speculative</span>
+          <span>Williams &amp; Bargh · 2008 (challenged)</span>
+        </div>
+        <div class="ka-card-pills">
+          <span class="ka-pill ka-pill-warn">Thermal</span>
+          <span class="ka-pill">Social</span>
+        </div>
+        <div class="ka-card-body">
+          <p><strong>Chain:</strong> Warmer ambient temperature → primed "warmth"
+          concept → prosocial judgement.</p>
+          <p style="margin-top:6px;"><strong>Evidentiary status:</strong> Original
+          priming result has failed to replicate in large multi-lab efforts; listed
+          here as a cautionary mechanism to revise or retire.</p>
+        </div>
+      </article>
+
+      <article class="ka-card">
+        <div class="ka-card-title">Crowding → cognitive load → error rate</div>
+        <div class="ka-card-meta">
+          <span><span class="voi-dot voi-medium"></span> Partial support</span>
+          <span>Dense residential; healthcare</span>
+        </div>
+        <div class="ka-card-pills">
+          <span class="ka-pill">Crowding</span>
+          <span class="ka-pill ka-pill-cool">Attention</span>
+        </div>
+        <div class="ka-card-body">
+          <p><strong>Chain:</strong> Perceived social density → working-memory load
+          from inhibiting social monitoring → increased error rate on concurrent
+          tasks.</p>
+        </div>
+      </article>
+
+      <article class="ka-card">
+        <div class="ka-card-title">Materiality → thermal affect → room preference</div>
+        <div class="ka-card-meta">
+          <span><span class="voi-dot voi-medium"></span> Partial support</span>
+          <span>Wood vs. metal surfaces</span>
+        </div>
+        <div class="ka-card-pills">
+          <span class="ka-pill">Material</span>
+          <span class="ka-pill ka-pill-warn">Affect</span>
+        </div>
+        <div class="ka-card-body">
+          <p><strong>Chain:</strong> Touch of warm-feeling wood surface → lowered
+          skin-conductance response → positive affect → room preference.</p>
+        </div>
+      </article>
+
+    </div>
+
+    <p style="margin-top:24px;font-size:0.85rem;color:#8A9A96;">
+      <em>Placeholder data. A subsequent pass will extract mechanism rows from
+      <code>data/ka_payloads/topic_hierarchy.json</code> leaf IDs whose suffix is
+      <code>__mechanism</code>, with evidentiary annotations from
+      <code>data/ka_payloads/evidence.json</code>.</em>
+    </p>
+  </main>
+</div>
+
+<footer class="ka-footer">
+  Knowledge Atlas · UCSD Cognitive Science · Spring 2026
+</footer>
+
+<script>
+document.addEventListener('click', function (e) {
+  var card = e.target.closest('.ka-card');
+  if (!card) return;
+  card.classList.toggle('expanded');
+});
+document.getElementById('mech-search').addEventListener('input', function (e) {
+  var q = (e.target.value || '').toLowerCase().trim();
+  document.querySelectorAll('.ka-card').forEach(function (c) {
+    var hit = c.textContent.toLowerCase().indexOf(q) !== -1;
+    c.style.display = hit || !q ? '' : 'none';
+  });
+});
+</script>
+
+<script src="ka_canonical_navbar.js" defer></script>
+<script src="ka_journey_nav.js"      defer></script>
+</body>
+</html>

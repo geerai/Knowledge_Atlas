@@ -6,6 +6,14 @@ __pycache__/
 data/ka_auth.db
 data/ka_auth.db-shm
 data/ka_auth.db-wal
+data/ka_auth.db.bak
+data/ka_auth_test.db
+data/ka_auth_clean.db
+data/ka_auth_clean.db-journal
+data/ka_auth.server_*.db
+knowledge_atlas_auth.db
+160sp/pipeline_lifecycle_full.db
+~$*.pptx
 data/ka_auth_secret.txt
 data/storage/
 logs/

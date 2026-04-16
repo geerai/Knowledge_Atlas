@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neuro Perspective — Knowledge Atlas</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #1C3D3A;
+      --amber:  #E8872A;
+      --cream:  #F7F4EF;
+      --green:  #2A7868;
+      --text:   #2D2010;
+      --muted:  #6A5E50;
+      --border: #DDD6CD;
+      --light:  #EDE8E0;
+    }
+
+    body { font-family: Arial, sans-serif; background: var(--cream); color: var(--text); line-height: 1.65; }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky; top: 0; z-index: 500;
+      background: var(--navy); display: flex; align-items: center;
+      gap: 24px; padding: 0 28px; height: 52px;
+      border-bottom: 2px solid var(--amber);
+    }
+    .nav-brand { color: #A8C8BF; font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; }
+    .nav-brand:hover { color: var(--amber); }
+    nav a.nav-link { color: #7AACA0; font-size: 0.8rem; text-decoration: none; transition: color 0.15s; }
+    nav a.nav-link:hover { color: #fff; }
+    .nav-sep { color: rgba(255,255,255,0.18); }
+    .nav-center { display: flex; gap: 18px; align-items: center; flex: 1; }
+
+    /* ── Hero ── */
+    .page-hero {
+      background: linear-gradient(135deg, #163230 0%, var(--navy) 50%, #1A2E2C 100%);
+      padding: 56px 40px 48px;
+      border-bottom: 3px solid var(--amber);
+    }
+    .page-hero .eyebrow {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em;
+      text-transform: uppercase; color: #7AACA0; margin-bottom: 12px;
+    }
+    .page-hero h1 {
+      font-family: Georgia, serif; font-size: 2rem; font-weight: 400;
+      color: #F5F0E8; line-height: 1.25; margin-bottom: 14px;
+    }
+    .page-hero p { font-size: 1rem; color: #A8C8BF; line-height: 1.7; max-width: 720px; }
+
+    .outer { max-width: 960px; margin: 0 auto; padding: 0 32px 80px; }
+
+    /* ── Did You Know Cards ── */
+    .dyk-section { margin-top: 40px; margin-bottom: 12px; }
+    .dyk-label {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--amber); margin-bottom: 16px;
+    }
+    .dyk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    @media (max-width: 780px) { .dyk-grid { grid-template-columns: 1fr; } }
+
+    .dyk-card {
+      background: #fff; border: 1px solid var(--border); border-radius: 10px;
+      padding: 20px 18px; position: relative; overflow: hidden;
+      transition: transform 0.15s, box-shadow 0.15s; cursor: default;
+    }
+    .dyk-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+    .dyk-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--amber);
+    }
+    .dyk-icon { font-size: 1.6rem; margin-bottom: 8px; }
+    .dyk-title {
+      font-size: 0.82rem; font-weight: 700; color: var(--navy);
+      margin-bottom: 6px; line-height: 1.35;
+    }
+    .dyk-body { font-size: 0.8rem; color: var(--muted); line-height: 1.55; }
+    .dyk-source {
+      margin-top: 8px; font-size: 0.68rem; color: var(--green); font-style: italic;
+    }
+
+    /* ── Topic Selector ── */
+    .topic-section { margin-top: 48px; }
+    .topic-header {
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 20px; padding-bottom: 14px;
+      border-bottom: 2px solid var(--border);
+    }
+    .topic-header h2 {
+      font-family: Georgia, serif; font-size: 1.3rem; font-weight: 400; color: var(--navy);
+    }
+    .topic-select-wrap { margin-bottom: 28px; }
+    .topic-select {
+      width: 100%; max-width: 420px; padding: 12px 16px; font-size: 0.95rem;
+      border: 2px solid var(--border); border-radius: 8px; background: #fff;
+      color: var(--text); font-family: Arial, sans-serif; cursor: pointer;
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236A5E50' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 16px center;
+    }
+    .topic-select:focus { outline: none; border-color: var(--green); }
+
+    /* ── Content Panel ── */
+    .topic-content { display: none; }
+    .topic-content.active { display: block; }
+
+    .mech-overview {
+      background: linear-gradient(135deg, #163230, var(--navy));
+      border-radius: 12px; padding: 28px 24px; margin-bottom: 24px; color: #F5F0E8;
+    }
+    .mech-overview h3 {
+      font-family: Georgia, serif; font-size: 1.15rem; font-weight: 400;
+      color: #F5F0E8; margin-bottom: 10px;
+    }
+    .mech-overview p { font-size: 0.88rem; color: #A8C8BF; line-height: 1.65; }
+    .mech-overview .stat-row {
+      display: flex; gap: 24px; margin-top: 16px; flex-wrap: wrap;
+    }
+    .mech-stat {
+      background: rgba(255,255,255,0.06); border-radius: 8px;
+      padding: 10px 16px; flex: 1; min-width: 120px;
+    }
+    .mech-stat-val { font-size: 1.3rem; font-weight: 800; color: var(--amber); }
+    .mech-stat-lbl { font-size: 0.68rem; color: #7AACA0; margin-top: 2px; }
+
+    /* ── Mechanism cards ── */
+    .mech-cards { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 28px; }
+
+    .mech-card {
+      background: #fff; border: 1px solid var(--border); border-radius: 10px;
+      padding: 20px 22px; position: relative;
+    }
+    .mech-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .mech-id {
+      background: var(--navy); color: #A8C8BF; font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.08em; padding: 4px 8px; border-radius: 4px;
+    }
+    .mech-name { font-size: 0.92rem; font-weight: 700; color: var(--navy); }
+    .mech-maturity {
+      margin-left: auto; font-size: 0.68rem; font-weight: 700; padding: 3px 10px;
+      border-radius: 12px; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .mat-actual { background: #d4edda; color: #1a5928; }
+    .mat-plausible { background: #fff3cd; color: #7a6012; }
+    .mat-possible { background: #f8d7da; color: #721c24; }
+
+    .mech-chain {
+      background: #1A2E2C; border-radius: 8px; padding: 14px 16px; margin: 12px 0;
+      font-family: 'SF Mono', 'Fira Code', Consolas, monospace; font-size: 0.78rem;
+      color: #A8C8BF; line-height: 1.7;
+    }
+    .mech-chain .arrow { color: var(--amber); font-weight: 700; }
+
+    .mech-details { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 12px; }
+    @media (max-width: 640px) { .mech-details { grid-template-columns: 1fr; } }
+    .mech-detail-box {
+      background: var(--light); border-radius: 6px; padding: 10px 14px;
+    }
+    .mech-detail-lbl { font-size: 0.65rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+    .mech-detail-val { font-size: 0.82rem; color: var(--navy); font-weight: 600; }
+
+    .mech-refs { margin-top: 10px; font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
+
+    /* ── Dose-Response Chart ── */
+    .dose-section { margin-top: 12px; }
+    .dose-section h4 {
+      font-size: 0.88rem; font-weight: 700; color: var(--navy); margin-bottom: 12px;
+    }
+    .dose-chart {
+      background: #fff; border: 1px solid var(--border); border-radius: 10px;
+      padding: 20px; height: 260px; position: relative;
+    }
+    .dose-chart canvas { width: 100% !important; height: 100% !important; }
+
+    /* ── 7-Layer Diagram ── */
+    .layer-diagram { margin: 28px 0; }
+    .layer-diagram h4 { font-size: 0.88rem; font-weight: 700; color: var(--navy); margin-bottom: 14px; }
+    .layer-stack { display: flex; flex-direction: column; gap: 4px; }
+    .layer-bar {
+      display: flex; align-items: center; border-radius: 6px; padding: 8px 14px;
+      font-size: 0.78rem; transition: all 0.2s; cursor: default;
+    }
+    .layer-bar:hover { transform: translateX(4px); }
+    .layer-num {
+      width: 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.68rem; font-weight: 700; margin-right: 12px; flex-shrink: 0;
+    }
+    .layer-name { font-weight: 700; flex: 1; }
+    .layer-time { font-size: 0.72rem; opacity: 0.8; }
+    .layer-bar.active-layer { outline: 2px solid var(--amber); outline-offset: 1px; }
+
+    .l1 { background: #2E7D60; color: #d4f5e8; }
+    .l2 { background: #287058; color: #c8f0dd; }
+    .l3 { background: #226350; color: #bcebd2; }
+    .l4 { background: #1C5648; color: #b0e6c7; }
+    .l5 { background: #164940; color: #a4e1bc; }
+    .l6 { background: #103C38; color: #98dcb1; }
+    .l7 { background: #0A2F30; color: #8cd7a6; }
+
+    /* ── Confidence bar ── */
+    .conf-bar-wrap { margin-top: 8px; display: flex; align-items: center; gap: 10px; }
+    .conf-bar-track {
+      flex: 1; height: 8px; background: var(--light); border-radius: 4px; overflow: hidden;
+    }
+    .conf-bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s; }
+    .conf-val { font-size: 0.78rem; font-weight: 700; color: var(--navy); min-width: 36px; }
+
+    /* ── Footer ── */
+    .page-footer {
+      background: var(--navy); padding: 32px 40px; margin-top: 60px;
+      border-top: 2px solid var(--amber);
+    }
+    .page-footer p { font-size: 0.75rem; color: #7AACA0; }
+    .page-footer a { color: var(--amber); text-decoration: none; }
+  
+.wordmark {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; flex-shrink: 0;
+}
+.wordmark-icon { width: 30px; height: 30px; }
+.wordmark-text { display: flex; flex-direction: column; line-height: 1.1; }
+.wm-top { font-size: 0.66rem; font-weight: 400; letter-spacing: 0.24em; text-transform: uppercase; color: #A8C8BF; }
+.wm-bottom { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.03em; color: #fff; }
+.wm-bottom span { color: #F5A623; }
+</style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav>
+  <a class="wordmark" href="ka_home.html">
+    <svg class="wordmark-icon" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="3.5" fill="#F5A623"/>
+      <circle cx="16" cy="5"  r="2.5" fill="#A8C8BF"/>
+      <circle cx="27" cy="22" r="2.5" fill="#A8C8BF"/>
+      <circle cx="5"  cy="22" r="2.5" fill="#A8C8BF"/>
+      <line x1="16"   y1="7.5"  x2="16"   y2="12.5" stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="24.8" y1="20.2" x2="19.0" y2="17.3"  stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="7.2"  y1="20.2" x2="13.0" y2="17.3"  stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="16" y1="7.5"  x2="25.5" y2="20" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+      <line x1="25.5" y1="20" x2="6.5"   y2="20" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+      <line x1="6.5"  y1="20" x2="16"    y2="7.5" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+    </svg>
+    <div class="wordmark-text">
+      <span class="wm-top">Knowledge</span>
+      <span class="wm-bottom">At<span>las</span></span>
+    </div>
+  </a>
+  <div class="nav-center">
+    <span class="nav-sep">|</span>
+    <a href="ka_home.html" class="nav-link">Home</a>
+    <a href="ka_topics.html" class="nav-link">Topics</a>
+    <a href="ka_warrants.html" class="nav-link">Warrants</a>
+    <a href="ka_evidence.html" class="nav-link">Evidence</a>
+    <a href="ka_neuro_perspective.html" class="nav-link" style="color:#E8872A;">Neuro</a>
+    <a href="ka_sitemap.html" class="nav-link">Sitemap</a>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<div class="page-hero">
+  <div class="eyebrow">COGS 160 &middot; Spring 2026</div>
+  <h1>The Neuro Perspective</h1>
+  <p>Every claim in the Knowledge Atlas rests on neural mechanisms &mdash; chains of brain events that explain how built environments shape cognition, affect, and physiology. Choose a topic below to see what the brain is actually doing.</p>
+</div>
+
+<div class="outer">
+
+  <!-- ── Did You Know Cards ── -->
+  <div class="dyk-section">
+    <div class="dyk-label">Did You Know?</div>
+    <div class="dyk-grid">
+
+      <div class="dyk-card">
+        <div class="dyk-icon">&#x1F9E0;</div>
+        <div class="dyk-title">Your brain judges a room in 130 milliseconds</div>
+        <div class="dyk-body">A fast magnocellular pathway extracts scene "gist" &mdash; proportions, lighting distribution, spatial depth &mdash; before you consciously see any detail. This 130ms snapshot frames everything you feel about the space afterward.</div>
+        <div class="dyk-source">Bar (2007), Neuron; Friston (2010), Nature Reviews Neuroscience</div>
+      </div>
+
+      <div class="dyk-card">
+        <div class="dyk-icon">&#x1F4A1;</div>
+        <div class="dyk-title">Wrong light at night costs you 42 minutes of sleep</div>
+        <div class="dyk-body">Melanopsin-expressing retinal ganglion cells (ipRGCs) don't care about color &mdash; they measure light intensity. Exposure to &gt;10 melanopic lux within 1 hour of bedtime suppresses melatonin and delays sleep onset by 30-50 minutes on average.</div>
+        <div class="dyk-source">Berson et al. (2002), Science; Foster (2021), Lifetime of Light</div>
+      </div>
+
+      <div class="dyk-card">
+        <div class="dyk-icon">&#x1F3DB;&#xFE0F;</div>
+        <div class="dyk-title">Buildings literally become part of your brain</div>
+        <div class="dyk-body">Andy Clark's extended cognition thesis isn't metaphor. Clear wayfinding extends spatial memory; organized workspaces extend working memory. The brain treats reliable environmental structure as part of its own cognitive architecture.</div>
+        <div class="dyk-source">Clark &amp; Chalmers (1998), Analysis; Clark (2016), Surfing Uncertainty</div>
+      </div>
+
+      <div class="dyk-card">
+        <div class="dyk-icon">&#x1F6D1;</div>
+        <div class="dyk-title">You don't "get used to" bad noise</div>
+        <div class="dyk-body">Unlike most stimuli, chronic noise shows sensitization &mdash; the stress response increases with repeated exposure. The HPA axis doesn't habituate to unpredictable noise above 70 dB. "People adapt" is a myth for this mechanism.</div>
+        <div class="dyk-source">Babisch (2003), Noise &amp; Health; Evans &amp; Johnson (2000), J. Applied Psychology</div>
+      </div>
+
+      <div class="dyk-card">
+        <div class="dyk-icon">&#x1F333;</div>
+        <div class="dyk-title">Nature works in 20 minutes, then diminishing returns</div>
+        <div class="dyk-body">Cortisol drops fastest in the first 20 minutes of nature exposure (logarithmic curve). After 120 minutes the benefit saturates. A 20-minute break in a garden delivers ~80% of the physiological benefit of a 2-hour forest walk.</div>
+        <div class="dyk-source">Hunter et al. (2019), Frontiers in Psychology; White et al. (2019), Scientific Reports</div>
+      </div>
+
+      <div class="dyk-card">
+        <div class="dyk-icon">&#x1F30D;</div>
+        <div class="dyk-title">Feng Shui and neuroscience agree (sort of)</div>
+        <div class="dyk-body">Cross-cultural analysis shows that Feng Shui's "chi flow" maps onto airflow + visual permeability (comfort prediction), and yin-yang balance maps onto the complexity-simplicity PE optimization curve. Different cultural frame, same neural substrate.</div>
+        <div class="dyk-source">Panel 10: Cultural Validation (2026); Han (2015), Culture and Neural Frames</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Topic Explorer ── -->
+  <div class="topic-section">
+    <div class="topic-header">
+      <h2>Explore the Neural Mechanisms</h2>
+    </div>
+    <p style="font-size:0.88rem; color:var(--muted); margin-bottom:20px;">Select an environmental feature to see which brain mechanisms it activates, how the dose-response works, and which layers of the 7-layer neural architecture are involved.</p>
+
+    <div class="topic-select-wrap">
+      <select class="topic-select" id="topicSelect" onchange="showTopic(this.value)">
+        <option value="">Choose a topic...</option>
+        <option value="light">Light &amp; Circadian Biology</option>
+        <option value="noise">Noise &amp; Acoustic Stress</option>
+        <option value="nature">Nature Views &amp; Biophilia</option>
+        <option value="complexity">Visual Complexity &amp; Fractals</option>
+        <option value="ceiling">Ceiling Height &amp; Spatial Volume</option>
+        <option value="wayfinding">Wayfinding &amp; Navigation</option>
+        <option value="temperature">Temperature &amp; Thermal Comfort</option>
+        <option value="control">Perceived Control &amp; Agency</option>
+        <option value="social">Social Space &amp; Co-Presence</option>
+        <option value="airquality">Air Quality &amp; CO&#x2082;</option>
+      </select>
+    </div>
+
+    <!-- ── LIGHT ── -->
+    <div class="topic-content" id="topic-light">
+      <div class="mech-overview">
+        <h3>Light &amp; Circadian Biology</h3>
+        <p>Light is the most biologically potent environmental feature. It operates through two distinct pathways: image-forming vision (rods and cones) for spatial perception, and non-image-forming photoreception (ipRGCs) for circadian entrainment. The circadian pathway is the highest-confidence mechanism in the entire ATLAS system.</p>
+        <div class="stat-row">
+          <div class="mech-stat"><div class="mech-stat-val">3</div><div class="mech-stat-lbl">Core Mechanisms</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">0.89</div><div class="mech-stat-lbl">Peak Confidence</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">Layer 6</div><div class="mech-stat-lbl">Primary Layer</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">Sigmoid</div><div class="mech-stat-lbl">Dose Curve</div></div>
+        </div>
+      </div>
+
+      <div class="mech-cards">
+        <div class="mech-card">
+          <div class="mech-card-header">
+            <span class="mech-id">CB-CIRCADIAN-001</span>
+            <span class="mech-name">ipRGC-Mediated Circadian Phase Setting</span>
+            <span class="mech-maturity mat-actual">How-Actually</span>
+          </div>
+          <div class="mech-chain">
+            Retinal ipRGCs (melanopsin) <span class="arrow">&rarr;</span> detect melanopic irradiance <span class="arrow">&rarr;</span> signal via retinohypothalamic tract <span class="arrow">&rarr;</span> SCN master clock <span class="arrow">&rarr;</span> entrain circadian phase <span class="arrow">&rarr;</span> coordinate melatonin, cortisol, core temperature rhythms
+          </div>
+          <div class="mech-details">
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Onset</div><div class="mech-detail-val">Minutes</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Full Entrainment</div><div class="mech-detail-val">2-7 days</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Bridge Warrant</div><div class="mech-detail-val">Mechanism (d=0.80)</div></div>
+          </div>
+          <div class="conf-bar-wrap">
+            <div class="conf-bar-track"><div class="conf-bar-fill" style="width:89%; background:var(--green);"></div></div>
+            <div class="conf-val">0.89</div>
+          </div>
+          <div class="mech-refs">Berson et al. (2002) Science; Foster (2021); Roenneberg et al. (2019) Sleep Medicine Reviews</div>
+        </div>
+
+        <div class="mech-card">
+          <div class="mech-card-header">
+            <span class="mech-id">CB-SLEEP-002</span>
+            <span class="mech-name">Evening Light &amp; Melatonin Suppression</span>
+            <span class="mech-maturity mat-actual">How-Actually</span>
+          </div>
+          <div class="mech-chain">
+            Evening light (&gt;10 melanopic lux) <span class="arrow">&rarr;</span> ipRGC activation <span class="arrow">&rarr;</span> SCN alerting signal <span class="arrow">&rarr;</span> pineal melatonin suppression <span class="arrow">&rarr;</span> delayed sleep onset (30-50 min) <span class="arrow">&rarr;</span> reduced sleep quality
+          </div>
+          <div class="mech-details">
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Critical Window</div><div class="mech-detail-val">1-2 hrs pre-sleep</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Threshold</div><div class="mech-detail-val">&gt;10 melanopic lux</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Bridge Warrant</div><div class="mech-detail-val">Mechanism (d=0.80)</div></div>
+          </div>
+          <div class="conf-bar-wrap">
+            <div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%; background:var(--green);"></div></div>
+            <div class="conf-val">0.88</div>
+          </div>
+          <div class="mech-refs">Gooley et al. (2011) J. Clinical Endocrinology; Chang et al. (2015) PNAS</div>
+        </div>
+
+        <div class="mech-card">
+          <div class="mech-card-header">
+            <span class="mech-id">CB-ALLOSTATIC-003</span>
+            <span class="mech-name">Chronic Circadian Misalignment &amp; Inflammation</span>
+            <span class="mech-maturity mat-actual">How-Actually</span>
+          </div>
+          <div class="mech-chain">
+            Chronic circadian disruption <span class="arrow">&rarr;</span> cortisol rhythm flattening <span class="arrow">&rarr;</span> HPA axis dysregulation <span class="arrow">&rarr;</span> pro-inflammatory cytokine elevation <span class="arrow">&rarr;</span> systemic inflammation <span class="arrow">&rarr;</span> cardiovascular, metabolic, cognitive impairment
+          </div>
+          <div class="mech-details">
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Timescale</div><div class="mech-detail-val">Weeks to years</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Reversibility</div><div class="mech-detail-val">Partial (months)</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Bridge Warrant</div><div class="mech-detail-val">Mechanism (d=0.80)</div></div>
+          </div>
+          <div class="conf-bar-wrap">
+            <div class="conf-bar-track"><div class="conf-bar-fill" style="width:85%; background:var(--green);"></div></div>
+            <div class="conf-val">0.85</div>
+          </div>
+          <div class="mech-refs">McEwen (1998) NEJM; Scheer et al. (2009) PNAS; Sterling (2012) Allostasis</div>
+        </div>
+      </div>
+
+      <div class="layer-diagram">
+        <h4>Active Neural Layers</h4>
+        <div class="layer-stack">
+          <div class="layer-bar l1"><span class="layer-num">1</span><span class="layer-name">Rapid Perceptual</span><span class="layer-time">0-200ms</span></div>
+          <div class="layer-bar l2"><span class="layer-num">2</span><span class="layer-name">Salience Evaluation</span><span class="layer-time">200ms-5s</span></div>
+          <div class="layer-bar l3"><span class="layer-num">3</span><span class="layer-name">Neuromodulatory</span><span class="layer-time">sec-min</span></div>
+          <div class="layer-bar l4"><span class="layer-num">4</span><span class="layer-name">Network State</span><span class="layer-time">min-hrs</span></div>
+          <div class="layer-bar l5"><span class="layer-num">5</span><span class="layer-name">Hippocampal</span><span class="layer-time">min-overnight</span></div>
+          <div class="layer-bar l6 active-layer"><span class="layer-num">6</span><span class="layer-name">Circadian Integration</span><span class="layer-time">hrs-days</span></div>
+          <div class="layer-bar l7 active-layer"><span class="layer-num">7</span><span class="layer-name">Allostatic Accumulation</span><span class="layer-time">days-yrs</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── NOISE ── -->
+    <div class="topic-content" id="topic-noise">
+      <div class="mech-overview">
+        <h3>Noise &amp; Acoustic Stress</h3>
+        <p>Noise operates through two pathways: the salience network (sudden sounds trigger DMN&rarr;CEN switching) and the HPA axis (chronic noise elevates cortisol). Uniquely among environmental stressors, noise shows sensitization rather than habituation &mdash; the stress response gets worse, not better, with repeated exposure above 70 dB.</p>
+        <div class="stat-row">
+          <div class="mech-stat"><div class="mech-stat-val">3</div><div class="mech-stat-lbl">Core Mechanisms</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">0.88</div><div class="mech-stat-lbl">Peak Confidence</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">Layers 2-3</div><div class="mech-stat-lbl">Primary Layers</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">Inverted-U + cliff</div><div class="mech-stat-lbl">Dose Curve</div></div>
+        </div>
+      </div>
+      <div class="mech-cards">
+        <div class="mech-card">
+          <div class="mech-card-header">
+            <span class="mech-id">SN-SWITCHING-001</span>
+            <span class="mech-name">Salience-Mediated Network Switching</span>
+            <span class="mech-maturity mat-actual">How-Actually</span>
+          </div>
+          <div class="mech-chain">
+            Sudden noise &gt;55 dB <span class="arrow">&rarr;</span> anterior insula salience detection (200ms) <span class="arrow">&rarr;</span> DMN suppression <span class="arrow">&rarr;</span> CEN activation <span class="arrow">&rarr;</span> attentional capture <span class="arrow">&rarr;</span> task disruption (3-8s recovery)
+          </div>
+          <div class="mech-details">
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Onset</div><div class="mech-detail-val">200ms</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Recovery</div><div class="mech-detail-val">3-8 seconds</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Sensitization</div><div class="mech-detail-val">Yes (chronic stress)</div></div>
+          </div>
+          <div class="conf-bar-wrap">
+            <div class="conf-bar-track"><div class="conf-bar-fill" style="width:88%; background:var(--green);"></div></div>
+            <div class="conf-val">0.88</div>
+          </div>
+          <div class="mech-refs">Menon &amp; Uddin (2010) Trends in Cognitive Sciences; Sridharan et al. (2008) PNAS</div>
+        </div>
+
+        <div class="mech-card">
+          <div class="mech-card-header">
+            <span class="mech-id">NM-NE-STRESS-001</span>
+            <span class="mech-name">Noise-Driven NE Stress Cascade</span>
+            <span class="mech-maturity mat-actual">How-Actually</span>
+          </div>
+          <div class="mech-chain">
+            Unpredictable noise &gt;70 dB <span class="arrow">&rarr;</span> locus coeruleus NE release <span class="arrow">&rarr;</span> cortical arousal increase <span class="arrow">&rarr;</span> HPA axis activation <span class="arrow">&rarr;</span> cortisol elevation <span class="arrow">&rarr;</span> sustained stress state
+          </div>
+          <div class="mech-details">
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Cliff Threshold</div><div class="mech-detail-val">70 dB(A)</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Optimal Range</div><div class="mech-detail-val">40-50 dB(A)</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Habituation</div><div class="mech-detail-val">NO &mdash; sensitizes</div></div>
+          </div>
+          <div class="conf-bar-wrap">
+            <div class="conf-bar-track"><div class="conf-bar-fill" style="width:84%; background:var(--green);"></div></div>
+            <div class="conf-val">0.84</div>
+          </div>
+          <div class="mech-refs">Babisch (2003) Noise &amp; Health; Yu &amp; Dayan (2005) Neural Computation</div>
+        </div>
+      </div>
+      <div class="layer-diagram">
+        <h4>Active Neural Layers</h4>
+        <div class="layer-stack">
+          <div class="layer-bar l1"><span class="layer-num">1</span><span class="layer-name">Rapid Perceptual</span><span class="layer-time">0-200ms</span></div>
+          <div class="layer-bar l2 active-layer"><span class="layer-num">2</span><span class="layer-name">Salience Evaluation</span><span class="layer-time">200ms-5s</span></div>
+          <div class="layer-bar l3 active-layer"><span class="layer-num">3</span><span class="layer-name">Neuromodulatory</span><span class="layer-time">sec-min</span></div>
+          <div class="layer-bar l4"><span class="layer-num">4</span><span class="layer-name">Network State</span><span class="layer-time">min-hrs</span></div>
+          <div class="layer-bar l5"><span class="layer-num">5</span><span class="layer-name">Hippocampal</span><span class="layer-time">min-overnight</span></div>
+          <div class="layer-bar l6"><span class="layer-num">6</span><span class="layer-name">Circadian Integration</span><span class="layer-time">hrs-days</span></div>
+          <div class="layer-bar l7 active-layer"><span class="layer-num">7</span><span class="layer-name">Allostatic Accumulation</span><span class="layer-time">days-yrs</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── NATURE ── -->
+    <div class="topic-content" id="topic-nature">
+      <div class="mech-overview">
+        <h3>Nature Views &amp; Biophilia</h3>
+        <p>Nature exposure reduces stress through two converging mechanisms: low prediction error (natural scenes have fractal statistics the visual system evolved with) and sustained DMN engagement (nature's "soft fascination" avoids salience-triggered switching). The dose-response is logarithmic &mdash; most benefit arrives in the first 20 minutes.</p>
+        <div class="stat-row">
+          <div class="mech-stat"><div class="mech-stat-val">3</div><div class="mech-stat-lbl">Core Mechanisms</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">0.84</div><div class="mech-stat-lbl">Peak Confidence</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">Layers 1-4</div><div class="mech-stat-lbl">Primary Layers</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">Logarithmic</div><div class="mech-stat-lbl">Dose Curve</div></div>
+        </div>
+      </div>
+      <div class="mech-cards">
+        <div class="mech-card">
+          <div class="mech-card-header">
+            <span class="mech-id">PP-NATURE-001</span>
+            <span class="mech-name">Low Prediction Error from Fractal Statistics</span>
+            <span class="mech-maturity mat-plausible">How-Plausibly</span>
+          </div>
+          <div class="mech-chain">
+            Natural scene (fractal D &asymp; 1.3) <span class="arrow">&rarr;</span> visual cortex processes familiar statistical structure <span class="arrow">&rarr;</span> low PE across hierarchy <span class="arrow">&rarr;</span> reduced metabolic cost <span class="arrow">&rarr;</span> SN below threshold <span class="arrow">&rarr;</span> DMN sustained
+          </div>
+          <div class="mech-details">
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Onset</div><div class="mech-detail-val">130ms (gist)</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">80% Benefit</div><div class="mech-detail-val">20 minutes</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Saturation</div><div class="mech-detail-val">~120 minutes</div></div>
+          </div>
+          <div class="conf-bar-wrap">
+            <div class="conf-bar-track"><div class="conf-bar-fill" style="width:78%; background:var(--green);"></div></div>
+            <div class="conf-val">0.78</div>
+          </div>
+          <div class="mech-refs">Taylor et al. (2011) Nonlinear Dynamics; Ulrich (1984) Science; Kaplan (1995) J. Env. Psych.</div>
+        </div>
+
+        <div class="mech-card">
+          <div class="mech-card-header">
+            <span class="mech-id">DT-RESTORATIVE-001</span>
+            <span class="mech-name">DMN Sustained Engagement (Soft Fascination)</span>
+            <span class="mech-maturity mat-plausible">How-Plausibly</span>
+          </div>
+          <div class="mech-chain">
+            Nature view <span class="arrow">&rarr;</span> moderate interest without demanding attention <span class="arrow">&rarr;</span> SN stays below switch threshold <span class="arrow">&rarr;</span> DMN sustained <span class="arrow">&rarr;</span> memory consolidation (MTL) + self-referential processing <span class="arrow">&rarr;</span> cognitive restoration
+          </div>
+          <div class="mech-details">
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Onset</div><div class="mech-detail-val">1-5 minutes</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Bridge Warrant</div><div class="mech-detail-val">Empirical Assoc (d=0.80)</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">CCI Score</div><div class="mech-detail-val">0.75 (well-supported)</div></div>
+          </div>
+          <div class="conf-bar-wrap">
+            <div class="conf-bar-track"><div class="conf-bar-fill" style="width:76%; background:var(--green);"></div></div>
+            <div class="conf-val">0.76</div>
+          </div>
+          <div class="mech-refs">Raichle (2015) PNAS; Berman et al. (2008) Psychological Science; Kaplan (1995)</div>
+        </div>
+      </div>
+      <div class="layer-diagram">
+        <h4>Active Neural Layers</h4>
+        <div class="layer-stack">
+          <div class="layer-bar l1 active-layer"><span class="layer-num">1</span><span class="layer-name">Rapid Perceptual</span><span class="layer-time">0-200ms</span></div>
+          <div class="layer-bar l2 active-layer"><span class="layer-num">2</span><span class="layer-name">Salience Evaluation</span><span class="layer-time">200ms-5s</span></div>
+          <div class="layer-bar l3 active-layer"><span class="layer-num">3</span><span class="layer-name">Neuromodulatory</span><span class="layer-time">sec-min</span></div>
+          <div class="layer-bar l4 active-layer"><span class="layer-num">4</span><span class="layer-name">Network State</span><span class="layer-time">min-hrs</span></div>
+          <div class="layer-bar l5"><span class="layer-num">5</span><span class="layer-name">Hippocampal</span><span class="layer-time">min-overnight</span></div>
+          <div class="layer-bar l6"><span class="layer-num">6</span><span class="layer-name">Circadian Integration</span><span class="layer-time">hrs-days</span></div>
+          <div class="layer-bar l7"><span class="layer-num">7</span><span class="layer-name">Allostatic Accumulation</span><span class="layer-time">days-yrs</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── COMPLEXITY ── -->
+    <div class="topic-content" id="topic-complexity">
+      <div class="mech-overview">
+        <h3>Visual Complexity &amp; Fractals</h3>
+        <p>The brain prefers intermediate complexity (fractal dimension D &asymp; 1.3-1.5). Too simple: understimulation and boredom (insufficient dopaminergic novelty signal). Too complex: prediction error overload and salience switching. The Goldilocks curve is an inverted-U whose peak shifts rightward with expertise and familiarity.</p>
+        <div class="stat-row">
+          <div class="mech-stat"><div class="mech-stat-val">2</div><div class="mech-stat-lbl">Core Mechanisms</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">0.80</div><div class="mech-stat-lbl">Peak Confidence</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">Layers 1-3</div><div class="mech-stat-lbl">Primary Layers</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">Inverted-U</div><div class="mech-stat-lbl">Dose Curve</div></div>
+        </div>
+      </div>
+      <div class="mech-cards">
+        <div class="mech-card">
+          <div class="mech-card-header">
+            <span class="mech-id">PP-ATTENTION-002</span>
+            <span class="mech-name">Precision-Weighted Prediction Error</span>
+            <span class="mech-maturity mat-actual">How-Actually</span>
+          </div>
+          <div class="mech-chain">
+            Visual complexity <span class="arrow">&rarr;</span> hierarchical PE magnitude at V1/V4/PFC <span class="arrow">&rarr;</span> precision weighting by familiarity priors <span class="arrow">&rarr;</span> net PE compared to Goldilocks range <span class="arrow">&rarr;</span> optimal: engaged curiosity; excess: stress; deficit: boredom
+          </div>
+          <div class="mech-details">
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Peak Range</div><div class="mech-detail-val">D = 1.3-1.5</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Expert Shift</div><div class="mech-detail-val">Peak moves rightward</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Adaptation tau</div><div class="mech-detail-val">2-30 min (level-dependent)</div></div>
+          </div>
+          <div class="conf-bar-wrap">
+            <div class="conf-bar-track"><div class="conf-bar-fill" style="width:80%; background:var(--green);"></div></div>
+            <div class="conf-val">0.80</div>
+          </div>
+          <div class="mech-refs">Friston (2010) Nature Reviews Neuro; Taylor et al. (2011); Berlyne (1971) Aesthetics &amp; Psychobiology</div>
+        </div>
+      </div>
+      <div class="layer-diagram">
+        <h4>Active Neural Layers</h4>
+        <div class="layer-stack">
+          <div class="layer-bar l1 active-layer"><span class="layer-num">1</span><span class="layer-name">Rapid Perceptual</span><span class="layer-time">0-200ms</span></div>
+          <div class="layer-bar l2 active-layer"><span class="layer-num">2</span><span class="layer-name">Salience Evaluation</span><span class="layer-time">200ms-5s</span></div>
+          <div class="layer-bar l3 active-layer"><span class="layer-num">3</span><span class="layer-name">Neuromodulatory</span><span class="layer-time">sec-min</span></div>
+          <div class="layer-bar l4"><span class="layer-num">4</span><span class="layer-name">Network State</span><span class="layer-time">min-hrs</span></div>
+          <div class="layer-bar l5"><span class="layer-num">5</span><span class="layer-name">Hippocampal</span><span class="layer-time">min-overnight</span></div>
+          <div class="layer-bar l6"><span class="layer-num">6</span><span class="layer-name">Circadian Integration</span><span class="layer-time">hrs-days</span></div>
+          <div class="layer-bar l7"><span class="layer-num">7</span><span class="layer-name">Allostatic Accumulation</span><span class="layer-time">days-yrs</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CEILING ── -->
+    <div class="topic-content" id="topic-ceiling">
+      <div class="mech-overview">
+        <h3>Ceiling Height &amp; Spatial Volume</h3>
+        <p>Ceiling height modulates cognition through spatial prediction error and metaphorical priming. Higher ceilings increase creative-relational processing (broader conceptual search); lower ceilings increase focused-analytical processing. The effect follows an inverted-U peaking at 3.0-3.5m for creativity tasks and 2.4-2.7m for detail-focused work.</p>
+        <div class="stat-row">
+          <div class="mech-stat"><div class="mech-stat-val">2</div><div class="mech-stat-lbl">Core Mechanisms</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">0.72</div><div class="mech-stat-lbl">Peak Confidence</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">Layers 1-4</div><div class="mech-stat-lbl">Primary Layers</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">Inverted-U</div><div class="mech-stat-lbl">Dose Curve</div></div>
+        </div>
+      </div>
+      <div class="mech-cards">
+        <div class="mech-card">
+          <div class="mech-card-header">
+            <span class="mech-id">PP-SPATIAL-001</span>
+            <span class="mech-name">Spatial Volume Prediction Error</span>
+            <span class="mech-maturity mat-plausible">How-Plausibly</span>
+          </div>
+          <div class="mech-chain">
+            Unexpected ceiling height <span class="arrow">&rarr;</span> spatial PE (high: expansive; low: confining) <span class="arrow">&rarr;</span> precision reweighting of body-space model <span class="arrow">&rarr;</span> metaphorical activation (freedom/constraint) <span class="arrow">&rarr;</span> cognitive mode shift (creative vs. analytic)
+          </div>
+          <div class="mech-details">
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Creativity Peak</div><div class="mech-detail-val">3.0-3.5m</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Focus Peak</div><div class="mech-detail-val">2.4-2.7m</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Adaptation</div><div class="mech-detail-val">~30 min</div></div>
+          </div>
+          <div class="conf-bar-wrap">
+            <div class="conf-bar-track"><div class="conf-bar-fill" style="width:72%; background:#c8a020;"></div></div>
+            <div class="conf-val">0.72</div>
+          </div>
+          <div class="mech-refs">Meyers-Levy &amp; Zhu (2007) J. Consumer Research; Vartanian et al. (2015) J. Env. Psych.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── WAYFINDING ── -->
+    <div class="topic-content" id="topic-wayfinding">
+      <div class="mech-overview">
+        <h3>Wayfinding &amp; Navigation</h3>
+        <p>Navigation engages the hippocampal memory system directly. Theta sequences during movement represent compressed trajectories; sharp-wave ripples during rest consolidate spatial knowledge. Architecture with long sightlines and gradual turns supports smooth theta sequences; blind corners produce navigational distress through sequence discontinuities.</p>
+        <div class="stat-row">
+          <div class="mech-stat"><div class="mech-stat-val">4</div><div class="mech-stat-lbl">Core Mechanisms</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">0.81</div><div class="mech-stat-lbl">Peak Confidence</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">Layers 4-5</div><div class="mech-stat-lbl">Primary Layers</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">Complex</div><div class="mech-stat-lbl">Dose Curve</div></div>
+        </div>
+      </div>
+      <div class="mech-cards">
+        <div class="mech-card">
+          <div class="mech-card-header">
+            <span class="mech-id">MS-SPATIAL-003</span>
+            <span class="mech-name">Place Cell Remapping in Novel Contexts</span>
+            <span class="mech-maturity mat-actual">How-Actually</span>
+          </div>
+          <div class="mech-chain">
+            Novel environment <span class="arrow">&rarr;</span> hippocampal place cells remap <span class="arrow">&rarr;</span> new spatial representations form <span class="arrow">&rarr;</span> cognitive map construction <span class="arrow">&rarr;</span> binds space + time + emotion (Nadel) <span class="arrow">&rarr;</span> navigational competence
+          </div>
+          <div class="mech-details">
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Map Formation</div><div class="mech-detail-val">Days to weeks</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Rest Required</div><div class="mech-detail-val">SPW-R replay</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Bridge Warrant</div><div class="mech-detail-val">Mechanism (d=0.80)</div></div>
+          </div>
+          <div class="conf-bar-wrap">
+            <div class="conf-bar-track"><div class="conf-bar-fill" style="width:80%; background:var(--green);"></div></div>
+            <div class="conf-val">0.80</div>
+          </div>
+          <div class="mech-refs">O'Keefe &amp; Nadel (1978) Hippocampus as Cognitive Map; Buzsaki (2006) Rhythms of the Brain</div>
+        </div>
+        <div class="mech-card">
+          <div class="mech-card-header">
+            <span class="mech-id">EC-SPATIAL-001</span>
+            <span class="mech-name">Architecture as External Spatial Memory</span>
+            <span class="mech-maturity mat-actual">How-Actually</span>
+          </div>
+          <div class="mech-chain">
+            Clear wayfinding cues <span class="arrow">&rarr;</span> reduce hippocampal load (offload to environment) <span class="arrow">&rarr;</span> free working memory capacity <span class="arrow">&rarr;</span> reduced navigational anxiety <span class="arrow">&rarr;</span> more resources for task performance
+          </div>
+          <div class="mech-details">
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Onset</div><div class="mech-detail-val">Immediate</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Expertise Effect</div><div class="mech-detail-val">Experts offload less</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Bridge Warrant</div><div class="mech-detail-val">Mechanism (d=0.80)</div></div>
+          </div>
+          <div class="conf-bar-wrap">
+            <div class="conf-bar-track"><div class="conf-bar-fill" style="width:81%; background:var(--green);"></div></div>
+            <div class="conf-val">0.81</div>
+          </div>
+          <div class="mech-refs">Clark &amp; Chalmers (1998) Analysis; Dalton (2003) Environment &amp; Behavior</div>
+        </div>
+      </div>
+      <div class="layer-diagram">
+        <h4>Active Neural Layers</h4>
+        <div class="layer-stack">
+          <div class="layer-bar l1 active-layer"><span class="layer-num">1</span><span class="layer-name">Rapid Perceptual</span><span class="layer-time">0-200ms</span></div>
+          <div class="layer-bar l2"><span class="layer-num">2</span><span class="layer-name">Salience Evaluation</span><span class="layer-time">200ms-5s</span></div>
+          <div class="layer-bar l3"><span class="layer-num">3</span><span class="layer-name">Neuromodulatory</span><span class="layer-time">sec-min</span></div>
+          <div class="layer-bar l4 active-layer"><span class="layer-num">4</span><span class="layer-name">Network State</span><span class="layer-time">min-hrs</span></div>
+          <div class="layer-bar l5 active-layer"><span class="layer-num">5</span><span class="layer-name">Hippocampal</span><span class="layer-time">min-overnight</span></div>
+          <div class="layer-bar l6"><span class="layer-num">6</span><span class="layer-name">Circadian Integration</span><span class="layer-time">hrs-days</span></div>
+          <div class="layer-bar l7"><span class="layer-num">7</span><span class="layer-name">Allostatic Accumulation</span><span class="layer-time">days-yrs</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TEMPERATURE ── -->
+    <div class="topic-content" id="topic-temperature">
+      <div class="mech-overview">
+        <h3>Temperature &amp; Thermal Comfort</h3>
+        <p>Thermal comfort is regulated through interoceptive prediction. The brain continuously predicts body temperature and pre-regulates via autonomic adjustments. When the environment matches the prediction, allostatic cost is minimal. The dose-response is a tight inverted-U peaking at 21-23&deg;C with steep cognitive decline outside this range.</p>
+        <div class="stat-row">
+          <div class="mech-stat"><div class="mech-stat-val">2</div><div class="mech-stat-lbl">Core Mechanisms</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">0.84</div><div class="mech-stat-lbl">Peak Confidence</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">Layers 3,7</div><div class="mech-stat-lbl">Primary Layers</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">Tight inverted-U</div><div class="mech-stat-lbl">Dose Curve</div></div>
+        </div>
+      </div>
+      <div class="mech-cards">
+        <div class="mech-card">
+          <div class="mech-card-header">
+            <span class="mech-id">IC-INTEROCEPTIVE-001</span>
+            <span class="mech-name">Thermal Interoceptive Prediction</span>
+            <span class="mech-maturity mat-plausible">How-Plausibly</span>
+          </div>
+          <div class="mech-chain">
+            Ambient temperature <span class="arrow">&rarr;</span> thermoreceptor signals <span class="arrow">&rarr;</span> interoceptive PE (mismatch from predicted comfort) <span class="arrow">&rarr;</span> autonomic pre-regulation (vasodilation/constriction, sweating) <span class="arrow">&rarr;</span> allostatic cost proportional to regulation effort
+          </div>
+          <div class="mech-details">
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Optimal</div><div class="mech-detail-val">21-23&deg;C</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Adaptation</div><div class="mech-detail-val">~15 min (logarithmic)</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Bridge Warrant</div><div class="mech-detail-val">Mechanism (d=0.80)</div></div>
+          </div>
+          <div class="conf-bar-wrap">
+            <div class="conf-bar-track"><div class="conf-bar-fill" style="width:78%; background:var(--green);"></div></div>
+            <div class="conf-val">0.78</div>
+          </div>
+          <div class="mech-refs">Seth (2013) NYAS; Sterling (2012) Allostasis; Wyon (2004) Indoor Air</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CONTROL ── -->
+    <div class="topic-content" id="topic-control">
+      <div class="mech-overview">
+        <h3>Perceived Control &amp; Agency</h3>
+        <p>Perceived control is a universal moderator &mdash; it modulates the impact of every other environmental stressor. The vmPFC&rarr;amygdala pathway suppresses threat response when the occupant believes they can change the environment. Adjustable lighting, openable windows, and controllable temperature reduce allostatic load even when the physical conditions are identical.</p>
+        <div class="stat-row">
+          <div class="mech-stat"><div class="mech-stat-val">2</div><div class="mech-stat-lbl">Core Mechanisms</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">0.82</div><div class="mech-stat-lbl">Peak Confidence</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">Layers 2-4</div><div class="mech-stat-lbl">Primary Layers</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">Moderator</div><div class="mech-stat-lbl">Function Type</div></div>
+        </div>
+      </div>
+      <div class="mech-cards">
+        <div class="mech-card">
+          <div class="mech-card-header">
+            <span class="mech-id">IC-CONTROL-001</span>
+            <span class="mech-name">vmPFC-Mediated Threat Suppression via Control</span>
+            <span class="mech-maturity mat-actual">How-Actually</span>
+          </div>
+          <div class="mech-chain">
+            Perceived environmental control <span class="arrow">&rarr;</span> vmPFC activation <span class="arrow">&rarr;</span> top-down amygdala suppression <span class="arrow">&rarr;</span> reduced cortisol response <span class="arrow">&rarr;</span> lower allostatic cost <span class="arrow">&rarr;</span> identical physical conditions, reduced stress
+          </div>
+          <div class="mech-details">
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Onset</div><div class="mech-detail-val">Seconds (belief-dependent)</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Key Finding</div><div class="mech-detail-val">Belief sufficient (action optional)</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Bridge Warrant</div><div class="mech-detail-val">Mechanism (d=0.80)</div></div>
+          </div>
+          <div class="conf-bar-wrap">
+            <div class="conf-bar-track"><div class="conf-bar-fill" style="width:82%; background:var(--green);"></div></div>
+            <div class="conf-val">0.82</div>
+          </div>
+          <div class="mech-refs">Maier &amp; Seligman (2016) Psychological Review; Delgado et al. (2008) J. Neuroscience</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SOCIAL ── -->
+    <div class="topic-content" id="topic-social">
+      <div class="mech-overview">
+        <h3>Social Space &amp; Co-Presence</h3>
+        <p>Architecture mediates social cognition through proximity, visual access, and acoustic privacy. The dmPFC subsystem of the Default Mode Network generates automatic social inferences about co-occupants. Open-plan layouts force continuous social processing; private spaces reduce the social-cognitive load. The balance determines whether a space supports collaboration or drains attention.</p>
+        <div class="stat-row">
+          <div class="mech-stat"><div class="mech-stat-val">2</div><div class="mech-stat-lbl">Core Mechanisms</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">0.76</div><div class="mech-stat-lbl">Peak Confidence</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">Layers 3-4</div><div class="mech-stat-lbl">Primary Layers</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">Threshold</div><div class="mech-stat-lbl">Function Type</div></div>
+        </div>
+      </div>
+      <div class="mech-cards">
+        <div class="mech-card">
+          <div class="mech-card-header">
+            <span class="mech-id">EC-SOCIAL-003</span>
+            <span class="mech-name">Architectural Proximity as Social Scaffolding</span>
+            <span class="mech-maturity mat-plausible">How-Plausibly</span>
+          </div>
+          <div class="mech-chain">
+            Physical proximity + visual access <span class="arrow">&rarr;</span> dmPFC social inference activation <span class="arrow">&rarr;</span> automatic mentalizing (intentions, emotions of others) <span class="arrow">&rarr;</span> cognitive load from social monitoring <span class="arrow">&rarr;</span> trade-off: collaboration affordance vs. attentional drain
+          </div>
+          <div class="mech-details">
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Network</div><div class="mech-detail-val">DMN dmPFC subsystem</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Introvert Effect</div><div class="mech-detail-val">Higher sensitivity</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Bridge Warrant</div><div class="mech-detail-val">Mechanism (d=0.80)</div></div>
+          </div>
+          <div class="conf-bar-wrap">
+            <div class="conf-bar-track"><div class="conf-bar-fill" style="width:75%; background:var(--green);"></div></div>
+            <div class="conf-val">0.75</div>
+          </div>
+          <div class="mech-refs">Bernstein et al. (2018) Philosophical Transactions; Saxe (2006) Trends in Cognitive Sciences</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── AIR QUALITY ── -->
+    <div class="topic-content" id="topic-airquality">
+      <div class="mech-overview">
+        <h3>Air Quality &amp; CO&#x2082;</h3>
+        <p>CO&#x2082; operates through a threshold mechanism: no measurable cognitive effect below 1000 ppm, then roughly -15% cognitive performance per 500 ppm above that. At 2500 ppm (common in poorly ventilated meeting rooms), strategic thinking drops by ~50%. The mechanism is direct &mdash; CO&#x2082; crosses the blood-brain barrier and affects neuronal excitability.</p>
+        <div class="stat-row">
+          <div class="mech-stat"><div class="mech-stat-val">1</div><div class="mech-stat-lbl">Core Mechanisms</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">0.79</div><div class="mech-stat-lbl">Peak Confidence</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">Layers 3-4</div><div class="mech-stat-lbl">Primary Layers</div></div>
+          <div class="mech-stat"><div class="mech-stat-val">Threshold + linear</div><div class="mech-stat-lbl">Dose Curve</div></div>
+        </div>
+      </div>
+      <div class="mech-cards">
+        <div class="mech-card">
+          <div class="mech-card-header">
+            <span class="mech-id">NM-CO2-001</span>
+            <span class="mech-name">CO&#x2082; Neuronal Excitability Suppression</span>
+            <span class="mech-maturity mat-actual">How-Actually</span>
+          </div>
+          <div class="mech-chain">
+            Elevated CO&#x2082; (&gt;1000 ppm) <span class="arrow">&rarr;</span> crosses blood-brain barrier <span class="arrow">&rarr;</span> reduces neuronal excitability <span class="arrow">&rarr;</span> impairs prefrontal function (strategic decision-making, initiative) <span class="arrow">&rarr;</span> -15% cognition per +500 ppm above threshold
+          </div>
+          <div class="mech-details">
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Threshold</div><div class="mech-detail-val">~1000 ppm</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Meeting Room Risk</div><div class="mech-detail-val">2500+ ppm common</div></div>
+            <div class="mech-detail-box"><div class="mech-detail-lbl">Interaction</div><div class="mech-detail-val">Temperature amplifies</div></div>
+          </div>
+          <div class="conf-bar-wrap">
+            <div class="conf-bar-track"><div class="conf-bar-fill" style="width:79%; background:var(--green);"></div></div>
+            <div class="conf-val">0.79</div>
+          </div>
+          <div class="mech-refs">Allen et al. (2016) Environmental Health Perspectives; Satish et al. (2012) EHP</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Placeholder for topics without full content ── -->
+    <div class="topic-content" id="topic-placeholder" style="text-align:center; padding:40px 0;">
+      <p style="font-size:1rem; color:var(--muted);">Detailed mechanism view for this topic coming soon.</p>
+    </div>
+
+  </div><!-- topic-section -->
+
+  <!-- ── System Stats ── -->
+  <div style="margin-top:48px; padding:24px; background:#fff; border:1px solid var(--border); border-radius:10px;">
+    <h3 style="font-family:Georgia,serif; font-size:1.1rem; color:var(--navy); margin-bottom:16px;">System Overview</h3>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px; text-align:center;">
+      <div>
+        <div style="font-size:1.6rem; font-weight:800; color:var(--amber);">40+</div>
+        <div style="font-size:0.75rem; color:var(--muted);">Neural Mechanisms</div>
+      </div>
+      <div>
+        <div style="font-size:1.6rem; font-weight:800; color:var(--amber);">10</div>
+        <div style="font-size:0.75rem; color:var(--muted);">T1 Frameworks</div>
+      </div>
+      <div>
+        <div style="font-size:1.6rem; font-weight:800; color:var(--amber);">7</div>
+        <div style="font-size:0.75rem; color:var(--muted);">Neural Layers</div>
+      </div>
+      <div>
+        <div style="font-size:1.6rem; font-weight:800; color:var(--amber);">12</div>
+        <div style="font-size:0.75rem; color:var(--muted);">Expert Panels</div>
+      </div>
+    </div>
+    <p style="font-size:0.78rem; color:var(--muted); margin-top:14px; text-align:center;">
+      Based on 12 expert panels with 120 named neuroscientists, ~400 APA references, and the extended Cartwright log-odds credence formula.<br>
+      <a href="ka_warrants.html" style="color:var(--green);">Explore the warrant system &rarr;</a> &nbsp;|&nbsp;
+      <a href="ka_evidence.html" style="color:var(--green);">See the evidence base &rarr;</a>
+    </p>
+  </div>
+
+</div><!-- outer -->
+
+<!-- ── Footer ── -->
+<div class="page-footer">
+  <p>Knowledge Atlas &middot; COGS 160 Spring 2026 &middot; Prof. David Kirsh, UCSD Cognitive Science</p>
+  <p style="margin-top:6px;"><a href="ka_sitemap.html">Sitemap</a> &middot; <a href="ka_ai_methodology.html">AI Methodology</a> &middot; <a href="ka_ai_system_failures.html">AI Failure Modes</a></p>
+</div>
+
+<script>
+function showTopic(val) {
+  // Hide all topic content
+  document.querySelectorAll('.topic-content').forEach(el => el.classList.remove('active'));
+  if (val) {
+    const target = document.getElementById('topic-' + val);
+    if (target) {
+      target.classList.add('active');
+    } else {
+      document.getElementById('topic-placeholder').classList.add('active');
+    }
+  }
+}
+</script>
+
+<script src="ka_auth_widget.js"></script>
+</body>
+</html>

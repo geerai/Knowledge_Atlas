@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track TWO: AI Article Pipeline — COGS 160</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #1C3D3A;
+      --amber:  #E8872A;
+      --cream:  #F7F4EF;
+      --green:  #2A7868;
+      --text:   #2D2010;
+      --muted:  #6A5E50;
+      --border: #DDD6CD;
+      --light:  #EDE8E0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky; top: 0; z-index: 500;
+      background: var(--navy); display: flex; align-items: center;
+      gap: 24px; padding: 0 28px; min-height: 52px;
+      border-bottom: 2px solid var(--amber);
+    }
+    .nav-brand { color: #A8C8BF; font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; }
+    .nav-brand:hover { color: var(--amber); }
+    .nav-center { display:flex; align-items:center; gap:14px; flex:1; }
+    nav a.nav-link { color: #7AACA0; font-size: 0.8rem; text-decoration: none;
+      transition: color 0.15s, background 0.15s; padding: 6px 10px; border-radius: 6px; }
+    nav a.nav-link:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    nav a.nav-link.active { color: #F5A623; background: rgba(232,135,42,0.12); }
+    .nav-right { display:flex; align-items:center; gap:12px; }
+    .mode-select {
+      font-size: 0.76rem; padding: 6px 10px; border-radius: 16px;
+      border: 1px solid rgba(168, 200, 191, 0.34); background: rgba(255,255,255,0.05);
+      color: #D8EAE4;
+    }
+    .mode-select option { color: var(--navy); }
+    .mode-pill {
+      background: rgba(42,120,104,0.3); color: #5AC8AA; padding: 4px 12px;
+      border-radius: 20px; font-family: Arial, sans-serif; font-size: 0.75rem;
+      font-weight: 700; letter-spacing: 0.05em;
+    }
+
+    /* ── Hero ── */
+    .page-hero {
+      background: linear-gradient(135deg, var(--navy) 0%, #163230 100%);
+      padding: 56px 40px 48px;
+      border-bottom: 3px solid var(--amber);
+    }
+    .page-hero .eyebrow {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em;
+      text-transform: uppercase; color: #7AACA0; margin-bottom: 12px;
+    }
+    .page-hero h1 {
+      font-family: Georgia, serif; font-size: 2rem; font-weight: 400;
+      color: #F5F0E8; line-height: 1.25; margin-bottom: 14px;
+    }
+    .page-hero p {
+      font-size: 1rem; color: #A8C8BF; line-height: 1.7;
+      max-width: 640px;
+    }
+
+    /* ── Layout ── */
+    .outer { max-width: 1000px; margin: 0 auto; padding: 0 32px 72px; }
+
+    /* ── Section ── */
+    .content-section { margin-top: 48px; }
+    .section-title {
+      font-family: Georgia, serif; font-size: 1.4rem; font-weight: 400;
+      color: var(--navy); margin-bottom: 20px; line-height: 1.3;
+    }
+    .section-intro {
+      font-size: 0.95rem; color: var(--muted); line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    /* ── Prose ── */
+    p { margin-bottom: 14px; font-size: 0.95rem; line-height: 1.7; }
+    p:last-child { margin-bottom: 0; }
+    ul, ol { margin-left: 1.5rem; margin-bottom: 14px; }
+    li { margin-bottom: 8px; }
+    strong { color: var(--text); }
+
+    /* ── Callout ── */
+    .callout {
+      border-radius: 8px; padding: 18px 20px;
+      margin: 20px 0; font-size: 0.92rem; line-height: 1.7;
+    }
+    .callout-info {
+      background: #E6F5F0; border-left: 4px solid var(--green);
+      color: #1a4a3f;
+    }
+    .callout strong { color: #1a4a3f; }
+
+    /* ── Milestone table ── */
+    .milestone-table {
+      width: 100%; border-collapse: collapse; margin: 24px 0;
+      border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+    }
+    .milestone-table th {
+      background: var(--navy); color: #fff; padding: 12px 16px;
+      text-align: left; font-size: 0.85rem; font-weight: 600;
+    }
+    .milestone-table td {
+      padding: 12px 16px; border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    .milestone-table tr:last-child td { border-bottom: none; }
+    .milestone-table tr:hover td { background: var(--light); }
+    .week-col { font-weight: 700; color: var(--navy); min-width: 70px; }
+    .phase-col { color: var(--green); font-weight: 600; }
+    .activity-col { }
+
+    /* ── CTA buttons ── */
+    .cta-button {
+      display: inline-block; padding: 12px 24px;
+      background: var(--navy); color: #fff;
+      border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.95rem;
+      transition: opacity 0.15s; margin-top: 12px;
+    }
+    .cta-button:hover { opacity: 0.85; }
+    .cta-button.secondary {
+      background: transparent; color: var(--navy);
+      border: 1.5px solid var(--navy);
+    }
+    .cta-button.secondary:hover { background: rgba(28,61,58,0.05); }
+
+    /* ── Navigation footer ── */
+    .track-nav {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 56px; padding-top: 28px; border-top: 2px solid var(--border);
+    }
+    .track-nav a { text-decoration: none; }
+
+    /* ── Version badge ── */
+    .version-badge {
+      position: fixed; bottom: 14px; left: 24px; z-index: 400;
+      background: rgba(28,61,58,0.7); color: #7AACA0;
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
+      padding: 3px 10px; border-radius: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .milestone-table { font-size: 0.85rem; }
+      .milestone-table td, .milestone-table th { padding: 8px 12px; }
+      .track-nav { flex-direction: column; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="../ka_home.html" class="nav-brand">Knowledge Atlas</a>
+  <div class="nav-center">
+    <a id="nav-shell-explore" href="../ka_topics.html" class="nav-link">Explore</a>
+    <a id="nav-shell-evidence" href="../ka_evidence.html" class="nav-link">Evidence</a>
+    <a id="nav-shell-gaps" href="../ka_gaps.html" class="nav-link">Gaps</a>
+    <a id="nav-shell-articles" href="../ka_article_search.html" class="nav-link">Articles</a>
+    <a id="nav-shell-contribute" href="../ka_contribute.html" class="nav-link">Contribute</a>
+    <a id="nav-shell-course" href="ka_student_setup.html" class="nav-link active">Course</a>
+  </div>
+  <div class="nav-right">
+    <select class="mode-select" id="track2-mode-select" aria-label="Switch user mode">
+      <option value="student_explorer">Student explorer</option>
+      <option value="researcher">Researcher</option>
+      <option value="contributor">Contributor</option>
+      <option value="instructor">Instructor</option>
+      <option value="practitioner">Practitioner</option>
+      <option value="theory_mechanism_explorer">Theory Explorer</option>
+    </select>
+    <div class="mode-pill" id="track2-mode-pill">STUDENT EXPLORER</div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="eyebrow">COGS 160 · Track 2 of 4</div>
+  <h1>Track TWO: AI Article Pipeline</h1>
+  <p>
+    Build automated article discovery systems using AI. Implement RAG-based retrieval, relevance scoring, and Value of Information prioritization to continuously find and filter research articles.
+  </p>
+</div>
+
+<div class="outer">
+
+  <div class="content-section">
+    <h2 class="section-title">Track Overview</h2>
+    <p class="section-intro">
+      This track is not about manually finding more citations. It's about automating the article discovery process using artificial intelligence and information theory.
+    </p>
+
+    <div class="callout callout-info">
+      <strong>The Goal:</strong> Build a system that continuously hunts for relevant papers and presents them to other students ranked by how much they'd contribute to filling knowledge gaps. You'll combine Retrieval-Augmented Generation (RAG), relevance filtering, and Value of Information (VOI) scoring.
+    </div>
+
+    <h3 style="font-family:Georgia,serif;font-size:1.05rem;color:var(--navy);margin-top:28px;margin-bottom:12px;">Core Skills You'll Develop</h3>
+    <ul>
+      <li><strong>Automated Retrieval:</strong> Query engines that connect to Semantic Scholar API and other open-access sources</li>
+      <li><strong>RAG Systems:</strong> Retrieval-Augmented Generation pipelines that rank articles by relevance to existing knowledge</li>
+      <li><strong>Relevance Filtering:</strong> Distinguish experimental articles from theory papers and meta-reviews</li>
+      <li><strong>Value of Information:</strong> Prioritize which articles would most advance the knowledge base</li>
+      <li><strong>Quality Assurance:</strong> Automated gates that verify article type, topic relevance, and data quality</li>
+      <li><strong>Benchmarking:</strong> Test and measure retrieval accuracy against human-selected articles</li>
+    </ul>
+
+    <h3 style="font-family:Georgia,serif;font-size:1.05rem;color:var(--navy);margin-top:28px;margin-bottom:12px;">Weekly Syllabus</h3>
+
+    <table class="milestone-table">
+      <thead>
+        <tr>
+          <th>Weeks</th>
+          <th>Phase</th>
+          <th>Activities & Deliverables</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="week-col">1–2</td>
+          <td class="phase-col">Article Collection (A0)</td>
+          <td class="activity-col">Upload 10 experiment articles + 10 best articles from Google Scholar (everyone does this)</td>
+        </tr>
+        <tr>
+          <td class="week-col">3–4</td>
+          <td class="phase-col">Basic Query Engine</td>
+          <td class="activity-col">Connect to Semantic Scholar API. Build query builder. Retrieve 50 candidate articles for assigned topics. Write data validation spec.</td>
+        </tr>
+        <tr>
+          <td class="week-col">5–6</td>
+          <td class="phase-col">RAG & Relevance Scoring</td>
+          <td class="activity-col">Implement RAG using embeddings. Build relevance classifier (experiment vs. theory). Test on 100 articles. Measure F1 score.</td>
+        </tr>
+        <tr>
+          <td class="week-col">7–8</td>
+          <td class="phase-col">VOI & Prioritization</td>
+          <td class="activity-col">Integrate Value of Information weighting. Rank articles by likely contribution to gaps. Build automated quality gates. Benchmark against manual selection.</td>
+        </tr>
+        <tr>
+          <td class="week-col">9–10</td>
+          <td class="phase-col">Final Pipeline & Integration</td>
+          <td class="activity-col">Polish pipeline, write operational documentation, integrate into Fall 160 site. Course-wide debugging.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-info" style="margin-top:28px;">
+      <strong>Key Concepts to Understand:</strong>
+      <ul style="margin-top:10px;margin-left:1.2rem;">
+        <li><strong>RAG:</strong> Retrieval-Augmented Generation — combining vector search with LLMs to rank articles contextually</li>
+        <li><strong>Relevance:</strong> Not just "mentions keywords," but "is an empirical study on topic" vs. "is a review or theory paper"</li>
+        <li><strong>Value of Information:</strong> Which articles would fill the most critical gaps in the knowledge base?</li>
+        <li><strong>Semantic Scholar API:</strong> Open-access, powerful tool for academic article retrieval</li>
+        <li><strong>Embedding-based search:</strong> Using language models to understand semantic similarity between papers</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ── Navigation ── -->
+  <div class="track-nav">
+    <a href="ka_student_setup.html" class="cta-button secondary">← Back to Track Overview</a>
+    <a href="ka_track3_vr.html" class="cta-button">View Track 3: VR for Experiments →</a>
+  </div>
+
+</div>
+
+<div class="version-badge">KA UI · v0.5</div>
+
+<script src="../ka_mode_switch.js"></script>
+<script src="../ka_site_shell.js"></script>
+<script src="../ka_data_adapter.js"></script>
+<script src="../ka_live_context.js"></script>
+<script>
+window.KA_SHELL.initShell({
+  navContainerSelector: '.nav-center',
+  modeSelectId: 'track2-mode-select',
+  modePillId: 'track2-mode-pill',
+  defaultMode: 'student_explorer'
+});
+</script>
+
+</body>
+</html>

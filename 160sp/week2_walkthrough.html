@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 2 Step-by-Step Walkthrough · COGS 160</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #1C3D3A; --teal: #2A7868; --teal-lt: #5AC8AA; --teal-bg: #E6F5F0;
+  --amber: #E8872A; --amber-lt: #FFF3E0; --amber-dk: #9a5010;
+  --cream: #F7F4EF; --ink: #2C2C2C; --muted: #6B6B6B; --border: #D8D0C5;
+  --white: #FFFFFF; --green: #1A7A50; --red: #C0392B;
+}
+body { font-family: Georgia, serif; background: var(--cream); color: var(--ink); line-height: 1.72; }
+
+/* ── Nav ── */
+.top-nav { background: var(--navy); padding: 0 1.5rem; display: flex; align-items: center; height: 52px; gap: 1.2rem; font-size: 0.85rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; position: sticky; top: 0; z-index: 100; }
+.nav-brand { color: var(--amber); font-weight: 800; font-size: 1.05rem; text-decoration: none; }
+.nav-sep { color: rgba(255,255,255,0.2); }
+.nav-link { color: #b2dfdb; text-decoration: none; padding: 4px 10px; border-radius: 5px; transition: background 0.15s; }
+.nav-link:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.nav-link.active { background: rgba(255,255,255,0.15); color: #fff; font-weight: 600; }
+.nav-right { margin-left: auto; color: rgba(255,255,255,0.4); font-size: 0.75rem; font-family: -apple-system, sans-serif; }
+
+/* ── Hero ── */
+.hero { background: linear-gradient(135deg, var(--navy) 0%, #152e2b 100%); color: #fff; padding: 2.5rem 2rem 2rem; text-align: center; }
+.hero-eyebrow { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber); font-weight: 600; margin-bottom: 0.5rem; font-family: -apple-system, sans-serif; }
+.hero h1 { font-size: 2.1rem; font-weight: 700; line-height: 1.2; margin-bottom: 0.6rem; }
+.hero-sub { font-size: 1.05rem; color: rgba(255,255,255,0.75); max-width: 660px; margin: 0 auto; line-height: 1.6; }
+
+/* ── Page ── */
+.page-wrap { max-width: 760px; margin: 0 auto; padding: 2.2rem 1.5rem 3rem; }
+
+/* ── Prose ── */
+.prose { margin-bottom: 2.5rem; }
+.prose h2 { font-size: 1.5rem; color: var(--navy); margin: 2.5rem 0 0.8rem; padding-top: 1.5rem; border-top: 2px solid var(--border); }
+.prose h2:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+.prose h3 { font-size: 1.15rem; color: var(--teal); margin: 1.8rem 0 0.6rem; }
+.prose p { margin-bottom: 1rem; font-size: 1.02rem; }
+.prose p + p { margin-top: 0; }
+.prose strong { color: var(--navy); }
+
+/* ── Steps ── */
+.step-card { background: var(--white); border-radius: 12px; padding: 1.8rem 2rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); position: relative; border-left: 5px solid var(--teal); }
+.step-card.action { border-left-color: var(--amber); }
+.step-card.verify { border-left-color: var(--green); }
+.step-card.reflect { border-left-color: #7A1A5C; }
+.step-num-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 32px; height: 32px; border-radius: 50%; background: var(--teal); color: #fff; font-family: -apple-system, sans-serif; font-weight: 700; font-size: 0.9rem; margin-right: 0.7rem; padding: 0 8px; }
+.step-card.action .step-num-badge { background: var(--amber); }
+.step-card.verify .step-num-badge { background: var(--green); }
+.step-card.reflect .step-num-badge { background: #7A1A5C; }
+.step-head { display: flex; align-items: center; margin-bottom: 0.8rem; }
+.step-title { font-size: 1.15rem; font-weight: 700; color: var(--navy); }
+.step-card p { font-size: 0.98rem; margin-bottom: 0.8rem; }
+
+/* ── Prompt boxes ── */
+.prompt-box { background: #1C3D3A; color: #e0e0e0; padding: 1.2rem 1.4rem; border-radius: 8px; margin: 0.8rem 0 1rem; font-family: "SF Mono", "Fira Code", Menlo, monospace; font-size: 0.88rem; line-height: 1.55; white-space: pre-wrap; position: relative; }
+.prompt-label { position: absolute; top: -0.6rem; left: 1rem; background: var(--amber); color: #fff; font-family: -apple-system, sans-serif; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 2px 8px; border-radius: 3px; }
+.copy-note { font-family: -apple-system, sans-serif; font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; font-style: italic; }
+
+/* ── Callouts ── */
+.callout { border-radius: 0 8px 8px 0; padding: 1rem 1.2rem; margin: 1.2rem 0; font-size: 0.95rem; }
+.callout-amber { background: #FFF3E0; border-left: 4px solid var(--amber); }
+.callout-teal { background: #E0F2EE; border-left: 4px solid var(--teal); }
+.callout-green { background: #E8F5E9; border-left: 4px solid var(--green); }
+.callout-red { background: #FFEBEE; border-left: 4px solid var(--red); }
+.callout strong { display: block; margin-bottom: 0.3rem; }
+
+/* ── Context table ── */
+.context-table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.92rem; font-family: -apple-system, sans-serif; }
+.context-table th { text-align: left; padding: 0.5rem 0.8rem; background: var(--teal-bg); color: var(--teal); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.context-table td { padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--border); }
+.context-table a { color: var(--teal); font-weight: 600; text-decoration: none; }
+.context-table a:hover { text-decoration: underline; }
+
+code { background: #f0ece6; padding: 2px 6px; border-radius: 4px; font-size: 0.88rem; font-family: "SF Mono", "Fira Code", Menlo, monospace; }
+
+@media (max-width: 640px) {
+  .page-wrap { padding: 1.5rem 1rem 2rem; }
+  .step-card { padding: 1.2rem; }
+}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a href="../ka_home.html" class="nav-brand">K-ATLAS</a>
+  <span class="nav-sep">|</span>
+  <a href="ka_schedule.html" class="nav-link">Schedule</a>
+  <a href="week2_exercises.html" class="nav-link">Exercises</a>
+  <a href="week2_walkthrough.html" class="nav-link active">Walkthrough</a>
+  <a href="../ka_evidence.html" class="nav-link">Evidence</a>
+  <span class="nav-right">COGS 160 &middot; Spring 2026</span>
+</nav>
+
+<header class="hero">
+  <p class="hero-eyebrow">COGS 160 &middot; Week 2</p>
+  <h1>Step-by-Step Walkthrough</h1>
+  <p class="hero-sub">Follow these steps exactly. No programming experience required. The only part that requires your own thinking is composing the prompts you send to the AI.</p>
+</header>
+
+<div class="page-wrap">
+<div class="prose">
+
+<!-- ════════════════════════════════════════════════════ -->
+<h2>What This Assignment Actually Is</h2>
+<!-- ════════════════════════════════════════════════════ -->
+
+<p>You are going to build a working software component — a real piece of the Knowledge Atlas system — without writing a single line of code yourself. An AI will write all the code. Your job is something harder and more important: you will <em>direct</em> the AI by thinking carefully about what the component should do before asking the AI to build it.</p>
+
+<p>This matters because AI writes code fast but thinks about requirements poorly. If you say "build me a search filter," it will — and the result will look professional, seem to work, and quietly fail on half the cases that matter. The component will search the wrong fields, display misleading numbers, or crash on edge cases that any thoughtful person would have anticipated. The AI's code is only as good as the instructions you give it.</p>
+
+<p>The assignment teaches you a method for giving those instructions. It has seven steps. Steps 1 through 3 happen <em>before</em> any code is written — they are about thinking, not programming. Steps 4 through 7 are about building and testing. The entire process takes 60–80 minutes. You will submit a document showing every step, including your mistakes.</p>
+
+<p>Here is the sequence:</p>
+
+<div class="callout callout-teal">
+<strong>The seven steps, in plain language:</strong>
+1. Ask the AI to pretend to be a panel of experts who argue about what the component should do.
+2. Write down exactly what the component takes as input, produces as output, and how to know if it worked.
+3. Write specific test cases — before any code exists.
+4. Tell the AI to build it according to your specification.
+5. Run the tests. See what fails.
+6. Figure out why it failed — was your specification wrong, or did the AI build it wrong?
+7. Fix the problem. Test again. Repeat until it works.
+</div>
+
+<p>That is the whole assignment. What follows is exactly how to do each step.</p>
+
+<!-- ════════════════════════════════════════════════════ -->
+<h2>Before You Begin: Three Things You Need</h2>
+<!-- ════════════════════════════════════════════════════ -->
+
+<p>You need an AI chat (Claude at claude.ai, ChatGPT, or similar), a web browser, and your context file. That's it. No software to install. No code editor. No terminal. No GitHub account.</p>
+
+<p>The <strong>context file</strong> is a document that describes the data your component will work with — the field names, the data types, what the numbers mean, and where the data lives. Your AI cannot see the Knowledge Atlas database. It does not know what <code>warrant_discount</code> means or that <code>credence</code> ranges from 0 to 1. The context file gives it that knowledge. Without it, the AI will guess — and guess wrong.</p>
+
+<p>Download the context file for your assigned exercise:</p>
+
+<table class="context-table">
+  <thead><tr><th>Exercise</th><th>Teams</th><th>Context File</th></tr></thead>
+  <tbody>
+    <tr><td>Exercise A — "Why Trust This?" Panel</td><td>1–2</td><td><a href="context/context_exA_trust_panel.md" download>&#8595; Download</a></td></tr>
+    <tr><td>Exercise B — Debate Visualizer</td><td>3–4</td><td><a href="context/context_exB_debate_visualizer.md" download>&#8595; Download</a></td></tr>
+    <tr><td>Exercise C — Warrant Calculator</td><td>5–6</td><td><a href="context/context_exC_warrant_calculator.md" download>&#8595; Download</a></td></tr>
+    <tr><td>Exercise D — Search Filter</td><td>7–8</td><td><a href="context/context_exD_search_filter.md" download>&#8595; Download</a></td></tr>
+  </tbody>
+</table>
+
+<!-- ════════════════════════════════════════════════════ -->
+<h2>The Steps</h2>
+<!-- ════════════════════════════════════════════════════ -->
+
+</div><!-- /prose -->
+
+<!-- ─────────── STEP 0 ─────────── -->
+<div class="step-card">
+  <div class="step-head">
+    <span class="step-num-badge">0</span>
+    <span class="step-title">Give the AI Your Context File</span>
+  </div>
+  <p>Open a new chat with your AI. This should be a fresh conversation — don't continue an old one.</p>
+  <p><strong>Do this:</strong> Drag the context file you downloaded into the chat window, or click the attachment/paperclip button to upload it. Most AI tools (Claude, ChatGPT) accept file uploads directly.</p>
+  <p>If file upload doesn't work, open the downloaded <code>.md</code> file in any text editor, select everything (Ctrl+A or Cmd+A), copy it (Ctrl+C or Cmd+C), and paste it into the chat.</p>
+  <p>Then type this message and send it:</p>
+  <div class="prompt-box"><span class="prompt-label">Copy &amp; Paste This</span>
+I've attached the context file for my exercise.
+Before we do anything else, please explain:
+1. What is this task about, in your own words?
+2. What are the main data fields I'll be working with?
+3. What do you think will be the hardest part?
+4. What could go wrong if we're not careful?</div>
+  <p class="copy-note">Copy the text above exactly. This is not the creative part — this is setup.</p>
+
+  <p><strong>Read the AI's response carefully.</strong> Does its description match what the context file says? If it mentions field names that aren't in the context file, or misunderstands what a field means, correct it now. Every step after this depends on the AI understanding the data correctly.</p>
+
+  <div class="callout callout-red">
+    <strong>If you skip this step, everything downstream breaks.</strong> The panel will discuss the wrong requirements. The spec will define the wrong inputs. The code will use the wrong field names. It will all look fine until you test it — and then nothing will work, and you won't know why.
+  </div>
+</div>
+
+<!-- ─────────── STEP 1 ─────────── -->
+<div class="step-card action">
+  <div class="step-head">
+    <span class="step-num-badge">1</span>
+    <span class="step-title">Convene the Expert Panel</span>
+  </div>
+  <p>Now you ask the AI to simulate a panel of experts who argue about what your component should do. This is not decorative — the panel's job is to surface requirements that you would not have thought of on your own. The experts should disagree with each other. If they all say the same thing, the panel failed.</p>
+  <p><strong>Do this:</strong> Go to the <a href="week2_exercises.html">exercises page</a>, find your assigned exercise (A, B, C, or D), and look for the section labeled <strong>"Step 1 — Convene Panel."</strong> You will see a gray box containing a prompt. Copy that entire prompt and paste it into your AI chat.</p>
+  <p>The prompt names specific experts (real researchers and designers) and tells the AI what role each one plays. The AI will generate a simulated discussion where the experts argue about what matters most.</p>
+
+  <div class="callout callout-amber">
+    <strong>What you're looking for:</strong> At least one requirement that surprises you — something you would not have included if you were just writing a feature list. If the panel produced three experts who all politely agree, tell the AI: "The experts are being too agreeable. Make them actually disagree about something substantive." Real experts disagree. That's where the good requirements come from.
+  </div>
+
+  <p><strong>Save the entire panel transcript.</strong> You will submit it as part of your deliverable.</p>
+</div>
+
+<!-- ─────────── STEP 2 ─────────── -->
+<div class="step-card">
+  <div class="step-head">
+    <span class="step-num-badge">2</span>
+    <span class="step-title">Write the Specification</span>
+  </div>
+  <p>The panel gave you a set of requirements — some from each expert, with some disagreements. Now turn those into a precise specification: what the component takes as input, what it produces as output, what counts as success, and what the edge cases are.</p>
+  <p><strong>Do this:</strong> Send a message like this to the AI:</p>
+  <div class="prompt-box"><span class="prompt-label">Adapt This to Your Exercise</span>
+Based on the panel discussion, write a specification for this component.
+Include:
+- INPUT: What does the component receive? (be specific about types)
+- OUTPUT: What does it produce? (what does the user see?)
+- SUCCESS CONDITIONS: How do we know it worked correctly?
+- EDGE CASES: What unusual inputs should it handle?
+
+Use the actual field names from the context file.</div>
+  <p class="copy-note">You may adapt this — it's a template, not a script.</p>
+
+  <p><strong>Read the spec the AI produces.</strong> Does it account for the panel's key disagreements? If the panel argued about whether to use additive vs. multiplicative scoring (Exercise C), the spec should state which approach you chose and why. If it argued about two-column vs. force-directed layout (Exercise B), the spec should commit to one.</p>
+
+  <p>If something is missing, tell the AI what to add. This is your specification — you own it.</p>
+</div>
+
+<!-- ─────────── STEP 3 ─────────── -->
+<div class="step-card">
+  <div class="step-head">
+    <span class="step-num-badge">3</span>
+    <span class="step-title">Write Test Cases Before Any Code</span>
+  </div>
+  <p>This is the step most people want to skip. Don't. Writing tests before code forces you to think about what "working" actually means — before you have code to be distracted by.</p>
+  <p><strong>Do this:</strong></p>
+  <div class="prompt-box"><span class="prompt-label">Copy &amp; Paste This</span>
+Now write at least 4 acceptance tests for this component.
+Each test must specify:
+- INPUT: What exactly do we feed it?
+- EXPECTED OUTPUT: What should appear?
+- HOW TO VERIFY: How do we check it worked?
+
+Include at least:
+- One normal case (typical input, should work perfectly)
+- One edge case (unusual but valid input)
+- One failure case (invalid or missing input — should fail gracefully)
+- One visual check (does it look right?)</div>
+
+  <p>The AI will produce tests like "Input: 'natural light', 'task performance'. Expected: a directed graph with at least 2 intermediate nodes." Each test is a bet about what the component should do. When the code is built, you will check whether the bet was right.</p>
+
+  <div class="callout callout-teal">
+    <strong>You have now finished the thinking part.</strong> Steps 1–3 are complete. You have a panel transcript, a specification, and test cases — all before a single line of code. This is the method. Everything that follows is execution.
+  </div>
+</div>
+
+<!-- ─────────── STEP 4 ─────────── -->
+<div class="step-card action">
+  <div class="step-head">
+    <span class="step-num-badge">4</span>
+    <span class="step-title">Ask the AI to Build It</span>
+  </div>
+  <p>Now — and only now — you tell the AI to write the code.</p>
+  <div class="prompt-box"><span class="prompt-label">Copy &amp; Paste This</span>
+Build the component according to the specification above.
+Create a single, self-contained HTML file that I can open
+in a browser.
+
+For the data, embed 20-30 realistic sample records directly
+in the JavaScript as a const SAMPLE_DATA array. Base the
+sample records on the schema from the context file — use
+realistic field values, not placeholders.
+
+Use the same visual style as the Knowledge Atlas site:
+cream background (#FAF6F0), Georgia headings, system-ui body text.</div>
+  <p class="copy-note">The "embed sample data" instruction is important — it means the HTML file works anywhere, no server needed.</p>
+
+  <p>The AI will produce a complete HTML file. It may be long — that's fine. You don't need to read the code. You need to <em>run</em> it.</p>
+
+  <p><strong>How to run it:</strong></p>
+  <p>If your AI has a built-in preview (Claude shows "artifacts," ChatGPT shows "canvas"), the component should appear right there in the chat. You're done — move to Step 5.</p>
+  <p>If not: ask the AI to show you the complete HTML. Copy everything, paste it into a plain text file, save it with a <code>.html</code> extension (e.g., <code>my_exercise.html</code>), and double-click to open it in your browser.</p>
+</div>
+
+<!-- ─────────── STEP 5 ─────────── -->
+<div class="step-card verify">
+  <div class="step-head">
+    <span class="step-num-badge">5</span>
+    <span class="step-title">Run Your Tests</span>
+  </div>
+  <p>Go back to the test cases you wrote in Step 3. Run each one against the component. For each test, record:</p>
+  <p><strong>PASS</strong> — the component did what the test predicted.<br>
+  <strong>FAIL</strong> — the component did something else. Write down exactly what happened.</p>
+
+  <p>Be honest. If a test is ambiguous and you're not sure whether it passed, write that down too. The grading rubric rewards honest verification, not a perfect score.</p>
+
+  <div class="callout callout-green">
+    <strong>Most components will fail at least one test.</strong> That is expected. That is the point. If everything passes on the first try, either your tests were too easy or you got lucky. The next two steps — diagnosis and iteration — are where the learning happens.
+  </div>
+</div>
+
+<!-- ─────────── STEP 6 ─────────── -->
+<div class="step-card action">
+  <div class="step-head">
+    <span class="step-num-badge">6</span>
+    <span class="step-title">Diagnose the Failures</span>
+  </div>
+  <p>For each failed test, you need to figure out <em>why</em> it failed. There are exactly two possibilities:</p>
+  <p><strong>The spec was wrong.</strong> You asked for the wrong thing. The test expected behavior that doesn't make sense given the data, or your specification was ambiguous and the AI interpreted it differently than you intended.</p>
+  <p><strong>The implementation was wrong.</strong> Your spec was correct, but the AI built it incorrectly — a bug, a misused field name, a calculation error.</p>
+  <p>This distinction matters. If the spec was wrong, you need to fix the spec and then rebuild. If the implementation was wrong, you tell the AI what went wrong and ask it to fix the code.</p>
+  <p><strong>Do this:</strong> Tell the AI about the failure and ask it to diagnose:</p>
+  <div class="prompt-box"><span class="prompt-label">Adapt This</span>
+Test 2 failed. I expected [what you expected], but instead
+I got [what actually happened].
+
+Look at the specification and the code. Is this a problem
+with the spec (I asked for the wrong thing) or the code
+(you built the right thing incorrectly)?</div>
+</div>
+
+<!-- ─────────── STEP 7 ─────────── -->
+<div class="step-card verify">
+  <div class="step-head">
+    <span class="step-num-badge">7</span>
+    <span class="step-title">Fix and Re-Test</span>
+  </div>
+  <p>Based on the diagnosis, ask the AI to fix either the spec or the code. Then re-run the failing test. If it passes, move on. If it fails differently, go back to Step 6.</p>
+  <p>You do not need to achieve a perfect pass rate to get a good grade. You need to show that you <em>tried</em>, <em>diagnosed</em>, and <em>iterated</em>. A component with one unresolved failure and a clear explanation of why is worth more than a component with no failures and no evidence of testing.</p>
+</div>
+
+<!-- ─────────── STEP 8 ─────────── -->
+<div class="step-card reflect">
+  <div class="step-head">
+    <span class="step-num-badge">8</span>
+    <span class="step-title">Write Your Reflection (Two Paragraphs)</span>
+  </div>
+  <p><strong>Paragraph 1:</strong> Identify one requirement that came out of the panel discussion that you would not have thought of on your own. Explain why it surprised you and how it changed the specification.</p>
+  <p><strong>Paragraph 2:</strong> Describe one specific failure — a test that didn't pass — and how you diagnosed it. Was it a spec problem or an implementation problem? What did you do about it? What did you learn?</p>
+
+  <div class="callout callout-amber">
+    <strong>Avoid generic statements.</strong> "The AI was really helpful" is not a reflection. "The AI generated a search filter that looked perfect but silently dropped all claims with empty defeat_type fields, which is 93% of the dataset" — that is a reflection. Be specific. Name the fields. Describe the failure concretely.
+  </div>
+</div>
+
+<div class="prose">
+
+<!-- ════════════════════════════════════════════════════ -->
+<h2>What You Submit</h2>
+<!-- ════════════════════════════════════════════════════ -->
+
+<p>One document (Google Doc, Word, or PDF) containing everything in this order:</p>
+
+<div class="step-card" style="border-left-color: var(--navy);">
+  <p><strong>1. Panel transcript</strong> — the full simulated expert discussion from Step 1.</p>
+  <p><strong>2. Specification</strong> — inputs, outputs, success conditions, edge cases from Step 2.</p>
+  <p><strong>3. Acceptance tests</strong> — all test cases with expected outcomes from Step 3.</p>
+  <p><strong>4. All prompts you sent to the AI</strong> — including ones that didn't work. This is important: we want to see the failed attempts, not just the successes.</p>
+  <p><strong>5. The AI's code output</strong> — the final HTML file (or a link to it).</p>
+  <p><strong>6. Test results</strong> — PASS/FAIL for each test, with notes on what happened.</p>
+  <p><strong>7. Two-paragraph reflection</strong> — from Step 8.</p>
+</div>
+
+<!-- ════════════════════════════════════════════════════ -->
+<h2>How This Is Graded</h2>
+<!-- ════════════════════════════════════════════════════ -->
+
+<p>Each component is worth 25% of the grade. Notice that none of them are "does the code work perfectly."</p>
+
+<div class="step-card" style="border-left-color: var(--navy);">
+  <p><strong>Panel quality (25%)</strong> — Did the experts actually disagree, or did they just list features? A real argument between panelists about what matters most is worth far more than three experts who politely agree.</p>
+  <p><strong>Specification completeness (25%)</strong> — Are inputs, outputs, edge cases, and success conditions defined <em>before</em> the code was written? If the spec is vague, the code will be too.</p>
+  <p><strong>Verification rigor (25%)</strong> — Did you run the tests? Did you catch real failures? Did you diagnose them? A component that fails one test with a clear explanation beats an untested component that "seems to work."</p>
+  <p><strong>Reflection honesty (25%)</strong> — A genuine surprise and a genuine failure, described concretely. Not "the AI is amazing" or "I learned a lot."</p>
+</div>
+
+</div><!-- /prose -->
+
+<nav style="display: flex; justify-content: space-between; padding: 1.5rem 0; border-top: 2px solid var(--border); margin-top: 1rem; font-family: -apple-system, sans-serif;">
+  <a href="week2_exercises.html" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.2rem; border-radius: 6px; text-decoration: none; font-size: 0.88rem; font-weight: 600; background: var(--white); color: var(--navy); border: 1.5px solid var(--border);">&larr; Exercise Details</a>
+  <a href="ka_schedule.html" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.2rem; border-radius: 6px; text-decoration: none; font-size: 0.88rem; font-weight: 600; background: var(--navy); color: #fff;">Full Schedule &rarr;</a>
+</nav>
+
+</div><!-- /page-wrap -->
+</body>
+</html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Design Archive — COGS 160 Pre-4-Track Era</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: #FAFAF7;
+      color: #2D2010;
+      line-height: 1.7;
+      padding: 0;
+    }
+
+    header {
+      background: #1C3D3A;
+      color: #E5DDD0;
+      padding: 48px 40px 40px;
+      border-bottom: 3px solid #E8872A;
+    }
+    header .archive-label {
+      font-family: Arial, sans-serif;
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em;
+      text-transform: uppercase; color: #7AACA0;
+      margin-bottom: 12px;
+    }
+    header h1 {
+      font-size: 1.9rem; font-weight: 400; color: #F5F0E8;
+      margin-bottom: 8px; line-height: 1.3;
+    }
+    header .subtitle {
+      font-size: 1rem; color: #A8C8BF;
+      font-style: italic; margin-bottom: 24px;
+    }
+    header .meta {
+      font-family: Arial, sans-serif;
+      font-size: 0.8rem; color: #7AACA0;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 48px 40px;
+    }
+
+    .notice {
+      background: #FFF8E8;
+      border: 1px solid #F0C060;
+      border-left: 4px solid #E8872A;
+      border-radius: 6px;
+      padding: 18px 22px;
+      margin-bottom: 36px;
+      font-family: Arial, sans-serif;
+      font-size: 0.88rem;
+      color: #5A3010;
+      line-height: 1.6;
+    }
+    .notice strong { color: #3A1800; }
+
+    h2 {
+      font-size: 1.25rem; font-weight: 600; color: #1C3D3A;
+      margin: 36px 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #D4CDC4;
+    }
+    h3 {
+      font-size: 1.0rem; font-weight: 600; color: #2D2010;
+      margin: 24px 0 8px;
+    }
+    p { margin-bottom: 14px; font-size: 0.95rem; }
+
+    .page-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+    @media (max-width: 640px) { .page-grid { grid-template-columns: 1fr; } }
+
+    .page-card {
+      background: #fff;
+      border: 1px solid #DDD6CD;
+      border-radius: 8px;
+      padding: 16px 18px;
+    }
+    .page-card .page-title {
+      font-family: Arial, sans-serif;
+      font-weight: 700; font-size: 0.85rem;
+      color: #1C3D3A; margin-bottom: 4px;
+    }
+    .page-card .page-status {
+      display: inline-block;
+      font-family: Arial, sans-serif; font-size: 0.65rem;
+      font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 2px 8px; border-radius: 3px; margin-bottom: 8px;
+    }
+    .status-superseded { background: #FBE9E7; color: #B71C1C; }
+    .status-partial { background: #FFF3E0; color: #E65100; }
+    .status-data { background: #E8F5E9; color: #1B5E20; }
+    .page-card .page-desc {
+      font-family: Arial, sans-serif; font-size: 0.83rem;
+      color: #555; line-height: 1.5;
+    }
+    .page-card a {
+      font-family: Arial, sans-serif; font-size: 0.78rem;
+      color: #1C7A68; text-decoration: none;
+    }
+    .page-card a:hover { text-decoration: underline; }
+
+    table {
+      width: 100%; border-collapse: collapse;
+      font-family: Arial, sans-serif; font-size: 0.84rem;
+      margin: 16px 0;
+    }
+    th {
+      background: #EDE8E0; color: #3A2D1E;
+      font-weight: 700; padding: 9px 12px;
+      text-align: left; font-size: 0.75rem;
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    td { padding: 9px 12px; border-bottom: 1px solid #E8E2DA; vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #FAF7F2; }
+
+    .ideas-list {
+      list-style: none; padding: 0;
+    }
+    .ideas-list li {
+      padding: 8px 0 8px 24px; position: relative;
+      border-bottom: 1px solid #EDECE6;
+      font-size: 0.9rem;
+    }
+    .ideas-list li:last-child { border-bottom: none; }
+    .ideas-list li::before {
+      content: "→"; position: absolute; left: 0;
+      color: #E8872A; font-weight: 700;
+    }
+
+    footer {
+      background: #EDE8E0;
+      border-top: 1px solid #D0C8BC;
+      padding: 28px 40px;
+      font-family: Arial, sans-serif;
+      font-size: 0.78rem; color: #7A7060;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="archive-label">Course Design Archive · Knowledge Atlas</div>
+  <h1>COGS 160 — Pre-4-Track Era Design History</h1>
+  <p class="subtitle">What we built before the track model, why it was superseded, and what ideas should carry forward</p>
+  <div class="meta">Archived: 2026-03-24 · Owner: David Kirsh, UCSD Cognitive Science · Status: Read-only historical record</div>
+</header>
+
+<div class="container">
+
+  <div class="notice">
+    <strong>Archive Notice.</strong> The pages documented here represent the first-generation COGS 160 site design,
+    built before the 4-track contributor model (Track 1: Image Tagging; Track 2: Article Finding;
+    Track 3: VR Production; Track 4: GUI Evaluation &amp; Experiment Design) was adopted as the
+    course structure in March 2026. The files remain accessible in
+    <code>Knowledge_Atlas/Designing_Experiments/</code> and are linked from the current KA pages via
+    "Previous pages" footer links. They must not be deleted — they contain research data and design ideas
+    of continuing value.
+  </div>
+
+  <h2>Why the Redesign Happened</h2>
+
+  <p>The original COGS 160 site was organised around <em>research topics</em> (the 20 CNFA clusters)
+  and disciplinary categories (acoustic, thermal, social, biophilic, cognitive). Students navigated
+  a landscape of findings and were expected to self-direct into experiment design. In practice this was
+  too open-ended: students needed more structured role assignments, clearer deliverables, and a clearer
+  sense of what they were contributing to a collective project.</p>
+
+  <p>The 4-track model solves this by assigning each student to a concrete production role —
+  tagger, article finder, VR producer, or GUI evaluator — with a defined deliverable sequence, milestone
+  table, and quality gate. The research topic landscape is still present (via <code>ka_topics.html</code>),
+  but it now serves the contributors' workflows rather than being the entry point itself.</p>
+
+  <h2>Archived Page Inventory</h2>
+
+  <div class="page-grid">
+
+    <div class="page-card">
+      <div class="page-title">Knowledge Navigator</div>
+      <span class="page-status status-superseded">Superseded by ka_topics.html</span>
+      <div class="page-desc">
+        The original topic-exploration page: 20 CNFA research fronts, surprise findings,
+        browse-by-category, VOI rankings. Contained the REPORTS data structure with
+        paradigm profiles and VR-readiness scores. Superseded by <code>ka_topics.html</code>
+        (same data, redesigned for contributor workflows).
+      </div>
+      <a href="knowledge_navigator.html">Open archived page →</a>
+    </div>
+
+    <div class="page-card">
+      <div class="page-title">COGS 160 Spring 2026 Site</div>
+      <span class="page-status status-superseded">Superseded by ka_home.html</span>
+      <div class="page-desc">
+        Early full-site landing page with course overview, module list, and a different
+        navigation hierarchy. Superseded by <code>ka_home.html</code> under the Knowledge
+        Atlas brand.
+      </div>
+      <a href="cogs160_spring_2026_site.html">Open archived page →</a>
+    </div>
+
+    <div class="page-card">
+      <div class="page-title">Course Pilot</div>
+      <span class="page-status status-superseded">Superseded by ka_home.html + track pages</span>
+      <div class="page-desc">
+        First pilot version of the COGS 160 course site. Contains the original framing
+        of the course as "Designing Experiments with AI &amp; VR." Historical record of
+        the course's initial identity before the KA contributor-track model.
+      </div>
+      <a href="course_pilot.html">Open archived page →</a>
+    </div>
+
+    <div class="page-card">
+      <div class="page-title">Epistemic Network Navigator</div>
+      <span class="page-status status-partial">Partially superseded — data still used</span>
+      <div class="page-desc">
+        An epistemic network visualisation tool built around <code>en_navigator_data.json</code>.
+        The data file (CNFA construct relationships) remains active in the KA repo.
+        The page may be revived for the GUI evaluation track as a data visualisation tool.
+      </div>
+      <a href="en_navigator.html">Open archived page →</a>
+    </div>
+
+    <div class="page-card">
+      <div class="page-title">Bayesian Network Navigator</div>
+      <span class="page-status status-partial">Partial — may be revived for T4</span>
+      <div class="page-desc">
+        Interactive Bayesian network exploration tool for the CNFA construct space.
+        Not yet superseded by a KA equivalent. Candidate for integration into the
+        Track 4 GUI evaluation workflow or as a standalone KA tool.
+      </div>
+      <a href="bn_navigator.html">Open archived page →</a>
+    </div>
+
+    <div class="page-card">
+      <div class="page-title">Experiment Builder Wizard</div>
+      <span class="page-status status-superseded">Superseded by ka_hypothesis_builder.html</span>
+      <div class="page-desc">
+        Step-by-step wizard for building an experiment. The workflow was generalised and
+        reworked as <code>ka_hypothesis_builder.html</code> with credence tracking and
+        6-stage pipeline. The wizard's domain knowledge may still be useful as reference.
+      </div>
+      <a href="experiment_wizard.html">Open archived page →</a>
+    </div>
+
+    <div class="page-card">
+      <div class="page-title">Hypothesis Builder (DE version)</div>
+      <span class="page-status status-superseded">Superseded by ka_hypothesis_builder.html</span>
+      <div class="page-desc">
+        Earlier version of the hypothesis construction interface. Superseded by the
+        KA version (<code>ka_hypothesis_builder.html</code>) with credence gauges,
+        signal alignment, and overseer integration.
+      </div>
+      <a href="hypothesis_builder.html">Open archived page →</a>
+    </div>
+
+    <div class="page-card">
+      <div class="page-title">Measurement Instruments &amp; Sensors</div>
+      <span class="page-status status-superseded">Superseded by ka_sensors.html</span>
+      <div class="page-desc">
+        Earlier sensor/instrument catalogue. Superseded by <code>ka_sensors.html</code>
+        (27 measures with mechanistic explanations, tier ratings, and KA design system).
+      </div>
+      <a href="measurement_instruments.html">Open archived page →</a>
+    </div>
+
+    <div class="page-card">
+      <div class="page-title">Methods Taxonomy</div>
+      <span class="page-status status-partial">No KA equivalent yet</span>
+      <div class="page-desc">
+        Taxonomy of experimental methods used in CNFA research (CLE, FE, PCP, etc.).
+        No direct KA equivalent yet. The paradigm profiles in the REPORTS data provide
+        partial coverage. A methods-taxonomy page is a candidate addition to KA.
+      </div>
+      <a href="methods_taxonomy.html">Open archived page →</a>
+    </div>
+
+    <div class="page-card">
+      <div class="page-title">Sensor Catalogue (DE version)</div>
+      <span class="page-status status-superseded">Superseded by ka_sensors.html</span>
+      <div class="page-desc">
+        Earlier sensor catalogue page. Superseded by the KA version.
+      </div>
+      <a href="sensor_catalogue.html">Open archived page →</a>
+    </div>
+
+    <div class="page-card">
+      <div class="page-title">System Inventory &amp; Overseer</div>
+      <span class="page-status status-data">ATLAS data — not course-facing</span>
+      <div class="page-desc">
+        Shows the ATLAS backend system inventory and overseer health. This page is
+        about the KA backend infrastructure, not a student-facing page. Retained for
+        developer and instructor review.
+      </div>
+      <a href="system_inventory.html">Open archived page →</a>
+    </div>
+
+    <div class="page-card">
+      <div class="page-title">Theory &amp; Experiment Design</div>
+      <span class="page-status status-partial">Ideas to carry forward</span>
+      <div class="page-desc">
+        A theoretical framing page linking theories (ART, CLT, Biophilia, etc.) to
+        experiment design choices. Not yet superseded. May be developed as a KA
+        theory browser (Track 4 tool candidate).
+      </div>
+      <a href="theory_and_experiment_design.html">Open archived page →</a>
+    </div>
+
+  </div>
+
+  <h2>What Must Be Carried Forward</h2>
+
+  <p>Several design decisions and data structures from the DE era are still active
+  in the KA system and must not be lost:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Current Location</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>REPORTS data</strong> (VOI scores, paradigm profiles, VR-readiness, effect-size ranges for 20 research fronts)</td>
+        <td><code>knowledge_navigator.html</code> (inline JS)</td>
+        <td>Should be extracted to a standalone JSON file and imported by <code>ka_topics.html</code></td>
+      </tr>
+      <tr>
+        <td><strong>en_navigator_data.json</strong> (CNFA construct network)</td>
+        <td><code>Designing_Experiments/data/en_navigator_data.json</code></td>
+        <td>Active — used by en_navigator.html; candidate data source for KA construct browser</td>
+      </tr>
+      <tr>
+        <td><strong>Paradigm taxonomy</strong> (CLE, FE, PCP, MAR, PPM, IVW, BMT, NI, LES, CFA, PVS)</td>
+        <td><code>methods_taxonomy.html</code> + embedded in REPORTS</td>
+        <td>No KA page yet. Track 2 article-finding uses paradigm codes as article metadata</td>
+      </tr>
+      <tr>
+        <td><strong>Theory list</strong> (ART, CLT, Biophilia, Arousal, Embodied Cognition, Dual-Process, etc.)</td>
+        <td><code>theory_and_experiment_design.html</code></td>
+        <td>Should become a filterable KA data source for hypothesis construction</td>
+      </tr>
+      <tr>
+        <td><strong>Surprise findings narrative</strong> (the "Did You Know" content from knowledge_navigator)</td>
+        <td>Inline JS in <code>knowledge_navigator.html</code></td>
+        <td>Partially absorbed into <code>ka_demo_v04.html</code> QUERY_BANK; the full set should be exported</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Open Design Ideas From the DE Era</h2>
+
+  <p>The following ideas appear in DE pages but have no KA equivalent yet. They are listed
+  here so future contributors and Track 4 GUI evaluators can decide whether to develop them:</p>
+
+  <ul class="ideas-list">
+    <li>A theory browser mapping theories (ART, CLT, Biophilia) to research fronts, constructs, and experiment designs — analogous to <code>ka_sensors.html</code> but for explanatory frameworks rather than measurement instruments.</li>
+    <li>A methods taxonomy page cataloguing the 11+ paradigm families (CLE, FE, PCP, etc.) with VR-adaptability scores, so students can see which methods are available for a given construct-environment pair.</li>
+    <li>The Bayesian Network Navigator as a visual construct-space exploration tool — potentially useful as a Track 4 GUI evaluation scenario target.</li>
+    <li>The Epistemic Network Navigator as a graph-based way to explore how constructs are related across research fronts — a candidate KA data visualisation page.</li>
+    <li>An "Experiment Sketch" generator — the REPORTS data already contains automated experiment sketches (research question, IV, DV, suggested paradigms) for each of the 20 research fronts. These could be surfaced in <code>ka_topics.html</code> as an "Experiment Ideas" section per topic card.</li>
+    <li>Missing paradigm alerts — the REPORTS data flags which paradigm families are absent from each research front. A Track 2 or Track 4 tool could surface these as "unexplored method opportunities" for experiment design.</li>
+  </ul>
+
+  <h2>Track 4 GUI Evaluation — Specific Implications</h2>
+
+  <p>Track 4 students assigned to GUI Evaluation &amp; Experiment Design should review the DE
+  pages with the following questions in mind:</p>
+
+  <ul class="ideas-list">
+    <li>Which navigation paradigm served users better — the topic-browse model (knowledge_navigator) or the track-based workflow model (current KA)? What evidence from your user scenarios supports that judgment?</li>
+    <li>What did the knowledge_navigator page do that <code>ka_topics.html</code> does not yet do? (e.g., showing effect-size ranges, paradigm profiles, VR-readiness scores per topic.)</li>
+    <li>Which archived pages should be revived as KA tools, and with what redesign? Use the Page Function Specification framework to define their objective, users, and uses before proposing a rebuild.</li>
+    <li>The transition from a topic-browse model to a contributor-track model changes the primary user mental model. Do the current KA pages communicate this shift clearly to a first-time visitor?</li>
+  </ul>
+
+</div>
+
+<footer>
+  Knowledge Atlas · UCSD Cognitive Science · Course Design Archive · 2026-03-24 ·
+  All archived pages are read-only and must not be modified; they preserve a historical record of the pre-4-track design era.
+</footer>
+
+</body>
+</html>

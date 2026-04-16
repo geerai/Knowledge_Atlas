@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Propose an Article – Knowledge Atlas</title>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --navy:#1C3D3A;--teal:#2A7868;--teal-lt:#5AC8AA;--teal-bg:#E6F5F0;
+      --amber:#E8872A;--amber-lt:#FFF3E0;--amber-dk:#9a5010;
+      --cream:#F7F4EF;--ink:#2C2C2C;--muted:#6B6B6B;--border:#D8D0C5;
+      --white:#FFFFFF;--rose:#A84F6B;--rose-lt:#F8EBF0;
+      --blue:#3A6EA8;--blue-lt:#EBF2F8;--green:#2A7868;
+    }
+    body{font-family:Arial,sans-serif;background:var(--cream);color:var(--ink)}
+    .top-nav{position:fixed;top:0;left:0;right:0;height:56px;background:var(--navy);border-bottom:1px solid #0f2423;display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:1000;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+    .nav-wordmark{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.1em;color:#A8C8BF}
+    .nav-icon{width:20px;height:20px;background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23A8C8BF" stroke-width="1.5"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><line x1="6" y1="6" x2="12" y2="18"/><line x1="18" y1="6" x2="12" y2="18"/></svg>') no-repeat center/contain}
+    .nav-title{color:#fff}.nav-title-accent{color:#F5A623}
+    .nav-center{flex:1;text-align:center;color:#A8C8BF;font-size:13px}
+    .nav-right{display:flex;align-items:center;gap:14px}
+    .mode-pill{background:rgba(42,120,104,.3);color:#7AACA0;font-size:11px;font-weight:700;letter-spacing:.1em;padding:4px 12px;border-radius:20px}
+    .nav-links{display:flex;align-items:center;gap:18px;flex:1;justify-content:center}
+    .nav-links a{color:#B8D4CE;font-size:.86rem;text-decoration:none;transition:color .15s}
+    .nav-links a:hover{color:#fff}
+    .nav-links a.active{color:#F5A623}
+    .mode-select{font-size:.76rem;padding:6px 10px;border-radius:16px;border:1px solid rgba(168,200,191,.34);background:rgba(255,255,255,.05);color:#D8EAE4}
+    .mode-select option{color:#1C3D3A}
+    .page-wrap{max-width:1160px;margin:80px auto 60px;padding:0 28px;display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
+    .breadcrumb{font-size:11px;color:var(--muted);margin-bottom:14px;grid-column:1/-1}
+    .breadcrumb a{color:var(--teal);text-decoration:none}
+    .page-title{grid-column:1/-1;font-family:Georgia,serif;font-size:1.65rem;color:var(--navy);margin:-4px 0 2px}
+    .page-subtitle{grid-column:1/-1;font-size:0.88rem;color:var(--muted);line-height:1.6;margin-bottom:4px}
+
+    .section-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:22px;margin-bottom:18px}
+    .card-title{font-family:Georgia,serif;font-size:1.0rem;color:var(--navy);margin-bottom:4px}
+    .card-sub{font-size:0.82rem;color:var(--muted);margin-bottom:16px;line-height:1.55}
+    .callout{padding:11px 14px;border-radius:6px;font-size:0.82rem;line-height:1.6;margin-bottom:14px}
+    .callout-teal{background:var(--teal-bg);border-left:3px solid var(--teal);color:#1a4a3f}
+    .callout-amber{background:var(--amber-lt);border-left:3px solid var(--amber);color:var(--amber-dk)}
+    .callout-blue{background:var(--blue-lt);border-left:3px solid var(--blue);color:#1a3a6a}
+    .callout-rose{background:var(--rose-lt);border-left:3px solid var(--rose);color:#5a1a30}
+    .route-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+    .route-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px}
+    .route-kicker{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
+    .route-card h3{font-family:Georgia,serif;font-size:1rem;color:var(--navy);margin-bottom:6px}
+    .route-card p{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:10px}
+    .route-list{margin-left:18px;font-size:0.8rem;color:var(--ink);line-height:1.75}
+    .route-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .identity-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:18px}
+    .identity-kicker{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
+    .identity-title{font-family:Georgia,serif;font-size:1rem;color:var(--navy);margin-bottom:6px}
+    .identity-copy{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:12px}
+    .identity-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .identity-metric{background:#FAFAF8;border:1px solid var(--border);border-radius:8px;padding:10px}
+    .identity-metric-label{font-size:10px;font-weight:700;letter-spacing:.05em;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+    .identity-metric-value{font-family:Georgia,serif;font-size:1.2rem;color:var(--navy)}
+
+    .field-group{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+    .field-label{font-size:11px;font-weight:600;color:var(--teal);text-transform:uppercase;letter-spacing:.06em}
+    .field-input,.field-textarea,.field-select{border:1px solid var(--border);border-radius:6px;padding:9px 11px;font-family:Arial,sans-serif;font-size:0.84rem;color:var(--ink);background:var(--cream);resize:vertical;width:100%}
+    .field-input:focus,.field-textarea:focus,.field-select:focus{outline:none;border-color:var(--teal);background:#fff}
+    .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .field-hint{font-size:10px;color:var(--muted);line-height:1.4}
+
+    .upload-zone{border:2px dashed var(--border);border-radius:10px;padding:28px;text-align:center;cursor:pointer;transition:all .15s;background:var(--cream)}
+    .upload-zone:hover,.upload-zone.dragover{border-color:var(--teal);background:var(--teal-bg)}
+    .upload-icon{font-size:30px;margin-bottom:10px}
+    .upload-label{font-size:0.92rem;color:var(--ink);font-weight:600;margin-bottom:6px}
+    .upload-hint{font-size:11px;color:var(--muted);line-height:1.5}
+    .upload-subhint{font-size:11px;color:var(--teal);margin-top:6px}
+
+    .batch-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .btn{border:none;border-radius:7px;padding:10px 16px;font-size:0.84rem;font-weight:600;cursor:pointer;font-family:Arial,sans-serif;transition:background .12s,color .12s,border-color .12s}
+    .btn-primary{background:var(--amber);color:#fff}
+    .btn-primary:hover{background:#c97020}
+    .btn-secondary{background:var(--teal);color:#fff}
+    .btn-secondary:hover{background:#1a5c4e}
+    .btn-ghost{background:#F0EBE3;color:var(--ink);border:1px solid var(--border)}
+    .btn-ghost:hover{background:#E4DDD3}
+    .btn:disabled{background:#ccc;color:#777;cursor:not-allowed}
+
+    .batch-table-wrap{overflow-x:auto}
+    .batch-table{width:100%;border-collapse:collapse;font-size:0.82rem}
+    .batch-table th{background:#f0ebe3;color:var(--navy);padding:9px 12px;text-align:left;font-size:10px;letter-spacing:.07em;font-weight:700;border-bottom:2px solid var(--border)}
+    .batch-table td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+    .batch-table tr:hover td{background:#FAF7F2}
+    .batch-table .empty-row td{text-align:center;color:var(--muted);padding:18px}
+    .mini-meta{font-size:11px;color:var(--muted);line-height:1.45}
+    .status-pill{display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;letter-spacing:.05em}
+    .s-extracted{background:var(--blue-lt);color:var(--blue);border:1px solid #b0c8e8}
+    .s-duplicate{background:var(--amber-lt);color:var(--amber-dk);border:1px solid #f0c080}
+    .s-staged{background:var(--teal-bg);color:var(--teal);border:1px solid #b2ddd4}
+    .s-review{background:#EEE8E0;color:#6A5E50;border:1px solid #D8D0C5}
+    .s-bad{background:var(--rose-lt);color:var(--rose);border:1px solid #e8b8c8}
+    .file-row-actions{display:flex;gap:6px;flex-wrap:wrap}
+    .tiny-btn{border:1px solid var(--border);background:#fff;color:var(--ink);padding:5px 8px;border-radius:5px;font-size:11px;cursor:pointer}
+    .tiny-btn:hover{border-color:var(--teal);color:var(--teal)}
+
+    .metadata-panel{background:#FAFAF8;border:1px solid var(--border);border-radius:8px;padding:14px;display:none}
+    .metadata-panel.visible{display:block}
+    .metadata-title{font-family:Georgia,serif;font-size:0.92rem;color:var(--navy);margin-bottom:8px}
+    .metadata-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .metadata-item{font-size:0.8rem;color:var(--ink);line-height:1.55}
+    .metadata-item strong{color:var(--navy)}
+
+    .queue-card{background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;position:sticky;top:80px}
+    .queue-header{background:var(--navy);color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
+    .queue-title{font-family:Georgia,serif;font-size:0.95rem}
+    .queue-badge{background:var(--teal);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px}
+    .queue-tabs{display:flex;border-bottom:1px solid var(--border)}
+    .queue-tab{flex:1;padding:8px;text-align:center;font-size:11px;font-weight:600;cursor:pointer;color:var(--muted);transition:all .12s;border-bottom:2px solid transparent}
+    .queue-tab.active{color:var(--teal);border-bottom-color:var(--teal)}
+    .queue-item{padding:12px 14px;border-bottom:1px solid var(--border)}
+    .queue-item:last-child{border-bottom:none}
+    .qi-title{font-size:0.82rem;font-weight:600;color:var(--navy);margin-bottom:3px;line-height:1.4}
+    .qi-meta{font-size:10px;color:var(--muted);margin-bottom:4px}
+    .qi-status{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;margin-top:2px}
+    .qi-pending{background:#EEE8E0;color:#6A5E50;border:1px solid #D8D0C5}
+    .qi-approved{background:var(--teal-bg);color:var(--teal);border:1px solid #b2ddd4}
+    .qi-reviewing{background:var(--blue-lt);color:var(--blue);border:1px solid #b0c8e8}
+    .qi-rejected{background:var(--rose-lt);color:var(--rose);border:1px solid #e8b8c8}
+    .qi-duplicate{background:var(--amber-lt);color:var(--amber-dk);border:1px solid #f0c080}
+
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:2000;align-items:center;justify-content:center}
+    .modal-overlay.open{display:flex}
+    .modal-box{background:var(--white);border-radius:12px;max-width:500px;width:92vw;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.22)}
+    .modal-head{background:var(--navy);color:#fff;padding:16px 22px;font-family:Georgia,serif;font-size:1.0rem}
+    .modal-body{padding:18px 22px;font-size:0.86rem;color:var(--ink);line-height:1.65}
+    .modal-foot{padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end}
+    .btn-ok{background:var(--teal);color:#fff;border:none;padding:9px 22px;border-radius:6px;font-size:0.85rem;font-weight:600;cursor:pointer;font-family:Arial,sans-serif}
+    .version-badge{position:fixed;bottom:12px;left:16px;background:var(--navy);color:#A8C8BF;font-size:10px;padding:3px 8px;border-radius:4px;opacity:.6;z-index:50}
+  .wordmark {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; flex-shrink: 0;
+}
+.wordmark-icon { width: 30px; height: 30px; }
+.wordmark-text { display: flex; flex-direction: column; line-height: 1.1; }
+.wm-top { font-size: 0.66rem; font-weight: 400; letter-spacing: 0.24em; text-transform: uppercase; color: #A8C8BF; }
+.wm-bottom { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.03em; color: #fff; }
+.wm-bottom span { color: #F5A623; }
+</style>
+<script src="ka_config.js"></script>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a class="wordmark" href="ka_home.html">
+    <svg class="wordmark-icon" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="3.5" fill="#F5A623"/>
+      <circle cx="16" cy="5"  r="2.5" fill="#A8C8BF"/>
+      <circle cx="27" cy="22" r="2.5" fill="#A8C8BF"/>
+      <circle cx="5"  cy="22" r="2.5" fill="#A8C8BF"/>
+      <line x1="16"   y1="7.5"  x2="16"   y2="12.5" stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="24.8" y1="20.2" x2="19.0" y2="17.3"  stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="7.2"  y1="20.2" x2="13.0" y2="17.3"  stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="16" y1="7.5"  x2="25.5" y2="20" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+      <line x1="25.5" y1="20" x2="6.5"   y2="20" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+      <line x1="6.5"  y1="20" x2="16"    y2="7.5" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+    </svg>
+    <div class="wordmark-text">
+      <span class="wm-top">Knowledge</span>
+      <span class="wm-bottom">At<span>las</span></span>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a id="nav-shell-explore" href="ka_topics.html">Explore</a>
+    <a id="nav-shell-evidence" href="ka_evidence.html">Evidence</a>
+    <a id="nav-shell-gaps" href="ka_gaps.html">Gaps</a>
+    <a id="nav-shell-articles" href="ka_article_search.html">Articles</a>
+    <a id="nav-shell-contribute" href="ka_contribute.html" class="active">Contribute</a>
+    <a id="nav-shell-course" href="160sp/ka_student_setup.html">Course</a>
+            <a id="nav-shell-syllabus" href="160sp/ka_schedule.html" class="nav-link">160 Syllabus</a>
+  </div>
+  <div class="nav-right">
+    <select class="mode-select" id="article-propose-mode-select" aria-label="Switch user mode">
+      <option value="student_explorer">Student explorer</option>
+      <option value="researcher">Researcher</option>
+      <option value="contributor">Contributor</option>
+      <option value="instructor">Instructor</option>
+      <option value="practitioner">Practitioner</option>
+      <option value="theory_mechanism_explorer">Theory Explorer</option>
+    </select>
+    <span class="mode-pill" id="article-propose-mode-pill">CONTRIBUTOR</span>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="breadcrumb"><a href="ka_article_search.html">← Article Search</a> &nbsp;/&nbsp; Propose New Article</div>
+  <h1 class="page-title">Propose an Article</h1>
+  <div class="page-subtitle">Unified intake for contributors and Track 2. Duplicate checking happens immediately, but student submissions should carry a usable citation record before staging so the corpus does not fill with orphan PDFs.</div>
+
+  <div class="main-col">
+    <div class="section-card">
+      <div class="card-title">Choose an intake mode</div>
+      <div class="card-sub">This should become one unified intake surface. Public contributors and Track 2 students can use the same core mechanics, while KA changes attribution, progress tracking, and workflow hints based on identity.</div>
+      <div class="route-grid">
+        <div class="route-card">
+          <div class="route-kicker">PDF intake mode</div>
+          <h3>Upload one PDF or a batch</h3>
+          <p>Best if you already have PDFs. Duplicate checks happen immediately, but Track 2 should still attach a usable citation record before staging.</p>
+          <ul class="route-list">
+            <li>Single PDF or batch/folder upload</li>
+            <li>Immediate duplicate blocking</li>
+            <li>Optional DOI/title cleanup</li>
+            <li>Nightly review and acceptance</li>
+          </ul>
+        </div>
+        <div class="route-card">
+          <div class="route-kicker">Citation intake mode</div>
+          <h3>Paste citations or upload a citation file</h3>
+          <p>Best if you have DOI/title/APA/BibTeX/RIS/CSV material before PDFs. Track 2 students should still use the assignment/setup workflow around this intake surface.</p>
+          <div class="route-actions">
+            <a class="btn btn-secondary" href="160sp/ka_article_finder_assignment.html" style="text-decoration:none">Track 2 assignment</a>
+            <a class="btn btn-ghost" href="160sp/ka_student_setup.html" style="text-decoration:none">Student setup</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="identity-card">
+      <div class="identity-kicker">Identity and credit</div>
+      <div class="identity-title" id="identityTitle">Submitting as public / unclaimed</div>
+      <div class="identity-copy" id="identityCopy">Anonymous submissions are allowed, but they do not count toward student track metrics.</div>
+      <div class="identity-metrics">
+        <div class="identity-metric"><div class="identity-metric-label">Pending</div><div class="identity-metric-value" id="metricPending">0</div></div>
+        <div class="identity-metric"><div class="identity-metric-label">Approved</div><div class="identity-metric-value" id="metricApproved">0</div></div>
+        <div class="identity-metric"><div class="identity-metric-label">Rejected</div><div class="identity-metric-value" id="metricRejected">0</div></div>
+        <div class="identity-metric"><div class="identity-metric-label">Duplicates</div><div class="identity-metric-value" id="metricDuplicates">0</div></div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="card-title">Step 1A — Submit Citations</div>
+      <div class="card-sub">Paste one citation per line or upload a citation file. This supports Track 2 workflows where you screen abstracts first and only fetch PDFs later.</div>
+
+      <div class="field-group">
+        <label class="field-label">Paste citations, DOI lines, or title lines</label>
+        <textarea class="field-textarea" id="citationTextInput" rows="6" placeholder="One citation or DOI per line. APA, DOI-only, or title-first lines are all acceptable for first-pass intake."></textarea>
+      </div>
+      <div class="batch-actions">
+        <button class="btn btn-secondary" onclick="addCitationTextBatch()">Add pasted citations</button>
+        <button class="btn btn-ghost" onclick="triggerCitationFileUpload()">Upload citation file</button>
+      </div>
+      <div class="field-hint">Accepted file types for citation intake: <code>.txt</code>, <code>.csv</code>, <code>.ris</code>, and <code>.bib</code>. In the real backend these would be parsed by the AF importer before de-duplication and staging.</div>
+      <input type="file" id="citationFileInput" accept=".txt,.csv,.ris,.bib" style="display:none" onchange="handleCitationFiles(this.files)">
+    </div>
+
+    <div class="section-card">
+      <div class="card-title">Step 1B — Upload PDFs</div>
+      <div class="card-sub">Drop one PDF or a whole batch. The system extracts metadata, checks for duplicates immediately, and stages non-duplicates for later review. For Track 2, a PDF without at least author + title or a pasted citation should be treated as incomplete.</div>
+
+      <div class="callout callout-teal"><strong>Immediate gate:</strong> duplicate detection happens as soon as the PDF is inspected. If KA already has the article, the upload is stopped and no second permanent copy is kept.</div>
+      <div class="callout callout-amber"><strong>Deferred gate:</strong> relevance is reviewed asynchronously in the nightly intake process. That means contributors can move quickly, while maintainers make the harder inclusion decisions in batch.</div>
+      <div class="callout callout-blue"><strong>Track 2 rule:</strong> do not stage an orphan PDF. Before staging, include either a pasted APA citation or enough metadata to reconstruct one quickly: first author + title, or DOI + title. That makes abstract recovery, duplicate detection, and later repair materially easier.</div>
+      <div class="callout callout-blue"><strong>Security gate:</strong> uploaded files are untrusted until validated. The real intake backend must verify file type by content, quarantine uploads, hash them, reject encrypted or malformed files, and process them in an isolated worker before any promotion into the main corpus.</div>
+      <div class="callout callout-rose"><strong>Storage rule:</strong> rejected staged PDFs should be deleted promptly after review to save space. Metadata and rejection reason remain in the audit trail.</div>
+
+      <div class="upload-zone" id="uploadZone" onclick="triggerUpload()" ondragover="dragOver(event)" ondragleave="dragLeave()" ondrop="dropFiles(event)">
+        <div class="upload-icon">📚</div>
+        <div class="upload-label">Click to upload PDFs or drag a batch here</div>
+        <div class="upload-hint">PDF only · multiple files supported · DOI/title extraction happens automatically</div>
+        <div class="upload-subhint">Best for Track 2: upload the PDFs you already found, then let KA resolve citations where it can.</div>
+      </div>
+      <input type="file" id="hiddenFileInput" accept=".pdf" multiple style="display:none" onchange="handlePickedFiles(this.files)">
+
+      <div class="batch-actions">
+        <button class="btn btn-secondary" id="stageBtn" onclick="stagePendingFiles()" disabled>Stage non-duplicates for nightly review</button>
+        <button class="btn btn-ghost" onclick="clearPendingFiles()">Clear pending batch</button>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="card-title">Step 2 — Inspect Batch Results</div>
+      <div class="card-sub">Each intake item gets a first-pass metadata extraction. Duplicate matches are blocked immediately. Public submissions may remain provisional, but Track 2 submissions should not be staged until they have a minimally usable citation record.</div>
+
+      <div class="batch-table-wrap">
+        <table class="batch-table">
+          <thead>
+            <tr>
+              <th>File</th>
+              <th>Extracted metadata</th>
+              <th>Immediate check</th>
+              <th>Next action</th>
+            </tr>
+          </thead>
+          <tbody id="batchBody">
+            <tr class="empty-row"><td colspan="4">No PDFs uploaded yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="card-title">Step 3 — Optional Citation Cleanup</div>
+      <div class="card-sub">If automatic resolution is weak, refine the record before staging. For Track 2, this is not optional: every staged item should have enough citation information to recover an abstract and create a stable APA record, and the abstract itself should be included whenever your search tool already exposed it.</div>
+
+      <div class="metadata-panel visible" id="citationPanel">
+        <div class="metadata-title">Selected file metadata</div>
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">DOI</label>
+            <input type="text" class="field-input" id="editDOI" placeholder="Auto-extracted DOI or leave blank">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Year</label>
+            <input type="number" class="field-input" id="editYear" placeholder="2014" min="1900" max="2030">
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Probable title</label>
+          <input type="text" class="field-input" id="editTitle" placeholder="Auto-extracted title">
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">First author or author string</label>
+            <input type="text" class="field-input" id="editAuthors" placeholder="Kaplan, S. or Kaplan, S., Boubekri, M., ...">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Journal / venue</label>
+            <input type="text" class="field-input" id="editJournal" placeholder="Journal of Environmental Psychology">
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Preferred citation / APA line</label>
+          <textarea class="field-textarea" id="editCitation" rows="3" placeholder="Paste or build a citation line here. Track 2 should provide at least one stable citation string before staging."></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Abstract (capture if available)</label>
+          <textarea class="field-textarea" id="editAbstract" rows="4" placeholder="If Elicit, OpenAlex, Semantic Scholar, Consensus, or another tool showed the abstract, paste it here before staging."></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Why this might matter (optional)</label>
+          <textarea class="field-textarea" id="editWhy" rows="2" placeholder="Optional note for reviewer: pathway family, topic cluster, or why the paper looks relevant."></textarea>
+        </div>
+        <div class="batch-actions">
+          <button class="btn btn-secondary" onclick="resolveSelectedCitation()">Resolve citation from DOI/title</button>
+          <button class="btn btn-ghost" onclick="saveSelectedEdits()">Save edits to selected file</button>
+        </div>
+        <div class="field-hint">In the real pipeline this step would call Crossref / OpenAlex / Semantic Scholar. In this demo it uses DOI or title matching against a small mocked resolver. Including an author string materially improves citation recovery quality.</div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="card-title">Step 4 — Nightly Review Policy</div>
+      <div class="card-sub">What happens after staging.</div>
+      <ul style="margin-left:18px;line-height:1.9;font-size:0.84rem;color:var(--ink)">
+        <li><strong>Duplicates:</strong> rejected immediately; no permanent second copy stored.</li>
+        <li><strong>Staged pending review:</strong> held for the nightly reviewer pass.</li>
+        <li><strong>Accepted:</strong> moved into the extraction queue.</li>
+        <li><strong>Rejected as irrelevant:</strong> PDF deleted promptly after review; metadata and decision retained.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="queue-col">
+    <div class="queue-card">
+      <div class="queue-header">
+        <div class="queue-title">Intake Queue</div>
+        <span class="queue-badge" id="queueBadge">0</span>
+      </div>
+      <div class="queue-tabs">
+        <div class="queue-tab active" onclick="showTab('pending')">Pending</div>
+        <div class="queue-tab" onclick="showTab('approved')">Approved</div>
+        <div class="queue-tab" onclick="showTab('rejected')">Rejected</div>
+      </div>
+      <div id="queueItems"></div>
+    </div>
+  </div>
+</div>
+
+<div class="version-badge">KA UI · v0.4</div>
+
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box">
+    <div class="modal-head" id="confirmTitle">Done</div>
+    <div class="modal-body" id="confirmBody"></div>
+    <div class="modal-foot"><button class="btn-ok" onclick="closeModal()">OK</button></div>
+  </div>
+</div>
+
+<script src="data/ka_payloads/workflow.js"></script>
+<script src="ka_workflow_store.js"></script>
+<script>
+const EXISTING_ARTICLES = [
+  {
+    doi: '10.1037/0033-2909.132.6.833',
+    title: 'The restorative benefits of nature: toward an integrative framework',
+    authors: 'Kaplan, S.',
+    year: 1995
+  },
+  {
+    doi: '10.5664/jcsm.3780',
+    title: 'Impact of windows and daylight exposure on overall health and sleep quality of office workers',
+    authors: 'Boubekri, M., Cheung, I. N., Reid, K. J., Wang, C. H., & Zee, P. C.',
+    year: 2014
+  }
+];
+
+const RESOLVER = {
+  '10.5664/jcsm.3780': {
+    title: 'Impact of windows and daylight exposure on overall health and sleep quality of office workers',
+    authors: 'Boubekri, M., Cheung, I. N., Reid, K. J., Wang, C. H., & Zee, P. C.',
+    year: 2014,
+    journal: 'Journal of Clinical Sleep Medicine',
+    confidence: 'high'
+  },
+  '10.1037/0033-2909.132.6.833': {
+    title: 'The restorative benefits of nature: toward an integrative framework',
+    authors: 'Kaplan, S.',
+    year: 1995,
+    journal: 'Journal of Environmental Psychology',
+    confidence: 'high'
+  },
+  'default mode network fatigue office.pdf': {
+    title: 'Default mode network suppression and fatigue in focused work settings',
+    authors: 'Mock reviewer seed',
+    year: 2022,
+    journal: 'Environment and Behavior',
+    confidence: 'medium'
+  },
+  'lc-ne vigilance fatigue.pdf': {
+    title: 'Locus coeruleus-norepinephrine dynamics in vigilance under fatigue',
+    authors: 'Mock reviewer seed',
+    year: 2021,
+    journal: 'Cognitive, Affective, & Behavioral Neuroscience',
+    confidence: 'medium'
+  }
+};
+
+let INTAKE_QUEUE = [
+  {id:'KA-PROP-0041',title:'Thermal comfort and cognitive performance in climate-controlled offices',authors:'Kim & de Dear',year:2013,status:'pending',hasPDF:true},
+  {id:'KA-PROP-0040',title:'Noise annoyance and sustained attention: a within-subjects study',authors:'Banbury & Berry',year:2005,status:'approved',hasPDF:true},
+  {id:'KA-PROP-0037',title:'Electricity consumption and industrial output in Taiwan',authors:'Huang et al.',year:2017,status:'rejected',hasPDF:false,reason:'Out of KA scope'}
+];
+
+let PENDING_FILES = [];
+let currentTab = 'pending';
+let selectedFileId = null;
+
+function getIdentityContext() {
+  const user = window.KA_WORKFLOW_STORE ? window.KA_WORKFLOW_STORE.currentUser() : null;
+  if (!user) return { identityType: 'anonymous', label: 'public / unclaimed', userId: null, track: null };
+  return {
+    identityType: 'student',
+    label: `student${user.trackChoice1 ? ' · ' + user.trackChoice1 : ''}`,
+    userId: user.id || null,
+    track: user.trackChoice1 || null
+  };
+}
+
+function getContributionStore() {
+  return window.KA_WORKFLOW_STORE ? window.KA_WORKFLOW_STORE.intakeSubmissions() : JSON.parse(localStorage.getItem('ka_intake_submissions') || '[]');
+}
+
+function saveContributionStore(rows) {
+  if (window.KA_WORKFLOW_STORE) {
+    window.KA_WORKFLOW_STORE.saveIntakeSubmissions(rows);
+  } else {
+    localStorage.setItem('ka_intake_submissions', JSON.stringify(rows));
+  }
+}
+
+function syncIdentityCard() {
+  const identity = getIdentityContext();
+  const rows = getContributionStore();
+  document.getElementById('identityTitle').textContent = `Submitting as ${identity.label}`;
+  document.getElementById('identityCopy').textContent =
+    identity.identityType === 'student'
+      ? 'Accepted citations and PDFs should count toward student metrics once review decisions are made.'
+      : 'Anonymous/public submissions are allowed, but they do not count toward student track metrics in the workflow snapshot.';
+
+  const relevant = rows.filter(row => {
+    if (identity.userId) return row.userId === identity.userId;
+    return row.identityType === 'anonymous';
+  });
+  document.getElementById('metricPending').textContent = relevant.filter(r => r.status === 'pending').length;
+  document.getElementById('metricApproved').textContent = relevant.filter(r => r.status === 'approved').length;
+  document.getElementById('metricRejected').textContent = relevant.filter(r => r.status === 'rejected').length;
+  document.getElementById('metricDuplicates').textContent = relevant.filter(r => r.status === 'duplicate_existing').length;
+}
+
+function triggerUpload() {
+  document.getElementById('hiddenFileInput').click();
+}
+function triggerCitationFileUpload() {
+  document.getElementById('citationFileInput').click();
+}
+function dragOver(e){e.preventDefault();document.getElementById('uploadZone').classList.add('dragover');}
+function dragLeave(){document.getElementById('uploadZone').classList.remove('dragover');}
+function dropFiles(e){e.preventDefault();dragLeave();handlePickedFiles(e.dataTransfer.files);}
+
+function addCitationTextBatch() {
+  const textarea = document.getElementById('citationTextInput');
+  const lines = textarea.value
+    .split(/\n+/)
+    .map(line => line.trim())
+    .filter(Boolean);
+  if (!lines.length) {
+    showConfirm('No citations found','Paste one or more citations, DOI lines, or title lines first.');
+    return;
+  }
+  lines.forEach(addPendingCitationLine);
+  textarea.value = '';
+  renderPendingFiles();
+}
+
+function handleCitationFiles(fileList) {
+  const files = Array.from(fileList || []);
+  if (!files.length) {
+    showConfirm('No file selected','Choose a citation file first.');
+    return;
+  }
+  Promise.all(files.map(readCitationFile))
+    .then(function(allLines) {
+      const lines = allLines.flat().map(line => line.trim()).filter(Boolean);
+      if (!lines.length) {
+        showConfirm('No citations found','The uploaded citation file did not contain any usable lines.');
+        return;
+      }
+      lines.forEach(addPendingCitationLine);
+      renderPendingFiles();
+      document.getElementById('citationFileInput').value = '';
+    })
+    .catch(function() {
+      showConfirm('Citation file failed','The citation file could not be read in the browser demo. Use pasted citations or try a plain text export.');
+    });
+}
+
+function readCitationFile(file) {
+  return new Promise(function(resolve, reject) {
+    const reader = new FileReader();
+    reader.onload = function() {
+      const raw = String(reader.result || '');
+      if (/\.ris$/i.test(file.name)) {
+        const risTitles = (raw.match(/^TI\s+-\s+.+$/gm) || []).map(line => line.replace(/^TI\s+-\s+/,'').trim());
+        return resolve(risTitles.length ? risTitles : raw.split(/\n+/));
+      }
+      if (/\.bib$/i.test(file.name)) {
+        const bibTitles = Array.from(raw.matchAll(/title\s*=\s*[{\"]([^}\"]+)/gi)).map(match => match[1].trim());
+        return resolve(bibTitles.length ? bibTitles : raw.split(/\n+/));
+      }
+      resolve(raw.split(/\n+/));
+    };
+    reader.onerror = reject;
+    reader.readAsText(file);
+  });
+}
+
+function handlePickedFiles(fileList) {
+  const files = Array.from(fileList || []).filter(f => /\.pdf$/i.test(f.name));
+  if (!files.length) {
+    showConfirm('PDFs required','Please upload one or more PDF files.');
+    return;
+  }
+  files.forEach(addPendingFile);
+  document.getElementById('hiddenFileInput').value = '';
+  renderPendingFiles();
+}
+
+function addPendingFile(file) {
+  const meta = extractMetadataFromFile(file);
+  const duplicate = findExistingMatch(meta);
+  PENDING_FILES.push({
+    id: 'pending-' + Date.now() + '-' + Math.random().toString(16).slice(2,8),
+    file: file,  // Keep the actual File object for server upload
+    fileName: file.name,
+    sizeMb: (file.size / (1024*1024)).toFixed(1),
+    metadata: meta,
+    status: duplicate ? 'duplicate' : 'extracted',
+    duplicateMatch: duplicate,
+    reviewerNote: '',
+    staged: false,
+    fileTypeOk: file.type === 'application/pdf' || /\.pdf$/i.test(file.name)
+  });
+}
+
+function addPendingCitationLine(line) {
+  const meta = extractMetadataFromCitation(line);
+  const duplicate = findExistingMatch(meta);
+  PENDING_FILES.push({
+    id: 'pending-' + Date.now() + '-' + Math.random().toString(16).slice(2,8),
+    kind: 'citation',
+    sourceLabel: line,
+    fileName: '',
+    sizeMb: '',
+    metadata: meta,
+    status: duplicate ? 'duplicate' : 'extracted',
+    duplicateMatch: duplicate,
+    reviewerNote: '',
+    staged: false,
+    fileTypeOk: true
+  });
+}
+
+function extractMetadataFromFile(file) {
+  const name = file.name.replace(/\.pdf$/i,'');
+  const doiMatch = name.match(/10\.\d{4,9}\/[A-Za-z0-9._;()\-/:]+/i);
+  const yearMatch = name.match(/(19|20)\d{2}/);
+  const normalized = name.replace(/[_-]+/g,' ').replace(/\s+/g,' ').trim();
+  const probableTitle = normalized.replace(doiMatch ? doiMatch[0] : '', '').replace(yearMatch ? yearMatch[0] : '', '').trim() || normalized;
+  return {
+    doi: doiMatch ? doiMatch[0] : '',
+    title: titleCase(probableTitle),
+    year: yearMatch ? parseInt(yearMatch[0], 10) : '',
+    authors: '',
+    journal: '',
+    resolutionConfidence: doiMatch ? 'high' : 'low'
+  };
+}
+
+function extractMetadataFromCitation(line) {
+  const doiMatch = line.match(/10\.\d{4,9}\/[A-Za-z0-9._;()\-/:]+/i);
+  const yearMatch = line.match(/\b(19|20)\d{2}\b/);
+  let probableTitle = line;
+  if (doiMatch) probableTitle = probableTitle.replace(doiMatch[0], ' ');
+  probableTitle = probableTitle.replace(/\([^)]*(19|20)\d{2}[^)]*\)/g, ' ');
+  probableTitle = probableTitle.replace(/^[^.]*(\.\s+)/, '');
+  probableTitle = probableTitle.replace(/\s+/g, ' ').trim();
+  const looksLikeDoiOnly = doiMatch && normalizeTitle(line) === normalizeTitle(doiMatch[0]);
+  return {
+    doi: doiMatch ? doiMatch[0] : '',
+    title: looksLikeDoiOnly ? '' : titleCase(probableTitle),
+    year: yearMatch ? parseInt(yearMatch[0], 10) : '',
+    authors: '',
+    journal: '',
+    resolutionConfidence: doiMatch ? 'high' : (yearMatch ? 'medium' : 'low')
+  };
+}
+
+function titleCase(text) {
+  return text.replace(/\w\S*/g, function(word) {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  });
+}
+
+function findExistingMatch(meta) {
+  if (meta.doi) {
+    const doiHit = EXISTING_ARTICLES.find(a => a.doi.toLowerCase() === meta.doi.toLowerCase());
+    if (doiHit) return doiHit;
+  }
+  if (meta.title) {
+    const titleHit = EXISTING_ARTICLES.find(a => normalizeTitle(a.title) === normalizeTitle(meta.title));
+    if (titleHit) return titleHit;
+  }
+  return null;
+}
+
+function normalizeTitle(title) {
+  return (title || '').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+}
+
+function renderPendingFiles() {
+  const tbody = document.getElementById('batchBody');
+  if (!PENDING_FILES.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="4">No PDFs uploaded yet.</td></tr>';
+    document.getElementById('stageBtn').disabled = true;
+    return;
+  }
+  tbody.innerHTML = PENDING_FILES.map(function(item) {
+    const meta = item.metadata;
+    const itemLabel = item.kind === 'citation' ? truncate(item.sourceLabel, 72) : item.fileName;
+    const itemMeta = item.kind === 'citation' ? 'Citation intake' : `${item.sizeMb} MB`;
+    const statusLabel = item.staged ? '<span class="status-pill s-staged">staged</span>' : item.status === 'duplicate' ? '<span class="status-pill s-duplicate">duplicate</span>' : '<span class="status-pill s-extracted">ready to stage</span>';
+    const nextAction = item.status === 'duplicate'
+      ? 'Blocked immediately; use the existing record instead.'
+      : item.staged
+      ? 'Waiting for nightly review.'
+      : 'Can be staged now; optional citation cleanup available.';
+    return `<tr onclick="selectPendingFile('${item.id}')" style="cursor:pointer">
+      <td><strong>${escapeHtml(itemLabel)}</strong><div class="mini-meta">${escapeHtml(itemMeta)}</div></td>
+      <td>
+        <div><strong>${escapeHtml(meta.title || 'No title yet')}</strong></div>
+        <div class="mini-meta">DOI: ${escapeHtml(meta.doi || 'not found')} · Year: ${escapeHtml(String(meta.year || 'unknown'))} · Confidence: ${escapeHtml(meta.resolutionConfidence)}</div>
+        <div class="mini-meta">Authors: ${escapeHtml(meta.authors || 'not recorded')} · Citation: ${escapeHtml(meta.citation ? 'present' : 'missing')}</div>
+      </td>
+      <td>${statusLabel}${item.duplicateMatch ? `<div class="mini-meta" style="margin-top:6px">Matches existing: ${escapeHtml(item.duplicateMatch.title)}</div>` : ''}</td>
+      <td><div class="mini-meta">${nextAction}</div><div class="file-row-actions" style="margin-top:8px">${item.status !== 'duplicate' ? `<button class="tiny-btn" onclick="event.stopPropagation();selectPendingFile('${item.id}')">Edit metadata</button>` : ''}<button class="tiny-btn" onclick="event.stopPropagation();removePendingFile('${item.id}')">Remove</button></div></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('stageBtn').disabled = !PENDING_FILES.some(item => item.status !== 'duplicate' && !item.staged);
+  if (!selectedFileId && PENDING_FILES.length) {
+    selectPendingFile(PENDING_FILES.find(item => item.status !== 'duplicate')?.id || PENDING_FILES[0].id);
+  }
+}
+
+function selectPendingFile(id) {
+  selectedFileId = id;
+  const item = PENDING_FILES.find(f => f.id === id);
+  if (!item) return;
+  document.getElementById('editDOI').value = item.metadata.doi || '';
+  document.getElementById('editYear').value = item.metadata.year || '';
+  document.getElementById('editTitle').value = item.metadata.title || '';
+  document.getElementById('editAuthors').value = item.metadata.authors || '';
+  document.getElementById('editJournal').value = item.metadata.journal || '';
+  document.getElementById('editCitation').value = item.metadata.citation || item.sourceLabel || '';
+  document.getElementById('editAbstract').value = item.metadata.abstract || '';
+  document.getElementById('editWhy').value = item.reviewerNote || '';
+}
+
+function saveSelectedEdits() {
+  const item = PENDING_FILES.find(f => f.id === selectedFileId);
+  if (!item) {
+    showConfirm('No file selected','Select a file row first.');
+    return;
+  }
+  item.metadata.doi = document.getElementById('editDOI').value.trim();
+  item.metadata.year = document.getElementById('editYear').value.trim();
+  item.metadata.title = document.getElementById('editTitle').value.trim();
+  item.metadata.authors = document.getElementById('editAuthors').value.trim();
+  item.metadata.journal = document.getElementById('editJournal').value.trim();
+  item.metadata.citation = document.getElementById('editCitation').value.trim();
+  item.metadata.abstract = document.getElementById('editAbstract').value.trim();
+  item.reviewerNote = document.getElementById('editWhy').value.trim();
+  item.metadata.resolutionConfidence = item.metadata.doi || item.metadata.title || item.metadata.citation ? 'manual_refined' : item.metadata.resolutionConfidence;
+  item.duplicateMatch = findExistingMatch(item.metadata);
+  item.status = item.duplicateMatch ? 'duplicate' : (item.staged ? 'staged' : 'extracted');
+  renderPendingFiles();
+  showConfirm('Metadata saved','Your edits were saved to the selected staged file.');
+}
+
+function resolveSelectedCitation() {
+  const item = PENDING_FILES.find(f => f.id === selectedFileId);
+  if (!item) {
+    showConfirm('No file selected','Select a file row first.');
+    return;
+  }
+  const doi = document.getElementById('editDOI').value.trim().toLowerCase();
+  const title = document.getElementById('editTitle').value.trim().toLowerCase();
+  const byDoi = doi && RESOLVER[doi];
+  const byTitle = title && RESOLVER[title + '.pdf'];
+  const resolved = byDoi || byTitle;
+  if (!resolved) {
+    showConfirm('No strong citation match','No confident DOI/title match was found in the resolver. Keep the staged record and let nightly review handle it.');
+    return;
+  }
+  item.metadata.doi = item.metadata.doi || doi;
+  item.metadata.title = resolved.title;
+  item.metadata.year = resolved.year;
+  item.metadata.authors = resolved.authors;
+  item.metadata.journal = resolved.journal;
+  item.metadata.citation = item.metadata.citation || [resolved.authors, `(${resolved.year})`, resolved.title, resolved.journal].filter(Boolean).join('. ');
+  item.metadata.abstract = item.metadata.abstract || resolved.abstract || '';
+  item.metadata.resolutionConfidence = resolved.confidence;
+  item.duplicateMatch = findExistingMatch(item.metadata);
+  item.status = item.duplicateMatch ? 'duplicate' : (item.staged ? 'staged' : 'extracted');
+  selectPendingFile(item.id);
+  renderPendingFiles();
+  showConfirm('Citation resolved','The citation metadata was updated from the DOI/title resolver.');
+}
+
+/* ── SERVER CONFIG ── */
+const KA_API = window.__KA_CONFIG__?.apiBase ?? '';
+
+async function stagePendingFiles() {
+  const stageable = PENDING_FILES.filter(item => item.status !== 'duplicate' && !item.staged);
+  if (!stageable.length) {
+    showConfirm('Nothing to stage','There are no non-duplicate files ready to stage.');
+    return;
+  }
+  const studentIdentity = getIdentityContext().identityType === 'student';
+  const incomplete = stageable.filter(item => studentIdentity && !hasUsableCitationRecord(item));
+  if (incomplete.length) {
+    showConfirm(
+      'Citation record required',
+      `Track 2 submissions must include a usable citation record before staging. Complete at least author + title, DOI + title, or paste a citation line for ${incomplete.length} item(s).`
+    );
+    return;
+  }
+
+  // Build FormData for server submission
+  const formData = new FormData();
+  const citationLines = [];
+
+  stageable.forEach(function(item) {
+    if (item.file) {
+      formData.append('files', item.file, item.fileName);
+    } else if (item.kind === 'citation' && item.sourceLabel) {
+      citationLines.push(item.sourceLabel);
+    }
+  });
+
+  if (citationLines.length) {
+    formData.append('citations', citationLines.join('\n'));
+  }
+
+  const why = document.getElementById('editWhy') ? document.getElementById('editWhy').value.trim() : '';
+  if (why) formData.append('notes', why);
+  formData.append('source_surface', 'ka_article_propose');
+
+  // Attach auth token if available
+  const headers = {};
+  const token = localStorage.getItem('ka_access_token');
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+
+  // Show loading state on button
+  const stageBtn = document.getElementById('stageBtn');
+  if (stageBtn) { stageBtn.disabled = true; stageBtn.textContent = 'Uploading…'; }
+
+  try {
+    const resp = await fetch(KA_API + '/api/articles/submit', {
+      method: 'POST', body: formData, headers: headers
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({ detail: 'Server error' }));
+      showConfirm('Staging failed', err.detail || 'An unexpected error occurred. Please try again.');
+      return;
+    }
+
+    const result = await resp.json();
+    const s = result.summary;
+
+    // Update local state to reflect server response
+    const identity = getIdentityContext();
+    const store = getContributionStore();
+
+    result.items.forEach(function(serverItem) {
+      // Match back to local pending file
+      const local = stageable.find(f =>
+        (f.fileName && f.fileName === serverItem.filename) ||
+        (f.sourceLabel && serverItem.citation && f.sourceLabel.substring(0, 50) === serverItem.citation.substring(0, 50))
+      );
+      if (local) {
+        local.staged = true;
+        local.status = serverItem.status === 'staged_pending_review' ? 'staged'
+                     : serverItem.status === 'duplicate_existing' ? 'duplicate'
+                     : serverItem.status.startsWith('rejected') ? 'rejected' : 'staged';
+        local.serverArticleId = serverItem.article_id;
+      }
+
+      // Add to local queue display
+      INTAKE_QUEUE.unshift({
+        id: serverItem.article_id,
+        title: (serverItem.metadata && serverItem.metadata.title) ||
+               (local && (local.metadata.title || local.sourceLabel)) || 'Untitled',
+        authors: (local && local.metadata.authors) || 'Metadata pending',
+        year: (local && local.metadata.year) || '—',
+        status: serverItem.status === 'staged_pending_review' ? 'pending'
+              : serverItem.status === 'duplicate_existing' ? 'duplicate' : 'rejected',
+        hasPDF: serverItem.input_mode !== 'citation_text',
+        note: serverItem.status === 'staged_pending_review' ? 'Queued for review'
+            : serverItem.status === 'duplicate_existing' ? 'Duplicate of ' + (serverItem.duplicate_of || 'existing')
+            : serverItem.reason || 'Rejected'
+      });
+
+      store.unshift({
+        submissionId: serverItem.article_id,
+        userId: identity.userId,
+        identityType: identity.identityType,
+        track: identity.track,
+        status: serverItem.status,
+        kind: serverItem.input_mode === 'citation_text' ? 'citation' : 'pdf',
+        title: (serverItem.metadata && serverItem.metadata.title) || '',
+        citation: (local && local.metadata.citation) || '',
+        authors: (local && local.metadata.authors) || '',
+        abstract: (local && local.metadata.abstract) || ''
+      });
+    });
+
+    saveContributionStore(store);
+    renderPendingFiles();
+    renderQueue();
+    syncIdentityCard();
+
+    showConfirm(
+      'Items staged — thank you!',
+      `${s.total} item(s) processed: ${s.staged} staged for review, ` +
+      `${s.duplicates} duplicate(s) caught, ${s.rejected} rejected.` +
+      `<br><br><strong>Submission ID:</strong> ${result.submission_id}`
+    );
+
+  } catch (err) {
+    showConfirm('Connection error', 'Could not reach the Knowledge Atlas server. ' +
+      'Please check that the server is running and try again.' +
+      '<br><br><em>Technical detail: ' + (err.message || err) + '</em>');
+  } finally {
+    if (stageBtn) { stageBtn.disabled = false; stageBtn.textContent = 'Stage non-duplicates for nightly review'; }
+  }
+}
+
+function clearPendingFiles() {
+  PENDING_FILES = [];
+  selectedFileId = null;
+  renderPendingFiles();
+  document.getElementById('editDOI').value = '';
+  document.getElementById('editYear').value = '';
+  document.getElementById('editTitle').value = '';
+  document.getElementById('editAuthors').value = '';
+  document.getElementById('editJournal').value = '';
+  document.getElementById('editCitation').value = '';
+  document.getElementById('editAbstract').value = '';
+  document.getElementById('editWhy').value = '';
+}
+
+function hasUsableCitationRecord(item) {
+  const meta = item.metadata || {};
+  const hasCitation = !!String(meta.citation || '').trim();
+  const hasAuthorAndTitle = !!String(meta.authors || '').trim() && !!String(meta.title || '').trim();
+  const hasDoiAndTitle = !!String(meta.doi || '').trim() && !!String(meta.title || '').trim();
+  return hasCitation || hasAuthorAndTitle || hasDoiAndTitle;
+}
+
+function removePendingFile(id) {
+  PENDING_FILES = PENDING_FILES.filter(item => item.id !== id);
+  if (selectedFileId === id) selectedFileId = null;
+  renderPendingFiles();
+}
+
+function showTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.queue-tab').forEach((t,i) => {
+    t.classList.toggle('active', ['pending','approved','rejected'][i] === tab);
+  });
+  renderQueue();
+}
+
+function renderQueue() {
+  const filtered = INTAKE_QUEUE.filter(q => q.status === currentTab);
+  document.getElementById('queueBadge').textContent = INTAKE_QUEUE.filter(q => q.status === 'pending').length;
+  const statusMap = {pending:'qi-reviewing',approved:'qi-approved',rejected:'qi-rejected'};
+  const labelMap = {pending:'Awaiting nightly review',approved:'Accepted for extraction',rejected:'Rejected / deleted'};
+  document.getElementById('queueItems').innerHTML = filtered.map(q => `
+    <div class="queue-item">
+      <div class="qi-title">${escapeHtml(truncate(q.title, 62))}</div>
+      <div class="qi-meta">${escapeHtml(String(q.authors))} · ${escapeHtml(String(q.year))} ${q.hasPDF ? '· PDF staged' : '· metadata only'}</div>
+      <span class="qi-status ${statusMap[q.status]}">${labelMap[q.status]}</span>
+      ${q.note ? `<div class="qi-meta" style="margin-top:5px">${escapeHtml(q.note)}</div>` : ''}
+    </div>`).join('') || '<div style="padding:18px;text-align:center;font-size:0.82rem;color:var(--muted)">No items in this queue</div>';
+}
+
+function truncate(text, n) {
+  return text.length > n ? text.slice(0,n) + '…' : text;
+}
+
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function showConfirm(title,body){
+  document.getElementById('confirmTitle').textContent=title;
+  document.getElementById('confirmBody').innerHTML=`<p style="color:var(--muted);font-size:0.85rem;">${body}</p>`;
+  document.getElementById('confirmModal').classList.add('open');
+}
+function closeModal(){document.getElementById('confirmModal').classList.remove('open');}
+document.getElementById('confirmModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+renderPendingFiles();
+renderQueue();
+syncIdentityCard();
+</script>
+<script src="ka_mode_switch.js"></script>
+<script src="ka_site_shell.js"></script>
+<script src="ka_page_function.js"></script>
+<!-- ka_demo_wiring.js removed: live backend active -->
+<script>
+window.KA_SHELL.initShell({
+  navContainerSelector: '.nav-links',
+  modeSelectId: 'article-propose-mode-select',
+  modePillId: 'article-propose-mode-pill',
+  defaultMode: 'contributor'
+});
+</script>
+<script>
+window.KA_ABOUT_PAGE = {
+  pageId: 'ka_article_propose',
+  objective: 'Allows contributors to intake articles PDF-first, extract provisional metadata, block duplicates immediately, and stage non-duplicates for nightly review.',
+  users: 'Public contributors suggesting papers; Track 2 article-finder contributors using this as the final intake endpoint after search and screening',
+  uses: [
+    'Allow public users to suggest relevant papers without needing a full citation-first workflow',
+    'Upload one PDF or a batch of PDFs before writing citations manually',
+    'Run immediate duplicate checks against existing KA articles',
+    'Refine DOI/title metadata only when automatic extraction is weak',
+    'Stage non-duplicates for later relevance review and extraction decisions'
+  ]
+};
+</script>
+<script src="ka_about_page.js"></script>
+<script src="ka_ui_fixes.js"></script>
+<script src="ka_route_cta.js"></script>
+
+<script src="ka_auth_widget.js"></script>
+</body>
+</html>

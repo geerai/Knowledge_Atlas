@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COGS160: AI & VR — Image Track Week 5: Tag Extractors</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+         background:#f5f5f5;padding:20px;color:#222;line-height:1.65}
+    .container{max-width:960px;margin:0 auto;background:#fff;padding:48px;
+               box-shadow:0 2px 10px rgba(0,0,0,.08)}
+
+    /* Nav */
+    .nav{display:flex;justify-content:space-between;align-items:center;
+         margin-bottom:32px;padding-bottom:16px;border-bottom:2px solid #d4620f}
+    .nav a{color:#d4620f;text-decoration:none;font-weight:600;font-size:.9rem}
+    .nav a:hover{text-decoration:underline}
+    .track-pill{background:#d4620f;color:#fff;padding:4px 14px;border-radius:20px;
+                font-size:.8rem;font-weight:700;letter-spacing:.5px}
+
+    /* Header */
+    header{margin-bottom:36px}
+    .week-label{font-size:.85rem;font-weight:700;color:#d4620f;text-transform:uppercase;
+                letter-spacing:1px;margin-bottom:6px}
+    h1{font-size:2rem;color:#182B49;font-weight:800;margin-bottom:8px;line-height:1.2}
+    .subtitle{font-size:1.05rem;color:#555;margin-bottom:20px}
+    .meta-row{display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;color:#777}
+    .meta-row span strong{color:#333}
+
+    /* Section headers */
+    h2{font-size:1.3rem;color:#182B49;font-weight:700;margin:40px 0 12px;
+       padding-bottom:6px;border-bottom:2px solid #d4620f}
+    h3{font-size:1.05rem;color:#d4620f;font-weight:700;margin:24px 0 8px}
+    h4{font-size:.95rem;color:#444;font-weight:700;margin:16px 0 6px}
+
+    /* Boxes */
+    .context-box{background:linear-gradient(135deg,#fff8f5,#fff3ee);border:1px solid #f0b090;
+                 border-left:4px solid #d4620f;border-radius:6px;padding:20px 24px;margin-bottom:32px}
+    .context-box p{font-size:.95rem;color:#444;margin-bottom:8px}
+    .context-box p:last-child{margin-bottom:0}
+
+    .outcome-list{list-style:none;padding:0}
+    .outcome-list li{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid #f0ece8;
+                     font-size:.95rem}
+    .outcome-list li:last-child{border-bottom:none}
+    .outcome-num{min-width:28px;height:28px;background:#d4620f;color:#fff;border-radius:50%;
+                 display:flex;align-items:center;justify-content:center;font-weight:700;
+                 font-size:.8rem;flex-shrink:0;margin-top:1px}
+
+    /* Spec box */
+    .spec-box{background:#f9f9f9;border:1px solid #ddd;border-radius:6px;padding:20px 24px;margin:16px 0}
+    .spec-grid{display:grid;grid-template-columns:120px 1fr;gap:8px 16px;font-size:.9rem}
+    .spec-label{font-weight:700;color:#555}
+    .spec-value{color:#222}
+
+    /* Worked example */
+    .example-block{background:#f0f7ff;border:1px solid #aed0ef;border-radius:8px;
+                   padding:24px;margin:20px 0}
+    .example-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;
+                    padding-bottom:12px;border-bottom:2px solid #aed0ef}
+    .example-badge{background:#182B49;color:#fff;padding:4px 12px;border-radius:4px;
+                   font-size:.78rem;font-weight:700;letter-spacing:.5px}
+    .example-title{font-size:1.05rem;font-weight:700;color:#182B49}
+
+    /* Code blocks */
+    pre{background:#1e1e2e;color:#cdd6f4;border-radius:6px;padding:20px;
+        font-size:.82rem;line-height:1.6;overflow-x:auto;margin:12px 0;tab-size:4}
+    code{font-family:"JetBrains Mono","Fira Code","Courier New",monospace}
+    .code-label{font-size:.75rem;font-weight:700;color:#888;text-transform:uppercase;
+                letter-spacing:.5px;margin-bottom:4px}
+
+    /* Syntax highlighting approximation */
+    .kw{color:#cba6f7}   /* keywords */
+    .fn{color:#89b4fa}   /* function names */
+    .st{color:#a6e3a1}   /* strings */
+    .cm{color:#6c7086;font-style:italic}  /* comments */
+    .nm{color:#fab387}   /* numbers */
+    .cl{color:#f38ba8}   /* class names */
+
+    /* Calibration strip */
+    .calibration-strip{display:flex;gap:0;margin:20px 0;border-radius:8px;
+                       overflow:hidden;border:1px solid #ddd}
+    .cal-cell{flex:1;text-align:center;padding:12px 6px}
+    .cal-patch{height:80px;border-radius:4px;margin-bottom:8px;display:flex;
+               align-items:center;justify-content:center;font-size:.75rem;color:rgba(255,255,255,.8);
+               font-weight:700}
+    .cal-value{font-size:.85rem;font-weight:800;color:#182B49;margin-bottom:4px}
+    .cal-desc{font-size:.72rem;color:#666;line-height:1.3}
+
+    /* Reference list */
+    .ref-list{list-style:none;padding:0}
+    .ref-list li{padding:10px 0;border-bottom:1px solid #eee;font-size:.88rem;color:#444;
+                 display:flex;gap:12px}
+    .ref-list li:last-child{border-bottom:none}
+    .ref-num{min-width:28px;font-weight:700;color:#d4620f}
+    .ref-text{flex:1}
+    .ref-text em{font-style:normal;font-weight:600;color:#222}
+
+    /* Steps */
+    .step-list{display:flex;flex-direction:column;gap:16px;margin:16px 0}
+    .step{display:flex;gap:16px;align-items:flex-start}
+    .step-num{min-width:36px;height:36px;background:#182B49;color:#fff;border-radius:50%;
+              display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+    .step-body{flex:1;padding-top:6px}
+    .step-body strong{display:block;margin-bottom:4px;font-size:.95rem;color:#182B49}
+    .step-body p,.step-body ul{font-size:.9rem;color:#444;margin-top:4px}
+
+    /* Warn / tip boxes */
+    .tip{background:#f0fff4;border:1px solid #a8d5b5;border-left:4px solid #28a745;
+         border-radius:6px;padding:14px 18px;margin:12px 0;font-size:.9rem}
+    .warn{background:#fff8e6;border:1px solid #e8c87a;border-left:4px solid #C69214;
+          border-radius:6px;padding:14px 18px;margin:12px 0;font-size:.9rem}
+    .tip strong,.warn strong{display:block;margin-bottom:4px}
+
+    /* FAQ */
+    .faq-item{border:1px solid #e8e0d8;border-radius:6px;margin-bottom:10px;overflow:hidden}
+    .faq-q{padding:14px 18px;cursor:pointer;font-weight:700;font-size:.9rem;color:#182B49;
+           background:#fdf9f6;display:flex;justify-content:space-between;align-items:center;
+           user-select:none}
+    .faq-q:hover{background:#f5ede4}
+    .faq-a{padding:0 18px;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s}
+    .faq-a.open{max-height:600px;padding:14px 18px}
+    .faq-a p{font-size:.9rem;color:#444;margin-bottom:8px}
+    .faq-a p:last-child{margin-bottom:0}
+    .faq-a pre{font-size:.78rem}
+    .faq-chevron{font-size:.8rem;transition:transform .3s}
+    .faq-chevron.open{transform:rotate(180deg)}
+
+    /* Checklist */
+    .checklist{list-style:none;padding:0}
+    .checklist li{padding:8px 0;border-bottom:1px solid #eee;font-size:.9rem;display:flex;gap:10px}
+    .checklist li::before{content:"☐";font-size:1.1rem;color:#d4620f;flex-shrink:0}
+
+    /* Deliverable banner */
+    .deliverable-banner{background:#182B49;color:#fff;border-radius:8px;padding:20px 24px;margin:24px 0}
+    .deliverable-banner h3{color:#C69214;margin:0 0 8px}
+    .deliverable-banner p{font-size:.9rem;opacity:.9;margin-bottom:4px}
+    .deliverable-banner .grade{font-size:1.4rem;font-weight:800;color:#C69214}
+
+    /* Links */
+    a.resource-link{color:#d4620f;font-weight:600;text-decoration:none}
+    a.resource-link:hover{text-decoration:underline}
+
+    footer{margin-top:48px;padding-top:20px;border-top:2px solid #d4620f;
+           font-size:.82rem;color:#888;text-align:center}
+
+    @media(max-width:600px){.container{padding:24px 16px}.calibration-strip{flex-direction:column}}
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="nav">
+    <a href="index.html">← All Tracks</a>
+    <span class="track-pill">Track 1 — Image Tagger</span>
+    <a href="image_wk06_vlm.html">Week 6: VLM Extractors →</a>
+  </nav>
+
+  <header>
+    <div class="week-label">Week 5 of 10 &nbsp;|&nbsp; Image Tagger Track</div>
+    <h1>Each Extractor Is a Scientific Claim. The Test Suite Is Your Evidence.</h1>
+    <p class="subtitle">Implementing a CNFA tag is not a coding exercise. It is an argument: "this computation measures this psychological construct, because here is what it does to images we know the answer for." This week you write both the argument and its proof.</p>
+    <div class="meta-row">
+      <span><strong>Deliverable:</strong> D2 — Test Suite + Math Implementations</span>
+      <span><strong>Weight:</strong> 15% of final grade</span>
+      <span><strong>Due:</strong> End of Week 5 (Sunday 11:59 PM)</span>
+      <span><strong>Team:</strong> Pair work — one shared GitHub branch per pair</span>
+    </div>
+  </header>
+
+  <div class="context-box">
+    <p>In Week 3 you triaged 20 tags and augmented 10 registry entries with bilingual fields. In Week 4 you established what VLMs can and cannot do reliably. This week you write the deterministic extractors — the math-based ones that can be tested against known ground truth. VLM-based semantic extractors come in Week 6, after you understand what deterministic computation looks like and where it stops working.</p>
+    <p>The central requirement is test-before-code. Write the tests first. This is not a stylistic preference; it is a methodological one. Hagerhall et al. (2004) showed that fractal dimension predicts landscape preference — but only when computed correctly on images with sufficient resolution and appropriate edge detection. If you write the extractor first and then check whether the tests pass, you will unconsciously tune the extractor to pass the tests rather than to measure the construct. Writing the tests first, against the definition, prevents that drift.</p>
+  </div>
+
+  <!-- LEARNING OUTCOMES -->
+  <h2>Learning Outcomes</h2>
+  <ul class="outcome-list">
+    <li><span class="outcome-num">1</span>Read a CNFA registry entry and translate its <code>extraction_notes_2d</code> field into a working OpenCV/NumPy implementation.</li>
+    <li><span class="outcome-num">2</span>Write a known-case sanity test suite that precedes and constrains the implementation (test-before-code).</li>
+    <li><span class="outcome-num">3</span>Wrap any scalar extractor in a spatial grid so that it returns per-region values alongside the whole-image value.</li>
+    <li><span class="outcome-num">4</span>Interpret your extractor's outputs on real images — do they make perceptual sense? Document surprises.</li>
+    <li><span class="outcome-num">5</span>Understand the limitations of 2D proxies for 3D perceptual constructs, and state those limitations clearly in your tag passport.</li>
+  </ul>
+
+  <!-- THE TASK -->
+  <h2>The Task</h2>
+  <div class="spec-box">
+    <div class="spec-grid">
+      <span class="spec-label">Input</span>
+      <span class="spec-value">Your pair's assigned CNFA tags (4–5 tags from the triage table, all rated High or Medium feasibility for 2D extraction)</span>
+      <span class="spec-label">Output 1</span>
+      <span class="spec-value">Known-case test suite: ≥5 tests per tag, all passing, written in <code>tests/</code> directory</span>
+      <span class="spec-label">Output 2</span>
+      <span class="spec-value">Extractor implementations in <code>backend/science/math/</code>, each wrapped in the spatial bounding utility</span>
+      <span class="spec-label">Output 3</span>
+      <span class="spec-value">Tag passports: one 300-word justification document per tag, filed in <code>docs/tag_passports/</code></span>
+      <span class="spec-label">Output 4</span>
+      <span class="spec-value">Validation runs: each extractor applied to 10 real images from the database; results reviewed and discussed in the passport</span>
+    </div>
+  </div>
+
+  <!-- ===== WORKED EXAMPLE ===== -->
+  <h2>Worked Example: <code>fractal_dimension</code></h2>
+  <p style="font-size:.9rem;color:#555;margin-bottom:16px">We walk through this tag end-to-end. Your tags follow exactly the same pattern. Do not copy the code below for a different tag — read your registry entry and write fresh from it.</p>
+
+  <div class="example-block">
+    <div class="example-header">
+      <span class="example-badge">STEP 1</span>
+      <span class="example-title">Read the Registry Entry</span>
+    </div>
+    <p style="font-size:.9rem;color:#444;margin-bottom:12px">Open <code>data/category_a/registry_v0.2.8.json</code> and find the entry for <code>cnfa.fractal_dimension</code>. Every field matters:</p>
+    <div class="code-label">registry_v0.2.8.json (excerpt)</div>
+    <pre><code>{
+  <span class="st">"tag_id"</span>: <span class="st">"cnfa.fractal_dimension"</span>,
+  <span class="st">"phase"</span>: <span class="nm">0</span>,
+  <span class="st">"definition"</span>: <span class="st">"The box-counting fractal dimension of visible surfaces, measuring
+               self-similarity of texture across spatial scales."</span>,
+  <span class="st">"raw_range"</span>: [<span class="nm">1.0</span>, <span class="nm">2.0</span>],
+  <span class="st">"normalized_range"</span>: [<span class="nm">0.0</span>, <span class="nm">1.0</span>],
+  <span class="st">"extraction_notes_2d"</span>: <span class="st">"Apply Canny edge detection (threshold1=50, threshold2=150).
+    Compute box-counting dimension: count boxes of sizes [4,8,16,32,64,128] px that contain
+    ≥1 edge pixel. D = slope of log(count) vs log(1/size). Normalize: (D-1.0)/1.0."</span>,
+  <span class="st">"common_sense_terms"</span>: [<span class="st">"intricate patterns"</span>, <span class="st">"organic texture"</span>, <span class="st">"leafy"</span>, <span class="st">"bark"</span>,
+                           <span class="st">"stone grain"</span>, <span class="st">"woven fabric"</span>, <span class="st">"visual complexity"</span>],
+  <span class="st">"layperson_description"</span>: <span class="st">"How much fine, repeating detail is visible at different
+    scales. High in foliage and natural textures; low in smooth concrete walls."</span>
+}</code></pre>
+    <div class="tip"><strong>What to look for:</strong> The <code>extraction_notes_2d</code> field is your implementation spec. If it is vague, that is a problem to raise in your tag passport. The <code>raw_range</code> tells you how to normalize. The <code>common_sense_terms</code> came from your Week 3 augmentation work.</div>
+  </div>
+
+  <div class="example-block">
+    <div class="example-header">
+      <span class="example-badge">STEP 2</span>
+      <span class="example-title">Write the Known-Case Tests First</span>
+    </div>
+    <p style="font-size:.9rem;color:#444;margin-bottom:12px">Do not write any extractor code yet. Tests must precede implementation and be written against the <em>definition</em>, not against guesses about what your code will return.</p>
+    <div class="code-label">tests/test_fractal_dimension.py</div>
+    <pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> cv2
+<span class="kw">from</span> backend.science.math.fractal <span class="kw">import</span> compute_fractal_dimension
+
+<span class="kw">def</span> <span class="fn">test_pure_white_near_zero</span>():
+    <span class="st">"""A blank white image has no edges → fractal dimension ≈ 0."""</span>
+    img = np.ones((<span class="nm">256</span>, <span class="nm">256</span>, <span class="nm">3</span>), dtype=np.uint8) * <span class="nm">255</span>
+    result = compute_fractal_dimension(img)
+    <span class="kw">assert</span> result &lt; <span class="nm">0.10</span>, f<span class="st">"Expected &lt; 0.10 for blank image, got {result:.4f}"</span>
+
+<span class="kw">def</span> <span class="fn">test_pure_black_near_zero</span>():
+    <span class="st">"""A blank black image has no edges → fractal dimension ≈ 0."""</span>
+    img = np.zeros((<span class="nm">256</span>, <span class="nm">256</span>, <span class="nm">3</span>), dtype=np.uint8)
+    result = compute_fractal_dimension(img)
+    <span class="kw">assert</span> result &lt; <span class="nm">0.10</span>, f<span class="st">"Expected &lt; 0.10 for blank image, got {result:.4f}"</span>
+
+<span class="kw">def</span> <span class="fn">test_fine_checkerboard_moderate</span>():
+    <span class="st">"""A 4×4 px checkerboard has regular edges at one scale → moderate D (0.35–0.65)."""</span>
+    img = np.zeros((<span class="nm">256</span>, <span class="nm">256</span>, <span class="nm">3</span>), dtype=np.uint8)
+    <span class="kw">for</span> y <span class="kw">in</span> range(<span class="nm">0</span>, <span class="nm">256</span>, <span class="nm">4</span>):
+        <span class="kw">for</span> x <span class="kw">in</span> range(<span class="nm">0</span>, <span class="nm">256</span>, <span class="nm">4</span>):
+            <span class="kw">if</span> (y // <span class="nm">4</span> + x // <span class="nm">4</span>) % <span class="nm">2</span> == <span class="nm">0</span>:
+                img[y:y+<span class="nm">4</span>, x:x+<span class="nm">4</span>] = <span class="nm">255</span>
+    result = compute_fractal_dimension(img)
+    <span class="kw">assert</span> <span class="nm">0.35</span> &lt; result &lt; <span class="nm">0.65</span>, f<span class="st">"Expected 0.35–0.65 for checkerboard, got {result:.4f}"</span>
+
+<span class="kw">def</span> <span class="fn">test_single_horizontal_line_low</span>():
+    <span class="st">"""One straight horizontal line is a 1D object → D close to 0 after normalization."""</span>
+    img = np.zeros((<span class="nm">256</span>, <span class="nm">256</span>, <span class="nm">3</span>), dtype=np.uint8)
+    img[<span class="nm">128</span>, :] = <span class="nm">255</span>   <span class="cm"># single white row</span>
+    result = compute_fractal_dimension(img)
+    <span class="kw">assert</span> result &lt; <span class="nm">0.25</span>, f<span class="st">"Expected &lt; 0.25 for single line, got {result:.4f}"</span>
+
+<span class="kw">def</span> <span class="fn">test_monotonicity_with_noise</span>():
+    <span class="st">"""Adding Gaussian noise should monotonically increase fractal dimension."""</span>
+    base = np.zeros((<span class="nm">256</span>, <span class="nm">256</span>, <span class="nm">3</span>), dtype=np.uint8)
+    prev = compute_fractal_dimension(base)
+    <span class="kw">for</span> sigma <span class="kw">in</span> [<span class="nm">5</span>, <span class="nm">20</span>, <span class="nm">60</span>]:
+        noisy = np.clip(base.astype(float) +
+                        np.random.normal(<span class="nm">128</span>, sigma, base.shape), <span class="nm">0</span>, <span class="nm">255</span>).astype(np.uint8)
+        curr = compute_fractal_dimension(noisy)
+        <span class="kw">assert</span> curr &gt;= prev, f<span class="st">"Expected monotone increase at sigma={sigma}"</span>
+        prev = curr</code></pre>
+    <div class="warn"><strong>Common mistake:</strong> Writing tests that will pass regardless of whether your implementation is correct — for example, <code>assert 0 &lt;= result &lt;= 1</code>. That just tests that you normalized. The test must fail if your algorithm is broken. The blank-image test (<em>no edges → D ≈ 0</em>) is a hard constraint, not a range check.</div>
+  </div>
+
+  <div class="example-block">
+    <div class="example-header">
+      <span class="example-badge">STEP 3</span>
+      <span class="example-title">Implement the Extractor</span>
+    </div>
+    <div class="code-label">backend/science/math/fractal.py</div>
+    <pre><code><span class="kw">import</span> cv2
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> typing <span class="kw">import</span> Optional
+
+<span class="kw">def</span> <span class="fn">compute_fractal_dimension</span>(image: np.ndarray,
+                               canny_lo: <span class="cl">int</span> = <span class="nm">50</span>,
+                               canny_hi: <span class="cl">int</span> = <span class="nm">150</span>) -&gt; <span class="cl">float</span>:
+    <span class="st">"""
+    Box-counting fractal dimension of image texture.
+
+    Returns a value in [0, 1] where 0 = no texture (smooth wall),
+    1 = maximally complex self-similar texture (dense foliage).
+
+    Algorithm: Canny edge detection → box counting across 6 scales →
+    log-log linear fit → slope = raw D → normalize to [0,1].
+
+    References:
+        Mandelbrot, B. B. (1982). The Fractal Geometry of Nature. Freeman.
+        Taylor, R. P. et al. (1999). Fractal analysis of Pollock's drip paintings.
+            Nature, 399, 422. https://doi.org/10.1038/20833
+        Hagerhall, C. M. et al. (2004). Fractal dimension of landscape silhouette
+            outlines as a predictor of landscape preference.
+            J. Environmental Psychology, 24, 247–255.
+    """</span>
+    <span class="kw">if</span> image.size == <span class="nm">0</span>:
+        <span class="kw">return</span> <span class="nm">0.0</span>
+
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    edges = cv2.Canny(gray, threshold1=canny_lo, threshold2=canny_hi)
+
+    <span class="cm"># Box sizes: powers of 2 from 4px to 128px</span>
+    sizes = [<span class="nm">4</span>, <span class="nm">8</span>, <span class="nm">16</span>, <span class="nm">32</span>, <span class="nm">64</span>, <span class="nm">128</span>]
+    counts = []
+    h, w = edges.shape
+    <span class="kw">for</span> size <span class="kw">in</span> sizes:
+        n_boxes = <span class="nm">0</span>
+        <span class="kw">for</span> y <span class="kw">in</span> range(<span class="nm">0</span>, h, size):
+            <span class="kw">for</span> x <span class="kw">in</span> range(<span class="nm">0</span>, w, size):
+                <span class="kw">if</span> edges[y:y+size, x:x+size].any():
+                    n_boxes += <span class="nm">1</span>
+        counts.append(max(n_boxes, <span class="nm">1</span>))   <span class="cm"># avoid log(0)</span>
+
+    <span class="cm"># Log-log fit: slope is the fractal dimension D</span>
+    log_inv_size = np.log(<span class="nm">1.0</span> / np.array(sizes, dtype=float))
+    log_count    = np.log(np.array(counts, dtype=float))
+    slope, _     = np.polyfit(log_inv_size, log_count, <span class="nm">1</span>)
+
+    <span class="cm"># Raw D is in [1, 2] for 2D images; normalize to [0, 1]</span>
+    d_raw = float(np.clip(slope, <span class="nm">1.0</span>, <span class="nm">2.0</span>))
+    <span class="kw">return</span> (d_raw - <span class="nm">1.0</span>) / <span class="nm">1.0</span></code></pre>
+  </div>
+
+  <div class="example-block">
+    <div class="example-header">
+      <span class="example-badge">STEP 4</span>
+      <span class="example-title">Wrap in the Spatial Bounding Utility</span>
+    </div>
+    <p style="font-size:.9rem;color:#444;margin-bottom:12px">Every extractor must be called through the spatial wrapper. Do not return a single scalar — return the full regional structure. The wrapper is already in the codebase; you just need to use it.</p>
+    <div class="code-label">backend/science/spatial.py (utility — do not modify)</div>
+    <pre><code><span class="kw">from</span> typing <span class="kw">import</span> Callable, Dict, Any
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">def</span> <span class="fn">apply_regional</span>(image: np.ndarray,
+                    extractor_fn: Callable[[np.ndarray], float],
+                    grid_rows: <span class="cl">int</span> = <span class="nm">3</span>,
+                    grid_cols: <span class="cl">int</span> = <span class="nm">3</span>) -&gt; Dict[str, Any]:
+    <span class="st">"""
+    Apply a scalar extractor to the whole image and to each cell of a
+    (grid_rows × grid_cols) spatial grid.
+
+    Returns:
+        {
+          "whole_image": float,
+          "grid_shape": [rows, cols],
+          "cells": [
+            {"row": r, "col": c, "value": float|None,
+             "bbox_xywh": [x, y, w, h]},
+            ...
+          ]
+        }
+    Cells where the crop is smaller than 16×16 px receive value=None.
+    """</span>
+    h, w = image.shape[:<span class="nm">2</span>]
+    cell_h, cell_w = h // grid_rows, w // grid_cols
+    cells = []
+    <span class="kw">for</span> r <span class="kw">in</span> range(grid_rows):
+        <span class="kw">for</span> c <span class="kw">in</span> range(grid_cols):
+            y1 = r * cell_h;  y2 = (r+<span class="nm">1</span>) * cell_h
+            x1 = c * cell_w;  x2 = (c+<span class="nm">1</span>) * cell_w
+            crop = image[y1:y2, x1:x2]
+            value = extractor_fn(crop) <span class="kw">if</span> min(crop.shape[:<span class="nm">2</span>]) &gt;= <span class="nm">16</span> <span class="kw">else</span> <span class="kw">None</span>
+            cells.append({<span class="st">"row"</span>: r, <span class="st">"col"</span>: c, <span class="st">"value"</span>: value,
+                          <span class="st">"bbox_xywh"</span>: [x1, y1, cell_w, cell_h]})
+    <span class="kw">return</span> {<span class="st">"whole_image"</span>: extractor_fn(image),
+            <span class="st">"grid_shape"</span>: [grid_rows, grid_cols],
+            <span class="st">"cells"</span>: cells}</code></pre>
+    <div class="code-label">Your usage in the tagging pipeline</div>
+    <pre><code><span class="kw">from</span> backend.science.spatial <span class="kw">import</span> apply_regional
+<span class="kw">from</span> backend.science.math.fractal <span class="kw">import</span> compute_fractal_dimension
+
+img = cv2.imread(<span class="st">"path/to/room.jpg"</span>)
+result = apply_regional(img, compute_fractal_dimension, grid_rows=<span class="nm">3</span>, grid_cols=<span class="nm">3</span>)
+
+<span class="cm"># result looks like:</span>
+<span class="cm"># {</span>
+<span class="cm">#   "whole_image": 0.62,</span>
+<span class="cm">#   "grid_shape": [3, 3],</span>
+<span class="cm">#   "cells": [</span>
+<span class="cm">#     {"row": 0, "col": 0, "value": 0.41, "bbox_xywh": [0, 0, 256, 171]},</span>
+<span class="cm">#     {"row": 0, "col": 1, "value": 0.71, "bbox_xywh": [256, 0, 256, 171]},</span>
+<span class="cm">#     ...  9 cells total</span>
+<span class="cm">#   ]</span>
+<span class="cm"># }</span>
+
+<span class="cm"># Query: which regions score above 0.6?</span>
+hot_regions = [c <span class="kw">for</span> c <span class="kw">in</span> result[<span class="st">"cells"</span>] <span class="kw">if</span> c[<span class="st">"value"</span>] <span class="kw">and</span> c[<span class="st">"value"</span>] &gt;= <span class="nm">0.6</span>]</code></pre>
+  </div>
+
+  <!-- ===== VISUAL CALIBRATION ===== -->
+  <h2>Visual Calibration: What Does <code>fractal_dimension</code> Look Like?</h2>
+  <p style="font-size:.9rem;color:#555;margin-bottom:16px">Before you run your extractor on real images, you should have a mental model of the output range. The cells below show what different scores correspond to perceptually. (The full interactive Tag Visualizer — which shows <em>real</em> patches from the database — is a separate tool that your pair is building.)</p>
+
+  <div class="calibration-strip">
+    <div class="cal-cell" style="background:#fef9f6">
+      <div class="cal-patch" style="background:linear-gradient(135deg,#f0f0f0,#e8e8e8)">smooth</div>
+      <div class="cal-value">0.0 – 0.1</div>
+      <div class="cal-desc">Plain white wall, smooth ceiling tile, blank concrete slab. No detectable edges at any scale.</div>
+    </div>
+    <div class="cal-cell" style="background:#fdf5f0">
+      <div class="cal-patch" style="background:repeating-linear-gradient(45deg,#ccc 0,#ccc 2px,#eee 2px,#eee 10px)">hatched</div>
+      <div class="cal-value">0.2 – 0.3</div>
+      <div class="cal-desc">Painted brick at distance, uniform tile grid, single-direction wood grain. Edges at one scale only.</div>
+    </div>
+    <div class="cal-cell" style="background:#fbeee6">
+      <div class="cal-patch" style="background:repeating-conic-gradient(#bbb 0% 25%,#ddd 0% 50%) 0 0/12px 12px">woven</div>
+      <div class="cal-value">0.4 – 0.5</div>
+      <div class="cal-desc">Carpet texture, rough plaster, woven cane panels. Edges appear at two or three scales.</div>
+    </div>
+    <div class="cal-cell" style="background:#f8e4d8">
+      <div class="cal-patch" style="background:radial-gradient(circle at 30% 40%,#8a7,#5a4 20%,#3a2 40%,#2a1 60%,#1a0 80%)">branching</div>
+      <div class="cal-value">0.6 – 0.7</div>
+      <div class="cal-desc">Stone wall, rough timber, geometric decorative panels. Edges present across four scales with some clustering.</div>
+    </div>
+    <div class="cal-cell" style="background:#f5d6c4">
+      <div class="cal-patch" style="background:radial-gradient(ellipse at 20% 30%,#4a6,#2a4 15%,#4a6 25%,#1a3 40%,#3a5 55%,#082 70%)">leafy</div>
+      <div class="cal-value">0.8 – 0.9</div>
+      <div class="cal-desc">Dense foliage, Persian rug, bark surface. Edges self-similar across five or six scales — classic fractal behaviour.</div>
+    </div>
+    <div class="cal-cell" style="background:#f2c8ae">
+      <div class="cal-patch" style="background:repeating-radial-gradient(circle at 50% 50%,#1a3,#3a1 3px,#1a3 6px,#2a2 9px,#082 12px)">max</div>
+      <div class="cal-value">0.95 – 1.0</div>
+      <div class="cal-desc">Extremely dense organic pattern. Rare in architectural interiors. Check for Canny threshold artifacts if you see this.</div>
+    </div>
+  </div>
+  <div class="tip">See <strong><a href="image_tag_visualizer.html" class="resource-link">Tag Visualizer →</a></strong> for real image patches from the database across the full 0–1 range for every implemented tag.</div>
+
+  <!-- ===== TECHNICAL BACKGROUND ===== -->
+  <h2>Technical Background</h2>
+
+  <h3>Why Box-Counting for Fractal Dimension?</h3>
+  <p style="font-size:.9rem;color:#444;margin-bottom:12px">The box-counting method (Liebovitch &amp; Toth, 1989) is the standard approach for estimating the fractal dimension of 2D images because it is computationally straightforward and well-validated. The core idea: if an object is self-similar across scales, the number of boxes of size <em>r</em> needed to cover it scales as <em>N(r) ∝ r<sup>−D</sup></em>. Plotting log N against log(1/r) gives a straight line whose slope is D. For a smooth surface (no self-similar edges), D ≈ 1. For a maximally complex texture, D approaches 2. We normalize to [0, 1] by applying (D − 1) / 1.</p>
+  <p style="font-size:.9rem;color:#444;margin-bottom:12px">The psychological significance is established by work from Richard Taylor and colleagues (Taylor et al., 1999; Hagerhall et al., 2004; Joye, 2007): human aesthetic preference shows an inverted-U curve peaking at D ≈ 1.3–1.5 (normalized ≈ 0.3–0.5). Dense urban environments cluster around D ≈ 1.2–1.6; natural landscapes around D ≈ 1.3–1.8. This is the scientific claim your implementation operationalizes.</p>
+
+  <h3>Making a Tag Regional: The Core How-To</h3>
+  <p style="font-size:.9rem;color:#444;margin-bottom:8px">The <code>apply_regional</code> utility (Step 4 above) handles grid slicing. Here is what you need to understand about what it does internally:</p>
+  <pre><code><span class="cm"># How array slicing defines spatial regions in NumPy:</span>
+<span class="cm"># Image shape is (height, width, channels). Y is rows; X is columns.</span>
+
+h, w = image.shape[:<span class="nm">2</span>]
+cell_h = h // <span class="nm">3</span>          <span class="cm"># e.g. 512 // 3 = 170 px per row</span>
+cell_w = w // <span class="nm">3</span>
+
+<span class="cm"># Top-left cell (row=0, col=0):</span>
+top_left = image[<span class="nm">0</span>:cell_h, <span class="nm">0</span>:cell_w]
+
+<span class="cm"># Upper-centre cell (row=0, col=1) — useful for ceiling queries:</span>
+top_centre = image[<span class="nm">0</span>:cell_h, cell_w:<span class="nm">2</span>*cell_w]
+
+<span class="cm"># Lower-right cell (row=2, col=2) — useful for floor queries:</span>
+bot_right = image[<span class="nm">2</span>*cell_h:, <span class="nm">2</span>*cell_w:]
+
+<span class="cm"># Threshold query — find cells where value ≥ 0.6:</span>
+results = apply_regional(img, compute_fractal_dimension)
+hot = [(c[<span class="st">"row"</span>], c[<span class="st">"col"</span>]) <span class="kw">for</span> c <span class="kw">in</span> results[<span class="st">"cells"</span>]
+       <span class="kw">if</span> c[<span class="st">"value"</span>] <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span> <span class="kw">and</span> c[<span class="st">"value"</span>] &gt;= <span class="nm">0.6</span>]</code></pre>
+  <div class="warn"><strong>Minimum region size:</strong> Most algorithms behave badly on very small patches. The spatial wrapper enforces a 16×16 px minimum and returns <code>None</code> for smaller cells. For a 512×512 image with a 3×3 grid, each cell is ~170×170 px — well above the minimum. For the box-counting algorithm specifically, the largest box size (128 px) must be smaller than the shortest cell dimension, otherwise the fit uses fewer than four points and becomes unreliable. If your images are small, use fewer grid divisions (2×2 instead of 3×3).</div>
+
+  <h3>Canny Edge Detection — Choosing Thresholds</h3>
+  <p style="font-size:.9rem;color:#444;margin-bottom:8px">Canny has two parameters, <code>threshold1</code> (lower) and <code>threshold2</code> (upper). Edges with gradient magnitude above threshold2 are always kept; those below threshold1 are discarded; those between are kept only if connected to a strong edge. The default (50/150) is appropriate for most interior images. However:</p>
+  <ul style="font-size:.9rem;color:#444;margin-left:20px;margin-bottom:12px">
+    <li>Low-contrast images (dim rooms, overcast natural light) may need a lower threshold (20/80).</li>
+    <li>HDR or strongly post-processed images may be oversaturated in edges — use a higher threshold (100/200).</li>
+    <li>Run <code>cv2.Canny(gray, 50, 150)</code> and display the result before computing D; inspect it. Does it pick up the texture you expect?</li>
+  </ul>
+
+  <h3>Known Limitations of This Approach</h3>
+  <p style="font-size:.9rem;color:#444;margin-bottom:8px">You must state these in your tag passport:</p>
+  <ul style="font-size:.9rem;color:#444;margin-left:20px">
+    <li><strong>JPEG compression artifacts</strong> add spurious high-frequency edges that inflate D. Pre-filter with a small Gaussian blur (<code>cv2.GaussianBlur(gray, (3,3), 0)</code>) before Canny if you observe anomalously high scores on compressed images.</li>
+    <li><strong>Depth cues are ignored</strong>: a room with many small objects in the foreground will score high even if the background is smooth. The score reflects what the camera sees, not the physical complexity of the space.</li>
+    <li><strong>Lighting conditions</strong>: very low light collapses edge contrast. Very bright light (blown highlights) eliminates texture. Flag images with extreme exposure.</li>
+  </ul>
+
+  <!-- ===== REFERENCES ===== -->
+  <h2>Key References</h2>
+  <p style="font-size:.85rem;color:#666;margin-bottom:14px">For your tag passports and for understanding what your extractor is actually measuring. All APA 7th ed.</p>
+  <ul class="ref-list">
+    <li><span class="ref-num">[1]</span><span class="ref-text">Mandelbrot, B. B. (1982). <em>The fractal geometry of nature.</em> W. H. Freeman. — The foundational text. Chapter 1 explains box-counting dimension; Chapter 6 covers texture.</span></li>
+    <li><span class="ref-num">[2]</span><span class="ref-text">Taylor, R. P., Micolich, A. P., &amp; Jonas, D. (1999). Fractal analysis of Pollock's drip paintings. <em>Nature, 399,</em> 422. https://doi.org/10.1038/20833 — Establishes that fractal dimension is aesthetically detectable and preferred at D ≈ 1.3–1.5.</span></li>
+    <li><span class="ref-num">[3]</span><span class="ref-text">Hagerhall, C. M., Purcell, T., &amp; Taylor, R. (2004). Fractal dimension of landscape silhouette outlines as a predictor of landscape preference. <em>Journal of Environmental Psychology, 24</em>(2), 247–255. https://doi.org/10.1016/j.jenvp.2003.12.004 — Best reference connecting D to environmental preference in spatial contexts.</span></li>
+    <li><span class="ref-num">[4]</span><span class="ref-text">Joye, Y. (2007). Architectural lessons from environmental psychology: The case of biophilic architecture. <em>Review of General Psychology, 11</em>(4), 305–328. https://doi.org/10.1037/1089-2680.11.4.305 — Situates fractal dimension within the broader neuroarchitecture literature.</span></li>
+    <li><span class="ref-num">[5]</span><span class="ref-text">Liebovitch, L. S., &amp; Toth, T. (1989). A fast algorithm to determine fractal dimensions by box counting. <em>Physics Letters A, 141</em>(8–9), 386–390. https://doi.org/10.1016/0375-9601(89)90854-2 — The box-counting algorithm you are implementing.</span></li>
+    <li><span class="ref-num">[6]</span><span class="ref-text">Bradski, G., &amp; Kaehler, A. (2008). <em>Learning OpenCV.</em> O'Reilly Media. — Chapter 6 covers Canny edge detection; Chapter 11 covers image filtering. <a href="https://docs.opencv.org/4.x/d9/d61/tutorial_py_canny.html" class="resource-link">OpenCV Canny tutorial ↗</a></span></li>
+    <li><span class="ref-num">[7]</span><span class="ref-text">Kaplan, R., &amp; Kaplan, S. (1989). <em>The experience of nature: A psychological perspective.</em> Cambridge University Press. — Chapters 2–3 establish fascination and complexity as components of restorativeness, the theoretical motivation for including fractal dimension.</span></li>
+  </ul>
+
+  <!-- ===== DELIVERABLE ===== -->
+  <div class="deliverable-banner">
+    <h3>D2 — Deliverable Specification</h3>
+    <p><span class="grade">15%</span> of final course grade &nbsp;|&nbsp; Due: End of Week 5</p>
+    <p style="margin-top:8px">Submit a pull request on your pair's branch. The PR description must include a link to the test run output (CI log or screenshot) showing all tests passing.</p>
+  </div>
+
+  <h2>Submission Checklist</h2>
+  <ul class="checklist">
+    <li>Test file in <code>tests/test_[tag_name].py</code> with ≥5 known-case tests per assigned tag — all passing</li>
+    <li>Implementation file in <code>backend/science/math/[tag_name].py</code> following the module structure</li>
+    <li>All extractors callable through <code>apply_regional(img, compute_[tag])</code> — verified with a short script</li>
+    <li>Validation run output: JSON files in <code>data/validation/wk5/[pair_id]/</code> — one per image, 10 images per tag</li>
+    <li>Tag passports: one Markdown file per tag in <code>docs/tag_passports/[tag_id].md</code>, using the provided template</li>
+    <li>Tag passport discusses at least one known limitation and cites ≥2 references from the list above</li>
+    <li>Brief written notes (in the PR description or a <code>NOTES.md</code>) on any surprising outputs from the validation run</li>
+  </ul>
+
+  <!-- ===== FAQ ===== -->
+  <h2>FAQ</h2>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">The registry entry for my tag is very vague — it just says "estimate visually." What do I do? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>This is a genuine problem and worth raising in your tag passport. If <code>extraction_notes_2d</code> does not give you a computable procedure, you have three options. First, search the literature: is there an established computer vision proxy for this perceptual construct? (The references above are a starting point; also try Google Scholar with the tag name + "image analysis" or "texture feature.") Second, ask Claude: describe the construct and ask what image statistics would correlate with it — but treat the answer as a hypothesis, not a fact, and test it. Third, note in the triage table that this tag needs additional specification and flag it as requiring VLM-based extraction (Week 6). Do not invent an algorithm without justification and present it as authoritative.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">My implementation passes all tests but gives nonsensical results on real images. What's wrong? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>This is more common than you might expect and reveals a genuine gap between synthetic test cases and real-world data. The most common causes: (1) Your tests did not cover the distribution of the real images — they were too clean or too ideal. (2) The algorithm has a parameter that needs tuning for architectural interiors specifically (e.g., Canny thresholds, or the range of box sizes). (3) The tag definition, when applied to real rooms, does not separate perceptually meaningfully. All three are important findings worth reporting. First, visualize the intermediate outputs — for fractal dimension, display the Canny edge map for a real image. Does it look right? If the edge map is nearly empty (low-contrast image) or completely full (JPEG artifacts), you have found the problem.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Why 3×3 grid? My images are landscape and the cells come out as wide rectangles. <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>The 3×3 grid is the default, not a fixed requirement. You can pass any <code>grid_rows, grid_cols</code> to <code>apply_regional</code>. For architectural interiors at 4:3 or 16:9 aspect ratio, a 3×4 grid (3 rows, 4 columns) gives more nearly square cells, which matters for some algorithms. However: check whether your algorithm's behaviour changes with cell aspect ratio before changing from 3×3. For fractal dimension specifically, the box-counting algorithm is not aspect-ratio-sensitive because it tiles the cell independently in both axes. For edge-density or symmetry algorithms, rectangular cells may produce systematic bias. Document whatever grid you use and why.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Can I use scikit-image or scipy instead of OpenCV? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>Yes, with one constraint: the function signature must remain <code>compute_[tag](image: np.ndarray) -> float</code> where <code>image</code> is a BGR uint8 array (OpenCV convention), and the output must be in [0, 1]. Any library that produces that output is acceptable. If you use scikit-image, note that it expects RGB arrays — convert with <code>image_rgb = image[:, :, ::-1]</code>. Document your library choices in the tag passport.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">How do I handle images that are smaller than 128×128 px (the largest box size)? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>Cap the largest box size at <code>min(h, w) // 2</code>. For a 90×90 image, use sizes <code>[4, 8, 16, 32, 45]</code>. The fit will have fewer points and be less reliable — flag this in the output as <code>"low_resolution_warning": true</code>. For the spatial wrapper applied to a 3×3 grid, a 90×90 image gives 30×30 px cells — below the recommended minimum for most algorithms. Switch to a 2×2 grid, or simply report the whole-image value only.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">My tag is "perceived naturalness" — there is no formula for this. Is this a Week 5 or Week 6 tag? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>Week 6. Perceived naturalness requires scene understanding — it is not derivable from pixel statistics alone. It is a VLM-based semantic tag: you will prompt a vision-language model with something like "On a scale of 0 to 10, how natural does this space feel? Consider biophilic elements, material character, and the absence of industrial or synthetic surfaces. Respond with a single number." In Week 5, check whether any <em>proxy</em> for naturalness is extractable deterministically — for example, the proportion of green-hued pixels, or the fraction of the image that matches a vegetation colour range. That proxy would be a separate math-based tag (e.g., <code>green_pixel_fraction</code>) that can be computed this week, even though it is not the same as perceived naturalness.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">The Tag Visualizer link points to a page that doesn't exist yet. When will it be ready? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>The Tag Visualizer is being built in parallel by another pair — it is also a Week 7 deliverable. For now, you can build your own local visualizer in a Jupyter notebook: load 5–6 images that you expect to span the range, run your extractor, and display them sorted by value. That is exactly the calibration exercise the Tag Visualizer does, just without the database integration. <a href="image_tag_visualizer.html" class="resource-link">See the Tag Visualizer spec →</a></p>
+    </div>
+  </div>
+
+  <footer>
+    COGS160: AI &amp; VR — Spring 2026 &nbsp;|&nbsp; Track 1: Image Tagger &nbsp;|&nbsp; Week 5
+    &nbsp;|&nbsp; Prof. David Kirsh, UCSD Cognitive Science
+  </footer>
+</div>
+
+<script>
+function toggleFaq(el){
+  const ans = el.nextElementSibling;
+  const chev = el.querySelector('.faq-chevron');
+  ans.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+</script>
+</body>
+</html>

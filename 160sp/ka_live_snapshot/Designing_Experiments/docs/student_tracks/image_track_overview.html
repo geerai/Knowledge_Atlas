@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track 1: Image Tagger | COGS160: AI & VR</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #d4620f 0%, #e8823f 100%);
+            color: white;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            margin-bottom: 0.25rem;
+        }
+
+        header .track-context {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .breadcrumb {
+            padding: 1rem 2rem;
+            background-color: white;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .breadcrumb a {
+            color: #d4620f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            border-left: 4px solid #d4620f;
+        }
+
+        .section h2 {
+            color: #d4620f;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .section h3 {
+            color: #333;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            border-bottom: 2px solid #d4620f;
+            padding-bottom: 0.5rem;
+        }
+
+        .section h4 {
+            color: #555;
+            margin-top: 1rem;
+            margin-bottom: 0.75rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        .learning-objectives {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe8d0 100%);
+            padding: 1.5rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+        }
+
+        .learning-objectives h4 {
+            color: #d4620f;
+            margin-top: 0;
+        }
+
+        .learning-objectives li {
+            color: #333;
+        }
+
+        .team-assignments {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .team-card {
+            background: #fafafa;
+            border: 2px solid #f5e6d3;
+            border-radius: 6px;
+            padding: 1.5rem;
+        }
+
+        .team-card h4 {
+            color: #d4620f;
+            margin-top: 0;
+            border-bottom: 2px solid #d4620f;
+            padding-bottom: 0.5rem;
+        }
+
+        .team-card p {
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .deliverables-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .deliverables-table th {
+            background-color: #d4620f;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .deliverables-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .deliverables-table tbody tr:nth-child(even) {
+            background-color: #fafaf5;
+        }
+
+        .deliverables-table tbody tr:hover {
+            background-color: #f8f5f0;
+        }
+
+        .task-box {
+            background: #fafafa;
+            border-left: 4px solid #d4620f;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .task-box h4 {
+            color: #d4620f;
+            margin-top: 0;
+        }
+
+        .task-box p {
+            margin-bottom: 0.75rem;
+        }
+
+        .task-box ul {
+            margin-left: 1.5rem;
+        }
+
+        .ai-guidance {
+            background: linear-gradient(135deg, #fff8dc 0%, #fffacd 100%);
+            border-left: 4px solid #b8860b;
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .ai-guidance h4 {
+            color: #8b6b00;
+            margin-top: 0;
+        }
+
+        .ai-guidance p {
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        .code-example {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: "Courier New", monospace;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+            line-height: 1.4;
+        }
+
+        .section-divider {
+            margin: 2.5rem 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #d4620f, transparent);
+        }
+
+        .faq-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .faq-item {
+            background: #fafafa;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .faq-question {
+            cursor: pointer;
+            padding: 1rem;
+            background-color: #fff3e0;
+            border-left: 4px solid #d4620f;
+            font-weight: 600;
+            color: #333;
+            border-radius: 4px;
+        }
+
+        .faq-question:hover {
+            background-color: #ffebe0;
+        }
+
+        .faq-answer {
+            padding: 1rem;
+            color: #555;
+            display: none;
+        }
+
+        .faq-answer.active {
+            display: block;
+        }
+
+        .highlight {
+            background-color: #fff3e0;
+            padding: 0.2rem 0.4rem;
+            border-radius: 2px;
+            font-weight: 500;
+        }
+
+        .success-criteria {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe8d0 100%);
+            border-left: 4px solid #d4620f;
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+        }
+
+        .success-criteria h4 {
+            color: #d4620f;
+            margin-top: 0;
+        }
+
+        .git-workflow {
+            background: #f0f0f0;
+            padding: 1.5rem;
+            border-radius: 6px;
+            margin: 1.5rem 0;
+            border: 1px solid #ddd;
+        }
+
+        .git-workflow h4 {
+            color: #333;
+            margin-top: 0;
+        }
+
+        .note-box {
+            background: #e8f5e9;
+            border-left: 4px solid #2e7d32;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .note-box strong {
+            color: #1b5e20;
+        }
+
+        footer {
+            margin-top: 3rem;
+            padding: 2rem;
+            text-align: center;
+            color: #999;
+            font-size: 0.85rem;
+            border-top: 1px solid #ddd;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.6rem;
+            }
+
+            .team-assignments {
+                grid-template-columns: 1fr;
+            }
+
+            .deliverables-table {
+                font-size: 0.85rem;
+            }
+
+            .deliverables-table th,
+            .deliverables-table td {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Track 1: Image Tagger & Scientific Tag Validation</h1>
+        <div class="subtitle">Building the CNFA Environmental Psychology Image Tagging System</div>
+        <div class="track-context">COGS160: AI & VR Spring 2026 | Team Size: 3 Pairs (6 Students)</div>
+    </header>
+
+    <div class="breadcrumb">
+        <a href="index.html">← Back to All Tracks</a>
+    </div>
+
+    <div class="container">
+        <!-- SECTION 1: OVERVIEW -->
+        <div class="section">
+            <h2>1. Every Design Decision About the Built Environment Is Also a Claim About Perception</h2>
+
+            <p>When an architect chooses to cover a wall in rough stone rather than smooth plaster, they are betting — usually implicitly — that the texture will register differently in the nervous systems of the people who inhabit the space. Sometimes that bet is supported by environmental psychology research. More often it is not, because the research exists but the connection between the lab finding and the design decision has never been made explicit. ATLAS exists to make those connections explicit, using a corpus of environmental images tagged with the psychological constructs that decades of research have shown to matter: biophilic richness, spatial openness, luminance uniformity, fractal complexity, and 420 others.</p>
+
+            <p>Your track builds the tagging layer. Specifically, you implement the 424 scientific tags as computational extractors — algorithms that take a photograph and return a number between 0 and 1 — and validate that those numbers correlate with what the tags actually claim to measure. This is harder than it sounds, and that difficulty is the intellectual content of the track. The registry lists 30 tags as phase_0 (extractable from a 2D photograph without depth data). This designation is a hypothesis. Your triage work in Week 3 tests that hypothesis. Your implementation work in Weeks 4–6 operationalizes the tags that pass. Your validation work in Week 7 assesses whether the operations actually measured what they claimed to measure.</p>
+
+            <p>The system needs three kinds of extraction. Deterministic extractors use OpenCV and NumPy to compute explicit mathematical functions of pixel values — fractal dimension, color entropy, edge density. VLM semantic extractors use vision-language models to recognize semantic patterns that no closed-form formula captures — whether a space feels biophilic, whether it reads as cluttered. Spatial bounding applies to both: every tag eventually returns per-region values across a 3×3 grid, because knowing that a photograph is 0.72 on fractal complexity in its upper-left quadrant is more useful for design than knowing that the whole image averages 0.58.</p>
+
+            <div class="learning-objectives">
+                <h4>Learning Outcomes</h4>
+                <ul>
+                    <li><strong>Scientific operationalization</strong>: You will translate abstract psychological constructs into specific computational claims, and defend those translations with citations to the environmental psychology literature that originally defined the constructs.</li>
+                    <li><strong>Test-before-code</strong>: You will write test cases against known ground truth (a blank white image has near-zero fractal dimension; a forest photograph scores near 1.0) before you write any implementation code — and you will use failing tests to diagnose implementation errors rather than adjusting the tests to fit the code.</li>
+                    <li><strong>Recognition versus generation</strong>: You will distinguish between what a VLM can reliably recognize (binary presence of semantic features) and what it cannot reliably generate (calibrated continuous values correlated with psychological outcomes). This distinction is one of the most important lessons of the track.</li>
+                    <li><strong>Construct validity as an ongoing negotiation</strong>: You will learn that "does this tag measure what it claims to measure?" is not a question with a yes/no answer. It has an answer on a spectrum — supported, contested, provisional, deprecated — and your tag passports will document where each of your tags sits on that spectrum and why.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SECTION 2: TEAM ASSIGNMENTS -->
+        <div class="section">
+            <h2>2. Team Assignments (3 Pairs)</h2>
+
+            <div class="team-assignments">
+                <div class="team-card">
+                    <h4>Pair 1: Scientific Tag Implementation</h4>
+                    <p><strong>Primary Focus</strong>: Implement deterministic (math/OpenCV-based) extractors for scientific tags. Focus on tags with clear mathematical definitions.</p>
+                    <p><strong>Key Deliverable</strong>: "Known-Case Tests & Math Implementations" (Week 5, D2)</p>
+                    <p><strong>Tasks</strong>: Study registry entries for assigned tags; write mathematical definitions; implement in OpenCV/NumPy; write test cases; document operationalization with literature citations.</p>
+                </div>
+
+                <div class="team-card">
+                    <h4>Pair 2: VLM Semantic Extractors & Spatial Bounding</h4>
+                    <p><strong>Primary Focus</strong>: Implement VLM-based extractors for semantic tags; add spatial region analysis (quadrants, heat maps).</p>
+                    <p><strong>Key Deliverable</strong>: Semantic extractor implementations + spatial bounding system (by Week 6)</p>
+                    <p><strong>Tasks</strong>: Design VLM prompts; test with Claude API; implement region-based tagging; create spatial visualization; validate accuracy on test set.</p>
+                </div>
+
+                <div class="team-card">
+                    <h4>Pair 3: Image Collection, Tag Viewer, Experiment-Image Linking</h4>
+                    <p><strong>Primary Focus</strong>: Build the image database, create a UI viewer for tagged images, link images to ATLAS experiments and stimuli.</p>
+                    <p><strong>Key Deliverable</strong>: "Tag Viewer & Experiment Linking" system (ongoing through Week 7, D3)</p>
+                    <p><strong>Tasks</strong>: Source and license images; build tag viewer with spatial overlay; implement tag-based search; bridge ATLAS findings to matching images.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 3: DELIVERABLES TIMELINE -->
+        <div class="section">
+            <h2>3. Deliverables Timeline (Weeks 3–7)</h2>
+
+            <table class="deliverables-table">
+                <thead>
+                    <tr>
+                        <th>Week</th>
+                        <th>Deliverable</th>
+                        <th>Weight</th>
+                        <th>Lead Pair(s)</th>
+                        <th>Key Components</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>3</strong></td>
+                        <td><strong><a href="image_wk03_triage.html" style="color:#d4620f">D1a: Tag Triage — What Can a Photograph Answer?</a></strong><br>
+                            <a href="image_wk03_registry.html" style="color:#d4620f;font-size:.85em">D1b: Registry Augmentation — Bilingual Layer</a></td>
+                        <td>8% + 5%</td>
+                        <td>All (collaborative)</td>
+                        <td>D1a: 20 tags triaged GO/PROXY/DEFER/CLARIFY; HITL q-card ratings; one Tag Passport. D1b: 10 registry entries augmented with bilingual fields (synonyms, VLM prompts, validation status).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4</strong></td>
+                        <td><strong>(No formal deliverable)</strong></td>
+                        <td>—</td>
+                        <td>Pair 2</td>
+                        <td>VLM Lab: Test Claude vision API, GPT-4V; evaluate accuracy on test images; document capabilities and costs</td>
+                    </tr>
+                    <tr>
+                        <td><strong>5</strong></td>
+                        <td><strong>D2: Known-Case Tests & Math Implementations</strong></td>
+                        <td>15%</td>
+                        <td>Pair 1</td>
+                        <td>Test-before-code for 20+ tags; OpenCV/NumPy implementations; test results; operationalization justifications with citations</td>
+                    </tr>
+                    <tr>
+                        <td><strong>6</strong></td>
+                        <td><strong>(Ongoing)</strong></td>
+                        <td>—</td>
+                        <td>Pair 2</td>
+                        <td>VLM semantic extractors operational; spatial bounding system tested on sample images</td>
+                    </tr>
+                    <tr>
+                        <td><strong>7</strong></td>
+                        <td><strong>D3: Interim Validation Report</strong></td>
+                        <td>20%</td>
+                        <td>All</td>
+                        <td>Comprehensive validation results across all three pairs; tag accuracy data; confidence ratings; lessons learned; roadmap for full system</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- SECTION 4: DETAILED TASK BREAKDOWN -->
+        <div class="section">
+            <h2>4. Detailed Task Breakdown</h2>
+
+            <!-- 4a -->
+            <h3>4a. Scientific Tagging: Not Just Eyeballing</h3>
+
+            <div class="task-box">
+                <h4>The Core Challenge</h4>
+                <p>You have 424 tags from the CNFA registry. Each tag represents an environmental psychology construct. <span class="highlight">The tag must have a scientific definition that you can code.</span></p>
+
+                <p>Not okay: "This room looks biophilic."</p>
+                <p>Okay: "Biophilic richness = (# of plants + # of wood surfaces + # of water features) × (% natural light / 100) × (visual complexity score, 0-1)"</p>
+
+                <h4>Step 1: Study the Registry</h4>
+                <p>Each tag in the CNFA registry has an entry with:</p>
+                <ul>
+                    <li>Definition in plain English</li>
+                    <li>Expected range of values (0-1? 0-100? binary?)</li>
+                    <li>Operationalization notes: how other researchers have measured this</li>
+                    <li>Literature references supporting the construct</li>
+                    <li>Example images (high and low values)</li>
+                </ul>
+
+                <h4>Step 2: Classify Each Tag</h4>
+                <p>For every tag, decide:</p>
+                <ul>
+                    <li><strong>Deterministic (Pair 1)</strong>: Can be computed with math/OpenCV? Examples:
+                        <ul>
+                            <li>Window-to-wall ratio (count pixels, compute ratio)</li>
+                            <li>Average hue or luminance</li>
+                            <li>Edge density (how many sharp transitions?)</li>
+                            <li>Symmetry score</li>
+                        </ul>
+                    </li>
+                    <li><strong>VLM semantic (Pair 2)</strong>: Requires visual understanding beyond pixels? Examples:
+                        <ul>
+                            <li>Biophilic richness (are there plants? natural materials?)</li>
+                            <li>Color harmony (do the colors go well together?)</li>
+                            <li>Visual clutter (is this space orderly or chaotic?)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Blocked</strong>: Cannot be reliably measured from still images? Examples:
+                        <ul>
+                            <li>Acoustic properties (need sound measurements)</li>
+                            <li>Thermal comfort (need temperature sensors)</li>
+                            <li>Smell (need olfactory sensors)</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h4>Step 3: Write Mathematical Definitions (Pair 1)</h4>
+                <p>For each deterministic tag, write an <span class="highlight">operationalization document</span> that specifies:</p>
+
+                <div class="code-example">Tag: Spatial Openness
+Definition: "The degree to which a space feels expansive rather than confined."
+
+Operationalization:
+spatial_openness = (room_volume / person_height^3) × ceiling_height_factor × window_area_factor
+
+Where:
+- room_volume: estimated from vanishing points and depth cues
+- ceiling_height_factor: 0-1, based on pixels above eye level
+- window_area_factor: window pixels / wall pixels
+
+Evidence:
+- Kaplan & Kaplan (1989): perceived spaciousness correlates with cognitive restoration
+- Augustin et al. (2006): enclosed spaces increase stress hormone levels
+- [more citations]
+
+Implementation:
+- Use Canny edge detection to find room boundaries
+- Estimate depth using [method]
+- Compute factor values in OpenCV
+- Normalize to 0-1 scale
+
+Test cases:
+- cathedral (high): volume >> person scale, many windows → should yield 0.8+
+- narrow hallway (low): volume ~ person scale, few windows → should yield 0.2-
+</div>
+
+                <h4>Step 4: VLM Semantic Prompts (Pair 2)</h4>
+                <p>For VLM-based tags, write a prompt that Claude (or GPT-4V) can use to evaluate the tag:</p>
+
+                <div class="ai-guidance">
+                    <h4>VLM Prompt Template</h4>
+                    <div class="code-example">You are analyzing an interior photograph to rate "biophilic richness"—the degree to which the space contains natural or nature-inspired elements that support psychological restoration.
+
+Biophilic richness includes:
+- Living plants or green walls
+- Natural materials (wood, stone, natural fibers)
+- Water features (fountains, aquariums)
+- Natural colors (greens, earth tones, sky blue)
+- Natural patterns (wood grain, leaf patterns)
+- Views of nature or nature imagery
+
+Rate this image on a scale of 0-1:
+- 0: No biophilic elements; purely artificial/concrete
+- 0.3: One or two minor elements
+- 0.6: Several biophilic elements, well-integrated
+- 1.0: Heavily biophilic; extensive nature integration
+
+Provide your rating and a one-sentence justification.</div>
+                </div>
+
+                <h4>Literature Justification: REQUIRED</h4>
+                <p>For <strong>every tag you implement</strong>, you must write a justification document with this structure:</p>
+
+                <ul>
+                    <li><strong>What the tag measures</strong>: Plain English definition of the construct</li>
+                    <li><strong>Why it matters for environmental psychology</strong>: What cognitive or affective outcomes does it predict?
+                        <ul>
+                            <li>Examples:
+                                <ul>
+                                    <li>Biophilic richness → +0.3 SD restorativeness (Kaplan & Kaplan, 1989)</li>
+                                    <li>Spatial openness → −0.4 SD stress cortisol (Augustin et al., 2006)</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><strong>How we operationalize it</strong>: Math formula or VLM prompt</li>
+                    <li><strong>Validation evidence</strong>: Has this operationalization been used before? Does it correlate with known outcomes?</li>
+                    <li><strong>Known limitations</strong>: When will this fail? (e.g., "outdoor photos; artistic renderings; black-and-white images")</li>
+                </ul>
+
+                <p>This becomes a registry entry that future users can understand and trust.</p>
+            </div>
+
+            <!-- 4b -->
+            <h3>4b. Spatial Bounding: Regional Tag Application</h3>
+
+            <div class="task-box">
+                <h4>Why Spatial Bounding Matters</h4>
+                <p>A room might have high biophilic richness in one corner (potted plants) but none in another (concrete wall). If you only store a single "average" score, you lose important information.</p>
+
+                <p><strong>Better approach</strong>: Divide the image into regions and compute tag values per region.</p>
+
+                <h4>Step 1: Spatial Regions</h4>
+                <p>Divide each image into 9 regions (3×3 grid):</p>
+                <ul>
+                    <li>Top-left, top-center, top-right (ceiling area)</li>
+                    <li>Middle-left, middle-center, middle-right (wall area)</li>
+                    <li>Bottom-left, bottom-center, bottom-right (floor area)</li>
+                </ul>
+
+                <p>Or use quadrants (2×2) if 3×3 is too granular. Store region boundaries as normalized coordinates (0-1 scale).</p>
+
+                <h4>Step 2: Compute Tags Per Region</h4>
+                <ul>
+                    <li><strong>Deterministic tags</strong>: Crop the image to the region; compute the tag value on the cropped region</li>
+                    <li><strong>VLM tags</strong>: Include region info in the prompt: "Rate biophilic richness of the top-left 25% of this room"</li>
+                </ul>
+
+                <h4>Step 3: Spatial Indexing & Queries</h4>
+                <p>Store results like this:</p>
+
+                <div class="code-example">image_id: "IMG_00124"
+tags: {
+  "biophilic_richness": {
+    "global": 0.65,
+    "by_region": {
+      "top_left": 0.8,
+      "top_center": 0.7,
+      "top_right": 0.4,
+      "middle_left": 0.75,
+      ...
+    }
+  },
+  "spatial_openness": {
+    "global": 0.55,
+    "by_region": { ... }
+  }
+}</div>
+
+                <p>This allows queries like: "Show me images where the ceiling is biophilic" (high value in top_* regions) or "Show me images where the left wall is very open" (high spatial_openness on *_left regions).</p>
+
+                <h4>Step 4: Create a Tag Viewer (Pair 3)</h4>
+                <p>Build a web-based viewer showing:</p>
+                <ul>
+                    <li>The image with regional overlay (9 colored boxes for 3×3 grid)</li>
+                    <li>Each region shows its tag values (bar chart or heat map)</li>
+                    <li>Ability to select a region and see all tags for that region</li>
+                    <li>Ability to compare two images side-by-side</li>
+                    <li>Search: "Find images where top-left > 0.7 biophilic richness"</li>
+                </ul>
+
+                <div class="success-criteria">
+                    <h4>Success Criteria for Spatial Bounding</h4>
+                    <ul>
+                        <li>Every tag has both a global score and regional scores</li>
+                        <li>Regions are consistent across all images (same grid)</li>
+                        <li>Viewer allows filtering and comparison by region</li>
+                        <li>Data structure is documented and used consistently</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 4c -->
+            <h3>4c. Test-Before-Code: The Known-Case Methodology</h3>
+
+            <div class="task-box">
+                <h4>Why This Matters</h4>
+                <p>Before you write the code to compute a tag, you should know what the code should output. This is the "test-before-code" principle (similar to TDD in software engineering).</p>
+
+                <h4>The Process (for Pair 1, deterministic tags)</h4>
+
+                <p><strong>Week 4: Pre-implementation testing</strong></p>
+                <ol>
+                    <li>Find or create 3-5 "known" images for each tag:
+                        <ul>
+                            <li>One image where the tag value should be <strong>high</strong> (0.7-1.0)</li>
+                            <li>One image where the tag value should be <strong>low</strong> (0.0-0.3)</li>
+                            <li>One image where the tag value should be <strong>medium</strong> (0.4-0.6)</li>
+                            <li>Optional: edge cases</li>
+                        </ul>
+                    </li>
+                    <li>Document why each image is a known case:
+                        <ul>
+                            <li>"This cathedral has a very high spatial openness because the volume is enormous and ceilings are 100+ feet"</li>
+                            <li>"This narrow hallway has low spatial openness: volume ~15×8×10 feet, no windows"</li>
+                        </ul>
+                    </li>
+                    <li>Have the pair manually estimate the tag value for each image (without the code)</li>
+                </ol>
+
+                <p><strong>Week 5: Implementation & validation</strong></p>
+                <ol>
+                    <li>Implement the tag's mathematical formula in OpenCV/NumPy</li>
+                    <li>Run your code on the known-case images</li>
+                    <li>Does your output match your manual estimates?
+                        <ul>
+                            <li>✓ High confidence: Yes, matches well</li>
+                            <li>⚠ Medium confidence: Close, but not exact (off by 0.1-0.2)</li>
+                            <li>✗ Low confidence: Way off; formula is wrong</li>
+                        </ul>
+                    </li>
+                    <li>If it doesn't match, debug: Is the formula wrong? Did you implement it correctly? Is the manual estimate wrong?</li>
+                </ol>
+
+                <h4>Example Test Case Documentation</h4>
+
+                <div class="code-example">Tag: Window-to-Wall Ratio
+Mathematical definition: (pixel count of windows) / (pixel count of walls)
+
+Known-case images:
+1. Modern office with full glass wall (expected: 0.85+)
+   - Image: IMG_12034_glass_wall.jpg
+   - Manual estimate: 0.88 (glass dominates; small solid sections)
+   - Rationale: Professional photos show ~80-90% glass on one wall
+
+2. Historic stone building with small windows (expected: 0.15-)
+   - Image: IMG_45201_castle.jpg
+   - Manual estimate: 0.12 (few small openings, lots of stone)
+   - Rationale: Medieval castles have small windows for defense; windows << wall area
+
+3. Office with standard window-per-wall (expected: 0.50±0.1)
+   - Image: IMG_78902_office.jpg
+   - Manual estimate: 0.48 (one large window, other walls solid)
+   - Rationale: Typical office design has windows on perimeter, solid interior walls
+
+Results after implementing:
+- IMG_12034: computed 0.86 ✓ (expected 0.88, diff 0.02)
+- IMG_45201: computed 0.11 ✓ (expected 0.12, diff 0.01)
+- IMG_78902: computed 0.47 ✓ (expected 0.48, diff 0.01)
+
+Confidence: HIGH. All known cases match manual estimates within margin of error (±0.02).</div>
+
+                <h4>Document Everything</h4>
+                <p>Your D2 deliverable includes a test report with:</p>
+                <ul>
+                    <li>Known-case images (with manual estimates)</li>
+                    <li>Code output (actual computed values)</li>
+                    <li>Accuracy analysis: how close are they? What's the error margin?</li>
+                    <li>Confidence rating per tag: HIGH / MEDIUM / LOW</li>
+                    <li>Any tags where your formula is still uncertain</li>
+                </ul>
+            </div>
+
+            <!-- 4d -->
+            <h3>4d. Image Collection with Scientific Provenance</h3>
+
+            <div class="task-box">
+                <h4>What You're Building</h4>
+                <p>The image database must have thousands of interior architectural photographs with complete metadata (source, license, building type, geographic location, approximate year).</p>
+
+                <h4>Sources to Investigate (Pair 3)</h4>
+                <ul>
+                    <li><strong>Flickr Creative Commons</strong>: High volume, varied quality. License types: CC0, CC-BY, CC-BY-SA. Free to use.
+                        <ul>
+                            <li>Search terms: "interior design," "office space," "hotel lobby," etc.</li>
+                        </ul>
+                    </li>
+                    <li><strong>LAION</strong>: Large-scale image dataset. Already processed and downloadable. CC0 and public domain images.
+                        <ul>
+                            <li>Filter for architecture/interiors using LAION metadata</li>
+                        </ul>
+                    </li>
+                    <li><strong>ADE20K</strong>: MIT's annotated scene database. High quality. 27,884 images with semantic segmentation.
+                        <ul>
+                            <li>Subset: images of building interiors with detailed annotations</li>
+                        </ul>
+                    </li>
+                    <li><strong>SUN Database</strong>: MIT's Scene UNderstanding database. 130,519 images. Various licenses. Well-annotated.
+                        <ul>
+                            <li>Filter for indoor scenes</li>
+                        </ul>
+                    </li>
+                    <li><strong>Places365</strong>: Deep learning dataset of 10 million+ images. Licensed. Includes many interior scenes.
+                        <ul>
+                            <li>High quality, but large downloads</li>
+                        </ul>
+                    </li>
+                    <li><strong>Wikipedia Commons</strong>: User-contributed images. High variance in quality. CC-0, CC-BY, etc.
+                        <ul>
+                            <li>Architecture category has good coverage</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h4>Step 1: Evaluate Sources</h4>
+                <p>Create a comparison table:</p>
+
+                <div class="code-example">Source | # Images | License Types | Quality | Coverage | Download Feasibility
+Flickr CC | 1M+ | CC0, BY, BY-SA | Variable | Broad | Easy (API)
+LAION | 1B+ | CC0, PD | Variable | Broad | Medium (large scale)
+ADE20K | 20K | CC0 | High | Mixed | Hard (request)
+SUN | 130K | Mixed | High | Indoor good | Hard (request)
+Places365 | 10M+ | Proprietary | High | Excellent | Medium (registration)
+Wikipedia Commons | 3M+ | CC0, BY, etc. | Variable | Broad | Easy (download)</div>
+
+                <h4>Step 2: Image Metadata Schema</h4>
+                <p>Every image in your database must have:</p>
+
+                <div class="code-example">image_id: "IMG_00001"
+source: "flickr"
+source_url: "https://www.flickr.com/photos/..."
+photographer: "John Smith" (or unknown)
+license: "CC-BY-4.0"
+license_url: "https://creativecommons.org/licenses/by/4.0/"
+
+building_type: "office" | "residential" | "hotel" | "hospital" | "retail" | "educational" | "religious" | "other"
+style: "modern" | "contemporary" | "historic" | "minimalist" | "eclectic" | etc.
+geographic_location: "San Diego, CA, USA" (or "Unknown")
+approximate_year: 2020 (or "Unknown")
+
+file_path: "/data/images/IMG_00001.jpg"
+file_size: 2457836 (bytes)
+dimensions: 3840x2560
+color_space: "RGB"</div>
+
+                <h4>Step 3: Source and License Properly</h4>
+                <ul>
+                    <li>Never use images with unknown licenses or without clear attribution rights</li>
+                    <li>Maintain a spreadsheet with image ID, source, license, photographer attribution</li>
+                    <li>If CC-BY, make sure you credit the photographer whenever the image is displayed</li>
+                    <li>Document any permissions requests (e.g., if requesting from ADE20K authors)</li>
+                </ul>
+
+                <h4>Goal for Spring: Minimum Image Count</h4>
+                <p>Aim for at least 500-1000 images by the end of Week 7, with good coverage across:</p>
+                <ul>
+                    <li>Building types (offices, homes, hotels, schools, shops, etc.)</li>
+                    <li>Styles (modern, historic, minimalist, colorful, etc.)</li>
+                    <li>Geographic regions (US, Europe, Asia, etc.)</li>
+                    <li>Lighting conditions (bright, dim, warm, cool, etc.)</li>
+                </ul>
+
+                <p>In the final report (D3), note: "We have X images from Y sources covering these categories. For full production, we recommend scaling to 10,000+ images using [sources]."</p>
+            </div>
+
+            <!-- 4e -->
+            <h3>4e. Connecting Images to Experiments (The Science Bridge)</h3>
+
+            <div class="task-box">
+                <h4>What You're Solving For</h4>
+                <p>ATLAS contains hundreds of experimental studies. Each study used specific stimuli (rooms, images, VR scenes). Your job: bridge the gap between study findings and the images in your database.</p>
+
+                <h4>The Bridge</h4>
+                <p>Study → Stimulus Description → Tag Values → Image Search</p>
+
+                <h4>Example</h4>
+                <p>Study: "The Restorativeness of Biophilic Design in Office Workspaces" (Cohen et al., 2018)</p>
+                <ul>
+                    <li>Finding: "High-biophilic condition showed +0.4 SD improvement in attention restoration compared to low-biophilic condition"</li>
+                    <li>Stimulus description (from paper): "The high-biophilic condition used a 3.5m × 5m room with 12 potted plants distributed throughout, natural wood flooring, live wood edge furniture, 3200K warm lighting, and a view of a green courtyard."</li>
+                    <li>Operationalized as tag values:
+                        <ul>
+                            <li>biophilic_richness: 0.78 (many plants, natural materials, natural light)</li>
+                            <li>luminance: 0.65 (3200K warm, not bright)</li>
+                            <li>color_harmony: 0.82 (greens + wood tones)</li>
+                            <li>clutter_level: 0.25 (minimalist, orderly)</li>
+                        </ul>
+                    </li>
+                    <li>Search query: "Find images matching these tag ranges: biophilic_richness 0.7-0.85, luminance 0.6-0.75, color_harmony 0.75-0.9, clutter 0.1-0.3"</li>
+                    <li>Result: Database returns 15 images from your collection that match the described stimulus</li>
+                </ul>
+
+                <h4>Step 1: Read Through ATLAS Evidence (Pair 3)</h4>
+                <p>Look at the paper bundles. For papers that describe experimental rooms or images, extract:</p>
+                <ul>
+                    <li>Design dimensions (size, colors, furniture, plants, light, etc.)</li>
+                    <li>Key findings (what psychology outcomes resulted?)</li>
+                    <li>Study populations and context</li>
+                </ul>
+
+                <h4>Step 2: Characterize Stimuli in Tag Terms (with Claude)</h4>
+                <p>Feed the stimulus description to Claude:</p>
+
+                <div class="ai-guidance">
+                    <h4>Stimulus Characterization Prompt</h4>
+                    <div class="code-example">I'm analyzing an experiment from a scientific paper. The stimulus (experimental room/image) was described as:
+
+[CITATION + STIMULUS DESCRIPTION]
+
+I need to estimate the tag values for this stimulus so I can find matching images in a database. Here are the tag definitions:
+
+- biophilic_richness (0-1): degree of natural and nature-inspired elements
+- spatial_openness (0-1): how expansive vs. confined the space feels
+- luminance (0-1): brightness and light quality
+- color_harmony (0-1): how well the colors work together
+- clutter_level (0-1): orderliness (0=very organized, 1=cluttered)
+- [more tags]
+
+Based on the description, estimate:
+1. The likely value for each tag (0-1)
+2. The confidence (HIGH/MEDIUM/LOW)
+3. Any caveats (e.g., "description was vague on lighting")
+
+Format as table:
+| Tag | Estimate | Confidence | Notes |</div>
+                </div>
+
+                <h4>Step 3: Build the Image-Experiment Bridge (Search System)</h4>
+                <p>Create a web interface or API endpoint:</p>
+                <ul>
+                    <li><strong>Input</strong>: Select an ATLAS study or paste a stimulus description</li>
+                    <li><strong>Processing</strong>: Extract or estimate tag values</li>
+                    <li><strong>Search</strong>: Query image database for matches (allow ±0.1 tolerance on tag values)</li>
+                    <li><strong>Output</strong>: Return matching images with scores showing how well they match the description</li>
+                </ul>
+
+                <p>Example query in pseudo-code:</p>
+
+                <div class="code-example">query = {
+  "biophilic_richness": {"target": 0.75, "tolerance": 0.1},
+  "spatial_openness": {"target": 0.60, "tolerance": 0.1},
+  "luminance": {"target": 0.65, "tolerance": 0.1}
+}
+
+results = search_images(query)  # returns images where values fall within tolerance ranges
+results = sorted(results, key=lambda x: distance_to_target(x, query))  # sort by match quality
+
+display(results[0:10])  # show top 10 matches</div>
+
+                <h4>Step 4: Deliverable for D3</h4>
+                <p>Include in your final report:</p>
+                <ul>
+                    <li>Examples of 5-10 studies successfully bridged to matching images</li>
+                    <li>Stimulus characterization document (tag values for each study)</li>
+                    <li>Working search system (or demo)</li>
+                    <li>Notes on success/limitations: Which studies were easy to bridge? Which were hard?</li>
+                </ul>
+
+                <div class="note-box">
+                    <strong>Future Impact</strong>: This bridge enables a Fall VR student (or any researcher) to say "I want to recreate the restorative condition from Cohen et al. Show me images like it" and get instant visual reference material. This is a powerful tool for translating research into design practice.
+                </div>
+            </div>
+
+            <!-- 4f -->
+            <h3>4f. Validation & Confidence Ratings</h3>
+
+            <div class="task-box">
+                <h4>What You're Documenting</h4>
+                <p>Not all tags are equally reliable. Some (like window-to-wall ratio) are highly reliable. Others (like "visual clutter," which is somewhat subjective) are less reliable. Your final report must document this honestly.</p>
+
+                <h4>Confidence Tiers</h4>
+                <ul>
+                    <li><strong>GOLD (High Confidence)</strong>: Deterministic extractors with clean known-case validation
+                        <ul>
+                            <li>Examples: window-to-wall ratio, average hue, luminance</li>
+                            <li>Criterion: Code output matches manual estimates within ±0.05</li>
+                        </ul>
+                    </li>
+                    <li><strong>SILVER (Medium Confidence)</strong>: VLM-based or semi-deterministic tags, validated on sample set
+                        <ul>
+                            <li>Examples: biophilic richness, color harmony</li>
+                            <li>Criterion: VLM output validated on 20-30 images; moderate inter-rater agreement (if multiple people rate)</li>
+                        </ul>
+                    </li>
+                    <li><strong>BRONZE (Lower Confidence)</strong>: Preliminary implementations; more validation needed
+                        <ul>
+                            <li>Examples: abstract constructs with complex definitions</li>
+                            <li>Criterion: Works on known cases, but haven't done comprehensive testing</li>
+                        </ul>
+                    </li>
+                    <li><strong>BLOCKED</strong>: Not implementable from images alone
+                        <ul>
+                            <li>Examples: acoustic properties, thermal comfort, smell</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h4>Validation Report Structure (for D3)</h4>
+                <ul>
+                    <li><strong>Executive Summary</strong>: How many tags implemented? Breakdown by confidence tier?</li>
+                    <li><strong>Tier Breakdown Table</strong>: All 424 tags listed with tier assignments</li>
+                    <li><strong>GOLD Tier Analysis</strong>: Per-tag validation results, test images, error margins</li>
+                    <li><strong>SILVER Tier Analysis</strong>: VLM accuracy data, example outputs, confidence intervals</li>
+                    <li><strong>BRONZE Tier Analysis</strong>: What's missing? What would improve confidence?</li>
+                    <li><strong>BLOCKED Tags Analysis</strong>: Why are they blocked? Could they be enabled with additional data?</li>
+                    <li><strong>Cross-Tag Consistency</strong>: Do related tags (e.g., different measures of "biophilicity") agree?</li>
+                    <li><strong>Next Steps Roadmap</strong>: What should be done in summer or fall to improve tier assignments?</li>
+                </ul>
+
+                <p><strong>This report is crucial</strong>. It tells users of the image database how much to trust each tag. A researcher using GOLD-tier tags can be confident in their results. Someone using BRONZE tags should be cautious.</p>
+            </div>
+        </div>
+
+        <!-- SECTION 5: AI TOOL GUIDE -->
+        <div class="section">
+            <h2>5. AI Tool Guide for Image Track Students</h2>
+
+            <h3>Prompt Category 1: Tag Definition Assistance</h3>
+            <div class="ai-guidance">
+                <h4>Help Operationalizing Abstract Constructs</h4>
+                <div class="code-example">I need to operationalize this environmental psychology construct:
+
+[TAG NAME FROM REGISTRY]: [Definition + Literature reference]
+
+I want to create a mathematical formula or VLM prompt that measures this from interior photographs.
+
+Given the definition and examples, generate:
+1. A mathematical formula (if deterministic) OR a VLM prompt (if semantic)
+2. Example images where the value should be HIGH and LOW
+3. Validation approach: how would I test if this formula works?
+4. Known limitations: what types of images would this formula fail on?</div>
+            </div>
+
+            <h3>Prompt Category 2: VLM Prompt Refinement</h3>
+            <div class="ai-guidance">
+                <h4>Testing and Iterating VLM Prompts</h4>
+                <div class="code-example">I'm using Claude's vision API to rate images on this scale:
+
+[TAG NAME]: [Definition + rating scale 0-1]
+
+Here's my current prompt:
+
+[YOUR PROMPT]
+
+I tested it on 10 images and got these results:
+[Image name] → [Claude's rating] (I expected [your rating])
+
+Are the outputs reasonable? What's missing from my prompt? How can I improve consistency?</div>
+            </div>
+
+            <h3>Prompt Category 3: Known-Case Test Generation</h3>
+            <div class="ai-guidance">
+                <h4>Designing Test Cases</h4>
+                <div class="code-example">I'm implementing a tag called [TAG NAME]: [definition]
+
+I need to design "known-case" test images—examples where I know the expected tag value in advance.
+
+Generate 5 concrete test cases:
+1. HIGH value (0.8-1.0): Describe a real image where this should score high
+2. LOW value (0.0-0.2): Describe a real image where this should score low
+3. MEDIUM value (0.4-0.6): Describe a real image with moderate value
+4. EDGE CASE 1: Something that might break the formula
+5. EDGE CASE 2: Another potential edge case
+
+For each, include:
+- Why this image is a valid test case (cite literature or intuition)
+- What the expected value should be
+- What might go wrong when measuring it</div>
+            </div>
+
+            <h3>Prompt Category 4: Literature Justification</h3>
+            <div class="ai-guidance">
+                <h4>Building Justification Documents</h4>
+                <div class="code-example">I'm documenting a scientific tag for an image database. Here's what I know:
+
+Tag: [Name]
+Operationalization: [Formula or VLM prompt]
+
+Generate a justification document with sections:
+1. What this tag measures (plain English definition)
+2. Why it matters for environmental psychology (what does the literature say it predicts?)
+3. Examples of findings that use this construct
+4. How my operationalization relates to prior work
+5. Known limitations or assumptions
+
+Include DOI citations where possible.</div>
+            </div>
+
+            <h3>Prompt Category 5: Accuracy Analysis & Confidence Assessment</h3>
+            <div class="ai-guidance">
+                <h4>Evaluating Implementation Quality</h4>
+                <div class="code-example">I've implemented a tag and tested it on known-case images. Here are the results:
+
+[Table with Image, Expected Value, Computed Value, Error]
+
+Based on the accuracy across these test cases, assess:
+1. How confident am I in this implementation? (HIGH/MEDIUM/LOW/BLOCKED)
+2. What's the error margin? (±X)
+3. For which types of images is this most reliable?
+4. For which types might it fail?
+5. What would improve confidence?</div>
+            </div>
+        </div>
+
+        <!-- SECTION 6: GIT WORKFLOW -->
+        <div class="section">
+            <h2>6. Git Workflow for Image Track</h2>
+
+            <div class="git-workflow">
+                <h4>Repository Structure</h4>
+                <div class="code-example">image-tagger/
+├── extractors/
+│   ├── deterministic/
+│   │   ├── window_to_wall_ratio.py
+│   │   ├── luminance.py
+│   │   └── ...
+│   ├── vlm/
+│   │   ├── biophilic_richness.py
+│   │   ├── color_harmony.py
+│   │   └── ...
+│   └── spatial_bounding.py
+├── images/
+│   ├── raw/
+│   ├── metadata/
+│   └── tagged/
+├── tests/
+│   ├── known_cases/
+│   │   ├── biophilic_richness_test_cases.md
+│   │   └── ...
+│   └── validation_results/
+├── docs/
+│   ├── tag_definitions/
+│   │   ├── biophilic_richness.md
+│   │   └── ...
+│   ├── operationalization_guides.md
+│   └── validation_report.md
+└── viewer/
+    ├── app.py
+    ├── templates/
+    └── static/</div>
+
+                <h4>Branch Naming</h4>
+                <div class="code-example">feature/tag-{tag-name}-{pair-initials}
+Examples:
+feature/tag-biophilic_richness-ab
+feature/tag-window_to_wall_ratio-cd
+feature/spatial-bounding-ef
+
+bugfix/tag-{tag-name}-accuracy-{initials}
+Examples:
+bugfix/tag-luminance-accuracy-ab
+
+docs/tag-justifications-{initials}</div>
+
+                <h4>Commit Discipline</h4>
+                <ol>
+                    <li>Commit frequently (once per tag or feature)</li>
+                    <li>Use clear commit messages:
+                        <div class="code-example">feature(extractors): implement biophilic_richness deterministic extractor
+
+Add OpenCV-based implementation measuring:
+- Plant pixel count
+- Natural material area
+- Light quality score
+
+Includes test validation on 5 known-case images.
+All tests passing.</div>
+                    </li>
+                    <li>Push to remote daily (or end of session)</li>
+                </ol>
+
+                <h4>Code Review Checklist Before PR</h4>
+                <ul>
+                    <li>✓ Tag has an operationalization document with literature citations</li>
+                    <li>✓ Known-case tests exist and pass</li>
+                    <li>✓ Code is documented (docstrings, comments)</li>
+                    <li>✓ Error handling for edge cases</li>
+                    <li>✓ Confidence tier assigned (GOLD/SILVER/BRONZE)</li>
+                    <li>✓ Spatial bounding implemented (or documented why it's not)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SECTION 7: FAQs -->
+        <div class="section">
+            <h2>7. Frequently Asked Questions</h2>
+
+            <div class="faq-section">
+                <div class="faq-item">
+                    <div class="faq-question" onclick="this.nextElementSibling.classList.toggle('active')">
+                        ❓ What if I can't implement all 424 tags? Is that a failure?
+                    </div>
+                    <div class="faq-answer">
+                        No. The goal is not to implement all 424 tags in 5 weeks. The goal is to implement a subset well, understand the challenges, and provide a roadmap for completing the rest. Implementing 40-80 tags robustly is excellent progress. Your D1 triage table will categorize all 424, so Prof. Kirsh and future students will know what's feasible vs. blocked.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="this.nextElementSibling.classList.toggle('active')">
+                        ❓ Should I use GPT-4V, Claude vision, or another VLM for semantic tags?
+                    </div>
+                    <div class="faq-answer">
+                        Start with Claude (you have API access through the course). In Week 4, Pair 2 will run a VLM lab comparing Claude, GPT-4V, and maybe open-source alternatives. Document costs, accuracy, and latency. Claude is likely to be good enough for most semantic tags, but the comparison will inform your choice.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="this.nextElementSibling.classList.toggle('active')">
+                        ❓ How do I find "known-case" images if I'm building the database from scratch?
+                    </div>
+                    <div class="faq-answer">
+                        Good question. Strategies:
+                        (1) Borrow or adapt from the sources listed in 4d. LAION, ADE20K, and Places365 all have example images you can download for testing.
+                        (2) Use AI image generation (DALL-E, Midjourney) to create synthetic test images with specific properties. E.g., "Generate a modern office with 80% glass walls and no plants."
+                        (3) Describe the ideal test image and ask Claude to find it in public Flickr/Wikipedia.
+                        (4) Take your own photos or recruit a friend to shoot images matching your test specifications.
+                        For Week 5 D2, you don't need a giant test set—5 images per tag is plenty to validate your formula.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="this.nextElementSibling.classList.toggle('active')">
+                        ❓ What if the VLM's rating disagrees with my manual estimate on a known-case image?
+                    </div>
+                    <div class="faq-answer">
+                        That's valuable data, not a failure. Document it:
+                        (1) Is the VLM rating reasonable? Maybe your manual estimate was wrong.
+                        (2) Is the VLM rating unreasonable? Maybe the prompt is unclear, or the VLM has a different interpretation.
+                        (3) Iterate the prompt to get better agreement.
+                        This is part of the validation process. In your D2/D3 reports, document these discrepancies and what you learned.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="this.nextElementSibling.classList.toggle('active')">
+                        ❓ Do I need to implement the tag viewer perfectly, or is a prototype OK for D3?
+                    </div>
+                    <div class="faq-answer">
+                        A working prototype is perfect for spring. Key features for D3:
+                        ✓ Display image with regional overlay (3×3 grid)
+                        ✓ Show tag values for each region (as numbers or bar chart)
+                        ✓ Allow region selection to see all tags for that region
+                        ✓ Can search by tag value range
+                        A polished production UI is nice, but not required. Your focus should be on validating that the regional tagging approach actually works.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="this.nextElementSibling.classList.toggle('active')">
+                        ❓ How do I handle images with multiple rooms or ambiguous boundaries?
+                    </div>
+                    <div class="faq-answer">
+                        Good observation. For now:
+                        (1) If the image clearly shows one room, tag the whole room (9 regions).
+                        (2) If the image shows multiple rooms or is ambiguous, you have options:
+                            a. Exclude it from the database (simplest).
+                            b. Tag only the primary visible room.
+                            c. Create multiple tag entries for the same image (one per room).
+                        Document your choices in the image metadata. This is something for a future version to handle more rigorously (maybe with instance segmentation).
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="this.nextElementSibling.classList.toggle('active')">
+                        ❓ Can I use my phone's camera to create test images?
+                    </div>
+                    <div class="faq-answer">
+                        Absolutely. If you want to create known-case images (e.g., a photo of a room with exactly 5 windows for testing window-to-wall ratio), your phone works great. Just:
+                        (1) Document where/when you took the photo
+                        (2) Make sure the lighting and angle are representative
+                        (3) Manually estimate the tag values (ground truth) before running your code on it
+                        This is a valid and often useful approach.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="section">
+            <h3>Key Takeaways for Image Track Students</h3>
+
+            <ul>
+                <li><strong>Scientific rigor is non-negotiable</strong>: Every tag must have a definition and literature support, not just intuition.</li>
+                <li><strong>Test-before-code saves time</strong>: Knowing what you want before you write the code catches problems early.</li>
+                <li><strong>Spatial bounding is powerful</strong>: Regional tag values unlock new research and design applications.</li>
+                <li><strong>Validation is honest</strong>: Document which tags are GOLD, SILVER, and BRONZE. Users need to know what they can trust.</li>
+                <li><strong>The bridge to experiments is the payoff</strong>: Connecting image databases to study results makes ATLAS useful for designers and researchers.</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>Track 1: Image Tagger | COGS160: AI & VR Spring 2026</p>
+        <p>For questions, contact: Prof. David Kirsh or your Track 1 TA</p>
+        <p style="margin-top: 1rem;">Last updated: March 28, 2026</p>
+    </footer>
+
+    <script>
+        // Simple FAQ toggle functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const answer = this.nextElementSibling;
+                answer.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>

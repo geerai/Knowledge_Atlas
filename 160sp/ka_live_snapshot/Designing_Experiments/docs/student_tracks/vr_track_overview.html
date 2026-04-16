@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COGS160: AI & VR — VR Track Overview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #182B49;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #182B49;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .track-designation {
+            font-size: 12px;
+            background: #182B49;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        /* Deliverables Summary Table */
+        .summary-section {
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #f5f7fb 0%, #fff9f0 100%);
+            border: 2px solid #C69214;
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .summary-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #182B49;
+            margin-bottom: 16px;
+            border-bottom: 2px solid #C69214;
+            padding-bottom: 10px;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .summary-table th {
+            background: #182B49;
+            color: white;
+            padding: 10px;
+            text-align: left;
+            font-weight: 700;
+            border-right: 1px solid #34507e;
+        }
+
+        .summary-table th:last-child {
+            border-right: none;
+        }
+
+        .summary-table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .summary-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .summary-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .weight-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            background: #C69214;
+            color: white;
+            border-radius: 3px;
+            font-weight: 600;
+            font-size: 11px;
+        }
+
+        /* Timeline Container */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        /* Phase Group */
+        .phase-group {
+            background: linear-gradient(135deg, #f5f7fb 0%, #f0fff5 100%);
+            border: 2px solid #2d7a4a;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .phase-group.phase-1 {
+            background: linear-gradient(135deg, #f5f7fb 0%, #fff9f0 100%);
+            border-color: #C69214;
+        }
+
+        .phase-group.phase-3 {
+            background: linear-gradient(135deg, #fef9e7 0%, #fff5f0 100%);
+            border-color: #182B49;
+        }
+
+        .phase-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(198, 146, 20, 0.3);
+        }
+
+        .phase-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #182B49;
+            flex: 1;
+        }
+
+        .phase-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: #C69214;
+            color: white;
+        }
+
+        .phase-badge.phase-1-badge {
+            background: #C69214;
+        }
+
+        .phase-badge.phase-2-badge {
+            background: #2d7a4a;
+        }
+
+        .phase-badge.phase-3-badge {
+            background: #182B49;
+        }
+
+        /* Week Boxes Grid */
+        .weeks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .week-box {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            transition: box-shadow 0.2s ease;
+        }
+
+        .week-box:hover {
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+        }
+
+        .week-number {
+            font-size: 13px;
+            font-weight: 700;
+            color: #C69214;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .week-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #182B49;
+            margin-bottom: 12px;
+        }
+
+        .week-activities {
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .activity-bullet {
+            margin-bottom: 6px;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .activity-bullet:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #C69214;
+            font-weight: bold;
+        }
+
+        .week-deliverable {
+            background: #f9f9f9;
+            border-left: 3px solid #C69214;
+            padding: 8px;
+            margin-bottom: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #182B49;
+        }
+
+        .week-time {
+            font-size: 11px;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Deliverable Badge */
+        .deliverable-label {
+            display: inline-block;
+            padding: 2px 6px;
+            background: #182B49;
+            color: white;
+            border-radius: 2px;
+            font-size: 10px;
+            font-weight: 700;
+            margin-right: 4px;
+        }
+
+        /* Team Structure Section */
+        .team-structure {
+            margin-top: 40px;
+            background: linear-gradient(135deg, #fef9e7 0%, #fff5f0 100%);
+            border: 2px dashed #C69214;
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .team-structure-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #182B49;
+            margin-bottom: 16px;
+            border-bottom: 2px solid #C69214;
+            padding-bottom: 10px;
+        }
+
+        .team-structure-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .team-pair {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 14px;
+            font-size: 13px;
+        }
+
+        .team-pair-title {
+            font-weight: 700;
+            color: #182B49;
+            margin-bottom: 6px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .team-pair-desc {
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .dimension-name {
+            font-weight: 600;
+            color: #2d7a4a;
+        }
+
+        .team-notes {
+            background: white;
+            border-left: 4px solid #C69214;
+            padding: 14px;
+            margin-top: 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .team-notes strong {
+            color: #182B49;
+        }
+
+        /* Footer */
+        .footer-section {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                max-width: 100%;
+                padding: 20px;
+                box-shadow: none;
+            }
+
+            h1 {
+                font-size: 24px;
+                page-break-after: avoid;
+            }
+
+            .phase-group {
+                page-break-inside: avoid;
+            }
+
+            header {
+                page-break-after: avoid;
+            }
+
+            .team-structure {
+                page-break-before: avoid;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .weeks-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .team-structure-content {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-table {
+                font-size: 12px;
+            }
+
+            .summary-table td,
+            .summary-table th {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>VR Track (Track 3) — Full Semester Overview</h1>
+            <p class="subtitle">COGS160: AI & VR | VR Stimulus Production</p>
+            <span class="track-designation">Track 3 • 10 Weeks • 3 Pairs of 2 Students</span>
+        </header>
+
+        <!-- Deliverables Summary -->
+        <div class="summary-section">
+            <div class="summary-title">Deliverables at a Glance</div>
+            <table class="summary-table">
+                <thead>
+                    <tr>
+                        <th>Deliverable</th>
+                        <th>Week Due</th>
+                        <th>Description</th>
+                        <th>Grade Weight</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>D1: Stimulus Design Plan</strong></td>
+                        <td>Week 3</td>
+                        <td>Literature-grounded stimulus dimension choice, levels, held constants, design rationale</td>
+                        <td><span class="weight-badge">10%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>D2: Stimulus Set (≥5 scenes)</strong></td>
+                        <td>Week 5</td>
+                        <td>Interactive VR scenes demonstrating the chosen stimulus dimension across planned levels</td>
+                        <td><span class="weight-badge">15%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>D3: Preference Data Analysis Report</strong></td>
+                        <td>Week 7</td>
+                        <td>Analysis of ≥8 participants' preference ratings with statistical summary & interpretation</td>
+                        <td><span class="weight-badge">20%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>D4: Technical Documentation</strong></td>
+                        <td>Week 8</td>
+                        <td>Scene asset inventories, Unity project structure, rendering settings, reproducibility guide</td>
+                        <td><span class="weight-badge">15%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>D5: Final Report</strong></td>
+                        <td>Week 10</td>
+                        <td>Integrated narrative: design decisions, preference findings, implications, limitations</td>
+                        <td><span class="weight-badge">25%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>D6: Presentation (5 min)</strong></td>
+                        <td>Week 10</td>
+                        <td>Live or recorded VR walkthrough + preference interpretation to class</td>
+                        <td><span class="weight-badge">5%</span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="text-align: right; font-weight: 700; color: #182B49;">TOTAL: 90% track-specific + 10% class participation & reflection</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline">
+            <!-- PHASE I -->
+            <div class="phase-group phase-1">
+                <div class="phase-header">
+                    <span class="phase-title">PHASE I: Foundation (Week 1, D0 due Mon night Wk 2)</span>
+                    <span class="phase-badge phase-1-badge">COMMON CLASS</span>
+                </div>
+
+                <div class="weeks-grid">
+                    <div class="week-box">
+                        <div class="week-number">Week 1</div>
+                        <div class="week-title">Course Foundations & Manual Literature Search</div>
+                        <div class="week-activities">
+                            <div class="activity-bullet">Introduction to experimental design concepts & COGS160: AI & VR overview</div>
+                            <div class="activity-bullet">Manual literature search on assigned topic (no AI assistance on search itself)</div>
+                            <div class="activity-bullet">Read & annotate 5–7 foundational papers in your domain</div>
+                        </div>
+                        <div class="week-time">Est. 8 hrs traditional → 1 hr with pair + AI assistance (literature reading accelerated)</div>
+                    </div>
+
+                    <div class="week-box">
+                        <div class="week-number">Week 2</div>
+                        <div class="week-title">Query Diary & D0 Reflection</div>
+                        <div class="week-activities">
+                            <div class="activity-bullet">Keep a query diary: search terms, papers found, relevance assessments</div>
+                            <div class="activity-bullet">Write D0 Reflection: summarize state of the literature, identify gaps, articulate design question</div>
+                            <div class="activity-bullet">Prepare for track-specific work starting Week 3</div>
+                        </div>
+                        <div class="week-deliverable">
+                            <span class="deliverable-label">D0</span> Reflection (formative; not graded)
+                        </div>
+                        <div class="week-time">Est. 6 hrs traditional → 45 min with pair + AI (writing acceleration)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PHASE II -->
+            <div class="phase-group phase-2">
+                <div class="phase-header">
+                    <span class="phase-title">PHASE II: VR-Specific Production (Weeks 3–8)</span>
+                    <span class="phase-badge phase-2-badge">VR TRACK</span>
+                </div>
+
+                <div class="weeks-grid">
+                    <div class="week-box">
+                        <div class="week-number">Week 3</div>
+                        <div class="week-title">Stimulus Design Planning & VR Apparatus Training</div>
+                        <div class="week-activities">
+                            <div class="activity-bullet">Choose stimulus dimension from track list (see Team Structure below)</div>
+                            <div class="activity-bullet">Literature review: design dimension rationale, identify ≥3 levels to test</div>
+                            <div class="activity-bullet">Mandatory VR apparatus training (safety, headset operation, motion controls)</div>
+                        </div>
+                        <div class="week-deliverable">
+                            <span class="deliverable-label">D1</span> Stimulus Design Plan (5 sections: dimension, levels, held-constants, rationale, predicted preferences)
+                        </div>
+                        <div class="week-time">Est. 12 hrs traditional → 1.7 hrs with pair + AI (lit evidence review 50 min, design spec 30 min, writing 20 min)</div>
+                    </div>
+
+                    <div class="week-box">
+                        <div class="week-number">Week 4</div>
+                        <div class="week-title">Production Sprint 1: Scenes 1–3</div>
+                        <div class="week-activities">
+                            <div class="activity-bullet">Build three VR scenes in Unity, corresponding to three stimulus levels</div>
+                            <div class="activity-bullet">Import assets, set up environment, test basic interactivity</div>
+                            <div class="activity-bullet">No formal deliverable; progress shown in Week 5 stimulus set</div>
+                        </div>
+                        <div class="week-time">Est. 15 hrs traditional → 2 hrs with pair + AI (asset sourcing, scripting templates, testing)</div>
+                    </div>
+
+                    <div class="week-box">
+                        <div class="week-number">Week 5</div>
+                        <div class="week-title">Production Sprint 2 & Preference Testing Setup</div>
+                        <div class="week-activities">
+                            <div class="activity-bullet">Build additional scenes (total ≥5); finalize interactivity</div>
+                            <div class="activity-bullet">Design preference questionnaire (e.g., 5-point Likert scales)</div>
+                            <div class="activity-bullet">Recruit & schedule testing participants (aim for ≥8)</div>
+                        </div>
+                        <div class="week-deliverable">
+                            <span class="deliverable-label">D2</span> Stimulus Set: ≥5 interactive VR scenes (Unity builds + metadata)
+                        </div>
+                        <div class="week-time">Est. 16 hrs traditional → 2.5 hrs with pair + AI (scene finalization, questionnaire generation, participant database)</div>
+                    </div>
+
+                    <div class="week-box">
+                        <div class="week-number">Week 6</div>
+                        <div class="week-title">Adaptive Preference Testing (≥8 Participants)</div>
+                        <div class="week-activities">
+                            <div class="activity-bullet">Run testing sessions: each participant experiences all stimulus levels, rates preferences</div>
+                            <div class="activity-bullet">Collect questionnaire data, record observations, take notes on participant comments</div>
+                            <div class="activity-bullet">No formal deliverable this week; data collection phase</div>
+                        </div>
+                        <div class="week-time">Est. 12 hrs traditional → 3 hrs with pair + AI (session coordination, data entry, preliminary screening)</div>
+                    </div>
+
+                    <div class="week-box">
+                        <div class="week-number">Week 7</div>
+                        <div class="week-title">Preference Data Analysis</div>
+                        <div class="week-activities">
+                            <div class="activity-bullet">Summarize preference ratings (descriptive stats: means, SDs, medians)</div>
+                            <div class="activity-bullet">Visualize preference functions (e.g., preference × stimulus level)</div>
+                            <div class="activity-bullet">Interpret results: Do findings match design predictions? Why or why not?</div>
+                        </div>
+                        <div class="week-deliverable">
+                            <span class="deliverable-label">D3</span> Preference Data Analysis Report (tables, figures, interpretation, limitations)
+                        </div>
+                        <div class="week-time">Est. 10 hrs traditional → 1.5 hrs with pair + AI (data cleaning, stat computation, figure generation, writing)</div>
+                    </div>
+
+                    <div class="week-box">
+                        <div class="week-number">Week 8</div>
+                        <div class="week-title">Scene Finalization & Technical Documentation</div>
+                        <div class="week-activities">
+                            <div class="activity-bullet">Polish scenes: optimize rendering, fix any bugs, ensure reproducibility</div>
+                            <div class="activity-bullet">Document project structure, asset inventories, rendering settings, build instructions</div>
+                            <div class="activity-bullet">Create step-by-step guide for running scenes on target VR hardware</div>
+                        </div>
+                        <div class="week-deliverable">
+                            <span class="deliverable-label">D4</span> Technical Documentation (Unity project guide, asset manifest, build & deployment steps)
+                        </div>
+                        <div class="week-time">Est. 8 hrs traditional → 1 hr with pair + AI (documentation template, asset tracking, testing)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PHASE III -->
+            <div class="phase-group phase-3">
+                <div class="phase-header">
+                    <span class="phase-title">PHASE III: Integration & Presentations (Weeks 9–10)</span>
+                    <span class="phase-badge phase-3-badge">FINAL STAGE</span>
+                </div>
+
+                <div class="weeks-grid">
+                    <div class="week-box">
+                        <div class="week-number">Week 9</div>
+                        <div class="week-title">Final Report Writing</div>
+                        <div class="week-activities">
+                            <div class="activity-bullet">Integrate design rationale, preference findings, and technical implementation into coherent narrative</div>
+                            <div class="activity-bullet">Discuss implications: What does this tell us about stimulus design in human factors?</div>
+                            <div class="activity-bullet">Acknowledge limitations and suggest future directions</div>
+                        </div>
+                        <div class="week-time">Est. 10 hrs traditional → 1.5 hrs with pair + AI (outline generation, section drafting, revision)</div>
+                    </div>
+
+                    <div class="week-box">
+                        <div class="week-number">Week 10</div>
+                        <div class="week-title">Final Report & Presentation</div>
+                        <div class="week-activities">
+                            <div class="activity-bullet">Polish final report: proofread, check citations, finalize figures</div>
+                            <div class="activity-bullet">Prepare 5-minute presentation: live VR walkthrough or recorded demo + interpretation of findings</div>
+                            <div class="activity-bullet">Present to class; participate in peer feedback</div>
+                        </div>
+                        <div class="week-deliverable">
+                            <span class="deliverable-label">D5</span> Final Report (complete project narrative) • <span class="deliverable-label">D6</span> Presentation (live or recorded VR + findings)
+                        </div>
+                        <div class="week-time">Est. 12 hrs traditional → 2 hrs with pair + AI (report finalization, slide design, practice presentation)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Structure -->
+        <div class="team-structure">
+            <div class="team-structure-title">How 3 Pairs Divide the Work</div>
+            <p style="margin-bottom: 16px; font-size: 13px; color: #555;">
+                Each pair of 2 students specializes in one stimulus dimension from the VR design space. This allows depth specialization within a single semester while maintaining breadth across the track. All pairs follow the same timeline (Weeks 1–10), but their stimulus design choices and resulting scenes differ. This creates natural comparison across teams during peer review and final presentations.
+            </p>
+
+            <div class="team-structure-content">
+                <div class="team-pair">
+                    <div class="team-pair-title">Pair 1: Pair Assignment TBD</div>
+                    <div class="team-pair-desc">
+                        Stimulus Dimension: <span class="dimension-name">Spatial Openness</span><br><br>
+                        Focus: How perceived spatial expansiveness (corridor vs. room vs. outdoors) influences aesthetic preference and sense of presence. Design three levels: enclosed, semi-open, fully open.
+                    </div>
+                </div>
+
+                <div class="team-pair">
+                    <div class="team-pair-title">Pair 2: Pair Assignment TBD</div>
+                    <div class="team-pair-desc">
+                        Stimulus Dimension: <span class="dimension-name">Biophilic Content</span><br><br>
+                        Focus: How inclusion of living elements (plants, water, natural textures) impacts restorativeness and engagement. Design three levels: no nature, moderate nature, high nature saturation.
+                    </div>
+                </div>
+
+                <div class="team-pair">
+                    <div class="team-pair-title">Pair 3: Pair Assignment TBD</div>
+                    <div class="team-pair-desc">
+                        Stimulus Dimension: <span class="dimension-name">Lighting Quality</span><br><br>
+                        Focus: How daylight characteristics (cool vs. warm color temperature, diffuse vs. direct shadows) affect mood and focus. Design three levels: cool fluorescent, warm incandescent, natural daylight.
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-notes">
+                <strong>Work Distribution Within Each Pair:</strong> One student leads literature review and design rationale; the other leads scene production and testing logistics. Both contribute to analysis and writing. <strong>Cross-Pair Coordination:</strong> All three pairs use identical held-constant parameters (room dimensions, base furniture, interaction mechanics) so that findings are comparable. A shared asset library and style guide ensures visual consistency. <strong>Alternative Stimulus Dimensions</strong> (by instructor approval): Material complexity, color saturation, avatar presence, acoustic properties, or user control options.
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-section">
+            <p>COGS160: AI & VR | VR Track | UCSD Cognitive Science</p>
+            <p style="margin-top: 6px;">Track Overview | Week-by-Week Schedule & Deliverables</p>
+            <p style="margin-top: 6px; font-size: 11px;">Generated 2026-03-28 | For Students & Teaching Staff</p>
+        </div>
+    </div>
+</body>
+</html>

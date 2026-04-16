@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 1 — Orientation &amp; The Knowledge Atlas · COGS 160</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #1C3D3A; --teal: #2A7868; --teal-lt: #5AC8AA; --teal-bg: #E6F5F0;
+  --amber: #E8872A; --amber-lt: #FFF3E0; --amber-dk: #9a5010;
+  --cream: #F7F4EF; --ink: #2C2C2C; --muted: #6B6B6B; --border: #D8D0C5;
+  --white: #FFFFFF; --rose: #A84F6B; --blue: #3A6EA8; --green: #1A7A50;
+}
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--cream); color: var(--ink); line-height: 1.65; }
+
+/* ── Top nav ── */
+.top-nav { background: var(--navy); padding: 0 1.5rem; display: flex; align-items: center; height: 52px; gap: 1.2rem; font-size: 0.85rem; position: sticky; top: 0; z-index: 100; }
+.nav-brand { color: var(--amber); font-weight: 800; font-size: 1.05rem; text-decoration: none; }
+.nav-sep { color: rgba(255,255,255,0.2); }
+.nav-link { color: #b2dfdb; text-decoration: none; padding: 4px 10px; border-radius: 5px; transition: background 0.15s; }
+.nav-link:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.nav-link.active { background: rgba(255,255,255,0.15); color: #fff; font-weight: 600; }
+.nav-right { margin-left: auto; color: rgba(255,255,255,0.4); font-size: 0.75rem; }
+
+/* ── Hero ── */
+.hero { background: linear-gradient(135deg, var(--navy) 0%, #152e2b 100%); color: #fff; padding: 3rem 2rem 2.5rem; text-align: center; }
+.hero-eyebrow { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber); font-weight: 600; margin-bottom: 0.5rem; }
+.hero h1 { font-family: Georgia, serif; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; line-height: 1.15; margin-bottom: 0.5rem; }
+.hero-sub { font-size: 1rem; color: rgba(255,255,255,0.7); max-width: 680px; margin: 0 auto 1.2rem; }
+.hero-pills { display: flex; justify-content: center; gap: 0.6rem; flex-wrap: wrap; }
+.hero-pill { display: inline-block; padding: 0.28rem 0.85rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.pill-teal { background: var(--teal); color: #fff; }
+.pill-amber { background: var(--amber); color: #fff; }
+.pill-outline { background: transparent; border: 1.5px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.8); }
+
+/* ── Layout ── */
+.page-wrap { max-width: 920px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+
+/* ── Day blocks ── */
+.day-block { background: var(--white); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.day-label { display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 3px 10px; border-radius: 4px; margin-bottom: 0.75rem; }
+.day-label-tue { background: var(--teal-bg); color: var(--teal); }
+.day-label-thu { background: var(--amber-lt); color: var(--amber-dk); }
+.day-title { font-family: Georgia, serif; font-size: 1.35rem; font-weight: 700; color: var(--navy); margin-bottom: 0.6rem; }
+.day-block p { margin-bottom: 0.9rem; font-size: 0.95rem; }
+.day-block p:last-child { margin-bottom: 0; }
+
+/* ── Agenda items ── */
+.agenda-item { display: flex; gap: 1rem; margin: 1.2rem 0; align-items: flex-start; }
+.agenda-num { width: 2rem; height: 2rem; border-radius: 50%; background: var(--navy); color: var(--amber); font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 0.15rem; }
+.agenda-body { flex: 1; }
+.agenda-body h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 0.3rem; }
+.agenda-body p { font-size: 0.92rem; color: #444; }
+
+/* ── Callout boxes ── */
+.callout { border-left: 4px solid; border-radius: 0 8px 8px 0; padding: 1rem 1.2rem; margin: 1.2rem 0; font-size: 0.9rem; }
+.callout-teal { border-color: var(--teal); background: var(--teal-bg); }
+.callout-amber { border-color: var(--amber); background: var(--amber-lt); }
+.callout-rose { border-color: var(--rose); background: #fdf0ef; }
+.callout-label { font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.35rem; }
+.callout-teal .callout-label { color: var(--teal); }
+.callout-amber .callout-label { color: var(--amber-dk); }
+.callout-rose .callout-label { color: var(--rose); }
+
+/* ── Failure mode cards ── */
+.failure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin: 1.2rem 0; }
+.fail-card { border: 1.5px solid var(--border); border-radius: 8px; padding: 0.9rem 1rem; background: var(--white); }
+.fail-card h4 { font-size: 0.85rem; font-weight: 700; color: var(--navy); margin-bottom: 0.25rem; }
+.fail-card p { font-size: 0.82rem; color: var(--muted); margin: 0; }
+.fail-card.slow { border-top: 3px solid var(--amber); }
+
+/* ── Resource cards ── */
+.resource-row { display: flex; gap: 0.8rem; margin: 1rem 0; flex-wrap: wrap; }
+.resource-card { flex: 1; min-width: 200px; border: 1.5px solid var(--border); border-radius: 8px; padding: 1rem; background: var(--white); }
+.resource-card h4 { font-size: 0.88rem; font-weight: 700; color: var(--navy); margin-bottom: 0.3rem; }
+.resource-card p { font-size: 0.82rem; color: var(--muted); margin: 0; }
+.resource-card .rec { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; padding: 2px 6px; border-radius: 3px; background: var(--teal-bg); color: var(--teal); margin-top: 0.4rem; }
+
+/* ── Link buttons ── */
+.page-links { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1.2rem 0; }
+.page-link { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: all 0.15s; }
+.link-primary { background: var(--navy); color: #fff; }
+.link-primary:hover { background: var(--teal); }
+.link-secondary { background: var(--teal-bg); color: var(--navy); border: 1.5px solid var(--teal); }
+.link-secondary:hover { background: var(--teal); color: #fff; }
+
+/* ── Deliverable box ── */
+.deliverable { background: var(--amber-lt); border: 1.5px solid var(--amber); border-radius: 8px; padding: 1rem 1.2rem; margin: 1.2rem 0; }
+.deliverable-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber-dk); margin-bottom: 0.3rem; }
+.deliverable p { font-size: 0.88rem; color: #5a3800; margin: 0; }
+
+/* ── Week nav ── */
+.week-nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 0; margin-top: 1rem; border-top: 2px solid var(--border); }
+.week-nav a { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.2rem; border-radius: 6px; text-decoration: none; font-size: 0.88rem; font-weight: 600; transition: all 0.15s; }
+.week-nav .prev { background: var(--white); color: var(--navy); border: 1.5px solid var(--border); }
+.week-nav .prev:hover { border-color: var(--navy); }
+.week-nav .next { background: var(--navy); color: #fff; }
+.week-nav .next:hover { background: var(--teal); }
+.week-nav .disabled { opacity: 0.3; pointer-events: none; }
+
+/* ── Signup banner ── */
+.signup-banner { background: linear-gradient(135deg, var(--teal-bg) 0%, #d4ede6 100%); border: 1.5px solid var(--teal); border-radius: 10px; padding: 1.2rem 1.5rem; margin: 1.5rem 0; display: flex; align-items: center; gap: 1rem; }
+.signup-banner p { font-size: 0.9rem; color: var(--navy); flex: 1; margin: 0; }
+.signup-banner a { padding: 0.5rem 1.2rem; background: var(--teal); color: #fff; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.85rem; white-space: nowrap; }
+
+@media (max-width: 640px) {
+  .failure-grid { grid-template-columns: 1fr; }
+  .resource-row { flex-direction: column; }
+  .signup-banner { flex-direction: column; text-align: center; }
+}
+
+.wordmark {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; flex-shrink: 0;
+}
+.wordmark-icon { width: 30px; height: 30px; }
+.wordmark-text { display: flex; flex-direction: column; line-height: 1.1; }
+.wm-top { font-size: 0.66rem; font-weight: 400; letter-spacing: 0.24em; text-transform: uppercase; color: #A8C8BF; }
+.wm-bottom { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.03em; color: #fff; }
+.wm-bottom span { color: #F5A623; }
+</style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav class="top-nav">
+  <a class="wordmark" href="../ka_home.html">
+    <svg class="wordmark-icon" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="3.5" fill="#F5A623"/>
+      <circle cx="16" cy="5"  r="2.5" fill="#A8C8BF"/>
+      <circle cx="27" cy="22" r="2.5" fill="#A8C8BF"/>
+      <circle cx="5"  cy="22" r="2.5" fill="#A8C8BF"/>
+      <line x1="16"   y1="7.5"  x2="16"   y2="12.5" stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="24.8" y1="20.2" x2="19.0" y2="17.3"  stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="7.2"  y1="20.2" x2="13.0" y2="17.3"  stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="16" y1="7.5"  x2="25.5" y2="20" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+      <line x1="25.5" y1="20" x2="6.5"   y2="20" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+      <line x1="6.5"  y1="20" x2="16"    y2="7.5" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+    </svg>
+    <div class="wordmark-text">
+      <span class="wm-top">Knowledge</span>
+      <span class="wm-bottom">At<span>las</span></span>
+    </div>
+  </a>
+  <span class="nav-sep">|</span>
+  <a href="ka_schedule.html" class="nav-link">Schedule</a>
+  <a href="ka_student_setup.html" class="nav-link">Setup</a>
+  <a href="../ka_topics.html" class="nav-link">Topics</a>
+  <a href="../ka_evidence.html" class="nav-link">Evidence</a>
+  <a href="../ka_demo_v04.html" class="nav-link">Ask</a>
+  <span class="nav-right">COGS 160 · Spring 2026</span>
+</nav>
+<div style="background:#EDE8E0;padding:8px 28px;font-size:0.78rem;color:#6A5E50;display:flex;align-items:center;gap:6px;">
+  <a href="../ka_home.html" style="color:#1C3D3A;text-decoration:none;font-weight:600;">Home</a> <span style="color:#B0A898;">/</span>
+  <a href="ka_student_setup.html" style="color:#1C3D3A;text-decoration:none;font-weight:600;">COGS 160 Start</a> <span style="color:#B0A898;">/</span>
+  <span>Week 1</span>
+</div>
+
+<!-- ── Hero ── -->
+<header class="hero">
+  <p class="hero-eyebrow">COGS 160 · Spring 2026 · Week 1 of 8</p>
+  <h1>Orientation &amp; The Knowledge Atlas</h1>
+  <p class="hero-sub">Meet the system you will spend the quarter building. Understand the methodology that makes AI-directed development work. Start collecting articles.</p>
+  <div class="hero-pills">
+    <span class="hero-pill pill-teal">Tuesday: Seminar</span>
+    <span class="hero-pill pill-amber">Thursday: Lab</span>
+    <span class="hero-pill pill-outline">A0 Assigned</span>
+  </div>
+</header>
+
+<div class="page-wrap">
+
+  <!-- ── Registration + Track signup banners ── -->
+  <div class="callout callout-teal" style="margin-top:0;">
+    <div class="callout-label">Before anything else: Register</div>
+    <p>You need two accounts set up by the end of Week 1. First, <strong>register on the K-ATLAS site</strong> — this is where you submit articles, view evidence, and track your contributions. Second, make sure you have a <strong>GitHub account</strong> — you will need it by Week 3 when you join your track and begin committing code. If you already have GitHub, you are set; if not, create a free account at <a href="https://github.com" style="color:var(--navy);font-weight:600;">github.com</a>.</p>
+    <div class="page-links" style="margin-top:0.8rem;margin-bottom:0;">
+      <a href="../ka_register.html" class="page-link link-primary">Register on K-ATLAS →</a>
+      <a href="../ka_login.html" class="page-link link-secondary">Already registered? Log in</a>
+    </div>
+  </div>
+
+  <div class="signup-banner">
+    <p><strong>Choose your track early.</strong> You must finalize by Week 3, but browsing now helps you prepare. Four tracks: Image Tagger, Article Finder, VR Production, GUI Evaluation.</p>
+    <a href="ka_track_signup.html">Browse Tracks &amp; Sign Up →</a>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       TUESDAY — Day 1
+  ════════════════════════════════════════════ -->
+  <div class="day-block">
+    <span class="day-label day-label-tue">Tuesday · Day 1 · Seminar</span>
+    <h2 class="day-title">What This Course Is and How AI Actually Works in Practice</h2>
+
+    <p>This class teaches you to direct AI systems toward production-quality knowledge infrastructure. The content domain is environmental psychology — how physical spaces shape cognition, emotion, and behavior — but the methodology transfers to any domain. Knowledge Atlas is the practice substrate: a real system with real data, real users, and real gaps that need closing.</p>
+
+    <div class="agenda-item">
+      <div class="agenda-num">1</div>
+      <div class="agenda-body">
+        <h3>Syllabus and Course Structure</h3>
+        <p>Eight-week arc in three phases. Weeks 1–2: whole-class foundation (everyone learns the methodology and contributes articles). Week 3: form teams and choose tracks. Weeks 4–7: track-specific sprints building real KA components. Week 8: preview the fall continuation and final integration. Grading is based on your methodology log, sprint deliverables, and article contributions.</p>
+      </div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="agenda-num">2</div>
+      <div class="agenda-body">
+        <h3>Required Resources: Your AI Subscription</h3>
+        <p>You need access to at least one AI coding assistant for the entire quarter. This is a required tool, like a textbook — you cannot complete the assignments without it.</p>
+      </div>
+    </div>
+
+    <div class="resource-row">
+      <div class="resource-card">
+        <h4>Claude Desktop with Cowork</h4>
+        <p>Anthropic's desktop app with file access, code execution, and browser automation. Best for structured multi-step tasks and document creation.</p>
+        <span class="rec">Recommended</span>
+      </div>
+      <div class="resource-card">
+        <h4>ChatGPT Plus / Codex</h4>
+        <p>OpenAI's chat interface with code interpreter. Strong at exploratory coding and data analysis. Codex provides terminal-level access.</p>
+        <span class="rec">Recommended</span>
+      </div>
+      <div class="resource-card">
+        <h4>Any Equivalent</h4>
+        <p>Gemini Advanced, Copilot, or another frontier model with code execution. Must support file upload and multi-turn conversation.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-teal">
+      <div class="callout-label">Why you need a paid subscription</div>
+      <p>Free tiers rate-limit you to a few messages per hour. The methodology requires sustained, multi-turn sessions — sometimes 30–50 prompts in a sitting. A free tier will cut you off mid-task and destroy your session context. Budget approximately $20/month.</p>
+    </div>
+
+    <div class="agenda-item">
+      <div class="agenda-num">3</div>
+      <div class="agenda-body">
+        <h3>The Knowledge Atlas: What It Is and Why It Exists</h3>
+        <p>A guided walkthrough of the K-ATLAS system — the evidence network, warrant types, credence propagation, and the six capability gaps your work this quarter will address. This is not a passive lecture: you will interact with the live system during the presentation.</p>
+      </div>
+    </div>
+
+    <div class="page-links">
+      <a href="../ka_explain_system.html" class="page-link link-primary">Understanding the System →</a>
+      <a href="../ka_demo_v04.html" class="page-link link-secondary">Try the Demo (Ask a Question)</a>
+    </div>
+
+    <div class="agenda-item">
+      <div class="agenda-num">4</div>
+      <div class="agenda-body">
+        <h3>The Seven AI Failure Modes</h3>
+        <p>AI systems fail in predictable, recurring patterns. Knowing these patterns is the difference between producing work you can trust and producing work that looks right but is subtly wrong. The first five failures emerge in single prompts; the last two — Deletion and Drift — are slow-acting and compound silently over long sessions.</p>
+      </div>
+    </div>
+
+    <div class="failure-grid">
+      <div class="fail-card">
+        <h4>1. Plausible Hallucination</h4>
+        <p>Content that reads correctly, uses domain vocabulary, and is completely fabricated. Fake citations, invented effect sizes.</p>
+      </div>
+      <div class="fail-card">
+        <h4>2. Wrong-Problem Drift</h4>
+        <p>Starts on task X, gradually migrates to easier task Y. Common in multi-step prompts where attention degrades.</p>
+      </div>
+      <div class="fail-card">
+        <h4>3. Self-Congratulatory Report</h4>
+        <p>AI implements, tests its own work, and reports success — but the tests verify what the code does, not what it should do.</p>
+      </div>
+      <div class="fail-card">
+        <h4>4. Consensus Fabrication</h4>
+        <p>When synthesizing perspectives, the AI smooths over disagreements — destroying the information that matters most.</p>
+      </div>
+      <div class="fail-card">
+        <h4>5. Premature Abstraction</h4>
+        <p>"Several studies found..." instead of "3 studies (Mehta 2012, N=45; Steidle 2013, N=80) found..."</p>
+      </div>
+      <div class="fail-card slow">
+        <h4>6. Attention-Induced Deletion</h4>
+        <p>AI focuses on a subset of files and silently drops everything outside its attention window. Repos shrink instead of growing.</p>
+      </div>
+      <div class="fail-card slow">
+        <h4>7. Session Drift</h4>
+        <p>Over a long session the AI loses the original goal. Each step looks reasonable, but the cumulative trajectory diverges. A 12-line fix expands to 3,200 lines across 14 files.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-rose">
+      <div class="callout-label">The methodology exists because every shortcut has been tried and has failed</div>
+      <p>The seven-step workflow (Define → Panel → Spec → Plan → Implement → Verify → Iterate) is not bureaucracy. It is the minimum structure that prevents these failure modes from silently ruining your work. Students who skip the panel step produce systems that solve the wrong problem. Students who skip the spec step produce systems that cannot be tested.</p>
+    </div>
+
+    <div class="agenda-item">
+      <div class="agenda-num">5</div>
+      <div class="agenda-body">
+        <h3>Introducing A0: Collect Articles (Your First Homework)</h3>
+        <p>Every student — regardless of track — completes this universal assignment during Weeks 1–2. You will be assigned two research questions from the K-ATLAS question bank. For each question, find and upload 10 peer-reviewed articles with PDFs, APA citations, DOIs, and abstracts. This builds the empirical corpus that all other work depends on.</p>
+      </div>
+    </div>
+
+    <div class="page-links">
+      <a href="ka_collect_articles.html" class="page-link link-primary">A0: Collect Articles Assignment →</a>
+      <a href="ka_google_search_guide.html" class="page-link link-secondary">Google AI Citation Guide</a>
+    </div>
+
+    <div class="deliverable">
+      <div class="deliverable-label">Due: End of Week 2</div>
+      <p>20 articles total (10 per question) with PDFs, APA citations, DOIs, and abstracts uploaded through the contribute page. Questions assigned in Thursday's lab.</p>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       THURSDAY — Day 2
+  ════════════════════════════════════════════ -->
+  <div class="day-block">
+    <span class="day-label day-label-thu">Thursday · Day 2 · Lab</span>
+    <h2 class="day-title">Select Your Questions and Begin the Article Search</h2>
+
+    <p>Thursday is hands-on. You receive your two assigned questions, learn how to write effective search queries using Google AI Citation, and begin finding articles. By the end of class you should have your first 3–5 papers per question identified — with at least one PDF downloaded and verified.</p>
+
+    <div class="agenda-item">
+      <div class="agenda-num">1</div>
+      <div class="agenda-body">
+        <h3>Receive and Review Your Assigned Questions</h3>
+        <p>Each student gets two questions drawn from the K-ATLAS question bank — 130 questions spanning 11 topic clusters. Your questions are specifically formatted for Google AI Citation: they contain the population, the environmental variable, the outcome measure, and the evidence type. Read them carefully before searching.</p>
+      </div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="agenda-num">2</div>
+      <div class="agenda-body">
+        <h3>Learn the Search Method</h3>
+        <p>Walk through the Google AI Citation Guide together. Standard academic search uses Boolean operators and treats retrieval as keyword matching. Google AI Citation treats it as question answering — the language model interprets your query semantically and surfaces papers that address the specific intersection of concepts you describe, even when they do not contain your exact keywords.</p>
+      </div>
+    </div>
+
+    <div class="page-links">
+      <a href="ka_google_search_guide.html" class="page-link link-primary">Open the Search Guide →</a>
+      <a href="../ka_topics.html" class="page-link link-secondary">Browse KA Topics</a>
+    </div>
+
+    <div class="agenda-item">
+      <div class="agenda-num">3</div>
+      <div class="agenda-body">
+        <h3>Begin Searching (Remaining Class Time)</h3>
+        <p>Open Google Scholar, paste your first question, and start evaluating results. For each paper: check that it is peer-reviewed, relevant to the question, and available as a PDF. Download the PDF. Record the APA citation and DOI. Aim for 3–5 papers per question by the end of class.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-amber">
+      <div class="callout-label">Tip: Quality over quantity</div>
+      <p>A paper is only useful if it directly addresses your question. A tangentially related paper wastes your time and clutters the corpus. When in doubt, read the abstract. If the abstract does not mention the specific environmental variable and outcome in your question, move on.</p>
+    </div>
+
+    <div class="deliverable">
+      <div class="deliverable-label">By end of Thursday</div>
+      <p>3–5 candidate papers per question identified. At least one PDF per question downloaded and verified as relevant. Continue through the weekend to reach the full 10 per question by end of Week 2.</p>
+    </div>
+  </div>
+
+  <!-- ── Week Navigation ── -->
+  <div class="week-nav">
+    <a href="ka_schedule.html" class="prev">← Course Schedule</a>
+    <a href="week2_agenda.html" class="next">Week 2: AI Demo &amp; First Tasks →</a>
+  </div>
+
+</div>
+<script src="../ka_auth_widget.js?v=20260407b"></script>
+</body>
+</html>

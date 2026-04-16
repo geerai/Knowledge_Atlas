@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track 3 · VR Resources</title>
+<link rel="stylesheet" href="../ka_atlas_shell.css">
+<style>:root { --hub-color: #4A3A78; }</style>
+</head>
+<body data-ka-active="" data-ka-journey="contributor"
+      data-ka-crumbs='[["Home","ka_home.html"],["AI VR Hub","ka_track3_hub.html"],["Resources",""]]'>
+
+<a class="ka-skip" href="#main">Skip to main content</a>
+<div id="ka-navbar-slot"></div>
+<div id="ka-breadcrumb-slot"></div>
+
+<section class="hub-banner">
+  <div class="tag">Track 3 · Shared Resources</div>
+  <h1>VR Resources <span class="local-badge">Local preview</span></h1>
+  <p class="subtitle">
+    Scenes, instrumentation scripts, licensed assets, and AI-agent behaviours curated
+    by the AI VR team. Initial items are seeded by the instructor. Add what your
+    sub-team has built — and what saved you time — so the rest of the team benefits.
+  </p>
+</section>
+
+<div class="ka-shell">
+  <aside id="ka-journey-slot"></aside>
+  <main id="ka-main">
+
+    <section id="scenes" class="hub-region">
+      <div class="hub-region-head"><div>
+        <div class="hub-region-num">Section 1</div>
+        <div class="hub-region-title">Baseline scenes</div>
+      </div></div>
+      <div class="hub-region-body">
+        <div class="resource-list" id="resources-scenes">
+          <div class="resource-item">
+            <div class="rtitle">BaselineRoom.unity</div>
+            <div class="rmeta">Seeded · Unity 2022.3 LTS · 4×4 m room, neutral walls</div>
+            <div class="rdesc">Starting point for ceiling-height, daylight, and
+              crowding variants. Instrumented with the canonical GazeLogger.</div>
+          </div>
+          <div class="resource-item">
+            <div class="rtitle">CourtyardOpen.unity</div>
+            <div class="rmeta">Seeded · Outdoor baseline with dynamic sky</div>
+            <div class="rdesc">For prospect-refuge and nature-exposure studies.</div>
+          </div>
+        </div>
+        <form class="resource-add-form" onsubmit="return addResource('scenes', this)">
+          <strong>Add a scene</strong>
+          <input name="title" placeholder="Scene name (e.g. 'ClassroomDense.unity')" required>
+          <input name="meta"  placeholder="Author · date · Unity version">
+          <textarea name="body" placeholder="What it's for, dependencies, LFS size" required></textarea>
+          <button class="ka-btn" type="submit">Save locally</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="scripts" class="hub-region">
+      <div class="hub-region-head"><div>
+        <div class="hub-region-num">Section 2</div>
+        <div class="hub-region-title">Instrumentation scripts</div>
+      </div></div>
+      <div class="hub-region-body">
+        <div class="resource-list" id="resources-scripts">
+          <div class="resource-item">
+            <div class="rtitle">GazeLogger.cs</div>
+            <div class="rmeta">Seeded · 60 Hz · CSV output</div>
+            <div class="rdesc">Canonical gaze / head-direction logger. Do not fork; extend
+              via subclass.</div>
+          </div>
+          <div class="resource-item">
+            <div class="rtitle">LocomotionTracer.cs</div>
+            <div class="rmeta">Seeded · logs player XYZ and velocity</div>
+            <div class="rdesc">For wayfinding and crowding studies.</div>
+          </div>
+        </div>
+        <form class="resource-add-form" onsubmit="return addResource('scripts', this)">
+          <strong>Add an instrumentation script</strong>
+          <input name="title" placeholder="Script name" required>
+          <input name="meta"  placeholder="Author · date">
+          <textarea name="body" placeholder="What it measures, sampling rate, output schema" required></textarea>
+          <button class="ka-btn" type="submit">Save locally</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="assets" class="hub-region">
+      <div class="hub-region-head"><div>
+        <div class="hub-region-num">Section 3</div>
+        <div class="hub-region-title">Licensed asset packs</div>
+      </div></div>
+      <div class="hub-region-body">
+        <div class="resource-list" id="resources-assets">
+          <div class="resource-item">
+            <div class="rtitle">Archviz Interiors Vol. 1</div>
+            <div class="rmeta">Unity Asset Store · course licence · attribution required</div>
+            <div class="rdesc">Use for office / residential scenes. Credit in scene README.</div>
+          </div>
+        </div>
+        <form class="resource-add-form" onsubmit="return addResource('assets', this)">
+          <strong>Add an asset pack</strong>
+          <input name="title" placeholder="Pack name" required>
+          <input name="meta"  placeholder="Source · licence · attribution">
+          <textarea name="body" placeholder="What's in it, suitable uses" required></textarea>
+          <button class="ka-btn" type="submit">Save locally</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="agents" class="hub-region">
+      <div class="hub-region-head"><div>
+        <div class="hub-region-num">Section 4</div>
+        <div class="hub-region-title">AI-agent behaviours</div>
+      </div></div>
+      <div class="hub-region-body">
+        <div class="resource-list" id="resources-agents">
+          <div class="resource-item">
+            <div class="rtitle">WayfindingNPC · system prompt v0.2</div>
+            <div class="rmeta">Seeded · applies to VR-003</div>
+            <div class="rdesc">Conditions the NPC on a serialised map + landmark list.
+              Known failure mode: hallucinated corridors when map is sparse.</div>
+          </div>
+        </div>
+        <form class="resource-add-form" onsubmit="return addResource('agents', this)">
+          <strong>Add an agent behaviour</strong>
+          <input name="title" placeholder="Agent name / version" required>
+          <input name="meta"  placeholder="Author · date · model used">
+          <textarea name="body" placeholder="Prompt, known quirks, verification scenarios" required></textarea>
+          <button class="ka-btn" type="submit">Save locally</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="ka-footer">
+  Knowledge Atlas · UCSD Cognitive Science · COGS 160 Spring 2026
+</footer>
+
+<script>
+(function () {
+  ['scenes','scripts','assets','agents'].forEach(function (key) {
+    var list = document.getElementById('resources-' + key);
+    if (!list) return;
+    var stored = JSON.parse(localStorage.getItem('ka_t3_res_' + key) || '[]');
+    stored.forEach(function (r) { list.appendChild(renderResource(r)); });
+  });
+})();
+
+function renderResource(r) {
+  var d = document.createElement('div');
+  d.className = 'resource-item';
+  d.innerHTML = '<div class="rtitle">' + escapeHtml(r.title) +
+                ' <span class="local-badge">Local</span></div>' +
+                '<div class="rmeta">' + escapeHtml(r.meta || '') + '</div>' +
+                '<div class="rdesc">' + escapeHtml(r.body).replace(/\n/g,'<br>') + '</div>';
+  return d;
+}
+
+function addResource(key, form) {
+  var r = {
+    title: form.title.value.trim(),
+    meta:  form.meta.value.trim() || ('Added ' + new Date().toISOString().slice(0,10)),
+    body:  form.body.value.trim()
+  };
+  var stored = JSON.parse(localStorage.getItem('ka_t3_res_' + key) || '[]');
+  stored.push(r);
+  localStorage.setItem('ka_t3_res_' + key, JSON.stringify(stored));
+  document.getElementById('resources-' + key).appendChild(renderResource(r));
+  form.reset();
+  return false;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+</script>
+
+<script src="../ka_canonical_navbar.js" defer></script>
+<script src="../ka_journey_nav.js"      defer></script>
+</body>
+</html>

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COGS160 — AF &amp; Image Tagger Track Setup Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            line-height: 1.7;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        .header {
+            background: linear-gradient(135deg, #182B49 0%, #1a4d7a 100%);
+            color: white;
+            padding: 2.5rem 0;
+            text-align: center;
+            border-bottom: 4px solid #1a7a5e;
+        }
+        .header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.4rem; }
+        .header p { opacity: 0.88; font-size: 1rem; }
+        nav.top-nav {
+            background: #182B49;
+            padding: 0.9rem 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #1a7a5e;
+        }
+        nav.top-nav a {
+            color: #7addb9;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        nav.top-nav a:hover { color: white; }
+        .container { max-width: 960px; margin: 2rem auto; padding: 0 1.5rem; }
+        section {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            padding: 2rem 2.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.09);
+        }
+        section h2 {
+            color: #182B49;
+            font-size: 1.55rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 3px solid #1a7a5e;
+        }
+        section h3 { color: #1a7a5e; font-size: 1.1rem; margin: 1.5rem 0 0.75rem; }
+        p { margin-bottom: 1rem; }
+        ul, ol { padding-left: 2rem; margin-bottom: 1rem; }
+        li { margin: 0.4rem 0; }
+        .code-block {
+            background: #1e2d3a;
+            color: #d4e6ef;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+            font-size: 0.83rem;
+            line-height: 1.7;
+            padding: 1.25rem 1.5rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        .code-block .comment { color: #6a9fb5; }
+        .code-block .prompt { color: #7addb9; }
+        .code-block .output { color: #b0c4cf; font-style: italic; }
+        .step-box {
+            border: 1.5px solid #dde3e9;
+            border-radius: 6px;
+            margin: 1.25rem 0;
+            overflow: hidden;
+        }
+        .step-box .step-header {
+            background: #182B49;
+            color: white;
+            padding: 0.65rem 1.25rem;
+            font-weight: 700;
+            font-size: 0.92rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .step-box .step-num {
+            background: #1a7a5e;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .step-box .step-body { padding: 1.25rem 1.5rem; }
+        .step-box .step-body p:last-child { margin-bottom: 0; }
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #f39c12;
+            padding: 1rem 1.25rem;
+            margin: 1.25rem 0;
+            border-radius: 4px;
+            font-size: 0.92rem;
+        }
+        .success-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 1rem 1.25rem;
+            margin: 1.25rem 0;
+            border-radius: 4px;
+            font-size: 0.92rem;
+        }
+        .info-box {
+            background: linear-gradient(135deg, #e8f8f3, #f0fcf9);
+            border-left: 4px solid #1a7a5e;
+            padding: 1rem 1.25rem;
+            margin: 1.25rem 0;
+            border-radius: 4px;
+            font-size: 0.92rem;
+        }
+        code {
+            font-family: 'SFMono-Regular', Consolas, monospace;
+            font-size: 0.84rem;
+            background: #e8f0f8;
+            color: #1a4d7a;
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 0.87rem; margin: 1rem 0; }
+        table th { background: #182B49; color: white; padding: 0.6rem 1rem; text-align: left; font-size: 0.82rem; }
+        table td { padding: 0.55rem 1rem; border-bottom: 1px solid #edf0f3; vertical-align: top; }
+        table tr:hover { background: #f5fbf8; }
+        .os-tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid #dde3e9;
+            margin-bottom: 1rem;
+        }
+        .os-tab {
+            padding: 0.5rem 1.25rem;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.87rem;
+            border: none;
+            background: #f5f7f9;
+            color: #555;
+            border-radius: 4px 4px 0 0;
+            transition: background 0.2s;
+        }
+        .os-tab.active { background: #1a7a5e; color: white; }
+        .os-panel { display: none; }
+        .os-panel.active { display: block; }
+        footer {
+            background: #182B49;
+            color: #9ab5c8;
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.82rem;
+            margin-top: 3rem;
+        }
+        footer a { color: #7addb9; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Repository Setup Guide</h1>
+    <p>Article Finder Track &amp; Image Tagger Track · COGS 160: AI &amp; VR</p>
+</div>
+
+<nav class="top-nav">
+    <a href="af_track_planning.html">AF Track Overview</a>
+    <a href="af_wk03.html">AF Week 3 →</a>
+    <a href="image_track_overview.html">Image Tagger Track</a>
+    <a href="image_wk03_triage.html">Image Tagger Week 3 →</a>
+</nav>
+
+<div class="container">
+
+<!-- WHO NEEDS THIS -->
+<section>
+    <div class="info-box">
+        <strong>Who needs this guide.</strong> Every student in the Article Finder track and in the Image Tagger track who will run code, inspect the registry, or submit files to the repositories. GUI track students working only with the Streamlit interface do not need a local clone of Article_Eater, but they do need the Designing_Experiments repo.
+    </div>
+
+    <h3>What you will have when this guide is complete</h3>
+    <ul>
+        <li>A local clone of both relevant repositories</li>
+        <li>A working Python 3.10+ virtual environment with all required packages</li>
+        <li>A passing (or near-passing) test suite for Article_Eater_PostQuinean_v1_recovery</li>
+        <li>A GitHub account that belongs to the course organization, with write access to your team's feature branch</li>
+        <li>The ability to push a commit and open a pull request without asking for help</li>
+    </ul>
+</section>
+
+<!-- PREREQUISITES -->
+<section>
+    <h2>Step 0 — Prerequisites: What You Need First</h2>
+
+    <div class="step-box">
+        <div class="step-header"><div class="step-num">0a</div>A GitHub account</div>
+        <div class="step-body">
+            <p>Create one at <strong>github.com</strong> if you don't have one. Use your UCSD email address so the course organization can find you. Once you have an account, email your GitHub username to the course instructor so you can be added to the <code>ucsd-cogs160</code> organization with write access to the repositories.</p>
+            <p>Do not start the clone steps until you have received an invitation email from GitHub and accepted it.</p>
+        </div>
+    </div>
+
+    <div class="step-box">
+        <div class="step-header"><div class="step-num">0b</div>Git installed on your computer</div>
+        <div class="step-body">
+            <p>Check whether Git is installed:</p>
+            <div class="code-block"><span class="prompt">$</span> git --version
+<span class="output">git version 2.39.2  ← any version ≥ 2.30 is fine</span></div>
+            <p>If Git is not installed: on macOS, running <code>git</code> in Terminal will prompt you to install the Xcode Command Line Tools — click Install. On Windows, download Git from <strong>git-scm.com</strong>. On Linux (Ubuntu/Debian): <code>sudo apt install git</code>.</p>
+        </div>
+    </div>
+
+    <div class="step-box">
+        <div class="step-header"><div class="step-num">0c</div>Python 3.10 or higher</div>
+        <div class="step-body">
+            <p>The Article_Eater codebase uses Python 3.10+ features (match statements, structural pattern matching). Check your version:</p>
+            <div class="code-block"><span class="prompt">$</span> python3 --version
+<span class="output">Python 3.11.4  ← 3.10 or higher required</span></div>
+            <p>If you have Python 3.9 or lower: on macOS, install via Homebrew (<code>brew install python@3.11</code>). On Windows, download from <strong>python.org</strong>. On Linux: <code>sudo apt install python3.11 python3.11-venv</code>.</p>
+            <div class="warning-box"><strong>macOS note:</strong> The system Python on macOS is often 3.9. The Homebrew Python is at <code>/opt/homebrew/bin/python3</code>. You may need to use that path explicitly if <code>python3</code> resolves to the system version.</div>
+        </div>
+    </div>
+</section>
+
+<!-- CLONING -->
+<section>
+    <h2>Step 1 — Clone the Repositories</h2>
+
+    <div class="step-box">
+        <div class="step-header"><div class="step-num">1</div>Clone Article_Eater (AF Track and Image Tagger Track)</div>
+        <div class="step-body">
+            <p>Choose a location on your computer for course repos — for example, <code>~/Documents/COGS160/</code>. Then:</p>
+            <div class="code-block"><span class="comment"># Create a workspace folder</span>
+<span class="prompt">$</span> mkdir -p ~/Documents/COGS160 &amp;&amp; cd ~/Documents/COGS160
+
+<span class="comment"># Clone Article_Eater (the main AF pipeline)</span>
+<span class="prompt">$</span> git clone https://github.com/ucsd-cogs160/Article_Eater_PostQuinean_v1_recovery.git
+<span class="output">Cloning into 'Article_Eater_PostQuinean_v1_recovery'...</span>
+
+<span class="comment"># Clone Designing_Experiments (course materials, Streamlit app, registry)</span>
+<span class="prompt">$</span> git clone https://github.com/ucsd-cogs160/Designing_Experiments.git
+<span class="output">Cloning into 'Designing_Experiments'...</span></div>
+            <div class="warning-box"><strong>Wrong branch?</strong> Article_Eater has multiple branches. The active branch is <code>codex/recovery-cc-migration-artifacts</code>. After cloning, confirm you are on it:
+                <div class="code-block"><span class="prompt">$</span> cd Article_Eater_PostQuinean_v1_recovery
+<span class="prompt">$</span> git branch --show-current
+<span class="output">codex/recovery-cc-migration-artifacts</span></div>
+                If you see <code>main</code> or any other branch, switch: <code>git checkout codex/recovery-cc-migration-artifacts</code>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PYTHON ENVIRONMENT -->
+<section>
+    <h2>Step 2 — Set Up the Python Environment</h2>
+
+    <div class="step-box">
+        <div class="step-header"><div class="step-num">2a</div>Create a virtual environment</div>
+        <div class="step-body">
+            <p>Always use a virtual environment. It isolates the packages you install for this project from your system Python, preventing version conflicts with other software.</p>
+            <div class="code-block"><span class="comment"># From inside Article_Eater_PostQuinean_v1_recovery/</span>
+<span class="prompt">$</span> python3 -m venv .venv
+
+<span class="comment"># Activate (macOS / Linux)</span>
+<span class="prompt">$</span> source .venv/bin/activate
+<span class="output">(.venv) $  ← the prefix confirms activation</span>
+
+<span class="comment"># Activate (Windows PowerShell)</span>
+<span class="prompt">PS&gt;</span> .venv\Scripts\Activate.ps1</div>
+            <p>You must activate the virtual environment every time you open a new terminal window before running any project code. Add a note somewhere visible — many students forget this step after the first week.</p>
+        </div>
+    </div>
+
+    <div class="step-box">
+        <div class="step-header"><div class="step-num">2b</div>Install dependencies</div>
+        <div class="step-body">
+            <div class="code-block"><span class="comment"># Upgrade pip first</span>
+<span class="prompt">(.venv) $</span> pip install --upgrade pip
+
+<span class="comment"># Install all project dependencies</span>
+<span class="prompt">(.venv) $</span> pip install -r requirements.txt
+<span class="output">Successfully installed ...  (this takes 1–3 minutes)</span>
+
+<span class="comment"># If you see errors about specific packages, try:</span>
+<span class="prompt">(.venv) $</span> pip install -r requirements.txt --ignore-requires-python</div>
+
+            <div class="info-box">
+                <strong>Optional packages.</strong> Two dependencies are optional and may fail to install on some systems without C compiler tools: <code>sentence-transformers</code> (semantic similarity) and <code>scikit-learn</code> (some analysis scripts). They are not required for D1–D3. If installation fails, skip them with: <code>pip install -r requirements.txt --ignore-requires-python 2&gt;&amp;1 | grep -v "sentence-transformers\|scikit"</code>
+            </div>
+        </div>
+    </div>
+
+    <div class="step-box">
+        <div class="step-header"><div class="step-num">2c</div>Verify the environment</div>
+        <div class="step-body">
+            <div class="code-block"><span class="comment"># Run a quick import check</span>
+<span class="prompt">(.venv) $</span> python3 -c "from src.services.voi_search import VOISearchCoordinator; print('OK')"
+<span class="output">OK</span>
+
+<span class="comment"># Run the test suite (expect some pre-existing failures)</span>
+<span class="prompt">(.venv) $</span> python3 -m pytest tests/ -x -q \
+    --ignore=tests/test_figure_suggestion_service.py \
+    -k "not test_follow_ups_enabled"
+<span class="output">......................................  (some dots, then summary)
+X passed, Y warnings  ← any result with fewer than 5 failures is fine</span></div>
+            <div class="success-box"><strong>Success looks like:</strong> More than 80 tests pass and fewer than 5 fail. The two pre-existing broken test files are <code>test_figure_suggestion_service.py</code> and any test with <code>test_follow_ups_enabled</code> in its name — skip those with the flags above.</div>
+        </div>
+    </div>
+</section>
+
+<!-- GIT WORKFLOW -->
+<section>
+    <h2>Step 3 — GitHub Workflow for Submitting Work</h2>
+
+    <p>All team deliverables live in the repositories. You do not submit through Canvas — you submit by opening a pull request. Here is the complete workflow from starting a new assignment to getting it reviewed.</p>
+
+    <div class="step-box">
+        <div class="step-header"><div class="step-num">3a</div>Create a feature branch for each deliverable</div>
+        <div class="step-body">
+            <p>Never commit directly to <code>main</code> or the active recovery branch. For each deliverable, create a named branch:</p>
+            <div class="code-block"><span class="comment"># Convention: [track]-[deliverable]-[team-name]</span>
+<span class="prompt">$</span> git checkout -b af-d1-team-gecko
+<span class="output">Switched to a new branch 'af-d1-team-gecko'</span>
+
+<span class="comment"># Or for Image Tagger:</span>
+<span class="prompt">$</span> git checkout -b image-d1a-team-gecko</div>
+        </div>
+    </div>
+
+    <div class="step-box">
+        <div class="step-header"><div class="step-num">3b</div>Commit regularly</div>
+        <div class="step-body">
+            <p>Commit whenever you reach a natural stopping point — after writing a section, after a test passes, after fixing a bug. Small commits with clear messages are better than large commits that bundle unrelated changes.</p>
+            <div class="code-block"><span class="comment"># Stage specific files (never use git add . for the first commit)</span>
+<span class="prompt">$</span> git add reports/D1_Pipeline_Orientation.md scripts/gap_trace.py
+
+<span class="comment"># Commit with a message that says what changed and why</span>
+<span class="prompt">$</span> git commit -m "AF D1: add end-to-end query trace for natural light question
+
+Traces query through QueryParser → QueryEngine → GapDetector.
+Shows how a VALIDATION gap is generated when credence &lt; 0.45.
+Table of top-5 gaps from DB inspection added to report."</div>
+        </div>
+    </div>
+
+    <div class="step-box">
+        <div class="step-header"><div class="step-num">3c</div>Push to GitHub</div>
+        <div class="step-body">
+            <div class="code-block"><span class="comment"># Push your branch to GitHub (first time)</span>
+<span class="prompt">$</span> git push -u origin af-d1-team-gecko
+<span class="output">Branch 'af-d1-team-gecko' set up to track 'origin/af-d1-team-gecko'.</span>
+
+<span class="comment"># Subsequent pushes (shorter)</span>
+<span class="prompt">$</span> git push</div>
+        </div>
+    </div>
+
+    <div class="step-box">
+        <div class="step-header"><div class="step-num">3d</div>Open a pull request</div>
+        <div class="step-body">
+            <p>When your deliverable is ready for review, go to the repository page on GitHub and click <strong>Compare &amp; pull request</strong> (the yellow banner that appears after you push). Set:</p>
+            <ul>
+                <li><strong>Base branch:</strong> <code>codex/recovery-cc-migration-artifacts</code> (not main)</li>
+                <li><strong>Compare branch:</strong> your feature branch</li>
+                <li><strong>Title:</strong> <code>[AF] D1 Pipeline Orientation Report — Team Gecko</code></li>
+                <li><strong>Description:</strong> One paragraph saying what the deliverable covers and any known limitations or questions for the reviewer</li>
+            </ul>
+            <p>Add the course instructor as a reviewer. The pull request URL is what you submit to the course gradebook.</p>
+        </div>
+    </div>
+
+    <div class="step-box">
+        <div class="step-header"><div class="step-num">3e</div>Tag each deliverable after it is graded</div>
+        <div class="step-body">
+            <p>After your PR is merged and graded, tag the commit so you can find it later:</p>
+            <div class="code-block"><span class="prompt">$</span> git tag -a v0.1 -m "D1: Pipeline Orientation Report — graded"
+<span class="prompt">$</span> git push origin v0.1</div>
+            <p>Convention: v0.1 = D1, v0.2 = D2, v0.3 = D3, v0.4 = D4, v0.5 = D5, v1.0 = final report.</p>
+        </div>
+    </div>
+
+</section>
+
+<!-- REGISTRY ACCESS FOR IMAGE TAGGER -->
+<section>
+    <h2>Registry Access — Image Tagger Track</h2>
+
+    <p>The Image Tagger track works with the CNFA tag registry — the list of 424 environmental tags that ATLAS uses to describe photographs. The registry file lives in the Tagging_Contractor repository, which is a separate clone.</p>
+
+    <div class="step-box">
+        <div class="step-header"><div class="step-num">R1</div>Clone Tagging_Contractor</div>
+        <div class="step-body">
+            <div class="code-block"><span class="prompt">$</span> cd ~/Documents/COGS160
+<span class="prompt">$</span> git clone https://github.com/ucsd-cogs160/Tagging_Contractor.git</div>
+        </div>
+    </div>
+
+    <div class="step-box">
+        <div class="step-header"><div class="step-num">R2</div>Locate the registry file</div>
+        <div class="step-body">
+            <p>The canonical registry is at:</p>
+            <div class="code-block">Tagging_Contractor/core/trs-core/v0.2.8/registry/registry_v0.2.8.json</div>
+            <p>This is a JSON dictionary of 424 tags. Each tag key is a dotted identifier like <code>spatial.openness</code> or <code>luminous.daylight_availability</code>. The <a href="image_tag_table.html">Registry Tag Browser</a> shows all 424 tags with sortable columns — use it to find tags quickly without opening the JSON directly.</p>
+        </div>
+    </div>
+
+    <div class="step-box">
+        <div class="step-header"><div class="step-num">R3</div>Open the registry in Python</div>
+        <div class="step-body">
+            <div class="code-block"><span class="comment"># Load the registry</span>
+<span class="prompt">(.venv) $</span> python3
+<span class="output">&gt;&gt;&gt;</span> import json
+<span class="output">&gt;&gt;&gt;</span> with open('Tagging_Contractor/core/trs-core/v0.2.8/registry/registry_v0.2.8.json') as f:
+<span class="output">...     reg = json.load(f)</span>
+<span class="output">&gt;&gt;&gt;</span> tags = reg['tags']
+<span class="output">&gt;&gt;&gt;</span> print(len(tags))
+<span class="output">424</span>
+<span class="output">&gt;&gt;&gt;</span> print(list(tags.keys())[:5])
+<span class="output">['affect.cozy', 'affect.jarring', 'affect.scary', 'affect.sublime', 'affect.uncanny']</span></div>
+        </div>
+    </div>
+
+    <div class="step-box">
+        <div class="step-header"><div class="step-num">R4</div>Submit registry edits via pull request</div>
+        <div class="step-body">
+            <p>In D1b (registry augmentation), you add the bilingual block to 5–7 tags. Do this on a feature branch in the Tagging_Contractor repo, following the same workflow described in Step 3 above. The branch naming convention for the Image Tagger track is <code>image-[deliverable]-[team-name]</code>.</p>
+            <div class="warning-box"><strong>Do not edit registry_v0.2.8.json directly on the main branch.</strong> Changes must go through pull request review so the course instructors can validate the bilingual field format before they are merged. Merging malformed JSON will break the tag browser for all students.</div>
+        </div>
+    </div>
+</section>
+
+<!-- QUICK REFERENCE -->
+<section>
+    <h2>Quick Reference Table</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>What you need</th>
+                <th>Where it lives</th>
+                <th>Track</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>AF pipeline source code</td>
+                <td><code>Article_Eater_PostQuinean_v1_recovery/src/</code></td>
+                <td>AF</td>
+            </tr>
+            <tr>
+                <td>Core AF files (6)</td>
+                <td><code>src/services/voi_search.py</code>, <code>query_engine.py</code>, <code>query_parser.py</code>, <code>integrated_query_service.py</code>, <code>identification_voi_pipeline.py</code>; <code>src/queue/automated_searcher.py</code></td>
+                <td>AF</td>
+            </tr>
+            <tr>
+                <td>Web of Belief database</td>
+                <td><code>Article_Eater.../data/web_persistence_v2.db</code></td>
+                <td>AF</td>
+            </tr>
+            <tr>
+                <td>Test suite</td>
+                <td><code>Article_Eater.../tests/</code></td>
+                <td>AF</td>
+            </tr>
+            <tr>
+                <td>Registry JSON (424 tags)</td>
+                <td><code>Tagging_Contractor/core/trs-core/v0.2.8/registry/registry_v0.2.8.json</code></td>
+                <td>Image</td>
+            </tr>
+            <tr>
+                <td>Registry tag browser (sortable)</td>
+                <td><a href="image_tag_table.html">image_tag_table.html</a></td>
+                <td>Image</td>
+            </tr>
+            <tr>
+                <td>Image extractor code</td>
+                <td><code>Designing_Experiments/src/extractors/</code></td>
+                <td>Image</td>
+            </tr>
+            <tr>
+                <td>GUI Streamlit app</td>
+                <td><code>Designing_Experiments/app/</code> — run with <code>streamlit run app/main.py</code></td>
+                <td>GUI</td>
+            </tr>
+            <tr>
+                <td>Course assignment pages</td>
+                <td><code>Designing_Experiments/docs/student_tracks/</code></td>
+                <td>All</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- COMMON ERRORS -->
+<section>
+    <h2>Common Errors and Fixes</h2>
+
+    <div class="step-box">
+        <div class="step-header"><div class="step-num">E1</div><code>ModuleNotFoundError: No module named 'src'</code></div>
+        <div class="step-body">
+            <p>You are running Python from the wrong directory. Always run commands from the root of the cloned repository (the folder that contains <code>src/</code>, <code>tests/</code>, and <code>requirements.txt</code>). Check your current directory with <code>pwd</code> and navigate there with <code>cd</code>.</p>
+        </div>
+    </div>
+
+    <div class="step-box">
+        <div class="step-header"><div class="step-num">E2</div><code>fatal: repository not found</code> on git clone</div>
+        <div class="step-body">
+            <p>You have not accepted the GitHub organization invitation, or your account is not yet in the organization. Check your email for the invitation from <code>github.com</code>. If you accepted more than 24 hours ago and still get this error, email the course instructor with your GitHub username.</p>
+        </div>
+    </div>
+
+    <div class="step-box">
+        <div class="step-header"><div class="step-num">E3</div><code>sqlite3.OperationalError: no such table: beliefs</code></div>
+        <div class="step-body">
+            <p>The Web of Belief database has not been seeded yet. Run the seeding script: <code>python3 scripts/seed_web.py --sample</code>. If that script doesn't exist in your version, ask on the course Slack — the database seed files are shared there.</p>
+        </div>
+    </div>
+
+    <div class="step-box">
+        <div class="step-header"><div class="step-num">E4</div>Tests fail with <code>ImportError: cannot import name 'X' from 'src.services.voi_search'</code></div>
+        <div class="step-body">
+            <p>You may be on the wrong branch. Run <code>git branch --show-current</code>. If you are not on <code>codex/recovery-cc-migration-artifacts</code>, switch to it: <code>git checkout codex/recovery-cc-migration-artifacts</code>. Then reinstall dependencies: <code>pip install -r requirements.txt</code>.</p>
+        </div>
+    </div>
+
+    <div class="step-box">
+        <div class="step-header"><div class="step-num">E5</div>On macOS: <code>pip: command not found</code></div>
+        <div class="step-body">
+            <p>Use <code>pip3</code> instead of <code>pip</code>. On macOS with Homebrew Python, the correct commands are <code>python3</code> and <code>pip3</code>. If you have activated a virtual environment (Step 2a), <code>pip</code> and <code>python</code> (without the <code>3</code>) should work inside the environment.</p>
+        </div>
+    </div>
+</section>
+
+</div>
+
+<footer>
+    <p>COGS 160: AI &amp; VR · University of California San Diego · Department of Cognitive Science</p>
+    <p style="margin-top: 0.5rem;">
+        <a href="af_track_planning.html">AF Track</a> ·
+        <a href="image_track_overview.html">Image Tagger Track</a> ·
+        <a href="image_tag_table.html">Tag Browser</a>
+    </p>
+</footer>
+
+<script>
+// OS tab switching
+document.querySelectorAll('.os-tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+        const group = this.closest('.os-tab-group');
+        group.querySelectorAll('.os-tab').forEach(t => t.classList.remove('active'));
+        group.querySelectorAll('.os-panel').forEach(p => p.classList.remove('active'));
+        this.classList.add('active');
+        document.getElementById(this.dataset.target).classList.add('active');
+    });
+});
+</script>
+</body>
+</html>

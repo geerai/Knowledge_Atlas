@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track 2 Setup — Article Finder — COGS 160</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--navy:#1C3D3A;--amber:#E8872A;--cream:#F7F4EF;--green:#2A7868;--text:#2D2010;--muted:#6A5E50;--border:#DDD6CD;--light:#EDE8E0;}
+    body{font-family:Arial,sans-serif;background:var(--cream);color:var(--text);line-height:1.65;}
+    nav{position:sticky;top:0;z-index:500;background:var(--navy);display:flex;align-items:center;gap:24px;padding:0 28px;min-height:52px;border-bottom:2px solid var(--amber);}
+    .nav-center{display:flex;align-items:center;gap:14px;flex:1;}
+    nav a.nav-link{color:#7AACA0;font-size:0.8rem;text-decoration:none;padding:6px 10px;border-radius:6px;}
+    nav a.nav-link:hover{color:#fff;background:rgba(255,255,255,0.08);}
+    nav a.nav-link.active{color:#F5A623;background:rgba(232,135,42,0.12);}
+    .nav-right{display:flex;align-items:center;gap:12px;}
+    .page-hero{background:linear-gradient(135deg,var(--navy) 0%,#163230 100%);padding:48px 40px 40px;border-bottom:3px solid var(--amber);}
+    .page-hero .eyebrow{font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#7AACA0;margin-bottom:10px;}
+    .page-hero h1{font-family:Georgia,serif;font-size:1.9rem;font-weight:400;color:#F5F0E8;line-height:1.25;margin-bottom:12px;}
+    .page-hero p{font-size:1rem;color:#A8C8BF;line-height:1.65;max-width:720px;}
+    .outer{max-width:920px;margin:0 auto;padding:0 32px 72px;}
+    .content-section{margin-top:44px;}
+    .section-title{font-family:Georgia,serif;font-size:1.35rem;font-weight:400;color:var(--navy);margin-bottom:18px;line-height:1.3;}
+    p{margin-bottom:14px;font-size:0.95rem;line-height:1.7;}
+    ul,ol{margin-left:1.5rem;margin-bottom:14px;}
+    li{margin-bottom:8px;}
+    strong{color:var(--text);}
+    code{background:#f1ece4;padding:1px 5px;border-radius:3px;font-family:Menlo,Consolas,monospace;font-size:0.88em;color:#5A3F1A;}
+    pre{background:#1C3D3A;color:#E8DFCF;padding:14px 16px;border-radius:8px;overflow-x:auto;font-family:Menlo,Consolas,monospace;font-size:0.85rem;line-height:1.55;margin:12px 0 18px;}
+    .callout{border-radius:8px;padding:16px 18px;margin:18px 0;font-size:0.92rem;line-height:1.65;}
+    .callout-info{background:#E6F5F0;border-left:4px solid var(--green);color:#1a4a3f;}
+    .callout-warn{background:#FFF3DD;border-left:4px solid var(--amber);color:#6a4614;}
+    .step-num{display:inline-block;width:28px;height:28px;background:var(--amber);color:#fff;border-radius:50%;text-align:center;font-weight:700;font-size:0.9rem;line-height:28px;margin-right:8px;vertical-align:middle;}
+    .step-head{font-family:Georgia,serif;font-size:1.1rem;color:var(--navy);margin:26px 0 10px;display:flex;align-items:center;}
+    .cta-button{display:inline-block;padding:11px 22px;background:var(--navy);color:#fff;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.92rem;margin-top:10px;}
+    .cta-button.secondary{background:transparent;color:var(--navy);border:1.5px solid var(--navy);}
+    .track-nav{display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:24px;border-top:2px solid var(--border);}
+    .scope-callout{background:#F0E8FB;border-left:4px solid #7A3FAA;color:#3A1A5C;border-radius:8px;padding:16px 18px;margin:18px 0;font-size:0.92rem;line-height:1.65;}
+
+    /* Offset anchor jumps so section titles clear the fixed class navbar */
+    :target { scroll-margin-top: 96px; }
+    h1[id], h2[id], h3[id], h4[id], section[id], div[id] { scroll-margin-top: 96px; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="../ka_home.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;"><svg viewBox="0 0 32 32" fill="none" style="width:28px;height:28px;">
+      <circle cx="16" cy="16" r="3.5" fill="#F5A623"/>
+      <circle cx="16" cy="5" r="2.5" fill="#A8C8BF"/>
+      <circle cx="27" cy="22" r="2.5" fill="#A8C8BF"/>
+      <circle cx="5" cy="22" r="2.5" fill="#A8C8BF"/>
+      <line x1="16" y1="7.5" x2="16" y2="12.5" stroke="#F5A623" stroke-width="1.5"/>
+      <line x1="24.8" y1="20.2" x2="19.0" y2="17.3" stroke="#F5A623" stroke-width="1.5"/>
+      <line x1="7.2" y1="20.2" x2="13.0" y2="17.3" stroke="#F5A623" stroke-width="1.5"/>
+    </svg>
+    <div style="display:flex;flex-direction:column;line-height:1.1;">
+      <span style="font-size:0.66rem;font-weight:400;letter-spacing:0.24em;text-transform:uppercase;color:#A8C8BF;">Knowledge</span>
+      <span style="font-size:1.05rem;font-weight:700;color:#fff;">At<span style="color:#F5A623;">las</span> · <span style="font-size:0.85rem;color:#A8C8BF;font-weight:400;">COGS 160</span></span>
+    </div>
+  </a>
+  <div class="nav-center">
+    <a href="ka_schedule.html" class="nav-link">160 Syllabus</a>
+    <a href="week2_exercises.html" class="nav-link">A0</a>
+    <a href="week3_agenda.html" class="nav-link">A1</a>
+    <a href="ka_track1_tagging.html" class="nav-link">Track 1</a>
+    <a href="ka_track2_pipeline.html" class="nav-link active">Track 2</a>
+    <a href="ka_track3_vr.html" class="nav-link">Track 3</a>
+    <a href="ka_track4_ux.html" class="nav-link">Track 4</a>
+  </div>
+  <div class="nav-right">
+    <a href="ka_student_profile.html" class="nav-link">160 Student Profile</a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="eyebrow">COGS 160 · Track 2 · How to Set Up</div>
+  <h1>Track 2 Setup — Article Finder</h1>
+  <p>Track 2 works on one repository, the <strong>Article Finder</strong> (AF). AF generates
+  Value-of-Information queries, searches Semantic Scholar and OpenAlex, downloads candidate PDFs,
+  and hands them off to the downstream extraction pipeline. Track 2 students do <em>not</em>
+  clone the extraction repo (Article Eater); that is a different track. Plan for about an
+  hour — thirty minutes to fork, clone, and install, another thirty for the GitHub-workflow walk
+  through at the bottom of this page.</p>
+</div>
+
+<div class="outer">
+
+  <div class="content-section">
+    <h2 class="section-title">Scope</h2>
+    <div class="scope-callout">
+      <strong>One repository only.</strong> Everything on this page refers to
+      <code>kirsh-lab/Article_Finder</code>. The sibling repository
+      <code>Article_Eater_PostQuinean_v1_recovery</code> is consumed by a different track and
+      should not be cloned for Track 2. The Finder writes a well-defined handoff artefact
+      (<code>data/handoff/*.json</code>) that the Eater reads; the contract between them is the
+      only thing Track 2 needs to honour.
+    </div>
+  </div>
+
+  <div class="content-section">
+    <h2 class="section-title">Prerequisites</h2>
+    <ul>
+      <li><strong>GitHub account</strong> with SSH keys configured. If you have never set up SSH,
+        follow GitHub's official instructions at
+        <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh"
+           style="color:var(--amber);font-weight:600;">docs.github.com/en/authentication/connecting-to-github-with-ssh</a>
+        before Step 1. Verify with <code>ssh -T git@github.com</code>.</li>
+      <li><strong>Python 3.11+</strong> and <strong>Git 2.30+</strong> — confirm with
+        <code>python3 --version</code> and <code>git --version</code>.</li>
+      <li><strong>Semantic Scholar API key</strong> — free; request at
+        <a href="https://www.semanticscholar.org/product/api" style="color:var(--amber);font-weight:600;">semanticscholar.org/product/api</a>.</li>
+      <li><strong>OpenAlex access</strong> — no key required; set <code>OPENALEX_EMAIL</code> in your
+        <code>.env</code> so the polite pool accepts your requests.</li>
+      <li><strong>15 GB free disk</strong> for PDFs harvested during the quarter.</li>
+    </ul>
+  </div>
+
+  <!-- ─────────── PART A — GITHUB FORK WORKFLOW ─────────── -->
+  <div class="content-section">
+    <h2 class="section-title">Part A — The GitHub Fork Workflow (do this first)</h2>
+
+    <p>Everyone on Track 2 works from their own <strong>fork</strong> of the Article Finder
+    repository, not from a direct clone. A fork is your personal server-side copy of the lab's
+    repository: you can push freely to your fork, and when your work is ready you open a
+    pull request back to the lab's copy, which we call <em>upstream</em>. This pattern is the
+    standard open-source contribution model and it is what the rest of the class will evaluate
+    your work through.</p>
+
+    <div class="step-head"><span class="step-num">1</span>Fork the repository on GitHub (once per person)</div>
+    <ol>
+      <li>Sign in to GitHub, then open
+        <a href="https://github.com/kirsh-lab/Article_Finder" style="color:var(--amber);font-weight:600;">
+          github.com/kirsh-lab/Article_Finder</a>.</li>
+      <li>Click the <strong>Fork</strong> button in the top-right corner.</li>
+      <li>Accept the defaults. GitHub creates a copy at
+        <code>github.com/&lt;your-handle&gt;/Article_Finder</code>.</li>
+      <li>Leave the "Copy the main branch only" box checked — it is faster and you will not need
+        legacy branches.</li>
+    </ol>
+    <div class="callout callout-info">
+      <strong>Why fork instead of clone directly?</strong> You do not have write access to
+      <code>kirsh-lab/Article_Finder</code>, which is deliberate: it prevents accidental pushes to
+      <code>main</code> and it gives every student a private space to break things. All of your
+      commits will live on your fork until you open a pull request.
+    </div>
+
+    <div class="step-head"><span class="step-num">2</span>Clone <em>your fork</em> (not the lab's copy)</div>
+    <pre>mkdir -p ~/REPOS && cd ~/REPOS
+git clone git@github.com:&lt;your-handle&gt;/Article_Finder.git
+cd Article_Finder</pre>
+    <p>Replace <code>&lt;your-handle&gt;</code> with your GitHub username. The clone creates a remote
+    called <code>origin</code> that points at your fork.</p>
+
+    <div class="step-head"><span class="step-num">3</span>Add the lab repository as <code>upstream</code></div>
+    <pre>git remote add upstream git@github.com:kirsh-lab/Article_Finder.git
+git remote -v
+# You should see:
+#   origin    git@github.com:&lt;your-handle&gt;/Article_Finder.git (fetch)
+#   origin    git@github.com:&lt;your-handle&gt;/Article_Finder.git (push)
+#   upstream  git@github.com:kirsh-lab/Article_Finder.git       (fetch)
+#   upstream  git@github.com:kirsh-lab/Article_Finder.git       (push)</pre>
+    <p>You will <strong>pull</strong> from <code>upstream</code> whenever the lab's
+    <code>main</code> advances, and <strong>push</strong> only to <code>origin</code>. Never push
+    directly to <code>upstream</code>; the server-side protection rules will reject it anyway.</p>
+
+    <div class="step-head"><span class="step-num">4</span>Disable accidental pushes to upstream</div>
+    <pre>git remote set-url --push upstream no_push</pre>
+    <p>This belt-and-braces step makes <code>git push upstream</code> fail at the local level so
+    a mistyped command cannot reach the lab's copy.</p>
+  </div>
+
+  <!-- ─────────── PART B — INSTALL & RUN ─────────── -->
+  <div class="content-section">
+    <h2 class="section-title">Part B — Install and Run the Article Finder</h2>
+
+    <div class="step-head"><span class="step-num">5</span>Create and activate a virtual environment</div>
+    <pre># macOS / Linux
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Windows (PowerShell)
+py -3 -m venv .venv
+.venv\Scripts\Activate.ps1</pre>
+
+    <div class="step-head"><span class="step-num">6</span>Install dependencies</div>
+    <pre>pip install --upgrade pip
+pip install -r requirements.txt</pre>
+
+    <div class="step-head"><span class="step-num">7</span>Configure your API credentials</div>
+    <pre>cp .env.example .env
+# Edit .env and fill in:
+#   SEMANTIC_SCHOLAR_API_KEY=...
+#   OPENALEX_EMAIL=you@ucsd.edu</pre>
+    <div class="callout callout-warn">
+      <strong>Never commit <code>.env</code>.</strong> It is already in <code>.gitignore</code>;
+      keep it that way. If you accidentally push a key, rotate it immediately on the provider's
+      website and then remove it from git history with <code>git filter-repo</code>. Ask a TA if
+      you have already pushed — it is recoverable, but do not keep committing on top of it.
+    </div>
+
+    <div class="step-head"><span class="step-num">8</span>Initialise the local pipeline database</div>
+    <pre>python scripts/init_pipeline_db.py</pre>
+    <p style="font-size:0.88rem;color:var(--muted);">Creates <code>data/pipeline_lifecycle.db</code>
+    (SQLite) with empty tables for candidates, downloads, and VOI scores.</p>
+
+    <div class="step-head"><span class="step-num">9</span>Run a sanity-check query</div>
+    <pre>python -m article_finder.cli discover \
+    --query "ceiling height creativity" \
+    --max-results 10</pre>
+    <p>You should see ten candidate articles with DOIs, abstracts, and VOI scores logged to the
+    database. If the command fails with <code>ModuleNotFoundError: article_finder</code>, your
+    virtual environment is not active — re-run Step 5 and try again.</p>
+  </div>
+
+  <!-- ─────────── PART C — DAILY GITHUB WORKFLOW ─────────── -->
+  <div class="content-section">
+    <h2 class="section-title">Part C — Your Daily GitHub Workflow</h2>
+
+    <p>Every unit of work — a new VOI heuristic, a fixed parser, a reworded prompt — follows the
+    same six-step loop. Doing it the same way every time is how a class of thirty students can
+    collaborate on one repository without stepping on each other.</p>
+
+    <div class="step-head"><span class="step-num">10</span>Sync your fork with upstream</div>
+    <pre>git checkout main
+git fetch upstream
+git merge --ff-only upstream/main
+git push origin main</pre>
+    <p>Run this <em>every time you start a work session</em>. <code>--ff-only</code> refuses to
+    merge if your local <code>main</code> has diverged from <code>upstream/main</code>; if it
+    does diverge, ask a TA — it usually means something was committed to <code>main</code>
+    directly by mistake, and the fix is not something to improvise.</p>
+
+    <div class="step-head"><span class="step-num">11</span>Create a feature branch</div>
+    <pre>git checkout -b track2/&lt;your-handle&gt;/&lt;short-topic&gt;</pre>
+    <p>For example: <code>track2/dkirsh/voi-prior-calibration</code>. The branch name is not
+    cosmetic — our CI reads the <code>track2/</code> prefix and runs the Track 2 test suite only.
+    Branches that do not match the prefix get no CI coverage.</p>
+
+    <div class="step-head"><span class="step-num">12</span>Commit in small, readable increments</div>
+    <pre>git add path/to/file.py
+git commit -m "voi: widen prior on ceiling-height studies (fixes #123)"</pre>
+    <p>One concern per commit; one sentence per commit message, in the imperative. The rest of
+    the commit message is for the <em>why</em>, not the <em>what</em> — the diff already shows
+    what. If you are changing more than one thing at a time, split it into two commits.</p>
+
+    <div class="step-head"><span class="step-num">13</span>Push your branch to <code>origin</code> (your fork)</div>
+    <pre>git push -u origin track2/&lt;your-handle&gt;/&lt;short-topic&gt;</pre>
+    <p>The <code>-u</code> flag sets the upstream tracking reference so future
+    <code>git push</code> and <code>git pull</code> on this branch work without extra arguments.</p>
+
+    <div class="step-head"><span class="step-num">14</span>Open a Pull Request against <code>upstream/main</code></div>
+    <ol>
+      <li>Visit your fork on GitHub. GitHub will display a yellow banner offering to open a PR
+        against <code>kirsh-lab/Article_Finder:main</code>. Click <strong>Compare &amp; pull request</strong>.</li>
+      <li>Title: one sentence describing the change. Body: a short paragraph on motivation,
+        a bullet list of what changed, and a <em>Testing</em> section showing the command you ran
+        to verify the change.</li>
+      <li>Request review from your track lead.</li>
+      <li>Wait for CI (about three minutes). If CI fails, read the log, fix, push again — the
+        PR updates automatically.</li>
+    </ol>
+
+    <div class="step-head"><span class="step-num">15</span>After the PR merges, clean up</div>
+    <pre>git checkout main
+git fetch upstream
+git merge --ff-only upstream/main
+git push origin main
+git branch -d track2/&lt;your-handle&gt;/&lt;short-topic&gt;
+git push origin --delete track2/&lt;your-handle&gt;/&lt;short-topic&gt;</pre>
+    <p>Your feature branch's job is done the moment the PR merges. Keeping merged branches
+    around creates noise for the next contributor reviewing your fork.</p>
+
+    <div class="callout callout-info">
+      <strong>A visual summary.</strong> <code>upstream/main</code> is the canonical history;
+      your <code>origin/main</code> is a mirror of it; your feature branch sprouts from
+      <code>main</code>, lives on <code>origin</code>, is reviewed as a PR, and is deleted on merge.
+      Sync at the start of every session, branch before every change, one PR per concern,
+      clean up after merge.
+    </div>
+  </div>
+
+  <!-- ─────────── PART D — SITE WIRE-UP ─────────── -->
+  <div class="content-section">
+    <h2 class="section-title">Part D — Wire up the class site locally (optional)</h2>
+    <p>If you have cloned <code>Knowledge_Atlas</code> for other reasons, boot the class site so
+    the Track 2 pages show your Finder's output:</p>
+    <pre>cd ~/REPOS/Knowledge_Atlas
+python3 160sp/ka_local_server_setup.py   # serves at http://localhost:8765</pre>
+    <p>The Article-Finder-facing pages live at
+    <code>/160sp/ka_article_finder_assignment.html</code> and
+    <code>/160sp/ka_collect_articles.html</code>.</p>
+    <p style="margin-top:10px;">
+      <a href="ka_track2_intake.html"
+         style="display:inline-block;background:var(--amber,#E8872A);color:#fff;
+                border-radius:8px;padding:10px 18px;text-decoration:none;font-weight:700;">
+        Open Track 2 Article Intake →
+      </a>
+    </p>
+  </div>
+
+  <div class="content-section">
+    <h2 class="section-title">Google AI Scholar Manual Workflow</h2>
+    <p>Google AI Scholar does not yet expose an API. Until it does, we capture its result pages by hand:</p>
+    <ol>
+      <li>Open Google AI Scholar, run your query, and scroll through the first two pages of results.</li>
+      <li>Use the browser's <em>Save as → Web Page, Complete</em> to preserve the HTML locally.</li>
+      <li>Drop the saved page into <code>data/manual_captures/&lt;date&gt;/</code> and run
+      <code>python scripts/ingest_manual_capture.py</code> — it parses titles, DOIs, and abstracts into
+      the same schema the API crawlers use.</li>
+    </ol>
+  </div>
+
+  <div class="content-section">
+    <h2 class="section-title">Common Snags</h2>
+    <ul>
+      <li><strong><code>Permission denied (publickey)</code> on <code>git clone</code></strong> —
+        your SSH key is not attached to your GitHub account. Run <code>ssh -T git@github.com</code>;
+        if it fails, follow the SSH-key guide linked in Prerequisites.</li>
+      <li><strong><code>fatal: refusing to merge unrelated histories</code></strong> — almost
+        always means you cloned <code>upstream</code> directly instead of your fork. Delete the
+        directory and start over from Step 2.</li>
+      <li><strong><code>Updates were rejected because the remote contains work you do not have</code></strong>
+        — someone (possibly your earlier self from another machine) pushed to the same branch.
+        <code>git pull --rebase origin &lt;branch&gt;</code> and re-push.</li>
+      <li><strong>HTTP 429 from Semantic Scholar</strong> — rate-limit; the CLI already backs off,
+        but without an API key you are hard-capped. Complete Step 7.</li>
+      <li><strong>Slow PDF downloads</strong> — publishers throttle anonymous GETs. Use the UCSD
+        library VPN; the pipeline respects <code>HTTPS_PROXY</code>.</li>
+      <li><strong><code>article_finder</code> not a package</strong> — you ran the CLI from the
+        wrong directory. <code>cd</code> into the repo root and re-activate the venv.</li>
+    </ul>
+    <div class="callout callout-warn">
+      <strong>Never commit to <code>main</code>.</strong> The only commits that should appear on
+      your local <code>main</code> are fast-forward merges from <code>upstream/main</code>. If you
+      ever find yourself on <code>main</code> with uncommitted changes, stash them
+      (<code>git stash</code>), branch (<code>git checkout -b track2/…</code>), and
+      unstash (<code>git stash pop</code>).
+    </div>
+  </div>
+
+  <div class="track-nav">
+    <a href="ka_track2_pipeline.html" class="cta-button secondary">← Back to Track 2</a>
+    <a href="ka_technical_setup.html" class="cta-button">Full Technical Setup →</a>
+  </div>
+</div>
+
+</body>
+</html>

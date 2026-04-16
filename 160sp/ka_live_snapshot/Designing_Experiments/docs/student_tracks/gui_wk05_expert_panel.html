@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COGS160: AI & VR — GUI Track Week 5: Expert Panel Critique</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+         background:#f5f5f5;padding:20px;color:#222;line-height:1.7}
+    .container{max-width:960px;margin:0 auto;background:#fff;padding:48px;
+               box-shadow:0 2px 10px rgba(0,0,0,.08)}
+    .nav{display:flex;justify-content:space-between;align-items:center;
+         margin-bottom:32px;padding-bottom:16px;border-bottom:2px solid #6b3fa0}
+    .nav a{color:#6b3fa0;text-decoration:none;font-weight:600;font-size:.9rem}
+    .nav a:hover{text-decoration:underline}
+    .track-pill{background:#6b3fa0;color:#fff;padding:4px 14px;border-radius:20px;
+                font-size:.8rem;font-weight:700;letter-spacing:.5px}
+    header{margin-bottom:36px}
+    .week-label{font-size:.85rem;font-weight:700;color:#6b3fa0;text-transform:uppercase;
+                letter-spacing:1px;margin-bottom:6px}
+    h1{font-size:2rem;color:#182B49;font-weight:800;margin-bottom:8px;line-height:1.2}
+    .subtitle{font-size:1.05rem;color:#555;margin-bottom:20px}
+    .meta-row{display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;color:#777}
+    .meta-row span strong{color:#333}
+    h2{font-size:1.3rem;color:#182B49;font-weight:700;margin:40px 0 12px;
+       padding-bottom:6px;border-bottom:2px solid #6b3fa0}
+    h3{font-size:1.05rem;color:#6b3fa0;font-weight:700;margin:24px 0 8px}
+    h4{font-size:.95rem;color:#444;font-weight:700;margin:16px 0 6px}
+    p{margin-bottom:14px;color:#333;font-size:.95rem;line-height:1.7}
+
+    .context-box{background:linear-gradient(135deg,#faf5ff,#f3e8ff);border:1px solid #c4a0e8;
+                 border-left:4px solid #6b3fa0;border-radius:6px;padding:20px 24px;margin-bottom:32px}
+    .context-box p{font-size:.95rem;color:#444;margin-bottom:8px}
+    .context-box p:last-child{margin-bottom:0}
+
+    .insight-box{background:#f0f7ff;border:1px solid #aed0ef;border-left:4px solid #1a6fb5;
+                 border-radius:6px;padding:20px 24px;margin:20px 0}
+    .insight-box h4{color:#1a6fb5;margin-top:0}
+
+    .outcome-list{list-style:none;padding:0}
+    .outcome-list li{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid #ede0f5;font-size:.95rem}
+    .outcome-list li:last-child{border-bottom:none}
+    .outcome-num{min-width:28px;height:28px;background:#6b3fa0;color:#fff;border-radius:50%;
+                 display:flex;align-items:center;justify-content:center;font-weight:700;
+                 font-size:.8rem;flex-shrink:0;margin-top:2px}
+
+    .example-block{background:#f0f7ff;border:1px solid #aed0ef;border-radius:8px;padding:24px;margin:20px 0}
+    .example-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;
+                    padding-bottom:12px;border-bottom:2px solid #aed0ef}
+    .example-badge{background:#182B49;color:#fff;padding:4px 12px;border-radius:4px;
+                   font-size:.78rem;font-weight:700;letter-spacing:.5px}
+    .example-title{font-size:1.05rem;font-weight:700;color:#182B49}
+
+    .step-list{display:flex;flex-direction:column;gap:16px;margin:16px 0}
+    .step{display:flex;gap:16px;align-items:flex-start}
+    .step-num{min-width:36px;height:36px;background:#6b3fa0;color:#fff;border-radius:50%;
+              display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+    .step-body{flex:1;padding-top:6px}
+    .step-body strong{display:block;margin-bottom:4px;font-size:.95rem;color:#182B49}
+    .step-body p{font-size:.9rem;color:#444;margin-top:4px}
+
+    table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.88rem}
+    th{background:#182B49;color:#fff;padding:10px 14px;text-align:left;font-weight:700}
+    td{padding:9px 14px;border-bottom:1px solid #eee}
+    tr:nth-child(even) td{background:#fafafa}
+
+    .tip{background:#f0fff4;border:1px solid #a8d5b5;border-left:4px solid #28a745;
+         border-radius:6px;padding:14px 18px;margin:12px 0;font-size:.9rem}
+    .warn{background:#fff8e6;border:1px solid #e8c87a;border-left:4px solid #C69214;
+          border-radius:6px;padding:14px 18px;margin:12px 0;font-size:.9rem}
+    .tip strong,.warn strong{display:block;margin-bottom:4px}
+
+    .faq-item{border:1px solid #e8e0f5;border-radius:6px;margin-bottom:10px;overflow:hidden}
+    .faq-q{padding:14px 18px;cursor:pointer;font-weight:700;font-size:.9rem;color:#182B49;
+           background:#fdf9ff;display:flex;justify-content:space-between;align-items:center;
+           user-select:none}
+    .faq-q:hover{background:#f5ecff}
+    .faq-a{padding:0 18px;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s}
+    .faq-a.open{max-height:800px;padding:14px 18px}
+    .faq-a p{font-size:.9rem;color:#444;margin-bottom:8px}
+    .faq-a p:last-child{margin-bottom:0}
+    .faq-chevron{font-size:.8rem;transition:transform .3s}
+    .faq-chevron.open{transform:rotate(180deg)}
+
+    .ref-list{list-style:none;padding:0}
+    .ref-list li{padding:10px 0;border-bottom:1px solid #eee;font-size:.88rem;color:#444;display:flex;gap:12px}
+    .ref-list li:last-child{border-bottom:none}
+    .ref-num{min-width:28px;font-weight:700;color:#6b3fa0}
+    .ref-text{flex:1}
+
+    .deliverable-banner{background:#182B49;color:#fff;border-radius:8px;padding:20px 24px;margin:24px 0}
+    .deliverable-banner h3{color:#C69214;margin:0 0 8px}
+    .deliverable-banner p{font-size:.9rem;opacity:.9;margin-bottom:4px}
+    .deliverable-banner .grade{font-size:1.4rem;font-weight:800;color:#C69214}
+
+    .checklist{list-style:none;padding:0}
+    .checklist li{padding:8px 0;border-bottom:1px solid #eee;font-size:.9rem;display:flex;gap:10px}
+    .checklist li::before{content:"☐";font-size:1.1rem;color:#6b3fa0;flex-shrink:0}
+
+    .spec-box{background:#f9f9f9;border:1px solid #ddd;border-radius:6px;padding:20px 24px;margin:16px 0}
+    .spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:.9rem}
+    .spec-col{border-right:1px solid #ddd;padding-right:16px}
+    .spec-col:last-child{border-right:none;padding-right:0}
+    .spec-label{font-weight:700;color:#555;margin-bottom:4px;display:block}
+    .spec-value{color:#222}
+
+    .comparison-table{margin:20px 0}
+    .comparison-header{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;font-weight:700}
+    .comparison-header div{color:#182B49;padding-bottom:8px;border-bottom:2px solid #6b3fa0}
+    .comparison-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px;padding:12px;background:#f9f9f9;border-radius:4px}
+    .comparison-row strong{display:block;margin-bottom:4px;color:#333}
+    .comparison-row p{font-size:.85rem;margin:0}
+
+    footer{margin-top:48px;padding-top:20px;border-top:1px solid #eee;font-size:.82rem;color:#999;text-align:center}
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="nav">
+    <a href="index.html">← Course Home</a>
+    <span class="track-pill">🖥 GUI Evaluation Track</span>
+    <a href="gui_track_overview.html">Track Overview →</a>
+  </nav>
+
+  <header>
+    <div class="week-label">Week 5 · Deliverable D3 · Pair 3 leads</div>
+    <h1>When Algorithms and Experts Disagree</h1>
+    <p class="subtitle">Comparing Automated UI Evaluation to Human Expert Judgment</p>
+    <div class="meta-row">
+      <span><strong>Due:</strong> Sunday, Week 5 (11:59 PM)</span>
+      <span><strong>Weight:</strong> 15% of course grade</span>
+      <span><strong>Lead:</strong> Pair 3 (all pairs contribute evaluation sessions)</span>
+    </div>
+  </header>
+
+  <!-- Opening narrative — Gawande's arc: setup → complication → resolution -->
+  <div class="context-box">
+    <p>You might reasonably expect that automated UI evaluation—the application of systematic rules to interface design—would be more objective than human judgment. Rules are applied consistently, without fatigue, without bias, without the variability that plagues human evaluation. In one narrow sense, this expectation is correct. But Ivory and Hearst (2001) document a crucial irony: automated evaluation systems that apply consistent rules to an incomplete rule set produce systematically wrong answers in exactly the situations where you need the most reliable judgment. The automation does not eliminate subjectivity; it disguises subjectivity as objectivity.</p>
+    <p>This week, Pair 3 becomes a critical reader of automated evaluation. You will run the Article Eater's UI evaluation agent on four user-type-specific tasks, then conduct an independent human expert evaluation of the same tasks. You will compare the two systematically, document where and why they diverge, and propose what the automated agent is missing. Your job is not to trust the agent or to dismiss it—it is to understand its actual strengths and limitations.</p>
+  </div>
+
+  <h2>Learning Outcomes</h2>
+  <ul class="outcome-list">
+    <li><span class="outcome-num">1</span><span>Articulate Nielsen's 10 usability heuristics and apply them to a specific interface with sufficient specificity that two evaluators applying the same heuristic reach similar conclusions.</span></li>
+    <li><span class="outcome-num">2</span><span>Run an automated UI evaluation agent and interpret its output: what rules is the agent applying, what is it checking for, and what is it blind to?</span></li>
+    <li><span class="outcome-num">3</span><span>Document systematic divergence between human and machine evaluation: classify disagreements by their source (missing heuristic, incorrect application, context-specificity, missed design pattern) and evaluate which source is most consequential for this interface.</span></li>
+    <li><span class="outcome-num">4</span><span>Evaluate visualization and information design using Tufte's data-ink principle and Shneiderman's information-seeking mantra; assess whether the Article Eater's admin viewers meet these standards.</span></li>
+  </ul>
+
+  <!-- Part 1: Defamiliarization — what makes automated evaluation dangerous -->
+  <h2>Part 1 — The Consistency Paradox in Automated Evaluation</h2>
+
+  <p>Heuristic evaluation — the systematic application of usability rules to an interface — was formalized by Nielsen and Molich (1990) as a method for identifying usability problems without user testing. The method is powerful. A trained evaluator applying Nielsen's 10 heuristics can reliably find 60–80% of the usability problems that user testing would uncover, in a fraction of the time. The power comes from consistency: the heuristics create a shared language, a checklist that prevents evaluators from overlooking patterns because those patterns don't happen to be on their minds on a particular day.</p>
+
+  <p>But here is the dangerous part: the heuristics, elegant as they are, cover only a partial space of good interface design. They catch problems of feedback ("the user did something but nothing happened") and conceptual misalignment ("the user expected a different mental model"). They miss problems of information architecture, of priority and emphasis, of what Shneiderman (1996) calls the information-seeking mantra — "overview first, then filter, then details on demand." An automated system that applies Nielsen's heuristics consistently will find real problems. It will also, just as consistently, miss categories of problems that fall outside the rule set. The worse part: because the system is automated, its findings carry an aura of objectivity, and the missed problems become invisible precisely because they were not flagged by the "scientific" tool.</p>
+
+  <p>Lewis (2014) shows that automated evaluation systems perform best in familiar domains (e.g., web forms) where the rule set is mature and comprehensive. In less familiar domains (e.g., complex scientific software, novel interaction paradigms), automated evaluation becomes less reliable—not because the automation is worse, but because the rule set is incomplete. The task this week is to become a critical reader of automation, learning to recognize when the rules are sufficient and when they are not.</p>
+
+  <h2>Part 2 — Running the Automated UI Evaluation Agent</h2>
+
+  <p>The Article Eater system includes an automated UI evaluation agent that inspects an interface screenshot and produces a structured report of heuristic violations. The agent is not perfect; it is a tool. Your job is to use it, understand its logic, and compare its findings to what a human expert would notice.</p>
+
+  <p>You will run the evaluation agent on four tasks, each one designed for a different user type from Week 3:</p>
+
+  <div class="step-list">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Task 1: Initial Search (Enrolled Student user type)</strong>
+        <p>The system should help a student navigate from home screen to the first successful query. Capture a screenshot of the interface at the point where a student would construct their first search. Run the evaluation agent on this screenshot.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Task 2: Results Interpretation (Researcher user type)</strong>
+        <p>The system should help a domain expert understand confidence scores and evidence chains. Capture a screenshot showing the results panel with confidence indicators. Run the evaluation agent.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Task 3: Admin Monitoring (System Administrator user type)</strong>
+        <p>The system should provide at-a-glance status of the ingestion pipeline. Capture a screenshot of the admin dashboard. Run the evaluation agent on the admin viewer interface.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>Task 4: Data Export (Data Analyst user type)</strong>
+        <p>The system should allow structured data export with provenance information. Capture a screenshot of the export dialog or results panel with export options. Run the evaluation agent.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Part 3 — Independent Human Heuristic Evaluation</h2>
+
+  <p>Now that you have the automated agent's findings, conduct your own independent heuristic evaluation. Do not look at the agent's report while you evaluate; evaluate first, then compare. For each of the four screenshots, apply Nielsen's 10 heuristics systematically:</p>
+
+  <table>
+    <tr>
+      <th>Heuristic</th>
+      <th>What to look for</th>
+    </tr>
+    <tr>
+      <td><strong>1. Visibility of system status</strong></td>
+      <td>Does the user know what is happening right now? If they click a button, do they see feedback?</td>
+    </tr>
+    <tr>
+      <td><strong>2. Match between system and real world</strong></td>
+      <td>Does the interface use terms the user would use? Or does it force the user to learn new terminology?</td>
+    </tr>
+    <tr>
+      <td><strong>3. User control and freedom</strong></td>
+      <td>Can the user undo actions? Can they exit from the current state without losing work?</td>
+    </tr>
+    <tr>
+      <td><strong>4. Error prevention and recovery</strong></td>
+      <td>Does the interface warn before destructive actions? Are error messages helpful?</td>
+    </tr>
+    <tr>
+      <td><strong>5. Error messages</strong></td>
+      <td>Are errors described in user terms? Do they suggest solutions?</td>
+    </tr>
+    <tr>
+      <td><strong>6. Recognition over recall</strong></td>
+      <td>Are important options visible? Or must the user remember them from context?</td>
+    </tr>
+    <tr>
+      <td><strong>7. Flexibility and efficiency of use</strong></td>
+      <td>Can experienced users work faster than novices? Are there shortcuts?</td>
+    </tr>
+    <tr>
+      <td><strong>8. Aesthetic and minimalist design</strong></td>
+      <td>Is the interface cluttered with information the user does not need? Is the hierarchy clear?</td>
+    </tr>
+    <tr>
+      <td><strong>9. Help and documentation</strong></td>
+      <td>Is help available? Is it task-focused, not feature-focused?</td>
+    </tr>
+    <tr>
+      <td><strong>10. Match between design and real tasks</strong></td>
+      <td>Does the workflow align with how users actually work? Or does the interface force a different order?</td>
+    </tr>
+  </table>
+
+  <p>For each heuristic, document: (a) whether you see a violation, (b) the specific interface element involved, (c) the severity (minor friction vs. task-blocking), and (d) the impact on the target user type. Write findings in the style "Heuristic 6 violation: The VOI query panel does not show all available variable types unless the user scrolls; an experienced researcher cannot recognize which variables are available without this action."</p>
+
+  <h2>Part 4 — Comparison and Divergence Analysis</h2>
+
+  <p>Now align the automated agent's findings with your human evaluation. Create a divergence matrix:</p>
+
+  <div class="insight-box">
+    <h4>What to classify</h4>
+    <p><strong>Matches:</strong> Issues both the agent and you identified (validates the agent's rule set). <strong>Agent found it, human missed it:</strong> The agent detected something your expert evaluation overlooked (suggests you need to internalize that rule better). <strong>Human found it, agent missed it:</strong> You detected something the agent's rules do not check for (this is the most important category — what is the agent blind to?). <strong>Different severity:</strong> You both found the issue, but disagreed about how serious it is.</p>
+  </div>
+
+  <div class="example-block">
+    <div class="example-header">
+      <span class="example-badge">WORKED EXAMPLE</span>
+      <span class="example-title">Divergence analysis: Admin Dashboard VOI Viewer</span>
+    </div>
+
+    <div class="spec-box">
+      <div class="spec-grid">
+        <div class="spec-col">
+          <span class="spec-label">Agent finding:</span>
+          <span class="spec-value">Heuristic 6 violation: The active variable list does not display a count of how many articles are tagged with each variable. Severity: Medium.</span>
+        </div>
+        <div class="spec-col">
+          <span class="spec-label">Human finding:</span>
+          <span class="spec-value">Heuristic 8 violation: The admin dashboard violates Tufte's data-ink principle. The VOI viewer devotes 40% of screen space to decorative icons and labels with low information density. A researcher scanning for coverage should see coverage statistics immediately; instead, they see design flourishes.</span>
+        </div>
+      </div>
+      <p style="margin-top:16px"><strong>Classification:</strong> Different issue, same root cause. The agent identified a discrete feature gap (missing count). The human identified a broader design principle violation (information hierarchy). The agent's finding is narrower and more actionable (add a count field); the human's finding is broader and more strategic (redesign the information architecture).</p>
+      <p><strong>Resolution:</strong> The human insight is more consequential for this interface. An admin who wants to monitor coverage needs a glanceable overview of domain distribution. A count field helps, but only if it is integrated into a redesigned view that prioritizes signal over decoration. The agent's narrow finding would partially solve the problem but would not address the deeper issue of information primacy.</p>
+      <p><strong>What the agent is blind to:</strong> The agent applies Nielsen's heuristics (recognition, error prevention, system status) but not information design principles (Shneiderman's mantra, Tufte's data-ink principle). The admin viewer problem is fundamentally an information design problem, not a usability heuristic problem.</p>
+    </div>
+  </div>
+
+  <h2>Part 5 — Evaluating Admin Viewers Against Design Principles</h2>
+
+  <p>The Article Eater system includes four main admin viewers: the VOI viewer (domain coverage), the annotation types viewer (what kinds of annotations are in the system), the interpretation monitor (what the system is currently inferring), and the EN graph (evidence network visualization). Evaluate these viewers against two design frameworks that go beyond Nielsen's heuristics.</p>
+
+  <h3>Tufte's data-ink principle</h3>
+
+  <p>Edward Tufte (1983) argues that the ratio of data-ink (pixels representing actual data) to total ink (all pixels in the visualization) should be as high as possible. Decorative elements, redundant labels, and visual noise all reduce this ratio. For each admin viewer, estimate the data-ink ratio. If the viewer shows domain coverage, how much of the screen is devoted to the coverage data itself vs. titles, icons, and decorative elements? An admin who needs to assess pipeline status should not need to filter through design elements to find the information.</p>
+
+  <h3>Shneiderman's information-seeking mantra</h3>
+
+  <p>Ben Shneiderman (1996) proposes that effective information visualization should support this workflow: overview first (show the full picture), then filter (zoom to relevant subsets), then details on demand (drill down to specific data points). Evaluate each admin viewer against this three-stage mantra. Can an admin see the overall state of the system at a glance? Can they filter to a domain of interest? Can they drill down to examine a specific annotation or evidence chain?</p>
+
+  <table>
+    <tr>
+      <th>Viewer</th>
+      <th>Data-Ink Ratio Estimate</th>
+      <th>Information-Seeking Support</th>
+    </tr>
+    <tr>
+      <td><strong>VOI Viewer</strong></td>
+      <td>% of screen space showing actual coverage data</td>
+      <td>Overview? Filter? Details on demand?</td>
+    </tr>
+    <tr>
+      <td><strong>Annotation Types</strong></td>
+      <td>% of screen space showing actual annotation stats</td>
+      <td>Overview? Filter? Details on demand?</td>
+    </tr>
+    <tr>
+      <td><strong>Interpretation Monitor</strong></td>
+      <td>% of screen space showing actual inferences</td>
+      <td>Overview? Filter? Details on demand?</td>
+    </tr>
+    <tr>
+      <td><strong>EN Graph</strong></td>
+      <td>% of screen space showing actual evidence relationships</td>
+      <td>Overview? Filter? Details on demand?</td>
+    </tr>
+  </table>
+
+  <div class="warn">
+    <strong>Design principle vs. heuristic</strong>
+    Tufte and Shneiderman are not heuristics in Nielsen's sense; they are principles from information design and visualization. Many UI evaluation tools miss these because they are not checking for discrete violations. The automated agent might flag "the user cannot undo an action" (a heuristic violation). It is less likely to flag "the visualization presents data in an order that requires the user to mentally reorder to understand the pattern" (a principle violation). Both are real problems, but they require different evaluation methods.
+  </div>
+
+  <h2>Deliverable Specification</h2>
+
+  <div class="deliverable-banner">
+    <h3>D3: Simulated Expert Panel Critique</h3>
+    <p><strong>Format:</strong> PDF report (10–14 pages) + screenshots + divergence matrix (spreadsheet or table in document)</p>
+    <p><strong>Due:</strong> Sunday, Week 5, 11:59 PM</p>
+    <p class="grade">15%</p>
+  </div>
+
+  <h3>Required report sections</h3>
+
+  <ul class="checklist">
+    <li>Title page (system name, pair members, date)</li>
+    <li>Executive summary (1 page): What is the most consequential difference between automated and human evaluation? Which areas is the agent most reliable in? Which areas is it most blind to?</li>
+    <li>Methodology (1 page): Describe Nielsen's 10 heuristics and explain your evaluation process. Note: you should apply the heuristics, not just list them.</li>
+    <li>Automated evaluation findings (2 pages): For each of the four tasks, show the agent's output and summarize its findings by heuristic.</li>
+    <li>Human evaluation findings (3–4 pages): For each of the four tasks, present your independent findings organized by heuristic. Include specific interface elements and severity assessments.</li>
+    <li>Divergence analysis (3–4 pages): Compare agent and human findings systematically. For high-value divergences, explain why the disagreement exists and which evaluation method (automated or human) is more reliable for that issue.</li>
+    <li>Admin viewer assessment (2 pages): Evaluate VOI viewer, annotation types viewer, interpretation monitor, and EN graph against Tufte's data-ink principle and Shneiderman's information-seeking mantra. Include the table above with your assessments.</li>
+    <li>Conclusions and recommendations (1 page): What should the design team trust from automated evaluation? What do they need to supplement with human judgment? Which improvements would have the highest impact?</li>
+    <li>References (APA format, minimum 4–5 sources)</li>
+  </ul>
+
+  <h3>Materials to submit</h3>
+
+  <ul class="checklist">
+    <li>Main report (PDF)</li>
+    <li>Four screenshots (one per task) with clear labels</li>
+    <li>Automated agent output (copy-paste from the system or exported if the system supports export)</li>
+    <li>Divergence matrix (spreadsheet format or detailed table in the report showing Matches / Agent only / Human only / Different severity)</li>
+    <li>High-resolution screenshots of admin viewers if your evaluation focuses on those</li>
+  </ul>
+
+  <h2>FAQs</h2>
+
+  <div class="faq-item">
+    <div class="faq-q">How do I know if I'm applying the heuristics correctly? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>Apply the specificity test: after you identify a heuristic violation, ask whether another evaluator reading your description could find the same interface element you are referring to. "Heuristic 6 violation: the menu is hard to find" is too vague. "Heuristic 6 violation: the main menu is accessed via a three-icon hamburger menu in the top-right corner, which is not visible in the default view of the admin dashboard; a user would not know it exists without hovering over the corner or reading documentation" is specific enough that another evaluator could verify your finding. Specificity is the difference between an opinion and an analysis.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">What if the automated agent and I both find the same issue but for different reasons? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>Classify it as a match, but note the difference in reasoning in your divergence matrix. For example, you might both identify that the VOI query panel is problematic, but you identify it as a Heuristic 2 violation (system/real-world mismatch in terminology), while the agent identifies it as a Heuristic 6 violation (users must recall "variable of interest" terminology rather than recognizing it). Both are valid; the difference in framing suggests that the interface has multiple problems in this area, and fixing one without addressing the other may not solve the core usability issue.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">Do I need to be a domain expert in information design to evaluate the admin viewers? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>No, but you should read Tufte (1983) and Shneiderman (1996) before conducting the evaluation. The references section of this assignment points to the most relevant excerpts. You do not need to become an information design expert; you need to learn what Tufte and Shneiderman were arguing and apply their principles to the specific viewers. As a practical exercise: open the VOI viewer and imagine you are an administrator who needs to know, in 5 seconds, whether the system has articles about green space. Can you find that information in 5 seconds? If not, the viewer violates Shneiderman's overview-first principle.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">What if the automated agent has bugs or produces nonsensical findings? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>Document this as a finding about the agent itself. A nonsensical or contradictory agent output tells you something important about the agent's reliability and limitations. In your report, note if the agent produces contradictory findings, misapplies a heuristic, or flags false positives. This is not a problem with your evaluation; it is part of your evaluation. Real automated systems are imperfect, and your job is to understand their actual behavior, not assume they work as intended.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">How much of the report should focus on the divergence analysis vs. the individual findings? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>Allocate space proportionally: if you identify 20 total issues (agent + human combined), and 8 of them show divergence, then divergence analysis should take about 8/20 ≈ 40% of your findings section. The divergences are the most interesting part because they reveal what the agent is blind to. But you must show your work on the matches too, so that the reader can see the full evaluation process and understand which issues are robustly identified by both methods.</p>
+    </div>
+  </div>
+
+  <!-- Supplementary reference guides -->
+  <div style="border:2px solid #6b3fa0;border-radius:10px;padding:1.5rem;background:#faf5ff;margin-bottom:2rem">
+    <div style="font-weight:700;color:#3d1f6e;font-size:1.05rem;margin-bottom:0.8rem">📚 Supplementary Reference Guides</div>
+    <p style="color:#555;font-size:0.9rem;margin-bottom:1rem">Two reference documents were compiled specifically for this track. They go beyond what is citable in a weekly assignment; use them as working references while you conduct your evaluations.</p>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap">
+      <a href="gui_design_experts_reference.html" style="flex:1;min-width:200px;display:block;background:#fff;border:1px solid #c4b5e8;border-radius:8px;padding:1rem;text-decoration:none;color:#3d1f6e">
+        <div style="font-size:1.3rem">🧑‍🏫</div>
+        <div style="font-weight:700;margin:0.3rem 0 0.3rem">Design Experts Reference</div>
+        <div style="font-size:0.82rem;color:#666">Verbatim panel advice from Norman, Nielsen, Cooper, Shneiderman, Walter, Wroblewski, Spool, Clark &amp; Kennedy — plus a decision trace table.</div>
+      </a>
+      <a href="gui_visualization_guide.html" style="flex:1;min-width:200px;display:block;background:#fff;border:1px solid #a5d8e8;border-radius:8px;padding:1rem;text-decoration:none;color:#0e7490">
+        <div style="font-size:1.3rem">📊</div>
+        <div style="font-weight:700;margin:0.3rem 0 0.3rem">Visualization Design Guide</div>
+        <div style="font-size:0.82rem;color:#666">Tufte, Cleveland, Cairo, Knaflic: chart-choice table, eight anti-patterns, and checklists for ATLAS dashboard and evidence cards.</div>
+      </a>
+    </div>
+  </div>
+
+  <h2>Key References</h2>
+  <ul class="ref-list">
+    <li>
+      <span class="ref-num">1</span>
+      <span class="ref-text">Nielsen, J., &amp; Molich, R. (1990). Heuristic evaluation of user interfaces. In <em>Proceedings of CHI '90</em> (pp. 249–256). ACM. <a href="https://doi.org/10.1145/97243.97281" style="color:#6b3fa0" target="_blank">https://doi.org/10.1145/97243.97281</a> (~3,900 citations) — The foundational paper; defines the 10 heuristics and describes the method for evaluators to apply them systematically.</span>
+    </li>
+    <li>
+      <span class="ref-num">2</span>
+      <span class="ref-text">Tufte, E. R. (1983). <em>The visual display of quantitative information</em>. Graphics Press. (~8,000 citations) — The canonical text on data visualization; Chapter 2 on the data-ink principle and graphic integrity is essential for evaluating the admin viewers. Principles are timeless and apply whether the visualization is on paper or on screen.</span>
+    </li>
+    <li>
+      <span class="ref-num">3</span>
+      <span class="ref-text">Shneiderman, B. (1996). The eyes have it: A task by data type taxonomy for information visualizations. In <em>Proceedings of the 1996 IEEE Symposium on Visual Languages</em> (pp. 336–343). IEEE. <a href="https://doi.org/10.1109/VL.1996.545307" style="color:#6b3fa0" target="_blank">https://doi.org/10.1109/VL.1996.545307</a> (~2,200 citations) — Formulates the information-seeking mantra (overview → filter → details). Directly applicable to evaluating whether the admin viewers support the workflow an administrator actually needs.</span>
+    </li>
+    <li>
+      <span class="ref-num">4</span>
+      <span class="ref-text">Ivory, M. Y., &amp; Hearst, M. A. (2001). The state of the art in automating usability evaluation of user interfaces. <em>ACM Computing Surveys</em>, 33(4), 470–516. <a href="https://doi.org/10.1145/503112.503114" style="color:#6b3fa0" target="_blank">https://doi.org/10.1145/503112.503114</a> (~700 citations) — Comprehensive review of automated evaluation tools; Section 5 on limitations of automated evaluation is essential reading. Shows systematically where and why automation fails.</span>
+    </li>
+    <li>
+      <span class="ref-num">5</span>
+      <span class="ref-text">Lewis, J. R. (2014). Usability: Lessons from 20 years of research and practice. <em>Interactions</em>, 21(4), 66–73. <a href="https://doi.org/10.1145/2606612" style="color:#6b3fa0" target="_blank">https://doi.org/10.1145/2606612</a> (~200 citations) — Meta-analysis of what has and has not worked in usability evaluation over two decades. Documents how automation works well in familiar domains and breaks down in novel ones.</span>
+    </li>
+  </ul>
+
+  <footer>
+    COGS160: AI &amp; VR · GUI Evaluation Track · Week 5 · D3 — Expert Panel Critique<br>
+    Department of Cognitive Science, UC San Diego · Prof. David Kirsh
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+      const a = q.nextElementSibling;
+      const ch = q.querySelector('.faq-chevron');
+      a.classList.toggle('open');
+      ch.classList.toggle('open');
+    });
+  });
+</script>
+</body>
+</html>

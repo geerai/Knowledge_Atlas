@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COGS160: AI & VR — GUI Track Week 3: User Type Profiles</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+         background:#f5f5f5;padding:20px;color:#222;line-height:1.7}
+    .container{max-width:960px;margin:0 auto;background:#fff;padding:48px;
+               box-shadow:0 2px 10px rgba(0,0,0,.08)}
+    .nav{display:flex;justify-content:space-between;align-items:center;
+         margin-bottom:32px;padding-bottom:16px;border-bottom:2px solid #6b3fa0}
+    .nav a{color:#6b3fa0;text-decoration:none;font-weight:600;font-size:.9rem}
+    .nav a:hover{text-decoration:underline}
+    .track-pill{background:#6b3fa0;color:#fff;padding:4px 14px;border-radius:20px;
+                font-size:.8rem;font-weight:700;letter-spacing:.5px}
+    header{margin-bottom:36px}
+    .week-label{font-size:.85rem;font-weight:700;color:#6b3fa0;text-transform:uppercase;
+                letter-spacing:1px;margin-bottom:6px}
+    h1{font-size:2rem;color:#182B49;font-weight:800;margin-bottom:8px;line-height:1.2}
+    .subtitle{font-size:1.05rem;color:#555;margin-bottom:20px}
+    .meta-row{display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;color:#777}
+    .meta-row span strong{color:#333}
+    h2{font-size:1.3rem;color:#182B49;font-weight:700;margin:40px 0 12px;
+       padding-bottom:6px;border-bottom:2px solid #6b3fa0}
+    h3{font-size:1.05rem;color:#6b3fa0;font-weight:700;margin:24px 0 8px}
+    h4{font-size:.95rem;color:#444;font-weight:700;margin:16px 0 6px}
+    p{margin-bottom:14px;color:#333;font-size:.95rem;line-height:1.7}
+
+    .context-box{background:linear-gradient(135deg,#faf5ff,#f3e8ff);border:1px solid #c4a0e8;
+                 border-left:4px solid #6b3fa0;border-radius:6px;padding:20px 24px;margin-bottom:32px}
+    .context-box p{font-size:.95rem;color:#444;margin-bottom:8px}
+    .context-box p:last-child{margin-bottom:0}
+
+    .story-box{background:#fff8f0;border:1px solid #f5c080;border-left:4px solid #d97706;
+               border-radius:6px;padding:20px 24px;margin:20px 0;font-style:italic}
+    .story-box p{color:#555}
+
+    .insight-box{background:#f0f7ff;border:1px solid #aed0ef;border-left:4px solid #1a6fb5;
+                 border-radius:6px;padding:20px 24px;margin:20px 0}
+    .insight-box h4{color:#1a6fb5;margin-top:0}
+
+    .outcome-list{list-style:none;padding:0}
+    .outcome-list li{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid #ede0f5;font-size:.95rem}
+    .outcome-list li:last-child{border-bottom:none}
+    .outcome-num{min-width:28px;height:28px;background:#6b3fa0;color:#fff;border-radius:50%;
+                 display:flex;align-items:center;justify-content:center;font-weight:700;
+                 font-size:.8rem;flex-shrink:0;margin-top:2px}
+
+    /* Persona cards */
+    .persona-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+    @media(max-width:640px){.persona-grid{grid-template-columns:1fr}}
+    .persona-card{border:1px solid #ddd;border-radius:8px;overflow:hidden;border-top:4px solid #6b3fa0}
+    .persona-header{background:#f9f5ff;padding:14px 16px;display:flex;gap:12px;align-items:flex-start}
+    .persona-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;
+                    justify-content:center;font-size:1.3rem;flex-shrink:0;background:#ede0f5}
+    .persona-name{font-weight:800;color:#182B49;font-size:.95rem}
+    .persona-role{font-size:.8rem;color:#6b3fa0;font-weight:600}
+    .persona-body{padding:14px 16px;font-size:.85rem;color:#444}
+    .persona-body p{margin-bottom:8px;font-size:.85rem}
+    .persona-body p:last-child{margin-bottom:0}
+    .persona-tag{display:inline-block;background:#ede0f5;color:#6b3fa0;padding:2px 8px;
+                 border-radius:10px;font-size:.72rem;font-weight:700;margin:2px}
+
+    /* Example block */
+    .example-block{background:#f0f7ff;border:1px solid #aed0ef;border-radius:8px;padding:24px;margin:20px 0}
+    .example-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;
+                    padding-bottom:12px;border-bottom:2px solid #aed0ef}
+    .example-badge{background:#182B49;color:#fff;padding:4px 12px;border-radius:4px;
+                   font-size:.78rem;font-weight:700;letter-spacing:.5px}
+    .example-title{font-size:1.05rem;font-weight:700;color:#182B49}
+
+    /* Code */
+    pre{background:#1e1e2e;color:#cdd6f4;border-radius:6px;padding:20px;
+        font-size:.82rem;line-height:1.6;overflow-x:auto;margin:12px 0;tab-size:2}
+    code{font-family:"JetBrains Mono","Fira Code","Courier New",monospace}
+    .code-label{font-size:.75rem;font-weight:700;color:#888;text-transform:uppercase;
+                letter-spacing:.5px;margin-bottom:4px}
+    .st{color:#a6e3a1}.cm{color:#6c7086;font-style:italic}.kw{color:#cba6f7}
+
+    /* Steps */
+    .step-list{display:flex;flex-direction:column;gap:16px;margin:16px 0}
+    .step{display:flex;gap:16px;align-items:flex-start}
+    .step-num{min-width:36px;height:36px;background:#6b3fa0;color:#fff;border-radius:50%;
+              display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+    .step-body{flex:1;padding-top:6px}
+    .step-body strong{display:block;margin-bottom:4px;font-size:.95rem;color:#182B49}
+    .step-body p{font-size:.9rem;color:#444;margin-top:4px}
+
+    /* Tables */
+    table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.88rem}
+    th{background:#182B49;color:#fff;padding:10px 14px;text-align:left;font-weight:700}
+    td{padding:9px 14px;border-bottom:1px solid #eee}
+    tr:nth-child(even) td{background:#fafafa}
+
+    .tip{background:#f0fff4;border:1px solid #a8d5b5;border-left:4px solid #28a745;
+         border-radius:6px;padding:14px 18px;margin:12px 0;font-size:.9rem}
+    .warn{background:#fff8e6;border:1px solid #e8c87a;border-left:4px solid #C69214;
+          border-radius:6px;padding:14px 18px;margin:12px 0;font-size:.9rem}
+    .tip strong,.warn strong{display:block;margin-bottom:4px}
+
+    .faq-item{border:1px solid #e8e0f5;border-radius:6px;margin-bottom:10px;overflow:hidden}
+    .faq-q{padding:14px 18px;cursor:pointer;font-weight:700;font-size:.9rem;color:#182B49;
+           background:#fdf9ff;display:flex;justify-content:space-between;align-items:center;
+           user-select:none}
+    .faq-q:hover{background:#f5ecff}
+    .faq-a{padding:0 18px;max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s}
+    .faq-a.open{max-height:700px;padding:14px 18px}
+    .faq-a p{font-size:.9rem;color:#444;margin-bottom:8px}
+    .faq-a p:last-child{margin-bottom:0}
+    .faq-chevron{font-size:.8rem;transition:transform .3s}
+    .faq-chevron.open{transform:rotate(180deg)}
+
+    .ref-list{list-style:none;padding:0}
+    .ref-list li{padding:10px 0;border-bottom:1px solid #eee;font-size:.88rem;color:#444;display:flex;gap:12px}
+    .ref-list li:last-child{border-bottom:none}
+    .ref-num{min-width:28px;font-weight:700;color:#6b3fa0}
+    .ref-text{flex:1}
+
+    .deliverable-banner{background:#182B49;color:#fff;border-radius:8px;padding:20px 24px;margin:24px 0}
+    .deliverable-banner h3{color:#C69214;margin:0 0 8px}
+    .deliverable-banner p{font-size:.9rem;opacity:.9;margin-bottom:4px}
+    .deliverable-banner .grade{font-size:1.4rem;font-weight:800;color:#C69214}
+
+    .checklist{list-style:none;padding:0}
+    .checklist li{padding:8px 0;border-bottom:1px solid #eee;font-size:.9rem;display:flex;gap:10px}
+    .checklist li::before{content:"☐";font-size:1.1rem;color:#6b3fa0;flex-shrink:0}
+
+    /* Spec box */
+    .spec-box{background:#f9f9f9;border:1px solid #ddd;border-radius:6px;padding:20px 24px;margin:16px 0}
+    .spec-grid{display:grid;grid-template-columns:140px 1fr;gap:8px 16px;font-size:.9rem}
+    .spec-label{font-weight:700;color:#555}
+    .spec-value{color:#222}
+
+    footer{margin-top:48px;padding-top:20px;border-top:1px solid #eee;font-size:.82rem;color:#999;text-align:center}
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="nav">
+    <a href="index.html">← Course Home</a>
+    <span class="track-pill">🖥 GUI Evaluation Track</span>
+    <a href="gui_track_overview.html">Track Overview →</a>
+  </nav>
+
+  <header>
+    <div class="week-label">Week 3 · Deliverable D1 · Pair 1 leads</div>
+    <h1>Who Is This System Actually For?</h1>
+    <p class="subtitle">Building Refined User Type Profiles and a Use-Case Matrix</p>
+    <div class="meta-row">
+      <span><strong>Due:</strong> Sunday, Week 3 (11:59 PM)</span>
+      <span><strong>Weight:</strong> 12% of course grade</span>
+      <span><strong>Lead:</strong> Pair 1 (all pairs contribute recordings)</span>
+    </div>
+  </header>
+
+  <!-- Opening narrative — Gawande's arc: setup → complication → resolution -->
+  <div class="context-box">
+    <p>Here is a fact about usability testing that most people find surprising: the hardest part is not running the tests. It is deciding whose experience you are trying to improve. The Article Eater system has at least eight distinct user types — from first-year undergraduates navigating a course assignment to senior researchers querying a knowledge base developed over years. Each user brings a different mental model, a different vocabulary for describing what the system does, and a different definition of "it worked." A usability test that treats these eight users as interchangeable will produce findings that are simultaneously true of no one in particular and therefore actionable for no one at all.</p>
+    <p>This week, Pair 1 constructs the foundation that all subsequent GUI work depends on: a detailed map of who uses the system, what they are trying to accomplish, and where they get stuck. Everyone in the track contributes at least one recorded think-aloud session, but Pair 1 analyzes the recordings and produces the final profiles.</p>
+  </div>
+
+  <h2>Learning Outcomes</h2>
+  <ul class="outcome-list">
+    <li><span class="outcome-num">1</span><span>Distinguish eight user types by their goals, prior knowledge, and relationship to the system — and explain why those distinctions matter for interface design.</span></li>
+    <li><span class="outcome-num">2</span><span>Record, transcribe, and code a think-aloud session that surfaces genuine confusion rather than performed competence.</span></li>
+    <li><span class="outcome-num">3</span><span>Build a persona — a fictional but evidence-grounded user — that is specific enough to generate a disagreement among designers.</span></li>
+    <li><span class="outcome-num">4</span><span>Produce a use-case matrix that maps user types to workflows and labels each intersection as smooth, friction-prone, or blocked.</span></li>
+  </ul>
+
+  <!-- Part 1: Defamiliarization — make the familiar strange -->
+  <h2>Part 1 — Eight Users, Eight Worlds</h2>
+
+  <p>When interface designers talk about "the user," they are usually lying, even when they don't mean to be. What they mean is "the user we imagined while designing this." That imagined user has their own familiarity with the system, their own tolerance for ambiguity, and their own goals — and those qualities are usually closer to the designer's than to the actual population's. The first task of a usability evaluation is to break that habit by cataloguing the genuine diversity of people who will actually sit in front of this interface.</p>
+
+  <p>The Article Eater system serves a population that is genuinely heterogeneous. Berlyne's (1971) classic finding — that users calibrate their engagement with a system based on how much it aligns with their current schema — predicts that the same interface element will feel intuitive to one user type and opaque to another, not because either group is incompetent but because their schemas differ. The following eight user types are derived from the system design documents; your recordings this week will test whether they are the right eight, whether they overlap in unexpected ways, and whether there are types the design team missed.</p>
+
+  <div class="persona-grid">
+    <div class="persona-card">
+      <div class="persona-header">
+        <div class="persona-avatar">🎓</div>
+        <div>
+          <div class="persona-name">The Enrolled Student</div>
+          <div class="persona-role">First-time system user</div>
+        </div>
+      </div>
+      <div class="persona-body">
+        <p>Arrives with a specific assignment and leaves when it is done. Does not explore. Reads instructions only when stuck. Interprets any error message as "I did something wrong," not "the system has a bug."</p>
+        <p><span class="persona-tag">Goal: complete D0</span> <span class="persona-tag">Risk: abandons on first error</span></p>
+      </div>
+    </div>
+    <div class="persona-card">
+      <div class="persona-header">
+        <div class="persona-avatar">🔬</div>
+        <div>
+          <div class="persona-name">The Researcher</div>
+          <div class="persona-role">Power user, domain expert</div>
+        </div>
+      </div>
+      <div class="persona-body">
+        <p>Knows exactly what they want but not how to get the system to produce it. Fluent in the scientific domain; unfamiliar with the system's data model. Most dangerous user type for surface usability: they can appear to succeed while building an incorrect mental model.</p>
+        <p><span class="persona-tag">Goal: VOI query</span> <span class="persona-tag">Risk: silent error</span></p>
+      </div>
+    </div>
+    <div class="persona-card">
+      <div class="persona-header">
+        <div class="persona-avatar">🏛</div>
+        <div>
+          <div class="persona-name">The Architect / Designer</div>
+          <div class="persona-role">External professional user</div>
+        </div>
+      </div>
+      <div class="persona-body">
+        <p>Interested in design evidence — what built environments produce what effects. Has no background in the system's epistemological framework. Will attempt to read evidence as recommendations, not as calibrated probabilistic claims.</p>
+        <p><span class="persona-tag">Goal: design guidance</span> <span class="persona-tag">Risk: miscalibrated confidence</span></p>
+      </div>
+    </div>
+    <div class="persona-card">
+      <div class="persona-header">
+        <div class="persona-avatar">⚙️</div>
+        <div>
+          <div class="persona-name">The System Administrator</div>
+          <div class="persona-role">Operations and monitoring</div>
+        </div>
+      </div>
+      <div class="persona-body">
+        <p>Needs to understand what the system is doing at any moment — ingestion pipeline status, annotation backlog, error rates. Reads dashboards, not articles. Will ignore any feature not on the admin viewer pages.</p>
+        <p><span class="persona-tag">Goal: monitor pipeline</span> <span class="persona-tag">Risk: invisible failures</span></p>
+      </div>
+    </div>
+    <div class="persona-card">
+      <div class="persona-header">
+        <div class="persona-avatar">📊</div>
+        <div>
+          <div class="persona-name">The Data Analyst</div>
+          <div class="persona-role">Downstream consumer of extracted data</div>
+        </div>
+      </div>
+      <div class="persona-body">
+        <p>Wants structured outputs — CSV exports, query results, calibrated confidence values — that can be imported into R or Python. Will build workflows around the system's API. Cares deeply about data provenance; will not trust outputs without a clear chain of evidence.</p>
+        <p><span class="persona-tag">Goal: export + provenance</span> <span class="persona-tag">Risk: trust failure</span></p>
+      </div>
+    </div>
+    <div class="persona-card">
+      <div class="persona-header">
+        <div class="persona-avatar">📝</div>
+        <div>
+          <div class="persona-name">The Annotator / Curator</div>
+          <div class="persona-role">Human-in-the-loop contributor</div>
+        </div>
+      </div>
+      <div class="persona-body">
+        <p>Responsible for reviewing and correcting system annotations. Spends long sessions on a single task. Needs extremely efficient keyboard navigation; any extra click compounds into hours of friction over a semester.</p>
+        <p><span class="persona-tag">Goal: fast annotation</span> <span class="persona-tag">Risk: efficiency death by a thousand clicks</span></p>
+      </div>
+    </div>
+    <div class="persona-card">
+      <div class="persona-header">
+        <div class="persona-avatar">👁</div>
+        <div>
+          <div class="persona-name">The System Evaluator</div>
+          <div class="persona-role">Peer or TA assessing quality</div>
+        </div>
+      </div>
+      <div class="persona-body">
+        <p>Needs to quickly audit what the system produced — not to use it, but to judge whether it is working correctly. Will look for comparison views, before/after states, and error indicators. No patience for features that are useful for production use but not for auditing.</p>
+        <p><span class="persona-tag">Goal: audit outputs</span> <span class="persona-tag">Risk: no comparison affordance</span></p>
+      </div>
+    </div>
+    <div class="persona-card">
+      <div class="persona-header">
+        <div class="persona-avatar">💡</div>
+        <div>
+          <div class="persona-name">The Curious Newcomer</div>
+          <div class="persona-role">Onboarding, first contact</div>
+        </div>
+      </div>
+      <div class="persona-body">
+        <p>Has heard about the system from a colleague and wants to understand what it does. Will spend 10 minutes exploring before forming a durable first impression. If they do not understand the system's purpose within those 10 minutes, they will not return.</p>
+        <p><span class="persona-tag">Goal: understand the system</span> <span class="persona-tag">Risk: 10-minute abandonment</span></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight-box">
+    <h4>The "First-Timer Rule"</h4>
+    <p>Every think-aloud session you record this week must include at least one person who has <em>never seen the system before</em>. This is not a preference — it is a methodological requirement. Experienced users learn workarounds for broken affordances and stop noticing them; they will perform tasks smoothly while routing around problems that a newcomer would find insurmountable. The first-timer's confusion is the most valuable data you will collect, because it reveals the system's interface assumptions in the sharpest possible way.</p>
+    <p>Concretely: if your team has three members and you are recruiting participants, at least one of your recorded sessions must be someone who opened the system for the first time while the recording was running.</p>
+  </div>
+
+  <!-- Part 2: The recording protocol -->
+  <h2>Part 2 — Recording Think-Aloud Sessions</h2>
+
+  <p>Think-aloud protocol (Ericsson & Simon, 1993) is the most reliable method we have for surfacing the difference between what an interface presents and what a user perceives. The method is simple to describe and surprisingly difficult to execute. The failure mode is almost always the same: the facilitator, wanting to be helpful, answers questions or offers guidance the moment the participant hesitates. This destroys the data. A participant who receives guidance has not demonstrated a usability problem — they have demonstrated that they can follow instructions, which is not interesting.</p>
+
+  <h3>The Zoom Recording Protocol</h3>
+  <p>All sessions must be recorded via Zoom or an equivalent screen-recording tool. This serves two purposes. First, you need the screen recording to code confusion moments accurately — human memory of a 30-minute session is too coarse. Second, the system design team will want to watch the recordings; a written summary of "the participant seemed confused at the search bar" is 10 times less informative than 90 seconds of video showing exactly where they clicked, what they said, and how long they paused.</p>
+
+  <div class="step-list">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Brief the participant honestly (2 min)</strong>
+        <p>Tell them: "We're evaluating the system, not you. There are no wrong answers. If something is confusing, that's exactly what we want to know. Please say aloud whatever you're thinking — even if it's 'I don't know what this button does' or 'I'm just going to try this and see what happens.'" Start the Zoom recording before you say this, so you capture the full session including the briefing.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Give the task, then go silent (25–30 min)</strong>
+        <p>Hand the participant a printed task card (see worked example below). Tell them to read it and begin. From that moment, your role is to listen and note-take. You may say: "Keep talking" or "What are you thinking right now?" You may not say: "Try clicking there," "That button does X," or "You're on the right track."</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Debrief immediately after (10 min)</strong>
+        <p>While the participant's experience is fresh, ask: "What was the most confusing moment?" "Was there anything you expected to find that wasn't there?" "If you could change one thing about the interface, what would it be?" Record this as part of the session. The debrief often surfaces the participant's mental model more clearly than the session itself.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>Timestamp your notes during the session</strong>
+        <p>Write timestamps for every moment of hesitation (pause > 5 seconds), every wrong click (click on a non-functional element), every verbal confusion signal ("Hmm," "Wait," "I'm not sure"), and every recovery behavior (going back, reloading, switching tabs). These timestamps let you find the key moments in the video without watching the whole recording.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Worked example -->
+  <div class="example-block">
+    <div class="example-header">
+      <span class="example-badge">WORKED EXAMPLE</span>
+      <span class="example-title">Task Card for The Enrolled Student persona</span>
+    </div>
+
+    <div class="spec-box">
+      <p><strong>Background:</strong> You are a student in COGS160: AI &amp; VR. Your instructor has asked you to use the Article Eater system to find at least 5 research articles about how green space affects mood and concentration. You have not used this system before. Your course assignment is due in 48 hours.</p>
+      <p style="margin-top:12px"><strong>Your task:</strong> Find 5 articles about green space and psychological wellbeing. Record their titles and whether the system gives you any indication of how confident it is in its findings.</p>
+      <p style="margin-top:12px"><em>That is the complete task description. Please begin.</em></p>
+    </div>
+
+    <h4>Why this task card is well-designed</h4>
+    <p>The task card gives the participant a goal that a real student would have — it is not a feature tour ("find the search bar and enter a query"). The time pressure ("due in 48 hours") activates realistic motivation: the participant will behave more like a real student and less like someone performing for observation. The task also requires the participant to notice the system's confidence indicators — a feature that may or may not be visible enough to be found without prompting. If no participant notices the confidence display independently, that is a significant usability finding.</p>
+
+    <h4>Signs of a poorly designed task card</h4>
+    <p>Avoid tasks that name interface elements ("use the VOI query panel to..."), describe the correct procedure ("click on the search icon and then..."), or have a single correct answer that can be verified without system knowledge ("find the article published in 2019 by Smith et al."). These designs measure whether the participant can follow instructions, not whether the interface affords the target behavior.</p>
+  </div>
+
+  <!-- Part 3: Building personas -->
+  <h2>Part 3 — From Recordings to Personas</h2>
+
+  <p>A persona, in the sense used here, is a fictional but evidence-grounded user whose specific characteristics — name, background, habits, frustrations — make abstract usability findings concrete. The standard critique of personas is that they encourage designers to design for their imagined character rather than for actual users. This critique is valid against personas built from intuition. It does not apply to personas built from recorded evidence, because the evidence constrains what the character can plausibly believe and do.</p>
+
+  <p>Cooper (1999), who formalized the persona concept, recommended that a persona should be specific enough to generate a genuine design disagreement. If your team can read a persona and all immediately agree on what the interface should do, the persona is too vague. A persona for The Enrolled Student that says "wants to find articles efficiently" will generate no disagreement. A persona that says "assumes the system has already retrieved the best articles on her topic, and will not realize she needs to formulate a query" will immediately raise the question of whether the interface should set expectations before the user starts, and if so, how.</p>
+
+  <div class="example-block">
+    <div class="example-header">
+      <span class="example-badge">WORKED EXAMPLE</span>
+      <span class="example-title">Full persona: "Mei" — The Enrolled Student</span>
+    </div>
+
+    <div class="spec-box">
+      <div class="spec-grid">
+        <span class="spec-label">Name / Age</span>
+        <span class="spec-value">Mei Chen, 20 years old, second-year cognitive science major</span>
+        <span class="spec-label">Context</span>
+        <span class="spec-value">Enrolled in COGS160: AI &amp; VR for her research methods requirement. Has taken intro stats and one lab methods course. Comfortable with Google Scholar; has never used a structured evidence system.</span>
+        <span class="spec-label">Goal this session</span>
+        <span class="spec-value">Complete D0 (Query Diary) before Monday night. Find 5 articles about green space and mood; understand enough about the system to come back next week.</span>
+        <span class="spec-label">Mental model</span>
+        <span class="spec-value">Believes the system works like an improved Google Scholar — that typing a phrase into any search box will surface the best articles on that topic. Does not expect to need to construct a structured VOI query. Expects the system to have already "ingested" all relevant literature.</span>
+        <span class="spec-label">Key frustration (from recording)</span>
+        <span class="spec-value">Spent 4 minutes looking for a simple search bar before finding the VOI query panel. After finding it, did not understand why she needed to specify a "variable of interest" separately from a "dependent construct." Said aloud: "I just want to search for stuff about green space."</span>
+        <span class="spec-label">Recovery behavior</span>
+        <span class="spec-value">Typed "green space mood" into the VOI field (treating it as a free-text search), got no results, and concluded the system did not contain relevant articles. Did not investigate further.</span>
+        <span class="spec-label">Design implication</span>
+        <span class="spec-value">The interface must either (a) redirect free-text queries to an appropriate structured query, or (b) provide enough onboarding at the query panel to establish the correct mental model before the user has already formed the wrong one.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip">
+    <strong>The specificity test</strong>
+    Read your persona draft and ask: "If two designers read this persona, would they disagree about what the interface should do?" If the answer is no, add one more specific piece of evidence from your recordings — a specific quote, a specific recovery behavior, a specific wrong click — until the disagreement is live. A persona that generates a design disagreement is doing its job.
+  </div>
+
+  <!-- Part 4: Use-case matrix -->
+  <h2>Part 4 — The Use-Case Matrix</h2>
+
+  <p>The eight personas tell you who uses the system. The use-case matrix tells you what each user type tries to do — and, crucially, which combinations of user type and workflow produce friction or outright failure. The matrix is a tool for prioritization: there are more interface improvements possible than any team can execute in five weeks, and the matrix makes explicit which improvements affect the most users in the most consequential workflows.</p>
+
+  <h3>Matrix structure</h3>
+  <table>
+    <tr>
+      <th>Workflow</th>
+      <th>Enrolled Student</th>
+      <th>Researcher</th>
+      <th>Architect</th>
+      <th>Admin</th>
+      <th>Data Analyst</th>
+      <th>Annotator</th>
+      <th>Evaluator</th>
+      <th>Newcomer</th>
+    </tr>
+    <tr>
+      <td><strong>Initial orientation (0–5 min)</strong></td>
+      <td style="background:#fee2e2">Blocked</td>
+      <td style="background:#fef9c3">Friction</td>
+      <td style="background:#fee2e2">Blocked</td>
+      <td style="background:#dcfce7">Smooth</td>
+      <td style="background:#fef9c3">Friction</td>
+      <td style="background:#dcfce7">Smooth</td>
+      <td style="background:#fef9c3">Friction</td>
+      <td style="background:#fee2e2">Blocked</td>
+    </tr>
+    <tr>
+      <td><strong>VOI query construction</strong></td>
+      <td style="background:#fee2e2">Blocked</td>
+      <td style="background:#fef9c3">Friction</td>
+      <td style="background:#fee2e2">Blocked</td>
+      <td style="background:#dcfce7">N/A</td>
+      <td style="background:#fef9c3">Friction</td>
+      <td style="background:#dcfce7">N/A</td>
+      <td style="background:#fef9c3">Friction</td>
+      <td style="background:#fee2e2">Blocked</td>
+    </tr>
+    <tr>
+      <td><strong>Interpreting confidence scores</strong></td>
+      <td style="background:#fee2e2">Blocked</td>
+      <td style="background:#dcfce7">Smooth</td>
+      <td style="background:#fee2e2">Blocked</td>
+      <td style="background:#fef9c3">Friction</td>
+      <td style="background:#dcfce7">Smooth</td>
+      <td style="background:#dcfce7">Smooth</td>
+      <td style="background:#dcfce7">Smooth</td>
+      <td style="background:#fee2e2">Blocked</td>
+    </tr>
+    <tr>
+      <td><strong>Exporting results</strong></td>
+      <td style="background:#fef9c3">Friction</td>
+      <td style="background:#dcfce7">Smooth</td>
+      <td style="background:#fee2e2">Blocked</td>
+      <td style="background:#dcfce7">N/A</td>
+      <td style="background:#dcfce7">Smooth</td>
+      <td style="background:#dcfce7">N/A</td>
+      <td style="background:#fef9c3">Friction</td>
+      <td style="background:#fee2e2">Blocked</td>
+    </tr>
+  </table>
+
+  <p><em>(This table shows a partially completed example based on prior course knowledge. Your D1 deliverable must fill in the full matrix based on evidence from your recorded sessions — not from assumptions.)</em></p>
+
+  <div class="warn">
+    <strong>The honesty rule for the use-case matrix</strong>
+    Every cell in your matrix must be traceable to at least one piece of evidence from a recorded session. If you have no evidence for a cell — because your sessions did not cover that user type attempting that workflow — mark the cell as "not tested" rather than guessing. An honest gap is more useful than a confident fiction. Your D1 will be evaluated in part on how clearly it distinguishes what you found from what you inferred.
+  </div>
+
+  <!-- Deliverable -->
+  <div class="deliverable-banner">
+    <h3>D1 — Deliverable: Refined User Type Profiles &amp; Use-Case Matrix</h3>
+    <p><strong>What to submit:</strong></p>
+    <p>1. Eight persona documents (one per user type): name, context, goal, mental model, key frustration with evidence citation, recovery behavior, design implication. Each persona should be 200–300 words.</p>
+    <p>2. Use-case matrix: rows = workflows, columns = user types, cells = Smooth / Friction / Blocked / Not tested, with a 1–2 sentence evidence note for every non-N/A cell.</p>
+    <p>3. Priority ranking: which three user type × workflow combinations represent the most important usability problems to fix? Justify with evidence.</p>
+    <p>4. Recording summaries: for each recorded session, a 1-page summary including participant type, task, timestamp log of confusion moments, and key quote.</p>
+    <div class="grade">12% of course grade</div>
+    <p style="margin-top:8px;font-size:.82rem;opacity:.7">Submit as a ZIP to the course portal: <code>COGS160_GUI_D1_[TeamName].zip</code></p>
+  </div>
+
+  <h2>Submission Checklist</h2>
+  <ul class="checklist">
+    <li>At least one recorded session features a genuine first-timer (documented as such in the session summary).</li>
+    <li>Every persona includes at least one specific quote or behavior from a recording, with a timestamp reference.</li>
+    <li>No persona says only what any reasonable person would predict — it contains at least one surprising finding.</li>
+    <li>The use-case matrix distinguishes "not tested" from "smooth" — these are not the same thing.</li>
+    <li>The priority ranking gives a reason that appeals to evidence, not to personal preference ("user type X had the most confusion" not "we find workflow Y interesting").</li>
+    <li>Recording summaries include timestamps, not just paraphrases.</li>
+    <li>At least one cell in the use-case matrix is classified "Blocked" with evidence.</li>
+  </ul>
+
+  <h2>Frequently Asked Questions</h2>
+
+  <div class="faq-item">
+    <div class="faq-q">Can we recruit COGS160 classmates as participants? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>Yes, with a caveat. Classmates who have already used the system during D0 are not first-timers and should not be presented as first-timer data. They make excellent participants for researcher, annotator, or evaluator personas because they have formed a mental model that you can probe. For the enrolled-student and newcomer personas, you genuinely need someone who has not seen the system. Classmates from other COGS courses, friends from other departments, or family members are all acceptable first-timers.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">What if a participant refuses to talk during the think-aloud? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>This is the most common practical problem with think-aloud protocols, and it happens because narrating while doing a complex task is genuinely unnatural. When the participant goes silent for more than 15 seconds, gently prompt: "What are you looking at right now?" or "What are you deciding?" Do not say "keep talking" — it sounds like a command and makes participants self-conscious. If a participant is consistently silent, switch to concurrent probing: pause the task every few minutes and ask "What were you just thinking?" rather than requiring continuous narration.</p>
+      <p>The Zoom recording of the screen is always running, so even a silent participant is producing timestamped cursor data. A silent recording is less rich than a verbal one, but it is not useless.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">How long should each persona document be? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>200–300 words per persona, plus the structured fields (name, context, mental model, and so on). The word count is for the prose narrative portion — the part that brings the persona to life as a specific person. The structured fields are in addition to this. Longer personas are not better; a persona that rambles loses the specificity that makes it useful. Every sentence in a persona should be either a piece of evidence from a recording or a direct inference from that evidence. Cut anything that is generic characterization that would apply to any user.</p>
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">What is a "confusion hot spot" and how do we identify one? <span class="faq-chevron">▼</span></div>
+    <div class="faq-a">
+      <p>A confusion hot spot is a specific location in the interface — a particular screen, panel, or interaction — where multiple participants from the same user type show the same hesitation or error pattern. Identifying one requires watching at least two recordings of the same user type attempting the same task and looking for co-occurrence: the same element, the same confusion signal, across at least two independent participants.</p>
+      <p>Practically: take your timestamp logs from your sessions, filter them by user type, and look for elements that appear in the confusion column across multiple sessions. If three enrolled-student participants all paused at the VOI query panel and then clicked the wrong element, that panel is a confusion hot spot. One participant's confusion might be idiosyncratic; three participants' confusion at the same element is a design problem.</p>
+    </div>
+  </div>
+
+  <h2>Key References</h2>
+  <ul class="ref-list">
+    <li>
+      <span class="ref-num">1</span>
+      <span class="ref-text">Ericsson, K. A., &amp; Simon, H. A. (1993). <em>Protocol analysis: Verbal reports as data</em> (revised ed.). MIT Press. (~6,200 citations) — Foundational methodological justification for think-aloud protocol; Chapters 2–3 on concurrent vs. retrospective verbalization are directly relevant to this assignment.</span>
+    </li>
+    <li>
+      <span class="ref-num">2</span>
+      <span class="ref-text">Cooper, A., Reimann, R., &amp; Cronin, D. (2007). <em>About face: The essentials of interaction design</em> (3rd ed.). Wiley. (~3,100 citations) — Chapters 4–5 on persona construction from qualitative data; Cooper's "design disagreement test" is the criterion used in this assignment.</span>
+    </li>
+    <li>
+      <span class="ref-num">3</span>
+      <span class="ref-text">Nielsen, J., &amp; Molich, R. (1990). Heuristic evaluation of user interfaces. In <em>Proceedings of CHI '90</em> (pp. 249–256). ACM. <a href="https://doi.org/10.1145/97243.97281" style="color:#6b3fa0" target="_blank">https://doi.org/10.1145/97243.97281</a> (~3,900 citations) — The original formulation of usability heuristics; heuristic 6 (recognition over recall) is relevant to the VOI query panel problem.</span>
+    </li>
+    <li>
+      <span class="ref-num">4</span>
+      <span class="ref-text">Berlyne, D. E. (1971). <em>Aesthetics and psychobiology</em>. Appleton-Century-Crofts. (~4,200 citations) — The theoretical basis for why different users with different schemas respond differently to the same interface complexity.</span>
+    </li>
+    <li>
+      <span class="ref-num">5</span>
+      <span class="ref-text">Portigal, S. (2013). <em>Interviewing users: How to uncover compelling insights</em>. Rosenfeld Media. (~560 citations) — Practical guidance on facilitating research sessions without leading participants; Chapter 5 on probing and the "keep talking" problem.</span>
+    </li>
+  </ul>
+
+  <footer>
+    COGS160: AI &amp; VR · GUI Evaluation Track · Week 3 · D1 — User Type Profiles &amp; Use-Case Matrix<br>
+    Department of Cognitive Science, UC San Diego · Prof. David Kirsh
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+      const a = q.nextElementSibling;
+      const ch = q.querySelector('.faq-chevron');
+      a.classList.toggle('open');
+      ch.classList.toggle('open');
+    });
+  });
+</script>
+</body>
+</html>

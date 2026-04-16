@@ -59,10 +59,10 @@ FRONTIER_QUESTIONS_PATH = AE / 'data' / 'interpretation_space' / 'phase4' / 'pri
 VALIDATION_COMPLETENESS_PATH = AE / 'data' / 'interpretation_space' / 'phase4' / 'validation_completeness.json'
 BOUNDARY_MAP_PATH = AE / 'data' / 'interpretation_space' / 'phase4' / 'boundary_map.json'
 DEFAULT_TRACK_TARGETS = [
-    ('Track 1 — Image Tagging', 5),
-    ('Track 2 — Article Finding', 5),
-    ('Track 3 — VR Production', 3),
-    ('Track 4 — GUI Evaluation & Experiment Design', 3),
+    ('Track 1 — Image Tagger', 5),
+    ('Track 2 — Article Finder', 5),
+    ('Track 3 — AI & VR', 3),
+    ('Track 4 — Interaction Design', 3),
 ]
 
 try:
@@ -1020,14 +1020,22 @@ def compact_reason_list(reasons, limit=2):
 
 def copy_visual_asset(src_path, paper_id):
     src = Path(src_path)
-    if not src.exists():
+    try:
+        if not src.exists():
+            return ''
+    except (PermissionError, OSError):
         return ''
     target_dir = VISUALS_OUT / paper_id
     target_dir.mkdir(parents=True, exist_ok=True)
     dst = target_dir / src.name
-    if not dst.exists() or src.stat().st_mtime > dst.stat().st_mtime:
-        shutil.copy2(src, dst)
-    return f"data/ka_payloads/article_visuals/{paper_id}/{src.name}"
+    try:
+        if not dst.exists() or src.stat().st_mtime > dst.stat().st_mtime:
+            shutil.copy2(src, dst)
+    except (PermissionError, OSError):
+        pass
+    if dst.exists():
+        return f"data/ka_payloads/article_visuals/{paper_id}/{src.name}"
+    return ''
 
 
 def build_visual_support_for_paper(paper_id, article_type, representative_claim):
@@ -1239,12 +1247,12 @@ def ensure_workflow_db():
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             [
-                ('student_alex_chen', 'Alex', 'Chen', 'alex.chen@example.edu', 'undergrad', 'UC San Diego', 'Cognitive Science', 'student_explorer', 'explore_literature', 'Track 2 — Article Finding', 'Track 4 — GUI Evaluation & Experiment Design', 'approved', 'Track 2 — Article Finding', '', '2026-03-20T09:00:00Z', '2026-03-21T18:00:00Z', ''),
-                ('student_jordan_miles', 'Jordan', 'Miles', 'jordan.miles@example.edu', 'undergrad', 'UC San Diego', 'Design Lab', 'contributor', 'contribute', 'Track 1 — Image Tagging', 'Track 2 — Article Finding', 'approved', 'Track 1 — Image Tagging', '', '2026-03-20T11:00:00Z', '2026-03-21T18:10:00Z', ''),
-                ('student_taylor_reed', 'Taylor', 'Reed', 'taylor.reed@example.edu', 'graduate', 'UC San Diego', 'VR Lab', 'contributor', 'contribute', 'Track 3 — VR Production', 'Track 4 — GUI Evaluation & Experiment Design', 'approved', 'Track 3 — VR Production', '', '2026-03-20T12:00:00Z', '2026-03-21T18:20:00Z', ''),
-                ('student_morgan_liu', 'Morgan', 'Liu', 'morgan.liu@example.edu', 'undergrad', 'UC San Diego', 'Human Factors', 'student_explorer', 'explore_literature', 'Track 4 — GUI Evaluation & Experiment Design', 'Track 2 — Article Finding', 'pending', '', '', '2026-03-24T08:30:00Z', '', ''),
-                ('student_priya_nair', 'Priya', 'Nair', 'priya.nair@example.edu', 'undergrad', 'UC San Diego', 'Psychology', 'student_explorer', 'explore_literature', 'Track 2 — Article Finding', 'Track 1 — Image Tagging', 'pending', '', '', '2026-03-24T10:15:00Z', '', ''),
-                ('student_sam_ortiz', 'Sam', 'Ortiz', 'sam.ortiz@example.edu', 'undergrad', 'UC San Diego', 'Cognitive Science', 'contributor', 'contribute', 'Track 1 — Image Tagging', 'Track 4 — GUI Evaluation & Experiment Design', 'rejected', '', 'Track capacity currently full', '2026-03-23T14:05:00Z', '', '2026-03-24T17:30:00Z'),
+                ('student_alex_chen', 'Alex', 'Chen', 'alex.chen@example.edu', 'undergrad', 'UC San Diego', 'Cognitive Science', 'student_explorer', 'explore_literature', 'Track 2 — Article Finder', 'Track 4 — Interaction Design', 'approved', 'Track 2 — Article Finder', '', '2026-03-20T09:00:00Z', '2026-03-21T18:00:00Z', ''),
+                ('student_jordan_miles', 'Jordan', 'Miles', 'jordan.miles@example.edu', 'undergrad', 'UC San Diego', 'Design Lab', 'contributor', 'contribute', 'Track 1 — Image Tagger', 'Track 2 — Article Finder', 'approved', 'Track 1 — Image Tagger', '', '2026-03-20T11:00:00Z', '2026-03-21T18:10:00Z', ''),
+                ('student_taylor_reed', 'Taylor', 'Reed', 'taylor.reed@example.edu', 'graduate', 'UC San Diego', 'VR Lab', 'contributor', 'contribute', 'Track 3 — AI & VR', 'Track 4 — Interaction Design', 'approved', 'Track 3 — AI & VR', '', '2026-03-20T12:00:00Z', '2026-03-21T18:20:00Z', ''),
+                ('student_morgan_liu', 'Morgan', 'Liu', 'morgan.liu@example.edu', 'undergrad', 'UC San Diego', 'Human Factors', 'student_explorer', 'explore_literature', 'Track 4 — Interaction Design', 'Track 2 — Article Finder', 'pending', '', '', '2026-03-24T08:30:00Z', '', ''),
+                ('student_priya_nair', 'Priya', 'Nair', 'priya.nair@example.edu', 'undergrad', 'UC San Diego', 'Psychology', 'student_explorer', 'explore_literature', 'Track 2 — Article Finder', 'Track 1 — Image Tagger', 'pending', '', '', '2026-03-24T10:15:00Z', '', ''),
+                ('student_sam_ortiz', 'Sam', 'Ortiz', 'sam.ortiz@example.edu', 'undergrad', 'UC San Diego', 'Cognitive Science', 'contributor', 'contribute', 'Track 1 — Image Tagger', 'Track 4 — Interaction Design', 'rejected', '', 'Track capacity currently full', '2026-03-23T14:05:00Z', '', '2026-03-24T17:30:00Z'),
             ],
         )
 
@@ -1258,10 +1266,10 @@ def ensure_workflow_db():
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             [
-                ('KA-PROP-0042', 'student_alex_chen', 'student', 'Track 2 — Article Finding', 'approved', 'citation', 'Impact of windows and daylight exposure on overall health and sleep quality of office workers', 'Boubekri et al. (2014). Impact of windows and daylight exposure on overall health and sleep quality of office workers. Journal of Clinical Sleep Medicine.', 'Boubekri, Cheung, Reid, Wang, Zee', 'Office workers with more daylight exposure slept longer and reported better quality of life indicators than workers in windowless offices.', '2026-03-22T09:10:00Z'),
-                ('KA-PROP-0043', 'student_alex_chen', 'student', 'Track 2 — Article Finding', 'pending', 'pdf', 'Appearance wood products and psychological well-being', 'Rice et al. (2006). Appearance wood products and psychological well-being. Wood and Fiber Science.', 'Rice, Kozak, Meitner, Cohen', 'Exploratory study of whether wood interiors shape emotional responses and perceived well-being.', '2026-03-24T11:30:00Z'),
-                ('KA-PROP-0044', 'student_jordan_miles', 'student', 'Track 1 — Image Tagging', 'approved', 'pdf', 'High-rise window views and stress recovery', '', 'Metadata pending', '', '2026-03-24T12:45:00Z'),
-                ('KA-PROP-0045', 'student_taylor_reed', 'student', 'Track 3 — VR Production', 'pending', 'citation', 'Green-water and green views from high-rise windows', 'Author metadata staged from window-view corpus.', 'Metadata pending', '', '2026-03-24T13:20:00Z'),
+                ('KA-PROP-0042', 'student_alex_chen', 'student', 'Track 2 — Article Finder', 'approved', 'citation', 'Impact of windows and daylight exposure on overall health and sleep quality of office workers', 'Boubekri et al. (2014). Impact of windows and daylight exposure on overall health and sleep quality of office workers. Journal of Clinical Sleep Medicine.', 'Boubekri, Cheung, Reid, Wang, Zee', 'Office workers with more daylight exposure slept longer and reported better quality of life indicators than workers in windowless offices.', '2026-03-22T09:10:00Z'),
+                ('KA-PROP-0043', 'student_alex_chen', 'student', 'Track 2 — Article Finder', 'pending', 'pdf', 'Appearance wood products and psychological well-being', 'Rice et al. (2006). Appearance wood products and psychological well-being. Wood and Fiber Science.', 'Rice, Kozak, Meitner, Cohen', 'Exploratory study of whether wood interiors shape emotional responses and perceived well-being.', '2026-03-24T11:30:00Z'),
+                ('KA-PROP-0044', 'student_jordan_miles', 'student', 'Track 1 — Image Tagger', 'approved', 'pdf', 'High-rise window views and stress recovery', '', 'Metadata pending', '', '2026-03-24T12:45:00Z'),
+                ('KA-PROP-0045', 'student_taylor_reed', 'student', 'Track 3 — AI & VR', 'pending', 'citation', 'Green-water and green views from high-rise windows', 'Author metadata staged from window-view corpus.', 'Metadata pending', '', '2026-03-24T13:20:00Z'),
             ],
         )
 

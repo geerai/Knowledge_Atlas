@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 680"
+     width="1100" height="680" font-family="Arial, Helvetica, sans-serif">
+<defs>
+  <filter id="shadow" x="-4%" y="-4%" width="108%" height="108%">
+    <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.10"/>
+  </filter>
+
+  <marker id="arrow-3A6EA8" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#3A6EA8"/>
+  </marker>
+
+  <marker id="arrow-E8872A" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#E8872A"/>
+  </marker>
+
+  <marker id="arrow-6B6B6B" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#6B6B6B"/>
+  </marker>
+
+  <marker id="arrow-1A7A50" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#1A7A50"/>
+  </marker>
+
+  <marker id="arrow-2A7868" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#2A7868"/>
+  </marker>
+
+  <marker id="arrow-6B4FA8" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#6B4FA8"/>
+  </marker>
+
+  <marker id="arrow-2C2C2C" viewBox="0 0 10 10" refX="9" refY="5"
+          markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#2C2C2C"/>
+  </marker>
+</defs>
+<rect width="1100" height="680" fill="#F7F4EF" rx="8"/>
+
+<text x="550.0" y="38" text-anchor="middle" font-family="Georgia, serif"
+      font-size="22" font-weight="bold" fill="#1C3D3A">ATLAS Multi-Repo System Architecture</text>
+<text x="550.0" y="58" text-anchor="middle" font-size="12" fill="#2A7868"
+      font-style="italic">Architecture for Typed, Layered Assessment of Science</text>
+
+<rect x="5" y="70" width="1090" height="90" rx="4" fill="#1A7A50" opacity="0.06"/>
+<text x="1080" y="85" text-anchor="end" font-size="9" font-weight="bold" fill="#1A7A50" opacity="0.5" letter-spacing="2">INTAKE</text>
+<rect x="5" y="185" width="1090" height="80" rx="4" fill="#6B4FA8" opacity="0.06"/>
+<text x="1080" y="200" text-anchor="end" font-size="9" font-weight="bold" fill="#6B4FA8" opacity="0.5" letter-spacing="2">SEMANTIC AUTHORITY</text>
+<rect x="5" y="298" width="1090" height="100" rx="4" fill="#A84F6B" opacity="0.06"/>
+<text x="1080" y="313" text-anchor="end" font-size="9" font-weight="bold" fill="#A84F6B" opacity="0.5" letter-spacing="2">EXTRACTION &amp; MODELING</text>
+<rect x="5" y="428" width="1090" height="95" rx="4" fill="#3A6EA8" opacity="0.06"/>
+<text x="1080" y="443" text-anchor="end" font-size="9" font-weight="bold" fill="#3A6EA8" opacity="0.5" letter-spacing="2">PRESENTATION &amp; TOOLS</text>
+
+  <line x1="164.00332824908503" y1="134.5952382718373" x2="200.49417556410117" y2="313.2083330242847"
+        stroke="#6B6B6B" stroke-width="1.5" marker-end="url(#arrow-6B6B6B)"/>
+  <text x="190.2487519065931" y="211.90178564806098" font-family="Arial, Helvetica, sans-serif" font-size="8.5" fill="#6B6B6B">job bundles,</text>
+<text x="190.2487519065931" y="223.90178564806098" font-family="Arial, Helvetica, sans-serif" font-size="8.5" fill="#6B6B6B">PDFs, metadata</text>
+
+
+  <line x1="360.0" y1="115.0" x2="195.0" y2="115.0"
+        stroke="#1A7A50" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrow-1A7A50)"/>
+  
+
+  <line x1="165.19230769230768" y1="245.96153846153845" x2="194.03846153846155" y2="315.1923076923077"
+        stroke="#6B4FA8" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrow-6B4FA8)"/>
+  <text x="187.6153846153846" y="274.5769230769231" font-family="Arial, Helvetica, sans-serif" font-size="8.5" fill="#6B6B6B">IV tags, aliases</text>
+
+
+  <line x1="157.94433474570295" y1="207.5049364433678" x2="159.22241419501987" y2="149.99136122410636"
+        stroke="#6B4FA8" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrow-6B4FA8)"/>
+  <text x="166.5833744703614" y="172.74814883373708" font-family="Arial, Helvetica, sans-serif" font-size="8.5" fill="#6B6B6B">IV vocab</text>
+
+
+  <line x1="361.16064273470477" y1="239.0336639519731" x2="236.09387521426666" y2="327.31608808404707"
+        stroke="#6B4FA8" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrow-6B4FA8)"/>
+  <text x="306.6272589744857" y="271.1748760180101" font-family="Arial, Helvetica, sans-serif" font-size="8.5" fill="#6B6B6B">outcome vocab,</text>
+<text x="306.6272589744857" y="283.1748760180101" font-family="Arial, Helvetica, sans-serif" font-size="8.5" fill="#6B6B6B">lookup</text>
+
+
+  <line x1="359.735647136881" y1="218.31154162252466" x2="191.08761751045822" y2="131.07980216058183"
+        stroke="#6B4FA8" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrow-6B4FA8)"/>
+  <text x="283.4116323236696" y="168.69567189155325" font-family="Arial, Helvetica, sans-serif" font-size="8.5" fill="#6B6B6B">taxonomy</text>
+
+
+  <line x1="391.1788225776266" y1="242.0907440828017" x2="466.06206048915345" y2="321.966197855097"
+        stroke="#6B4FA8" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrow-6B4FA8)"/>
+  <text x="436.62044153339" y="270.02847096894936" font-family="Arial, Helvetica, sans-serif" font-size="8.5" fill="#6B6B6B">BN outcome</text>
+<text x="436.62044153339" y="282.02847096894936" font-family="Arial, Helvetica, sans-serif" font-size="8.5" fill="#6B6B6B">nodes</text>
+
+
+  <line x1="200.19824942363087" y1="366.1194639697413" x2="170.27806350864597" y2="442.4159380529528"
+        stroke="#2C2C2C" stroke-width="1.5" marker-end="url(#arrow-2C2C2C)"/>
+  <text x="193.23815646613843" y="386.26770101134707" font-family="Arial, Helvetica, sans-serif" font-size="8.5" fill="#6B6B6B">gold claims,</text>
+<text x="193.23815646613843" y="398.26770101134707" font-family="Arial, Helvetica, sans-serif" font-size="8.5" fill="#6B6B6B">web_persistence,</text>
+<text x="193.23815646613843" y="410.26770101134707" font-family="Arial, Helvetica, sans-serif" font-size="8.5" fill="#6B6B6B">research fronts</text>
+
+
+  <line x1="223.5" y1="359.5" x2="349.5" y2="454.0"
+        stroke="#2C2C2C" stroke-width="1.5" marker-end="url(#arrow-2C2C2C)"/>
+  <text x="294.5" y="394.75" font-family="Arial, Helvetica, sans-serif" font-size="8.5" fill="#6B6B6B">rebuild artifacts,</text>
+<text x="294.5" y="406.75" font-family="Arial, Helvetica, sans-serif" font-size="8.5" fill="#6B6B6B">findings, summaries</text>
+
+
+  <line x1="227.5" y1="347.5" x2="455.0" y2="347.5"
+        stroke="#E8872A" stroke-width="1.5" marker-end="url(#arrow-E8872A)"/>
+  <text x="349.25" y="341.5" font-family="Arial, Helvetica, sans-serif" font-size="8.5" fill="#6B6B6B">ae_bn_bridge.v1</text>
+
+
+  <line x1="357.5" y1="475.0" x2="192.5" y2="475.0"
+        stroke="#3A6EA8" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrow-3A6EA8)"/>
+  <text x="283.0" y="463.0" font-family="Arial, Helvetica, sans-serif" font-size="8.5" fill="#6B6B6B">course pages,</text>
+<text x="283.0" y="475.0" font-family="Arial, Helvetica, sans-serif" font-size="8.5" fill="#6B6B6B">student flows</text>
+
+
+  <line x1="565.0" y1="475.0" x2="412.5" y2="475.0"
+        stroke="#3A6EA8" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrow-3A6EA8)"/>
+  
+
+  <line x1="565.0" y1="475.0" x2="192.5" y2="475.0"
+        stroke="#3A6EA8" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrow-3A6EA8)"/>
+  
+
+  <line x1="687.807038208138" y1="133.49102504492097" x2="191.9626831357584" y2="221.39070617138827"
+        stroke="#2A7868" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrow-2A7868)"/>
+  
+
+  <line x1="688.319645838822" y1="135.66692282034805" x2="411.0656197820615" y2="217.58288506439092"
+        stroke="#2A7868" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrow-2A7868)"/>
+  
+
+  <line x1="687.5075018757328" y1="129.45226032536254" x2="194.98687171746764" y2="115.95854443061555"
+        stroke="#2A7868" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrow-2A7868)"/>
+  
+
+  <line x1="689.1600570465331" y1="137.97787518475812" x2="239.5949001685671" y2="333.5387184266733"
+        stroke="#2A7868" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrow-2A7868)"/>
+  
+
+  <g>
+    <rect x="60" y="80" width="200" height="70" rx="6" ry="6"
+          fill="#FFFFFF" stroke="#1A7A50" stroke-width="1.5"
+          filter="url(#shadow)"/>
+    <rect x="60" y="80" width="200" height="5" rx="3" ry="3" fill="#1A7A50"/>
+    <text x="72" y="102" font-family="Arial, Helvetica, sans-serif" font-size="13"
+          font-weight="bold" fill="#1C3D3A">Article_Finder</text>
+    <text x="72" y="112" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6B6B6B">
+      <tspan x="72" dy="14">Corpus intake, discovery,</tspan><tspan x="72" dy="14">PDF cataloguing → job bundles</tspan>
+    </text>
+  </g>
+
+  <g>
+    <rect x="290" y="80" width="180" height="70" rx="6" ry="6"
+          fill="#FFFFFF" stroke="#1A7A50" stroke-width="1.5"
+          filter="url(#shadow)"/>
+    <rect x="290" y="80" width="180" height="5" rx="3" ry="3" fill="#1A7A50"/>
+    <text x="302" y="102" font-family="Arial, Helvetica, sans-serif" font-size="13"
+          font-weight="bold" fill="#1C3D3A">Crowd_PDF_Pipeline</text>
+    <text x="302" y="112" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6B6B6B">
+      <tspan x="302" dy="14">Stimulus/outcome hierarchy,</tspan><tspan x="302" dy="14">search support</tspan>
+    </text>
+  </g>
+
+  <g>
+    <rect x="60" y="195" width="195" height="65" rx="6" ry="6"
+          fill="#FFFFFF" stroke="#6B4FA8" stroke-width="1.5"
+          filter="url(#shadow)"/>
+    <rect x="60" y="195" width="195" height="5" rx="3" ry="3" fill="#6B4FA8"/>
+    <text x="72" y="217" font-family="Arial, Helvetica, sans-serif" font-size="13"
+          font-weight="bold" fill="#1C3D3A">Tagging_Contractor</text>
+    <text x="72" y="227" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6B6B6B">
+      <tspan x="72" dy="14">Canonical IV / built-environment</tspan><tspan x="72" dy="14">vocabulary authority</tspan>
+    </text>
+  </g>
+
+  <g>
+    <rect x="280" y="195" width="195" height="65" rx="6" ry="6"
+          fill="#FFFFFF" stroke="#6B4FA8" stroke-width="1.5"
+          filter="url(#shadow)"/>
+    <rect x="280" y="195" width="195" height="5" rx="3" ry="3" fill="#6B4FA8"/>
+    <text x="292" y="217" font-family="Arial, Helvetica, sans-serif" font-size="13"
+          font-weight="bold" fill="#1C3D3A">Outcome_Contractor</text>
+    <text x="292" y="227" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6B6B6B">
+      <tspan x="292" dy="14">Canonical DV / human-outcome</tspan><tspan x="292" dy="14">vocabulary authority</tspan>
+    </text>
+  </g>
+
+  <g>
+    <rect x="60" y="310" width="295" height="75" rx="6" ry="6"
+          fill="#FFFFFF" stroke="#A84F6B" stroke-width="1.5"
+          filter="url(#shadow)"/>
+    <rect x="60" y="310" width="295" height="5" rx="3" ry="3" fill="#A84F6B"/>
+    <text x="72" y="332" font-family="Arial, Helvetica, sans-serif" font-size="13"
+          font-weight="bold" fill="#1C3D3A">Article_Eater</text>
+    <text x="72" y="342" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6B6B6B">
+      <tspan x="72" dy="14">Core extraction &amp; rebuild engine:</tspan><tspan x="72" dy="14">claims, summaries, research fronts,</tspan><tspan x="72" dy="14">V7 pipeline, Web of Belief</tspan>
+    </text>
+  </g>
+
+  <g>
+    <rect x="400" y="310" width="180" height="75" rx="6" ry="6"
+          fill="#FFFFFF" stroke="#A84F6B" stroke-width="1.5"
+          filter="url(#shadow)"/>
+    <rect x="400" y="310" width="180" height="5" rx="3" ry="3" fill="#A84F6B"/>
+    <text x="412" y="332" font-family="Arial, Helvetica, sans-serif" font-size="13"
+          font-weight="bold" fill="#1C3D3A">BN_graphical</text>
+    <text x="412" y="342" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6B6B6B">
+      <tspan x="412" dy="14">Bayesian causal DAG,</tspan><tspan x="412" dy="14">Pearl-compliant inference,</tspan><tspan x="412" dy="14">uncertainty modeling</tspan>
+    </text>
+  </g>
+
+  <g>
+    <rect x="60" y="440" width="195" height="70" rx="6" ry="6"
+          fill="#FFFFFF" stroke="#3A6EA8" stroke-width="1.5"
+          filter="url(#shadow)"/>
+    <rect x="60" y="440" width="195" height="5" rx="3" ry="3" fill="#3A6EA8"/>
+    <text x="72" y="462" font-family="Arial, Helvetica, sans-serif" font-size="13"
+          font-weight="bold" fill="#1C3D3A">Knowledge_Atlas</text>
+    <text x="72" y="472" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6B6B6B">
+      <tspan x="72" dy="14">Live site, student UI, auth,</tspan><tspan x="72" dy="14">contributor workflows, payloads</tspan>
+    </text>
+  </g>
+
+  <g>
+    <rect x="280" y="440" width="195" height="70" rx="6" ry="6"
+          fill="#FFFFFF" stroke="#3A6EA8" stroke-width="1.5"
+          filter="url(#shadow)"/>
+    <rect x="280" y="440" width="195" height="5" rx="3" ry="3" fill="#3A6EA8"/>
+    <text x="292" y="462" font-family="Arial, Helvetica, sans-serif" font-size="13"
+          font-weight="bold" fill="#1C3D3A">Designing_Experiments</text>
+    <text x="292" y="472" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6B6B6B">
+      <tspan x="292" dy="14">Course materials, experiment</tspan><tspan x="292" dy="14">tools, precomputed content</tspan>
+    </text>
+  </g>
+
+  <g>
+    <rect x="500" y="440" width="170" height="70" rx="6" ry="6"
+          fill="#FFFFFF" stroke="#3A6EA8" stroke-width="1.5"
+          filter="url(#shadow)"/>
+    <rect x="500" y="440" width="170" height="5" rx="3" ry="3" fill="#3A6EA8"/>
+    <text x="512" y="462" font-family="Arial, Helvetica, sans-serif" font-size="13"
+          font-weight="bold" fill="#1C3D3A">emotibit_polar_data</text>
+    <text x="512" y="472" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6B6B6B">
+      <tspan x="512" dy="14">Physiological sensors</tspan><tspan x="512" dy="14">(HRV, EDA, cortisol)</tspan>
+    </text>
+  </g>
+
+  <g>
+    <rect x="620" y="100" width="175" height="60" rx="6" ry="6"
+          fill="#FFFFFF" stroke="#2A7868" stroke-width="1.5"
+          filter="url(#shadow)"/>
+    <rect x="620" y="100" width="175" height="5" rx="3" ry="3" fill="#2A7868"/>
+    <text x="632" y="122" font-family="Arial, Helvetica, sans-serif" font-size="13"
+          font-weight="bold" fill="#1C3D3A">Workspace_Scripts</text>
+    <text x="632" y="132" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6B6B6B">
+      <tspan x="632" dy="14">Cross-repo ontology</tspan><tspan x="632" dy="14">integration glue</tspan>
+    </text>
+  </g>
+
+<g>
+  <rect x="620" y="480" width="260" height="130" rx="6" fill="#FFFFFF" stroke="#6B6B6B" stroke-width="0.5" opacity="0.9"/>
+  <text x="632" y="498" font-size="11" font-weight="bold" fill="#1C3D3A">Legend</text>
+  <line x1="632" y1="510" x2="700" y2="510" stroke="#2C2C2C" stroke-width="1.5"/>
+  <text x="710" y="514" font-size="9" fill="#6B6B6B">Data flow (solid)</text>
+  <line x1="632" y1="528" x2="700" y2="528" stroke="#6B6B6B" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="710" y="532" font-size="9" fill="#6B6B6B">Vocabulary / support (dashed)</text>
+  <rect x="632" y="542" width="12" height="12" rx="2" fill="#1A7A50"/>
+  <text x="650" y="553" font-size="9" fill="#6B6B6B">Intake layer</text>
+  <rect x="632" y="560" width="12" height="12" rx="2" fill="#6B4FA8"/>
+  <text x="650" y="571" font-size="9" fill="#6B6B6B">Semantic authority layer</text>
+  <rect x="632" y="578" width="12" height="12" rx="2" fill="#A84F6B"/>
+  <text x="650" y="589" font-size="9" fill="#6B6B6B">Extraction &amp; modeling layer</text>
+  <rect x="760" y="542" width="12" height="12" rx="2" fill="#3A6EA8"/>
+  <text x="778" y="553" font-size="9" fill="#6B6B6B">Presentation layer</text>
+  <rect x="760" y="560" width="12" height="12" rx="2" fill="#2A7868"/>
+  <text x="778" y="571" font-size="9" fill="#6B6B6B">Cross-repo support</text>
+</g>
+
+<g>
+  <rect x="620" y="200" width="175" height="90" rx="6" fill="#FFFFFF" stroke="#E8872A" stroke-width="1.5"/>
+  <rect x="620" y="200" width="175" height="5" rx="3" fill="#E8872A"/>
+  <text x="632" y="220" font-size="11" font-weight="bold" fill="#1C3D3A">Key Contracts</text>
+  <text x="632" y="236" font-size="9" fill="#6B6B6B">ae_bundle.v1  ·  ae_bn_bridge.v1</text>
+  <text x="632" y="250" font-size="9" fill="#6B6B6B">oc.export.v1  ·  ae.claim.v2</text>
+  <text x="632" y="264" font-size="9" fill="#6B6B6B">af.job_bundle.v1  ·  ae.rule.v2</text>
+  <text x="632" y="278" font-size="9" fill="#6B6B6B">V7 Canonical Rebuild Contract</text>
+</g>
+</svg>

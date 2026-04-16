@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Week 8 — Looking Ahead: COGS 160 Fall · COGS 160</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #1C3D3A; --teal: #2A7868; --teal-lt: #5AC8AA; --teal-bg: #E6F5F0;
+  --amber: #E8872A; --amber-lt: #FFF3E0; --amber-dk: #9a5010;
+  --cream: #F7F4EF; --ink: #2C2C2C; --muted: #6B6B6B; --border: #D8D0C5;
+  --white: #FFFFFF; --rose: #A84F6B; --blue: #3A6EA8; --green: #1A7A50;
+}
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--cream); color: var(--ink); line-height: 1.65; }
+
+/* ── Top nav ── */
+.top-nav { background: var(--navy); padding: 0 1.5rem; display: flex; align-items: center; height: 52px; gap: 1.2rem; font-size: 0.85rem; position: sticky; top: 0; z-index: 100; }
+.nav-brand { color: var(--amber); font-weight: 800; font-size: 1.05rem; text-decoration: none; }
+.nav-sep { color: rgba(255,255,255,0.2); }
+.nav-link { color: #b2dfdb; text-decoration: none; padding: 4px 10px; border-radius: 5px; transition: background 0.15s; }
+.nav-link:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.nav-link.active { background: rgba(255,255,255,0.15); color: #fff; font-weight: 600; }
+.nav-right { margin-left: auto; color: rgba(255,255,255,0.4); font-size: 0.75rem; }
+
+/* ── Hero ── */
+.hero { background: linear-gradient(135deg, var(--navy) 0%, #152e2b 100%); color: #fff; padding: 3rem 2rem 2.5rem; text-align: center; }
+.hero-eyebrow { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber); font-weight: 600; margin-bottom: 0.5rem; }
+.hero h1 { font-family: Georgia, serif; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; line-height: 1.15; margin-bottom: 0.5rem; }
+.hero-sub { font-size: 1rem; color: rgba(255,255,255,0.7); max-width: 680px; margin: 0 auto 1.2rem; }
+.hero-pills { display: flex; justify-content: center; gap: 0.6rem; flex-wrap: wrap; }
+.hero-pill { display: inline-block; padding: 0.28rem 0.85rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.pill-teal { background: var(--teal); color: #fff; }
+.pill-amber { background: var(--amber); color: #fff; }
+.pill-outline { background: transparent; border: 1.5px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.8); }
+
+/* ── Layout ── */
+.page-wrap { max-width: 920px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+
+/* ── Day blocks ── */
+.day-block { background: var(--white); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.day-label { display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; padding: 3px 10px; border-radius: 4px; margin-bottom: 0.75rem; }
+.day-label-tue { background: var(--teal-bg); color: var(--teal); }
+.day-label-thu { background: var(--amber-lt); color: var(--amber-dk); }
+.day-title { font-family: Georgia, serif; font-size: 1.35rem; font-weight: 700; color: var(--navy); margin-bottom: 0.6rem; }
+.day-block p { margin-bottom: 0.9rem; font-size: 0.95rem; }
+.day-block p:last-child { margin-bottom: 0; }
+
+/* ── Agenda items ── */
+.agenda-item { display: flex; gap: 1rem; margin: 1.2rem 0; align-items: flex-start; }
+.agenda-num { width: 2rem; height: 2rem; border-radius: 50%; background: var(--navy); color: var(--amber); font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 0.15rem; }
+.agenda-body { flex: 1; }
+.agenda-body h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 0.3rem; }
+.agenda-body p { font-size: 0.92rem; color: #444; }
+
+/* ── Callout boxes ── */
+.callout { border-left: 4px solid; border-radius: 0 8px 8px 0; padding: 1rem 1.2rem; margin: 1.2rem 0; font-size: 0.9rem; }
+.callout-teal { border-color: var(--teal); background: var(--teal-bg); }
+.callout-amber { border-color: var(--amber); background: var(--amber-lt); }
+.callout-rose { border-color: var(--rose); background: #fdf0ef; }
+.callout-label { font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.35rem; }
+.callout-teal .callout-label { color: var(--teal); }
+.callout-amber .callout-label { color: var(--amber-dk); }
+.callout-rose .callout-label { color: var(--rose); }
+
+/* ── Link buttons ── */
+.page-links { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 1.2rem 0; }
+.page-link { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: all 0.15s; }
+.link-primary { background: var(--navy); color: #fff; }
+.link-primary:hover { background: var(--teal); }
+.link-secondary { background: var(--teal-bg); color: var(--navy); border: 1.5px solid var(--teal); }
+.link-secondary:hover { background: var(--teal); color: #fff; }
+
+/* ── Deliverable box ── */
+.deliverable { background: var(--amber-lt); border: 1.5px solid var(--amber); border-radius: 8px; padding: 1rem 1.2rem; margin: 1.2rem 0; }
+.deliverable-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber-dk); margin-bottom: 0.3rem; }
+.deliverable p { font-size: 0.88rem; color: #5a3800; margin: 0; }
+
+/* ── Week nav ── */
+.week-nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 0; margin-top: 1rem; border-top: 2px solid var(--border); }
+.week-nav a { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.2rem; border-radius: 6px; text-decoration: none; font-size: 0.88rem; font-weight: 600; transition: all 0.15s; }
+.week-nav .prev { background: var(--white); color: var(--navy); border: 1.5px solid var(--border); }
+.week-nav .prev:hover { border-color: var(--navy); }
+.week-nav .next { background: var(--navy); color: #fff; }
+.week-nav .next:hover { background: var(--teal); }
+.week-nav .disabled { opacity: 0.3; pointer-events: none; }
+
+@media (max-width: 640px) {
+  .page-links { flex-direction: column; }
+}
+
+.wordmark {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; flex-shrink: 0;
+}
+.wordmark-icon { width: 30px; height: 30px; }
+.wordmark-text { display: flex; flex-direction: column; line-height: 1.1; }
+.wm-top { font-size: 0.66rem; font-weight: 400; letter-spacing: 0.24em; text-transform: uppercase; color: #A8C8BF; }
+.wm-bottom { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.03em; color: #fff; }
+.wm-bottom span { color: #F5A623; }
+</style>
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav class="top-nav">
+  <a class="wordmark" href="../ka_home.html">
+    <svg class="wordmark-icon" viewBox="0 0 32 32" fill="none">
+      <circle cx="16" cy="16" r="3.5" fill="#F5A623"/>
+      <circle cx="16" cy="5"  r="2.5" fill="#A8C8BF"/>
+      <circle cx="27" cy="22" r="2.5" fill="#A8C8BF"/>
+      <circle cx="5"  cy="22" r="2.5" fill="#A8C8BF"/>
+      <line x1="16"   y1="7.5"  x2="16"   y2="12.5" stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="24.8" y1="20.2" x2="19.0" y2="17.3"  stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="7.2"  y1="20.2" x2="13.0" y2="17.3"  stroke="#F5A623" stroke-width="1.5" stroke-opacity="0.9"/>
+      <line x1="16" y1="7.5"  x2="25.5" y2="20" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+      <line x1="25.5" y1="20" x2="6.5"   y2="20" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+      <line x1="6.5"  y1="20" x2="16"    y2="7.5" stroke="#fff" stroke-width="0.8" stroke-opacity="0.18"/>
+    </svg>
+    <div class="wordmark-text">
+      <span class="wm-top">Knowledge</span>
+      <span class="wm-bottom">At<span>las</span></span>
+    </div>
+  </a>
+  <span class="nav-sep">|</span>
+  <a href="ka_schedule.html" class="nav-link">Schedule</a>
+  <a href="ka_student_setup.html" class="nav-link">Setup</a>
+  <a href="../ka_topics.html" class="nav-link">Topics</a>
+  <a href="../ka_evidence.html" class="nav-link">Evidence</a>
+  <a href="../ka_demo_v04.html" class="nav-link">Ask</a>
+  <span class="nav-right">COGS 160 · Spring 2026</span>
+</nav>
+<div style="background:#EDE8E0;padding:8px 28px;font-size:0.78rem;color:#6A5E50;display:flex;align-items:center;gap:6px;">
+  <a href="../ka_home.html" style="color:#1C3D3A;text-decoration:none;font-weight:600;">Home</a> <span style="color:#B0A898;">/</span>
+  <a href="ka_student_setup.html" style="color:#1C3D3A;text-decoration:none;font-weight:600;">COGS 160 Start</a> <span style="color:#B0A898;">/</span>
+  <span>Week 8</span>
+</div>
+
+<!-- ── Hero ── -->
+<header class="hero">
+  <p class="hero-eyebrow">COGS 160 · Spring 2026 · Week 8 of 8</p>
+  <h1>Looking Ahead: COGS 160 Fall</h1>
+  <p class="hero-sub">What you built this quarter. What comes next. The fall class picks up where you leave off.</p>
+  <div class="hero-pills">
+    <span class="hero-pill pill-teal">Tuesday: Presentations</span>
+    <span class="hero-pill pill-amber">Thursday: Fall Preview</span>
+    <span class="hero-pill pill-outline">Final Deliverables</span>
+  </div>
+</header>
+
+<div class="page-wrap">
+
+  <!-- ════════════════════════════════════════════
+       TUESDAY — Day 15
+  ════════════════════════════════════════════ -->
+  <div class="day-block">
+    <span class="day-label day-label-tue">Tuesday · Day 15 · Final Presentations</span>
+    <h2 class="day-title">Final Presentations</h2>
+
+    <p>Eight weeks ago you arrived knowing nothing about Knowledge Atlas, nothing about directing AI systems, and no experience with the methodology. Today you present the complete body of work you have built across both sprints. You have earned this presentation.</p>
+
+    <div class="agenda-item">
+      <div class="agenda-num">1</div>
+      <div class="agenda-body">
+        <h3>Each Track Presents (10 minutes per track)</h3>
+        <p>Cover the arc of your work from Week 4 to Week 7. Show Sprint 1: what you built, what you learned, what failed. Show Sprint 2: how you applied those lessons, what new capabilities you added, how you integrated with other tracks. Show a live demo or recording of the system working with real data. Then discuss: what remains unfinished, what architectural decisions would you keep, what would you change if you had more time?</p>
+      </div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="agenda-num">2</div>
+      <div class="agenda-body">
+        <h3>Cross-Track Discussion</h3>
+        <p>After all presentations, discuss the system as a whole. How do the pieces fit together? What are the strongest integration points? Where is the system fragile? If you had one more sprint, what would you build? What capability gap is most important to close? What would break first under heavy load? The question is not "what is working?" but "what matters?"</p>
+      </div>
+    </div>
+
+    <div class="deliverable">
+      <div class="deliverable-label">By end of Tuesday</div>
+      <p>Presentation slides or live demo recording. All methodology log entries complete. All source code and deliverables submitted.</p>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       THURSDAY — Day 16
+  ════════════════════════════════════════════ -->
+  <div class="day-block">
+    <span class="day-label day-label-thu">Thursday · Day 16 · Fall Preview and Handoff</span>
+    <h2 class="day-title">COGS 160 Fall: The Next Chapter</h2>
+
+    <p>The work you did this quarter does not end when finals are over. The Knowledge Atlas continues to grow. The fall class will inherit what you built, close the gaps you identified, and extend the system in directions you could not reach in eight weeks.</p>
+
+    <div class="agenda-item">
+      <div class="agenda-num">1</div>
+      <div class="agenda-body">
+        <h3>The Fall Class Preview</h3>
+        <p>David explains how the fall quarter builds on your work. The spring cohort established the core methodology and the basic tracks. The fall cohort will focus on capability expansion: deepening existing tracks, adding new evaluation methods, integrating external data sources, and preparing the system for real users. You created the foundation. They will build the house.</p>
+      </div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="agenda-num">2</div>
+      <div class="agenda-body">
+        <h3>Handoff Documentation</h3>
+        <p>Each team writes a one-page "State of the Track" handoff document. This is the most valuable artifact you produce. It covers: what works well and should be kept, what is broken and should be fixed, what remains unfinished and should be the next team's priority, what architectural decisions you made and why, what assumptions your code makes about downstream inputs. This document is read by the fall cohort before they write their first line of code. The quality of your handoff directly shapes the quality of their work.</p>
+      </div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="agenda-num">3</div>
+      <div class="agenda-body">
+        <h3>Course Feedback and Reflection</h3>
+        <p>What worked in this class? What should be different? Were there methodological steps that felt useless, or conversely, that you wish you had applied more rigorously? What surprised you about directing AI systems? Would you recommend this class to a colleague? This feedback shapes how we teach the fall quarter.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-teal">
+      <div class="callout-label">Your work persists</div>
+      <p>Unlike a typical course project that ends when the quarter ends, your contributions to Knowledge Atlas are permanent. The articles you found, the components you built, the integration tests you wrote — all of it continues into the fall class. The code you wrote becomes part of the foundation that the next team builds on top of. You are not writing throw-away homework. You are building something real.</p>
+    </div>
+
+    <div class="deliverable">
+      <div class="deliverable-label">Due: Friday, end of day</div>
+      <p>Final portfolio: all eight weeks of methodology logs (entries #1–#4) + Sprint 1 and Sprint 2 complete deliverables (with source code) + "State of the Track" handoff document (one page per team) + contribution summary (what specific artifacts you created or modified) + course feedback survey.</p>
+    </div>
+  </div>
+
+  <!-- ── Week Navigation ── -->
+  <div class="week-nav">
+    <a href="week7_agenda.html" class="prev">← Week 7: Sprint 2 Demo</a>
+    <a href="ka_schedule.html" class="next disabled">Course Complete</a>
+  </div>
+
+</div>
+<script src="../ka_auth_widget.js?v=20260407b"></script>
+</body>
+</html>
