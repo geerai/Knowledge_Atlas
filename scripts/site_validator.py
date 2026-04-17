@@ -210,20 +210,25 @@ def check_html(path: Path, root: Path, regime_items: dict[str, list[dict]],
 # ─── Archive entry discovery ───────────────────────────────────────────
 
 def find_archive_entries(root: Path) -> set[str]:
-    """Parse ka_archive.html and extract the page paths it archives."""
-    arc = root / "ka_archive.html"
-    if not arc.exists():
-        return set()
-    text = arc.read_text(encoding="utf-8")
-    # Find each <span class="arc-path">/ka/...</span> and extract the basename
+    """Return the set of pages that actually declare data-ka-regime="archive".
+
+    We do NOT use the list in ka_archive.html as the authoritative archive
+    set, because that index is aspirational — it names pages we consider
+    archived-in-principle but may still be live canonical surfaces. Only
+    pages that explicitly declare the archive regime on <body> are treated
+    as archived for the ARC001 orphan-check.
+    """
     entries = set()
-    for m in re.finditer(r'class=["\']arc-path["\'][^>]*>([^<]+)', text):
-        path = m.group(1).strip().lstrip("/")
-        # Strip 'ka/' prefix if present
-        if path.startswith("ka/"):
-            path = path[3:]
-        # Just use the basename for simpler matching
-        entries.add(Path(path).name)
+    for p in root.rglob("*.html"):
+        # Skip the archive index itself and directories we don't scan
+        if p.name == "ka_archive.html":
+            continue
+        try:
+            text = p.read_text(encoding="utf-8", errors="replace")
+        except Exception:
+            continue
+        if 'data-ka-regime="archive"' in text or "data-ka-regime='archive'" in text:
+            entries.add(p.name)
     return entries
 
 
