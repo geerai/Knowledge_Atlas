@@ -2,11 +2,13 @@
 
 *Session owner*: CW (Claude Code)
 *Reviewer*: Codex
-*Commits awaiting `git push origin master`*: **14**
+*Commits awaiting `git push origin master`*: **15 → 17 after review fixes** (see errata §11)
 *Remote*: `https://github.com/dkirsh/Knowledge_Atlas.git`
 *Branch*: `master`
 *Last-pushed commit*: `c10015d` (2026-04-17, "Global page canonicalisation…")
-*Head*: `9408a6e`
+*Head*: `9408a6e` at first-review time; fixes committed on top as a separate commit
+
+> **Codex's 2026-04-18 review was substantive and both P1 findings were correctness bugs I agreed with. All four findings are addressed in a follow-on commit; see §11 Errata at the bottom of this report for the patches applied, the regression tests that now pass, and the re-issued push recommendation.**
 
 This report is a self-contained account of what landed in the 14 commits that sit ahead of `origin/master`. It is written so that Codex can review without needing to walk the full commit history or reconstruct motivation from diffs alone. The report is organised around deliverables, not commits, because several commits span multiple concerns.
 
@@ -309,5 +311,111 @@ ka_theories.html                                (In-depth-entry links added)
 
 .gitignore                                      (pattern for data/*.bak)
 ```
+
+## 11. Errata + Codex-review fixes (added 2026-04-18 after review)
+
+Codex returned four findings: two P1 correctness bugs in the new class-state backend, and two P2 concerns about auth-default and scaffold-completeness. All four are now fixed; this section documents the patches and the regression tests that verify them.
+
+### 11.1 Factual corrections to this report
+
+- **Commit count.** The report originally said "14 commits ahead of `origin/master`". That count was accurate at the moment the report was *drafted*, but it became 15 the instant the report itself was committed. Codex caught this; the corrected count at the top of this file is now 15 and will be 16 once the review-fixes commit lands, plus this errata-update commit making 17.
+- **Breadth of the push.** The report framed the push in terms of eight substantive session commits. Codex noted the underlying diff is much broader: ~281 files changed, ~39,527 insertions, ~7,893 deletions over the full 15-commit window. That is not wrong — the bulk migration commit (`dfb2144`, "Bulk migration: 170 pages to canonical nav") and the earlier canonicalisation commit (`c10015d`) are the two that dominate the file-count — but reviewers should know the push touches files well beyond the rubric / grading / backend work. In particular, three files worth explicit notice before pushing to `master`:
+  - `ka_contribute.html.redesign_346lines.bak` — a retained reference backup of the 346-line redesign that we rolled back. Kept intentionally so future readers can see what the regression looked like.
+  - `160sp/testing_new_nav.html` — created earlier in the session at DK's explicit request ("strip this the way you want and save it as testing_new_nav inside `/Users/davidusa/REPOS/Knowledge_Atlas/160sp`").
+  - `docs/SESSION_REPORT_FOR_CODEX_2026-04-18.md` — this file, kept in the repo as a self-documenting review artefact.
+  All three are intentional and non-sensitive, but a reviewer should confirm they belong on the public `master` branch before approving the push.
+
+### 11.2 P1#1 — dossier over-count on re-grade / appeal
+
+**Codex finding.** `grade_dossiers` allowed multiple rows with `is_final = 1` for the same `(user_id, offering_id, deliverable_id)` triple, and the old `student_totals_v` SUMmed all of them. A regrade would inflate totals rather than replace them.
+
+**Fix applied** (`scripts/migrations/2026-04-17_class_state.sql`):
+
+1. Added a **partial unique index** at the schema level:
+    ```sql
+    CREATE UNIQUE INDEX IF NOT EXISTS ux_dossiers_one_final_per_user_deliv
+      ON grade_dossiers(user_id, offering_id, deliverable_id)
+      WHERE is_final = 1;
+    ```
+    The application contract is now "to regrade, flip the old row's `is_final` to 0 *before* inserting the new final". The index enforces this at `INSERT` time.
+2. Made `student_totals_v` **defensive** with a CTE (`latest_final_dossier`) that selects only the `MAX(graded_at)` row per `(user, offering, deliverable)` triple. Even if the index is ever dropped or violated by a migration error, the view will still report correct totals.
+
+**Regression test passes:**
+```
+P1#1.a OK: partial unique index present
+P1#1.b OK: student_totals_v uses latest_final_dossier CTE
+P1#1.c OK: partial unique index rejected duplicate final
+          (UNIQUE constraint failed: grade_dossiers.user_id, offering_id, deliverable_id)
+P1#1.d OK: view reports latest-only (a0_pts=4 after first=5 is flipped, second=4 inserted)
+```
+
+### 11.3 P1#2 — `GROUP BY … HAVING MAX(graded_at)` returns arbitrary rows
+
+**Codex finding.** The `/grading` endpoint built `conf_by_user` and `audit_by_user` dicts from a query of the form `SELECT user_id, confidence, flags_json FROM grade_dossiers … GROUP BY user_id HAVING MAX(graded_at)`. In SQLite this does not reliably return the latest row per group — the bare (non-aggregated) `confidence` and `flags_json` columns come from an arbitrary row, and `HAVING MAX(...)` is a truthy boolean rather than a row selector.
+
+**Fix applied** (`scripts/ka_class_api.py` line ~244): rewrote the query as a **correlated subquery** that unambiguously selects, for each user, the one dossier row whose `graded_at` equals that user's MAX:
+
+```sql
+SELECT gd.user_id, gd.confidence, gd.flags_json
+FROM grade_dossiers gd
+WHERE gd.offering_id = ?
+  AND gd.is_final = 1
+  AND gd.graded_at = (
+    SELECT MAX(gd2.graded_at)
+    FROM grade_dossiers gd2
+    WHERE gd2.user_id     = gd.user_id
+      AND gd2.offering_id = gd.offering_id
+      AND gd2.is_final    = 1
+  )
+```
+
+**Regression test passes:**
+```
+P1#2 OK: user u_c44d6b24... latest dossier correctly reflected
+        (conf=low from 12:00 dossier, audit=flag from the same;
+         NOT the conf=high / no-flag 10:00 dossier)
+```
+
+### 11.4 P2#3 — AI-grading scaffold not fail-safe when exemplars are absent
+
+**Codex finding.** The briefing told the worker to read exemplars "if present" but the grading prompt requires four-band exemplar comparison for Quality scoring. The system could run with missing exemplars and silently score Quality against anchors that don't exist. Codex called this a scaffold, not grading-ready.
+
+Codex is right. Exemplar-set authoring is a Week-3 track-lead deliverable (per `AI_GRADING_DESIGN_2026-04-17.md` §6) and may not be complete when grading runs. The fix is to turn the scaffold's silent-default into an explicit **degraded mode** that is impossible to miss.
+
+**Fix applied** in three places:
+
+1. **`scripts/ai_grader.py`** — new `check_exemplars(spec_yaml)` helper returns `(referenced, missing)` lists. `build_briefing()` checks during queue-build; if any exemplar is missing, it prepends an unmissable `## 0. ⚠ DEGRADED MODE — exemplars missing` section to the briefing with explicit instructions: (a) do not fabricate exemplar content, (b) score Quality against rubric prose bands only, (c) set `confidence: low` unconditionally, (d) add `degraded_mode_no_exemplars` to the dossier's §6 flag list with the list of missing paths as the flag's detail.
+2. **`scripts/ai_grader.py` — `cmd_queue`** — surfaces the same warning at the CLI level at the end of every `queue` run, listing the affected deliverables and the first few missing exemplar paths so DK sees it at queue time without having to open individual briefings.
+3. **`160sp/rubrics/prompts/grading_prompt_template.md`** — new "Degraded mode (exemplars missing)" section spells out the same procedure in the canonical prompt, so even a briefing that somehow bypassed the §0 prepend (e.g. a manually-edited briefing) still gets the instruction.
+
+**Regression test passes:**
+```
+P2#3.a OK: T1.d references 4 exemplars, all 4 currently missing
+P2#3.b OK: T1.d briefing has §0 DEGRADED MODE header AND all standard sections
+P2#3.c OK: T1.e also triggers §0 block (4 missing exemplars)
+P2#3.d OK: CLI queue printed '⚠  DEGRADED MODE for the following deliverables…'
+```
+
+### 11.5 P2#4 — admin auth open by default if no token is configured
+
+**Codex finding.** `ka_class_api.require_admin` allowed requests through whenever no admin token was configured, unless `KA_ADMIN_STRICT=1` was set. Acceptable for local development, a production foot-gun — a forgotten env var on the deploy would expose `/api/admin/class/*` to any HTTP client on the machine.
+
+**Fix applied** (`scripts/ka_class_api.py`): flipped the default. The dependency now **fails closed** by default and returns `503` with an explicit message. The new dev-mode escape hatch is `KA_ADMIN_ALLOW_OPEN=1` — loud and opt-in, as befits a development-only bypass, rather than `KA_ADMIN_STRICT=1` (opt-in security, which was wrong).
+
+**Regression test passes:**
+```
+P2#4.a OK: 503 when no token and no ALLOW_OPEN (body: "Admin token not configured…")
+P2#4.b OK: 200 when KA_ADMIN_ALLOW_OPEN=1
+P2#4.c OK: 401 when token wrong
+P2#4.d OK: 200 when token correct
+```
+
+### 11.6 Re-issued push recommendation
+
+After the four fixes: site validator still 0 errors / 171 warns (unchanged noise); AI-grader orchestrator imports and queues cleanly; real-DB migration is idempotent (re-applying adds the new index and the rewritten view without errors). The three files Codex explicitly flagged — `ka_contribute.html.redesign_346lines.bak`, `160sp/testing_new_nav.html`, the session report itself — are all intentional and non-sensitive; DK may choose to `git rm` them before pushing if a cleaner `master` is preferred, but none are push-blockers.
+
+CW recommendation: the backend is now correctness-safe for the P1 bugs Codex flagged, fail-safe for the scaffolding limitation (P2#3), and fail-closed on auth (P2#4). Ready for push on DK's explicit OK.
+
+End of errata.
 
 End of report.

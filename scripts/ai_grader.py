@@ -176,6 +176,11 @@ def load_roster() -> list[Student]:
 SPEC_BLOCK_RE = re.compile(
     r"## Machine-readable spec\s*```yaml\s*(.*?)\s*```", re.DOTALL | re.IGNORECASE)
 
+# Matches quoted paths that end in a file under an 'exemplars/' directory,
+# e.g. "t1/exemplars/T1.b_band0.md" in the rubric spec YAML.
+EXEMPLAR_PATH_RE = re.compile(
+    r'["\']([a-z0-9_\-/]+/exemplars/[a-zA-Z0-9_.\-]+\.md)["\']')
+
 
 def read_rubric(deliverable_id: str) -> tuple[str, str]:
     """Return (full_rubric_markdown, inline_spec_yaml_or_empty)."""
@@ -187,6 +192,27 @@ def read_rubric(deliverable_id: str) -> tuple[str, str]:
     m = SPEC_BLOCK_RE.search(md)
     spec = m.group(1).strip() if m else ""
     return md, spec
+
+
+def check_exemplars(spec_yaml: str) -> tuple[list[str], list[str]]:
+    """Return (referenced, missing) exemplar paths (relative to rubrics/).
+
+    Fix for Codex P2#3 (2026-04-18): the grading prompt requires
+    exemplar-anchored comparison for Quality scoring, but the exemplar
+    files are a Week-3 track-lead deliverable and may not exist yet.
+    This function lets the orchestrator flag "degraded mode" per
+    briefing so the grading worker cannot silently score against
+    missing anchors.
+    """
+    referenced = EXEMPLAR_PATH_RE.findall(spec_yaml or "")
+    missing = []
+    for ref in referenced:
+        # References in the YAML are stored relative to 160sp/rubrics/
+        # (e.g. "t1/exemplars/T1.b_band0.md"). Resolve under RUBRICS.
+        p = RUBRICS / ref
+        if not p.exists():
+            missing.append(ref)
+    return referenced, missing
 
 
 def read_prompt_template() -> str:
@@ -221,6 +247,10 @@ def build_briefing(student: Student, deliverable_id: str) -> str:
     prior_a0 = GRADING / student.sid / f"A0_*.md"
     prior_a1 = GRADING / student.sid / f"A1_*.md"
 
+    # Exemplar-presence check (Codex P2#3 fix)
+    exemplars_referenced, exemplars_missing = check_exemplars(spec_yaml)
+    degraded_mode = bool(exemplars_missing)
+
     out_path = dossier_path(student, deliverable_id)
     out_rel = out_path.relative_to(REPO)
 
@@ -233,6 +263,46 @@ def build_briefing(student: Student, deliverable_id: str) -> str:
         f"scripts/ai_grader.py complete {student.sid} {deliverable_id}` "
         "when the dossier is written.",
         "",
+    ]
+
+    # If any referenced exemplar is missing, prepend an unmissable
+    # DEGRADED MODE section so the worker cannot silently score against
+    # non-existent anchors. The worker is instructed to (a) fall back
+    # to rubric prose bands for Quality, (b) mark confidence 'low', and
+    # (c) add 'degraded_mode_no_exemplars' to the dossier flag set.
+    if degraded_mode:
+        lines.extend([
+            "## 0. ⚠ DEGRADED MODE — exemplars missing",
+            "",
+            "The spec for this deliverable references the following "
+            "exemplar files, but they do not exist on disk:",
+            "",
+            *[f"- `{RUBRICS.relative_to(REPO)}/{ref}`" for ref in exemplars_missing],
+            "",
+            "**Instructions for this briefing**:",
+            "",
+            "1. You MUST NOT pretend exemplars exist. Do not fabricate "
+            "their content or score against imagined anchors.",
+            "2. Score **Quality** using the rubric's prose band "
+            "descriptions only (from §2 below). Cite the exact band "
+            "language you used.",
+            "3. Set dossier `confidence` to **`low`**.",
+            "4. Add the flag **`degraded_mode_no_exemplars`** to the "
+            "dossier's §6 flag list, with the list of missing exemplar "
+            "paths as the flag's detail.",
+            "5. Proceed with Completeness and Reflection scoring as "
+            "normal — only Quality's anchoring is compromised.",
+            "",
+            "This block exists because exemplar-set authoring is a "
+            "Week-3 track-lead deliverable (see AI_GRADING_DESIGN_"
+            "2026-04-17.md §6) and may not be complete when this "
+            "briefing runs. Dossiers graded in degraded mode are "
+            "automatically placed in the audit queue's "
+            "`flagged_deliverable` stratum for human review.",
+            "",
+        ])
+
+    lines.extend([
         "## 1. Submission identity",
         "",
         f"- Student id: **{student.sid}**",
@@ -314,7 +384,7 @@ def build_briefing(student: Student, deliverable_id: str) -> str:
         "",
         "That call moves this briefing from `160sp/grading/queue/` to "
         "`160sp/grading/done/` and records the completion in the audit trail.",
-    ]
+    ])
     return "\n".join(lines) + "\n"
 
 
@@ -345,6 +415,7 @@ def cmd_queue(deliverable_filter: Optional[str],
     # Skip per-track deliverables for students on different tracks
     enqueued = 0
     skipped_existing = 0
+    degraded_deliverables: dict[str, list[str]] = {}  # deliv_id -> missing refs
     for s in roster:
         if student_filter and s.sid != student_filter:
             continue
@@ -363,10 +434,30 @@ def cmd_queue(deliverable_filter: Optional[str],
             if not force and existing_dossiers(s.sid, did):
                 skipped_existing += 1
                 continue
+            # Track degraded-mode deliverables (exemplars missing) so
+            # the CLI can warn once per deliverable at the end.
+            _rubric_md, spec_yaml = read_rubric(did)
+            _refs, missing = check_exemplars(spec_yaml)
+            if missing and did not in degraded_deliverables:
+                degraded_deliverables[did] = missing
             b.write_text(build_briefing(s, did))
             enqueued += 1
     print(f"Queued {enqueued} new briefings.  "
           f"Skipped {skipped_existing} already-present.")
+    if degraded_deliverables:
+        print()
+        print("⚠  DEGRADED MODE for the following deliverables "
+              "(exemplars missing):")
+        for did, missing in sorted(degraded_deliverables.items()):
+            print(f"  {did}: missing {len(missing)} exemplar(s)")
+            for m in missing[:4]:
+                print(f"    - {m}")
+            if len(missing) > 4:
+                print(f"    ... and {len(missing) - 4} more")
+        print("Worker subagents will be instructed to fall back to "
+              "rubric-prose Quality scoring and mark confidence 'low'.")
+        print("Populate exemplars under 160sp/rubrics/{track}/exemplars/ "
+              "to restore full-strength scoring.")
 
 
 def cmd_status() -> None:

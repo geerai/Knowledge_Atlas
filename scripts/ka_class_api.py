@@ -95,13 +95,28 @@ def _load_admin_token() -> Optional[str]:
 
 
 def require_admin(x_admin_token: str = Header(default="")) -> None:
+    """Fail-closed admin auth (Codex P2#4 fix, 2026-04-18).
+
+    Default behaviour: if no admin token is configured on the server,
+    reject all requests with 503. Dev mode: set KA_ADMIN_ALLOW_OPEN=1
+    to allow requests through without a token (for local development
+    and smoke tests against a fresh DB).
+
+    The previous design failed *open* when no token was configured,
+    which is a genuine production foot-gun — a forgotten env var on
+    the production deploy would leave /api/admin/class/* readable to
+    any HTTP client on the machine. Now the default is deny.
+    """
     expected = _load_admin_token()
     if not expected:
-        # Dev mode: no token configured. Log but allow. In production,
-        # the token file MUST exist.
-        if os.environ.get("KA_ADMIN_STRICT") == "1":
-            raise HTTPException(503, "No admin token configured on server")
-        return
+        if os.environ.get("KA_ADMIN_ALLOW_OPEN") == "1":
+            return
+        raise HTTPException(
+            503,
+            "Admin token not configured on server. "
+            "Set KA_ADMIN_TOKEN env var or create /etc/ka/admin_token.txt. "
+            "For local development, set KA_ADMIN_ALLOW_OPEN=1 to bypass.",
+        )
     if x_admin_token != expected:
         raise HTTPException(401, "Invalid X-Admin-Token")
 
@@ -248,17 +263,29 @@ def grading(offering_id: str = Query(default=DEFAULT_OFFERING)):
         avg = median = 0.0
         hi = lo = 0
 
-    # Confidence + audit columns: derived from latest dossier per student.
-    # If not yet populated, return '—'.
+    # Confidence + audit columns: derived from the LATEST dossier per
+    # student (across all their deliverables). Fix for Codex P1#2: the
+    # previous GROUP BY / HAVING MAX(graded_at) query returned an
+    # arbitrary row per user in SQLite because the bare confidence and
+    # flags_json columns are not aggregated and HAVING MAX() is a
+    # truthy boolean rather than a row selector. The correlated
+    # subquery below unambiguously selects the one row per user whose
+    # graded_at equals the user-and-offering MAX.
     with get_db() as con:
         conf_by_user = {}
         audit_by_user = {}
         for r in con.execute("""
-            SELECT user_id, confidence, flags_json
-            FROM grade_dossiers
-            WHERE offering_id = ? AND is_final = 1
-            GROUP BY user_id
-            HAVING MAX(graded_at)
+            SELECT gd.user_id, gd.confidence, gd.flags_json
+            FROM grade_dossiers gd
+            WHERE gd.offering_id = ?
+              AND gd.is_final = 1
+              AND gd.graded_at = (
+                SELECT MAX(gd2.graded_at)
+                FROM grade_dossiers gd2
+                WHERE gd2.user_id     = gd.user_id
+                  AND gd2.offering_id = gd.offering_id
+                  AND gd2.is_final    = 1
+              )
         """, (offering_id,)):
             conf_by_user[r["user_id"]] = r["confidence"]
             audit_by_user[r["user_id"]] = (

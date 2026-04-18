@@ -134,6 +134,17 @@ CREATE INDEX IF NOT EXISTS ix_dossiers_user_deliv
 CREATE INDEX IF NOT EXISTS ix_dossiers_offering
   ON grade_dossiers(offering_id, is_final);
 
+-- Data-model invariant: at most one final dossier per (user, offering,
+-- deliverable). A re-grade or instructor adjustment flips the previous
+-- is_final=1 row to is_final=0 before inserting the new final row;
+-- historical dossiers are preserved. This partial unique index
+-- enforces the invariant at the schema level so student_totals_v
+-- cannot double-count even if application code has a bug.
+-- (Fix for Codex P1#1, 2026-04-18.)
+CREATE UNIQUE INDEX IF NOT EXISTS ux_dossiers_one_final_per_user_deliv
+  ON grade_dossiers(user_id, offering_id, deliverable_id)
+  WHERE is_final = 1;
+
 -- ── 6. calibration_runs ──────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS calibration_runs (
   calibration_id     INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -223,8 +234,28 @@ CREATE INDEX IF NOT EXISTS ix_audit_log_class_offering
 -- ── student_totals_v (view) ──────────────────────────────────────────────
 -- Per-student per-offering totals. Drop and recreate to ensure the
 -- definition is current on re-run.
+--
+-- Defensive against dossier over-count (Codex P1#1 fix, 2026-04-18):
+-- uses a CTE to select exactly ONE dossier per (user, offering,
+-- deliverable) triple — the one with the maximum graded_at. The
+-- ux_dossiers_one_final_per_user_deliv partial unique index already
+-- enforces this invariant at insert time; the CTE is belt-and-braces
+-- so totals remain correct even if the index is ever dropped.
 DROP VIEW IF EXISTS student_totals_v;
 CREATE VIEW student_totals_v AS
+WITH latest_final_dossier AS (
+  SELECT gd.*
+  FROM grade_dossiers gd
+  WHERE gd.is_final = 1
+    AND gd.graded_at = (
+      SELECT MAX(gd2.graded_at)
+      FROM grade_dossiers gd2
+      WHERE gd2.user_id       = gd.user_id
+        AND gd2.offering_id   = gd.offering_id
+        AND gd2.deliverable_id = gd.deliverable_id
+        AND gd2.is_final = 1
+    )
+)
 SELECT
   e.offering_id,
   e.user_id,
@@ -233,24 +264,23 @@ SELECT
   e.track,
   e.f160_track,
   COALESCE(SUM(CASE WHEN d.deliverable_id = 'A0'
-                    THEN gd.points_awarded END), 0)  AS a0_pts,
+                    THEN ld.points_awarded END), 0)  AS a0_pts,
   COALESCE(SUM(CASE WHEN d.deliverable_id = 'A1'
-                    THEN gd.points_awarded END), 0)  AS a1_pts,
+                    THEN ld.points_awarded END), 0)  AS a1_pts,
   COALESCE(SUM(CASE WHEN d.track = e.track
-                    THEN gd.points_awarded END), 0)  AS track_pts,
+                    THEN ld.points_awarded END), 0)  AS track_pts,
   COALESCE(SUM(CASE WHEN d.deliverable_id = 'F160'
-                    THEN gd.points_awarded END), 0)  AS f160_pts,
-  COALESCE(SUM(gd.points_awarded), 0)                AS total_pts,
-  MAX(gd.graded_at)                                  AS last_graded_at
+                    THEN ld.points_awarded END), 0)  AS f160_pts,
+  COALESCE(SUM(ld.points_awarded), 0)                AS total_pts,
+  MAX(ld.graded_at)                                  AS last_graded_at
 FROM enrollments e
 JOIN users u ON u.user_id = e.user_id
-LEFT JOIN grade_dossiers gd
-       ON gd.user_id = e.user_id
-      AND gd.offering_id = e.offering_id
-      AND gd.is_final = 1
+LEFT JOIN latest_final_dossier ld
+       ON ld.user_id     = e.user_id
+      AND ld.offering_id = e.offering_id
 LEFT JOIN deliverables d
-       ON d.deliverable_id = gd.deliverable_id
-      AND d.offering_id    = gd.offering_id
+       ON d.deliverable_id = ld.deliverable_id
+      AND d.offering_id    = ld.offering_id
 WHERE e.role = 'student' AND e.status != 'dropped'
 GROUP BY e.offering_id, e.user_id;
 

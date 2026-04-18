@@ -51,9 +51,21 @@ Record every flag that fired in the dossier's §6.
 
 1. Every score must be backed by at least one literal quote from the student's submission or a literal DB row. No score without evidence. If you cannot find a quote to back a band, lower the score and say so.
 2. Do not reward verbosity. A 300-word reflection that scores band 3 on specificity must cite ≥ 4 distinct referents. A 600-word reflection that cites 1 referent scores band 1.
-3. Do not hallucinate evidence. If a required file does not exist, record that fact and continue; do not invent a reading of it.
+3. Do not hallucinate evidence. If a required file does not exist, record that fact and continue; do not invent a reading of it. **In particular, if the spec's `quality.exemplars` paths point at files that do not exist on disk, treat this as degraded mode** (see next section). Do not invent exemplar content.
 4. Do not curve. You see one student at a time; relative-to-class judgements are the instructor's role, not yours.
 5. Do not score originality, professional conduct, or in-person interactions. Those are instructor-only.
+
+## Degraded mode (exemplars missing)
+
+If the briefing includes a "⚠ DEGRADED MODE" section at §0, or if any exemplar path referenced in the spec's `quality.exemplars` block fails to resolve to a readable file, you are in degraded mode. Procedure:
+
+1. Score Completeness and Reflection exactly as specified above — these do not depend on exemplars.
+2. Score Quality using the rubric's **prose band descriptions** only (the "### Quality" subsection of the rubric's Scoring bands). Cite the specific band-language phrase you matched against. Do not invent exemplar text.
+3. Set dossier `confidence` to **`low`** regardless of how certain the prose-only scoring feels.
+4. Add `degraded_mode_no_exemplars` to the dossier's §6 flag list, with the list of missing exemplar paths as the flag's `detail` field.
+5. Produce the dossier normally; it will be routed to the `flagged_deliverable` audit stratum for human review.
+
+This path exists because exemplar-set authoring is a Week-3 track-lead deliverable (per `AI_GRADING_DESIGN_2026-04-17.md` §6) and may not be complete when grading runs. Degraded-mode dossiers are a first-pass record; the authoritative score is produced in the re-grading pass after exemplars land.
 
 ## Output
 
