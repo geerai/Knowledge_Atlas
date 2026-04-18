@@ -7,6 +7,8 @@ data/ka_auth.db
 data/ka_auth.db-shm
 data/ka_auth.db-wal
 data/ka_auth.db.bak
+data/ka_auth.db.*.bak
+data/*.bak
 data/ka_auth_test.db
 data/ka_auth_clean.db
 data/ka_auth_clean.db-journal

@@ -1214,6 +1214,49 @@ const USER_TYPES = [
    ADMIN_API — replace these stubs with real fetch() calls.
    Each stub returns a promise resolving to a plausible mock.
    ───────────────────────────────────────────────────────────── */
+/* ── Dual-write shim for class-state backend ──
+   Stage-2 migration per docs/CLASS_STATE_DATABASE_DESIGN_2026-04-17.md §4.
+   Each ADMIN_API function tries the real /api/admin/class/* endpoint
+   first; on any network / 4xx / 5xx error it falls back silently to
+   the demo data so the page remains usable without the backend.
+   Admin token (if any) is read from sessionStorage 'ka.adminToken'.    */
+const KA_CLASS_API_BASE =
+  (window.__KA_CONFIG__ && window.__KA_CONFIG__.classApiBase) ||
+  '/api/admin/class';
+
+async function kaApiGet(path, fallback){
+  try {
+    const tok = (window.sessionStorage && window.sessionStorage.getItem('ka.adminToken')) || '';
+    const r = await fetch(KA_CLASS_API_BASE + path, {
+      headers: tok ? {'X-Admin-Token': tok} : {},
+      credentials: 'same-origin',
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return await r.json();
+  } catch (e) {
+    if (window.console) console.debug('ka-backend fallback', path, e.message);
+    return fallback;
+  }
+}
+
+async function kaApiPost(path, body, fallback){
+  try {
+    const tok = (window.sessionStorage && window.sessionStorage.getItem('ka.adminToken')) || '';
+    const r = await fetch(KA_CLASS_API_BASE + path, {
+      method: 'POST',
+      headers: Object.assign({'Content-Type':'application/json'},
+                             tok ? {'X-Admin-Token': tok} : {}),
+      body: body ? JSON.stringify(body) : undefined,
+      credentials: 'same-origin',
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return await r.json();
+  } catch (e) {
+    if (window.console) console.debug('ka-backend fallback', path, e.message);
+    return fallback;
+  }
+}
+
 const ADMIN_API = {
   resetLogin:    (id, opts) => Promise.resolve({ok:true, authKey: randKey(opts.len)}),
   revokeSession: (id)       => Promise.resolve({ok:true}),
@@ -1231,28 +1274,24 @@ const ADMIN_API = {
      See scripts/ka_admin_refresh_endpoint.py and
      docs/SSH_SETUP_FOR_PNU_REFRESH.md. In this demo the call is stubbed. */
   /* ── Grading endpoints (AI primary, TA audit second pass) ──
-     In production, each of these calls a /api/admin/grading/* endpoint that
-     reads ./160sp/grading/{student_id}/{deliverable_id}_{date}.md dossiers
-     and joins them with the unified pipeline registry.                    */
-  loadGrading: () => new Promise((resolve) => setTimeout(() => resolve(
-    DEMO_GRADING
-  ), 120)),
-  loadCalibration: () => new Promise((resolve) => setTimeout(() => resolve(
-    DEMO_CALIBRATION
-  ), 120)),
-  loadAuditQueue: () => new Promise((resolve) => setTimeout(() => resolve(
-    DEMO_AUDIT_QUEUE
-  ), 120)),
-  loadAppeals: () => new Promise((resolve) => setTimeout(() => resolve(
-    DEMO_APPEALS
-  ), 120)),
-  runGradingPass: () => new Promise((resolve) => setTimeout(() => resolve({
-    ok: true, dossiers_written: 47, time_elapsed_sec: 142,
-    note: '(demo mode — no AI calls made)'
-  }), 1100)),
-  pullAuditSample: () => new Promise((resolve) => setTimeout(() => resolve({
-    ok: true, sample_size: 9, note: '(demo mode — stratified sample refreshed)'
-  }), 500)),
+     Stage-2 dual-write: real /api/admin/class/* endpoints via kaApiGet/
+     kaApiPost shim above; each call falls back to DEMO_* data on any
+     error so the page stays usable when the backend is offline or the
+     admin token is not set. See scripts/ka_class_api.py for the real
+     endpoint contracts and docs/CLASS_STATE_DATABASE_DESIGN_2026-04-17.md
+     for the migration plan.                                            */
+  loadGrading:     () => kaApiGet('/grading',     DEMO_GRADING),
+  loadCalibration: () => kaApiGet('/calibration', DEMO_CALIBRATION),
+  loadAuditQueue:  () => kaApiGet('/audit/queue', DEMO_AUDIT_QUEUE),
+  loadAppeals:     () => kaApiGet('/appeals',     DEMO_APPEALS),
+  runGradingPass:  () => kaApiPost('/grading/run', null, {
+    ok: true, queued: 0,
+    note: '(demo mode — backend unreachable; no briefings built)'
+  }),
+  pullAuditSample: () => kaApiPost('/audit/pull', null, {
+    ok: true, sample_size: 0,
+    note: '(demo mode — backend unreachable)'
+  }),
 
   refreshPnus:   ()         => {
     // In production, replace with:
@@ -2016,21 +2055,27 @@ function renderGrading(){
     el('#gDossierCnt').textContent  = cs.dossier_count != null ? cs.dossier_count : '–';
     el('#gAppealsOpen').textContent = cs.appeals_open != null ? cs.appeals_open : '0';
 
-    /* Per-student totals */
+    /* Per-student totals — prefer inline name/track from the API
+       response (real backend returns u_{hex} sids that won't match the
+       demo ROSTER); fall back to rosterById for demo-only rows.       */
     el('#gradingBody').innerHTML = (grading.students || []).map(s => {
       const r = rosterById(s.sid);
-      if (!r) return '';
-      const total = (s.a0||0) + (s.a1||0) + (s.track_sub||0) + (s.f160||0);
+      const name = s.name || (r && r.name) || s.sid;
+      const trackRaw = s.track || (r && r.track) || '';
+      const trackShort = (trackRaw.includes('·') ? trackRaw.split('·')[0].trim()
+                                                  : (trackRaw || '—'));
+      const total = (typeof s.total === 'number')
+                      ? s.total
+                      : (s.a0||0) + (s.a1||0) + (s.track_sub||0) + (s.f160||0);
       const pct   = total;  /* /100 */
-      const trackShort = r.track.split('·')[0].trim();
       const conf  = s.conf || '—';
       const confCls = conf==='high' ? 'pill-ok' : conf==='medium' ? 'pill-warn' : conf==='low' ? 'pill-error' : '';
       const auditCls = s.audit==='flag' ? 'pill-warn' : s.audit==='ok' ? 'pill-ok' : '';
       const totalCls = pct>=85 ? 'pill-ok' : pct>=60 ? 'pill-warn' : pct>0 ? 'pill-error' : '';
       return `
         <tr>
-          <td class="tb-name">${esc(r.name)}${s.flag ? `<div class="tb-sub">${esc(s.flag)}</div>` : ''}</td>
-          <td><span class="pill ${trackCls(r.track)}">${esc(trackShort)}</span></td>
+          <td class="tb-name">${esc(name)}${s.flag ? `<div class="tb-sub">${esc(s.flag)}</div>` : ''}</td>
+          <td><span class="pill ${trackCls(trackRaw)}">${esc(trackShort)}</span></td>
           <td>${s.a0}/5</td>
           <td>${s.a1}/5</td>
           <td>${s.track_sub}/75</td>
