@@ -411,6 +411,7 @@ body.impersonating { padding-top: 32px; }
     <div class="tab" data-tab="logins">Logins &amp; Keys</div>
     <div class="tab" data-tab="tracks">Tracks &amp; Deliverables</div>
     <div class="tab" data-tab="grades">Progress</div>
+    <div class="tab" data-tab="grading">Grading <span class="tab-count" id="gradingCount">–</span></div>
     <div class="tab" data-tab="announce">Announcements</div>
     <div class="tab" data-tab="site">Site Health</div>
     <div class="tab" data-tab="content">Content</div>
@@ -692,6 +693,124 @@ body.impersonating { padding-top: 32px; }
       </table>
     </div>
   </div>
+</section>
+
+<!-- ══════════════════════  GRADING (AI primary)  ══════════════════════ -->
+<section class="tabpanel" id="tab-grading">
+
+  <!-- Class-level totals row -->
+  <div class="card">
+    <div class="card-head"><div>
+      <div class="card-title">Class grading summary</div>
+      <div class="card-sub">
+        Primary grader: AI (Claude Opus 4.6). Points are allocated class-wide: 5 A0 + 5 A1 + 75 track + 15 Work-on-160F = 100.
+        See <a href="rubrics/AI_GRADING_DESIGN_2026-04-17.md" target="_blank">AI grading design</a>
+        and <a href="rubrics/README.md" target="_blank">rubrics README</a>.
+      </div>
+    </div><div class="btn-row">
+      <button class="btn btn-secondary btn-sm" onclick="runGradingPass()">Run grading pass</button>
+      <button class="btn btn-secondary btn-sm" onclick="exportGradingCsv()">Export CSV</button>
+    </div></div>
+    <div class="kpi-grid" style="padding:0 20px 20px;">
+      <div class="kpi"><div class="kpi-num" id="gClassAvg">–</div><div class="kpi-lbl">Class avg / 100</div></div>
+      <div class="kpi"><div class="kpi-num" id="gClassMed">–</div><div class="kpi-lbl">Median / 100</div></div>
+      <div class="kpi"><div class="kpi-num" id="gClassHi">–</div><div class="kpi-lbl">High / 100</div></div>
+      <div class="kpi"><div class="kpi-num" id="gClassLo">–</div><div class="kpi-lbl">Low / 100</div></div>
+      <div class="kpi"><div class="kpi-num" id="gDossierCnt">–</div><div class="kpi-lbl">Dossiers on file</div></div>
+      <div class="kpi"><div class="kpi-num" id="gAppealsOpen">–</div><div class="kpi-lbl">Open appeals</div></div>
+    </div>
+  </div>
+
+  <!-- Per-student totals table -->
+  <div class="card">
+    <div class="card-head"><div>
+      <div class="card-title">Per-student totals</div>
+      <div class="card-sub">Click any row to open the per-deliverable dossier view.</div>
+    </div></div>
+    <div style="overflow-x:auto;">
+      <table id="gradingTable">
+        <thead><tr>
+          <th>Student</th><th>Track</th>
+          <th>A0 /5</th><th>A1 /5</th>
+          <th>Track /75</th><th>F160 /15</th>
+          <th>Total /100</th>
+          <th>Last AI pass</th>
+          <th>Audit</th>
+          <th>Conf.</th>
+          <th></th>
+        </tr></thead>
+        <tbody id="gradingBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Two-column: calibration health + audit queue -->
+  <div class="two-col">
+    <div class="card">
+      <div class="card-head"><div>
+        <div class="card-title">Calibration health</div>
+        <div class="card-sub">AI-vs-expert agreement per deliverable. Gates: κ ≥ 0.70 Completeness, 0.65 Quality, 0.55 Reflection.</div>
+      </div></div>
+      <div style="overflow-x:auto;">
+        <table id="calibrationTable">
+          <thead><tr>
+            <th>Deliverable</th>
+            <th>κ Comp.</th>
+            <th>κ Qual.</th>
+            <th>κ Refl.</th>
+            <th>n</th>
+            <th>Status</th>
+          </tr></thead>
+          <tbody id="calibrationBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><div>
+        <div class="card-title">Audit queue</div>
+        <div class="card-sub">Stratified 20% sample per deliverable pending TA blind re-grade.</div>
+      </div><div class="btn-row">
+        <button class="btn btn-secondary btn-sm" onclick="pullAuditSample()">Pull new sample</button>
+      </div></div>
+      <div style="overflow-x:auto;">
+        <table id="auditTable">
+          <thead><tr>
+            <th>Student</th>
+            <th>Deliverable</th>
+            <th>AI score</th>
+            <th>Stratum</th>
+            <th>Due</th>
+          </tr></thead>
+          <tbody id="auditBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Appeals -->
+  <div class="card">
+    <div class="card-head"><div>
+      <div class="card-title">Open appeals</div>
+      <div class="card-sub">Student-initiated grade appeals. Two-stage resolution: second AI grader → human adjudication if ≥ 1-band disagreement.</div>
+    </div></div>
+    <div style="overflow-x:auto;">
+      <table id="appealsTable">
+        <thead><tr>
+          <th>Student</th>
+          <th>Deliverable</th>
+          <th>Criterion</th>
+          <th>Original score</th>
+          <th>Student asks</th>
+          <th>Stage</th>
+          <th>Opened</th>
+          <th>Action</th>
+        </tr></thead>
+        <tbody id="appealsBody"></tbody>
+      </table>
+    </div>
+  </div>
+
 </section>
 
 <!-- ══════════════════════  ANNOUNCEMENTS  ══════════════════════ -->
@@ -1111,6 +1230,30 @@ const ADMIN_API = {
      writes the returned JSON into the site's data/ka_payloads/pnus.json.
      See scripts/ka_admin_refresh_endpoint.py and
      docs/SSH_SETUP_FOR_PNU_REFRESH.md. In this demo the call is stubbed. */
+  /* ── Grading endpoints (AI primary, TA audit second pass) ──
+     In production, each of these calls a /api/admin/grading/* endpoint that
+     reads ./160sp/grading/{student_id}/{deliverable_id}_{date}.md dossiers
+     and joins them with the unified pipeline registry.                    */
+  loadGrading: () => new Promise((resolve) => setTimeout(() => resolve(
+    DEMO_GRADING
+  ), 120)),
+  loadCalibration: () => new Promise((resolve) => setTimeout(() => resolve(
+    DEMO_CALIBRATION
+  ), 120)),
+  loadAuditQueue: () => new Promise((resolve) => setTimeout(() => resolve(
+    DEMO_AUDIT_QUEUE
+  ), 120)),
+  loadAppeals: () => new Promise((resolve) => setTimeout(() => resolve(
+    DEMO_APPEALS
+  ), 120)),
+  runGradingPass: () => new Promise((resolve) => setTimeout(() => resolve({
+    ok: true, dossiers_written: 47, time_elapsed_sec: 142,
+    note: '(demo mode — no AI calls made)'
+  }), 1100)),
+  pullAuditSample: () => new Promise((resolve) => setTimeout(() => resolve({
+    ok: true, sample_size: 9, note: '(demo mode — stratified sample refreshed)'
+  }), 500)),
+
   refreshPnus:   ()         => {
     // In production, replace with:
     //   return fetch('/api/admin/refresh-pnus', {
@@ -1189,6 +1332,74 @@ const DELIVERABLES = [
     t2:{d:'Final demo + reflection paper.',            sub: 0, of: 4},
     t3:{d:'Final demo + reflection paper.',            sub: 0, of: 4},
     t4:{d:'Final demo + reflection paper.',            sub: 0, of: 3} },
+];
+
+/* ══════════════════════  GRADING DEMO DATA  ══════════════════════
+   Mirrors 160sp/rubrics/{common,t1,t2,t3,t4,f160}/ allocation:
+     A0 = 5, A1 = 5, Track = 75, F160 = 15.  Total = 100.
+   In production this is replaced by ADMIN_API.loadGrading() which
+   reads dossiers under 160sp/grading/{sid}/ and joins the unified
+   pipeline registry. The audit + appeals tables are seeded with
+   plausible-looking rows so the UI is legible pre-wiring.          */
+const DEMO_GRADING = {
+  class_summary: {
+    avg: 71.4, median: 73, hi: 93, lo: 38,
+    dossier_count: 184, appeals_open: 2,
+    last_pass: '2026-04-17 14:05 PDT',
+  },
+  students: [
+    /* sid, a0, a1, track, track_sub, f160, last_pass, audit, conf   */
+    {sid:'s01', a0:5, a1:4, track_sub:61, f160:12, audit:'ok',   conf:'high'},
+    {sid:'s02', a0:4, a1:4, track_sub:58, f160:10, audit:'ok',   conf:'high'},
+    {sid:'s03', a0:3, a1:2, track_sub:30, f160: 3, audit:'flag', conf:'low',  flag:'Band-boundary on T1.b reflection'},
+    {sid:'s04', a0:5, a1:5, track_sub:69, f160:13, audit:'ok',   conf:'high'},
+    {sid:'s05', a0:5, a1:5, track_sub:66, f160:12, audit:'ok',   conf:'high'},
+    {sid:'s06', a0:0, a1:0, track_sub: 0, f160: 0, audit:'—',    conf:'—'},
+    {sid:'s07', a0:4, a1:4, track_sub:54, f160: 9, audit:'ok',   conf:'medium'},
+    {sid:'s08', a0:5, a1:4, track_sub:62, f160:11, audit:'ok',   conf:'high'},
+    {sid:'s09', a0:5, a1:5, track_sub:70, f160:13, audit:'ok',   conf:'high'},
+    {sid:'s10', a0:4, a1:3, track_sub:47, f160: 8, audit:'flag', conf:'low',  flag:'Appeal open on T2.c VOI'},
+    {sid:'s11', a0:5, a1:4, track_sub:60, f160:11, audit:'ok',   conf:'medium'},
+    {sid:'s12', a0:5, a1:5, track_sub:71, f160:14, audit:'ok',   conf:'high'},
+    {sid:'s13', a0:3, a1:3, track_sub:41, f160: 6, audit:'ok',   conf:'medium'},
+    {sid:'s14', a0:5, a1:4, track_sub:58, f160:10, audit:'ok',   conf:'high'},
+    {sid:'s15', a0:4, a1:4, track_sub:55, f160: 9, audit:'ok',   conf:'medium'},
+  ],
+};
+
+const DEMO_CALIBRATION = [
+  /* deliverable, kappa completeness / quality / reflection, n, status */
+  {id:'A0',       kc:1.00, kq:0.82, kr:0.71, n:15, ok:true},
+  {id:'A1',       kc:1.00, kq:0.79, kr:0.68, n:15, ok:true},
+  {id:'T1.a',     kc:1.00, kq:0.74, kr:0.64, n:12, ok:true},
+  {id:'T1.b',     kc:0.98, kq:0.66, kr:0.57, n:12, ok:true},
+  {id:'T1.c',     kc:1.00, kq:0.71, kr:0.58, n: 8, ok:true},
+  {id:'T1.d',     kc:0.95, kq:0.59, kr:0.52, n: 6, ok:false, reason:'Quality κ below 0.65 gate — revise exemplars'},
+  {id:'T2.a',     kc:1.00, kq:0.81, kr:0.72, n:10, ok:true},
+  {id:'T2.b.1',   kc:1.00, kq:0.77, kr:0.64, n:10, ok:true},
+  {id:'T2.c',     kc:1.00, kq:0.63, kr:0.56, n: 8, ok:false, reason:'Quality κ below 0.65 — VOI bands ambiguous at Medium vs High'},
+  {id:'T3.a',     kc:1.00, kq:0.73, kr:0.61, n: 6, ok:true},
+  {id:'T3.b',     kc:0.97, kq:0.67, kr:0.58, n: 6, ok:true},
+  {id:'T4.a',     kc:1.00, kq:0.69, kr:0.62, n: 6, ok:true},
+  {id:'T4.b',     kc:1.00, kq:0.72, kr:0.65, n: 6, ok:true},
+  {id:'F160',     kc:0.92, kq:0.65, kr:0.60, n: 4, ok:true},
+];
+
+const DEMO_AUDIT_QUEUE = [
+  {sid:'s03', deliv:'T1.b', ai_score:'4/10', stratum:'low-confidence', due:'2026-04-21'},
+  {sid:'s07', deliv:'T1.b', ai_score:'7/10', stratum:'random',         due:'2026-04-21'},
+  {sid:'s10', deliv:'T2.c', ai_score:'6/10', stratum:'band-boundary',  due:'2026-04-21'},
+  {sid:'s12', deliv:'T2.c', ai_score:'9/10', stratum:'random',         due:'2026-04-21'},
+  {sid:'s01', deliv:'T1.d', ai_score:'7/10', stratum:'flagged-deliverable', due:'2026-04-22'},
+  {sid:'s02', deliv:'T1.d', ai_score:'6/10', stratum:'flagged-deliverable', due:'2026-04-22'},
+  {sid:'s04', deliv:'T2.d', ai_score:'13/15', stratum:'random',        due:'2026-04-23'},
+  {sid:'s13', deliv:'A1',   ai_score:'3/5',   stratum:'low-confidence', due:'2026-04-20'},
+  {sid:'s15', deliv:'T4.a', ai_score:'8/12',  stratum:'random',        due:'2026-04-23'},
+];
+
+const DEMO_APPEALS = [
+  {sid:'s10', deliv:'T2.c', criterion:'Quality',     ai:2, asks:3, stage:'awaiting 2nd AI grader', opened:'2026-04-15'},
+  {sid:'s03', deliv:'T1.b', criterion:'Reflection',  ai:1, asks:2, stage:'awaiting human adjudication', opened:'2026-04-14'},
 ];
 
 /* ─── Helpers ─── */
@@ -1535,6 +1746,7 @@ function goTab(name){
   els('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab===name));
   els('.tabpanel').forEach(p => p.classList.toggle('active', p.id==='tab-'+name));
   window.scrollTo({top: 0, behavior: 'smooth'});
+  if (name === 'grading' && typeof renderGrading === 'function') renderGrading();
 }
 
 /* ─── Dashboard ─── */
@@ -1779,6 +1991,207 @@ function renderGrades(){
       <td>${r.avg ? r.avg.toFixed(1) : '—'}</td>
       <td>${r.flag ? `<span class="pill pill-warn">${esc(r.flag)}</span>` : '<span class="tb-sub">—</span>'}</td>
     </tr>`).join('');
+}
+
+/* ─── Grading (AI primary) ─── */
+function rosterById(sid){ return ROSTER.find(r => r.id === sid) || null; }
+
+function renderGrading(){
+  /* tab chip count */
+  const openAppeals = (typeof DEMO_APPEALS !== 'undefined') ? DEMO_APPEALS.length : 0;
+  const gc = el('#gradingCount'); if (gc) gc.textContent = openAppeals ? String(openAppeals) : '–';
+
+  Promise.all([
+    ADMIN_API.loadGrading(),
+    ADMIN_API.loadCalibration(),
+    ADMIN_API.loadAuditQueue(),
+    ADMIN_API.loadAppeals(),
+  ]).then(([grading, calibration, queue, appeals]) => {
+    /* Class summary KPIs */
+    const cs = grading.class_summary || {};
+    el('#gClassAvg').textContent  = cs.avg != null ? cs.avg.toFixed(1) : '–';
+    el('#gClassMed').textContent  = cs.median != null ? cs.median : '–';
+    el('#gClassHi').textContent   = cs.hi != null ? cs.hi : '–';
+    el('#gClassLo').textContent   = cs.lo != null ? cs.lo : '–';
+    el('#gDossierCnt').textContent  = cs.dossier_count != null ? cs.dossier_count : '–';
+    el('#gAppealsOpen').textContent = cs.appeals_open != null ? cs.appeals_open : '0';
+
+    /* Per-student totals */
+    el('#gradingBody').innerHTML = (grading.students || []).map(s => {
+      const r = rosterById(s.sid);
+      if (!r) return '';
+      const total = (s.a0||0) + (s.a1||0) + (s.track_sub||0) + (s.f160||0);
+      const pct   = total;  /* /100 */
+      const trackShort = r.track.split('·')[0].trim();
+      const conf  = s.conf || '—';
+      const confCls = conf==='high' ? 'pill-ok' : conf==='medium' ? 'pill-warn' : conf==='low' ? 'pill-error' : '';
+      const auditCls = s.audit==='flag' ? 'pill-warn' : s.audit==='ok' ? 'pill-ok' : '';
+      const totalCls = pct>=85 ? 'pill-ok' : pct>=60 ? 'pill-warn' : pct>0 ? 'pill-error' : '';
+      return `
+        <tr>
+          <td class="tb-name">${esc(r.name)}${s.flag ? `<div class="tb-sub">${esc(s.flag)}</div>` : ''}</td>
+          <td><span class="pill ${trackCls(r.track)}">${esc(trackShort)}</span></td>
+          <td>${s.a0}/5</td>
+          <td>${s.a1}/5</td>
+          <td>${s.track_sub}/75</td>
+          <td>${s.f160}/15</td>
+          <td><span class="pill ${totalCls}">${total}/100</span></td>
+          <td class="tb-sub">${esc(cs.last_pass || '—')}</td>
+          <td>${s.audit==='—' ? '<span class="tb-sub">—</span>' : `<span class="pill ${auditCls}">${esc(s.audit)}</span>`}</td>
+          <td>${conf==='—' ? '<span class="tb-sub">—</span>' : `<span class="pill ${confCls}">${esc(conf)}</span>`}</td>
+          <td><button class="btn btn-secondary btn-sm" onclick="openDossierModal('${esc(s.sid)}')">Dossier →</button></td>
+        </tr>`;
+    }).join('');
+
+    /* Calibration */
+    el('#calibrationBody').innerHTML = (calibration || []).map(c => {
+      const stCls = c.ok ? 'pill-ok' : 'pill-error';
+      const stTxt = c.ok ? 'Passing' : 'GATE';
+      const kcCls = c.kc >= 0.70 ? 'pill-ok' : 'pill-error';
+      const kqCls = c.kq >= 0.65 ? 'pill-ok' : 'pill-error';
+      const krCls = c.kr >= 0.55 ? 'pill-ok' : 'pill-error';
+      return `
+        <tr>
+          <td class="tb-name">${esc(c.id)}${c.reason ? `<div class="tb-sub">${esc(c.reason)}</div>` : ''}</td>
+          <td><span class="pill ${kcCls}">${c.kc.toFixed(2)}</span></td>
+          <td><span class="pill ${kqCls}">${c.kq.toFixed(2)}</span></td>
+          <td><span class="pill ${krCls}">${c.kr.toFixed(2)}</span></td>
+          <td>${c.n}</td>
+          <td><span class="pill ${stCls}">${stTxt}</span></td>
+        </tr>`;
+    }).join('');
+
+    /* Audit queue */
+    el('#auditBody').innerHTML = (queue || []).map(q => {
+      const r = rosterById(q.sid);
+      return `
+        <tr>
+          <td class="tb-name">${r ? esc(r.name) : esc(q.sid)}</td>
+          <td>${esc(q.deliv)}</td>
+          <td>${esc(q.ai_score)}</td>
+          <td><span class="pill">${esc(q.stratum)}</span></td>
+          <td class="tb-sub">${esc(q.due)}</td>
+        </tr>`;
+    }).join('');
+
+    /* Appeals */
+    el('#appealsBody').innerHTML = (appeals || []).length
+      ? appeals.map(a => {
+        const r = rosterById(a.sid);
+        return `
+          <tr>
+            <td class="tb-name">${r ? esc(r.name) : esc(a.sid)}</td>
+            <td>${esc(a.deliv)}</td>
+            <td>${esc(a.criterion)}</td>
+            <td>Band ${a.ai}</td>
+            <td>Band ${a.asks}</td>
+            <td><span class="pill pill-warn">${esc(a.stage)}</span></td>
+            <td class="tb-sub">${esc(a.opened)}</td>
+            <td><button class="btn btn-secondary btn-sm" onclick="openAppealModal('${esc(a.sid)}','${esc(a.deliv)}')">Review</button></td>
+          </tr>`;
+      }).join('')
+      : '<tr><td colspan="8" class="tb-sub" style="text-align:center;padding:14px;">No open appeals.</td></tr>';
+  });
+}
+
+function openDossierModal(sid){
+  const r = rosterById(sid);
+  const s = DEMO_GRADING.students.find(x => x.sid === sid) || {};
+  const trackKey = (r && r.track && r.track.match(/Track (\d)/) || [,'1'])[1];
+  const rubricBase = 'rubrics/t' + trackKey + '/';
+  openModal('Grade dossier — ' + (r ? esc(r.name) : sid), `
+    <p style="font-size:0.88rem;margin-bottom:12px;">
+      Per-deliverable breakdown. Each row links to the full AI grading dossier
+      (metadata + evidence + cited spans + confidence).
+      The dossier schema is documented in
+      <a href="rubrics/AI_GRADING_DESIGN_2026-04-17.md#3-what-the-ai-grader-produces-for-every-submission" target="_blank">§3 of the design doc</a>.
+    </p>
+    <table>
+      <thead><tr><th>Deliverable</th><th>Comp.</th><th>Qual.</th><th>Refl.</th><th>Points</th><th>Rubric</th><th>Dossier</th></tr></thead>
+      <tbody>
+        <tr><td>A0</td><td>3</td><td>3</td><td>${Math.min(3,Math.max(0,(s.a0||0)-2))}</td><td>${s.a0}/5</td>
+            <td><a href="rubrics/common/a0.md" target="_blank">a0.md</a></td>
+            <td><span class="tb-sub">pending wire</span></td></tr>
+        <tr><td>A1</td><td>3</td><td>${s.a1>=4?3:2}</td><td>${s.a1>=4?3:2}</td><td>${s.a1}/5</td>
+            <td><a href="rubrics/common/a1.md" target="_blank">a1.md</a></td>
+            <td><span class="tb-sub">pending wire</span></td></tr>
+        <tr><td>Track total (all ${trackKey==='4'?'T4':'T'+trackKey+' deliverables'})</td>
+            <td colspan="3" class="tb-sub">See per-deliverable dossier files under 160sp/grading/${esc(sid)}/</td>
+            <td>${s.track_sub}/75</td>
+            <td><a href="${rubricBase}README.md" target="_blank">track README</a></td>
+            <td><span class="tb-sub">pending wire</span></td></tr>
+        <tr><td>Work-on-160F</td>
+            <td>${Math.round(s.f160/5)}</td>
+            <td>${Math.round(s.f160/5)}</td>
+            <td>${Math.round(s.f160/5)}</td>
+            <td>${s.f160}/15</td>
+            <td><a href="rubrics/f160/README.md" target="_blank">f160 README</a></td>
+            <td><span class="tb-sub">pending wire</span></td></tr>
+      </tbody>
+    </table>
+    <p class="tb-sub" style="font-size:0.76rem;margin-top:14px;">
+      Confidence: <b>${esc(s.conf || '—')}</b>.
+      Audit: <b>${esc(s.audit || '—')}</b>.
+      ${s.flag ? 'Flag: <b>' + esc(s.flag) + '</b>.' : ''}
+    </p>
+  `,[{label:'Close',cls:'btn-secondary',on:closeModal}]);
+}
+
+function openAppealModal(sid, deliv){
+  const r = rosterById(sid);
+  const a = DEMO_APPEALS.find(x => x.sid===sid && x.deliv===deliv) || {};
+  openModal('Appeal — ' + (r ? esc(r.name) : sid) + ' · ' + esc(deliv), `
+    <dl class="kv">
+      <dt>Criterion</dt><dd>${esc(a.criterion||'—')}</dd>
+      <dt>Original AI band</dt><dd>Band ${a.ai}</dd>
+      <dt>Student asks</dt><dd>Band ${a.asks}</dd>
+      <dt>Opened</dt><dd>${esc(a.opened||'—')}</dd>
+      <dt>Current stage</dt><dd>${esc(a.stage||'—')}</dd>
+    </dl>
+    <p style="font-size:0.86rem;margin-top:12px;">
+      Two-stage resolution per the design (§5.3): a second AI grader produces
+      an independent dossier on the disputed criterion. If the two AI dossiers
+      disagree by ≥ 1 band, a human adjudicates. The higher of the two scores
+      stands unless the adjudicator finds a clear error in the student's favour.
+    </p>`,
+    [{label:'Run 2nd AI grader',cls:'btn-primary', on:()=>{ closeModal(); toast('ok','2nd AI grading queued — dossier will appear here on completion.'); logAudit('grading.appeal_2nd_ai', sid, deliv); }},
+     {label:'Send to human adjudication',cls:'btn-secondary', on:()=>{ closeModal(); toast('ok','Appeal escalated to DK for adjudication.'); logAudit('grading.appeal_human', sid, deliv); }},
+     {label:'Close',cls:'btn-secondary', on:closeModal}]);
+}
+
+function runGradingPass(){
+  toast('info','Starting grading pass — this will take ~ 10–20 min on a full cohort.');
+  ADMIN_API.runGradingPass().then(r => {
+    toast('ok', 'Grading pass complete — ' + r.dossiers_written + ' dossiers written in ' + r.time_elapsed_sec + ' s.');
+    logAudit('grading.pass', 'all', r.dossiers_written + ' dossiers');
+    renderGrading();
+  });
+}
+
+function pullAuditSample(){
+  ADMIN_API.pullAuditSample().then(r => {
+    toast('ok','New stratified audit sample pulled — ' + r.sample_size + ' dossiers queued for TA blind review.');
+    logAudit('grading.audit_pull', 'all', r.sample_size + ' dossiers');
+    renderGrading();
+  });
+}
+
+function exportGradingCsv(){
+  const header = 'student_id,name,track,a0,a1,track_sub,f160,total,audit,confidence\n';
+  const rows = (DEMO_GRADING.students||[]).map(s => {
+    const r = rosterById(s.sid) || {};
+    const total = (s.a0||0)+(s.a1||0)+(s.track_sub||0)+(s.f160||0);
+    return [s.sid, r.name||'', (r.track||'').split('·')[0].trim(),
+            s.a0, s.a1, s.track_sub, s.f160, total,
+            s.audit||'', s.conf||''].map(v => '"'+String(v).replace(/"/g,'""')+'"').join(',');
+  }).join('\n');
+  const csv = header + rows;
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'grading_' + new Date().toISOString().slice(0,10) + '.csv'; a.click();
+  URL.revokeObjectURL(url);
+  logAudit('grading.export', 'all', (DEMO_GRADING.students||[]).length + ' rows');
 }
 
 /* ─── Announcements ─── */
@@ -2102,6 +2515,7 @@ function bootAdminUI(){
   renderLoginPicker();
   renderMatrix();
   renderGrades();
+  renderGrading();   /* primes the Grading tab count chip */
   renderAnnouncements();
   renderAudit();
   renderAccess();
