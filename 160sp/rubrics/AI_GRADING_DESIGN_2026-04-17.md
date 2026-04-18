@@ -277,13 +277,36 @@ This is as important as what we will ask it to grade. Based on failure modes doc
 
 ---
 
-## 10. Cost and latency
+## 10. Cost and latency — amended per DK 2026-04-17
 
-A per-deliverable grading pass on a typical submission uses ~ 12 k–25 k input tokens (rubric + spec + exemplars + submission + history) and ~ 2 k output tokens (dossier). At current Claude-Opus-4.6 pricing (as of April 2026), that is roughly $0.15–$0.30 per dossier. A class of 40 students across 30 deliverables over the sprint is ~ 1200 dossiers, costing ~ $180–$360 total. The audit re-grades at 20 % add ~ $36–$72.
+DK's decision: **the grading LLM runs on DK's Claude subscription, not the Anthropic API**. Per-dossier marginal cost is therefore zero. The orchestration model changes accordingly.
 
-Latency per dossier is ~ 30–90 seconds of model time. With batch concurrency set at 8 (per the root CLAUDE.md Parallel Execution rule), a full class's weekly grading completes in ~ 10–20 minutes.
+### Subscription-LLM orchestration (adopted)
 
-This is inexpensive compared to the TA time it replaces. The budget item worth scrutinising is the calibration set build (one-time ~ 30 hours of track-lead time) and the audit (weekly ~ 3–4 hours of TA time across the class). Both are irreplaceable.
+Instead of a Python script that calls `anthropic.messages.create()` per dossier, the grader is a two-part system:
+
+1. **Python orchestrator** at `scripts/ai_grader.py` — pure Python, no API calls. Discovers ungraded submissions, builds one self-contained prompt "briefing" per submission, manages a file-based queue at `160sp/grading/{queue,in_progress,done}/`. The briefing bundles the rubric, the machine-readable spec, the student's prior submissions, the exemplar paths, the canonical grading prompt, and the exact output-dossier path.
+2. **Agent-dispatch master session** — a Claude Code or Cowork conversation (running on DK's subscription) reads the queue and spawns one subagent per briefing via the Task/Agent tool. Each subagent is a fresh Claude conversation that consumes the briefing, reads the submission evidence, and writes the dossier to the specified path, then shells out to `python3 scripts/ai_grader.py complete {sid} {deliv}` to close the loop.
+
+See `scripts/run_grading_pass.md` for the concrete commands a Cowork session runs to drive a full pass.
+
+### Cost at quarter scale
+
+Under the subscription model, per-dossier marginal cost is zero. The budget item to scrutinise is (a) the calibration-set build (~ 30 hours of track-lead time), (b) the weekly TA audit (~ 3–4 hours), and (c) the master-session context tokens (which count against the subscription's rate limits but not a per-token bill). A full 40-student × 30-deliverable quarter (~ 1,200 dossiers) runs comfortably within a standard Claude subscription's rate limits if dispatched over 8–10 passes spread across the quarter, rather than one big end-of-quarter pass.
+
+### Latency
+
+Per-dossier latency is ~ 30–90 seconds of subagent runtime plus ~ 3–5 seconds of master-session dispatch. With 8-way parallel dispatch, a full class's weekly grading completes in ~ 10–20 minutes. This is the same as the API-based design; the subscription path does not add latency beyond dispatch overhead.
+
+### Why subscription beats API for this use case
+
+Three reasons worth recording:
+
+1. **Fixed cost.** The subscription is fixed-cost; API usage is per-token. For a class that runs once a year, the amortised cost difference is real.
+2. **Human-oversight-friendly.** Every dispatch is visible in the Cowork or Claude Code master session. DK or a TA can watch it happen, pause mid-pass, or interject. API-driven batch scripts run silently and are harder to inspect.
+3. **No key management.** Nothing to rotate, nothing to accidentally leak into a public commit.
+
+The trade-off is that dispatching requires an attended master session rather than a cron job. For COGS 160 at this scale, that is a feature (human oversight is the point), not a bug.
 
 ---
 

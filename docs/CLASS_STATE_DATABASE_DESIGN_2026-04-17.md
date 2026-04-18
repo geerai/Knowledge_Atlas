@@ -304,7 +304,7 @@ Three concerns, all addressable.
 
 **PII minimisation**. Emails, real names, and student IDs are the obvious PII. Nothing else should be in the database without a clear need. In particular, do not store: home addresses (work addresses are OK if the student volunteers one), phone numbers (unless the student opts in for SMS notifications), government IDs (no). The grading data itself — scores, dossier text — is educational record, not PII in the narrow sense, but is still covered under FERPA.
 
-**Deletion on withdrawal**. When a student drops, their `enrollments.status` flips to `dropped` but the rows are not deleted. Hard deletion happens at the three-year retention boundary, implemented by a cron job that runs on July 1 each year.
+**Deletion on withdrawal**. When a student drops, their `enrollments.status` flips to `dropped` but the rows are not deleted. Hard deletion is *not* automated. Per DK (2026-04-17), records are retained on a 5 TB external disk for the UC-schedule-compliant five-year minimum, and hard-deletion candidates are surfaced by `scripts/destruction_list.py` (to be written in 2027) for manual review and destruction by the instructor on July 1 of the sixth year after each quarter. See `docs/END_OF_QUARTER_WORKFLOW_2026-04-18.md` for the archival layout on the 5T disk.
 
 ---
 
@@ -331,13 +331,15 @@ Total ~ 500 lines plus the schema. The read-flip per tab follows in subsequent c
 
 ---
 
-## 9. What this does not solve
+## 9. What this does not solve — amended per DK 2026-04-17
 
-Three things the DB does not by itself fix:
+Three things the DB does not by itself fix; two of the three now have a directional decision from DK.
 
-1. **SSO wiring.** Authentication still has to happen, and the `ka_sso_stub.py` Shibboleth scaffold is a scaffold. Wiring it to real UCSD Shibboleth is a separate sprint and needs instructor-of-record credentials on the Shib side.
-2. **The AI grader's actual LLM calls.** `scripts/ai_grader.py` still needs to be written. The DB provides the read/write surface; the grader consumes and produces rows against that surface, but the prompt orchestration and API budget management are their own problem.
-3. **The Fall-handoff policy.** When Spring 2026 ends, we need a policy decision on what transfers to Fall 2026: enrollments roll over? Grade dossiers are archived read-only? Student accounts persist? The DB allows any of these; the policy has to be decided.
+1. **SSO wiring.** Shibboleth is the end-state; interim auth is a password DK sets per user, validated against `data/ka_auth.db`'s existing credentials surface. See `docs/SHIBBOLETH_INTERIM_NOTE_2026-04-18.md` for where UCSD Shib credentials come from and what it takes to go live.
+2. **The AI grader's LLM calls.** Resolved: the grader runs on DK's Claude subscription, not the API. `scripts/ai_grader.py` is the Python orchestrator (written); `scripts/run_grading_pass.md` documents how a Cowork / Claude Code master session dispatches per-briefing subagents against the subscription. See the amended §10 of `160sp/rubrics/AI_GRADING_DESIGN_2026-04-17.md` for the full architecture.
+3. **Cohort handoff.** Resolved (DK 2026-04-17): the course **does not roll over**. Each offering is independent. Spring 2026 records do not migrate to Fall 2026; Fall starts with an empty class-state schema populated from the new roster and new rubrics. Student user accounts may persist across offerings (a student taking both) but every row in every class-state table carries `offering_id` and queries that omit it are bugs. End-of-quarter grade export goes to eGrades via `scripts/export_egrades.py`; archival goes to the 5T external disk per `docs/END_OF_QUARTER_WORKFLOW_2026-04-18.md`.
+
+The only remaining undecided item on this list is Shibboleth, and that is a scheduling question (when to invest the sprint), not a design question.
 
 ---
 
