@@ -91,6 +91,45 @@
   .mv-item.dimmed{opacity:0.35}
   .mv-item .mv-sub{font-size:0.76rem;color:#6B6B6B;margin-top:2px}
 
+  /* ── Pattern 5: Progressive-disclosure facets ── */
+  .pd-stage{background:#F9F5EE;border-radius:8px;padding:18px 20px;margin-bottom:14px}
+  .pd-stage.gated{opacity:0.5;pointer-events:none}
+  .pd-stage h4{font-family:Georgia,serif;color:#1C3D3A;font-size:1.0rem;margin-bottom:4px}
+  .pd-stage .pd-sub{color:#6B6B6B;font-size:0.85rem;margin-bottom:12px}
+  .pd-entry-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media (max-width:720px){.pd-entry-row{grid-template-columns:1fr}}
+  .pd-entry-btn{background:#fff;border:1.5px solid #D8D0C5;border-radius:8px;
+                padding:16px 18px;cursor:pointer;text-align:left;transition:all 0.12s;
+                font-family:inherit;color:#2C2C2C}
+  .pd-entry-btn:hover{border-color:#2A7868;background:#E6F5F0}
+  .pd-entry-btn .label{font-family:Georgia,serif;font-weight:700;color:#1C3D3A;
+                        font-size:0.98rem;margin-bottom:4px;display:block}
+  .pd-entry-btn .sub{color:#6B6B6B;font-size:0.82rem;display:block}
+  .pd-group{margin-bottom:10px;background:#fff;border-radius:6px;
+            border:1px solid #E0D8CC;overflow:hidden}
+  .pd-group-head{padding:9px 14px;cursor:pointer;display:flex;
+                  justify-content:space-between;align-items:center;
+                  background:#FAF7F0}
+  .pd-group-head:hover{background:#F4EFE4}
+  .pd-group-head .pd-caret{font-size:0.8rem;color:#8A9A96;margin-right:6px}
+  .pd-group-head.expanded .pd-caret{transform:rotate(90deg);display:inline-block;transition:transform 0.15s}
+  .pd-group-head .pd-name{font-weight:600;color:#1C3D3A;font-size:0.9rem}
+  .pd-group-head .pd-count{color:#6B6B6B;font-size:0.78rem}
+  .pd-group-body{padding:8px 14px 12px;display:none}
+  .pd-group-body.open{display:block}
+  .pd-crumb{display:flex;align-items:center;flex-wrap:wrap;gap:6px;
+            margin-bottom:14px;font-size:0.86rem}
+  .pd-crumb .crumb-item{background:#fff;border:1px solid #D8D0C5;padding:4px 10px;
+                         border-radius:14px;color:#1C3D3A}
+  .pd-crumb .crumb-item .crumb-label{color:#8A9A96;font-size:0.74rem;
+                                      letter-spacing:0.04em;margin-right:4px}
+  .pd-crumb .crumb-sep{color:#D0D0D0;font-size:0.82rem;margin:0 2px}
+  .pd-reset{font-size:0.78rem;color:#2A7868;cursor:pointer;margin-left:auto}
+  .pd-reset:hover{text-decoration:underline}
+  .pd-escape{font-size:0.78rem;color:#6B6B6B;text-align:right;margin-top:8px}
+  .pd-escape a{color:#2A7868;cursor:pointer}
+  .pd-escape a:hover{text-decoration:underline}
+
   /* ── Pattern 4: Bidirectional lookup ── */
   .bidir{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
   @media (max-width:640px){.bidir{grid-template-columns:1fr}}
@@ -235,6 +274,21 @@
   </div>
 </div>
 
+<!-- ═══ Pattern 5: Progressive-disclosure facets (added 2026-04-18 per DK) ═══ -->
+<div class="pattern">
+  <div class="pattern-header">
+    <span class="pattern-num">5.</span>
+    <span class="pattern-title">Progressive-disclosure facets (Nielsen / Krug / Hearst)</span>
+  </div>
+  <p class="pattern-desc">
+    The same faceted-filter idea as Pattern 2, but staged so the user never sees more than one decision at a time. The page opens with a single entry question ("where would you like to start?"), reveals only the first facet when the user commits to an entry path, groups its chips into plain-language categories shown as collapsed accordions, and unlocks the second facet and the bundle list only after the first selection. A breadcrumb lets the user back up; a small "show all facets" escape hatch jumps the power user to the full Pattern-2 surface. The underlying surface is the same crosswalk — what changes is the cognitive load at each moment.
+  </p>
+  <div id="pattern5"></div>
+  <div class="tradeoffs">
+    <b>Best for:</b> first-time visitors, mobile users, and domains where the vocabulary is jargon to newcomers. Scaffolds the user through the decision rather than presenting everything at once. The breadcrumb teaches the taxonomy as a side effect. <b>Weak for:</b> power users who already know what they want — for them the extra click-through is friction; the "show all facets" escape hatch exists precisely to let them bypass the scaffold. <b>Design lineage:</b> Nielsen (1994) on minimalist design and progressive disclosure; Krug (2014) on "don't make me think"; Hearst (2009) §4 on faceted-search overwhelm-prevention; Wroblewski (2008) on form-design progressive reveal.
+  </div>
+</div>
+
 <!-- ═══ Comparison ═══ -->
 <h2>Comparison and recommendation</h2>
 
@@ -272,11 +326,17 @@
       <td>Users who want to combine filters or see the whole surface</td>
       <td>Very low (~ 50 lines, pure HTML select + one handler each)</td>
     </tr>
+    <tr style="background:#FEF3E2">
+      <td><b>5. Progressive-disclosure facets</b></td>
+      <td>First-time visitors in a jargon-heavy domain; novices; mobile; overwhelm-prevention</td>
+      <td>Power users (but they get a one-click escape to Pattern 2)</td>
+      <td>Medium-high (~ 280 lines; staged state machine; accordion animations)</td>
+    </tr>
   </tbody>
 </table>
 
 <div class="design-note" style="margin-top:20px">
-  <b>My recommendation.</b> Use <b>Pattern 2 (faceted filter)</b> as the default entry on <code>ka_topics.html</code>, with <b>Pattern 1 (heatmap)</b> available as a secondary tab labelled <em>Coverage map</em>. Rationale: Pattern 2 serves the intent-driven user well, covers the three entry modes Codex's contract requires (outcome-first, architecture-first, bundle-first — all collapse to facet-first), and the chip counts surface the coverage information the heatmap also shows, just in a different modality. The heatmap as a secondary view gives the audit-minded reader (the instructor, the TA, the reviewer) the honest gap-assessment view the student doesn't need every time. Pattern 3 is over-specified for the 102-row scale and belongs to a later iteration when the corpus grows. Pattern 4 is suitable for a landing-page widget but not for the full topic page.
+  <b>Updated recommendation (2026-04-18, after DK raised the overwhelm concern).</b> Use <b>Pattern 5 (progressive-disclosure facets)</b> as the default landing view on <code>ka_topics.html</code>, with a prominent "Show all facets" link that jumps to <b>Pattern 2 (full faceted filter)</b> for users who know the vocabulary. Keep <b>Pattern 1 (heatmap)</b> as a secondary tab labelled <em>Coverage map</em> for audit-minded readers. Rationale: Pattern 5 scaffolds the user through the decision without hiding the option to see everything at once. The first screen is a single three-way question that orients the user to the bridge's two axes; the accordion grouping of outcomes into four plain-language categories (Cognitive, Affective, Physiological & Health, Behavioural, Other) relabels the taxonomy in terms a non-specialist can read; the orthogonal-facet reveal shows only options with defended bundles, so the user never clicks into a cell that's in the evidence gap; and the breadcrumb both confirms the user's path and teaches the structure. Pattern 2 remains available one click away for the power-user case, which is the right trade-off per Krug's "don't make me think" principle — default to the path that never makes the user think, escape-hatch the advanced view for users who already have. Pattern 3 stays deferred; Pattern 4 is suitable for a landing-page widget but not for the full topic page.
 </div>
 
 <!-- ═══ References ═══ -->
@@ -288,12 +348,14 @@
     <li>Few, S. (2012). <em>Show me the numbers: Designing tables and graphs to enlighten</em> (2nd ed.). Analytics Press. <span class="cite">GS: 1,100+</span></li>
     <li>Hearst, M. A. (2009). <em>Search user interfaces</em>. Cambridge University Press. https://doi.org/10.1017/CBO9781139644082 <span class="cite">GS: 2,800+</span></li>
     <li>Keim, D. A., Mansmann, F., Schneidewind, J., Thomas, J., &amp; Ziegler, H. (2008). Visual analytics: Scope and challenges. In <em>Visual data mining</em> (pp. 76–90). Springer. https://doi.org/10.1007/978-3-540-71080-6_6 <span class="cite">GS: 1,600+</span></li>
+    <li>Krug, S. (2014). <em>Don't make me think, revisited: A common sense approach to web usability</em> (3rd ed.). New Riders. <span class="cite">GS: 5,700+</span></li>
     <li>Munzner, T. (2014). <em>Visualization analysis and design</em>. CRC Press. https://doi.org/10.1201/b17511 <span class="cite">GS: 3,800+</span></li>
     <li>Norman, D. A. (2013). <em>The design of everyday things</em> (Revised &amp; expanded ed.). Basic Books. (Original work published 1988.) <span class="cite">GS: 48,000+</span></li>
     <li>Roberts, J. C. (2007). State of the art: Coordinated and multiple views in exploratory visualization. <em>Proceedings of the Fifth International Conference on Coordinated and Multiple Views in Exploratory Visualization (CMV 2007)</em>, 61–71. https://doi.org/10.1109/CMV.2007.20 <span class="cite">GS: 920+</span></li>
     <li>Shneiderman, B. (1994). Dynamic queries for visual information seeking. <em>IEEE Software</em>, 11(6), 70–77. https://doi.org/10.1109/52.329404 <span class="cite">GS: 2,400+</span></li>
     <li>Tufte, E. R. (1983). <em>The visual display of quantitative information</em>. Graphics Press. <span class="cite">GS: 17,000+</span></li>
     <li>Tufte, E. R. (2006). <em>Beautiful evidence</em>. Graphics Press. <span class="cite">GS: 4,100+</span></li>
+    <li>Wroblewski, L. (2008). <em>Web form design: Filling in the blanks</em>. Rosenfeld Media. <span class="cite">GS: 640+</span></li>
   </ol>
 </div>
 
@@ -322,6 +384,7 @@ async function init() {
   renderFaceted(rows, outcomes, families);
   renderMultiview(rows, outcomes, families);
   renderBidirectional(rows, outcomes, families);
+  renderProgressiveDisclosure(rows, outcomes, families);
 }
 
 // ═══ Pattern 1: Heatmap ═══
@@ -555,6 +618,229 @@ function renderBidirectional(rows, outcomes, families) {
     }
     document.getElementById('bidir-family-output').innerHTML = html || '<div style="color:#6B6B6B">No matches.</div>';
   });
+}
+
+// ═══ Pattern 5: Progressive-disclosure facets ═══
+//
+// Stages:
+//   0  entry         — three tiles: outcome-first / architecture-first / show me everything
+//   1a outcome-first — only outcome accordion visible; pick one outcome
+//   1b arch-first    — only family chips visible; pick one family
+//   2  orthogonal    — the other facet revealed, filtered to matching values
+//   3  results       — defended bundle list
+//
+// State is kept in a single plain object so the render can be driven
+// from a single redraw() call. Clicking the breadcrumb or the reset
+// link returns to stage 0.
+function renderProgressiveDisclosure(rows, outcomes, families) {
+  const state = {stage: 0, entry: null, outcome: null, family: null};
+
+  // Plain-language grouping of the 18 outcome labels into 4 categories.
+  // Prefix-based: cog.* → Cognitive; affect.* → Affective/Emotional;
+  // physio, neural, health → Physiological; everything else → Other.
+  const groupFor = (outcomeId) => {
+    const k = (outcomeId || '').toLowerCase();
+    if (k.startsWith('cog.')) return 'Cognitive outcomes';
+    if (k.startsWith('affect.')) return 'Affective / emotional outcomes';
+    if (k === 'physio' || k === 'neural' || k === 'health') return 'Physiological & health outcomes';
+    if (k.startsWith('behav.')) return 'Behavioural outcomes';
+    return 'Other / cross-cutting';
+  };
+
+  const redraw = () => {
+    const root = document.getElementById('pattern5');
+    let html = '';
+
+    // ── Breadcrumb (visible from stage 1 onward) ──────────────
+    if (state.stage > 0) {
+      html += '<div class="pd-crumb">';
+      if (state.outcome) {
+        const o = outcomes.find(x => x.outcome_term_id === state.outcome);
+        html += `<span class="crumb-item"><span class="crumb-label">OUTCOME</span>${o ? o.outcome_label : state.outcome}</span>`;
+      }
+      if (state.family) {
+        if (state.outcome) html += '<span class="crumb-sep">›</span>';
+        const f = families.find(x => x.iv_root === state.family);
+        html += `<span class="crumb-item"><span class="crumb-label">ARCHITECTURE</span>${f ? (f.iv_root_label || f.iv_root) : state.family}</span>`;
+      }
+      html += `<span class="pd-reset" onclick="__pdReset()">start over</span>`;
+      html += '</div>';
+    }
+
+    // ── Stage 0: entry tiles ──────────────────────────────────
+    if (state.stage === 0) {
+      html += `<div class="pd-stage">
+        <h4>Where would you like to start?</h4>
+        <div class="pd-sub">Pick whichever axis feels more natural. You can change your mind at any step.</div>
+        <div class="pd-entry-row">
+          <button class="pd-entry-btn" onclick="__pdEntry('outcome')">
+            <span class="label">A specific outcome I care about</span>
+            <span class="sub">Stress, attention, wellbeing, sleep, restoration, comfort, preference, navigation…</span>
+          </button>
+          <button class="pd-entry-btn" onclick="__pdEntry('family')">
+            <span class="label">An architectural feature I'm curious about</span>
+            <span class="sub">Luminous, acoustic, spatial form, natural elements, material, thermal…</span>
+          </button>
+          <button class="pd-entry-btn" onclick="__pdEntry('overview')">
+            <span class="label">Show me the landscape</span>
+            <span class="sub">Jumps to the full faceted view (Pattern 2 above). For when you know the vocabulary already.</span>
+          </button>
+        </div>
+      </div>`;
+      root.innerHTML = html;
+      return;
+    }
+
+    // ── Stage 1: first facet, grouped accordion ───────────────
+    if (state.entry === 'outcome' && !state.outcome) {
+      html += `<div class="pd-stage">
+        <h4>Which outcome?</h4>
+        <div class="pd-sub">Outcomes are grouped by category. Click a category to expand its options.</div>`;
+      // Group outcomes
+      const groups = {};
+      for (const o of outcomes) {
+        const g = groupFor(o.outcome_term_id);
+        (groups[g] = groups[g] || []).push(o);
+      }
+      for (const [gName, gOutcomes] of Object.entries(groups)) {
+        const totalPapers = gOutcomes.reduce((s,o)=>s+(o.paper_count||0),0);
+        const gSlug = gName.replace(/[^a-z]/gi,'');
+        html += `<div class="pd-group">
+          <div class="pd-group-head" onclick="__pdToggleGroup('${gSlug}')" id="pdhead-${gSlug}">
+            <span><span class="pd-caret">▸</span><span class="pd-name">${gName}</span></span>
+            <span class="pd-count">${gOutcomes.length} option${gOutcomes.length===1?'':'s'} · ${totalPapers} papers</span>
+          </div>
+          <div class="pd-group-body" id="pdbody-${gSlug}">`;
+        for (const o of gOutcomes) {
+          html += `<span class="chip" onclick="__pdPick('outcome','${o.outcome_term_id}')">${o.outcome_label} <span class="count">${o.paper_count}</span></span>`;
+        }
+        html += `</div></div>`;
+      }
+      html += `<div class="pd-escape">Prefer everything at once? <a onclick="__pdEntry('overview')">Show all facets</a></div>`;
+      html += `</div>`;
+      root.innerHTML = html;
+      return;
+    }
+
+    if (state.entry === 'family' && !state.family) {
+      html += `<div class="pd-stage">
+        <h4>Which architectural feature?</h4>
+        <div class="pd-sub">Nine families. Pick the one closest to your interest.</div>`;
+      for (const f of families) {
+        html += `<span class="chip" onclick="__pdPick('family','${f.iv_root}')">${f.iv_root_label || f.iv_root} <span class="count">${f.paper_count} papers · ${f.topic_ids ? f.topic_ids.length : 0} bundles</span></span>`;
+      }
+      html += `<div class="pd-escape">Prefer everything at once? <a onclick="__pdEntry('overview')">Show all facets</a></div>`;
+      html += `</div>`;
+      root.innerHTML = html;
+      return;
+    }
+
+    // ── Stage 2: orthogonal facet (matching only) + stage 3 results ──
+    // Determine the orthogonal filtered list
+    let matchingRows;
+    if (state.outcome && !state.family) {
+      matchingRows = rows.filter(r => (r.outcome_term_id || r.dv_focus) === state.outcome);
+      const matchingFamilyIds = [...new Set(matchingRows.map(r => r.iv_root))];
+      const matchingFamilies = families.filter(f => matchingFamilyIds.includes(f.iv_root));
+      html += `<div class="pd-stage">
+        <h4>Now: which architectural feature?</h4>
+        <div class="pd-sub">Only families with defended bundles for this outcome are shown.</div>`;
+      for (const f of matchingFamilies) {
+        const n = matchingRows.filter(r => r.iv_root === f.iv_root).length;
+        html += `<span class="chip" onclick="__pdPick('family','${f.iv_root}')">${f.iv_root_label || f.iv_root} <span class="count">${n} bundle${n===1?'':'s'}</span></span>`;
+      }
+      if (matchingFamilies.length === 0) {
+        html += `<div class="pd-sub">No defended bundles for this outcome yet. Try another outcome.</div>`;
+      }
+      html += `<div style="margin-top:10px;font-size:0.82rem;color:#6B6B6B">Or <a style="color:#2A7868;cursor:pointer" onclick="__pdShowBundles()">show all ${matchingRows.length} bundles for this outcome</a> without filtering by architecture.</div></div>`;
+      root.innerHTML = html;
+      return;
+    }
+    if (state.family && !state.outcome) {
+      matchingRows = rows.filter(r => r.iv_root === state.family);
+      const matchingOutcomeIds = [...new Set(matchingRows.map(r => r.outcome_term_id || r.dv_focus))];
+      const matchingOutcomes = outcomes.filter(o => matchingOutcomeIds.includes(o.outcome_term_id));
+      html += `<div class="pd-stage">
+        <h4>Now: which outcome?</h4>
+        <div class="pd-sub">Only outcomes with defended bundles for this architectural family are shown.</div>`;
+      const groups = {};
+      for (const o of matchingOutcomes) {
+        const g = groupFor(o.outcome_term_id);
+        (groups[g] = groups[g] || []).push(o);
+      }
+      for (const [gName, gOutcomes] of Object.entries(groups)) {
+        for (const o of gOutcomes) {
+          const n = matchingRows.filter(r => (r.outcome_term_id||r.dv_focus) === o.outcome_term_id).length;
+          html += `<span class="chip" onclick="__pdPick('outcome','${o.outcome_term_id}')">${o.outcome_label} <span class="count">${n} bundle${n===1?'':'s'}</span></span>`;
+        }
+      }
+      if (matchingOutcomes.length === 0) {
+        html += `<div class="pd-sub">No defended bundles for this family yet. Try another.</div>`;
+      }
+      html += `<div style="margin-top:10px;font-size:0.82rem;color:#6B6B6B">Or <a style="color:#2A7868;cursor:pointer" onclick="__pdShowBundles()">show all ${matchingRows.length} bundles for this family</a> without filtering by outcome.</div></div>`;
+      root.innerHTML = html;
+      return;
+    }
+
+    // Stage 3: both axes chosen (or user clicked "show all bundles") — results
+    matchingRows = rows.slice();
+    if (state.outcome) matchingRows = matchingRows.filter(r => (r.outcome_term_id || r.dv_focus) === state.outcome);
+    if (state.family)  matchingRows = matchingRows.filter(r => r.iv_root === state.family);
+    matchingRows.sort((a,b)=>(b.paper_count||0)-(a.paper_count||0));
+
+    html += `<div class="pd-stage">
+      <h4>Defended bundles (${matchingRows.length})</h4>`;
+    if (!matchingRows.length) {
+      html += '<div class="pd-sub">No bundles match this combination. Either this cell is in the evidence gap, or the crosswalk has not yet defended a bundle here. Try adjusting one of the facets above.</div>';
+    } else {
+      for (const r of matchingRows.slice(0, 10)) {
+        const pill = r.evidence_status === 'defended' ? 'status-pill' :
+                     r.evidence_status === 'mixed' ? 'status-pill mixed' :
+                     'status-pill unresolved';
+        html += `<div class="bundle-row">
+          <div class="bundle-title">${r.topic_label || r.topic_id}
+            <span class="${pill}">${r.evidence_status || 'working'}</span></div>
+          <div class="bundle-meta">${r.outcome_label} × ${r.iv_root_label || r.iv_root} ·
+            <b>${r.paper_count || 0}</b> paper${r.paper_count===1?'':'s'}
+            ${r.defended_paper_count ? `· <b>${r.defended_paper_count}</b> defended` : ''}</div>
+        </div>`;
+      }
+      if (matchingRows.length > 10) {
+        html += `<div class="bundle-row" style="color:#6B6B6B;text-align:center">… and ${matchingRows.length-10} more</div>`;
+      }
+    }
+    html += `</div>`;
+    root.innerHTML = html;
+  };
+
+  window.__pdEntry = (which) => {
+    if (which === 'overview') {
+      // Scroll to Pattern 2
+      document.getElementById('pattern2-facets').scrollIntoView({behavior:'smooth', block:'start'});
+      return;
+    }
+    state.entry = which;
+    state.stage = 1;
+    redraw();
+  };
+  window.__pdPick = (kind, val) => {
+    state[kind] = val;
+    state.stage = (state.outcome && state.family) ? 3 : 2;
+    redraw();
+  };
+  window.__pdShowBundles = () => { state.stage = 3; redraw(); };
+  window.__pdReset = () => {
+    state.stage = 0; state.entry = null; state.outcome = null; state.family = null;
+    redraw();
+  };
+  window.__pdToggleGroup = (slug) => {
+    const head = document.getElementById('pdhead-' + slug);
+    const body = document.getElementById('pdbody-' + slug);
+    head.classList.toggle('expanded');
+    body.classList.toggle('open');
+  };
+
+  redraw();
 }
 
 init();
