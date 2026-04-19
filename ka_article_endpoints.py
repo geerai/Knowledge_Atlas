@@ -19,7 +19,7 @@ APIRouter.  It adds:
 See docs/ARTICLE_SUBMISSION_MODULE_SPEC_2026-03-30.md for the full contract.
 """
 
-import hashlib, json, os, re, secrets, shutil, sqlite3
+import hashlib, json, os, re, secrets, shutil, sqlite3, sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional, List
@@ -27,6 +27,17 @@ from typing import Optional, List
 from fastapi import APIRouter, HTTPException, Depends, UploadFile, File, Form, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
+
+
+REPO_ROOT = Path(__file__).resolve().parent
+ATLAS_SHARED_SRC = REPO_ROOT.parent / "atlas_shared" / "src"
+if str(ATLAS_SHARED_SRC) not in sys.path:
+    sys.path.insert(0, str(ATLAS_SHARED_SRC))
+
+from atlas_shared.classifier_system import (  # type: ignore[import-not-found]
+    AdaptiveClassifierSubsystem,
+    ClassificationEvidence,
+)
 
 # ════════════════════════════════════════════════
 # CONFIG — overridable via environment variables
@@ -1467,112 +1478,89 @@ def _update_claim_counts(db, user_id: str, question_id: str):
 # AUTOMATIC ARTICLE TYPE CLASSIFICATION
 # ════════════════════════════════════════════════
 
-# Keywords strongly associated with experimental papers
-_EXP_KEYWORDS = {
-    "participants", "experiment", "experiments", "experimental", "randomized",
-    "randomised", "randomly assigned", "controlled trial", "rct", "anova",
-    "t-test", "t test", "chi-square", "regression analysis", "sample size",
-    "n =", "n=", "between-subjects", "within-subjects", "repeated measures",
-    "condition", "conditions", "manipulation", "manipulated", "stimulus",
-    "stimuli", "pre-test", "post-test", "pretest", "posttest", "baseline",
-    "intervention", "dependent variable", "independent variable", "effect size",
-    "cohen's d", "eta squared", "significant difference", "p <", "p<", "p =",
-    "findings suggest", "results showed", "results indicated", "was measured",
-    "were measured", "performance was", "reaction time", "accuracy was",
-    "eye tracking", "eye-tracking", "fmri", "eeg", "galvanic skin",
-    "physiological", "behavioral measure", "self-report", "likert",
-    "questionnaire", "survey instrument", "recruited", "enrolled",
-    "informed consent", "irb", "ethics committee", "exclusion criteria",
-    "inclusion criteria", "control group", "experimental group",
-    "treatment group", "placebo", "double-blind", "single-blind",
-    "counterbalanced", "latin square", "factorial design", "mixed design",
-    "between-group", "within-group", "lab study", "laboratory study",
-    "field experiment", "quasi-experiment", "longitudinal study",
-    "cross-sectional study", "cohort study", "observational study"
-}
+_SHARED_ARTICLE_CLASSIFIER: AdaptiveClassifierSubsystem | None = None
 
-# Keywords associated with reviews and meta-analyses
-_REVIEW_KEYWORDS = {
-    "systematic review", "meta-analysis", "meta analysis", "literature review",
-    "scoping review", "narrative review", "reviewed the literature",
-    "databases were searched", "prisma", "search strategy", "inclusion criteria",
-    "exclusion criteria for studies", "studies were identified", "studies met",
-    "effect sizes were", "pooled effect", "heterogeneity", "funnel plot",
-    "publication bias", "forest plot", "quality assessment", "risk of bias",
-    "we reviewed", "this review", "review of the literature"
-}
 
-# Keywords associated with theoretical papers
-_THEORY_KEYWORDS = {
-    "theoretical framework", "we propose", "we argue", "conceptual model",
-    "conceptual framework", "theoretical model", "theory of", "we theorize",
-    "philosophical", "epistemological", "ontological", "we contend",
-    "thought experiment", "framework for understanding", "taxonomy of",
-    "typology of", "we develop a", "integrative model", "computational model"
-}
+def _get_shared_article_classifier() -> AdaptiveClassifierSubsystem:
+    global _SHARED_ARTICLE_CLASSIFIER
+    if _SHARED_ARTICLE_CLASSIFIER is None:
+        _SHARED_ARTICLE_CLASSIFIER = AdaptiveClassifierSubsystem()
+    return _SHARED_ARTICLE_CLASSIFIER
+
+
+def _extract_abstract_from_text(text: str) -> str:
+    if not text.strip():
+        return ""
+    match = re.search(
+        r"(?i)\babstract\b[:\s]*(.{50,800}?)(?:\n\n|\bintroduction\b|\bkeywords\b)",
+        text,
+    )
+    if match:
+        return match.group(1).strip()
+    return text[:300].strip()
+
+
+def _extract_title_from_text(text: str, fallback: str = "") -> str:
+    if not text.strip():
+        return fallback
+    lines = [line.strip() for line in text.splitlines() if len(line.strip()) > 10]
+    if not lines:
+        return fallback
+    candidate = lines[0][:200]
+    if candidate.lower().startswith(("http", "doi", "volume", "journal")):
+        return fallback
+    return candidate if len(candidate) > 15 else fallback
+
+
+def _map_shared_article_type_to_ka_bucket(shared_label: str) -> str:
+    normalized = str(shared_label or "").strip().lower()
+    if normalized == "empirical_research":
+        return "experimental"
+    if normalized in {"systematic_review", "narrative_review"}:
+        return "review"
+    if normalized == "meta_analysis":
+        return "meta_analysis"
+    if normalized == "theoretical":
+        return "theory"
+    if normalized in {"commentary", "protocol", "case_study", "mixed_methods", "qualitative_research"}:
+        return "other"
+    if normalized in {"unknown", ""}:
+        return "unknown"
+    return "other"
+
+
+def _classify_article_payload(
+    *,
+    title: str = "",
+    abstract: str = "",
+    keywords: Optional[List[str]] = None,
+    text_surface: str = "",
+) -> dict:
+    evidence = ClassificationEvidence(
+        paper_id="",
+        title=title,
+        abstract=abstract,
+        keywords=tuple(keywords or ()),
+        first_page_text=text_surface[:3000].strip(),
+    )
+    result = _get_shared_article_classifier().classify(
+        evidence,
+        allow_surface_creation=False,
+    )
+    shared_label = result.article_type.value
+    return {
+        "article_type": _map_shared_article_type_to_ka_bucket(shared_label),
+        "canonical_article_type": shared_label,
+        "confidence": round(result.article_type.confidence, 2),
+        "signals": list(result.article_type.evidence),
+        "source": result.article_type.source,
+        "evidence_stage": result.evidence_stage,
+        "next_action": result.next_action,
+    }
 
 
 def _classify_article_type(text: str) -> dict:
-    """
-    Classify article type from abstract or full text using keyword heuristics.
-    Returns {"article_type": str, "confidence": float, "signals": list}.
-    """
-    if not text or len(text.strip()) < 20:
-        return {"article_type": "unknown", "confidence": 0.0, "signals": ["insufficient_text"]}
-
-    text_lower = text.lower()
-    signals = []
-
-    # Count keyword matches for each type
-    exp_hits = sum(1 for kw in _EXP_KEYWORDS if kw in text_lower)
-    rev_hits = sum(1 for kw in _REVIEW_KEYWORDS if kw in text_lower)
-    theory_hits = sum(1 for kw in _THEORY_KEYWORDS if kw in text_lower)
-
-    # Strong signals: methods section indicators
-    has_methods = bool(re.search(r'\b(method|methods|procedure|materials|design)\b', text_lower))
-    has_results = bool(re.search(r'\b(results|findings)\b', text_lower))
-    has_n_equals = bool(re.search(r'\bn\s*=\s*\d+', text_lower))
-    has_p_value = bool(re.search(r'p\s*[<>=]\s*[0-9.]', text_lower))
-
-    if has_methods:
-        signals.append("has_methods_section")
-    if has_results:
-        signals.append("has_results_section")
-    if has_n_equals:
-        signals.append("has_sample_size")
-        exp_hits += 3  # strong signal
-    if has_p_value:
-        signals.append("has_p_values")
-        exp_hits += 3  # strong signal
-
-    # Weighted scoring
-    exp_score = exp_hits
-    rev_score = rev_hits * 2  # review keywords are more specific
-    theory_score = theory_hits * 2
-
-    # Determine classification
-    if rev_score >= 4 and rev_score > exp_score:
-        article_type = "review" if "meta-analysis" not in text_lower and "meta analysis" not in text_lower else "meta_analysis"
-        confidence = min(0.95, 0.5 + rev_score * 0.05)
-        signals.append(f"review_keywords={rev_hits}")
-    elif exp_score >= 3:
-        article_type = "experimental"
-        confidence = min(0.95, 0.4 + exp_score * 0.03)
-        signals.append(f"exp_keywords={exp_hits}")
-    elif theory_score >= 4 and theory_score > exp_score:
-        article_type = "theory"
-        confidence = min(0.90, 0.4 + theory_score * 0.05)
-        signals.append(f"theory_keywords={theory_hits}")
-    elif exp_score >= 1 and has_methods and has_results:
-        article_type = "experimental"
-        confidence = 0.55
-        signals.append("weak_exp_with_methods_results")
-    else:
-        article_type = "unknown"
-        confidence = 0.2
-        signals.append("no_strong_signal")
-
-    return {"article_type": article_type, "confidence": round(confidence, 2), "signals": signals}
+    return _classify_article_payload(text_surface=text)
 
 
 def _extract_text_from_pdf_bytes(data: bytes, max_chars: int = 5000) -> str:
@@ -1738,18 +1726,15 @@ async def fetch_abstracts_and_classify(request: Request):
 
         # Extract text for classification
         extracted_text = _extract_text_from_pdf_bytes(content)
-        classification = _classify_article_type(extracted_text)
+        title = _extract_title_from_text(extracted_text, fallback=filename)
+        abstract = _extract_abstract_from_text(extracted_text)
+        classification = _classify_article_payload(
+            title=title,
+            abstract=abstract,
+            text_surface=extracted_text,
+        )
         art_type = classification["article_type"]
         art_confidence = classification["confidence"]
-
-        # Extract abstract (first ~500 chars after "abstract" keyword, or first paragraph)
-        abstract = ""
-        if extracted_text:
-            abs_match = re.search(r'(?i)\babstract\b[:\s]*(.{50,800}?)(?:\n\n|\bintroduction\b|\bkeywords\b)', extracted_text)
-            if abs_match:
-                abstract = abs_match.group(1).strip()
-            else:
-                abstract = extracted_text[:300].strip()
 
         # Get citation metadata if available
         meta = papers_meta[i] if i < len(papers_meta) else {}
@@ -1791,16 +1776,6 @@ async def fetch_abstracts_and_classify(request: Request):
         type_valid = 1
         if status == "staged_pending_review":
             qualifying_count += 1
-
-        # Extract title from text
-        title = filename
-        if extracted_text:
-            # First substantial line is often the title
-            lines = [l.strip() for l in extracted_text.split('\n') if len(l.strip()) > 10]
-            if lines:
-                candidate = lines[0][:200]
-                if len(candidate) > 15 and not candidate.lower().startswith(('http', 'doi', 'volume', 'journal')):
-                    title = candidate
 
         # Store in database
         db = _get_db()
@@ -1863,6 +1838,7 @@ async def fetch_abstracts_and_classify(request: Request):
             "title": title,
             "filename": filename,
             "article_type": art_type if art_type != "unknown" else "Other",
+            "canonical_article_type": classification["canonical_article_type"],
             "abstract": abstract[:300] if abstract else "Abstract not extracted",
             "pdf_present": True,
             "in_corpus": dup_result["is_duplicate"],
@@ -1929,7 +1905,10 @@ async def submit_title_only_papers(request: Request):
 
         # Classify from citation text (limited, but catches reviews/meta-analyses)
         classify_text = f"{title} {apa}"
-        classification = _classify_article_type(classify_text)
+        classification = _classify_article_payload(
+            title=title,
+            text_surface=classify_text,
+        )
         art_type = classification["article_type"]
         art_confidence = classification["confidence"]
 
@@ -1996,6 +1975,7 @@ async def submit_title_only_papers(request: Request):
         result_papers.append({
             "title": display_title,
             "article_type": art_type.capitalize() if art_type != "unknown" else "Unknown",
+            "canonical_article_type": classification["canonical_article_type"],
             "abstract": "Citation only — upload PDF for full abstract",
             "pdf_present": False,
             "in_corpus": dup_result["is_duplicate"],
@@ -2052,7 +2032,13 @@ async def classify_single_paper(request: Request):
 
     # Extract text and classify
     extracted_text = _extract_text_from_pdf_bytes(content)
-    classification = _classify_article_type(extracted_text)
+    title = _extract_title_from_text(extracted_text, fallback=filename)
+    abstract = _extract_abstract_from_text(extracted_text)
+    classification = _classify_article_payload(
+        title=title,
+        abstract=abstract,
+        text_surface=extracted_text,
+    )
 
     art_type = classification["article_type"]
     confidence = classification["confidence"]
@@ -2068,6 +2054,7 @@ async def classify_single_paper(request: Request):
         "filename": filename,
         "valid": True,
         "article_type": art_type,
+        "canonical_article_type": classification["canonical_article_type"],
         "confidence": confidence,
         "feedback": feedback,
         "is_experimental": art_type == "experimental",
