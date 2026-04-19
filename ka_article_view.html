@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Article — Knowledge Atlas</title>
+<script src="ka_canonical_navbar.js" defer></script>
+<script src="ka_user_type.js" defer></script>
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+       background:#F7F4EF;color:#2C2C2C;line-height:1.55}
+  main.ka-outer{max-width:880px;margin:24px auto 80px;padding:0 26px}
+
+  .art-breadcrumb{font-size:.82rem;color:#6B6B6B;margin-bottom:14px}
+  .art-breadcrumb a{color:#2A7868;text-decoration:none}
+  .art-breadcrumb a:hover{text-decoration:underline}
+
+  .art-type-pill{display:inline-block;font-size:.72rem;background:#E6F5F0;
+                  color:#1A7050;padding:3px 10px;border-radius:12px;
+                  font-weight:600;letter-spacing:.04em;margin-bottom:10px}
+
+  h1.art-title{font-family:Georgia,serif;font-size:1.9rem;color:#1C3D3A;
+               line-height:1.2;margin-bottom:10px}
+  .art-authors{font-size:.96rem;color:#2C2C2C;margin-bottom:4px}
+  .art-venue{font-size:.88rem;color:#6B6B6B;margin-bottom:14px}
+  .art-venue a{color:#2A7868;text-decoration:none}
+  .art-venue a:hover{text-decoration:underline}
+
+  .art-pid-stats{display:flex;flex-wrap:wrap;gap:12px 20px;font-size:.82rem;
+                  color:#6B6B6B;padding-bottom:14px;border-bottom:1px solid #E0D8CC;margin-bottom:22px}
+  .art-pid-stats .stat b{color:#1C3D3A}
+
+  h2.art-section{font-family:Georgia,serif;font-size:1.15rem;color:#1C3D3A;
+                  margin:26px 0 10px;padding-bottom:4px;border-bottom:1px solid #E0D8CC}
+  .art-body p{margin-bottom:10px}
+  .art-body .abstract{background:#fff;border-left:3px solid #2A7868;
+                       padding:14px 18px;border-radius:0 6px 6px 0;
+                       font-size:.95rem;line-height:1.6}
+
+  .kv{display:grid;grid-template-columns:140px 1fr;gap:8px 18px;
+      background:#fff;border:1px solid #E0D8CC;border-radius:8px;
+      padding:14px 18px;font-size:.88rem;margin-bottom:14px}
+  .kv dt{color:#8A9A96;font-weight:600;letter-spacing:.02em}
+  .kv dd{color:#1C3D3A}
+
+  .tag-row{display:flex;flex-wrap:wrap;gap:6px}
+  .tag{display:inline-block;background:#F9F5EE;color:#1C3D3A;
+        border:1px solid #E0D8CC;padding:3px 10px;border-radius:13px;
+        font-size:.78rem}
+  .tag.tag-theory{background:#FEF3E2;color:#9a5010;border-color:#F5D09F}
+
+  .related-list{list-style:none;padding:0}
+  .related-list li{padding:10px 0;border-bottom:1px dashed #E0D8CC}
+  .related-list li:last-child{border-bottom:0}
+  .related-list .rel-score{display:inline-block;background:#E6F5F0;color:#1A7050;
+                            font-size:.72rem;padding:2px 7px;border-radius:10px;
+                            font-weight:600;margin-right:8px}
+  .related-list a{color:#1C3D3A;font-weight:600;text-decoration:none}
+  .related-list a:hover{color:#2A7868;text-decoration:underline}
+  .related-list .rel-reason{color:#6B6B6B;font-size:.8rem;margin-top:2px}
+
+  .empty-state{background:#fff;border:1.5px solid #F5D09F;border-radius:8px;
+                padding:22px 26px;margin-top:20px}
+  .empty-state h3{font-family:Georgia,serif;color:#9a5010;margin-bottom:8px}
+  .empty-state p{font-size:.9rem;color:#6B6B6B;margin-bottom:10px}
+  .empty-state code{font-family:ui-monospace,Menlo,monospace;font-size:.85em;
+                     background:#F9F5EE;padding:1px 5px;border-radius:3px}
+
+  .loading{text-align:center;padding:60px 20px;color:#8A9A96;font-size:.95rem}
+</style>
+</head>
+<body data-ka-regime="global" data-ka-active="articles">
+<div id="ka-navbar-slot"></div>
+
+<main class="ka-outer">
+  <div class="art-breadcrumb">
+    <a href="ka_home.html">Home</a> ›
+    <a href="ka_articles.html">Articles</a> ›
+    <a href="ka_topics.html">Topics</a> ›
+    <span id="crumb-title">…</span>
+  </div>
+
+  <div id="art-mount" class="loading">Loading article record…</div>
+</main>
+
+<script>
+// Declared up front so the async IIFE below can call esc() immediately
+// without a TDZ race against the assignment at the bottom of the file.
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+
+(async function(){
+  const mount = document.getElementById("art-mount");
+  const crumb = document.getElementById("crumb-title");
+
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id") || params.get("paper_id") || "";
+
+  if (!id) {
+    mount.className = "empty-state";
+    mount.innerHTML = `
+      <h3>No article id specified</h3>
+      <p>This page displays one article record. Pass the paper id as <code>?id=PDF-XXXX</code>
+         in the URL. Example: <a href="?id=PDF-0007">?id=PDF-0007</a>.</p>
+      <p>You can also browse by topic from the <a href="ka_topics.html">Topics page</a>;
+         each topic lists its articles and each article link lands here.</p>`;
+    crumb.textContent = "(no id)";
+    return;
+  }
+  crumb.textContent = id;
+
+  let articlesData;
+  try {
+    const r = await fetch("data/ka_payloads/articles.json", {cache: "no-store"});
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    articlesData = await r.json();
+  } catch (e) {
+    mount.className = "empty-state";
+    mount.innerHTML = `
+      <h3>Could not load articles.json</h3>
+      <p>Serve this page over HTTP (not <code>file://</code>) so the data payload loads.</p>
+      <p>Error: <code>${esc(e.message || e)}</code></p>`;
+    return;
+  }
+
+  const articles = (articlesData && articlesData.articles) || [];
+  const a = articles.find(x => x && x.paper_id === id);
+  if (!a) {
+    mount.className = "empty-state";
+    mount.innerHTML = `
+      <h3>Article ${esc(id)} not found</h3>
+      <p>The articles.json payload does not include a record for this paper id. This is
+         usually because the paper is listed in a topic's <code>paper_ids</code> array but
+         hasn't been indexed yet. It may appear here after the next articles-builder run.</p>
+      <p><a href="ka_topics.html">← Back to topics</a></p>`;
+    return;
+  }
+
+  // Build the article view
+  document.title = (a.title || id) + " — Knowledge Atlas";
+  crumb.textContent = a.title ? (a.title.length > 60 ? a.title.slice(0,57) + "…" : a.title) : id;
+
+  const authors = (a.authors && a.authors.length)
+    ? a.authors.join(", ")
+    : (a.apa_citation ? a.apa_citation.split("(")[0].trim() : "");
+
+  const doiLine = a.doi
+    ? `<a href="https://doi.org/${encodeURIComponent(a.doi)}" target="_blank" rel="noopener">${esc(a.doi)}</a>`
+    : '<span style="color:#8A9A96">(no DOI)</span>';
+
+  const stats = [];
+  stats.push(`<span class="stat">paper id: <b>${esc(a.paper_id)}</b></span>`);
+  if (a.year) stats.push(`<span class="stat">year: <b>${a.year}</b></span>`);
+  if (a.sample_n) stats.push(`<span class="stat">n: <b>${esc(String(a.sample_n))}</b></span>`);
+  if (a.subject_count_total) stats.push(`<span class="stat">subjects: <b>${esc(String(a.subject_count_total))}</b></span>`);
+  if (a.p_value != null && a.p_value !== "") stats.push(`<span class="stat">p: <b>${esc(String(a.p_value))}</b></span>`);
+  if (a.effect_size != null && a.effect_size !== "") stats.push(`<span class="stat">effect: <b>${esc(String(a.effect_size))}</b></span>`);
+  if (a.claim_count) stats.push(`<span class="stat">claims: <b>${a.claim_count}</b></span>`);
+
+  const topicTags = (a.topic_labels || []).map(t =>
+    `<span class="tag">${esc(t)}</span>`).join("");
+
+  const theoryTags = (a.theories || []).map(t =>
+    `<span class="tag tag-theory">${esc(t)}</span>`).join("");
+
+  const instruments = (a.instruments || []).map(i => `<span class="tag">${esc(i)}</span>`).join("");
+
+  const sensorLine = a.sensor_summary
+    ? `<dd>${esc(a.sensor_summary)}</dd>`
+    : (a.has_sensor_data ? "<dd>Yes, summary pending</dd>" : "<dd>None reported</dd>");
+
+  const mainConclusionBlock = a.main_conclusion
+    ? `<h2 class="art-section">Main conclusion</h2>
+       <div class="art-body"><p>${esc(a.main_conclusion)}</p></div>`
+    : "";
+
+  const relatedBlock = (a.related_papers && a.related_papers.length)
+    ? `<h2 class="art-section">Related papers</h2>
+       <ul class="related-list">
+         ${a.related_papers.map(rp => `
+           <li>
+             <span class="rel-score" title="Match score">${rp.score}</span>
+             <a href="ka_article_view.html?id=${encodeURIComponent(rp.paper_id)}">${esc(rp.title || rp.paper_id)}</a>
+             <div class="rel-reason">${esc(rp.reason || "")}${rp.primary_front ? " · " + esc(rp.primary_front) : ""}</div>
+           </li>`).join("")}
+       </ul>`
+    : "";
+
+  mount.className = "";
+  mount.innerHTML = `
+    ${a.article_type ? `<span class="art-type-pill">${esc(a.article_type.replace(/_/g," "))}</span>` : ""}
+    <h1 class="art-title">${esc(a.title || id)}</h1>
+    ${authors ? `<div class="art-authors">${esc(authors)}</div>` : ""}
+    <div class="art-venue">
+      ${a.venue ? esc(a.venue) + " · " : ""}
+      ${a.year ? a.year + " · " : ""}
+      DOI: ${doiLine}
+    </div>
+
+    <div class="art-pid-stats">${stats.join("")}</div>
+
+    ${a.abstract
+      ? `<h2 class="art-section">Abstract</h2>
+         <div class="art-body"><div class="abstract">${esc(a.abstract)}</div></div>`
+      : ""}
+
+    ${mainConclusionBlock}
+
+    <h2 class="art-section">Atlas classification</h2>
+    <dl class="kv">
+      <dt>Primary topic</dt><dd>${esc(a.primary_topic || "—")}</dd>
+      ${topicTags ? `<dt>Topics</dt><dd><div class="tag-row">${topicTags}</div></dd>` : ""}
+      ${theoryTags ? `<dt>Theories</dt><dd><div class="tag-row">${theoryTags}</div></dd>` : ""}
+      ${instruments ? `<dt>Instruments</dt><dd><div class="tag-row">${instruments}</div></dd>` : ""}
+      <dt>Sensor data</dt>${sensorLine}
+      ${a.primary_front && a.primary_front.name ? `<dt>Research front</dt><dd>${esc(a.primary_front.name)} (VOI ${a.primary_front.voi}, maturity ${esc(a.primary_front.maturity)})</dd>` : ""}
+    </dl>
+
+    ${relatedBlock}
+
+    <p style="color:#8A9A96;font-size:0.8rem;margin-top:32px">
+      Record from <code>data/ka_payloads/articles.json</code>
+      ${a.json_status ? "· field audit: " + Object.entries(a.json_status).map(([k,v]) => `${k}=${v}`).slice(0,5).join(", ") + (Object.keys(a.json_status).length > 5 ? ", …" : "") : ""}
+    </p>`;
+})();
+</script>
+</body>
+</html>

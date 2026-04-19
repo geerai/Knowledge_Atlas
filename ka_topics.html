@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Topics — Knowledge Atlas</title>
+<title>Topic Page (Classic View) — Knowledge Atlas</title>
 <meta name="description" content="Browse research topics. Each topic folds in its own evidence and gaps as sub-tabs.">
 <script src="ka_canonical_navbar.js" defer></script>
 <script src="ka_user_type.js" defer></script>
+<link rel="stylesheet" href="ka_crosswalk_patterns.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
@@ -115,10 +116,22 @@ main.ka-outer{max-width:1200px;margin:22px auto 70px;padding:0 22px}
 
 <main id="ka-main" class="ka-outer">
 
+<!-- ── Other Topic Page Versions (six variants total; this is the Classic View) ── -->
+<div class="variant-row" style="margin-bottom:18px">
+  <span class="vr-label">Other Topic Page Versions</span>
+  <a href="ka_topic_facet_view.html">        1. Facet View</a>
+  <a href="ka_topic_heatmap_view.html">      2. Heatmap View</a>
+  <a href="ka_topic_full_facets_view.html">  3. Full Facets</a>
+  <a href="ka_topic_dashboard_view.html">    4. Dashboard View</a>
+  <a href="ka_topic_quick_lookup_view.html"> 5. Quick Lookup</a>
+  <a href="ka_topics.html" class="current">  6. Classic View</a>
+</div>
+
 <div class="ka-hero">
-  <h1>Topics</h1>
-  <p>Research topics indexed in the Atlas. Pick a topic to see its
-     overview, evidence base, open gaps, and articles on one page.</p>
+  <h1>Topic Page (Classic View)</h1>
+  <p>The original topic browser: sidebar picker on the left, evidence / gaps /
+     articles tabs on the right. This is the sixth of six topic-page variants
+     — use the row above to jump to the newer faceted versions.</p>
 </div>
 
 <div class="topics-layout">
@@ -277,24 +290,56 @@ main.ka-outer{max-width:1200px;margin:22px auto 70px;padding:0 22px}
           <div class="ev-text">${esc(ev.summary)}</div>
         </div>
         <h4 style="font-size:.76rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8A9A96;margin-bottom:8px">Primary claims</h4>
-        ${(t.paper_ids||[]).slice(0,5).map(pid => `
-          <div class="ev-claim">
-            <div>Primary finding from <b>${esc(pid)}</b>. Full claim text loads from evidence.json in production.</div>
-            <div class="claim-meta">
-              <span class="pill pill-${ev.strength}">${ev.strength}</span>
-              <span>Credence: ${(t.mean_credence||0).toFixed(2)}</span>
-            </div>
-          </div>`).join('')}
+        ${(t.paper_ids||[]).slice(0,5).map(pid => {
+          const a = ARTICLES_BY_ID[pid];
+          const lead = a
+            ? `<a href="ka_article_view.html?id=${encodeURIComponent(pid)}" style="color:#1C3D3A;font-weight:600">${esc(a.title || pid)}</a>${a.year ? ' (' + a.year + ')' : ''}`
+            : `<a href="ka_article_view.html?id=${encodeURIComponent(pid)}" style="color:#1C3D3A;font-weight:600">${esc(pid)}</a>`;
+          const tail = a && a.main_conclusion
+            ? `<div style="color:#6B6B6B;font-size:.85rem;margin-top:4px">${esc(a.main_conclusion.slice(0,280))}${a.main_conclusion.length>280?'…':''}</div>`
+            : '<div style="color:#8A9A96;font-size:.82rem;margin-top:4px">Full claim text pending in evidence.json.</div>';
+          return `
+            <div class="ev-claim">
+              <div>${lead}</div>
+              ${tail}
+              <div class="claim-meta">
+                <span class="pill pill-${ev.strength}">${ev.strength}</span>
+                <span>Credence: ${(t.mean_credence||0).toFixed(2)}</span>
+              </div>
+            </div>`;
+        }).join('')}
       </div>
       <div class="tab-body" data-body="gaps">
         ${gs.map(g => `<div class="gap-item"><div class="gap-kind">${esc(g.kind)}</div><div>${esc(g.text)}</div></div>`).join('')}
       </div>
       <div class="tab-body" data-body="articles">
-        ${(t.paper_ids||[]).map(pid => `
-          <div class="art-row">
-            <div class="art-title"><a href="data/pnu_articles/${esc(pid)}_pnu.html">${esc(pid)}</a></div>
-            <div class="art-meta">Metadata from articles.json (pending).</div>
-          </div>`).join('')}
+        ${(t.paper_ids||[]).map(pid => {
+          const a = ARTICLES_BY_ID[pid];
+          if (!a) {
+            // Article not in articles.json — show the paper id with a
+            // dimmed note rather than a broken placeholder.
+            return `
+              <div class="art-row">
+                <div class="art-title"><a href="ka_article_view.html?id=${encodeURIComponent(pid)}">${esc(pid)}</a></div>
+                <div class="art-meta" style="color:#8A9A96">Paper not yet indexed in articles.json — the per-article page will show a minimal record.</div>
+              </div>`;
+          }
+          const authors = (a.authors && a.authors.length)
+            ? (a.authors.length > 3 ? a.authors.slice(0,3).join(', ') + ', …' : a.authors.join(', '))
+            : (a.apa_citation ? a.apa_citation.split('(')[0].trim() : '');
+          const yr = a.year ? ` (${a.year})` : '';
+          const metaBits = [];
+          if (authors) metaBits.push(authors + yr);
+          if (a.article_type) metaBits.push(a.article_type.replace(/_/g,' '));
+          if (a.primary_topic) metaBits.push(a.primary_topic);
+          return `
+            <div class="art-row">
+              <div class="art-title">
+                <a href="ka_article_view.html?id=${encodeURIComponent(pid)}">${esc(a.title || pid)}</a>
+              </div>
+              <div class="art-meta">${metaBits.map(esc).join(' · ')}</div>
+            </div>`;
+        }).join('')}
       </div>
     `;
     PANEL.querySelectorAll('.tab').forEach(btn => {
@@ -316,10 +361,26 @@ main.ka-outer{max-width:1200px;margin:22px auto 70px;padding:0 22px}
     renderSidebar();
   });
 
-  fetch('data/ka_payloads/topics.json', {cache:'no-store'})
-    .then(r => r.ok ? r.json() : Promise.reject(r.status))
-    .then(data => {
-      TOPICS = data.topics || [];
+  // Articles lookup: hydrated lazily from data/ka_payloads/articles.json
+  // so the articles tab shows real titles / authors / years instead of
+  // bare paper ids. Failing to load leaves ARTICLES_BY_ID empty; the
+  // render code then falls back to a minimal "paper not yet indexed" row.
+  let ARTICLES_BY_ID = {};
+
+  Promise.all([
+    fetch('data/ka_payloads/topics.json',   {cache:'no-store'})
+      .then(r => r.ok ? r.json() : Promise.reject('topics.json: ' + r.status)),
+    fetch('data/ka_payloads/articles.json', {cache:'no-store'})
+      .then(r => r.ok ? r.json() : null)
+      .catch(() => null),
+  ])
+    .then(([topicsData, articlesData]) => {
+      TOPICS = topicsData.topics || [];
+      if (articlesData && Array.isArray(articlesData.articles)) {
+        for (const a of articlesData.articles) {
+          if (a && a.paper_id) ARTICLES_BY_ID[a.paper_id] = a;
+        }
+      }
       renderSidebar();
       if (TOPICS.length) selectTopic(TOPICS[0].id);
     })
