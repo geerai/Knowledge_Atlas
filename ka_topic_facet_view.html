@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topic Page (Facet View) — Knowledge Atlas</title>
+<script src="ka_canonical_navbar.js" defer></script>
+<script src="ka_user_type.js" defer></script>
+<link rel="stylesheet" href="ka_crosswalk_patterns.css">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  body{background:#F7F4EF;color:#2C2C2C}
+</style>
+</head>
+<body data-ka-regime="global" data-ka-active="topics">
+<div id="ka-navbar-slot"></div>
+<main class="ka-topic-page">
+
+  <!-- ── Other Topic Page Versions (top row, same on every variant) ── -->
+  <div class="variant-row">
+    <span class="vr-label">Other Topic Page Versions</span>
+    <a href="ka_topic_facet_view.html"         class="current">1. Facet View</a>
+    <a href="ka_topic_heatmap_view.html">      2. Heatmap View</a>
+    <a href="ka_topic_full_facets_view.html">  3. Full Facets</a>
+    <a href="ka_topic_dashboard_view.html">    4. Dashboard View</a>
+    <a href="ka_topic_quick_lookup_view.html"> 5. Quick Lookup</a>
+    <span class="vr-help" id="__ka_help_btn">Help ℹ︎</span>
+  </div>
+
+  <h1 class="ka-topic-title">Topic Page (Facet View)</h1>
+  <p class="ka-topic-sub">
+    Progressive-disclosure faceted browsing of the Knowledge Atlas crosswalk.
+    Start by picking one of three paths; the page asks one question at a time
+    and reveals defended topic bundles once your path intersects the evidence
+    base. Use the <b>Help</b> button if the controls are unfamiliar.
+  </p>
+
+  <div id="__ka_pattern_mount"></div>
+
+</main>
+
+<!-- ── Modal help ── -->
+<div class="ka-modal-backdrop" id="__ka_help_modal">
+  <div class="ka-modal" role="dialog" aria-modal="true" aria-labelledby="__ka_help_title">
+    <button class="modal-close" onclick="__kaHideHelp()" aria-label="Close">×</button>
+    <h2 id="__ka_help_title">How this page works</h2>
+
+    <p>
+      The Knowledge Atlas <em>crosswalk</em> is a bridge between three things:
+      (a) human outcomes people care about (stress, attention, wellbeing, sleep…),
+      (b) architectural conditions and stimulus families (luminous, acoustic,
+      spatial, natural…), and (c) defended topic bundles that link papers,
+      theories, and measures. This page lets you travel across the bridge.
+    </p>
+
+    <h3>What each step does</h3>
+    <ul>
+      <li><b>Stage 0 — entry.</b> Pick whether you want to start with an outcome, an architectural feature, or see the full landscape at once.</li>
+      <li><b>Stage 1 — first facet.</b> Outcomes are grouped into categories (Cognitive, Affective, Physiological & Health, Behavioural, Other). Click a category header to expand its options.</li>
+      <li><b>Stage 2 — second facet.</b> Only the architectural families (or outcomes) with defended bundles for your first choice are shown. You can also skip this step and see all bundles for your first choice.</li>
+      <li><b>Stage 3 — results.</b> A list of defended topic bundles, each with paper count and evidence-status pill (defended / mixed / unresolved).</li>
+    </ul>
+
+    <h3>Breadcrumb &amp; reset</h3>
+    <p>
+      A breadcrumb at the top of each stage shows what you've picked so far
+      (e.g. <code>OUTCOME: stress › ARCHITECTURE: luminous</code>). Click
+      <em>start over</em> to return to Stage 0.
+    </p>
+
+    <h3>When to use the other variants</h3>
+    <ul>
+      <li><b>Heatmap View</b> — when you want to see coverage density across the whole 9 × 18 matrix at a glance.</li>
+      <li><b>Full Facets</b> — when you already know the vocabulary and want every chip visible at once.</li>
+      <li><b>Dashboard View</b> — when you want three linked panels updating in lockstep as you browse.</li>
+      <li><b>Quick Lookup</b> — when you want a single one-way answer (pick outcome, see families).</li>
+    </ul>
+
+    <h3>Evidence-status pills</h3>
+    <ul>
+      <li><b>defended</b> — the topic bundle has a defended paper set and a resolved outcome mapping. Highest confidence.</li>
+      <li><b>mixed</b> — evidence set has known quality issues; use with caution.</li>
+      <li><b>unresolved</b> — the outcome term could not be resolved to the Outcome Contractor canonical vocabulary. Present for transparency; treat as provisional.</li>
+    </ul>
+
+    <p style="font-size:0.82rem;color:#6B6B6B;margin-top:14px">
+      Built on the crosswalk payload at <code>data/ka_payloads/topic_crosswalk.json</code>
+      per <code>docs/TOPIC_CROSSWALK_AND_TOPIC_PAGE_CONTRACT_2026-04-19.md</code>.
+    </p>
+  </div>
+</div>
+
+<script src="ka_crosswalk_patterns.js"></script>
+<script>
+(async function(){
+  const mount = document.getElementById("__ka_pattern_mount");
+  try {
+    const data = await KA_CROSSWALK.loadCrosswalk();
+    KA_CROSSWALK.renderProgressiveDisclosure(data, mount);
+  } catch (e) {
+    mount.innerHTML =
+      '<div style="background:#F8D7DA;color:#8A1A25;padding:14px 18px;border-radius:8px">'+
+      '<b>Could not load the crosswalk data.</b> Ensure <code>data/ka_payloads/topic_crosswalk.json</code> '+
+      'is reachable and you are serving this page over HTTP (not file://). Error: '+(e.message||e)+
+      '</div>';
+  }
+})();
+
+window.__kaShowHelp = () => document.getElementById("__ka_help_modal").classList.add("open");
+window.__kaHideHelp = () => document.getElementById("__ka_help_modal").classList.remove("open");
+document.getElementById("__ka_help_btn").addEventListener("click", __kaShowHelp);
+document.getElementById("__ka_help_modal").addEventListener("click", e => {
+  if (e.target.id === "__ka_help_modal") __kaHideHelp();
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape") __kaHideHelp(); });
+</script>
+</body>
+</html>

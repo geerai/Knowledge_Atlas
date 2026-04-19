@@ -1,19 +1,22 @@
 # Track 4 — UX Research rubric overview
 
-*Last updated: 2026-04-17*
+*Last updated: 2026-04-19 (added T4.b.2)*
 
-## Track-level allocation (75 points)
+## Track-level allocation (75 points, pending DK approval of T4.b.2 + Option A reallocation)
 
 | Deliverable | Span | Hardness | Points | Rubric file |
 |-------------|:----:|:--------:|-------:|-------------|
 | T4.a Heuristic audit of K-Atlas public site (10 findings) | Weeks 3–4 | Medium | 12 | `T4.a_heuristic_audit.md` |
-| T4.b Scenario-based walkthrough on 3 archetype roles | Week 4 | Medium | 10 | `T4.b_scenarios.md` |
+| T4.b Scenario-based walkthrough on 3 archetype roles | Week 4 | Medium | **5** (was 10) | `T4.b_scenarios.md` |
+| **T4.b.2 Topic-page variant evaluation** (NEW 2026-04-19) | Week 4 | Medium-hard | **10** | `T4.b.2_topic_variant_evaluation.md` |
 | T4.c Moderated usability pilot (n = 5) | Weeks 5–6 | Hard | 15 | `T4.c_usability_pilot.md` |
-| T4.d Friction-point severity rubric + prioritised backlog | Week 6 | Medium-hard | 10 | `T4.d_severity_backlog.md` |
+| T4.d Friction-point severity rubric + prioritised backlog | Week 6 | Medium-hard | **5** (was 10) | `T4.d_severity_backlog.md` |
 | T4.e Reproducibility check — second student confirms 5 findings | Week 7 | Hard | 13 | `T4.e_reproducibility.md` |
 | T4.f Redesign proposal for one high-severity finding | Weeks 7–8 | Medium | 10 | `T4.f_redesign.md` |
 | T4.g Final report + reflection | Week 8 | Easy | 5 | `T4.g_final_report.md` |
 | **Total** | | | **75** | |
+
+**Point-reallocation note (pending DK approval):** Adding T4.b.2 requires a budget source. Option A (recommended in `T4.b.2_topic_variant_evaluation.md` § 6) shrinks T4.b from 10 → 5 pts (it now acts as a preparation exercise for T4.b.2) and shrinks T4.d from 10 → 5 pts (T4.b.2 absorbs some of the severity-rating work). Together these free 10 pts for T4.b.2. Total remains 75. If DK prefers a different allocation, see § 6 of the T4.b.2 rubric for alternatives.
 
 ## Primary signals the AI grader reads
 

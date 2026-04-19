@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topic Page (Heatmap View) — Knowledge Atlas</title>
+<script src="ka_canonical_navbar.js" defer></script>
+<script src="ka_user_type.js" defer></script>
+<link rel="stylesheet" href="ka_crosswalk_patterns.css">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  body{background:#F7F4EF;color:#2C2C2C}
+  .scale-legend{display:flex;align-items:center;gap:8px;margin-top:12px;
+                font-size:0.8rem;color:#6B6B6B}
+  .scale-legend .swatch{display:inline-block;width:22px;height:12px;border:1px solid #E0D8CC}
+</style>
+</head>
+<body data-ka-regime="global" data-ka-active="topics">
+<div id="ka-navbar-slot"></div>
+<main class="ka-topic-page">
+
+  <div class="variant-row">
+    <span class="vr-label">Other Topic Page Versions</span>
+    <a href="ka_topic_facet_view.html">        1. Facet View</a>
+    <a href="ka_topic_heatmap_view.html"       class="current">2. Heatmap View</a>
+    <a href="ka_topic_full_facets_view.html">  3. Full Facets</a>
+    <a href="ka_topic_dashboard_view.html">    4. Dashboard View</a>
+    <a href="ka_topic_quick_lookup_view.html"> 5. Quick Lookup</a>
+  </div>
+
+  <h1 class="ka-topic-title">Topic Page (Heatmap View)</h1>
+  <p class="ka-topic-sub">
+    The crosswalk rendered as a 9 × 18 coverage matrix: architectural families
+    (rows) × outcome clusters (columns). Each cell's colour encodes paper
+    count; empty cells are the evidence gap. Use this view when you want an
+    honest at-a-glance map of where the corpus is dense and where it's thin.
+  </p>
+
+  <div id="__ka_pattern_mount" class="heatmap-wrap"></div>
+  <div class="scale-legend">
+    paper count scale:
+    <span class="swatch" style="background:#f5f0e7"></span> 0
+    <span class="swatch" style="background:#bddbd0"></span> low
+    <span class="swatch" style="background:#4d9b87"></span> mid
+    <span class="swatch" style="background:#1a4a3f"></span> high
+  </div>
+</main>
+
+<script src="ka_crosswalk_patterns.js"></script>
+<script>
+(async function(){
+  const mount = document.getElementById("__ka_pattern_mount");
+  try {
+    const data = await KA_CROSSWALK.loadCrosswalk();
+    KA_CROSSWALK.renderHeatmap(data, mount);
+  } catch (e) {
+    mount.innerHTML =
+      '<div style="background:#F8D7DA;color:#8A1A25;padding:14px 18px;border-radius:8px">'+
+      '<b>Could not load the crosswalk data.</b> Serve this page over HTTP (not file://). Error: '+(e.message||e)+'</div>';
+  }
+})();
+</script>
+</body>
+</html>

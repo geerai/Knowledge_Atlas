@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topic Page (Dashboard View) — Knowledge Atlas</title>
+<script src="ka_canonical_navbar.js" defer></script>
+<script src="ka_user_type.js" defer></script>
+<link rel="stylesheet" href="ka_crosswalk_patterns.css">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  body{background:#F7F4EF;color:#2C2C2C}
+</style>
+</head>
+<body data-ka-regime="global" data-ka-active="topics">
+<div id="ka-navbar-slot"></div>
+<main class="ka-topic-page">
+
+  <div class="variant-row">
+    <span class="vr-label">Other Topic Page Versions</span>
+    <a href="ka_topic_facet_view.html">        1. Facet View</a>
+    <a href="ka_topic_heatmap_view.html">      2. Heatmap View</a>
+    <a href="ka_topic_full_facets_view.html">  3. Full Facets</a>
+    <a href="ka_topic_dashboard_view.html"     class="current">4. Dashboard View</a>
+    <a href="ka_topic_quick_lookup_view.html"> 5. Quick Lookup</a>
+  </div>
+
+  <h1 class="ka-topic-title">Topic Page (Dashboard View)</h1>
+  <p class="ka-topic-sub">
+    Three linked panels — outcomes (left), architectural families (middle),
+    defended bundles (right) — updating in lockstep. Clicking an outcome dims
+    non-matching families; clicking a family filters the bundle list. Best
+    for exploratory browsing where you want to learn the bridge structure
+    while you browse (Roberts 2007 multiple coordinated views).
+  </p>
+
+  <div id="__ka_pattern_mount"></div>
+
+</main>
+
+<script src="ka_crosswalk_patterns.js"></script>
+<script>
+(async function(){
+  const mount = document.getElementById("__ka_pattern_mount");
+  try {
+    const data = await KA_CROSSWALK.loadCrosswalk();
+    KA_CROSSWALK.renderMultiview(data, mount);
+  } catch (e) {
+    mount.innerHTML =
+      '<div style="background:#F8D7DA;color:#8A1A25;padding:14px 18px;border-radius:8px">'+
+      '<b>Could not load the crosswalk data.</b> Serve this page over HTTP (not file://). Error: '+(e.message||e)+'</div>';
+  }
+})();
+</script>
+</body>
+</html>

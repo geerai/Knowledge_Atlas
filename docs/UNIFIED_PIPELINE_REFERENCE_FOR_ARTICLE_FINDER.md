@@ -195,3 +195,26 @@ For a Track 2 maintainer who wants to add a new classifier: read §2.4 above for
 For a Track 2 auditor who wants to query the pipeline state: the canonical database is `data/pipeline_registry_unified.db`; a sample query suite is at the end of `MASTER_DOC_BRIEF_2026-04-08_UNIFIED_REGISTRY_AND_NOTIFICATION.md`.
 
 For anyone trying to answer "what is the complete status of paper X?": run the third query in that sample suite. Before April 2026 this required joining across five databases; now it is a single SELECT against the registry.
+
+---
+
+## Addendum — population audit (2026-04-18)
+
+A coverage audit of `pipeline_registry_unified.db` run against the 1,393-paper corpus found that several columns named above as part of the 14-column classification surface are **declared but currently not populated**:
+
+| Column | Coverage | Implication |
+|---|---|---|
+| `primary_topic_candidate` | **0 %** | No rows carry this value. Downstream readers must not treat it as authoritative. |
+| `canonical_triage_decision` (in `canonical_classifications`) | 0 % | Empty across all 1,428 classification rows. |
+| `has_classifier_conflict` | 0 % flagged | Flat 0 across all rows — either no conflicts are detected or the field is not being written. |
+
+Separately, `classification_confidence` is declared as numeric 0–1 but the actual column type in the table is `TEXT` and 12 rows contain the string `"high"` rather than a parseable number. Consumers should coerce and filter.
+
+The richer populated surface that consumers should read instead is:
+
+- `papers.topic_category` (~ 50 % populated; 9 sensory-modality values — luminous / spatial / acoustic / natural / material / control / thermal / social_spatial / multisensory).
+- `papers.topic_subcategory` (~ 49 % populated; 18 outcome values — cog.performance / affect.wellbeing / physio / neural / etc.).
+- `canonical_classifications.canonical_article_type` (well populated across the corpus; 14+ distinct types).
+- `canonical_classifications.canonical_primary_topic` (same 9-value modality taxonomy as `papers.topic_category`).
+
+The full audit is in `docs/CLASSIFIER_AUDIT_FINDINGS_2026-04-18.md` and the audit script is at `scripts/audit_classifiers.py`. The empty columns above are expected to be filled by a later classifier-repair sprint; until then, documentation in this repo that treats them as load-bearing should be read with the caveat that they are currently empty.
