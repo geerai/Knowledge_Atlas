@@ -6,17 +6,63 @@
 <title>Topic Page (Facet View) — Knowledge Atlas</title>
 <script src="ka_canonical_navbar.js" defer></script>
 <script src="ka_user_type.js" defer></script>
+<script src="ka_data_adapter.js"></script>
 <link rel="stylesheet" href="ka_crosswalk_patterns.css">
 <style>
   *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-  body{background:#F7F4EF;color:#2C2C2C}
+  body{background:#F7F4EF;color:#2C2C2C;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+  .ka-topic-page{max-width:1160px;margin:0 auto;padding:26px 24px 48px}
+  .topic-hero{background:linear-gradient(135deg,#1C3D3A 0%,#214844 100%);color:#fff;
+              border-radius:18px;padding:30px 30px 26px;margin-bottom:20px}
+  .topic-hero .eyebrow{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+                       color:#F5A623;font-weight:700;margin-bottom:8px}
+  .ka-topic-title{font-family:Georgia,serif;font-size:2rem;line-height:1.1;margin-bottom:10px}
+  .ka-topic-sub{font-size:1rem;line-height:1.65;color:#D0E0DB;max-width:860px}
+  .variant-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:#fff;
+               border:1px solid #E0D8CC;border-radius:12px;padding:14px 16px;margin-bottom:18px}
+  .vr-label{font-size:.76rem;text-transform:uppercase;letter-spacing:.12em;color:#8A9A96;font-weight:700;margin-right:6px}
+  .variant-row a,.vr-help{display:inline-flex;align-items:center;padding:8px 12px;border-radius:999px;
+                          text-decoration:none;font-size:.86rem;color:#1C3D3A;background:#F7F4EF;
+                          border:1px solid #E0D8CC;cursor:pointer}
+  .variant-row a.current{background:#1C3D3A;color:#fff;border-color:#1C3D3A}
+  .variant-row a:hover,.vr-help:hover{border-color:#2A7868;color:#2A7868}
+  .topic-notes{display:grid;grid-template-columns:1.4fr .9fr;gap:16px;margin-bottom:18px}
+  .topic-note{background:#fff;border:1px solid #E0D8CC;border-radius:12px;padding:16px 18px}
+  .topic-note h2{font-family:Georgia,serif;font-size:1.05rem;color:#1C3D3A;margin-bottom:8px}
+  .topic-note p{font-size:.9rem;line-height:1.6;color:#40514D}
+  .topic-note code{background:#F9F5EE;padding:1px 5px;border-radius:4px}
+  #__ka_pattern_mount{background:#fff;border:1px solid #E0D8CC;border-radius:16px;padding:20px}
+  .fallback-list{display:grid;gap:12px}
+  .fallback-row{padding:14px 16px;border:1px solid #E0D8CC;border-radius:10px;background:#F9F7F2}
+  .fallback-row h3{font-size:1rem;color:#1C3D3A;margin-bottom:4px}
+  .fallback-row .meta{font-size:.85rem;color:#6B6B6B}
+  .page-footer{background:#1C3D3A;color:#D6E6E0;padding:18px 24px;font-size:.84rem}
+  .page-footer-inner{max-width:1160px;margin:0 auto;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+  .page-footer a{color:#F5A623;text-decoration:none;font-weight:600}
+  .page-footer a:hover{text-decoration:underline}
+  @media (max-width:820px){
+    .topic-notes{grid-template-columns:1fr}
+    .ka-topic-page{padding:20px 16px 36px}
+    .topic-hero{padding:24px 22px}
+    .ka-topic-title{font-size:1.6rem}
+  }
 </style>
 </head>
 <body data-ka-regime="global" data-ka-active="topics">
 <div id="ka-navbar-slot"></div>
 <main class="ka-topic-page">
 
-  <!-- ── Other Topic Page Versions (top row, same on every variant) ── -->
+  <section class="topic-hero">
+    <div class="eyebrow">Knowledge Atlas</div>
+    <h1 class="ka-topic-title">Topic Page (Facet View)</h1>
+    <p class="ka-topic-sub">
+      Start with an outcome, an architectural family, or the defended crosswalk
+      itself. This page is meant to be readable before it is clever: one question
+      at a time, visible context, and clear evidence labels when a bundle is
+      defended, mixed, or unresolved.
+    </p>
+  </section>
+
   <div class="variant-row">
     <span class="vr-label">Other Topic Page Versions</span>
     <a href="ka_topic_facet_view.html"         class="current">1. Facet View</a>
@@ -28,13 +74,25 @@
     <span class="vr-help" id="__ka_help_btn">Help ℹ︎</span>
   </div>
 
-  <h1 class="ka-topic-title">Topic Page (Facet View)</h1>
-  <p class="ka-topic-sub">
-    Progressive-disclosure faceted browsing of the Knowledge Atlas crosswalk.
-    Start by picking one of three paths; the page asks one question at a time
-    and reveals defended topic bundles once your path intersects the evidence
-    base. Use the <b>Help</b> button if the controls are unfamiliar.
-  </p>
+  <div class="topic-notes">
+    <section class="topic-note">
+      <h2>How to read this page</h2>
+      <p>
+        The Atlas crosswalk links human outcomes, architectural conditions, and
+        defended topic bundles. Use it when the ordinary taxonomy is too coarse
+        and you want to ask a joined question such as <em>lighting and stress</em>
+        or <em>nature and attention</em>.
+      </p>
+    </section>
+    <section class="topic-note">
+      <h2>Data source</h2>
+      <p>
+        This page reads <code>data/ka_payloads/topic_crosswalk.json</code>. If the
+        richer renderer fails, the page falls back to a plain defended-bundle list
+        rather than leaving you with a broken screen.
+      </p>
+    </section>
+  </div>
 
   <div id="__ka_pattern_mount"></div>
 
@@ -93,16 +151,51 @@
 
 <script src="ka_crosswalk_patterns.js"></script>
 <script>
+function renderCrosswalkFallback(data, mount) {
+  const rows = ((data && data.rows) || []).slice().sort((a, b) =>
+    (b.paper_count || 0) - (a.paper_count || 0)
+  );
+  if (!rows.length) {
+    mount.innerHTML = '<div class="fallback-row"><h3>No crosswalk rows found</h3><div class="meta">The payload loaded, but it did not contain defended rows.</div></div>';
+    return;
+  }
+  mount.innerHTML = '<div class="fallback-list">' + rows.slice(0, 24).map(row => `
+    <article class="fallback-row">
+      <h3>${row.topic_label || row.topic_id}</h3>
+      <div class="meta">
+        ${(row.outcome_label || row.outcome_term_id || 'Outcome')} × ${(row.iv_root_label || row.iv_root || 'Family')}
+        · ${row.paper_count || 0} papers
+        · status: ${row.evidence_status || 'working'}
+      </div>
+    </article>
+  `).join('') + '</div>';
+}
+
 (async function(){
   const mount = document.getElementById("__ka_pattern_mount");
   try {
-    const data = await KA_CROSSWALK.loadCrosswalk();
-    KA_CROSSWALK.renderProgressiveDisclosure(data, mount);
+    let data = null;
+    if (window.KA_CROSSWALK && typeof window.KA_CROSSWALK.loadCrosswalk === 'function') {
+      data = await window.KA_CROSSWALK.loadCrosswalk();
+      if (typeof window.KA_CROSSWALK.renderProgressiveDisclosure === 'function') {
+        window.KA_CROSSWALK.renderProgressiveDisclosure(data, mount);
+        return;
+      }
+    }
+    if (!data && window.KA_DATA_ADAPTER) {
+      const payload = await window.KA_DATA_ADAPTER.loadPayload('topic_crosswalk', {});
+      data = {
+        rows: payload.rows || [],
+        outcomes: payload.outcome_index || [],
+        families: payload.iv_root_index || [],
+      };
+    }
+    renderCrosswalkFallback(data || { rows: [] }, mount);
   } catch (e) {
     mount.innerHTML =
       '<div style="background:#F8D7DA;color:#8A1A25;padding:14px 18px;border-radius:8px">'+
       '<b>Could not load the crosswalk data.</b> Ensure <code>data/ka_payloads/topic_crosswalk.json</code> '+
-      'is reachable and you are serving this page over HTTP (not file://). Error: '+(e.message||e)+
+      'is reachable and that the page is being served over HTTP. Error: '+(e.message||e)+
       '</div>';
   }
 })();
@@ -115,5 +208,11 @@ document.getElementById("__ka_help_modal").addEventListener("click", e => {
 });
 document.addEventListener("keydown", e => { if (e.key === "Escape") __kaHideHelp(); });
 </script>
+<footer class="page-footer">
+  <div class="page-footer-inner">
+    <div>Topic crosswalk browsing is public. Use this page when you want to cross from outcomes to architectural families without guessing the Atlas taxonomy first.</div>
+    <div><a href="ka_home.html">Home</a> · <a href="ka_user_home.html?role=researcher">Workspace</a> · <a href="ka_topics.html">Classic topics</a></div>
+  </div>
+</footer>
 </body>
 </html>

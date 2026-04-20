@@ -234,6 +234,53 @@
       font-weight: 700;
     }
 
+    .public-portal-note {
+      background: #fff7e8;
+      border: 1.5px solid #e8c77d;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 22px;
+    }
+    .public-portal-title {
+      font-size: .82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #9a5a10;
+      margin-bottom: 8px;
+    }
+    .public-portal-note p {
+      font-size: .9rem;
+      color: #4b5563;
+      line-height: 1.65;
+      margin-bottom: 10px;
+      max-width: 860px;
+    }
+    .public-portal-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .public-portal-actions a,
+    .public-portal-actions button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid #d9b46b;
+      background: #fff;
+      color: #8b4e0c;
+      text-decoration: none;
+      font-size: .84rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .public-portal-actions a:hover,
+    .public-portal-actions button:hover {
+      background: #fff1d4;
+    }
+
     /* ── Resume Card ─────────────────────────────────────────────────── */
     .resume-card {
       background: linear-gradient(135deg, #002d5b 0%, #1a56a4 100%);
@@ -778,6 +825,20 @@
       </div>
     </div>
 
+    <div class="public-portal-note" id="public-portal-note" style="display:none;">
+      <div class="public-portal-title">Public workspace</div>
+      <p>
+        Visitor, Researcher, Practitioner, and Contributor views are public.
+        You may inspect this workspace before signing in, and you may switch
+        roles later. Only COGS 160 student work requires the UCSD course login
+        and the student setup path.
+      </p>
+      <div class="public-portal-actions">
+        <button type="button" id="public-sign-in-btn">Sign in for saved work</button>
+        <a href="ka_home.html">Return to home</a>
+      </div>
+    </div>
+
     <!-- Role switcher and path guidance — hidden for students, shown in demo/instructor mode -->
     <div class="path-guidance" id="path-guidance-section" style="display:none;">
       <div class="path-guidance-title">How to use Atlas</div>
@@ -854,7 +915,7 @@
 <div id="login-overlay" style="display:none">
   <div class="login-modal">
     <h2>Log in to ATLAS</h2>
-    <p>Enter your UCSD email and course password to access your personalised workspace.</p>
+    <p>If you are a COGS 160 student, use your UCSD email and course password. If you are returning to saved contributor or instructor work, sign in here. Everyone else may browse publicly without signing in, and role choice is not permanent.</p>
     <div class="login-field">
       <label for="login-email">Email</label>
       <input type="email" id="login-email" placeholder="you@ucsd.edu" autocomplete="email" />
@@ -901,17 +962,16 @@
       try { currentUser = JSON.parse(stored); } catch (e) { currentUser = null; }
     }
     if (!token && !stored) {
-      // Check URL param for role (for demo / exploration)
       const params = new URLSearchParams(window.location.search);
       const urlRole = params.get('role');
       if (urlRole && window.KA_WORKFLOWS.roleMeta[urlRole]) {
         currentRole = urlRole;
-        demoMode = true;
       } else {
-        // Show login overlay
-        document.getElementById('login-overlay').style.display = 'flex';
-        demoMode = true; // default to demo so overlay can be dismissed
+        const savedRole = localStorage.getItem('ka_user_role');
+        currentRole = window.KA_WORKFLOWS.roleMeta[savedRole] ? savedRole : 'researcher';
       }
+      demoMode = true;
+      document.getElementById('login-overlay').style.display = 'none';
     } else {
       document.getElementById('login-overlay').style.display = 'none';
     }
@@ -1420,6 +1480,7 @@
     document.getElementById('role-switcher-section').style.display = demoMode ? '' : 'none';
     document.getElementById('workflow-section-heading').style.display = (demoMode || isInstructor) ? '' : 'none';
     document.getElementById('workflow-grid').style.display = (demoMode || isInstructor) ? '' : 'none';
+    document.getElementById('public-portal-note').style.display = (!currentUser || demoMode) ? '' : 'none';
 
     // Update active state in role switcher
     document.querySelectorAll('.role-switch-btn').forEach(function (btn) {
@@ -1488,6 +1549,13 @@
       e.preventDefault();
       document.getElementById('login-overlay').style.display = 'flex';
     });
+
+    const publicSignInBtn = document.getElementById('public-sign-in-btn');
+    if (publicSignInBtn) {
+      publicSignInBtn.addEventListener('click', function () {
+        document.getElementById('login-overlay').style.display = 'flex';
+      });
+    }
 
     document.getElementById('top-bar-logout').addEventListener('click', function () {
       localStorage.removeItem('ka_access_token');

@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Knowledge Atlas — Cognitive Neuroscience for Architecture</title>
-<meta name="description" content="A research atlas joining cognitive neuroscience to environmental and architectural design.">
+<title>Knowledge Atlas — Built Environment, Mind, and Brain</title>
+<meta name="description" content="A large knowledge model joining what psychology and neuroscience know about how the built environment affects cognition, affect, social behaviour, and the brain.">
 <script src="ka_canonical_navbar.js" defer></script>
 <script src="ka_user_type.js" defer></script>
 <style>
@@ -34,6 +34,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
 .role-card .returning.show{display:block}
 .role-card .returning b{color:#9a5010}
 .role-card .returning a{color:#9a5010;text-decoration:underline;font-weight:600}
+.role-card .public-note{background:#EEF7F3;border:1px solid #B8D7CF;border-radius:9px;
+                        padding:12px 14px;margin-bottom:14px;font-size:.87rem;
+                        color:#23433F;line-height:1.55}
+.role-card .public-note strong{color:#1C3D3A}
+.role-card .public-note a{color:#2A7868;font-weight:600;text-decoration:none}
+.role-card .public-note a:hover{text-decoration:underline}
 
 .role-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
            gap:12px;margin-top:8px}
@@ -118,10 +124,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-eyebrow">Knowledge Atlas</div>
-    <h1>Cognitive neuroscience for architecture.</h1>
-    <p class="tagline">A working research atlas joining what neuroscience
-       knows about perception, attention, affect, and memory to how
-       buildings and landscapes shape the people who live in them.</p>
+    <h1>A Large Knowledge Model</h1>
+    <p class="tagline">that joins what psychology and neuroscience know
+       about how the built environment affects our cognition, affect,
+       social behavior and brains.</p>
   </div>
 </section>
 
@@ -135,6 +141,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
       <a href="#" id="returningGo">Continue →</a>
       &nbsp;·&nbsp;
       <a href="#" id="returningDifferent">Choose a different role</a>
+    </div>
+
+    <div class="public-note">
+      <strong>Public access is the default.</strong> Visitor, Researcher,
+      Practitioner, and Contributor views are open to everyone. You may
+      browse those roles without signing in, and you may switch among them
+      later. Only <b>COGS 160 students</b> need the course login and student
+      setup path. If you want the shared portal first, open
+      <a href="ka_user_home.html?role=researcher">the Atlas workspace</a>.
     </div>
 
     <!-- Four balanced entries. Per KA_USER_PERSONAS_AND_USE_CASES, each role
@@ -277,7 +292,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
     <section class="section" id="get-started">
       <h2 class="section-head">Get started</h2>
       <p class="section-sub">New here? Pick a role at the top of the
-         page, or browse the eleven foundational frameworks directly.</p>
+         page, open the public workspace, or browse the eleven foundational
+         frameworks directly. Your role choice is a convenience, not a
+         permanent classification.</p>
+      <p style="margin-bottom:10px"><a href="ka_user_home.html?role=researcher" style="color:#2A7868;font-weight:600;">
+         Open the public Atlas workspace →</a></p>
       <p><a href="ka_theories.html" style="color:#2A7868;font-weight:600;">
          Browse the eleven theories →</a></p>
     </section>

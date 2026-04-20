@@ -29,6 +29,7 @@ VISUALS_OUT.mkdir(parents=True, exist_ok=True)
 WORKFLOW_DB_PATH = KA_REPO / 'data' / 'ka_workflow.db'
 REBUILD_DB_PATH = AE / 'data' / 'rebuild' / 'web_persistence_v5.db'
 REGISTRY_DB_PATH = AE / 'data' / 'verification_runs' / 'v7_gold_extraction_registry.db'
+LIFECYCLE_DB_PATH = AE / 'data' / 'pipeline_lifecycle_full.db'
 
 if str(AE) not in sys.path:
     sys.path.insert(0, str(AE))
@@ -978,6 +979,150 @@ def load_jsonl(path):
     except Exception:
         return []
     return rows
+
+
+def safe_json_loads(value, default=None):
+    if isinstance(value, (dict, list)):
+        return value
+    if value in (None, ''):
+        return default
+    try:
+        return json.loads(value)
+    except Exception:
+        return default
+
+
+def clean_rich_text(value):
+    text = str(value or '').replace('\r', '\n').strip()
+    if not text:
+        return ''
+    text = re.sub(r'^---\s*\n.*?\n---\s*\n', '', text, flags=re.S)
+    text = text.replace('**', '')
+    text = re.sub(r'\n\s+', '\n', text)
+    text = re.sub(r'\n{3,}', '\n\n', text)
+    return text.strip()
+
+
+def extract_science_summary_sections(raw_summary):
+    payload = safe_json_loads(raw_summary, {})
+    if isinstance(payload, dict):
+        sections = payload.get('sections') or {}
+        if isinstance(sections, dict) and sections:
+            return {
+                key: clean_rich_text(value)
+                for key, value in sections.items()
+                if clean_rich_text(value)
+            }
+    text = clean_rich_text(raw_summary)
+    if not text:
+        return {}
+    text = re.split(r'\n##\s+', text, 1)[0].strip()
+    return {'Core Finding': text}
+
+
+def first_sentence_block(text, max_words=340):
+    value = clean_rich_text(text)
+    if not value:
+        return ''
+    words = value.split()
+    if len(words) <= max_words:
+        return value
+    clipped = ' '.join(words[:max_words]).strip()
+    if '. ' in clipped:
+        clipped = clipped.rsplit('. ', 1)[0].strip()
+        if clipped and not clipped.endswith('.'):
+            clipped += '.'
+    return clipped or value
+
+
+def load_accepted_row_lookup(paper_ids):
+    lookup = {}
+    if not LIFECYCLE_DB_PATH.exists():
+        return lookup
+    try:
+        conn = sqlite3.connect(str(LIFECYCLE_DB_PATH))
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute(
+            """
+            SELECT paper_id, source_path
+            FROM paper_artifact_provenance
+            WHERE artifact_kind = 'accepted_row_json'
+            """
+        )
+        rows = cur.fetchall()
+    except Exception:
+        return lookup
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass
+
+    wanted = {str(paper_id).strip() for paper_id in paper_ids if str(paper_id).strip()}
+    by_path = defaultdict(set)
+    for row in rows:
+        paper_id = str(row['paper_id'] or '').strip()
+        source_path = str(row['source_path'] or '').strip()
+        if paper_id and paper_id in wanted and source_path:
+            by_path[source_path].add(paper_id)
+
+    for source_path, wanted_ids in by_path.items():
+        path = Path(source_path)
+        if not path.exists():
+            continue
+        try:
+            with path.open(encoding='utf-8') as handle:
+                for line in handle:
+                    text = line.strip()
+                    if not text:
+                        continue
+                    try:
+                        row = json.loads(text)
+                    except Exception:
+                        continue
+                    paper_id = str(row.get('paper_id') or '').strip()
+                    if paper_id and paper_id in wanted_ids and paper_id not in lookup:
+                        lookup[paper_id] = row
+        except Exception:
+            continue
+    return lookup
+
+
+def load_lifecycle_article_details(paper_ids):
+    details = {
+        'science_writer': {},
+        'pnu': {},
+        'structured_claims': {},
+    }
+    if not LIFECYCLE_DB_PATH.exists():
+        return details
+    wanted = {str(paper_id).strip() for paper_id in paper_ids if str(paper_id).strip()}
+    try:
+        conn = sqlite3.connect(str(LIFECYCLE_DB_PATH))
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        for table_name, bucket in (
+            ('science_writer_results', 'science_writer'),
+            ('pnu_artifacts', 'pnu'),
+            ('structured_claims', 'structured_claims'),
+        ):
+            try:
+                cur.execute(f"SELECT * FROM {table_name}")
+            except Exception:
+                continue
+            for row in cur.fetchall():
+                paper_id = str(row['paper_id'] or '').strip()
+                if paper_id and paper_id in wanted and paper_id not in details[bucket]:
+                    details[bucket][paper_id] = dict(row)
+    except Exception:
+        return details
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass
+    return details
 
 
 def parse_page_number(value):
@@ -3494,6 +3639,182 @@ def build_topic_crosswalk_payload(topic_hierarchy):
     }
 
 
+def build_article_details_payload(articles, evidence, argumentation):
+    paper_ids = [str(article.get('paper_id') or '').strip() for article in articles if str(article.get('paper_id') or '').strip()]
+    article_by_id = {article['paper_id']: article for article in articles if article.get('paper_id')}
+    accepted_rows = load_accepted_row_lookup(paper_ids)
+    lifecycle = load_lifecycle_article_details(paper_ids)
+
+    evidence_by_paper = defaultdict(list)
+    credence_means = {}
+    for row in evidence:
+        paper_id = str(row.get('paper_id') or '').strip()
+        if paper_id:
+            evidence_by_paper[paper_id].append(row)
+    for paper_id, rows in evidence_by_paper.items():
+        values = []
+        for row in rows:
+            try:
+                value = float(row.get('credence'))
+            except Exception:
+                continue
+            values.append(value)
+        if values:
+            credence_means[paper_id] = round(sum(values) / len(values), 3)
+
+    ordered_credences = sorted(credence_means.values())
+
+    def credence_percentile(value):
+        if value is None or not ordered_credences:
+            return None
+        rank = sum(1 for item in ordered_credences if item <= value)
+        return round((100.0 * rank) / len(ordered_credences), 1)
+
+    paper_nodes = {
+        str(node.get('paper_id') or '').strip(): node
+        for node in (argumentation.get('paper_nodes') or [])
+        if str(node.get('paper_id') or '').strip()
+    }
+    claim_nodes_by_paper = defaultdict(list)
+    for node in (argumentation.get('claim_nodes') or []):
+        paper_id = str(node.get('paper_id') or '').strip()
+        if paper_id:
+            claim_nodes_by_paper[paper_id].append(node)
+
+    challenge_counters = defaultdict(Counter)
+    for attack in (argumentation.get('attack_examples') or []):
+        target_paper_id = str(attack.get('target_paper_id') or '').strip()
+        source_paper_id = str(attack.get('source_paper_id') or '').strip()
+        if target_paper_id and source_paper_id and target_paper_id != source_paper_id:
+            challenge_counters[target_paper_id][source_paper_id] += 1
+
+    def paper_ref_rows(counter):
+        rows = []
+        for paper_id, link_count in counter.items():
+            article = article_by_id.get(paper_id) or {}
+            rows.append({
+                'paper_id': paper_id,
+                'title': article.get('title') or paper_id,
+                'year': article.get('year'),
+                'primary_topic': article.get('primary_topic') or '',
+                'link_count': int(link_count or 0),
+            })
+        rows.sort(key=lambda row: (-row['link_count'], row['title']))
+        return rows
+
+    details = {}
+    for paper_id in paper_ids:
+        article = article_by_id.get(paper_id) or {}
+        accepted = accepted_rows.get(paper_id) or {}
+        science_writer = lifecycle['science_writer'].get(paper_id) or {}
+        pnu = lifecycle['pnu'].get(paper_id) or {}
+        structured_claim = lifecycle['structured_claims'].get(paper_id) or {}
+        measurement_inventory = safe_json_loads(accepted.get('measurement_inventory'), []) or []
+        instrument_inventory = safe_json_loads(accepted.get('instrument_inventory'), []) or []
+        sensor_inventory = safe_json_loads(accepted.get('sensor_inventory'), []) or []
+
+        summary_sections = extract_science_summary_sections(accepted.get('science_writer_summary'))
+        top_claim_rows = sorted(
+            evidence_by_paper.get(paper_id) or [],
+            key=lambda row: (
+                -(int(row.get('support_count') or 0)),
+                int(row.get('attack_count') or 0),
+                -(float(row.get('credence') or 0) if row.get('credence') not in (None, '') else 0.0),
+            ),
+        )[:8]
+
+        support_counter = Counter()
+        attack_counter = Counter(challenge_counters.get(paper_id) or {})
+        support_edge_count = 0
+        attack_edge_count = 0
+        for claim_node in claim_nodes_by_paper.get(paper_id) or []:
+            support_edge_count += int(claim_node.get('incoming_support_count') or 0)
+            attack_edge_count += int(claim_node.get('incoming_attack_count') or 0)
+            for edge in claim_node.get('top_supports') or []:
+                source_paper_id = str(edge.get('source_paper_id') or '').strip()
+                if source_paper_id and source_paper_id != paper_id:
+                    support_counter[source_paper_id] += 1
+            for edge in claim_node.get('top_attacks') or []:
+                source_paper_id = str(edge.get('source_paper_id') or '').strip()
+                if source_paper_id and source_paper_id != paper_id:
+                    attack_counter[source_paper_id] += 1
+
+        mean_credence = credence_means.get(paper_id)
+        details[paper_id] = {
+            'paper_id': paper_id,
+            'science_summary': {
+                'core_finding': summary_sections.get('Core Finding') or structured_claim.get('core_finding_text') or article.get('main_conclusion') or '',
+                'methods_and_design': summary_sections.get('Methods & Design') or clean_rich_text(accepted.get('methods_surface_summary')),
+                'key_statistics': summary_sections.get('Key Statistics') or '',
+                'design_implications': summary_sections.get('Design Implications') or '',
+                'limitations': summary_sections.get('Limitations & Honest Uncertainty') or '',
+                'gap_and_door': summary_sections.get('The Gap & The Door') or '',
+                'word_count': int(science_writer.get('word_count') or 0),
+                'summary_source_modality': science_writer.get('summary_source_modality') or accepted.get('source_modality') or '',
+                'page_image_policy': science_writer.get('page_image_policy') or '',
+                'passed_verification': bool(science_writer.get('passed_verification')),
+            },
+            'atlas_reading': {
+                'core_finding_text': first_sentence_block(structured_claim.get('core_finding_text') or ''),
+                'claim_confidence': structured_claim.get('claim_confidence') or '',
+                'primary_instrument': structured_claim.get('primary_instrument') or '',
+                'outcome_vocab_name': structured_claim.get('outcome_vocab_name') or '',
+            },
+            'pnu': {
+                'short_summary': clean_rich_text(pnu.get('pnu_short_summary_300w')),
+                'long_summary': clean_rich_text(pnu.get('pnu_long_version')),
+                'short_status': pnu.get('pnu_short_summary_status') or '',
+                'long_status': pnu.get('pnu_long_version_status') or '',
+                'panel_status': pnu.get('panel_status') or '',
+                'panel_basis_count': int(pnu.get('panel_basis_count') or 0),
+                'verifier_status': pnu.get('pnu_verifier_status') or '',
+            },
+            'operationalization': {
+                'measurement_count': max(int(science_writer.get('measurement_count') or 0), len(measurement_inventory)),
+                'instrument_count': max(int(science_writer.get('instrument_count') or 0), len(instrument_inventory)),
+                'sensor_count': max(int(science_writer.get('sensor_count') or 0), len(sensor_inventory)),
+                'outcome_operationalization_count': int(science_writer.get('outcome_operationalization_count') or 0),
+                'measurement_inventory': measurement_inventory,
+                'instrument_inventory': instrument_inventory,
+                'sensor_inventory': sensor_inventory,
+                'measurement_schema': safe_json_loads(science_writer.get('measurement_schema_json'), {}) or safe_json_loads(accepted.get('measurement_schema'), {}) or {},
+            },
+            'evidence_profile': {
+                'atlas_credence_mean': mean_credence,
+                'atlas_credence_percentile': credence_percentile(mean_credence),
+                'paper_claim_count': int((paper_nodes.get(paper_id) or {}).get('claim_count') or 0),
+                'support_edge_count': support_edge_count,
+                'attack_edge_count': attack_edge_count,
+                'contradiction_count': int((paper_nodes.get(paper_id) or {}).get('contradiction_count') or 0),
+                'search_target_count': int((paper_nodes.get(paper_id) or {}).get('search_target_count') or 0),
+                'dominant_stance': (paper_nodes.get(paper_id) or {}).get('dominant_stance') or '',
+            },
+            'top_claims': [
+                {
+                    'finding': clean_rich_text(row.get('finding') or row.get('claim') or ''),
+                    'signal': row.get('signal') or '',
+                    'warrant': row.get('warrant') or '',
+                    'credence': row.get('credence'),
+                    'support_count': int(row.get('support_count') or 0),
+                    'attack_count': int(row.get('attack_count') or 0),
+                    'qualifier': row.get('qualifier') or '',
+                }
+                for row in top_claim_rows
+            ],
+            'supporting_papers': paper_ref_rows(support_counter)[:8],
+            'contradicting_papers': paper_ref_rows(attack_counter)[:8],
+        }
+
+    return {
+        'summary': {
+            'article_count': len(details),
+            'source_kind': 'article_detail_lookup',
+            'lifecycle_db': str(LIFECYCLE_DB_PATH.relative_to(ROOT)) if LIFECYCLE_DB_PATH.exists() else '',
+        },
+        'details': details,
+    }
+
+
 def _write_optional_payload_copy(source_path, output_name):
     source = Path(source_path)
     if not source.exists():
@@ -3796,6 +4117,7 @@ def main():
     json_status = build_json_status(articles)
     topic_crosswalk = build_topic_crosswalk_payload(topic_hierarchy)
     argumentation = build_argumentation_payload()
+    article_details = build_article_details_payload(articles, evidence, argumentation)
     annotations = build_annotations_payload()
     interpretation = build_interpretation_payload()
     layers = build_layers_summary(argumentation, annotations, interpretation)
@@ -3821,6 +4143,7 @@ def main():
     (OUT / 'articles.json').write_text(json.dumps({'articles': articles}, indent=2))
     (OUT / 'dashboard.json').write_text(json.dumps({'dashboard': dashboard}, indent=2))
     (OUT / 'json_status.json').write_text(json.dumps(json_status, indent=2))
+    (OUT / 'article_details.json').write_text(json.dumps(article_details, indent=2))
     (OUT / 'topic_hierarchy.json').write_text(json.dumps(topic_hierarchy, indent=2))
     (OUT / 'topic_crosswalk.json').write_text(json.dumps(topic_crosswalk, indent=2))
     (OUT / 'topic_repair_queue.json').write_text(json.dumps({'repair_queue': topic_hierarchy.get('repair_queue') or []}, indent=2))
