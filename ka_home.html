@@ -137,22 +137,28 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
       <a href="#" id="returningDifferent">Choose a different role</a>
     </div>
 
+    <!-- Four balanced entries. Per KA_USER_PERSONAS_AND_USE_CASES, each role
+         has an equally legitimate first-visit intent; no button should
+         dominate visually. The 160-Student button points at the student
+         setup page (per the default-route memory rule, not at the
+         schedule). The Contributor hint avoids pipeline jargon — pipeline
+         tools live at the internal contribute page, not the public one. -->
     <div class="role-grid" id="roleGrid">
-      <a class="role-btn primary" href="ka_topics.html" data-role="researcher">
+      <a class="role-btn" href="ka_topics_public_view.html" data-role="researcher">
         <div class="role-name">Researcher</div>
-        <div class="role-hint">Browse topics, evidence, and theory</div>
-      </a>
-      <a class="role-btn" href="ka_contribute.html" data-role="contributor">
-        <div class="role-name">Contributor</div>
-        <div class="role-hint">Add articles, tag images, run pipelines</div>
+        <div class="role-hint">Browse topics and evidence</div>
       </a>
       <a class="role-btn" href="ka_articles.html" data-role="practitioner">
         <div class="role-name">Practitioner</div>
         <div class="role-hint">Find evidence for a design decision</div>
       </a>
+      <a class="role-btn" href="ka_contribute_public.html" data-role="contributor">
+        <div class="role-name">Contributor</div>
+        <div class="role-hint">Suggest a paper we should index</div>
+      </a>
       <a class="role-btn" href="160sp/ka_student_setup.html" data-role="160-student">
         <div class="role-name">160 Student</div>
-        <div class="role-hint">COGS 160 Spring 2026</div>
+        <div class="role-hint">COGS 160 Spring 2026 — pick your track</div>
       </a>
     </div>
   </div>
@@ -295,8 +301,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
   if (!block) return;
 
   const roleMap = {
-    'researcher':   { label:'Researcher',   href:'ka_topics.html' },
-    'contributor':  { label:'Contributor',  href:'ka_contribute.html' },
+    'researcher':   { label:'Researcher',   href:'ka_topics_public_view.html' },
+    'contributor':  { label:'Contributor',  href:'ka_contribute_public.html' },
     'practitioner': { label:'Practitioner', href:'ka_articles.html' },
     '160-student':  { label:'160 Student',  href:'160sp/ka_student_setup.html' },
     'instructor':   { label:'Instructor',   href:'160sp/ka_admin.html' },

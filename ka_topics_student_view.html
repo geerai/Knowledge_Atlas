@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topics — COGS 160 student view — Knowledge Atlas</title>
+<meta name="description" content="Topic browser tailored to your COGS 160 track. See the bundles most relevant to your current assignment.">
+<script src="ka_canonical_navbar.js" defer></script>
+<script src="ka_user_type.js" defer></script>
+<link rel="stylesheet" href="ka_crosswalk_patterns.css">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  body{background:#F7F4EF;color:#2C2C2C;
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+       line-height:1.55}
+
+  .student-banner{background:#FEF3E2;border:1.5px solid #E8872A;border-radius:10px;
+                   padding:16px 20px;margin-bottom:20px;display:flex;
+                   gap:16px;align-items:flex-start;font-size:0.9rem}
+  .student-banner .sb-icon{font-size:1.3rem;flex-shrink:0;color:#9a5010}
+  .student-banner .sb-body b{color:#1C3D3A}
+  .student-banner a{color:#2A7868;font-weight:600;text-decoration:none}
+  .student-banner a:hover{text-decoration:underline}
+
+  .track-chip{display:inline-block;background:#2A7868;color:#fff;
+               padding:3px 11px;border-radius:14px;font-size:0.78rem;
+               font-weight:700;letter-spacing:0.03em;margin:0 4px}
+  .track-chip.t1{background:#D15A73}
+  .track-chip.t2{background:#2A7868}
+  .track-chip.t3{background:#4A6FA8}
+  .track-chip.t4{background:#E8872A}
+
+  .page-h1{font-family:Georgia,serif;font-size:1.55rem;color:#1C3D3A;margin-bottom:6px}
+  .page-sub{color:#6B6B6B;font-size:0.92rem;margin-bottom:20px;max-width:760px}
+
+  .student-tasks{background:#E6F5F0;border-radius:10px;padding:16px 20px;
+                  margin-bottom:22px;font-size:0.88rem}
+  .student-tasks h3{font-family:Georgia,serif;font-size:1.0rem;
+                     color:#1C3D3A;margin-bottom:8px}
+  .student-tasks .task{padding:6px 0;border-bottom:1px dashed #CFE6DE}
+  .student-tasks .task:last-child{border-bottom:none}
+  .student-tasks .task-id{font-family:ui-monospace,Menlo,monospace;
+                           font-weight:700;color:#1A7050;margin-right:8px}
+
+  .no-track{background:#F9F5EE;border-radius:10px;padding:18px 22px;
+             font-size:0.92rem;color:#6B6B6B;margin-bottom:22px;text-align:center}
+  .no-track a{color:#2A7868;font-weight:600;text-decoration:none}
+  .no-track a:hover{text-decoration:underline}
+</style>
+</head>
+<body data-ka-regime="global" data-ka-active="topics">
+<div id="ka-navbar-slot"></div>
+<main class="ka-topic-page">
+
+  <!-- ── Student-specific orientation strip ── -->
+  <div class="student-banner">
+    <span class="sb-icon">🎓</span>
+    <div class="sb-body">
+      <b>COGS 160 student view.</b> You are looking at the topic browser
+      configured for your track. The bundles most relevant to your current
+      assignment are highlighted below. If you do not see your track
+      highlighted, set it on your <a href="160sp/ka_student_setup.html">student setup page</a>.
+      Prefer the full picture? <a href="ka_topics.html">Switch to the general view</a>.
+    </div>
+  </div>
+
+  <h1 class="page-h1" id="__ka_page_title">Research topics</h1>
+  <p class="page-sub" id="__ka_page_sub">
+    Pick a topic to see the studies, theories, and measures the Atlas has on
+    file. Use the progressive-disclosure browser below.
+  </p>
+
+  <!-- ── Track-aware assignment tie-ins (populated client-side) ── -->
+  <div id="__ka_track_tasks"></div>
+
+  <!-- ── Primary interaction: progressive-disclosure facets ── -->
+  <div id="__ka_pattern_mount"></div>
+
+  <!-- ── Internal maintainer note ── -->
+  <div style="margin-top:32px;padding-top:16px;border-top:1px dashed #E0D8CC;
+              font-size:0.78rem;color:#8A9A96">
+    Internal note (for maintainers): this is the <b>160-student</b> variant
+    of the topic page. It orients the student toward their current track,
+    ties topic browsing to the deliverable the student is about to do, and
+    points at the rubric for that deliverable so the exploration is a
+    scaffold for the assignment rather than a detour. Developers comparing
+    the six topic-page variants for the UX track (T4.b.2) should use
+    <a href="ka_topics.html" style="color:#2A7868">the Classic View</a>
+    with the variant-row exposed.
+  </div>
+
+</main>
+
+<script src="ka_crosswalk_patterns.js"></script>
+<script>
+(async function(){
+  const mount = document.getElementById("__ka_pattern_mount");
+  const tasksEl = document.getElementById("__ka_track_tasks");
+  const titleEl = document.getElementById("__ka_page_title");
+  const subEl = document.getElementById("__ka_page_sub");
+
+  // Read the student's current track from localStorage. The track-join
+  // modal pattern on ka_track{1..4}_*.html writes ka_current_track; the
+  // student_setup page reads the same key.
+  const track = (localStorage.getItem("ka.currentTrack") ||
+                 localStorage.getItem("ka_current_track") || "").toLowerCase();
+
+  // Per-track scoping: which crosswalk iv_roots or outcomes each track
+  // most cares about, and which assignment deliverables they're working on.
+  const trackConfig = {
+    t1: {
+      name: "Track 1 — Image Tagging",
+      chipClass: "t1",
+      // Track 1 students work against visual/luminous/spatial topic bundles
+      emphasise_iv_roots: ["luminous", "spatial", "natural", "material"],
+      assignments: [
+        {id: "T1.a", label: "Schema study + 20 tagged images", link: "160sp/rubrics/t1/T1.a_schema_study.md"},
+        {id: "T1.b", label: "Tag 100 images", link: "160sp/rubrics/t1/T1.b_tag_100.md"},
+        {id: "T1.c", label: "Inter-rater kappa ≥ 0.7", link: "160sp/rubrics/t1/T1.c_interrater_kappa.md"},
+      ],
+      task_hint: "Topic bundles for Track 1 are visual / spatial / material; start there when picking frameworks to anchor your tagging schema against.",
+    },
+    t2: {
+      name: "Track 2 — Article Finder",
+      chipClass: "t2",
+      emphasise_iv_roots: null,   // Track 2 students care about all of it
+      assignments: [
+        {id: "T2.a", label: "Pipeline onboarding + 15 articles", link: "160sp/rubrics/t2/T2.a_onboarding.md"},
+        {id: "T2.d", label: "50-article topical-coverage sweep", link: "160sp/rubrics/t2/T2.d_topical_sweep.md"},
+        {id: "T2.f", label: "150-article cumulative + coverage audit", link: "160sp/rubrics/t2/T2.f_cumulative_150.md"},
+      ],
+      task_hint: "You are the one who fills this board. Pick a sub-topic you find interesting and audit the coverage; your T2.d / T2.f deliverables target 50 and 150 articles respectively.",
+    },
+    t3: {
+      name: "Track 3 — VR",
+      chipClass: "t3",
+      emphasise_iv_roots: ["spatial", "luminous", "natural", "acoustic"],
+      assignments: [
+        {id: "T3.b", label: "First interactive scene (one T1-framework mapping)", link: "160sp/rubrics/t3/T3.b_first_scene.md"},
+        {id: "T3.e", label: "User-study pilot (n = 3)", link: "160sp/rubrics/t3/T3.e_user_pilot.md"},
+      ],
+      task_hint: "Each scene you build operationalises one topic bundle. Start from a bundle with defended evidence and clear outcome measures; the bundles here link to the instruments you'd use.",
+    },
+    t4: {
+      name: "Track 4 — UX Research",
+      chipClass: "t4",
+      emphasise_iv_roots: null,
+      assignments: [
+        {id: "T4.a", label: "Heuristic audit (10 findings)", link: "160sp/rubrics/t4/T4.a_heuristic_audit.md"},
+        {id: "T4.b", label: "Scenario-based walkthroughs (3 archetype roles)", link: "160sp/rubrics/t4/T4.b_scenarios.md"},
+        {id: "T4.b.2", label: "Topic-page variant evaluation", link: "160sp/rubrics/t4/T4.b.2_topic_variant_evaluation.md"},
+      ],
+      task_hint: "The topic page itself is one of your audit surfaces — the T4.b.2 deliverable walks the three user archetypes through all six variants.",
+    },
+  };
+
+  const cfg = trackConfig[track] || null;
+
+  if (cfg) {
+    titleEl.innerHTML = `Research topics <span class="track-chip ${cfg.chipClass}">${cfg.name.split("—")[0].trim()}</span>`;
+    subEl.textContent = cfg.task_hint;
+    tasksEl.innerHTML = `
+      <div class="student-tasks">
+        <h3>Your deliverables that this page can help with</h3>
+        ${cfg.assignments.map(a => `
+          <div class="task">
+            <span class="task-id">${a.id}</span>
+            <a href="${a.link}" target="_blank" style="color:#1C3D3A;font-weight:600;text-decoration:none">${a.label}</a>
+            <span style="color:#6B6B6B;font-size:0.82rem"> · rubric ↗</span>
+          </div>`).join("")}
+      </div>`;
+  } else {
+    tasksEl.innerHTML = `
+      <div class="no-track">
+        We don't yet know which track you're on. Go to
+        <a href="160sp/ka_student_setup.html">your student setup page</a> to pick one,
+        and this page will tailor itself to your track's deliverables.
+      </div>`;
+  }
+
+  try {
+    const data = await KA_CROSSWALK.loadCrosswalk();
+    KA_CROSSWALK.renderProgressiveDisclosure(data, mount);
+  } catch (e) {
+    mount.innerHTML =
+      '<div style="background:#F8D7DA;color:#8A1A25;padding:14px 18px;border-radius:8px">'+
+      '<b>Topic browser is offline.</b> Try reloading the page. If it persists, browse articles directly from <a href="ka_articles.html" style="color:#8A1A25;text-decoration:underline">the articles page</a>.'+
+      '</div>';
+  }
+})();
+</script>
+</body>
+</html>
