@@ -264,8 +264,13 @@
       color: #888;
     }
     .source-links strong { color: #555; font-weight: 700; }
-    .source-links a { color: var(--ka-teal); text-decoration: none; margin-right: 0.75rem; }
-    .source-links a:hover { text-decoration: underline; }
+    .source-ref {
+      display: inline-block;
+      color: var(--ka-teal);
+      margin-right: 0.75rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.92em;
+    }
 
     /* ── Credential bar (top of doc) ─────────────── */
     .doc-credential {
@@ -420,10 +425,10 @@ graph TD
 
         <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>Chapter 1 is the entry point for every new student and collaborator. Read it before any other chapter to understand why each component exists. The five-layer diagram is the most concise single-image summary of K-ATLAS; the PageRank analogy has proven effective with students who have no formal Bayesian background — it conveys that authority propagates rather than merely vote-counts, without requiring probabilistic notation. When explaining the system to a research collaborator, this diagram and that analogy are the right starting point.</p></div>
         <div class="source-links"><strong>Source files:</strong>
-          <a href="../ARCHITECTURE.md">ARCHITECTURE.md</a>
-          <a href="../docs/ATLAS_THEORETICAL_FOUNDATIONS_MASTER_DOC.md">Master Doc</a>
-          <a href="../src/epistemic/contracts/claim_v2.py">claim_v2.py</a>
-          <a href="../src/epistemic/contracts/edge_v2.py">edge_v2.py</a>
+          <span class="source-ref">ARCHITECTURE.md</span>
+          <span class="source-ref">ATLAS_THEORETICAL_FOUNDATIONS_MASTER_DOC.md</span>
+          <span class="source-ref">claim_v2.py</span>
+          <span class="source-ref">edge_v2.py</span>
         </div>
       </section>
 
@@ -524,11 +529,11 @@ P = 1 − (1−0.70)(1−0.65)(1−0.60)
 
         <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>When a QA answer cites a credence value, the EN is what produced it. Understanding ClaimV2 structure and warrant types allows you to interpret any answer intelligently: a credence of 0.63 with interval [0.45, 0.78] tells a very different story than 0.78 with interval [0.71, 0.84], even though both represent moderate confidence. The warrant-type table is the most pedagogically valuable single table in the system — it makes the implicit hierarchy of evidence quality explicit and quantitative, and is worth a full class session.</p></div>
         <div class="source-links"><strong>Source files:</strong>
-          <a href="../src/epistemic/web_of_belief.py">web_of_belief.py</a>
-          <a href="../src/epistemic/warrant_scaling.py">warrant_scaling.py</a>
-          <a href="../src/epistemic/contracts/claim_v2.py">claim_v2.py</a>
-          <a href="../src/epistemic/contracts/edge_v2.py">edge_v2.py</a>
-          <a href="../docs/EPISTEMIC_PRINCIPLES.md">EPISTEMIC_PRINCIPLES.md</a>
+          <span class="source-ref">web_of_belief.py</span>
+          <span class="source-ref">warrant_scaling.py</span>
+          <span class="source-ref">claim_v2.py</span>
+          <span class="source-ref">edge_v2.py</span>
+          <span class="source-ref">EPISTEMIC_PRINCIPLES.md</span>
         </div>
       </section>
 
@@ -600,9 +605,9 @@ Example: 9 coherent links, 1 contradiction:
 
         <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>Bridge warrants are the primary mechanism for translating Japanese forest-bathing studies into design guidance for offices in San Diego. Every design recommendation that crosses a population or context boundary relies on a bridge warrant, and the formula makes that translation auditable rather than implicit. In the course, Chapters 3 and 5 work together: Chapter 3 explains how evidence is translated across contexts; Chapter 5 explains how translated credences enter the projection model. A student who understands both can trace a design recommendation from the original study all the way to the final probability projection.</p></div>
         <div class="source-links"><strong>Source files:</strong>
-          <a href="../src/services/bridge_warrants.py">bridge_warrants.py</a>
-          <a href="../src/epistemic/warrant_scaling.py">warrant_scaling.py</a>
-          <a href="../contracts/vocab/argument_schemes.json">argument_schemes.json</a>
+          <span class="source-ref">bridge_warrants.py</span>
+          <span class="source-ref">warrant_scaling.py</span>
+          <span class="source-ref">argument_schemes.json</span>
         </div>
       </section>
 
@@ -668,9 +673,9 @@ Example: 9 coherent links, 1 contradiction:
 
         <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>Every extraction assigns each claim to a tier, and this assignment determines which warrant types are permissible and how credences propagate. In practice, the tier table is the first reference when reading an unfamiliar paper: it tells you how much theoretical weight to give a paper's claims and what kind of warrant connects its findings to K-ATLAS beliefs. For course purposes, the T1.5 table — which lists domain theories with their reductions to T1 mechanisms — is the most useful teaching tool: it shows students that concepts like "fascination" in Attention Restoration Theory are not theoretical primitives but derived constructs that inherit their credence from predictive-processing and directed-attention research.</p></div>
         <div class="source-links"><strong>Source files:</strong>
-          <a href="../docs/02-14_07_Theory_Tier_Architecture_V1.0.md">Theory Tier Architecture V1.0.md</a>
-          <a href="../src/epistemic/entrenchment/entrenchment_index.py">entrenchment_index.py</a>
-          <a href="../ARCHITECTURE.md">ARCHITECTURE.md §Theory Tiers</a>
+          <span class="source-ref">02-14_07_Theory_Tier_Architecture_V1.0.md</span>
+          <span class="source-ref">entrenchment_index.py</span>
+          <span class="source-ref">ARCHITECTURE.md §Theory Tiers</span>
         </div>
       </section>
 
@@ -719,10 +724,10 @@ Example: 9 coherent links, 1 contradiction:
 
         <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>The BN answers "what-if" design questions that the EN cannot. While the EN tells you what the literature says about forest exposure and cortisol, the BN tells you what outcome to expect for a specific person in a specific room with specific design parameters. For the VR stimulus design work, this is the key projection tool: the BN predicts which parameter combinations — fractal dimension, mEDI, soundscape complexity — should produce the largest stress-recovery effect for a given patient population. The dual-BN diagnostic is worth inspecting whenever a projection seems surprising: high divergence signals that theoretical inference is doing most of the work.</p></div>
         <div class="source-links"><strong>Source files:</strong>
-          <a href="../src/epistemic/bn_nodes.py">bn_nodes.py</a>
-          <a href="../src/epistemic/bn_edges.py">bn_edges.py</a>
-          <a href="../src/services/t3_belief_engine.py">t3_belief_engine.py</a>
-          <a href="../src/services/t3_integration.py">t3_integration.py</a>
+          <span class="source-ref">bn_nodes.py</span>
+          <span class="source-ref">bn_edges.py</span>
+          <span class="source-ref">t3_belief_engine.py</span>
+          <span class="source-ref">t3_integration.py</span>
         </div>
       </section>
 
@@ -780,12 +785,12 @@ Example: 9 coherent links, 1 contradiction:
 
         <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>The QA system is where K-ATLAS becomes a research tool rather than a database. For students in the spring course, QA sessions are the primary interaction mode. The most important habit is to read the Population Qualifier (enrichment step 4) and the Gap Disclosure (step 7) before using any answer in a design argument — these are where the system tells you what it does not know and why. The Related Questions panel (step 9), generated by the Interpretation Space, often surfaces the question the student should have asked but did not know to ask.</p></div>
         <div class="source-links"><strong>Source files:</strong>
-          <a href="../src/services/arbitrary_qa_handler.py">arbitrary_qa_handler.py</a>
-          <a href="../src/qa/qa_cache_manager.py">qa_cache_manager.py</a>
-          <a href="../contracts/QA_ANSWER_NORMS.md">QA_ANSWER_NORMS.md</a>
-          <a href="../src/services/pipeline_qa_integration.py">pipeline_qa_integration.py</a>
-          <a href="../src/services/cva_qa_enricher.py">cva_qa_enricher.py</a>
-          <a href="../docs/EPISTEMIC_PRINCIPLES.md">EPISTEMIC_PRINCIPLES.md</a>
+          <span class="source-ref">arbitrary_qa_handler.py</span>
+          <span class="source-ref">qa_cache_manager.py</span>
+          <span class="source-ref">QA_ANSWER_NORMS.md</span>
+          <span class="source-ref">pipeline_qa_integration.py</span>
+          <span class="source-ref">cva_qa_enricher.py</span>
+          <span class="source-ref">EPISTEMIC_PRINCIPLES.md</span>
         </div>
       </section>
 
@@ -834,11 +839,11 @@ Example: 9 coherent links, 1 contradiction:
 
         <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>For student teams in the spring course, Chapter 7 is the map of what happens between "I found a paper" and "the paper is in K-ATLAS." The 14-step cascade table is the debugging reference for integration failures: if a paper does not appear in QA answers, walk through the steps in order to locate where the cascade stopped. Contract files — especially <span class="mono">claim_v2.py</span> and <span class="mono">edge_v2.py</span> — are the authoritative schema documentation; they are the right place to look when a field name is ambiguous or its permissible values are unclear.</p></div>
         <div class="source-links"><strong>Source files:</strong>
-          <a href="../src/epistemic/contracts/claim_v2.py">claim_v2.py</a>
-          <a href="../src/epistemic/contracts/edge_v2.py">edge_v2.py</a>
-          <a href="../contracts/">contracts/ directory</a>
-          <a href="../ARCHITECTURE.md">ARCHITECTURE.md</a>
-          <a href="../contracts/success_conditions.json">success_conditions.json</a>
+          <span class="source-ref">claim_v2.py</span>
+          <span class="source-ref">edge_v2.py</span>
+          <span class="source-ref">contracts/ directory</span>
+          <span class="source-ref">ARCHITECTURE.md</span>
+          <span class="source-ref">success_conditions.json</span>
         </div>
       </section>
 
@@ -891,11 +896,11 @@ Example: 9 coherent links, 1 contradiction:
 
         <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>The Overseer is the system's conscience. Its nightly report — the AESHI score and invariant status table — is the morning briefing: which beliefs have degraded, which pipelines are slow, and what each remediation playbook recommends. For student teams, the Overseer dashboard is the clearest indicator of whether the work done yesterday actually landed in the system correctly. Checking the Overseer after submitting any significant batch of papers is the equivalent of running a test suite: it tells you whether the integration introduced inconsistencies that need to be resolved before the next session.</p></div>
         <div class="source-links"><strong>Source files:</strong>
-          <a href="../src/services/overseer.py">overseer.py</a>
-          <a href="../governance/">governance/ directory</a>
-          <a href="../agents/SCIENCE_WRITER_AGENT.md">SCIENCE_WRITER_AGENT.md</a>
-          <a href="../AGENTS.md">AGENTS.md</a>
-          <a href="../tests/">tests/ directory</a>
+          <span class="source-ref">overseer.py</span>
+          <span class="source-ref">governance/ directory</span>
+          <span class="source-ref">SCIENCE_WRITER_AGENT.md</span>
+          <span class="source-ref">AGENTS.md</span>
+          <span class="source-ref">tests/ directory</span>
         </div>
       </section>
 
@@ -961,9 +966,9 @@ Example: 9 coherent links, 1 contradiction:
 
         <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>Chapter 9 is not a failure inventory — it is a prioritised research agenda. Before starting any implementation sprint, read it to check whether the gap you are about to fill is listed, and if so, what additional context is available. The Unbuilt Components table is the operational go-live checklist; the Intellectual Capital Gaps section is the list of arguments that need to be written before K-ATLAS can be fully published. For the Panel Agent, Chapter 9 is the primary source of open questions for each expert panel convened at a sprint boundary.</p></div>
         <div class="source-links"><strong>Source files:</strong>
-          <a href="../STUBS_AND_BLOCKING_FACTORS.md">STUBS_AND_BLOCKING_FACTORS.md</a>
-          <a href="../RUTHLESS_V8_AUDIT_REPORT.md">RUTHLESS_V8_AUDIT_REPORT.md</a>
-          <a href="../docs/ATLAS_THEORETICAL_FOUNDATIONS_MASTER_DOC.md">Master Doc</a>
+          <span class="source-ref">STUBS_AND_BLOCKING_FACTORS.md</span>
+          <span class="source-ref">RUTHLESS_V8_AUDIT_REPORT.md</span>
+          <span class="source-ref">ATLAS_THEORETICAL_FOUNDATIONS_MASTER_DOC.md</span>
         </div>
       </section>
 
@@ -1040,14 +1045,14 @@ graph LR
 
         <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>The Argumentation Engine is currently invoked primarily through <span class="mono">engine.vulnerability_report()</span>, which surfaces in QA answers as the "Alternative Explanations" enrichment step (step 8). For a student asking "Is biophilia well-supported?", the vulnerability report is the most informative output — it tells them not just that the credence is 0.43 but specifically why: WEIRD sampling bias, an unreplicated fractal-dimension claim, and two direct theoretical challenges. The PaperRelation component is most useful for students doing systematic review work — it identifies which papers in the corpus replicate, extend, or directly contest any other paper, saving manual cross-referencing time.</p></div>
         <div class="source-links" style="margin-top:1.5rem"><strong>Source files:</strong>
-          <a href="../src/argument/engine.py">engine.py</a>
-          <a href="../src/argument/critique_aggregator.py">critique_aggregator.py</a>
-          <a href="../src/argument/hierarchy_evidence.py">hierarchy_evidence.py</a>
-          <a href="../src/argument/meta_analytic.py">meta_analytic.py</a>
-          <a href="../src/argument/paper_relations.py">paper_relations.py</a>
-          <a href="../contracts/vocab/argument_schemes.json">argument_schemes.json</a>
-          <a href="../tests/test_argument_packets.py">test_argument_packets.py</a>
-          <a href="../tests/test_claim_argument_graph.py">test_claim_argument_graph.py</a>
+          <span class="source-ref">engine.py</span>
+          <span class="source-ref">critique_aggregator.py</span>
+          <span class="source-ref">hierarchy_evidence.py</span>
+          <span class="source-ref">meta_analytic.py</span>
+          <span class="source-ref">paper_relations.py</span>
+          <span class="source-ref">argument_schemes.json</span>
+          <span class="source-ref">test_argument_packets.py</span>
+          <span class="source-ref">test_claim_argument_graph.py</span>
         </div>
 
         <!-- ── Interpretation Space ── -->
@@ -1090,13 +1095,13 @@ graph LR
 
         <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>The Interpretation Space currently feeds the "Related Questions" panel (QA enrichment step 9), though this wiring is not yet complete. In the intended design, every QA answer surfaces three to five generated questions from the relevant mechanism templates: the R₁ (definitional) question for students new to the topic, the R₂ (evidential) question for those who want to interrogate the evidence base, and the R₄ (dialectical) question for those who want to understand the contested terrain. For the fall course, the Interpretation Space is the most promising tool for guided independent research: rather than assigning a reading list, the course could assign three R₄ questions per topic and ask students to find papers that answer them — turning the Interpretation Space into a research curriculum generator.</p></div>
         <div class="source-links" style="margin-top:1.5rem"><strong>Source files:</strong>
-          <a href="../src/services/interpretation_space_engine.py">interpretation_space_engine.py</a>
-          <a href="../src/services/interpretation_space_suggestions.py">interpretation_space_suggestions.py</a>
-          <a href="../src/services/interpretive_intelligence.py">interpretive_intelligence.py</a>
-          <a href="../tests/test_interpretation_space_suggestions.py">test_interpretation_space_suggestions.py</a>
-          <a href="../tests/test_interpretive_intelligence.py">test_interpretive_intelligence.py</a>
-          <a href="../tests/test_interpretation_zone_classification.py">test_interpretation_zone_classification.py</a>
-          <a href="../data/interpretation_space/">data/interpretation_space/</a>
+          <span class="source-ref">interpretation_space_engine.py</span>
+          <span class="source-ref">interpretation_space_suggestions.py</span>
+          <span class="source-ref">interpretive_intelligence.py</span>
+          <span class="source-ref">test_interpretation_space_suggestions.py</span>
+          <span class="source-ref">test_interpretive_intelligence.py</span>
+          <span class="source-ref">test_interpretation_zone_classification.py</span>
+          <span class="source-ref">data/interpretation_space/</span>
         </div>
 
         <!-- ── QA Layer ── -->
@@ -1145,14 +1150,14 @@ graph TD
 
         <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>The QA system is the point where K-ATLAS becomes a research tool rather than an infrastructure layer. For students in the spring course, QA sessions are the primary interaction mode, and the most important reading habit is to check the Population Qualifier (step 4) and Gap Disclosure (step 7) before using any answer in a design argument. The evidence / interpretation / prediction labelling (step 2) is worth examining in class: it makes explicit the epistemic status of each sentence in an answer, practising a form of epistemic vigilance that students rarely develop from reading papers alone.</p></div>
         <div class="source-links" style="margin-top:1.5rem"><strong>Source files:</strong>
-          <a href="../src/services/arbitrary_qa_handler.py">arbitrary_qa_handler.py</a>
-          <a href="../src/services/cva_qa_enricher.py">cva_qa_enricher.py</a>
-          <a href="../src/services/circuit_qa_service.py">circuit_qa_service.py</a>
-          <a href="../src/argument/qa_handlers.py">argument/qa_handlers.py</a>
-          <a href="../src/qa/qa_cache_manager.py">qa_cache_manager.py</a>
-          <a href="../src/services/pipeline_qa_integration.py">pipeline_qa_integration.py</a>
-          <a href="../contracts/QA_ANSWER_NORMS.md">QA_ANSWER_NORMS.md</a>
-          <a href="../docs/EPISTEMIC_PRINCIPLES.md">EPISTEMIC_PRINCIPLES.md</a>
+          <span class="source-ref">arbitrary_qa_handler.py</span>
+          <span class="source-ref">cva_qa_enricher.py</span>
+          <span class="source-ref">circuit_qa_service.py</span>
+          <span class="source-ref">argument/qa_handlers.py</span>
+          <span class="source-ref">qa_cache_manager.py</span>
+          <span class="source-ref">pipeline_qa_integration.py</span>
+          <span class="source-ref">QA_ANSWER_NORMS.md</span>
+          <span class="source-ref">EPISTEMIC_PRINCIPLES.md</span>
         </div>
 
         <!-- ── Annotation Layer ── -->
@@ -1194,13 +1199,13 @@ graph TD
 
         <div class="how-we-use"><div class="how-we-use-head">How We Use It</div><p>The Annotation Layer is the primary channel for injecting domain expertise into K-ATLAS without modifying the source extraction data. A new annotation requires three fields — the belief ID, the annotation type, and the content — added through <span class="mono">annotation_service.add_annotation()</span>. In practice, the most common annotation types are DESIGN_IMPLICATION (attaching an architectural recommendation to a belief) and OPEN_QUESTION (flagging an unresolved question from a QA session). For the fall course, a student team with annotation privileges could collectively annotate the corpus over the semester, building a structured layer of expert commentary on top of the extracted evidence — a form of peer learning that would benefit subsequent cohorts.</p></div>
         <div class="source-links" style="margin-top:1.5rem"><strong>Source files:</strong>
-          <a href="../src/services/annotation_service.py">annotation_service.py</a>
-          <a href="../src/models/cva_annotations.py">cva_annotations.py</a>
-          <a href="../src/models/extended_annotations.py">extended_annotations.py</a>
-          <a href="../migrations/024_annotation_system.sql">024_annotation_system.sql</a>
-          <a href="../tests/test_annotation_service.py">test_annotation_service.py</a>
-          <a href="../tests/test_annotation_card_integration.py">test_annotation_card_integration.py</a>
-          <a href="../tests/test_annotation_authority_contract.py">test_annotation_authority_contract.py</a>
+          <span class="source-ref">annotation_service.py</span>
+          <span class="source-ref">cva_annotations.py</span>
+          <span class="source-ref">extended_annotations.py</span>
+          <span class="source-ref">024_annotation_system.sql</span>
+          <span class="source-ref">test_annotation_service.py</span>
+          <span class="source-ref">test_annotation_card_integration.py</span>
+          <span class="source-ref">test_annotation_authority_contract.py</span>
         </div>
 
       </section>

@@ -3396,6 +3396,104 @@ def build_topic_hierarchy_payload(articles, topic_summary, ontology_payload=None
     return heuristic_payload
 
 
+def build_topic_crosswalk_payload(topic_hierarchy):
+    views = topic_hierarchy.get('views') or {}
+    defended_view = views.get('defended') or topic_hierarchy
+    working_view = views.get('working') or topic_hierarchy
+    defended_topics = list(defended_view.get('topics') or [])
+    working_topics = {topic.get('id'): topic for topic in (working_view.get('topics') or []) if topic.get('id')}
+
+    rows = []
+    outcome_index = {}
+    family_index = {}
+
+    for topic in defended_topics:
+        topic_id = str(topic.get('id') or '').strip()
+        if not topic_id:
+            continue
+        outcome_term_id = str(topic.get('dv_focus') or '').strip() or 'unspecified.outcome'
+        outcome_label = str(topic.get('dv_focus_label') or topic.get('dv_root_label') or outcome_term_id)
+        iv_root = str(topic.get('iv_root') or '').strip() or 'unspecified'
+        iv_root_label_text = str(topic.get('iv_root_label') or iv_root_label(iv_root) or iv_root)
+        paper_ids = sorted({str(paper_id).strip() for paper_id in (topic.get('paper_ids') or []) if str(paper_id).strip()})
+        working_topic = working_topics.get(topic_id) or {}
+        working_paper_ids = sorted(
+            {str(paper_id).strip() for paper_id in (working_topic.get('paper_ids') or paper_ids) if str(paper_id).strip()}
+        )
+        defended_count = int(topic.get('paper_count') or len(paper_ids))
+        working_count = int(working_topic.get('paper_count') or len(working_paper_ids))
+
+        row = {
+            'topic_id': topic_id,
+            'topic_label': topic.get('label') or topic_id,
+            'outcome_term_id': outcome_term_id,
+            'outcome_label': outcome_label,
+            'iv_root': iv_root,
+            'iv_root_label': iv_root_label_text,
+            'iv_node': topic.get('iv_node') or iv_root,
+            'iv_label': topic.get('iv_label') or iv_root_label_text,
+            'paper_ids': paper_ids,
+            'paper_count': defended_count,
+            'defended_paper_count': defended_count,
+            'working_paper_count': max(defended_count, working_count),
+            'theories': list(topic.get('theories') or [])[:8],
+            'common_sensors': list(topic.get('sensors') or [])[:8],
+            'fronts': list(topic.get('fronts') or [])[:8],
+            'evidence_status': 'defended',
+        }
+        rows.append(row)
+
+        outcome_entry = outcome_index.setdefault(
+            outcome_term_id,
+            {
+                'outcome_term_id': outcome_term_id,
+                'outcome_label': outcome_label,
+                'paper_count': 0,
+                'topic_ids': [],
+            },
+        )
+        outcome_entry['paper_count'] += defended_count
+        outcome_entry['topic_ids'].append(topic_id)
+
+        family_entry = family_index.setdefault(
+            iv_root,
+            {
+                'iv_root': iv_root,
+                'iv_root_label': iv_root_label_text,
+                'paper_count': 0,
+                'topic_ids': [],
+            },
+        )
+        family_entry['paper_count'] += defended_count
+        family_entry['topic_ids'].append(topic_id)
+
+    for entry in outcome_index.values():
+        entry['topic_ids'] = sorted(set(entry['topic_ids']))
+        entry['topic_count'] = len(entry['topic_ids'])
+
+    for entry in family_index.values():
+        entry['topic_ids'] = sorted(set(entry['topic_ids']))
+        entry['topic_count'] = len(entry['topic_ids'])
+
+    rows.sort(key=lambda row: (-int(row.get('paper_count') or 0), row.get('topic_label') or row.get('topic_id') or ''))
+    outcome_rows = sorted(outcome_index.values(), key=lambda row: (-int(row.get('paper_count') or 0), row.get('outcome_label') or ''))
+    family_rows = sorted(family_index.values(), key=lambda row: (-int(row.get('paper_count') or 0), row.get('iv_root_label') or ''))
+
+    return {
+        'summary': {
+            'row_count': len(rows),
+            'outcome_count': len(outcome_rows),
+            'iv_root_count': len(family_rows),
+            'default_view': topic_hierarchy.get('default_view') or 'defended',
+            'source_kind': 'topic_crosswalk',
+        },
+        'rows': rows,
+        'outcome_index': outcome_rows,
+        'iv_root_index': family_rows,
+        'source_files': topic_hierarchy.get('source_files') or {},
+    }
+
+
 def _write_optional_payload_copy(source_path, output_name):
     source = Path(source_path)
     if not source.exists():
@@ -3696,6 +3794,7 @@ def main():
     )
     dashboard = build_dashboard(articles, evidence)
     json_status = build_json_status(articles)
+    topic_crosswalk = build_topic_crosswalk_payload(topic_hierarchy)
     argumentation = build_argumentation_payload()
     annotations = build_annotations_payload()
     interpretation = build_interpretation_payload()
@@ -3723,6 +3822,7 @@ def main():
     (OUT / 'dashboard.json').write_text(json.dumps({'dashboard': dashboard}, indent=2))
     (OUT / 'json_status.json').write_text(json.dumps(json_status, indent=2))
     (OUT / 'topic_hierarchy.json').write_text(json.dumps(topic_hierarchy, indent=2))
+    (OUT / 'topic_crosswalk.json').write_text(json.dumps(topic_crosswalk, indent=2))
     (OUT / 'topic_repair_queue.json').write_text(json.dumps({'repair_queue': topic_hierarchy.get('repair_queue') or []}, indent=2))
     (OUT / 'topic_exclusion_queue.json').write_text(json.dumps({'exclusion_queue': topic_hierarchy.get('exclusion_queue') or []}, indent=2))
     if ontology_payload and membership_payload:

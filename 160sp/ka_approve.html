@@ -17,6 +17,86 @@
             color: #4A3E32;
         }
 
+        body.preauth nav,
+        body.preauth .admin-wrapper,
+        body.preauth .version-badge {
+            visibility: hidden;
+        }
+
+        #auth-gate {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #1C3D3A 0%, #0E2220 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            z-index: 4000;
+        }
+
+        #auth-gate.hidden {
+            display: none;
+        }
+
+        .auth-card {
+            width: min(560px, 100%);
+            background: #FFFFFF;
+            border-radius: 14px;
+            padding: 28px 30px;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.28);
+            border: 1px solid rgba(224,218,211,0.8);
+        }
+
+        .auth-card h1 {
+            font-size: 28px;
+            color: #1C3D3A;
+            margin-bottom: 10px;
+        }
+
+        .auth-card p {
+            font-size: 14px;
+            line-height: 1.65;
+            color: #5E5348;
+            margin-bottom: 14px;
+        }
+
+        .auth-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+
+        .auth-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+        }
+
+        .auth-btn.primary {
+            background: #1C3D3A;
+            color: #FFFFFF;
+        }
+
+        .auth-btn.secondary {
+            background: #F7F4EF;
+            color: #1C3D3A;
+            border: 1px solid #D7CEC4;
+        }
+
+        .auth-note {
+            margin-top: 16px;
+            font-size: 12px;
+            color: #7C6F62;
+        }
+
         /* Navigation */
         nav {
             position: fixed;
@@ -689,6 +769,19 @@
 <div id="ka-navbar-slot"></div>
 <div id="ka-breadcrumb-slot"></div>
 
+    <div id="auth-gate">
+        <div class="auth-card" role="dialog" aria-modal="true" aria-labelledby="auth-gate-title">
+            <h1 id="auth-gate-title">Instructor sign-in required</h1>
+            <p>This approval queue is for instructors and course administrators. It should not expose applicant data before the admin gate has fired.</p>
+            <p>Sign in through the main admin console first. When your admin session is live, come back here and reload the page.</p>
+            <div class="auth-actions">
+                <a class="auth-btn primary" href="ka_admin.html">Open main admin console</a>
+                <button class="auth-btn secondary" type="button" onclick="location.reload()">I've signed in — reload</button>
+            </div>
+            <div class="auth-note">Session check: <code>sessionStorage['ka.admin'] === 'yes'</code>.</div>
+        </div>
+    </div>
+
     <!-- Navigation -->
     <nav>
         <a href="../ka_home.html" class="nav-brand">
@@ -1136,6 +1229,19 @@
     <script src="../data/ka_payloads/workflow.js"></script>
     <script src="../ka_workflow_store.js"></script>
     <script>
+        const SS = window.sessionStorage;
+        function isAdmin() {
+            return SS.getItem('ka.admin') === 'yes';
+        }
+        function hideAuthGate() {
+            document.body.classList.remove('preauth');
+            document.getElementById('auth-gate').classList.add('hidden');
+        }
+        function showAuthGate() {
+            document.body.classList.add('preauth');
+            document.getElementById('auth-gate').classList.remove('hidden');
+        }
+
         // ── ROW EXPAND ──
         function expandRow(rowElement) {
             const nextRow = rowElement.nextElementSibling;
@@ -1379,6 +1485,12 @@
         }
 
         renderApprovalQueue();
+
+        if (isAdmin()) {
+            hideAuthGate();
+        } else {
+            showAuthGate();
+        }
 
         document.addEventListener('keydown', e => {
             if (e.key === 'Escape') {

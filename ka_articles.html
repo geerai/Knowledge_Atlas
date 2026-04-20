@@ -225,7 +225,7 @@ function render(){
 
   results.innerHTML = slice.map(a => `
     <article class="art">
-      <h3><a href="PNU_ARTICLES/${esc(a.id)}_pnu.html">${esc(a.title)}</a></h3>
+      <h3><a href="ka_article_view.html?id=${encodeURIComponent(a.id)}">${esc(a.title)}</a></h3>
       <div class="authors">${esc(a.authors)}</div>
       <div class="meta">
         <span>${esc(a.year)}</span>
