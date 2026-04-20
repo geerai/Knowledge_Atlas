@@ -106,6 +106,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
 .updates-item .txt{flex:1;color:#2C2C2C}
 .updates-item a{color:#2A7868;text-decoration:none;font-weight:600}
 
+.workbench-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.workbench-card{background:#fff;border:1.5px solid #E0D8CC;border-radius:10px;padding:18px 20px}
+.workbench-card h3{font-family:Georgia,serif;font-size:1.14rem;color:#1C3D3A;margin-bottom:8px}
+.workbench-card p{font-size:.9rem;color:#2C2C2C;line-height:1.55;margin-bottom:12px}
+.workbench-links{display:flex;flex-wrap:wrap;gap:8px}
+.workbench-links a{display:inline-block;padding:7px 10px;background:#F4F8F7;border:1px solid #C9DDD7;
+                   border-radius:999px;color:#2A7868;text-decoration:none;font-size:.8rem;font-weight:600}
+.workbench-links a:hover{text-decoration:underline;background:#fff}
+
 @media (max-width:820px){
   .main-wrap{grid-template-columns:1fr}
   .subnav{position:static}
@@ -187,6 +196,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
     <a href="#did-you-know" class="active">Did you know</a>
     <a href="#about">About the Atlas</a>
     <a href="#updates">Recent updates</a>
+    <a href="#gui-workbench">GUI workbench</a>
     <a href="#get-started" class="sep">Get started</a>
   </aside>
 
@@ -286,6 +296,53 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
             Theories, Mechanisms, and Neural Underpinnings pages
             redesigned under the T1 / T1.5 taxonomy.</div>
         </div>
+      </div>
+    </section>
+
+    <section class="section" id="gui-workbench">
+      <h2 class="section-head">GUI track workbench</h2>
+      <p class="section-sub">These newer pages are not yet the settled public front door. They are the more ambitious surfaces, prototypes, and comparison views that the GUI track ought to scrutinise, criticise, and improve.</p>
+      <div class="workbench-grid">
+        <article class="workbench-card">
+          <h3>Theories and frameworks</h3>
+          <p>The stable conceptual side of the Atlas: the theories index, the eleven framework pages, and the theory-linked reading surfaces.</p>
+          <div class="workbench-links">
+            <a href="ka_theories.html">Theories index</a>
+            <a href="ka_home_theory.html">Theory explorer</a>
+          </div>
+        </article>
+
+        <article class="workbench-card">
+          <h3>Mechanism pages</h3>
+          <p>The mechanism layer is where explanation starts to matter rather than mere correlation. These are exactly the pages that need careful interface thought.</p>
+          <div class="workbench-links">
+            <a href="ka_mechanisms.html">Mechanisms index</a>
+            <a href="ka_journey_mechanism.html">Mechanism journey</a>
+            <a href="ka_journey_theory.html">Theory journey</a>
+          </div>
+        </article>
+
+        <article class="workbench-card">
+          <h3>Claude’s late-night journey surfaces</h3>
+          <p>These are the more difficult internal-facing pages: not merely content pages, but pages about how the Atlas should reason, compare, and expose evidence.</p>
+          <div class="workbench-links">
+            <a href="ka_journeys.html">Journeys index</a>
+            <a href="ka_journey_evidence.html">Evidence landscape</a>
+            <a href="ka_journey_topic_inspector.html">Topic inspector</a>
+          </div>
+        </article>
+
+        <article class="workbench-card">
+          <h3>Topic page variants</h3>
+          <p>The crosswalk and topic-browsing work now has multiple variants. They should be compared as interface experiments, not mistaken for one settled design.</p>
+          <div class="workbench-links">
+            <a href="ka_topic_facet_view.html">Facet view</a>
+            <a href="ka_topic_heatmap_view.html">Heatmap view</a>
+            <a href="ka_topic_quick_lookup_view.html">Lookup view</a>
+            <a href="ka_topic_dashboard_view.html">Coordinated view</a>
+            <a href="ka_topic_full_facets_view.html">Progressive facets</a>
+          </div>
+        </article>
       </div>
     </section>
 

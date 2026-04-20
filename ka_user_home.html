@@ -281,6 +281,70 @@
       background: #fff1d4;
     }
 
+    .showcase-section {
+      background: #fff;
+      border: 1.5px solid #d8dde6;
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 24px;
+    }
+    .showcase-title {
+      font-size: .82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #5b3c8a;
+      margin-bottom: 8px;
+    }
+    .showcase-section p {
+      font-size: .9rem;
+      color: #4b5563;
+      line-height: 1.65;
+      margin-bottom: 14px;
+      max-width: 880px;
+    }
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+    .showcase-card {
+      border: 1px solid #dbe2ec;
+      border-radius: 12px;
+      padding: 14px 15px;
+      background: #f8fafc;
+    }
+    .showcase-card h3 {
+      font-size: 1rem;
+      color: #1f2937;
+      margin-bottom: 6px;
+    }
+    .showcase-card p {
+      font-size: .85rem;
+      color: #4b5563;
+      line-height: 1.55;
+      margin-bottom: 10px;
+    }
+    .showcase-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .showcase-links a {
+      display: inline-block;
+      padding: 6px 9px;
+      border-radius: 999px;
+      border: 1px solid #c9d7ea;
+      background: #fff;
+      color: #1a56a4;
+      font-size: .77rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .showcase-links a:hover {
+      text-decoration: underline;
+    }
+
     /* ── Resume Card ─────────────────────────────────────────────────── */
     .resume-card {
       background: linear-gradient(135deg, #002d5b 0%, #1a56a4 100%);
@@ -809,6 +873,8 @@
       <a class="sidebar-link" href="160sp/ka_schedule.html">📅 Schedule</a>
       <a class="sidebar-link" href="160sp/ka_student_setup.html">🔧 Setup Guide</a>
       <a class="sidebar-link" href="ka_account_settings.html">⚙️ Account Settings</a>
+      <a class="sidebar-link" href="ka_journeys.html">🧪 GUI Workbench</a>
+      <a class="sidebar-link" href="ka_home_theory.html">🧠 Theory Explorer</a>
       <a class="sidebar-link" href="ka_instructor_login_recovery.html" id="sidebar-instructor-recovery-link" style="display:none;">🔐 Student Login Recovery</a>
       <a class="sidebar-link" href="ka_home.html">🏠 ATLAS Home</a>
     </div>
@@ -836,6 +902,56 @@
       <div class="public-portal-actions">
         <button type="button" id="public-sign-in-btn">Sign in for saved work</button>
         <a href="ka_home.html">Return to home</a>
+      </div>
+    </div>
+
+    <div class="showcase-section" id="gui-showcase-section">
+      <div class="showcase-title">GUI track workbench</div>
+      <p>
+        These are the newer, more difficult Atlas surfaces: theories,
+        mechanisms, journey pages, and topic-comparison variants. They are
+        exactly the sort of pages the GUI track should criticise and redesign.
+        They are surfaced here so that they can be inspected deliberately,
+        rather than discovered by accident.
+      </p>
+      <div class="showcase-grid">
+        <article class="showcase-card">
+          <h3>Theories</h3>
+          <p>The conceptual scaffolding: the theory index and the more ambitious theory explorer page.</p>
+          <div class="showcase-links">
+            <a href="ka_theories.html">Theories index</a>
+            <a href="ka_home_theory.html">Theory explorer</a>
+          </div>
+        </article>
+        <article class="showcase-card">
+          <h3>Mechanisms</h3>
+          <p>The mechanism pages try to expose explanation rather than mere association. They are difficult, and therefore valuable.</p>
+          <div class="showcase-links">
+            <a href="ka_mechanisms.html">Mechanisms index</a>
+            <a href="ka_journey_mechanism.html">Mechanism journey</a>
+            <a href="ka_journey_theory.html">Theory journey</a>
+          </div>
+        </article>
+        <article class="showcase-card">
+          <h3>Journey surfaces</h3>
+          <p>Claude’s late-night prototype set for harder internal surfaces: evidence, topic inspection, and other reasoning-heavy pages.</p>
+          <div class="showcase-links">
+            <a href="ka_journeys.html">Journeys index</a>
+            <a href="ka_journey_evidence.html">Evidence landscape</a>
+            <a href="ka_journey_topic_inspector.html">Topic inspector</a>
+          </div>
+        </article>
+        <article class="showcase-card">
+          <h3>Topic variants</h3>
+          <p>These are alternative answers to the topic-browsing problem. They should be compared as interface experiments, not treated as settled doctrine.</p>
+          <div class="showcase-links">
+            <a href="ka_topic_facet_view.html">Facet</a>
+            <a href="ka_topic_heatmap_view.html">Heatmap</a>
+            <a href="ka_topic_quick_lookup_view.html">Lookup</a>
+            <a href="ka_topic_dashboard_view.html">Coordinated</a>
+            <a href="ka_topic_full_facets_view.html">Progressive</a>
+          </div>
+        </article>
       </div>
     </div>
 
