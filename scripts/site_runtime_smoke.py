@@ -518,6 +518,7 @@ def run_suite(config: SmokeConfig) -> SmokeReport:
         ("Home page shell", "ka_home.html", ["A Large Knowledge Model", "GUI workbench"]),
         ("Login page shell", "ka_login.html", ["Knowledge Atlas", "Forgot password"]),
         ("Forgot-password page shell", "ka_forgot_password.html", ["Reset your password", "Open the public workspace"]),
+        ("Reset-password page shell", "ka_reset_password.html?token=smoke-test-token", ["Choose a new password", "Request a new reset link"]),
         ("User home shell", "ka_user_home.html", ["GUI track workbench", "Theory Explorer"]),
         ("Topic facet shell", "ka_topic_facet_view.html", ["Topic Page (Facet View)", "topic_crosswalk.json"]),
         ("Article page shell", f"ka_article_view.html?id={config.sample_article_id}", ["Loading article record", "article_details.json"]),

@@ -11,6 +11,8 @@ def _fake_request(self, path, *, method="GET", json_body=None, headers=None):
         return smoke.ResponseData("http://test/ka_login.html", 200, "Knowledge Atlas Forgot password")
     if path == "ka_forgot_password.html":
         return smoke.ResponseData("http://test/ka_forgot_password.html", 200, "Reset your password Open the public workspace")
+    if path == "ka_reset_password.html?token=smoke-test-token":
+        return smoke.ResponseData("http://test/ka_reset_password.html?token=smoke-test-token", 200, "Choose a new password Request a new reset link")
     if path == "ka_user_home.html":
         return smoke.ResponseData("http://test/ka_user_home.html", 200, "GUI track workbench Theory Explorer")
     if path == "ka_topic_facet_view.html":
