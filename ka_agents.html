@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent directory — Knowledge Atlas</title>
+<meta name="description" content="The K-ATLAS agent directory: structured roles (Science-Writing, Science-Graphics, Usability-Critic, GUI, Experimental-Evaluate) each with a citation-grounded reference group and a specific required-output pack. Students and contributors can run them as sub-agent prompts.">
+<script src="ka_canonical_navbar.js" defer></script>
+<script src="ka_user_type.js" defer></script>
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  body{background:#F7F4EF;color:#2C2C2C;
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+       line-height:1.6}
+  main{max-width:1040px;margin:28px auto 80px;padding:0 28px}
+
+  .a-hero{background:linear-gradient(135deg,#1C3D3A,#2A7868);color:#fff;
+          border-radius:12px;padding:28px 32px;margin-bottom:22px}
+  .a-hero .eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.14em;
+                   text-transform:uppercase;color:#A8C8BF;margin-bottom:6px}
+  .a-hero h1{font-family:Georgia,serif;font-size:1.9rem;color:#fff;
+             margin-bottom:10px}
+  .a-hero p{color:#E6F5F0;max-width:760px}
+
+  .a-orient{background:#fff;border:1px solid #E0D8CC;border-left:4px solid #2A7868;
+            border-radius:8px;padding:16px 20px;margin-bottom:22px;
+            font-size:.92rem}
+  .a-orient h3{font-family:Georgia,serif;font-size:1.0rem;color:#1C3D3A;
+               margin-bottom:8px}
+  .a-orient ol{margin-left:22px}
+  .a-orient li{padding:3px 0}
+
+  .a-grid{display:grid;gap:14px;
+          grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+          margin-bottom:26px}
+
+  .a-card{background:#fff;border:1px solid #E0D8CC;border-radius:10px;
+          padding:18px 22px;border-top:4px solid #2A7868;
+          display:flex;flex-direction:column;gap:10px}
+  .a-card.sci-write{border-top-color:#4A3A8E}
+  .a-card.sci-graph{border-top-color:#2A7868}
+  .a-card.usab{border-top-color:#E8872A}
+  .a-card.gui{border-top-color:#4A6FA8}
+  .a-card.expt{border-top-color:#9a5010}
+
+  .a-card .a-tag{font-family:ui-monospace,Menlo,monospace;
+                 font-size:.7rem;font-weight:700;letter-spacing:.06em;
+                 text-transform:uppercase;color:#6B6B6B}
+  .a-card h3{font-family:Georgia,serif;font-size:1.1rem;color:#1C3D3A;
+             margin-top:0}
+  .a-card .a-role{font-size:.88rem;color:#4A4A4A;line-height:1.55}
+  .a-card .a-what{font-size:.82rem;color:#6B6B6B}
+  .a-card .a-what b{color:#1C3D3A}
+  .a-card .a-refgroup{font-size:.78rem;color:#6B6B6B;
+                      font-style:italic;line-height:1.5}
+  .a-card .a-actions{margin-top:auto;padding-top:10px;
+                     border-top:1px dashed #EEE8DC;
+                     display:flex;gap:10px;flex-wrap:wrap}
+  .a-card .a-actions a{font-size:.82rem;color:#2A7868;
+                       text-decoration:none;font-weight:600}
+  .a-card .a-actions a:hover{text-decoration:underline}
+
+  .a-usage{background:#F9F5EE;border:1px solid #E0D8CC;border-radius:8px;
+           padding:16px 20px;font-size:.9rem;margin-bottom:22px}
+  .a-usage h3{font-family:Georgia,serif;font-size:1.0rem;color:#1C3D3A;
+              margin-bottom:8px}
+  .a-usage code{font-family:ui-monospace,Menlo,monospace;
+                font-size:.84em;background:#fff;padding:2px 6px;
+                border-radius:3px;border:1px solid #E0D8CC}
+</style>
+</head>
+<body data-ka-regime="global" data-ka-active="">
+<div id="ka-navbar-slot"></div>
+
+<main>
+
+  <div class="a-hero">
+    <div class="eyebrow">Knowledge Atlas agents</div>
+    <h1>Structured roles for writing, charting, audit, and design</h1>
+    <p>
+      A K-ATLAS agent is a structured role with a citation-grounded reference
+      group, a one-sentence mission, a required-output pack, and a checklist
+      of things it must never do. Agents are meant to be run as sub-prompts by
+      you — whether as a student preparing a Track 4 deliverable, a
+      contributor writing a page's copy, or a reviewer auditing a design
+      proposal. The full agent source lives under <code>/agents/</code> in
+      the repo; this page is the human-readable index.
+    </p>
+  </div>
+
+  <div class="a-orient">
+    <h3>How to use an agent</h3>
+    <ol>
+      <li>Read the agent's source page to see its reference group, required inputs, and required outputs.</li>
+      <li>Copy the "Prompt to run this agent" block at the bottom of the source.</li>
+      <li>Paste into your preferred LLM (Claude, GPT, Gemini) with the specific page, chart, or draft attached as context.</li>
+      <li>The agent returns a structured report. Apply the findings and re-run if needed.</li>
+    </ol>
+  </div>
+
+  <div class="a-grid">
+
+    <div class="a-card sci-write">
+      <div class="a-tag">Agent · Science-Writing</div>
+      <h3>K-ATLAS Science-Writing Agent</h3>
+      <div class="a-role">Writes page copy, microcopy, explanations, warnings, example questions, and labels. Optimises for clarity, conceptual accuracy, and epistemic honesty — never hides uncertainty, never flattens expert pages into public prose.</div>
+      <div class="a-what"><b>Reference group:</b>
+        <span class="a-refgroup">Pinker (classic style, curse of knowledge), Williams (Given-New, stress position), Lanham (Paramedic Method), Sword (zombie nouns), Sacks, Sagan (scale bridging), Yong (slow complexity), Gawande, Carson, Doumont (structure as communication).</span>
+      </div>
+      <div class="a-what"><b>Required outputs per page:</b> 13 items — one-sentence purpose, short intro, expanded explainer, section labels, CTA wording, example questions, warnings, empty/loading/error states, tooltips, beginner variant, expert variant.</div>
+      <div class="a-actions">
+        <a href="agents/SCIENCE_WRITER_AGENT.md">Read agent source →</a>
+        <a href="https://github.com/dkirsh/Article_Eater_PostQuinean_v1_recovery/blob/main/contracts/SCIENCE_COMMUNICATION_NORMS.md" target="_blank" rel="noreferrer">Underlying norms →</a>
+      </div>
+    </div>
+
+    <div class="a-card sci-graph">
+      <div class="a-tag">Agent · Science-Graphics</div>
+      <h3>K-ATLAS Science-Graphics Agent</h3>
+      <div class="a-role">Audits, critiques, and directs the design of any data visualisation on the site. Optimises for signal-per-pixel, perceptual accuracy, uncertainty visibility, and familiar chart vocabulary. Runs before a chart is rendered, or as a critique agent after.</div>
+      <div class="a-what"><b>Reference group:</b>
+        <span class="a-refgroup">Tufte (data-ink, small multiples), Cleveland &amp; McGill (perceptual-accuracy ordering), Bertin (retinal-variable budget), Christiansen &amp; Montanez (familiar vocabulary first), Cox (iterate chart form), FT Visual Vocabulary (chart-to-task mapping), Krzywinski &amp; Altman (Points of View), PLOS Comp Bio "Ten simple rules".</span>
+      </div>
+      <div class="a-what"><b>Required outputs:</b> 10 items — message check, chart-form fit, data-ink audit, encoding audit, uncertainty check, caption check, axis/scale check, colour audit, anti-eye-candy check, prioritised redesign list.</div>
+      <div class="a-actions">
+        <a href="agents/SCIENCE_GRAPHICS_AGENT.md">Read agent source →</a>
+        <a href="https://github.com/dkirsh/emotibit_polar_data_system/blob/main/docs/SCIENCE_GRAPHICS_PLAYBOOK_2026-03-01.md" target="_blank" rel="noreferrer">Underlying playbook →</a>
+      </div>
+    </div>
+
+    <div class="a-card usab">
+      <div class="a-tag">Agent · Usability Critic</div>
+      <h3>K-ATLAS Usability Critic Agent</h3>
+      <div class="a-role">Conducts structured heuristic evaluation of any page or visualisation. Produces a verdict table and prioritised repair list — one paragraph per violated criterion. Does not soften verdicts; does not skip criteria because the page "mostly works."</div>
+      <div class="a-what"><b>Reference group:</b>
+        <span class="a-refgroup">Nielsen &amp; Molich (10 heuristics), Shneiderman (8 golden rules), plus 17 info-design criteria. 35 dimensions total.</span>
+      </div>
+      <div class="a-what"><b>Required outputs:</b> per-criterion finding, severity rating (cosmetic / minor / major / catastrophe), verdict table, prioritised repair list. Integrates with the in-browser <code>ka_usability_critic.js</code> panel students can launch on any live page.</div>
+      <div class="a-actions">
+        <a href="agents/USABILITY_CRITIC_AGENT.md">Read agent source →</a>
+        <a href="160sp/ka_t4_a_heuristic_audit.html">Used by T4.a deliverable →</a>
+      </div>
+    </div>
+
+    <div class="a-card gui">
+      <div class="a-tag">Agent · GUI Design</div>
+      <h3>K-ATLAS GUI Agent (v3)</h3>
+      <div class="a-role">Designs page layout, interaction patterns, and progressive-disclosure structure. Runs after the Science-Writing Agent has produced the copy pack, so that layout decisions are made around language that is already clear.</div>
+      <div class="a-what"><b>Reference group:</b>
+        <span class="a-refgroup">Norman (system image / user model), Krug (don't make me think), Nielsen &amp; Loranger (prioritising web usability), Rosenfeld &amp; Morville (information architecture), Hearst (search interfaces), Wroblewski (form design).</span>
+      </div>
+      <div class="a-what"><b>Required outputs:</b> page layout sketch, interaction pattern per affordance, progressive-disclosure tier structure, responsive breakpoint behaviour, accessibility notes.</div>
+      <div class="a-actions">
+        <a href="agents/GUI_AGENT_V3.md">Read agent source →</a>
+        <a href="agents/GUI_PRESENTATION_AGENT.md">Presentation companion →</a>
+      </div>
+    </div>
+
+    <div class="a-card expt">
+      <div class="a-tag">Agent · Experimental Evaluate</div>
+      <h3>K-ATLAS Experimental-Evaluate Agent</h3>
+      <div class="a-role">Audits experimental designs for methodological soundness before data collection — pre-registration checklist, power analysis, DV/IV clarity, confound audit, replication plan. Catches the common "what would falsify this?" failure at the design stage rather than the peer-review stage.</div>
+      <div class="a-what"><b>Reference group:</b>
+        <span class="a-refgroup">Chambers &amp; Munafò (registered reports), Simmons/Nelson/Simonsohn (false-positive psychology), Cumming (the new statistics), Munafò et al. (manifesto for reproducible science).</span>
+      </div>
+      <div class="a-what"><b>Required outputs:</b> pre-registration checklist pass/fail, power estimate with assumptions, confound register, falsification condition, replication plan.</div>
+      <div class="a-actions">
+        <a href="agents/EXPERIMENTAL_EVALUATE_AGENT.md">Read agent source →</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="a-usage">
+    <h3>When to chain agents</h3>
+    <p>
+      The five agents compose cleanly into a workflow. For a new page with
+      data visualisations:
+    </p>
+    <ol>
+      <li><b>Science-Writing Agent</b> → produce the copy pack (title, caption, explanatory paragraphs, tooltips, glossary entries).</li>
+      <li><b>Science-Graphics Agent</b> → decide the chart form and the encoding for each data panel; draft captions that guide attention.</li>
+      <li><b>GUI Agent v3</b> → place the copy and charts in a layout; decide progressive-disclosure tiers; name the affordances.</li>
+      <li><b>Usability Critic Agent</b> → audit the assembled page against Nielsen + Shneiderman + info-design criteria; produce a prioritised repair list.</li>
+      <li><b>Experimental-Evaluate Agent</b> (if the page publishes empirical claims) → audit the methodology of the claims the page is reporting.</li>
+    </ol>
+    <p style="margin-top:10px">
+      Track 4 students run a version of this chain on their T4.a / T4.c / T4.f
+      deliverables. Contributors writing K-ATLAS journey-page content should
+      run at minimum steps 1 and 2 before pushing a draft.
+    </p>
+  </div>
+
+  <div style="padding:14px 20px;background:#fff;border:1px solid #E0D8CC;
+              border-radius:8px;font-size:.86rem;color:#6B6B6B">
+    <b style="color:#1C3D3A">Repository note.</b>
+    Agent source files live at <code>/agents/*.md</code>. The Science-Writing
+    and Usability-Critic agents are mirrored from their canonical upstream
+    copies in the sibling <code>Article_Eater_PostQuinean_v1_recovery</code>
+    repo; the Science-Graphics Agent's playbook is canonical in the sibling
+    <code>emotibit_polar_data_system</code> repo. When a norm or heuristic
+    changes, edit the upstream canonical copy first and sync here.
+  </div>
+
+</main>
+</body>
+</html>

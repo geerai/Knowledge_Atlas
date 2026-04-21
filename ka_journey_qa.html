@@ -33,9 +33,9 @@
 
     <div class="j-section">
       <h2><span class="h2-icon">◧</span><span class="h2-text">What this page displays</span><span class="h2-hint">the information on offer</span></h2>
-    <p>The question-answering (QA) layer accepts a natural-language question ("does exposure to daylight improve task performance?") and returns an answer that is grounded in the corpus: a short prose answer, a confidence band, a list of the warrants cited, and a disclosure of what the system would not answer (because the corpus is silent or inconsistent).</p>
-    <p>The QA surface is the one most vulnerable to LLM hallucination. The design problem is therefore not just "return a helpful answer" but "refuse to answer when the corpus does not support one, and never cite a warrant the retrieval step did not actually return." Grounding is the load-bearing requirement.</p>
-    <p>The prototype supports single-turn questions and does not yet handle follow-ups or comparative questions; it also does not route a question to the right Atlas surface (interpretation, EN, BN) — every question currently hits the same retrieval-plus-generation pipeline.</p>
+    <p>The question-answering (QA) layer takes a natural-language question — <em>"does exposure to daylight improve task performance?"</em> — and returns an answer grounded in the corpus. Four elements: a short prose answer, a confidence band, the warrants cited, and an explicit disclosure of what the system won't answer because the corpus is silent or inconsistent.</p>
+    <p>QA is the surface most vulnerable to LLM hallucination. The design problem is not just "return a helpful answer" but two stronger commitments: refuse to answer when the corpus does not support one, and never cite a warrant the retrieval step did not actually return. Grounding is the load-bearing requirement.</p>
+    <p>The prototype handles single-turn questions. It does not yet handle follow-ups or comparative questions, and does not route questions to the appropriate Atlas surface (interpretation, EN, BN) — every question hits the same retrieval-plus-generation pipeline.</p>
     </div>
 
     <div class="j-section">

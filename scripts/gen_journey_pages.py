@@ -156,9 +156,9 @@ PAGES = [
         "tier": "High — no implementation yet",
         "roles_served": "researcher, 160_student",
         "displays": [
-            "The argumentation layer would render Dung's (1995) abstract argumentation frameworks over the Atlas's claim corpus: nodes are arguments (claim + supporting reasons), edges are <em>attacks</em> (one argument defeats another), and the computation produces an <em>acceptability labelling</em> — which arguments are IN (accepted), OUT (rejected), or UNDEC (undecided) under a given semantics (grounded, preferred, stable).",
-            "Unlike the EN, which shows epistemic support, the argumentation layer shows the <em>argumentative structure</em>: which argument defeats which, and which coherent sets of arguments survive mutual attack. It is the view that makes contested claims visible as contested, without resolving the contest.",
-            "The page does not yet exist. What follows is a spec for a page that would be the right target for T4's redesign loop in a future quarter.",
+            "The argumentation layer would render Dung's (1995) abstract argumentation frameworks over the Atlas's claim corpus. Nodes are arguments — a claim plus its supporting reasons. Edges are <em>attacks</em>: one argument defeats another. The computation produces an <em>acceptability labelling</em> that sorts every argument into IN (accepted), OUT (rejected), or UNDEC (undecided), under a chosen semantics (grounded, preferred, or stable).",
+            "Where the EN shows epistemic support, the argumentation layer shows <em>argumentative structure</em> — which argument defeats which, and which coherent sets of arguments survive mutual attack. It makes contested claims visible as contested, without pretending to resolve the contest.",
+            "The page does not yet exist. What follows is a spec — the right target for a future-quarter T4 redesign loop whose deliverable is an informed specification, not an implementation.",
         ],
         "roles_list": [
             ("researcher", "To see whether a minority-view argument they hold is actually defeated by the majority, or merely outnumbered. Dung's semantics separate those."),
@@ -175,8 +175,8 @@ PAGES = [
             "<b>No familiar metaphor.</b> Unlike a belief network (which people can read as a mind-map) or a topic page (which people can read as a category browser), an argumentation framework has no everyday metaphor. The page must invent one.",
         ],
         "naive": {
-            "body": "No naive solution is deployed. The placeholder currently points visitors to the Interpretation layer and notes that an argumentation viewer is planned.",
-            "why": "The critique exercise for this page is therefore a <em>specification critique</em> rather than an implementation critique. The student must argue, from each user's perspective, what the page would have to do for that user; the design problem is constrained by the absence of a defaulted metaphor.",
+            "body": "No implementation deployed. The placeholder routes visitors to the Interpretation layer and notes that an argumentation viewer is planned.",
+            "why": "The critique exercise here is a <em>specification critique</em>, not an implementation critique. A student argues, per user type, what the page would have to do for that user. The design problem is unusually constrained because no familiar metaphor is available — belief networks read as mind-maps, topic pages as category browsers, but argumentation frameworks have no everyday cognate. The page must invent one.",
         },
         "files": [
             ("data", "data/ka_payloads/argumentation_framework.json", "Argument list with textual content and supporting warrant IDs; attack relation; labellings under each semantics."),
@@ -196,9 +196,9 @@ PAGES = [
         "tier": "Medium-high — hallucination vs. grounding is the central risk",
         "roles_served": "public_visitor, practitioner, researcher",
         "displays": [
-            "The question-answering (QA) layer accepts a natural-language question (\"does exposure to daylight improve task performance?\") and returns an answer that is grounded in the corpus: a short prose answer, a confidence band, a list of the warrants cited, and a disclosure of what the system would not answer (because the corpus is silent or inconsistent).",
-            "The QA surface is the one most vulnerable to LLM hallucination. The design problem is therefore not just \"return a helpful answer\" but \"refuse to answer when the corpus does not support one, and never cite a warrant the retrieval step did not actually return.\" Grounding is the load-bearing requirement.",
-            "The prototype supports single-turn questions and does not yet handle follow-ups or comparative questions; it also does not route a question to the right Atlas surface (interpretation, EN, BN) — every question currently hits the same retrieval-plus-generation pipeline.",
+            "The question-answering (QA) layer takes a natural-language question — <em>\"does exposure to daylight improve task performance?\"</em> — and returns an answer grounded in the corpus. Four elements: a short prose answer, a confidence band, the warrants cited, and an explicit disclosure of what the system won't answer because the corpus is silent or inconsistent.",
+            "QA is the surface most vulnerable to LLM hallucination. The design problem is not just \"return a helpful answer\" but two stronger commitments: refuse to answer when the corpus does not support one, and never cite a warrant the retrieval step did not actually return. Grounding is the load-bearing requirement.",
+            "The prototype handles single-turn questions. It does not yet handle follow-ups or comparative questions, and does not route questions to the appropriate Atlas surface (interpretation, EN, BN) — every question hits the same retrieval-plus-generation pipeline.",
         ],
         "roles_list": [
             ("public_visitor", "This is where the public visitor most often lands. The question-answering surface is the front door for anyone with a specific question rather than an exploration appetite."),
@@ -357,9 +357,9 @@ PAGES = [
         "tier": "Medium — global orientation surface",
         "roles_served": "researcher, practitioner, public_visitor",
         "displays": [
-            "The evidence-landscape map is the global orientation view: it shows, for the entire topic × outcome × architectural-feature space, where the evidence base is dense, defended, mixed, or absent. It answers the question \"what is the overall shape of what the Atlas knows?\" in a single view.",
-            "The map is the entry point most often visited by readers who arrive without a specific question. It is also the surface most prone to false-summary: any global view compresses decisions that a user may want to unpack, and the map must let them drill down when they do.",
-            "The prototype renders the landscape as a two-dimensional heatmap (topics on one axis, outcomes on the other) with colour encoding evidence status. It is a reasonable first attempt but is not yet multi-scalar — it does not show architectural feature or theoretical framework as additional axes.",
+            "The evidence-landscape map is the Atlas's global orientation view. Across the full topic × outcome × architectural-feature space it shows where the evidence base is dense, defended, mixed, or absent. The map answers one question at a glance — <em>what is the overall shape of what the Atlas knows?</em>",
+            "Readers who arrive without a specific question land here most often. The map is also the surface most prone to false summary: any global view compresses decisions a user may want to unpack, and the page must let them drill down when they do.",
+            "The prototype renders the landscape as a 2D heatmap — topics on one axis, outcomes on the other, hue encoding evidence status. A reasonable first attempt. Not yet multi-scalar: architectural feature and theoretical framework remain hidden as additional axes.",
         ],
         "roles_list": [
             ("researcher", "To orient themselves before a literature review."),
