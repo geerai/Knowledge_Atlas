@@ -50,7 +50,7 @@ That does four things:
 
 1. pulls the staging checkout to the latest `origin/master`
 2. runs the staging runtime smoke suite
-3. promotes the staging tree into production with safe exclusions
+3. promotes the staging tree into production with safe exclusions and restores the production `data/` directory to the known working mode
 4. runs the production runtime smoke suite
 
 ## Other useful modes
@@ -122,3 +122,7 @@ sudo chmod 2775 /var/www/xrlab/ka/data
 sudo chgrp "domain users" /var/www/xrlab/ka/data
 sudo /bin/systemctl restart ka-auth.service
 ```
+
+The canonical release script now reapplies the `2775` mode and `domain users`
+group during promotion, precisely to prevent the earlier forgot-password
+regression from recurring.

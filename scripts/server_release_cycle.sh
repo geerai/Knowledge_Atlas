@@ -94,6 +94,13 @@ promote_to_production() {
   ensure_path "staging" "$STAGING_PATH"
   ensure_path "production" "$PRODUCTION_PATH"
   rsync -a "${RSYNC_EXCLUDES[@]}" "$STAGING_PATH/" "$PRODUCTION_PATH/"
+  if [[ -d "$PRODUCTION_PATH/data" ]]; then
+    chmod 2775 "$PRODUCTION_PATH/data"
+    chgrp 'domain users' "$PRODUCTION_PATH/data" || warn "could not set production data group to domain users"
+    ok "production data directory permissions restored"
+  else
+    warn "production data directory missing after promotion"
+  fi
   ok "production tree refreshed from staging"
 }
 
