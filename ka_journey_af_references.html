@@ -120,7 +120,7 @@
       <li><span class="file-type data">data</span><a>data/ka_payloads/reference_candidates.json</a><span class="file-desc">Deduplicated candidate table with <code>{ref_id, apa, doi, abstract, cited_by_ka_papers[], topic_guesses[], article_type, priority_score, approval_state}</code>.</span></li>
       <li><span class="file-type missing">missing</span><a>VOI scorer</a><span class="file-desc">Given (topic, candidate_reference), estimate how much the candidate's inclusion would change the Atlas's current interpretation layer. Requires a model of interpretation stability.</span></li>
       <li><span class="file-type missing">missing</span><a>harvest scheduler</a><span class="file-desc">Queue worker that respects per-publisher rate limits, retries on transient failures, and writes retrieved PDFs to <code>data/pnu_articles/</code>.</span></li>
-      <li><span class="file-type missing">missing</span><a>approval UI</a><span class="file-desc">Admin-gated page that drains the checkbox queue into a decision list; inline DOI preview and abstract display; one-click-accept with optional reason tag.</span></li>
+      <li><span class="file-type missing">missing</span><a>approval UI inside <code>/160sp/ka_admin.html</code></a><span class="file-desc">The instructor admin console already hosts the queue review framework; T2.d adds a new panel that drains the checkbox queue into a decision list, renders inline DOI preview and abstract display, and lets the admin one-click-accept each candidate with an optional reason tag. All writes are routed through <code>atlas_shared.bundle_router.QuestionBundleRouter</code> so every accepted reference lands under the correct question bundle.</span></li>
       </ul>
     </div>
 

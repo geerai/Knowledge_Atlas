@@ -119,7 +119,7 @@
       <li><span class="file-type data">data</span><a><code>data/ka_payloads/mechanisms.json</code></a><span class="file-desc">Mechanism layer with per-link directness scores; input to the mechanism-grounding ROI identifier.</span></li>
       <li><span class="file-type missing">missing</span><a>ROI ranker</a><span class="file-desc">Given an ROI, estimate its leverage. One sub-ranker per ROI type because the leverage semantics differ across types.</span></li>
       <li><span class="file-type missing">missing</span><a>ROI-to-query translator</a><span class="file-desc">Turns an ROI record into a structured Crossref / OpenAlex / Semantic Scholar query.</span></li>
-      <li><span class="file-type missing">missing</span><a>tighter relevance vetter</a><span class="file-desc">A deeper classifier than the current AdaptiveClassifierSubsystem's broad-relevance check. DK's note explicitly flags this as required.</span></li>
+      <li><span class="file-type missing">missing</span><a>tighter relevance vetter</a><span class="file-desc">A deeper classifier than <code>atlas_shared.classifier_system.AdaptiveClassifierSubsystem</code>&apos;s broad-relevance check. Must ship as a new module inside <code>atlas_shared</code> (pull request by DK, not by Track 2 code). DK&apos;s note explicitly flags this as required.</span></li>
       <li><span class="file-type api">api</span><a>/api/af/roi/trigger</a><span class="file-desc">Accepts a set of ROI ids and queues their searches. Returns an ROI-specific result set, vetted.</span></li>
       </ul>
     </div>
