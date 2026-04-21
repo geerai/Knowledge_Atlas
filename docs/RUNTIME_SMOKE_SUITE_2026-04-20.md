@@ -47,7 +47,8 @@ python3 scripts/site_runtime_smoke.py --profile staging --repo-root .
 
 Useful flags:
 
-- `--base-url https://xrlab.ucsd.edu/staging_KA`
+- `--site-base-url https://xrlab.ucsd.edu/staging_KA`
+- `--api-base-url https://xrlab.ucsd.edu/staging_KA`
 - `--student-email ...`
 - `--student-password ...`
 - `--admin-token ...`
@@ -64,6 +65,7 @@ Useful flags:
 Defaults:
 
 - base URL: `https://xrlab.ucsd.edu/staging_KA`
+- API base URL: `https://xrlab.ucsd.edu/staging_KA`
 - student: `jpark@ucsd.edu`
 - password: `StagingPass2026`
 - expected track: `track4`
@@ -75,6 +77,7 @@ Defaults:
 Defaults:
 
 - base URL: `https://xrlab.ucsd.edu/ka`
+- API base URL: `https://xrlab.ucsd.edu`
 - reset email: `dkirsh@ucsd.edu`
 
 Production does **not** assume a seeded student account. If you want the student-login checks on production, pass those values explicitly or through environment variables.
@@ -84,12 +87,15 @@ Production does **not** assume a seeded student account. If you want the student
 General:
 
 - `KA_SMOKE_BASE_URL`
+- `KA_SMOKE_SITE_BASE_URL`
+- `KA_SMOKE_API_BASE_URL`
 - `KA_SMOKE_RESET_EMAIL`
 - `KA_SMOKE_ADMIN_TOKEN`
 
 Staging-specific:
 
 - `KA_SMOKE_STAGING_BASE_URL`
+- `KA_SMOKE_STAGING_API_BASE_URL`
 - `KA_SMOKE_STAGING_RESET_EMAIL`
 - `KA_SMOKE_STAGING_STUDENT_EMAIL`
 - `KA_SMOKE_STAGING_STUDENT_PASSWORD`
@@ -100,6 +106,7 @@ Staging-specific:
 Production-specific:
 
 - `KA_SMOKE_PRODUCTION_BASE_URL`
+- `KA_SMOKE_PRODUCTION_API_BASE_URL`
 - `KA_SMOKE_PRODUCTION_RESET_EMAIL`
 - `KA_SMOKE_PRODUCTION_STUDENT_EMAIL`
 - `KA_SMOKE_PRODUCTION_STUDENT_PASSWORD`

@@ -37,7 +37,8 @@ SKIP = "SKIP"
 @dataclass
 class SmokeConfig:
     profile: str
-    base_url: str
+    site_base_url: str
+    api_base_url: str
     reset_email: str = ""
     student_email: str = ""
     student_password: str = ""
@@ -171,9 +172,15 @@ def _env_default(*names: str, fallback: str = "") -> str:
 def _profile_defaults(profile: str) -> dict[str, str]:
     if profile == "staging":
         return {
-            "base_url": _env_default(
+            "site_base_url": _env_default(
                 "KA_SMOKE_BASE_URL",
+                "KA_SMOKE_SITE_BASE_URL",
                 "KA_SMOKE_STAGING_BASE_URL",
+                fallback="https://xrlab.ucsd.edu/staging_KA",
+            ),
+            "api_base_url": _env_default(
+                "KA_SMOKE_API_BASE_URL",
+                "KA_SMOKE_STAGING_API_BASE_URL",
                 fallback="https://xrlab.ucsd.edu/staging_KA",
             ),
             "reset_email": _env_default(
@@ -206,10 +213,16 @@ def _profile_defaults(profile: str) -> dict[str, str]:
 
     if profile == "production":
         return {
-            "base_url": _env_default(
+            "site_base_url": _env_default(
                 "KA_SMOKE_BASE_URL",
+                "KA_SMOKE_SITE_BASE_URL",
                 "KA_SMOKE_PRODUCTION_BASE_URL",
                 fallback="https://xrlab.ucsd.edu/ka",
+            ),
+            "api_base_url": _env_default(
+                "KA_SMOKE_API_BASE_URL",
+                "KA_SMOKE_PRODUCTION_API_BASE_URL",
+                fallback="https://xrlab.ucsd.edu",
             ),
             "reset_email": _env_default(
                 "KA_SMOKE_RESET_EMAIL",
@@ -229,7 +242,8 @@ def _profile_defaults(profile: str) -> dict[str, str]:
         }
 
     return {
-        "base_url": _env_default("KA_SMOKE_BASE_URL"),
+        "site_base_url": _env_default("KA_SMOKE_BASE_URL", "KA_SMOKE_SITE_BASE_URL"),
+        "api_base_url": _env_default("KA_SMOKE_API_BASE_URL"),
         "reset_email": _env_default("KA_SMOKE_RESET_EMAIL"),
         "student_email": _env_default("KA_SMOKE_STUDENT_EMAIL"),
         "student_password": _env_default("KA_SMOKE_STUDENT_PASSWORD"),
@@ -241,14 +255,18 @@ def _profile_defaults(profile: str) -> dict[str, str]:
 
 def build_config(args: argparse.Namespace) -> SmokeConfig:
     defaults = _profile_defaults(args.profile)
-    base_url = (args.base_url or defaults["base_url"]).rstrip("/")
-    if not base_url:
-        raise SystemExit("A base URL is required. Use --base-url or a profile default.")
+    site_base_url = (args.site_base_url or args.base_url or defaults["site_base_url"]).rstrip("/")
+    api_base_url = (args.api_base_url or defaults["api_base_url"] or site_base_url).rstrip("/")
+    if not site_base_url:
+        raise SystemExit("A site base URL is required. Use --site-base-url, --base-url, or a profile default.")
+    if not api_base_url:
+        raise SystemExit("An API base URL is required. Use --api-base-url or a profile default.")
 
     repo_root = str((args.repo_root or REPO_ROOT).resolve()) if not args.no_site_validator else ""
     return SmokeConfig(
         profile=args.profile,
-        base_url=base_url,
+        site_base_url=site_base_url,
+        api_base_url=api_base_url,
         reset_email=args.reset_email if args.reset_email is not None else defaults["reset_email"],
         student_email=args.student_email if args.student_email is not None else defaults["student_email"],
         student_password=args.student_password if args.student_password is not None else defaults["student_password"],
@@ -471,7 +489,8 @@ def skip_result(name: str, category: str, reason: str) -> CheckResult:
 
 
 def run_suite(config: SmokeConfig) -> SmokeReport:
-    client = HttpClient(config.base_url, timeout=config.timeout)
+    site_client = HttpClient(config.site_base_url, timeout=config.timeout)
+    api_client = HttpClient(config.api_base_url, timeout=config.timeout)
     results: list[CheckResult] = []
 
     if config.with_site_validator and config.repo_root:
@@ -491,11 +510,11 @@ def run_suite(config: SmokeConfig) -> SmokeReport:
         ("Track 2 hub shell", "160sp/ka_track2_hub.html", ["Article Finder", "Unified pipeline reference"]),
     ]
     for name, path, markers in page_checks:
-        results.append(check_page_contains(client, name, path, markers))
+        results.append(check_page_contains(site_client, name, path, markers))
 
     results.append(
         check_json_payload(
-            client,
+            site_client,
             "Crosswalk payload",
             "data/ka_payloads/topic_crosswalk.json",
             required_keys=("rows", "outcome_index", "iv_root_index"),
@@ -504,7 +523,7 @@ def run_suite(config: SmokeConfig) -> SmokeReport:
     )
     results.append(
         check_json_payload(
-            client,
+            site_client,
             "Article details payload",
             "data/ka_payloads/article_details.json",
             required_keys=("details",),
@@ -513,7 +532,7 @@ def run_suite(config: SmokeConfig) -> SmokeReport:
     )
     results.append(
         check_json_field(
-            client,
+            api_client,
             "Auth health endpoint",
             "health",
             predicate=lambda payload: payload.get("ok") is True or payload.get("status") == "ok",
@@ -524,19 +543,19 @@ def run_suite(config: SmokeConfig) -> SmokeReport:
     )
 
     if config.reset_email:
-        results.append(check_forgot_password(client, config.reset_email))
+        results.append(check_forgot_password(api_client, config.reset_email))
     else:
         results.append(skip_result("Forgot-password action", "auth", "No reset email configured"))
 
     bearer_headers: dict[str, str] | None = None
     if config.student_email and config.student_password:
-        login_result, access_token = login_student(client, config.student_email, config.student_password)
+        login_result, access_token = login_student(api_client, config.student_email, config.student_password)
         results.append(login_result)
         if access_token:
             bearer_headers = {"Authorization": f"Bearer {access_token}"}
             results.append(
                 check_json_field(
-                    client,
+                    api_client,
                     "Student auth/me state",
                     "auth/me",
                     predicate=lambda payload: (
@@ -556,7 +575,7 @@ def run_suite(config: SmokeConfig) -> SmokeReport:
             )
             results.append(
                 check_json_field(
-                    client,
+                    api_client,
                     "Student assignments state",
                     "api/assignments",
                     predicate=lambda payload: payload.get("assigned") is True
@@ -579,7 +598,7 @@ def run_suite(config: SmokeConfig) -> SmokeReport:
         admin_headers = {"X-Admin-Token": config.admin_token}
         results.append(
             check_json_field(
-                client,
+                api_client,
                 "Admin class health",
                 "api/admin/class/health",
                 predicate=lambda payload: payload.get("ok") is True,
@@ -591,7 +610,7 @@ def run_suite(config: SmokeConfig) -> SmokeReport:
         )
         results.append(
             check_json_field(
-                client,
+                api_client,
                 "Admin roster state",
                 "api/admin/class/roster",
                 predicate=lambda payload: isinstance(payload.get("students"), list) and len(payload["students"]) >= 1,
@@ -603,7 +622,7 @@ def run_suite(config: SmokeConfig) -> SmokeReport:
         )
         results.append(
             check_json_field(
-                client,
+                api_client,
                 "Admin grading state",
                 "api/admin/class/grading",
                 predicate=lambda payload: isinstance(payload.get("students"), list)
@@ -642,7 +661,8 @@ def render_markdown(report: SmokeReport) -> str:
         "",
         f"- Generated: `{report.generated_at}`",
         f"- Profile: `{report.config.get('profile')}`",
-        f"- Base URL: `{report.config.get('base_url')}`",
+        f"- Site base URL: `{report.config.get('site_base_url')}`",
+        f"- API base URL: `{report.config.get('api_base_url')}`",
         f"- Site validator: `{'on' if report.config.get('with_site_validator') else 'off'}`",
         "",
         f"- Pass: `{report.pass_count}`",
@@ -699,7 +719,9 @@ def render_json(report: SmokeReport) -> str:
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--profile", choices=("staging", "production", "custom"), default="staging")
-    parser.add_argument("--base-url")
+    parser.add_argument("--base-url", help="Legacy alias for --site-base-url")
+    parser.add_argument("--site-base-url")
+    parser.add_argument("--api-base-url")
     parser.add_argument("--reset-email")
     parser.add_argument("--student-email")
     parser.add_argument("--student-password")

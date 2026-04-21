@@ -90,7 +90,8 @@ def test_run_suite_passes_with_mocked_http(monkeypatch):
     monkeypatch.setattr(smoke.HttpClient, "request", _fake_request)
     config = smoke.SmokeConfig(
         profile="custom",
-        base_url="http://test",
+        site_base_url="http://test",
+        api_base_url="http://test",
         reset_email="dkirsh@ucsd.edu",
         student_email="jpark@ucsd.edu",
         student_password="secret",
@@ -110,7 +111,8 @@ def test_run_suite_skips_checks_without_credentials(monkeypatch):
     monkeypatch.setattr(smoke.HttpClient, "request", _fake_request)
     config = smoke.SmokeConfig(
         profile="production",
-        base_url="http://test",
+        site_base_url="http://test",
+        api_base_url="http://test",
         with_site_validator=False,
     )
     report = smoke.run_suite(config)
@@ -124,7 +126,8 @@ def test_render_json_contains_summary(monkeypatch):
     monkeypatch.setattr(smoke.HttpClient, "request", _fake_request)
     config = smoke.SmokeConfig(
         profile="custom",
-        base_url="http://test",
+        site_base_url="http://test",
+        api_base_url="http://test",
         reset_email="dkirsh@ucsd.edu",
         student_email="jpark@ucsd.edu",
         student_password="secret",
