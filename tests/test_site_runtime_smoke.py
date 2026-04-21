@@ -54,7 +54,11 @@ def _fake_request(self, path, *, method="GET", json_body=None, headers=None):
             json.dumps({"details": {"PDF-0007": {"title": "Sample"}}}),
         )
     if path == "health":
-        return smoke.ResponseData("http://test/health", 200, json.dumps({"ok": True}))
+        return smoke.ResponseData(
+            "http://test/health",
+            200,
+            json.dumps({"ok": True, "modules": ["auth", "articles"], "article_module_loaded": True}),
+        )
     if path == "auth/forgot-password" and method == "POST":
         return smoke.ResponseData(
             "http://test/auth/forgot-password",
@@ -154,6 +158,12 @@ def test_run_suite_skips_checks_without_credentials(monkeypatch):
     assert statuses["Forgot-password action"] == smoke.SKIP
     assert statuses["Student login action"] == smoke.SKIP
     assert statuses["Admin class health"] == smoke.SKIP
+
+
+def test_auth_health_requires_article_module():
+    assert smoke._auth_health_ok({"ok": True, "modules": ["auth", "articles"], "article_module_loaded": True}) is True
+    assert smoke._auth_health_ok({"ok": True, "modules": ["auth"]}) is False
+    assert smoke._auth_health_ok({"ok": True, "modules": ["auth", "articles"], "article_module_loaded": False}) is False
 
 
 def test_render_json_contains_summary(monkeypatch):

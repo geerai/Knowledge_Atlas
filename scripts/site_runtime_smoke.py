@@ -172,6 +172,18 @@ def _env_default(*names: str, fallback: str = "") -> str:
     return fallback
 
 
+def _auth_health_ok(payload: dict[str, Any]) -> bool:
+    healthy = payload.get("ok") is True or payload.get("status") == "ok"
+    modules = payload.get("modules")
+    if not healthy:
+        return False
+    if isinstance(modules, list) and "articles" not in modules:
+        return False
+    if "article_module_loaded" in payload and payload.get("article_module_loaded") is not True:
+        return False
+    return True
+
+
 def _profile_defaults(profile: str) -> dict[str, str]:
     if profile == "staging":
         return {
@@ -189,7 +201,7 @@ def _profile_defaults(profile: str) -> dict[str, str]:
             "reset_email": _env_default(
                 "KA_SMOKE_RESET_EMAIL",
                 "KA_SMOKE_STAGING_RESET_EMAIL",
-                fallback="jpark@ucsd.edu",
+                fallback="",
             ),
             "auth_health_path": _env_default(
                 "KA_SMOKE_AUTH_HEALTH_PATH",
@@ -600,9 +612,9 @@ def run_suite(config: SmokeConfig) -> SmokeReport:
             api_client,
             "Auth health endpoint",
             config.auth_health_path,
-            predicate=lambda payload: payload.get("ok") is True or payload.get("status") == "ok",
-            success_detail="HTTP 200; health payload reported a healthy status",
-            failure_detail="HTTP 200; health payload did not report a healthy status",
+            predicate=_auth_health_ok,
+            success_detail="HTTP 200; health payload reported a healthy auth+article state",
+            failure_detail="HTTP 200; health payload was missing the article/A0 module or healthy status",
             category="auth",
         )
     )

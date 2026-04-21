@@ -39,6 +39,10 @@ docs/runtime_smoke_reports/latest_production.md
 docs/runtime_smoke_reports/latest_production.json
 ```
 
+If a checkout contains a local `.smoke.env`, the wrapper loads it before
+running the suite. This is the intended way to keep smoke-only student or
+admin credentials on the server without committing them to git.
+
 ## Direct Python form
 
 ```bash
@@ -67,7 +71,7 @@ Defaults:
 
 - base URL: `https://xrlab.ucsd.edu/staging_KA`
 - API base URL: `https://xrlab.ucsd.edu/staging_KA`
-- reset email: `jpark@ucsd.edu`
+- reset email: no default; provide one explicitly if you want forgot-password checked
 - student: `jpark@ucsd.edu`
 - password: `StagingPass2026`
 - expected track: `track4`
@@ -82,7 +86,10 @@ Defaults:
 - API base URL: `https://xrlab.ucsd.edu`
 - reset email: no default; provide one explicitly if you want forgot-password checked
 
-Production does **not** assume a seeded student account. If you want the student-login checks on production, pass those values explicitly or through environment variables.
+Production does **not** assume a seeded student account unless you provide
+one through environment variables or a local `.smoke.env`. That is the
+recommended way to make the production gate test real student-state and A0
+flows without publishing credentials in the repository.
 
 ## Environment variables
 
@@ -147,6 +154,12 @@ Authenticated flows:
 - `/auth/login`
 - `/auth/me`
 - `/api/assignments`
+- `/api/student/assignments`
+- `/api/student/topics-needed`
+
+The health check is not satisfied by a merely running auth server. It now
+requires the article/A0 module to be mounted as well, so a fallback to
+auth-only mode will fail the smoke.
 
 Admin flows:
 

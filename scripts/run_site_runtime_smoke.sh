@@ -7,6 +7,14 @@ if [[ $# -gt 0 ]]; then
   shift
 fi
 
+if [[ -f "$REPO/.smoke.env" ]]; then
+  # Keep smoke credentials local to the checkout rather than committing them.
+  set -a
+  # shellcheck disable=SC1091
+  source "$REPO/.smoke.env"
+  set +a
+fi
+
 REPORT_DIR="${REPORT_DIR:-$REPO/docs/runtime_smoke_reports}"
 TIMESTAMP="$(date -u +%Y%m%dT%H%M%SZ)"
 MD_OUT="$REPORT_DIR/${PROFILE}_${TIMESTAMP}.md"
