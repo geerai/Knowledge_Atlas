@@ -189,7 +189,7 @@ def _profile_defaults(profile: str) -> dict[str, str]:
             "reset_email": _env_default(
                 "KA_SMOKE_RESET_EMAIL",
                 "KA_SMOKE_STAGING_RESET_EMAIL",
-                fallback="dkirsh@ucsd.edu",
+                fallback="",
             ),
             "auth_health_path": _env_default(
                 "KA_SMOKE_AUTH_HEALTH_PATH",
@@ -235,7 +235,7 @@ def _profile_defaults(profile: str) -> dict[str, str]:
             "reset_email": _env_default(
                 "KA_SMOKE_RESET_EMAIL",
                 "KA_SMOKE_PRODUCTION_RESET_EMAIL",
-                fallback="dkirsh@ucsd.edu",
+                fallback="",
             ),
             "auth_health_path": _env_default(
                 "KA_SMOKE_AUTH_HEALTH_PATH",

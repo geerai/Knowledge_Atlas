@@ -16,7 +16,7 @@ STAGING_PATH="${STAGING_PATH:-/home/dkirsh/ka-staging-2026-04-20}"
 PRODUCTION_PATH="${PRODUCTION_PATH:-/var/www/xrlab/ka}"
 REMOTE_NAME="${REMOTE_NAME:-origin}"
 REMOTE_BRANCH="${REMOTE_BRANCH:-master}"
-RESET_EMAIL="${KA_SMOKE_RESET_EMAIL:-dkirsh@ucsd.edu}"
+RESET_EMAIL="${KA_SMOKE_RESET_EMAIL:-}"
 
 RSYNC_EXCLUDES=(
   --exclude='.git/'
@@ -107,10 +107,17 @@ promote_to_production() {
 smoke_production() {
   step_header "Run production runtime smoke"
   ensure_path "production" "$PRODUCTION_PATH"
-  (
-    cd "$PRODUCTION_PATH"
-    KA_SMOKE_RESET_EMAIL="$RESET_EMAIL" bash scripts/run_site_runtime_smoke.sh production
-  )
+  if [[ -n "$RESET_EMAIL" ]]; then
+    (
+      cd "$PRODUCTION_PATH"
+      KA_SMOKE_RESET_EMAIL="$RESET_EMAIL" bash scripts/run_site_runtime_smoke.sh production
+    )
+  else
+    (
+      cd "$PRODUCTION_PATH"
+      bash scripts/run_site_runtime_smoke.sh production
+    )
+  fi
   ok "production runtime smoke passed"
 }
 

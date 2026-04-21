@@ -76,6 +76,8 @@ cd /var/www/xrlab/ka
 KA_SMOKE_RESET_EMAIL=dkirsh@ucsd.edu bash scripts/server_release_cycle.sh production-smoke
 ```
 
+If `KA_SMOKE_RESET_EMAIL` is unset, the forgot-password check is skipped on purpose. This prevents an ordinary release run from invalidating a real user's live reset links.
+
 ## Important exclusions in promotion
 
 Production promotion deliberately does **not** overwrite:

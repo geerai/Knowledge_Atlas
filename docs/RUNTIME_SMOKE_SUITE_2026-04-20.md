@@ -79,7 +79,7 @@ Defaults:
 
 - base URL: `https://xrlab.ucsd.edu/ka`
 - API base URL: `https://xrlab.ucsd.edu`
-- reset email: `dkirsh@ucsd.edu`
+- reset email: no default; provide one explicitly if you want forgot-password checked
 
 Production does **not** assume a seeded student account. If you want the student-login checks on production, pass those values explicitly or through environment variables.
 
