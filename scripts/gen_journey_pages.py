@@ -518,8 +518,10 @@ PAGES = [
     {
         "slug": "af_references",
         "group": "af",
+        "deliverable_id": "T2.d",
+        "af_id": "AF-1",
         "title": "Articles referred to in the corpus — reference-harvest candidate generator",
-        "eyebrow": "Article Finder Problem · AF-1 · Reference harvesting",
+        "eyebrow": "Article Finder Problem · AF-1 · Reference harvesting · Track 2 graded deliverable T2.d",
         "status": "absent",
         "tier": "High — every indexed paper carries 20–60 references, so a 1,400-paper corpus implies tens of thousands of candidates",
         "roles_served": "160_student (Track 2), admin, researcher",
@@ -562,8 +564,10 @@ PAGES = [
     {
         "slug": "af_roi",
         "group": "af",
+        "deliverable_id": "T2.e",
+        "af_id": "AF-2",
         "title": "ROI-based candidate generator — driven by EN and argumentation analysis",
-        "eyebrow": "Article Finder Problem · AF-2 · Research-opportunity identification",
+        "eyebrow": "Article Finder Problem · AF-2 · Research-opportunity identification · Track 2 graded deliverable T2.e",
         "status": "absent",
         "tier": "High — requires both an ROI-identification model and a vetted-search backend",
         "roles_served": "researcher, 160_student (Track 2), admin",
@@ -606,8 +610,10 @@ PAGES = [
     {
         "slug": "af_neuro",
         "group": "af",
+        "deliverable_id": "T2.f",
+        "af_id": "AF-3",
         "title": "Plausible Neural Underpinnings — deepening the PNU layer",
-        "eyebrow": "Article Finder Problem · AF-3 · Neuroscience-grounding",
+        "eyebrow": "Article Finder Problem · AF-3 · Neuroscience-grounding · Track 2 graded deliverable T2.f",
         "status": "absent",
         "tier": "Very high — requires a neuroscience pathway model the Atlas does not yet have",
         "roles_served": "researcher, 160_student (Track 3), admin",
@@ -681,6 +687,7 @@ TEMPLATE = """<!DOCTYPE html>
       </div>
     </div>
 
+{t4_banner}
     <div class="j-siblings" id="j-siblings-slot"></div>
 
     <div class="j-section">
@@ -820,6 +827,73 @@ def render_page(page):
             f'<span class="file-desc">{fdesc}</span></li>\n'
         )
 
+    # T4-ownership banner (added 2026-04-21): every hard page names itself
+    # as a Track 4 redesign target with its current implementation status,
+    # so visitors of any track know who owns the redesign lifecycle while
+    # the pages themselves remain readable by all. AF-group pages are a
+    # different case: they are Track 2 build-out specs, not T4 critique-of-
+    # existing targets, so their banner points at the Track 2 hub instead.
+    status_phrase = {
+        "naive":     "The page exists at a placeholder level; redesign is open.",
+        "prototype": "A first serious pass exists; affordances are incomplete.",
+        "shipped":   "The page has passed one round of usability testing.",
+        "absent":    "No implementation yet; the spec here is the redesign starting point.",
+    }.get(page["status"], "")
+    if is_af:
+        deliverable_id = page.get("deliverable_id", "T2.?")
+        af_id = page.get("af_id", "AF-?")
+        # P1-A fix (2026-04-21): the current page's own deliverable ID is
+        # rendered as plain bold, not a self-link. The other two render as
+        # working cross-links. Prevents dead-click navigation.
+        def _did_link(tid, slug_target):
+            if tid == deliverable_id:
+                return f'<b style="color:#9a5010">{tid}</b>'
+            return (
+                f'<a href="{slug_target}" '
+                f'style="color:#9a5010;font-weight:600">{tid}</a>'
+            )
+        link_d = _did_link("T2.d", "ka_journey_af_references.html")
+        link_e = _did_link("T2.e", "ka_journey_af_roi.html")
+        link_f = _did_link("T2.f", "ka_journey_af_neuro.html")
+        t4_banner = (
+            '\n    <aside class="j-t4-banner" '
+            'style="background:#FFFBF5;border-left:4px solid #9a5010;'
+            'border-radius:6px;padding:12px 16px;margin:0 0 18px 0;'
+            'font-size:0.9rem;color:#3A2A10;line-height:1.5">\n'
+            f'      <b style="color:#9a5010">Track 2 major deliverable &middot; '
+            f'{deliverable_id} &middot; {af_id}.</b> '
+            'Track 2 students build this after the initial automation '
+            'pipeline passes &mdash; citation harvest (T2.a), abstract '
+            'screening (T2.b), and PDF acquisition on accepted articles '
+            f'(T2.c). It is one of three majors; {link_d}, {link_e}, and '
+            f'{link_f} are the set. '
+            'Every track may read the spec; only Track 2 implements. '
+            'The full deliverable chain lives at '
+            '<a href="160sp/ka_track2_hub.html" '
+            'style="color:#9a5010;font-weight:600">Track 2 hub, Region '
+            '3.5</a>.\n'
+            '    </aside>\n'
+        )
+    else:
+        t4_banner = (
+            '\n    <aside class="j-t4-banner" '
+            'style="background:#EFECFA;border-left:4px solid #4A3A8E;'
+            'border-radius:6px;padding:12px 16px;margin:0 0 18px 0;'
+            'font-size:0.9rem;color:#2A2250;line-height:1.5">\n'
+            '      <b style="color:#4A3A8E">Track 4 redesign target.</b> '
+            f'{status_phrase} Track 4 owns this page&apos;s redesign '
+            'through seven graded stages: heuristic audit (T4.a), '
+            'scenario walkthrough (T4.b), usability pilot (T4.c), '
+            'severity rubric (T4.d), reproducibility check (T4.e), '
+            'mid-fidelity redesign (T4.f), and final report (T4.g). '
+            'Every track may read the page; only Track 4 proposes new '
+            'designs. The full deliverable chain lives at '
+            '<a href="160sp/ka_track4_hub.html" '
+            'style="color:#4A3A8E;font-weight:600">Track 4 hub, Region '
+            '3.5</a>.\n'
+            '    </aside>\n'
+        )
+
     return TEMPLATE.format(
         slug=page["slug"],
         title=page["title"],
@@ -828,6 +902,7 @@ def render_page(page):
         tier=page["tier"],
         roles_served=page["roles_served"],
         group=page.get("group", "complicated"),
+        t4_banner=t4_banner,
         display_html=display_html,
         roles_html=roles_html,
         challenges_html=challenges_html,
