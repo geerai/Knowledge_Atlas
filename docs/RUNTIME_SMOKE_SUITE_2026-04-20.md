@@ -67,6 +67,7 @@ Defaults:
 
 - base URL: `https://xrlab.ucsd.edu/staging_KA`
 - API base URL: `https://xrlab.ucsd.edu/staging_KA`
+- reset email: `jpark@ucsd.edu`
 - student: `jpark@ucsd.edu`
 - password: `StagingPass2026`
 - expected track: `track4`
