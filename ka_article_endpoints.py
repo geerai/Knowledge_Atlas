@@ -20,9 +20,11 @@ See docs/ARTICLE_SUBMISSION_MODULE_SPEC_2026-03-30.md for the full contract.
 """
 
 import hashlib, json, os, re, secrets, shutil, sqlite3, sys
+from dataclasses import dataclass
 from datetime import datetime, timezone
+from importlib import import_module
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional, List, Any
 
 from fastapi import APIRouter, HTTPException, Depends, UploadFile, File, Form, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -31,13 +33,127 @@ from pydantic import BaseModel
 
 REPO_ROOT = Path(__file__).resolve().parent
 ATLAS_SHARED_SRC = REPO_ROOT.parent / "atlas_shared" / "src"
-if str(ATLAS_SHARED_SRC) not in sys.path:
+if ATLAS_SHARED_SRC.exists() and str(ATLAS_SHARED_SRC) not in sys.path:
     sys.path.insert(0, str(ATLAS_SHARED_SRC))
 
-from atlas_shared.classifier_system import (  # type: ignore[import-not-found]
-    AdaptiveClassifierSubsystem,
-    ClassificationEvidence,
-)
+
+def _build_local_classifier_backend():
+    @dataclass(frozen=True)
+    class LocalClassificationEvidence:
+        paper_id: str = ""
+        title: str = ""
+        abstract: str = ""
+        keywords: tuple[str, ...] = ()
+        first_page_text: str = ""
+
+    @dataclass(frozen=True)
+    class LocalArticleType:
+        value: str
+        confidence: float
+        evidence: tuple[str, ...]
+        source: str = "ka_local_fallback"
+
+    @dataclass(frozen=True)
+    class LocalClassificationResult:
+        article_type: LocalArticleType
+        evidence_stage: str = "heuristic"
+        next_action: str = "review_if_uncertain"
+
+    class LocalAdaptiveClassifierSubsystem:
+        def classify(self, evidence: LocalClassificationEvidence, allow_surface_creation: bool = False):
+            text = " ".join(
+                part for part in [
+                    evidence.title,
+                    evidence.abstract,
+                    " ".join(evidence.keywords),
+                    evidence.first_page_text,
+                ] if part
+            ).lower()
+
+            def result(label: str, confidence: float, *signals: str):
+                next_action = "accept" if confidence >= 0.75 else "review_if_uncertain"
+                return LocalClassificationResult(
+                    article_type=LocalArticleType(
+                        value=label,
+                        confidence=confidence,
+                        evidence=tuple(signals) or ("fallback:no_signals",),
+                    ),
+                    evidence_stage="heuristic",
+                    next_action=next_action,
+                )
+
+            if re.search(r"\bmeta[\s-]?analysis\b", text):
+                return result("meta_analysis", 0.96, "phrase:meta-analysis")
+            if any(phrase in text for phrase in ("systematic review", "scoping review", "literature review", "review article")):
+                return result("systematic_review", 0.93, "phrase:review")
+            if any(phrase in text for phrase in ("study protocol", "trial protocol", "protocol paper", "protocol for")):
+                return result("protocol", 0.9, "phrase:protocol")
+            if any(phrase in text for phrase in ("case study", "case report")):
+                return result("case_study", 0.88, "phrase:case-study")
+            if "mixed methods" in text or "mixed-methods" in text:
+                return result("mixed_methods", 0.82, "phrase:mixed-methods")
+            if any(phrase in text for phrase in ("qualitative study", "thematic analysis", "focus group", "focus groups", "semi-structured interview", "semi structured interview", "ethnograph", "grounded theory")):
+                return result("qualitative_research", 0.82, "phrase:qualitative")
+            if any(phrase in text for phrase in ("editorial", "commentary", "perspective", "viewpoint", "letter to the editor")):
+                return result("commentary", 0.78, "phrase:commentary")
+
+            empirical_hits = [
+                signal for signal in (
+                    ("randomized", "term:randomized"),
+                    ("participants", "term:participants"),
+                    ("method", "term:method"),
+                    ("results", "term:results"),
+                    ("experiment", "term:experiment"),
+                    ("trial", "term:trial"),
+                    ("survey", "term:survey"),
+                    ("intervention", "term:intervention"),
+                    ("we examined", "phrase:we-examined"),
+                    ("this study", "phrase:this-study"),
+                ) if signal[0] in text
+            ]
+            if len(empirical_hits) >= 2:
+                return result("empirical_research", 0.78, *(tag for _, tag in empirical_hits[:4]))
+
+            theoretical_hits = [
+                signal for signal in (
+                    ("theoretical framework", "phrase:theoretical-framework"),
+                    ("conceptual framework", "phrase:conceptual-framework"),
+                    ("conceptual model", "phrase:conceptual-model"),
+                    ("theoretical model", "phrase:theoretical-model"),
+                    ("we propose", "phrase:we-propose"),
+                    ("this paper discusses", "phrase:discusses"),
+                ) if signal[0] in text
+            ]
+            if theoretical_hits and not empirical_hits:
+                return result("theoretical", 0.72, *(tag for _, tag in theoretical_hits[:4]))
+
+            return result("unknown", 0.35, "fallback:unknown")
+
+    return LocalAdaptiveClassifierSubsystem, LocalClassificationEvidence
+
+
+def _load_classifier_backend(importer=import_module):
+    try:
+        module = importer("atlas_shared.classifier_system")
+        return (
+            module.AdaptiveClassifierSubsystem,
+            module.ClassificationEvidence,
+            "atlas_shared",
+            "",
+        )
+    except Exception as exc:
+        fallback_classifier, fallback_evidence = _build_local_classifier_backend()
+        return (
+            fallback_classifier,
+            fallback_evidence,
+            "ka_local_fallback",
+            repr(exc),
+        )
+
+
+AdaptiveClassifierSubsystem, ClassificationEvidence, CLASSIFIER_BACKEND, CLASSIFIER_BACKEND_NOTE = _load_classifier_backend()
+if CLASSIFIER_BACKEND != "atlas_shared":
+    print(f"[KA-ARTICLES] atlas_shared classifier unavailable; using local fallback ({CLASSIFIER_BACKEND_NOTE})")
 
 # ════════════════════════════════════════════════
 # CONFIG — overridable via environment variables

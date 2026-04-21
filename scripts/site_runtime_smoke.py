@@ -555,6 +555,7 @@ def run_suite(config: SmokeConfig) -> SmokeReport:
         ("Forgot-password page shell", "ka_forgot_password.html", ["Reset your password", "Open the public workspace"]),
         ("Reset-password page shell", "ka_reset_password.html?token=smoke-test-token", ["Choose a new password", "Request a new reset link"]),
         ("User home shell", "ka_user_home.html", ["GUI track workbench", "Theory Explorer"]),
+        ("A0 upload shell", "160sp/collect-articles-upload.html", ["Loading your assigned questions", "Part 2: Q2 — Open Corpus"]),
         ("Topic facet shell", "ka_topic_facet_view.html", ["Topic Page (Facet View)", "topic_crosswalk.json"]),
         ("Article page shell", f"ka_article_view.html?id={config.sample_article_id}", ["Loading article record", "article_details.json"]),
         ("Journeys index shell", "ka_journeys.html", ["The harder pages of Knowledge Atlas", "Article Finder"]),
@@ -650,13 +651,45 @@ def run_suite(config: SmokeConfig) -> SmokeReport:
                     headers=bearer_headers,
                 )
             )
+            results.append(
+                check_json_field(
+                    api_client,
+                    "A0 assignment state",
+                    "api/student/assignments",
+                    predicate=lambda payload: isinstance(payload.get("q1"), dict)
+                    and bool(payload["q1"].get("question_id"))
+                    and bool(payload["q1"].get("question_text")),
+                    success_detail="HTTP 200; A0 Question 1 assignment is present",
+                    failure_detail="HTTP 200; A0 Question 1 assignment was missing or incomplete",
+                    category="auth",
+                    headers=bearer_headers,
+                )
+            )
+            results.append(
+                check_json_field(
+                    api_client,
+                    "A0 Question 2 topic pool",
+                    "api/student/topics-needed",
+                    predicate=lambda payload: isinstance(payload.get("topics"), list)
+                    and len(payload["topics"]) >= 1
+                    and bool(payload["topics"][0].get("question_id")),
+                    success_detail="HTTP 200; A0 Question 2 topics are available",
+                    failure_detail="HTTP 200; A0 Question 2 topics were missing",
+                    category="auth",
+                    headers=bearer_headers,
+                )
+            )
         else:
             results.append(skip_result("Student auth/me state", "auth", "Skipped because login failed"))
             results.append(skip_result("Student assignments state", "auth", "Skipped because login failed"))
+            results.append(skip_result("A0 assignment state", "auth", "Skipped because login failed"))
+            results.append(skip_result("A0 Question 2 topic pool", "auth", "Skipped because login failed"))
     else:
         results.append(skip_result("Student login action", "auth", "No student credentials configured"))
         results.append(skip_result("Student auth/me state", "auth", "No student credentials configured"))
         results.append(skip_result("Student assignments state", "auth", "No student credentials configured"))
+        results.append(skip_result("A0 assignment state", "auth", "No student credentials configured"))
+        results.append(skip_result("A0 Question 2 topic pool", "auth", "No student credentials configured"))
 
     if config.admin_token:
         admin_headers = {"X-Admin-Token": config.admin_token}

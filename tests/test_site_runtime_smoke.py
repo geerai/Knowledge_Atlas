@@ -15,6 +15,8 @@ def _fake_request(self, path, *, method="GET", json_body=None, headers=None):
         return smoke.ResponseData("http://test/ka_reset_password.html?token=smoke-test-token", 200, "Choose a new password Request a new reset link")
     if path == "ka_user_home.html":
         return smoke.ResponseData("http://test/ka_user_home.html", 200, "GUI track workbench Theory Explorer")
+    if path == "160sp/collect-articles-upload.html":
+        return smoke.ResponseData("http://test/160sp/collect-articles-upload.html", 200, "Loading your assigned questions Part 2: Q2 — Open Corpus")
     if path == "ka_topic_facet_view.html":
         return smoke.ResponseData("http://test/ka_topic_facet_view.html", 200, "Topic Page (Facet View) topic_crosswalk.json")
     if path == "ka_article_view.html?id=PDF-0007":
@@ -79,6 +81,26 @@ def _fake_request(self, path, *, method="GET", json_body=None, headers=None):
                 json.dumps({"assigned": True, "question_id": "Q01"}),
             )
         return smoke.ResponseData("http://test/api/assignments", 401, json.dumps({"detail": "bad token"}), error="bad token")
+    if path == "api/student/assignments":
+        if headers.get("Authorization") == "Bearer token-123":
+            return smoke.ResponseData(
+                "http://test/api/student/assignments",
+                200,
+                json.dumps({
+                    "q1": {"question_id": "Q01", "question_text": "What is the assigned question?"},
+                    "q2": None,
+                    "brownie": [],
+                }),
+            )
+        return smoke.ResponseData("http://test/api/student/assignments", 401, json.dumps({"detail": "bad token"}), error="bad token")
+    if path == "api/student/topics-needed":
+        if headers.get("Authorization") == "Bearer token-123":
+            return smoke.ResponseData(
+                "http://test/api/student/topics-needed",
+                200,
+                json.dumps({"topics": [{"question_id": "Q05", "label": "Sample topic"}]}),
+            )
+        return smoke.ResponseData("http://test/api/student/topics-needed", 401, json.dumps({"detail": "bad token"}), error="bad token")
     if path == "api/admin/class/health":
         if headers.get("X-Admin-Token") == "admin-token":
             return smoke.ResponseData("http://test/api/admin/class/health", 200, json.dumps({"ok": True}))
