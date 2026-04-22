@@ -70,9 +70,12 @@
   const KA = (window.KA = window.KA || {});
   const SS = window.sessionStorage;
   const LS = window.localStorage;
+  const GATED_USER_TYPES = new Set(USER_TYPES_GATED.map(type => type.id));
   function g(k) { try { return SS.getItem(k); } catch (e) { return null; } }
   function s(k, v) { try { SS.setItem(k, v); } catch (e) {} }
   function lg(k) { try { return LS.getItem(k); } catch (e) { return null; } }
+  function lrm(k) { try { LS.removeItem(k); } catch (e) {} }
+  function srm(k) { try { SS.removeItem(k); } catch (e) {} }
   function esc(x) {
     return String(x == null ? '' : x).replace(/[&<>"']/g, c =>
       ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]);
@@ -91,10 +94,28 @@
     return !!lg('ka_access_token');
   }
 
+  function clearCompatSessionAuth() {
+    ['ka.admin', 'ka.adminEmail', 'ka.adminRole', 'ka.impersonating',
+     'ka.160.authed', 'ka.studentEmail'].forEach(srm);
+  }
+
+  function normalizeStoredUserType(isPrivileged) {
+    const current = g('ka.userType') || 'visitor';
+    if (!isPrivileged && GATED_USER_TYPES.has(current)) {
+      s('ka.userType', 'visitor');
+      return 'visitor';
+    }
+    return current;
+  }
+
   function syncCompatSessionFromLocalAuth() {
     const user = readCurrentUser();
     const hasToken = hasAccessToken();
-    if (!hasToken || !user || !user.email) return user;
+    if (!hasToken || !user || !user.email) {
+      clearCompatSessionAuth();
+      normalizeStoredUserType(false);
+      return null;
+    }
 
     const role = String(user.role || '').toLowerCase();
     if (role === 'instructor' || role === 'admin') {
@@ -113,6 +134,33 @@
     return user;
   }
 
+  function primeFromUser(user) {
+    if (!user || !user.email) return null;
+    try { LS.setItem('ka_current_user', JSON.stringify(user)); } catch (e) {}
+    return syncCompatSessionFromLocalAuth() || user;
+  }
+
+  function clearAuthState() {
+    clearCompatSessionAuth();
+    srm('ka_logged_in');
+    ['ka_access_token', 'ka_current_user', 'ka_logged_in', 'ka_refresh_token'].forEach(lrm);
+    normalizeStoredUserType(false);
+  }
+
+  function dispatchAuthStateChanged(source) {
+    if (typeof window === 'undefined' || typeof window.dispatchEvent !== 'function') return;
+    let event = null;
+    if (typeof window.CustomEvent === 'function') {
+      event = new window.CustomEvent('ka-auth-state-changed', { detail: { source: source || 'unknown' } });
+    } else if (typeof Event === 'function') {
+      event = new Event('ka-auth-state-changed');
+      event.detail = { source: source || 'unknown' };
+    } else {
+      event = { type: 'ka-auth-state-changed', detail: { source: source || 'unknown' } };
+    }
+    window.dispatchEvent(event);
+  }
+
   /* ─── State detection ────────────────────────────────────── */
 
   function detectRegime() {
@@ -127,7 +175,7 @@
     const isAdmin = g('ka.admin') === 'yes';
     const studentAuthed = g('ka.160.authed') === 'yes';
     const impersonating = g('ka.impersonating') === 'true';
-    const userType = g('ka.userType') || 'visitor';
+    const userType = normalizeStoredUserType(isAdmin || studentAuthed);
     const email = g('ka.adminEmail') || g('ka.studentEmail') || (localUser && localUser.email) || null;
 
     // Authority rules, in order:
@@ -481,13 +529,8 @@
       closeAllMenus();
       KA.nav.refresh();
     } else if (action === 'sign-out') {
-      ['ka.admin','ka.adminEmail','ka.adminRole','ka.userType',
-       'ka.impersonating','ka.160.authed','ka.studentEmail'].forEach(k => {
-        try { SS.removeItem(k); } catch (e) {}
-      });
-      ['ka_access_token','ka_current_user','ka_logged_in'].forEach(k => {
-        try { LS.removeItem(k); } catch (e) {}
-      });
+      clearAuthState();
+      dispatchAuthStateChanged('sign-out');
       location.reload();
     } else if (action === 'navigate') {
       // anchor href already points the right way; default link behaviour
@@ -515,6 +558,38 @@
     document.addEventListener('keydown', ev => {
       if (ev.key === 'Escape') closeAllMenus();
     });
+  }
+
+  function bindStateRefresh() {
+    if (KA.nav && KA.nav._stateRefreshBound) return;
+    const refresh = () => {
+      if (KA.nav && typeof KA.nav.refresh === 'function') KA.nav.refresh();
+    };
+    const watch = key => (
+      !key ||
+      key === 'ka_access_token' ||
+      key === 'ka_refresh_token' ||
+      key === 'ka_current_user' ||
+      key === 'ka_logged_in' ||
+      key === 'ka.userType' ||
+      key === 'ka.admin' ||
+      key === 'ka.160.authed'
+    );
+    if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+      window.addEventListener('pageshow', refresh);
+      window.addEventListener('focus', refresh);
+      window.addEventListener('ka-auth-state-changed', refresh);
+      window.addEventListener('storage', ev => {
+        if (watch(ev && ev.key)) refresh();
+      });
+    }
+    if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') refresh();
+      });
+    }
+    if (!KA.nav) KA.nav = {};
+    KA.nav._stateRefreshBound = true;
   }
 
   function retireLegacyTopNavs(regime) {
@@ -576,17 +651,24 @@
 
   /* ─── Public API ─────────────────────────────────────────── */
 
-  KA.nav = {
+  KA.nav = Object.assign(KA.nav || {}, {
     mount,
     refresh: mount,              // re-render from current state
     detectRegime,
     detectSession,
     setActive(id) { if (document.body) document.body.setAttribute('data-ka-active', id); mount(); },
     REGIME_ITEMS,                // exposed for inspection / tests
+  });
+  KA.authState = {
+    clear: clearAuthState,
+    notify: dispatchAuthStateChanged,
+    primeFromUser,
+    syncCompatSessionFromLocalAuth,
   };
 
   /* ─── Boot ───────────────────────────────────────────────── */
 
+  bindStateRefresh();
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', mount);
   } else {

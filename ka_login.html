@@ -485,6 +485,27 @@
       if (el) el.style.display = 'none';
     }
 
+    function syncCompatAuthState(user, email) {
+      const auth = window.KA && window.KA.authState;
+      if (auth && typeof auth.primeFromUser === 'function') {
+        auth.primeFromUser(user || { email });
+        auth.notify && auth.notify('login');
+        return;
+      }
+      if (!user || !user.email) return;
+      const role = String(user.role || '').toLowerCase();
+      if (role === 'instructor' || role === 'admin') {
+        sessionStorage.setItem('ka.admin', 'yes');
+        sessionStorage.setItem('ka.adminEmail', user.email);
+        sessionStorage.setItem('ka.adminRole', role);
+        sessionStorage.setItem('ka.userType', 'instructor');
+      } else {
+        sessionStorage.setItem('ka.160.authed', 'yes');
+        sessionStorage.setItem('ka.studentEmail', user.email);
+        sessionStorage.setItem('ka.userType', '160-student');
+      }
+    }
+
     // Password visibility toggle
     document.getElementById('passwordToggle').addEventListener('click', function(e) {
       e.preventDefault();
@@ -531,6 +552,7 @@
         localStorage.setItem('ka_current_user',  JSON.stringify(data.user));
         localStorage.setItem('ka_logged_in', '1');
         sessionStorage.setItem('ka_logged_in', '1');
+        syncCompatAuthState(data.user, email);
 
         // Backward-compat: keep workflow store in sync
         if (window.KA_WORKFLOW_STORE) window.KA_WORKFLOW_STORE.setLoggedIn(true);
@@ -559,6 +581,9 @@
         btn.onclick = function() {
           localStorage.setItem('ka_logged_in', '1');
           sessionStorage.setItem('ka_logged_in', '1');
+          if (window.KA && window.KA.authState && typeof window.KA.authState.notify === 'function') {
+            window.KA.authState.notify('demo-login');
+          }
           if (window.KA_WORKFLOW_STORE) window.KA_WORKFLOW_STORE.setLoggedIn(true);
           // Route demo students to the same setup flow as the live auth path,
           // so the demo fallback does not bypass onboarding.

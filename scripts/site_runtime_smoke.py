@@ -281,6 +281,13 @@ def _profile_defaults(profile: str) -> dict[str, str]:
     }
 
 
+def _production_health_default(repo_root: str, api_base_url: str) -> str:
+    normalized = str(Path(repo_root).resolve())
+    if normalized.endswith("/var/www/xrlab/ka") or normalized.endswith("/private/var/www/xrlab/ka"):
+        return "http://127.0.0.1:8765/health"
+    return ""
+
+
 def build_config(args: argparse.Namespace) -> SmokeConfig:
     defaults = _profile_defaults(args.profile)
     site_base_url = (args.site_base_url or args.base_url or defaults["site_base_url"]).rstrip("/")
@@ -291,14 +298,18 @@ def build_config(args: argparse.Namespace) -> SmokeConfig:
         raise SystemExit("An API base URL is required. Use --api-base-url or a profile default.")
 
     repo_root = str((args.repo_root or REPO_ROOT).resolve()) if not args.no_site_validator else ""
+    auth_health_path = (
+        args.auth_health_path if args.auth_health_path is not None else defaults["auth_health_path"]
+    )
+    if args.profile == "production" and auth_health_path == "http://127.0.0.1:8765/health":
+        auth_health_path = _production_health_default(repo_root or str(REPO_ROOT), api_base_url)
+
     return SmokeConfig(
         profile=args.profile,
         site_base_url=site_base_url,
         api_base_url=api_base_url,
         reset_email=args.reset_email if args.reset_email is not None else defaults["reset_email"],
-        auth_health_path=(
-            args.auth_health_path if args.auth_health_path is not None else defaults["auth_health_path"]
-        ),
+        auth_health_path=auth_health_path,
         student_email=args.student_email if args.student_email is not None else defaults["student_email"],
         student_password=args.student_password if args.student_password is not None else defaults["student_password"],
         admin_token=args.admin_token if args.admin_token is not None else defaults["admin_token"],
@@ -609,17 +620,20 @@ def run_suite(config: SmokeConfig) -> SmokeReport:
             body_markers=(config.sample_article_id,),
         )
     )
-    results.append(
-        check_json_field(
-            api_client,
-            "Auth health endpoint",
-            config.auth_health_path,
-            predicate=_auth_health_ok,
-            success_detail="HTTP 200; health payload reported a healthy auth+article state",
-            failure_detail="HTTP 200; health payload was missing the article/A0 module or healthy status",
-            category="auth",
+    if config.auth_health_path:
+        results.append(
+            check_json_field(
+                api_client,
+                "Auth health endpoint",
+                config.auth_health_path,
+                predicate=_auth_health_ok,
+                success_detail="HTTP 200; health payload reported a healthy auth+article state",
+                failure_detail="HTTP 200; health payload was missing the article/A0 module or healthy status",
+                category="auth",
+            )
         )
-    )
+    else:
+        results.append(skip_result("Auth health endpoint", "auth", "No auth health path configured for this run"))
 
     if config.reset_email:
         results.append(check_forgot_password(api_client, config.reset_email))

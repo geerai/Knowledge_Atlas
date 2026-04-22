@@ -34,15 +34,67 @@
   var GATED_TYPES  = ['160-student', 'instructor'];
 
   var SS = window.sessionStorage;
+  var LS = window.localStorage;
   function g(k) { try { return SS.getItem(k); } catch (e) { return null; } }
   function s(k, v) { try { SS.setItem(k, v); } catch (e) {} }
   function rm(k) { try { SS.removeItem(k); } catch (e) {} }
+  function lg(k) { try { return LS.getItem(k); } catch (e) { return null; } }
 
   var KA = window.KA = window.KA || {};
 
+  function readCurrentUser() {
+    try {
+      var raw = lg('ka_current_user');
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function hasAccessToken() {
+    return !!lg('ka_access_token');
+  }
+
+  function syncCompatSessionFromLocalAuth() {
+    var user = readCurrentUser();
+    var authed = hasAccessToken() && user && user.email;
+    if (!authed) {
+      rm('ka.admin');
+      rm('ka.adminEmail');
+      rm('ka.adminRole');
+      rm('ka.impersonating');
+      rm('ka.160.authed');
+      rm('ka.studentEmail');
+      if (GATED_TYPES.indexOf(g('ka.userType')) >= 0) s('ka.userType', 'visitor');
+      return null;
+    }
+
+    var role = String(user.role || '').toLowerCase();
+    if (role === 'instructor' || role === 'admin') {
+      s('ka.admin', 'yes');
+      s('ka.adminEmail', user.email);
+      s('ka.adminRole', role);
+      rm('ka.160.authed');
+      rm('ka.studentEmail');
+      if (!g('ka.userType')) s('ka.userType', 'instructor');
+      return user;
+    }
+
+    s('ka.160.authed', 'yes');
+    s('ka.studentEmail', user.email);
+    rm('ka.admin');
+    rm('ka.adminEmail');
+    rm('ka.adminRole');
+    if (!g('ka.userType') || g('ka.userType') === 'visitor') s('ka.userType', '160-student');
+    return user;
+  }
+
   KA.userType = {
     /** Which user type is the viewer currently acting as? */
-    get: function () { return g('ka.userType') || 'visitor'; },
+    get: function () {
+      syncCompatSessionFromLocalAuth();
+      return g('ka.userType') || 'visitor';
+    },
 
     /** Set the viewer's user type. Pass {impersonate:true} for admin override. */
     set: function (type, opts) {
@@ -96,8 +148,11 @@
       '<a href="160sp/ka_admin.html" style="color:#fff;text-decoration:underline;">Return to admin</a> &middot; ' +
       '<a href="#" id="ka-imp-stop" style="color:#fff;text-decoration:underline;">Stop impersonating</a>';
     document.body.insertBefore(bar, document.body.firstChild);
+    if (!document.body.dataset.kaImpBasePaddingTop) {
+      document.body.dataset.kaImpBasePaddingTop = String(parseInt(getComputedStyle(document.body).paddingTop, 10) || 0);
+    }
     document.body.style.paddingTop =
-      ((parseInt(getComputedStyle(document.body).paddingTop, 10) || 0) + 32) + 'px';
+      (parseInt(document.body.dataset.kaImpBasePaddingTop, 10) + 32) + 'px';
     var stop = document.getElementById('ka-imp-stop');
     if (stop) stop.addEventListener('click', function (e) {
       e.preventDefault();
@@ -115,8 +170,52 @@
         els[i].setAttribute('data-ka-gated', 'hidden');
       } else {
         els[i].removeAttribute('data-ka-gated');
+        els[i].style.removeProperty('display');
       }
     }
+  }
+
+  function removeBanner() {
+    var bar = document.getElementById('ka-imp-banner');
+    if (bar && bar.parentNode) bar.parentNode.removeChild(bar);
+    if (document.body && document.body.dataset.kaImpBasePaddingTop) {
+      document.body.style.paddingTop = document.body.dataset.kaImpBasePaddingTop + 'px';
+      delete document.body.dataset.kaImpBasePaddingTop;
+    }
+  }
+
+  function refreshState() {
+    syncCompatSessionFromLocalAuth();
+    removeBanner();
+    mountBanner();
+    applyElementGates();
+  }
+
+  function bindRefreshHooks() {
+    if (KA.userType._refreshHooksBound) return;
+    function maybeRefresh(ev) {
+      if (!ev || !ev.key ||
+          ev.key === 'ka_access_token' ||
+          ev.key === 'ka_current_user' ||
+          ev.key === 'ka_logged_in' ||
+          ev.key === 'ka.userType' ||
+          ev.key === 'ka.admin' ||
+          ev.key === 'ka.160.authed') {
+        refreshState();
+      }
+    }
+    if (typeof window.addEventListener === 'function') {
+      window.addEventListener('pageshow', refreshState);
+      window.addEventListener('focus', refreshState);
+      window.addEventListener('storage', maybeRefresh);
+      window.addEventListener('ka-auth-state-changed', refreshState);
+    }
+    if (typeof document.addEventListener === 'function') {
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'visible') refreshState();
+      });
+    }
+    KA.userType._refreshHooksBound = true;
   }
 
   /* ─── Helpers ─── */
@@ -127,13 +226,13 @@
   }
 
   /* ─── Boot (after DOM) ─── */
+  KA.userType.refresh = refreshState;
+  bindRefreshHooks();
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
-      mountBanner();
-      applyElementGates();
+      refreshState();
     });
   } else {
-    mountBanner();
-    applyElementGates();
+    refreshState();
   }
 })();

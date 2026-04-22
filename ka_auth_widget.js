@@ -31,11 +31,23 @@
 
   function logout() {
     clearLegacyAuthState();
-    localStorage.removeItem('ka_access_token');
-    localStorage.removeItem('ka_refresh_token');
-    localStorage.removeItem('ka_current_user');
-    localStorage.removeItem('ka_logged_in');
-    sessionStorage.removeItem('ka_logged_in');
+    if (window.KA && window.KA.authState && typeof window.KA.authState.clear === 'function') {
+      window.KA.authState.clear();
+      if (typeof window.KA.authState.notify === 'function') {
+        window.KA.authState.notify('logout');
+      }
+    } else {
+      localStorage.removeItem('ka_access_token');
+      localStorage.removeItem('ka_refresh_token');
+      localStorage.removeItem('ka_current_user');
+      localStorage.removeItem('ka_logged_in');
+      sessionStorage.removeItem('ka_logged_in');
+      sessionStorage.removeItem('ka.160.authed');
+      sessionStorage.removeItem('ka.studentEmail');
+      sessionStorage.removeItem('ka.admin');
+      sessionStorage.removeItem('ka.adminEmail');
+      sessionStorage.removeItem('ka.adminRole');
+    }
     window.location.reload();
   }
 

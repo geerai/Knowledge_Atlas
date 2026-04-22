@@ -127,3 +127,20 @@ def test_detect_session_promotes_instructor_local_storage_into_admin_state():
     assert result["sessionStorage"]["ka.admin"] == "yes"
     assert result["sessionStorage"]["ka.adminEmail"] == "dkirsh@ucsd.edu"
     assert result["sessionStorage"]["ka.userType"] == "instructor"
+
+
+def test_detect_session_clears_stale_student_session_without_local_auth():
+    result = _run_detect_session(
+        {},
+        {
+            "ka.userType": "160-student",
+            "ka.160.authed": "yes",
+            "ka.studentEmail": "stale@example.com",
+        },
+    )
+
+    assert result["detected"]["authState"] == "anonymous"
+    assert result["detected"]["studentAuthed"] is False
+    assert result["detected"]["userType"] == "visitor"
+    assert "ka.160.authed" not in result["sessionStorage"]
+    assert "ka.studentEmail" not in result["sessionStorage"]

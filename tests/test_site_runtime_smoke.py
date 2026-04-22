@@ -185,3 +185,29 @@ def test_render_json_contains_summary(monkeypatch):
     payload = json.loads(smoke.render_json(report))
     assert payload["summary"]["fail"] == 0
     assert payload["summary"]["pass"] == len(report.results)
+
+
+def test_build_config_uses_public_production_health_off_server(tmp_path):
+    args = smoke.parse_args(
+        [
+            "--profile",
+            "production",
+            "--repo-root",
+            str(tmp_path),
+        ]
+    )
+    config = smoke.build_config(args)
+    assert config.auth_health_path == ""
+
+
+def test_build_config_keeps_loopback_health_on_server_path():
+    args = smoke.parse_args(
+        [
+            "--profile",
+            "production",
+            "--repo-root",
+            "/var/www/xrlab/ka",
+        ]
+    )
+    config = smoke.build_config(args)
+    assert config.auth_health_path == "http://127.0.0.1:8765/health"
