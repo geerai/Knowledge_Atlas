@@ -201,6 +201,10 @@ def _nudge_page(page) -> None:
     page.wait_for_timeout(300)
 
 
+def _compact_text(value: str) -> str:
+    return " ".join(str(value or "").split())
+
+
 def run_suite(config: BrowserSmokeConfig) -> BrowserSmokeReport:
     try:
         from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
@@ -336,7 +340,7 @@ def run_suite(config: BrowserSmokeConfig) -> BrowserSmokeReport:
             article_topic_page.wait_for_url("**/ka_topic_facet_view.html?topic=*", wait_until="networkidle")
             article_topic_page.wait_for_selector("#__ka_topic_focus")
             topic_focus_text = article_topic_page.locator("#__ka_topic_focus").inner_text()
-            if focused_topic_label and focused_topic_label in topic_focus_text:
+            if focused_topic_label and _compact_text(focused_topic_label) in _compact_text(topic_focus_text):
                 results.append(_ok("Article-to-topic journey", f"Article topic link opened a focused topic briefing for {focused_topic_label}", url=article_topic_page.url))
             else:
                 results.append(_fail("Article-to-topic journey", f"Topic focus did not preserve the article topic handoff: {topic_focus_text!r}", url=article_topic_page.url))
