@@ -33,6 +33,7 @@ class BrowserSmokeConfig:
     base_url: str
     student_email: str
     student_password: str
+    reset_email: str
     headed: bool
     timeout_ms: int
 
@@ -93,6 +94,12 @@ def _profile_defaults(profile: str) -> dict[str, str]:
                 "KA_SMOKE_STAGING_STUDENT_PASSWORD",
                 fallback="StagingPass2026",
             ),
+            "reset_email": _env_default(
+                "KA_BROWSER_SMOKE_RESET_EMAIL",
+                "KA_BROWSER_SMOKE_STAGING_RESET_EMAIL",
+                "KA_SMOKE_STAGING_RESET_EMAIL",
+                fallback="",
+            ),
         }
     if profile == "production":
         return {
@@ -111,11 +118,18 @@ def _profile_defaults(profile: str) -> dict[str, str]:
                 "KA_SMOKE_PRODUCTION_STUDENT_PASSWORD",
                 fallback="SmokeReset!2026",
             ),
+            "reset_email": _env_default(
+                "KA_BROWSER_SMOKE_RESET_EMAIL",
+                "KA_BROWSER_SMOKE_PRODUCTION_RESET_EMAIL",
+                "KA_SMOKE_PRODUCTION_RESET_EMAIL",
+                fallback="",
+            ),
         }
     return {
         "base_url": _env_default("KA_BROWSER_SMOKE_BASE_URL"),
         "student_email": _env_default("KA_BROWSER_SMOKE_STUDENT_EMAIL"),
         "student_password": _env_default("KA_BROWSER_SMOKE_STUDENT_PASSWORD"),
+        "reset_email": _env_default("KA_BROWSER_SMOKE_RESET_EMAIL"),
     }
 
 
@@ -125,6 +139,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--base-url")
     parser.add_argument("--student-email")
     parser.add_argument("--student-password")
+    parser.add_argument("--reset-email")
     parser.add_argument("--headed", action="store_true")
     parser.add_argument("--timeout-ms", type=int, default=10000)
     parser.add_argument("--md-out", type=Path)
@@ -137,6 +152,7 @@ def build_config(args: argparse.Namespace) -> BrowserSmokeConfig:
     base_url = (args.base_url or defaults["base_url"]).rstrip("/")
     student_email = args.student_email or defaults["student_email"]
     student_password = args.student_password or defaults["student_password"]
+    reset_email = args.reset_email or defaults["reset_email"]
     if not base_url:
         raise SystemExit("A base URL is required.")
     if not student_email or not student_password:
@@ -146,6 +162,7 @@ def build_config(args: argparse.Namespace) -> BrowserSmokeConfig:
         base_url=base_url,
         student_email=student_email,
         student_password=student_password,
+        reset_email=reset_email,
         headed=args.headed,
         timeout_ms=args.timeout_ms,
     )
@@ -157,6 +174,10 @@ def _ok(name: str, detail: str, *, url: str = "") -> BrowserCheckResult:
 
 def _fail(name: str, detail: str, *, url: str = "") -> BrowserCheckResult:
     return BrowserCheckResult(name=name, status=FAIL, detail=detail, url=url)
+
+
+def _skip(name: str, detail: str, *, url: str = "") -> BrowserCheckResult:
+    return BrowserCheckResult(name=name, status=SKIP, detail=detail, url=url)
 
 
 def _wait_for_js_visible(locator) -> bool:
@@ -200,17 +221,26 @@ def run_suite(config: BrowserSmokeConfig) -> BrowserSmokeReport:
         home_page = context.new_page()
         user_home_page = context.new_page()
         a0_page = context.new_page()
+        forgot_page = context.new_page()
+        reset_page = context.new_page()
+        admin_page = context.new_page()
         login_page = context.new_page()
 
         try:
             home_url = f"{config.base_url}/ka_home.html"
             user_home_url = f"{config.base_url}/ka_user_home.html"
             a0_url = f"{config.base_url}/160sp/collect-articles-upload.html"
+            forgot_url = f"{config.base_url}/ka_forgot_password.html"
+            reset_url = f"{config.base_url}/ka_reset_password.html?token=invalid-browser-smoke-token"
+            admin_url = f"{config.base_url}/160sp/ka_admin.html"
             login_url = f"{config.base_url}/ka_login.html"
 
             home_page.goto(home_url, wait_until="networkidle")
             user_home_page.goto(user_home_url, wait_until="networkidle")
             a0_page.goto(a0_url, wait_until="networkidle")
+            forgot_page.goto(forgot_url, wait_until="networkidle")
+            reset_page.goto(reset_url, wait_until="networkidle")
+            admin_page.goto(admin_url, wait_until="networkidle")
 
             nav_text = home_page.locator(".ka-right").inner_text()
             if "Log in" in nav_text and "Register" in nav_text:
@@ -222,6 +252,43 @@ def run_suite(config: BrowserSmokeConfig) -> BrowserSmokeReport:
                 results.append(_ok("A0 login overlay", "A0 shows login overlay when anonymous", url=a0_url))
             else:
                 results.append(_fail("A0 login overlay", "A0 login overlay was not visible for anonymous user", url=a0_url))
+
+            admin_prompt = admin_page.locator(".auth-sub").inner_text()
+            if "Sign in with your UCSD instructor account." in admin_prompt:
+                results.append(_ok("Admin gate shell", "Admin page shows the protected instructor sign-in gate", url=admin_url))
+            else:
+                results.append(_fail("Admin gate shell", f"Admin page did not show the expected sign-in prompt: {admin_prompt!r}", url=admin_url))
+
+            reset_page.locator("#password").fill("BrowserSmoke!2026")
+            reset_page.locator("#confirm").fill("BrowserSmoke!2026")
+            reset_page.locator("#submitBtn").click()
+            reset_page.wait_for_timeout(800)
+            invalid_text = ""
+            error_visible = _wait_for_js_visible(reset_page.locator("#msg-error"))
+            invalid_visible = _wait_for_js_visible(reset_page.locator("#invalid-token"))
+            if error_visible:
+                invalid_text = reset_page.locator("#msg-error").inner_text().strip()
+            elif invalid_visible:
+                invalid_text = reset_page.locator("#invalid-token").inner_text().strip()
+            if "invalid" in invalid_text.lower() or "already been used" in invalid_text.lower():
+                results.append(_ok("Reset invalid-token handling", f"Reset page rejected an invalid token honestly: {invalid_text}", url=reset_url))
+            else:
+                results.append(_fail("Reset invalid-token handling", f"Reset page did not surface a clear invalid-token message: {invalid_text!r}", url=reset_url))
+
+            if config.reset_email:
+                forgot_page.locator("#email").fill(config.reset_email)
+                forgot_page.locator("#submitBtn").click()
+                forgot_page.wait_for_timeout(1000)
+                ok_visible = _wait_for_js_visible(forgot_page.locator("#okAlert"))
+                err_visible = _wait_for_js_visible(forgot_page.locator("#errAlert"))
+                if ok_visible and not err_visible:
+                    message = forgot_page.locator("#okAlert").inner_text().strip()
+                    results.append(_ok("Forgot-password browser action", f"Forgot-password page surfaced a success message: {message}", url=forgot_url))
+                else:
+                    message = forgot_page.locator("#errAlert").inner_text().strip() if err_visible else ""
+                    results.append(_fail("Forgot-password browser action", f"Forgot-password page did not surface a success state: {message!r}", url=forgot_url))
+            else:
+                results.append(_skip("Forgot-password browser action", "No reset email configured for browser smoke", url=forgot_url))
 
             login_page.goto(login_url, wait_until="networkidle")
             login_page.locator("#email").fill(config.student_email)
