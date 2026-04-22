@@ -8,7 +8,37 @@
 <script src="ka_canonical_navbar.js" defer></script>
 <script src="ka_user_type.js" defer></script>
 <script src="ka_journey_surface.js" defer></script>
+<script src="ka_data_adapter.js"></script>
 <link rel="stylesheet" href="ka_journey_page.css">
+<style>
+  .j-theory-live{background:#F7F4EF;border:1px solid #E0D8CC;border-radius:14px;padding:18px 20px;margin:0 0 18px}
+  .j-theory-live h2{font-family:Georgia,serif;color:#1C3D3A;font-size:1.2rem;margin-bottom:8px}
+  .j-theory-live p{font-size:.92rem;line-height:1.6;color:#40514D}
+  .j-theory-toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:14px 0 16px}
+  .j-theory-toolbar label{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:#6B6B6B;font-weight:700}
+  .j-theory-toolbar select{min-width:260px;padding:10px 12px;border-radius:10px;border:1px solid #D6CEC2;background:#fff;color:#1C3D3A}
+  .j-theory-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:14px}
+  .j-theory-metric{background:#fff;border:1px solid #E0D8CC;border-radius:12px;padding:13px 14px}
+  .j-theory-metric .label{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:#8A9A96;font-weight:700;margin-bottom:4px}
+  .j-theory-metric .value{font-size:1.18rem;color:#1C3D3A;font-weight:700}
+  .j-theory-metric .sub{font-size:.82rem;color:#6B6B6B;line-height:1.45;margin-top:4px}
+  .j-theory-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:14px}
+  .j-theory-card{background:#fff;border:1px solid #E0D8CC;border-radius:12px;padding:15px 16px}
+  .j-theory-card h3{font-size:1rem;color:#1C3D3A;margin-bottom:6px}
+  .j-theory-card p{font-size:.88rem;color:#40514D;line-height:1.55}
+  .j-theory-list{display:grid;gap:10px}
+  .j-theory-chip-row{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 0}
+  .j-theory-chip,.j-theory-chip-link{display:inline-flex;align-items:center;padding:5px 10px;border:1px solid #E0D8CC;border-radius:999px;background:#F9F7F2;color:#1C3D3A;font-size:.78rem;text-decoration:none}
+  .j-theory-chip-link:hover{border-color:#2A7868;color:#2A7868}
+  .j-theory-paper{padding:10px 12px;border:1px solid #ECE4D8;border-radius:10px;background:#FCFAF6}
+  .j-theory-paper b{color:#1C3D3A}
+  .j-theory-paper .meta{font-size:.8rem;color:#6B6B6B;margin-top:4px}
+  .j-theory-pnu{margin-top:8px;border-left:3px solid #E8872A;background:#fff;padding:10px 12px;border-radius:0 8px 8px 0;font-size:.84rem;color:#40514D;line-height:1.5}
+  .j-theory-loading,.j-theory-error{padding:14px 16px;border-radius:12px}
+  .j-theory-loading{background:#F9F5EE;color:#6B6B6B}
+  .j-theory-error{background:#F8D7DA;color:#8A1A25}
+  @media (max-width:860px){.j-theory-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body data-ka-regime="global" data-ka-active="" data-j-group="complicated">
 <div id="ka-navbar-slot"></div>
@@ -35,6 +65,10 @@
     </aside>
 
     <div class="j-siblings" id="j-siblings-slot"></div>
+
+    <section class="j-theory-live" id="j-theory-live">
+      <div class="j-theory-loading">Loading current Atlas theory companion…</div>
+    </section>
 
     <div class="j-section">
       <h2><span class="h2-icon">◧</span><span class="h2-text">What this page displays</span><span class="h2-hint">the information on offer</span></h2>
@@ -130,10 +164,135 @@
 </div>
 
 <script>
+function theoryEsc(value) {
+  return String(value == null ? '' : value).replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;'}[c])
+  );
+}
+
+function theoryCompact(text, limit = 220) {
+  const value = String(text || '').replace(/\s+/g, ' ').trim();
+  if (!value) return '';
+  return value.length <= limit ? value : value.slice(0, limit - 1).trimEnd() + '…';
+}
+
+function renderTheoryCompanion(payload, selectedId) {
+  const mount = document.getElementById('j-theory-live');
+  const theories = (payload && payload.theories) || [];
+  if (!mount) return;
+  if (!theories.length) {
+    mount.innerHTML = '<div class="j-theory-error"><b>Could not load the public theory payload.</b> No theories were available for rendering.</div>';
+    return;
+  }
+  const byId = new Map(theories.map(row => [row.id, row]));
+  const chosen = byId.get(selectedId) || theories[0];
+  const evidence = chosen.evidence_profile || {};
+  const papers = (chosen.representative_papers || []).slice(0, 4);
+  const related = (chosen.related_theories || []).slice(0, 5);
+  const pnus = (chosen.pnu_examples || []).slice(0, 3);
+  const topics = (chosen.topic_links || []).slice(0, 5);
+
+  mount.innerHTML = `
+    <h2>Current theory atlas companion</h2>
+    <p>This live layer is drawn from <code>data/ka_payloads/theories.json</code>. It does not replace the critique brief below; it gives the brief a current evidential object.</p>
+    <div class="j-theory-toolbar">
+      <label for="j-theory-select">Active theory</label>
+      <select id="j-theory-select">
+        ${theories.map(row => `<option value="${theoryEsc(row.id)}"${row.id === chosen.id ? ' selected' : ''}>${theoryEsc(row.name || row.id)}</option>`).join('')}
+      </select>
+    </div>
+    <div class="j-theory-metrics">
+      <div class="j-theory-metric">
+        <div class="label">Articles</div>
+        <div class="value">${theoryEsc(chosen.article_count || 0)}</div>
+        <div class="sub">Corpus articles currently linked to this theory.</div>
+      </div>
+      <div class="j-theory-metric">
+        <div class="label">Topic links</div>
+        <div class="value">${theoryEsc(chosen.topic_count || topics.length || 0)}</div>
+        <div class="sub">Topic bundles in which this theory currently appears.</div>
+      </div>
+      <div class="j-theory-metric">
+        <div class="label">Debate clusters</div>
+        <div class="value">${theoryEsc(chosen.debate_cluster_count || 0)}</div>
+        <div class="sub">Current debate clusters that carry this theory.</div>
+      </div>
+      <div class="j-theory-metric">
+        <div class="label">Support / attack</div>
+        <div class="value">${theoryEsc(evidence.support_edge_count || 0)} / ${theoryEsc(evidence.attack_edge_count || 0)}</div>
+        <div class="sub">Edge counts from the rebuilt evidence profile.</div>
+      </div>
+    </div>
+    <div class="j-theory-grid">
+      <section class="j-theory-card">
+        <h3>Nearby theories and active topics</h3>
+        <p>Theory pages become more truthful when they reveal their neighbourhood rather than presenting themselves as isolated monuments.</p>
+        <div class="j-theory-chip-row">
+          ${related.length ? related.map(row => `<a class="j-theory-chip-link" href="ka_home_theory.html?theory=${encodeURIComponent(row.id)}">${theoryEsc(row.name)}${row.weight ? ` · ${theoryEsc(row.weight)}` : ''}</a>`).join('') : '<span class="j-theory-chip">No neighbouring theories exported yet.</span>'}
+        </div>
+        <div class="j-theory-chip-row">
+          ${topics.length ? topics.map(row => `<span class="j-theory-chip">${theoryEsc(row.label)}${row.paper_count ? ` · ${theoryEsc(row.paper_count)}` : ''}</span>`).join('') : '<span class="j-theory-chip">No linked topic bundles yet.</span>'}
+        </div>
+      </section>
+      <section class="j-theory-card">
+        <h3>Representative papers</h3>
+        <div class="j-theory-list">
+          ${papers.length ? papers.map(row => `
+            <article class="j-theory-paper">
+              <b>${theoryEsc(row.title || row.paper_id)}</b>
+              <div class="meta">${theoryEsc(row.paper_id || '')}${row.primary_topic ? ` · ${theoryEsc(row.primary_topic)}` : ''}${row.claim_count ? ` · ${theoryEsc(row.claim_count)} claims` : ''}</div>
+            </article>`).join('') : '<p>No representative papers were exported for this theory.</p>'}
+        </div>
+      </section>
+      <section class="j-theory-card">
+        <h3>Paper-level PNU glimpses</h3>
+        <div class="j-theory-list">
+          ${pnus.length ? pnus.map(row => `
+            <article class="j-theory-paper">
+              <b>${theoryEsc(row.title || row.paper_id)}</b>
+              <div class="meta">${theoryEsc(row.paper_id || '')}</div>
+              <div class="j-theory-pnu">${theoryEsc(theoryCompact(row.short_summary, 260))}</div>
+            </article>`).join('') : '<p>No PNU examples are yet attached to this theory in the public export.</p>'}
+        </div>
+      </section>
+      <section class="j-theory-card">
+        <h3>Why this live layer matters</h3>
+        <p>It shows, in one place, whether the theory is densely represented, where it appears in the topic space, what nearby theories compete with it, and which paper-level mechanistic summaries currently instantiate it. The static prose below can now be read against current evidence rather than in a vacuum.</p>
+      </section>
+    </div>
+  `;
+
+  const select = document.getElementById('j-theory-select');
+  if (select) {
+    select.addEventListener('change', () => {
+      const next = theories.find(row => row.id === select.value) || theories[0];
+      const url = new URL(window.location.href);
+      url.searchParams.set('theory', next.id);
+      window.history.replaceState({}, '', url);
+      renderTheoryCompanion(payload, next.id);
+    });
+  }
+}
+
+async function initTheoryCompanion() {
+  const mount = document.getElementById('j-theory-live');
+  if (!mount) return;
+  try {
+    const payload = window.KA_DATA_ADAPTER
+      ? await window.KA_DATA_ADAPTER.loadPayload('theories', { theories: [] })
+      : await fetch('data/ka_payloads/theories.json').then(r => r.json());
+    const params = new URLSearchParams(window.location.search);
+    renderTheoryCompanion(payload, params.get('theory'));
+  } catch (error) {
+    mount.innerHTML = '<div class="j-theory-error"><b>Could not load the current Atlas theory companion.</b> Error: ' + theoryEsc(error.message || error) + '</div>';
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   if (window.renderJourneySidebar) window.renderJourneySidebar('theory');
   if (window.renderJourneySiblings) window.renderJourneySiblings('theory');
   if (window.restoreCritique) window.restoreCritique('theory');
+  initTheoryCompanion();
 });
 </script>
 </body>

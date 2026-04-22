@@ -227,7 +227,9 @@ def run_suite(config: BrowserSmokeConfig) -> BrowserSmokeReport:
         login_page = context.new_page()
         article_page = context.new_page()
         theory_page = context.new_page()
+        theory_journey_page = context.new_page()
         topic_page = context.new_page()
+        topic_dashboard_page = context.new_page()
         mechanism_page = context.new_page()
 
         try:
@@ -240,7 +242,9 @@ def run_suite(config: BrowserSmokeConfig) -> BrowserSmokeReport:
             login_url = f"{config.base_url}/ka_login.html"
             article_url = f"{config.base_url}/ka_article_view.html?id=PDF-0071"
             theory_url = f"{config.base_url}/ka_home_theory.html"
+            theory_journey_url = f"{config.base_url}/ka_journey_theory.html"
             topic_url = f"{config.base_url}/ka_topic_facet_view.html"
+            topic_dashboard_url = f"{config.base_url}/ka_topic_dashboard_view.html"
             mechanism_url = f"{config.base_url}/ka_journey_mechanism.html"
 
             home_page.goto(home_url, wait_until="networkidle")
@@ -251,7 +255,9 @@ def run_suite(config: BrowserSmokeConfig) -> BrowserSmokeReport:
             admin_page.goto(admin_url, wait_until="networkidle")
             article_page.goto(article_url, wait_until="networkidle")
             theory_page.goto(theory_url, wait_until="networkidle")
+            theory_journey_page.goto(theory_journey_url, wait_until="networkidle")
             topic_page.goto(topic_url, wait_until="networkidle")
+            topic_dashboard_page.goto(topic_dashboard_url, wait_until="networkidle")
             mechanism_page.goto(mechanism_url, wait_until="networkidle")
 
             nav_text = home_page.locator(".ka-right").inner_text()
@@ -304,6 +310,14 @@ def run_suite(config: BrowserSmokeConfig) -> BrowserSmokeReport:
             else:
                 results.append(_fail("Theory live index", f"Theory explorer did not render the live index as expected: options={theory_options}, cards={theory_cards}, mechanism_title={mechanism_title}", url=theory_url))
 
+            theory_journey_page.wait_for_selector("#j-theory-live .j-theory-card")
+            journey_theory_cards = theory_journey_page.locator("#j-theory-live .j-theory-card").count()
+            journey_theory_metrics = theory_journey_page.locator("#j-theory-live .j-theory-metric").count()
+            if journey_theory_cards >= 4 and journey_theory_metrics >= 4:
+                results.append(_ok("Theory journey live companion", f"Theory journey rendered {journey_theory_metrics} metrics and {journey_theory_cards} live companion cards", url=theory_journey_url))
+            else:
+                results.append(_fail("Theory journey live companion", f"Theory journey did not render the live companion layer as expected: metrics={journey_theory_metrics}, cards={journey_theory_cards}", url=theory_journey_url))
+
             topic_page.wait_for_selector("#__ka_topic_briefing .brief-card")
             topic_cards = topic_page.locator("#__ka_topic_briefing .brief-card").count()
             topic_metrics = topic_page.locator("#__ka_topic_briefing .brief-metric").count()
@@ -311,6 +325,14 @@ def run_suite(config: BrowserSmokeConfig) -> BrowserSmokeReport:
                 results.append(_ok("Topic briefing layer", f"Topic facet page rendered {topic_metrics} summary metrics and {topic_cards} briefing cards", url=topic_url))
             else:
                 results.append(_fail("Topic briefing layer", f"Topic facet page did not render the live briefing layer as expected: metrics={topic_metrics}, cards={topic_cards}", url=topic_url))
+
+            topic_dashboard_page.wait_for_selector("#__ka_dashboard_briefing .dash-card")
+            dashboard_cards = topic_dashboard_page.locator("#__ka_dashboard_briefing .dash-card").count()
+            dashboard_metrics = topic_dashboard_page.locator("#__ka_dashboard_briefing .dash-metric").count()
+            if dashboard_cards >= 4 and dashboard_metrics >= 4:
+                results.append(_ok("Topic dashboard briefing", f"Topic dashboard rendered {dashboard_metrics} metrics and {dashboard_cards} coordination cards", url=topic_dashboard_url))
+            else:
+                results.append(_fail("Topic dashboard briefing", f"Topic dashboard did not render the live coordination layer as expected: metrics={dashboard_metrics}, cards={dashboard_cards}", url=topic_dashboard_url))
 
             mechanism_page.wait_for_selector("#j-mechanism-live .j-live-card")
             mechanism_cards = mechanism_page.locator("#j-mechanism-live .j-live-card").count()
@@ -348,6 +370,15 @@ def run_suite(config: BrowserSmokeConfig) -> BrowserSmokeReport:
                 results.append(_ok("Home refresh after login", "Previously opened home page refreshed to signed-in student state", url=home_url))
             else:
                 results.append(_fail("Home refresh after login", f"Home navbar stayed stale after login: {home_nav_text!r}", url=home_url))
+
+            home_page.locator("[data-ka-menu='account']").click()
+            home_page.locator(".ka-menu [data-action='navigate']").click()
+            home_page.wait_for_url("**/160sp/ka_student_profile.html", wait_until="networkidle")
+            profile_heading = home_page.locator("text=160 Student Profile").count()
+            if profile_heading >= 1:
+                results.append(_ok("Profile navigation", "Account menu My profile item opened the student profile page", url=home_page.url))
+            else:
+                results.append(_fail("Profile navigation", f"Profile route changed but the expected heading was missing at {home_page.url}", url=home_page.url))
 
             _nudge_page(user_home_page)
             top_bar_login = user_home_page.locator("#top-bar-login-btn")

@@ -481,7 +481,7 @@
       const t = ev.target.closest('[data-action]');
       if (!t) return;
       ev.preventDefault();
-      handleMenuAction(t.dataset.action, t.dataset.value);
+      handleMenuAction(t.dataset.action, t.dataset.value || t.getAttribute('href') || '');
     });
   }
   function closeAllMenus() {
@@ -533,7 +533,14 @@
       dispatchAuthStateChanged('sign-out');
       location.reload();
     } else if (action === 'navigate') {
-      // anchor href already points the right way; default link behaviour
+      closeAllMenus();
+      if (value && value !== '#') {
+        if (typeof window !== 'undefined' && window.location && typeof window.location.assign === 'function') {
+          window.location.assign(value);
+        } else if (typeof location !== 'undefined') {
+          location.href = value;
+        }
+      }
     }
   }
 

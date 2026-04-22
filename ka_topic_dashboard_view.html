@@ -6,10 +6,31 @@
 <title>Topic Page (Dashboard View) — Knowledge Atlas</title>
 <script src="ka_canonical_navbar.js" defer></script>
 <script src="ka_user_type.js" defer></script>
+<script src="ka_data_adapter.js"></script>
 <link rel="stylesheet" href="ka_crosswalk_patterns.css">
 <style>
   *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
   body{background:#F7F4EF;color:#2C2C2C}
+  .ka-topic-page{max-width:1180px;margin:0 auto;padding:26px 24px 48px}
+  .dash-briefing{margin:0 0 18px}
+  .dash-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:14px}
+  .dash-metric{background:#fff;border:1px solid #E0D8CC;border-radius:12px;padding:14px 15px}
+  .dash-metric .label{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:#8A9A96;font-weight:700;margin-bottom:4px}
+  .dash-metric .value{font-size:1.2rem;font-weight:700;color:#1C3D3A}
+  .dash-metric .sub{font-size:.83rem;color:#6B6B6B;line-height:1.45;margin-top:4px}
+  .dash-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .dash-card{background:#fff;border:1px solid #E0D8CC;border-radius:14px;padding:18px}
+  .dash-card h2{font-family:Georgia,serif;font-size:1.08rem;color:#1C3D3A;margin-bottom:8px}
+  .dash-card p{font-size:.9rem;color:#40514D;line-height:1.6;margin-bottom:12px}
+  .dash-list{display:grid;gap:10px}
+  .dash-row{padding:12px 13px;border:1px solid #E9E1D5;border-radius:10px;background:#F9F7F2}
+  .dash-row b{color:#1C3D3A}
+  .dash-meta{font-size:.82rem;color:#6B6B6B;line-height:1.45;margin-top:4px}
+  .dash-chip-row{display:flex;flex-wrap:wrap;gap:7px}
+  .dash-chip,.dash-chip-link{display:inline-flex;align-items:center;padding:5px 10px;border:1px solid #E0D8CC;border-radius:999px;background:#fff;color:#1C3D3A;font-size:.78rem;text-decoration:none}
+  .dash-chip-link:hover{border-color:#2A7868;color:#2A7868}
+  .dash-pnu{font-size:.84rem;color:#40514D;line-height:1.5;background:#fff;border-left:3px solid #E8872A;padding:10px 12px;border-radius:0 8px 8px 0;margin-top:8px}
+  @media (max-width:860px){.dash-grid{grid-template-columns:1fr}.ka-topic-page{padding:20px 16px 36px}}
 </style>
 </head>
 <body data-ka-regime="global" data-ka-active="topics">
@@ -35,18 +56,147 @@
     while you browse (Roberts 2007 multiple coordinated views).
   </p>
 
+  <div id="__ka_dashboard_briefing" class="dash-briefing"></div>
   <div id="__ka_pattern_mount"></div>
 
 </main>
 
 <script src="ka_crosswalk_patterns.js"></script>
 <script>
+function dashEsc(value) {
+  return String(value == null ? '' : value).replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;'}[c])
+  );
+}
+
+function dashCompact(text, limit = 220) {
+  const value = String(text || '').replace(/\s+/g, ' ').trim();
+  if (!value) return '';
+  return value.length <= limit ? value : value.slice(0, limit - 1).trimEnd() + '…';
+}
+
+function renderDashboardBriefing(crosswalk, theoriesPayload, pnuPayload, mount) {
+  const rows = (crosswalk && crosswalk.rows) || [];
+  const theories = (theoriesPayload && theoriesPayload.theories) || [];
+  const pnuRows = (pnuPayload && pnuPayload.papers) || [];
+  const outcomes = Array.isArray(crosswalk && crosswalk.outcomes)
+    ? crosswalk.outcomes.length
+    : Object.keys((crosswalk && crosswalk.outcome_index) || {}).length;
+  const families = Array.isArray(crosswalk && crosswalk.families)
+    ? crosswalk.families.length
+    : Object.keys((crosswalk && crosswalk.iv_root_index) || {}).length;
+
+  const outcomeCounts = new Map();
+  const familyCounts = new Map();
+  const theoryCounts = new Map();
+  rows.forEach(row => {
+    const outcome = row.outcome_label || row.outcome_term_id || 'Outcome unresolved';
+    const family = row.iv_root_label || row.iv_root || row.iv_label || 'Family unresolved';
+    outcomeCounts.set(outcome, (outcomeCounts.get(outcome) || 0) + (row.defended_paper_count || row.paper_count || 0));
+    familyCounts.set(family, (familyCounts.get(family) || 0) + (row.defended_paper_count || row.paper_count || 0));
+    (row.theories || []).forEach(label => theoryCounts.set(label, (theoryCounts.get(label) || 0) + 1));
+  });
+
+  const topOutcomes = [...outcomeCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const topFamilies = [...familyCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const topTheories = [...theoryCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const theoryByName = new Map(theories.map(row => [String(row.name || '').toLowerCase(), row]));
+  const topPnus = pnuRows.slice().sort((a, b) => (b.supporting_paper_count || 0) - (a.supporting_paper_count || 0)).slice(0, 4);
+
+  mount.innerHTML = `
+    <div class="dash-metrics">
+      <div class="dash-metric">
+        <div class="label">Crosswalk bundles</div>
+        <div class="value">${dashEsc(rows.length)}</div>
+        <div class="sub">Defended outcome × family bundles now coordinated by this dashboard.</div>
+      </div>
+      <div class="dash-metric">
+        <div class="label">Outcome clusters</div>
+        <div class="value">${dashEsc(outcomes)}</div>
+        <div class="sub">Distinct outcomes currently visible in the exported crosswalk.</div>
+      </div>
+      <div class="dash-metric">
+        <div class="label">Architectural families</div>
+        <div class="value">${dashEsc(families)}</div>
+        <div class="sub">Stimulus families participating in the coordinated view.</div>
+      </div>
+      <div class="dash-metric">
+        <div class="label">Theory signals</div>
+        <div class="value">${dashEsc(topTheories.length)}</div>
+        <div class="sub">Theories now most recurrent across defended bundles.</div>
+      </div>
+      <div class="dash-metric">
+        <div class="label">Paper PNUs</div>
+        <div class="value">${dashEsc((pnuPayload && pnuPayload.summary && pnuPayload.summary.short_summary_count) || 0)}</div>
+        <div class="sub">Paper-level summaries available to ground the bundles.</div>
+      </div>
+    </div>
+    <div class="dash-grid">
+      <section class="dash-card">
+        <h2>Current coordinated atlas dashboard</h2>
+        <p>These are the most densely defended outcomes in the current crosswalk export.</p>
+        <div class="dash-list">
+          ${topOutcomes.map(([label, count]) => `<div class="dash-row"><b>${dashEsc(label)}</b><div class="dash-meta">${dashEsc(count)} defended-paper links across the coordinated view.</div></div>`).join('')}
+        </div>
+      </section>
+      <section class="dash-card">
+        <h2>Architectural families under load</h2>
+        <p>This is the architectural side of the same coordination problem: which families currently carry the most defended evidence.</p>
+        <div class="dash-list">
+          ${topFamilies.map(([label, count]) => `<div class="dash-row"><b>${dashEsc(label)}</b><div class="dash-meta">${dashEsc(count)} defended-paper links across the coordinated view.</div></div>`).join('')}
+        </div>
+      </section>
+      <section class="dash-card">
+        <h2>Theory signals in the dashboard</h2>
+        <p>The coordinated view becomes more interpretable when the recurring theoretical frameworks are visible rather than implicit.</p>
+        <div class="dash-chip-row">
+          ${topTheories.map(([label, count]) => {
+            const theory = theoryByName.get(String(label || '').toLowerCase());
+            const body = `${dashEsc(label)} · ${dashEsc(count)}`;
+            return theory
+              ? `<a class="dash-chip-link" href="ka_home_theory.html?theory=${encodeURIComponent(theory.id)}">${body}</a>`
+              : `<span class="dash-chip">${body}</span>`;
+          }).join('')}
+        </div>
+      </section>
+      <section class="dash-card">
+        <h2>Paper-level windows into the dashboard</h2>
+        <p>These paper-level PNUs are the nearest thing to a human-readable window into what the coordinated bundles actually imply.</p>
+        <div class="dash-list">
+          ${topPnus.map(row => `
+            <article class="dash-row">
+              <b>${dashEsc(row.title || row.paper_id)}</b>
+              <div class="dash-meta">${dashEsc(row.paper_id || '')}${row.primary_topic ? ` · ${dashEsc(row.primary_topic)}` : ''}</div>
+              ${row.pnu && row.pnu.short_summary ? `<div class="dash-pnu">${dashEsc(dashCompact(row.pnu.short_summary, 240))}</div>` : ''}
+            </article>`).join('')}
+        </div>
+      </section>
+    </div>
+  `;
+}
+
 (async function(){
   const mount = document.getElementById("__ka_pattern_mount");
+  const briefingMount = document.getElementById("__ka_dashboard_briefing");
   try {
+    let theoriesPayload = { theories: [] };
+    let pnuPayload = { papers: [], summary: {} };
+    if (window.KA_DATA_ADAPTER) {
+      [theoriesPayload, pnuPayload] = await Promise.all([
+        window.KA_DATA_ADAPTER.loadPayload('theories', { theories: [] }),
+        window.KA_DATA_ADAPTER.loadPayload('paper_pnus', { papers: [], summary: {} }),
+      ]);
+    }
     const data = await KA_CROSSWALK.loadCrosswalk();
+    renderDashboardBriefing(data, theoriesPayload, pnuPayload, briefingMount);
     KA_CROSSWALK.renderMultiview(data, mount);
   } catch (e) {
+    if (briefingMount) {
+      briefingMount.innerHTML =
+        '<div style="background:#F8D7DA;color:#8A1A25;padding:14px 18px;border-radius:8px;margin-bottom:14px">'+
+        '<b>Could not load the coordinated Atlas dashboard briefing.</b> Error: '+dashEsc(e.message||e)+
+        '</div>';
+    }
     mount.innerHTML =
       '<div style="background:#F8D7DA;color:#8A1A25;padding:14px 18px;border-radius:8px">'+
       '<b>Could not load the crosswalk data.</b> Serve this page over HTTP (not file://). Error: '+(e.message||e)+'</div>';
