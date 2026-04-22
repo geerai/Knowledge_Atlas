@@ -19,7 +19,6 @@ cat >"$DROPIN_PATH" <<EOF
 [Service]
 User=$SERVICE_USER
 Group=$DEPLOY_GROUP
-SupplementaryGroups=$DEPLOY_GROUP
 WorkingDirectory=$WORKDIR
 UMask=0002
 EOF
