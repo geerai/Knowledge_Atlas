@@ -54,6 +54,17 @@ That does four things:
 4. promotes the staging tree into production with safe exclusions and restores the production `data/` directory to the known working mode
 5. runs the production runtime smoke suite
 
+In both staging and production modes, the release cycle now also runs:
+
+```bash
+python3 scripts/server_verify_served_tree.py --profile ...
+```
+
+That verifier compares a small set of critical served assets against the
+current tree and checks the auth health payload from the actual runtime
+process. Its purpose is to prove that the site is serving the tree you think
+you deployed, not merely something that happens to answer.
+
 ## Other useful modes
 
 Only refresh staging and verify it:
@@ -123,6 +134,9 @@ Production reports:
 
 - `/var/www/xrlab/ka/docs/runtime_smoke_reports/latest_production.md`
 - `/var/www/xrlab/ka/docs/runtime_smoke_reports/latest_production.json`
+
+Served-tree evidence is printed directly in the release output and fails the
+release if a critical served file no longer matches the local tree.
 
 ## When manual intervention is still needed
 

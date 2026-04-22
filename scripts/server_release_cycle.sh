@@ -86,6 +86,7 @@ smoke_staging() {
     cd "$STAGING_PATH"
     bash scripts/server_ensure_staging_auth.sh
     bash scripts/run_site_runtime_smoke.sh staging --fail-on-skip
+    python3 scripts/server_verify_served_tree.py --profile staging --repo-root "$STAGING_PATH"
   )
   ok "staging runtime smoke passed"
 }
@@ -112,11 +113,13 @@ smoke_production() {
     (
       cd "$PRODUCTION_PATH"
       KA_SMOKE_RESET_EMAIL="$RESET_EMAIL" bash scripts/run_site_runtime_smoke.sh production
+      python3 scripts/server_verify_served_tree.py --profile production --repo-root "$PRODUCTION_PATH"
     )
   else
     (
       cd "$PRODUCTION_PATH"
       bash scripts/run_site_runtime_smoke.sh production
+      python3 scripts/server_verify_served_tree.py --profile production --repo-root "$PRODUCTION_PATH"
     )
   fi
   ok "production runtime smoke passed"
