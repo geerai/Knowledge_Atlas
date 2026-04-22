@@ -7,6 +7,14 @@ if [[ $# -gt 0 ]]; then
   shift
 fi
 
+if [[ -n "${PYTHON_BIN:-}" ]]; then
+  PYTHON_CMD="$PYTHON_BIN"
+elif [[ -x "$REPO/.venv/bin/python" ]]; then
+  PYTHON_CMD="$REPO/.venv/bin/python"
+else
+  PYTHON_CMD="python3"
+fi
+
 if [[ -f "$REPO/.smoke.env" ]]; then
   set -a
   # shellcheck disable=SC1091
@@ -24,7 +32,7 @@ LATEST_JSON="$REPORT_DIR/latest_${PROFILE}.json"
 mkdir -p "$REPORT_DIR"
 
 set +e
-python3 "$REPO/scripts/browser_runtime_smoke.py" \
+"$PYTHON_CMD" "$REPO/scripts/browser_runtime_smoke.py" \
   --profile "$PROFILE" \
   --md-out "$MD_OUT" \
   --json-out "$JSON_OUT" \
