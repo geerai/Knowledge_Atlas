@@ -244,6 +244,7 @@ def run_suite(config: BrowserSmokeConfig) -> BrowserSmokeReport:
         topic_to_theory_page = context.new_page()
         theory_mechanism_page = context.new_page()
         relay_page = context.new_page()
+        theory_journey_relay_page = context.new_page()
 
         try:
             home_url = f"{config.base_url}/ka_home.html"
@@ -285,6 +286,7 @@ def run_suite(config: BrowserSmokeConfig) -> BrowserSmokeReport:
             topic_to_theory_page.goto(topic_url, wait_until="networkidle")
             theory_mechanism_page.goto(theory_url, wait_until="networkidle")
             relay_page.goto(article_url, wait_until="networkidle")
+            theory_journey_relay_page.goto(article_url, wait_until="networkidle")
 
             nav_text = home_page.locator(".ka-right").inner_text()
             if "Log in" in nav_text and "Register" in nav_text:
@@ -377,6 +379,28 @@ def run_suite(config: BrowserSmokeConfig) -> BrowserSmokeReport:
                 results.append(_ok("Theory journey live companion", f"Theory journey rendered {journey_theory_metrics} metrics and {journey_theory_cards} live companion cards", url=theory_journey_url))
             else:
                 results.append(_fail("Theory journey live companion", f"Theory journey did not render the live companion layer as expected: metrics={journey_theory_metrics}, cards={journey_theory_cards}", url=theory_journey_url))
+
+            theory_journey_relay_page.wait_for_selector(".article-theory-link")
+            theory_journey_relay_page.locator(".article-theory-link").first.click()
+            theory_journey_relay_page.wait_for_url("**/ka_home_theory.html?theory=*&from_article=*", wait_until="networkidle")
+            theory_journey_relay_page.wait_for_selector("#live-theory-journey-link")
+            theory_journey_relay_page.locator("#live-theory-journey-link").click()
+            theory_journey_relay_page.wait_for_url("**/ka_journey_theory.html?theory=*&from_article=*", wait_until="networkidle")
+            theory_journey_relay_page.wait_for_selector("#j-theory-handoff")
+            journey_handoff_text = _compact_text(theory_journey_relay_page.locator("#j-theory-handoff").inner_text())
+            if "Opened from article" in journey_handoff_text:
+                results.append(_ok("Theory-journey article handoff", "Theory journey page preserved the article provenance from the explorer handoff", url=theory_journey_relay_page.url))
+            else:
+                results.append(_fail("Theory-journey article handoff", f"Theory journey page did not surface the article provenance: {journey_handoff_text!r}", url=theory_journey_relay_page.url))
+
+            theory_journey_relay_page.locator("#j-theory-mechanism-link").click()
+            theory_journey_relay_page.wait_for_url("**/ka_journey_mechanism.html?theory=*&from_article=*", wait_until="networkidle")
+            theory_journey_relay_page.wait_for_selector("#j-mechanism-focus")
+            journey_mechanism_text = _compact_text(theory_journey_relay_page.locator("#j-mechanism-focus").inner_text())
+            if "Opened from theory" in journey_mechanism_text and "originating article" in journey_mechanism_text:
+                results.append(_ok("Theory-journey to mechanism relay", "Theory journey page carried the article-aware theory context into the mechanism layer", url=theory_journey_relay_page.url))
+            else:
+                results.append(_fail("Theory-journey to mechanism relay", f"Theory journey page lost context before the mechanism layer: {journey_mechanism_text!r}", url=theory_journey_relay_page.url))
 
             topic_page.wait_for_selector("#__ka_topic_briefing .brief-card")
             topic_cards = topic_page.locator("#__ka_topic_briefing .brief-card").count()

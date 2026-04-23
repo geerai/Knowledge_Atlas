@@ -1841,6 +1841,15 @@
     });
   }
 
+  function liveTheoryJourneyHref(theory, context = {}) {
+    const focus = theory && (theory.id || theory.name) ? (theory.id || theory.name) : '';
+    return liveJourneyHref('ka_journey_theory.html', {
+      theory: focus,
+      from_topic: context.fromTopic || '',
+      from_article: context.fromArticle || '',
+    });
+  }
+
   function hydrateLiveRuntimeLinks(root) {
     (root || document).querySelectorAll('[data-runtime-link]').forEach(node => {
       node.setAttribute('href', node.getAttribute('data-runtime-link'));
@@ -1924,6 +1933,7 @@
         <p>Do not read this theory as an isolated proposition. Step into one of its live topics, or carry the theory itself into the mechanism layer.</p>
         <div class="live-chip-row">
           ${theory.topic_links && theory.topic_links.length ? `<a class="live-chip-link theory-topic-link" data-runtime-link="${liveEsc(liveTopicHref(theory.topic_links[0].label, journeyContext))}">Open focus topic</a>` : ''}
+          <a class="live-chip-link" id="live-theory-journey-link" data-runtime-link="${liveEsc(liveTheoryJourneyHref(theory, journeyContext))}">Open theory journey brief</a>
           <a class="live-chip-link" id="live-mechanism-journey-link" data-runtime-link="${liveEsc(liveMechanismHref(theory, journeyContext))}">Open mechanism journey</a>
         </div>
       </div>

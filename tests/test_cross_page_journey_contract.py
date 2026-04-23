@@ -17,14 +17,20 @@ def test_article_view_exposes_cross_page_journey_links():
 
 def test_theory_topic_and_mechanism_pages_preserve_journey_context():
     theory_source = (REPO_ROOT / "ka_home_theory.html").read_text()
+    theory_journey_source = (REPO_ROOT / "ka_journey_theory.html").read_text()
     topic_source = (REPO_ROOT / "ka_topic_facet_view.html").read_text()
     mechanism_source = (REPO_ROOT / "ka_journey_mechanism.html").read_text()
 
     assert "theory-topic-link" in theory_source
     assert "live-mechanism-journey-link" in theory_source
+    assert "live-theory-journey-link" in theory_source
     assert "from_topic" in theory_source
     assert "from_article" in theory_source
     assert 'id="live-theory-handoff"' in theory_source
+    assert 'id="j-theory-handoff"' in theory_journey_source
+    assert 'id="j-theory-mechanism-link"' in theory_journey_source
+    assert "params.get('from_topic')" in theory_journey_source
+    assert "params.get('from_article')" in theory_journey_source
     assert 'id="__ka_topic_focus"' in topic_source
     assert 'id="__ka_topic_handoff"' in topic_source
     assert "params.get('topic')" in topic_source
