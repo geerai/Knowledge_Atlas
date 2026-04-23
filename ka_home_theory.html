@@ -1807,17 +1807,38 @@
     `;
   }
 
-  function liveTopicHref(label) {
-    return `ka_topic_facet_view.html?topic=${encodeURIComponent(String(label || '').trim())}`;
+  function liveJourneyHref(path, params = {}) {
+    const query = new URLSearchParams();
+    Object.entries(params || {}).forEach(([key, value]) => {
+      const text = String(value || '').trim();
+      if (text) query.set(key, text);
+    });
+    const suffix = query.toString();
+    return suffix ? `${path}?${suffix}` : path;
   }
 
-  function liveTheoryHref(id) {
-    return `ka_home_theory.html?theory=${encodeURIComponent(String(id || '').trim())}`;
+  function liveTopicHref(label, context = {}) {
+    return liveJourneyHref('ka_topic_facet_view.html', {
+      topic: String(label || '').trim(),
+      from_article: context.fromArticle || '',
+    });
   }
 
-  function liveMechanismHref(theory) {
+  function liveTheoryHref(id, context = {}) {
+    return liveJourneyHref('ka_home_theory.html', {
+      theory: String(id || '').trim(),
+      from_topic: context.fromTopic || '',
+      from_article: context.fromArticle || '',
+    });
+  }
+
+  function liveMechanismHref(theory, context = {}) {
     const focus = theory && (theory.id || theory.name) ? (theory.id || theory.name) : '';
-    return focus ? `ka_journey_mechanism.html?theory=${encodeURIComponent(focus)}` : 'ka_journey_mechanism.html';
+    return liveJourneyHref('ka_journey_mechanism.html', {
+      theory: focus,
+      from_topic: context.fromTopic || '',
+      from_article: context.fromArticle || '',
+    });
   }
 
   function hydrateLiveRuntimeLinks(root) {
@@ -1842,7 +1863,27 @@
     return `<div class="live-list">${rows.map(mapper).join('')}</div>`;
   }
 
-  function renderTheoryDetail(theory) {
+  function renderTheoryHandoff(journeyContext, theory) {
+    const fromTopic = String((journeyContext && journeyContext.fromTopic) || '').trim();
+    const fromArticle = String((journeyContext && journeyContext.fromArticle) || '').trim();
+    if (!fromTopic && !fromArticle) return '';
+
+    const parts = [];
+    if (fromTopic) {
+      parts.push(`Opened from topic <a class="live-chip-link" data-runtime-link="${liveEsc(liveTopicHref(fromTopic, { fromArticle }))}">${liveEsc(fromTopic)}</a>.`);
+    }
+    if (fromArticle) {
+      parts.push(`The thread originated in article <a class="live-chip-link" href="ka_article_view.html?id=${encodeURIComponent(fromArticle)}">${liveEsc(fromArticle)}</a>.`);
+    }
+    return `
+      <div class="live-soft-box" id="live-theory-handoff" style="margin-bottom:16px">
+        <h4>Journey handoff</h4>
+        <p>${parts.join(' ')}</p>
+      </div>
+    `;
+  }
+
+  function renderTheoryDetail(theory, journeyContext) {
     if (!theory) {
       return '<div class="live-error">No theory record is available in the current payload.</div>';
     }
@@ -1850,6 +1891,7 @@
     const supportEdges = (theory.evidence_profile || {}).support_edge_count || 0;
     const attackEdges = (theory.evidence_profile || {}).attack_edge_count || 0;
     return `
+      ${renderTheoryHandoff(journeyContext, theory)}
       <div class="live-detail-grid">
         <div class="live-soft-box">
           <h4>Coverage</h4>
@@ -1865,7 +1907,7 @@
         <h4>Most-linked topics</h4>
         ${theory.topic_links && theory.topic_links.length ? `
           <div class="live-chip-row">
-            ${theory.topic_links.slice(0, 8).map(topic => `<a class="live-chip-link theory-topic-link" data-runtime-link="${liveEsc(liveTopicHref(topic.label))}">${liveEsc(topic.label)} (${liveEsc(topic.paper_count)})</a>`).join('')}
+            ${theory.topic_links.slice(0, 8).map(topic => `<a class="live-chip-link theory-topic-link" data-runtime-link="${liveEsc(liveTopicHref(topic.label, journeyContext))}">${liveEsc(topic.label)} (${liveEsc(topic.paper_count)})</a>`).join('')}
           </div>` : '<p>No topic links were exported for this theory.</p>'}
       </div>
 
@@ -1873,7 +1915,7 @@
         <h4>Nearby theories</h4>
         ${theory.related_theories && theory.related_theories.length ? `
           <div class="live-chip-row">
-            ${theory.related_theories.slice(0, 8).map(row => `<a class="live-chip-link theory-nearby-link" data-runtime-link="${liveEsc(liveTheoryHref(row.id))}">${liveEsc(row.name)} (${liveEsc(row.weight)})</a>`).join('')}
+            ${theory.related_theories.slice(0, 8).map(row => `<a class="live-chip-link theory-nearby-link" data-runtime-link="${liveEsc(liveTheoryHref(row.id, journeyContext))}">${liveEsc(row.name)} (${liveEsc(row.weight)})</a>`).join('')}
           </div>` : '<p>No cross-theory neighborhood was exported for this theory.</p>'}
       </div>
 
@@ -1881,8 +1923,8 @@
         <h4>Continue through the Atlas</h4>
         <p>Do not read this theory as an isolated proposition. Step into one of its live topics, or carry the theory itself into the mechanism layer.</p>
         <div class="live-chip-row">
-          ${theory.topic_links && theory.topic_links.length ? `<a class="live-chip-link theory-topic-link" data-runtime-link="${liveEsc(liveTopicHref(theory.topic_links[0].label))}">Open focus topic</a>` : ''}
-          <a class="live-chip-link" id="live-mechanism-journey-link" data-runtime-link="${liveEsc(liveMechanismHref(theory))}">Open mechanism journey</a>
+          ${theory.topic_links && theory.topic_links.length ? `<a class="live-chip-link theory-topic-link" data-runtime-link="${liveEsc(liveTopicHref(theory.topic_links[0].label, journeyContext))}">Open focus topic</a>` : ''}
+          <a class="live-chip-link" id="live-mechanism-journey-link" data-runtime-link="${liveEsc(liveMechanismHref(theory, journeyContext))}">Open mechanism journey</a>
         </div>
       </div>
 
@@ -1944,6 +1986,10 @@
       const mechanisms = mechanismPayload.mechanisms || [];
       const focusIds = theories.slice(0, 6);
       const params = new URLSearchParams(window.location.search);
+      const journeyContext = {
+        fromTopic: params.get('from_topic') || '',
+        fromArticle: params.get('from_article') || '',
+      };
       let selectedId = params.get('theory') || (focusIds[0] && focusIds[0].id) || (theories[0] && theories[0].id) || '';
 
       const frameworkCounts = mechanisms.reduce((acc, row) => {
@@ -2016,7 +2062,7 @@
           return;
         }
         selectedId = theory.id;
-        detailMount.innerHTML = renderTheoryDetail(theory);
+        detailMount.innerHTML = renderTheoryDetail(theory, journeyContext);
         hydrateLiveRuntimeLinks(detailMount);
         if (select) select.value = theory.id;
         cardButtons.forEach(button => button.classList.toggle('is-active', button.dataset.theoryId === theory.id));

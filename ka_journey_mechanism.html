@@ -178,6 +178,22 @@ function mechanismMetric(label, value, sub) {
   `;
 }
 
+function mechanismJourneyHref(path, params = {}) {
+  const query = new URLSearchParams();
+  Object.entries(params || {}).forEach(([key, value]) => {
+    const text = String(value || '').trim();
+    if (text) query.set(key, text);
+  });
+  const suffix = query.toString();
+  return suffix ? `${path}?${suffix}` : path;
+}
+
+function hydrateMechanismRuntimeLinks(root) {
+  (root || document).querySelectorAll('[data-runtime-link]').forEach(node => {
+    node.setAttribute('href', node.getAttribute('data-runtime-link'));
+  });
+}
+
 async function renderMechanismInventory() {
   const mount = document.getElementById('j-mechanism-live');
   if (!mount) return;
@@ -224,14 +240,19 @@ async function renderMechanismInventory() {
     const readiness = (mechanismPayload.summary || {}).readiness || {};
     const params = new URLSearchParams(window.location.search);
     const focusTheoryKey = String(params.get('theory') || '').trim().toLowerCase();
+    const fromTopic = String(params.get('from_topic') || '').trim();
+    const fromArticle = String(params.get('from_article') || '').trim();
     const focusTheory = focusTheoryKey
       ? theories.find(row => String(row.id || '').trim().toLowerCase() === focusTheoryKey || String(row.name || '').trim().toLowerCase() === focusTheoryKey)
       : null;
+    const focusTopicHref = fromTopic ? mechanismJourneyHref('ka_topic_facet_view.html', { topic: fromTopic, from_article: fromArticle }) : '';
 
     mount.innerHTML = `
       ${focusTheory ? `
         <div class="j-focus-note" id="j-mechanism-focus">
-          Opened from theory <a href="ka_home_theory.html?theory=${encodeURIComponent(focusTheory.id)}">${mechanismEsc(focusTheory.name || focusTheory.id)}</a>. This mechanism layer is therefore carrying a theory handoff, not merely showing the generic inventory.
+          Opened from theory <a data-runtime-link="${mechanismEsc(mechanismJourneyHref('ka_home_theory.html', { theory: focusTheory.id, from_topic: fromTopic, from_article: fromArticle }))}">${mechanismEsc(focusTheory.name || focusTheory.id)}</a>. This mechanism layer is therefore carrying a theory handoff, not merely showing the generic inventory.
+          ${fromTopic ? `It arrived via topic <a data-runtime-link="${mechanismEsc(focusTopicHref)}">${mechanismEsc(fromTopic)}</a>. ` : ''}
+          ${fromArticle ? `The originating article was <a href="ka_article_view.html?id=${encodeURIComponent(fromArticle)}">${mechanismEsc(fromArticle)}</a>.` : ''}
         </div>
       ` : ''}
       <div class="j-live-metrics">
@@ -274,6 +295,7 @@ async function renderMechanismInventory() {
         </div>
       </div>
     `;
+    hydrateMechanismRuntimeLinks(mount);
   } catch (error) {
     mount.className = 'j-live-error';
     mount.innerHTML = `Could not load the current mechanism inventory. Error: <code>${mechanismEsc(error.message || error)}</code>`;

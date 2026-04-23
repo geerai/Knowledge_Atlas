@@ -9,8 +9,9 @@ def test_article_view_exposes_cross_page_journey_links():
     assert "article-primary-topic-link" in source
     assert "article-theory-link" in source
     assert "journey-link-mechanism" in source
-    assert "ka_topic_facet_view.html?topic=" in source
-    assert "ka_home_theory.html?theory=" in source
+    assert "from_article" in source
+    assert "journeyHref('ka_topic_facet_view.html'" in source
+    assert "journeyHref('ka_home_theory.html'" in source
     assert 'id="journey"' in source
 
 
@@ -21,8 +22,14 @@ def test_theory_topic_and_mechanism_pages_preserve_journey_context():
 
     assert "theory-topic-link" in theory_source
     assert "live-mechanism-journey-link" in theory_source
-    assert "ka_journey_mechanism.html?theory=" in theory_source
+    assert "from_topic" in theory_source
+    assert "from_article" in theory_source
+    assert 'id="live-theory-handoff"' in theory_source
     assert 'id="__ka_topic_focus"' in topic_source
+    assert 'id="__ka_topic_handoff"' in topic_source
     assert "params.get('topic')" in topic_source
+    assert "params.get('from_article')" in topic_source
     assert 'id="j-mechanism-focus"' in mechanism_source
     assert "params.get('theory')" in mechanism_source
+    assert "params.get('from_topic')" in mechanism_source
+    assert "params.get('from_article')" in mechanism_source

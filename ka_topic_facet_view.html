@@ -190,10 +190,30 @@ function topicKey(value) {
   return String(value || '').replace(/\s+/g, ' ').trim().toLowerCase();
 }
 
-function theoryLink(label, theoryByName) {
+function topicJourneyHref(path, params = {}) {
+  const query = new URLSearchParams();
+  Object.entries(params || {}).forEach(([key, value]) => {
+    const text = String(value || '').trim();
+    if (text) query.set(key, text);
+  });
+  const suffix = query.toString();
+  return suffix ? `${path}?${suffix}` : path;
+}
+
+function hydrateTopicRuntimeLinks(root) {
+  (root || document).querySelectorAll('[data-runtime-link]').forEach(node => {
+    node.setAttribute('href', node.getAttribute('data-runtime-link'));
+  });
+}
+
+function theoryLink(label, theoryByName, context = {}) {
   const theory = theoryByName.get(String(label || '').toLowerCase());
   if (!theory) return `<span class="brief-chip">${topicEsc(label)}</span>`;
-  return `<a class="brief-chip-link" href="ka_home_theory.html?theory=${encodeURIComponent(theory.id)}">${topicEsc(theory.name)}</a>`;
+  return `<a class="brief-chip-link" data-runtime-link="${topicEsc(topicJourneyHref('ka_home_theory.html', {
+    theory: theory.id,
+    from_topic: context.fromTopic || '',
+    from_article: context.fromArticle || '',
+  }))}">${topicEsc(theory.name)}</a>`;
 }
 
 function renderTopicBriefings(crosswalk, topicsPayload, theoriesPayload, pnuPayload, mount, focusTopic = '') {
@@ -201,6 +221,8 @@ function renderTopicBriefings(crosswalk, topicsPayload, theoriesPayload, pnuPayl
   const topics = (topicsPayload && (topicsPayload.topics || topicsPayload.rows)) || [];
   const theories = (theoriesPayload && theoriesPayload.theories) || [];
   const pnuRows = (pnuPayload && pnuPayload.papers) || [];
+  const params = new URLSearchParams(window.location.search);
+  const fromArticle = String(params.get('from_article') || '').trim();
   const theoryByName = new Map(theories.map(row => [String(row.name || '').toLowerCase(), row]));
   const pnuByPaper = new Map(pnuRows.map(row => [row.paper_id, row]));
   const topCrosswalk = rows.slice().sort((a, b) => (b.defended_paper_count || b.paper_count || 0) - (a.defended_paper_count || a.paper_count || 0)).slice(0, 4);
@@ -224,8 +246,12 @@ function renderTopicBriefings(crosswalk, topicsPayload, theoriesPayload, pnuPayl
       <section class="brief-focus" id="__ka_topic_focus">
         <h2>Journey focus: ${topicEsc(focusRow.topic_label || focusRow.topic_id)}</h2>
         <p>This topic page was opened with a focused bundle in the URL, so the defended crosswalk row is surfaced first rather than left implicit inside the broader browser.</p>
+        ${fromArticle ? `<p class="brief-meta" id="__ka_topic_handoff">Opened from article <a href="ka_article_view.html?id=${encodeURIComponent(fromArticle)}">${topicEsc(fromArticle)}</a>. This topic surface is therefore showing the defended bundle that the paper points into, rather than merely the generic topic browser.</p>` : ''}
         <div class="brief-meta">${topicEsc(focusRow.outcome_label || 'Outcome')} × ${topicEsc(focusRow.iv_root_label || focusRow.iv_label || 'Family')} · ${topicEsc(focusRow.defended_paper_count || focusRow.paper_count || 0)} defended papers · status ${topicEsc(focusRow.evidence_status || 'working')}</div>
-        ${(focusRow.theories && focusRow.theories.length) ? `<div class="brief-chip-row">${focusRow.theories.slice(0, 6).map(label => theoryLink(label, theoryByName)).join('')}</div>` : ''}
+        ${(focusRow.theories && focusRow.theories.length) ? `<div class="brief-chip-row">${focusRow.theories.slice(0, 6).map(label => theoryLink(label, theoryByName, {
+          fromTopic: focusRow.topic_label || focusRow.topic_id,
+          fromArticle,
+        })).join('')}</div>` : ''}
         ${(focusRow.common_sensors && focusRow.common_sensors.length) ? `<div class="brief-chip-row">${focusRow.common_sensors.slice(0, 6).map(label => `<span class="brief-chip">${topicEsc(label)}</span>`).join('')}</div>` : ''}
         ${focusPnu ? `<div class="brief-pnu">${topicEsc(topicCompact(focusPnu.pnu.short_summary, 260))}</div>` : ''}
       </section>
@@ -269,7 +295,9 @@ function renderTopicBriefings(crosswalk, topicsPayload, theoriesPayload, pnuPayl
               <article class="brief-card">
                 <h3>${topicEsc(row.topic_label || row.topic_id)}</h3>
                 <div class="brief-meta">${topicEsc(row.outcome_label || 'Outcome')} × ${topicEsc(row.iv_root_label || row.iv_label || 'Family')} · ${topicEsc(row.defended_paper_count || row.paper_count || 0)} defended papers · status ${topicEsc(row.evidence_status || 'working')}</div>
-                ${(row.theories && row.theories.length) ? `<div class="brief-chip-row">${row.theories.slice(0, 5).map(label => theoryLink(label, theoryByName)).join('')}</div>` : ''}
+                ${(row.theories && row.theories.length) ? `<div class="brief-chip-row">${row.theories.slice(0, 5).map(label => theoryLink(label, theoryByName, {
+                  fromTopic: row.topic_label || row.topic_id,
+                })).join('')}</div>` : ''}
                 ${(row.common_sensors && row.common_sensors.length) ? `<div class="brief-chip-row">${row.common_sensors.slice(0, 5).map(label => `<span class="brief-chip">${topicEsc(label)}</span>`).join('')}</div>` : ''}
                 ${pnu ? `<div class="brief-pnu">${topicEsc(topicCompact(pnu.pnu.short_summary, 240))}</div>` : ''}
               </article>
@@ -287,13 +315,16 @@ function renderTopicBriefings(crosswalk, topicsPayload, theoriesPayload, pnuPayl
               <h3>${topicEsc(topic.name || topic.id)}</h3>
               <div class="brief-meta">${topicEsc(topic.cat || 'Topic')} · ${topicEsc(topic.n || 0)} papers · mean credence ${topic.mean_credence == null ? '—' : topicEsc(Number(topic.mean_credence).toFixed(2))}</div>
               <div class="brief-meta">${topicEsc(topicCompact(topic.desc || '', 220) || 'Description pending.')}</div>
-              ${(topic.shared_theories && topic.shared_theories.length) ? `<div class="brief-chip-row">${topic.shared_theories.slice(0, 5).map(label => theoryLink(label, theoryByName)).join('')}</div>` : ''}
+              ${(topic.shared_theories && topic.shared_theories.length) ? `<div class="brief-chip-row">${topic.shared_theories.slice(0, 5).map(label => theoryLink(label, theoryByName, {
+                fromTopic: topic.name || topic.id,
+              })).join('')}</div>` : ''}
             </article>
           `).join('')}
         </div>
       </section>
     </div>
   `;
+  hydrateTopicRuntimeLinks(mount);
 }
 
 function renderCrosswalkFallback(data, mount) {

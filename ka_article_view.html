@@ -167,16 +167,32 @@ function lowerKey(value) {
   return String(value || '').replace(/\s+/g, ' ').trim().toLowerCase();
 }
 
-function topicHref(label) {
-  return `ka_topic_facet_view.html?topic=${encodeURIComponent(String(label || '').trim())}`;
+function journeyHref(path, params = {}) {
+  const query = new URLSearchParams();
+  Object.entries(params || {}).forEach(([key, value]) => {
+    const text = String(value || '').trim();
+    if (text) query.set(key, text);
+  });
+  const suffix = query.toString();
+  return suffix ? `${path}?${suffix}` : path;
 }
 
-function theoryHref(label, theoryByName) {
+function topicHref(label, extraParams = {}) {
+  const raw = String(label || '').trim();
+  return raw ? journeyHref('ka_topic_facet_view.html', { topic: raw, ...extraParams }) : 'ka_topic_facet_view.html';
+}
+
+function theoryHref(label, theoryByName, extraParams = {}) {
   const raw = String(label || '').trim();
   if (!raw) return '';
   const hit = theoryByName.get(lowerKey(raw));
-  if (hit && hit.id) return `ka_home_theory.html?theory=${encodeURIComponent(hit.id)}`;
+  if (hit && hit.id) return journeyHref('ka_home_theory.html', { theory: hit.id, ...extraParams });
   return '';
+}
+
+function mechanismHref(theoryRow, extraParams = {}) {
+  const focus = theoryRow && (theoryRow.id || theoryRow.name) ? (theoryRow.id || theoryRow.name) : '';
+  return journeyHref('ka_journey_mechanism.html', { theory: focus, ...extraParams });
 }
 
 function renderChipCollection(items, emptyText) {
@@ -383,12 +399,11 @@ function updateTocActive() {
   const theoryByName = new Map(theoryRows.map(row => [lowerKey(row.name || row.id), row]));
   const firstTheoryLabel = detailTheories.find(Boolean) || '';
   const firstTheoryRow = theoryByName.get(lowerKey(firstTheoryLabel)) || null;
-  const firstTheoryLink = firstTheoryLabel ? theoryHref(firstTheoryLabel, theoryByName) : '';
-  const primaryTopicLink = article.primary_topic ? topicHref(article.primary_topic) : '';
-  const firstTopicLink = topicLabels.length ? topicHref(topicLabels[0]) : primaryTopicLink;
-  const mechanismLink = firstTheoryRow && firstTheoryRow.id
-    ? `ka_journey_mechanism.html?theory=${encodeURIComponent(firstTheoryRow.id)}`
-    : 'ka_journey_mechanism.html';
+  const articleJourneyParams = paperId ? { from_article: paperId } : {};
+  const firstTheoryLink = firstTheoryLabel ? theoryHref(firstTheoryLabel, theoryByName, articleJourneyParams) : '';
+  const primaryTopicLink = article.primary_topic ? topicHref(article.primary_topic, articleJourneyParams) : '';
+  const firstTopicLink = topicLabels.length ? topicHref(topicLabels[0], articleJourneyParams) : primaryTopicLink;
+  const mechanismLink = mechanismHref(firstTheoryRow, articleJourneyParams);
 
   document.title = `${article.title || paperId} — Knowledge Atlas`;
   crumb.textContent = article.title || paperId;

@@ -243,6 +243,7 @@ def run_suite(config: BrowserSmokeConfig) -> BrowserSmokeReport:
         article_topic_page = context.new_page()
         topic_to_theory_page = context.new_page()
         theory_mechanism_page = context.new_page()
+        relay_page = context.new_page()
 
         try:
             home_url = f"{config.base_url}/ka_home.html"
@@ -283,6 +284,7 @@ def run_suite(config: BrowserSmokeConfig) -> BrowserSmokeReport:
             article_topic_page.goto(article_url, wait_until="networkidle")
             topic_to_theory_page.goto(topic_url, wait_until="networkidle")
             theory_mechanism_page.goto(theory_url, wait_until="networkidle")
+            relay_page.goto(article_url, wait_until="networkidle")
 
             nav_text = home_page.locator(".ka-right").inner_text()
             if "Log in" in nav_text and "Register" in nav_text:
@@ -327,23 +329,27 @@ def run_suite(config: BrowserSmokeConfig) -> BrowserSmokeReport:
 
             article_theory_page.wait_for_selector(".article-theory-link")
             article_theory_page.locator(".article-theory-link").first.click()
-            article_theory_page.wait_for_url("**/ka_home_theory.html?theory=*", wait_until="networkidle")
+            article_theory_page.wait_for_url("**/ka_home_theory.html?theory=*&from_article=*", wait_until="networkidle")
+            article_theory_page.wait_for_selector("#live-theory-handoff")
             selected_theory = article_theory_page.locator("#live-theory-select").input_value()
-            if selected_theory:
-                results.append(_ok("Article-to-theory journey", f"Article theory link opened theory focus {selected_theory}", url=article_theory_page.url))
+            article_theory_handoff = _compact_text(article_theory_page.locator("#live-theory-handoff").inner_text())
+            if selected_theory and "Opened from article" in article_theory_handoff:
+                results.append(_ok("Article-to-theory journey", f"Article theory link opened theory focus {selected_theory} with a visible article handoff", url=article_theory_page.url))
             else:
-                results.append(_fail("Article-to-theory journey", f"Article theory link changed route but did not select a theory: {article_theory_page.url}", url=article_theory_page.url))
+                results.append(_fail("Article-to-theory journey", f"Article theory link did not preserve the expected handoff: theory={selected_theory!r}, handoff={article_theory_handoff!r}", url=article_theory_page.url))
 
             article_topic_page.wait_for_selector(".article-primary-topic-link")
             focused_topic_label = article_topic_page.locator(".article-primary-topic-link").first.inner_text().strip()
             article_topic_page.locator(".article-primary-topic-link").first.click()
-            article_topic_page.wait_for_url("**/ka_topic_facet_view.html?topic=*", wait_until="networkidle")
+            article_topic_page.wait_for_url("**/ka_topic_facet_view.html?topic=*&from_article=*", wait_until="networkidle")
             article_topic_page.wait_for_selector("#__ka_topic_focus")
+            article_topic_page.wait_for_selector("#__ka_topic_handoff")
             topic_focus_text = article_topic_page.locator("#__ka_topic_focus").inner_text()
-            if "Journey focus:" in topic_focus_text and "topic=" in article_topic_page.url:
-                results.append(_ok("Article-to-topic journey", f"Article topic link opened a focused topic briefing for {focused_topic_label or 'the article topic'}", url=article_topic_page.url))
+            topic_handoff_text = _compact_text(article_topic_page.locator("#__ka_topic_handoff").inner_text())
+            if "Journey focus:" in topic_focus_text and "from_article=" in article_topic_page.url and "Opened from article" in topic_handoff_text:
+                results.append(_ok("Article-to-topic journey", f"Article topic link opened a focused topic briefing for {focused_topic_label or 'the article topic'} with a visible article handoff", url=article_topic_page.url))
             else:
-                results.append(_fail("Article-to-topic journey", f"Topic focus did not preserve the article topic handoff: {topic_focus_text!r}", url=article_topic_page.url))
+                results.append(_fail("Article-to-topic journey", f"Topic focus did not preserve the article handoff: focus={topic_focus_text!r}, handoff={topic_handoff_text!r}", url=article_topic_page.url))
 
             theory_page.wait_for_selector("#live-theory-select")
             theory_options = theory_page.locator("#live-theory-select option").count()
@@ -382,12 +388,30 @@ def run_suite(config: BrowserSmokeConfig) -> BrowserSmokeReport:
 
             topic_to_theory_page.wait_for_selector(".brief-chip-link")
             topic_to_theory_page.locator(".brief-chip-link").first.click()
-            topic_to_theory_page.wait_for_url("**/ka_home_theory.html?theory=*", wait_until="networkidle")
+            topic_to_theory_page.wait_for_url("**/ka_home_theory.html?theory=*&from_topic=*", wait_until="networkidle")
+            topic_to_theory_page.wait_for_selector("#live-theory-handoff")
             selected_from_topic = topic_to_theory_page.locator("#live-theory-select").input_value()
-            if selected_from_topic:
-                results.append(_ok("Topic-to-theory journey", f"Topic theory chip opened theory focus {selected_from_topic}", url=topic_to_theory_page.url))
+            topic_theory_handoff = _compact_text(topic_to_theory_page.locator("#live-theory-handoff").inner_text())
+            if selected_from_topic and "Opened from topic" in topic_theory_handoff:
+                results.append(_ok("Topic-to-theory journey", f"Topic theory chip opened theory focus {selected_from_topic} with a visible topic handoff", url=topic_to_theory_page.url))
             else:
-                results.append(_fail("Topic-to-theory journey", f"Topic theory chip changed route but did not preserve a theory focus: {topic_to_theory_page.url}", url=topic_to_theory_page.url))
+                results.append(_fail("Topic-to-theory journey", f"Topic theory chip did not preserve the expected handoff: theory={selected_from_topic!r}, handoff={topic_theory_handoff!r}", url=topic_to_theory_page.url))
+
+            relay_page.wait_for_selector(".journey-link-topic")
+            relay_page.locator(".journey-link-topic").click()
+            relay_page.wait_for_url("**/ka_topic_facet_view.html?topic=*&from_article=*", wait_until="networkidle")
+            relay_page.wait_for_selector("#__ka_topic_handoff")
+            relay_page.locator("#__ka_topic_focus .brief-chip-link").first.click()
+            relay_page.wait_for_url("**/ka_home_theory.html?theory=*&from_topic=*&from_article=*", wait_until="networkidle")
+            relay_page.wait_for_selector("#live-theory-handoff")
+            relay_page.locator("#live-mechanism-journey-link").click()
+            relay_page.wait_for_url("**/ka_journey_mechanism.html?theory=*&from_topic=*&from_article=*", wait_until="networkidle")
+            relay_page.wait_for_selector("#j-mechanism-focus")
+            relay_focus_text = _compact_text(relay_page.locator("#j-mechanism-focus").inner_text())
+            if "Opened from theory" in relay_focus_text and "via topic" in relay_focus_text and "originating article" in relay_focus_text:
+                results.append(_ok("Article-topic-theory-mechanism relay", "A single browser relay carried article, topic, and theory context all the way into the mechanism layer", url=relay_page.url))
+            else:
+                results.append(_fail("Article-topic-theory-mechanism relay", f"The full cross-page relay lost context before the mechanism layer: {relay_focus_text!r}", url=relay_page.url))
 
             heatmap_page.wait_for_selector("#__ka_heatmap_briefing .heat-card")
             heatmap_cards = heatmap_page.locator("#__ka_heatmap_briefing .heat-card").count()
