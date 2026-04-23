@@ -402,6 +402,15 @@ def run_suite(config: BrowserSmokeConfig) -> BrowserSmokeReport:
             else:
                 results.append(_fail("Theory-journey to mechanism relay", f"Theory journey page lost context before the mechanism layer: {journey_mechanism_text!r}", url=theory_journey_relay_page.url))
 
+            theory_journey_relay_page.locator("#j-mechanism-theory-journey-link").click()
+            theory_journey_relay_page.wait_for_url("**/ka_journey_theory.html?theory=*&from_article=*", wait_until="networkidle")
+            theory_journey_relay_page.wait_for_selector("#j-theory-handoff")
+            mechanism_return_text = _compact_text(theory_journey_relay_page.locator("#j-theory-handoff").inner_text())
+            if "Opened from article" in mechanism_return_text:
+                results.append(_ok("Mechanism-to-theory-journey return", "Mechanism journey returned to the theory journey surface without losing the article relay", url=theory_journey_relay_page.url))
+            else:
+                results.append(_fail("Mechanism-to-theory-journey return", f"Mechanism return link lost the journey provenance: {mechanism_return_text!r}", url=theory_journey_relay_page.url))
+
             topic_page.wait_for_selector("#__ka_topic_briefing .brief-card")
             topic_cards = topic_page.locator("#__ka_topic_briefing .brief-card").count()
             topic_metrics = topic_page.locator("#__ka_topic_briefing .brief-metric").count()
