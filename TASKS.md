@@ -4,6 +4,17 @@
 
 ---
 
+## Newly Added — 2026-04-25 (Paper-quality follow-ups)
+
+| ID | Task | Owner | Context |
+|----|------|-------|---------|
+| PQ-160F-001 | **Adapt the experimental-quality factors paper for COGS 160 Fall** | DK + CW | The academic paper at `docs/EXPERIMENTAL_PAPER_QUALITY_FACTORS_2026-04-23.md` is written for system-design rationale, not pedagogy. Produce a COGS 160 Fall-class version that re-orders the material around the *student designing an experiment* rather than evaluating one. Likely structure: pre-design checklist → Cook & Campbell's threats reframed as design choices → power and pre-registration as planning steps → open-science transparency as default lab habit → worked example walking through one student-designed experiment. Should sit alongside the existing seminar materials and link out to the panel-consultation document for the methodological backbone. |
+| PQ-INTERP-001 | **Wire paper-quality fingerprint into the interpretation layer** | CW + Codex (after main build) | The interpretation layer produces a per-paper *gloss* — a reflective comment on what the paper shows, means, and suggests. The fingerprint is one input to that gloss but not the dominant one; the larger factor is the reflective synthesis. Specify the interaction in both directions: (a) the interpretation-layer prompt receives the structured fingerprint as context so the gloss is grounded in the paper's actual methodological profile rather than its prose flavour; (b) the interpretation layer's reflective verdicts (e.g., "construct claim is overreach", "result interesting but underpowered") are persisted as *interpretation cues* that surface alongside fingerprint fields on the paper page so the reader sees both layers. Schema work: add `interpretation_cue` and `interpretation_layer_version` columns to a new `paper_interpretation` table linked one-to-one with `paper_quality_fingerprints`. Update the design doc, build prompt, and overseer rollup before a separate "interpretation pass" build. |
+| PQ-PRECONDS-001 | **Complete preconditions before invoking the Codex build prompt** | DK + CW | See response 2026-04-25 for the full precondition list. Headline items: 20-paper anchor set picked and rated, decision-tree DK-preference slots annotated, per-field extraction prompts drafted in `prompts/paper_quality/`, V7 pipeline migration tested in dry-run mode, three repos confirmed on clean branches. Until all are satisfied the prompt should not be handed to Codex. |
+| PQ-TESTPROMPT-001 | **Write a separate testing prompt to harden against AG shortcutting** | CW | Build prompt does not currently catch the AG failure modes (Python heuristics replacing LLM calls, parallelisation that degrades quality, single-model agreement faked as multi-LLM). Write a companion `PAPER_QUALITY_TESTING_PROMPT_FOR_CODEX_2026-04-25.md` that includes adversarial tests (heuristic-detection probes, model-call audits, deterministic-output detection, paper-type variance checks) and is run *after* the build prompt completes but before the layer goes live. |
+
+---
+
 ## Newly Added — 2026-04-15
 
 | ID | Task | Owner | Context |
