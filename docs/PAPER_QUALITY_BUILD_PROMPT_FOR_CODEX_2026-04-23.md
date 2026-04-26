@@ -45,6 +45,58 @@ If you believe any of those things are necessary, stop and post the
 blocker to `COORDINATION.md` under `### CW paper-quality build —
 blocker`. Do not proceed past the blocker without DK's sign-off.
 
+## 1.5 LLM access constraint — subscription-only, ballistic operation (added 2026-04-25)
+
+**Hard constraint**: every LLM call in this build, in calibration runs,
+in the testing pass, and in the live pipeline must be made through
+subscription-based chat interfaces, not through per-call API
+endpoints. The cost of API-billed multi-LLM agreement at the scale of
+1 400 papers × 11 fields × 5 self-consistency samples × 2 model
+families is not in budget; subscription-billed automation is.
+
+**What "ballistic" means here**, borrowing the cognitive-science
+sense: the build runs as automated, fire-and-forget conversation
+sequences through the chat interfaces, without halting for human
+input mid-run. State is logged; errors are recorded; the next paper
+is processed; review happens after the run completes. This pairs
+with the failure-handling change in §5: hard-rule violations are
+recorded and skipped, not raised as halt-the-build exceptions.
+
+**Implementation implications**:
+
+- The Claude-class adapter drives Claude through Claude Desktop or
+  Cowork, not the Anthropic API. The OpenAI-class adapter drives
+  ChatGPT Plus through its desktop or browser interface, not the
+  OpenAI API.
+- The audit log records subscription session ID, conversation ID,
+  and message timestamps in place of API call IDs. The schema for
+  `fingerprint_extraction_events` is updated accordingly.
+- Per-token logprobs are not exposed by subscription chat interfaces.
+  Hard Rule 9 specifies a sampling-based proxy that does not need
+  logprobs.
+- A unit test asserts that no `ANTHROPIC_API_KEY` or `OPENAI_API_KEY`
+  environment variable is read during extraction. If either is
+  read, the test fails. The test is part of the CI matrix.
+- Throughput differs from API. Subscription rate limits, conversation
+  context limits, and re-authentication requirements all apply. The
+  retrofit pass on the existing 1 400-paper corpus may take weeks
+  rather than hours; that is acceptable.
+- "Ballistic" automation is via Cowork agents, browser automation
+  (Playwright or equivalent), or desktop automation — whatever
+  pattern the rest of the lab's tooling uses. Do not invent a new
+  harness; reuse what exists.
+
+**What is *not* affected**: the eleven extractable fields, the four
+sidecars, the seven-section contract template, the
+`PaperQualityFingerprint` dataclass shape, the schema, the HTTP
+endpoints, the UI block. Only the LLM-call layer changes.
+
+If subscription-based access proves infeasible for a specific field
+(for example, ChatGPT Plus rate limits prevent dual-model agreement
+on the construct-validity field at the required cadence), stop and
+post the blocker per the standard procedure. Do not silently fall
+back to API.
+
 ## 2. Pre-flight
 
 ```bash
@@ -181,7 +233,21 @@ calibration-report baseline is recorded in
 
 **Commit 7** — `contracts/schemas/paper_quality.sql` in
 Knowledge_Atlas: the three tables and two views from §4 of the
-design document. A migration script
+design document, plus the new `hard_rule_violations` and
+`holding_pen` view from §5.1, plus the `paper_interpretation`
+stub table from PQ-INTERP-001 (per DK 2026-04-25, Q21).
+
+The `paper_interpretation` stub has columns:
+`paper_id PRIMARY KEY`, `interpretation_cue TEXT NULL`,
+`interpretation_layer_version TEXT NULL`,
+`fingerprint_id REFERENCES paper_quality_fingerprints(id)`,
+`created_at`, `updated_at`. No logic populates it in this build;
+the table exists so the eventual interpretation pass lands its
+schema migration as an additive change rather than a structural
+one. A FK constraint to `paper_quality_fingerprints` is created
+so the relationship is explicit even before rows exist.
+
+A migration script
 `scripts/migrations/2026_04_23_paper_quality.sql` applies the
 schema to the existing atlas database. Idempotent (safe to re-run).
 
@@ -300,47 +366,123 @@ to end:
 8. **Multi-LLM agreement runs both adapters as independent
    processes.** The Claude-class and OpenAI-class extractions must
    each construct their own prompt from the per-field prompt
-   template, send it to their respective endpoint, parse the
-   response, and write the result to `fingerprint_staging`
-   independently. No "skip the second model when the first is
-   confident" optimisation. No re-using the first model's parsed
-   output as context for the second. No batching that lets two
-   papers' contexts mingle in either adapter. The adjudication
-   step's input must be two structurally-independent fingerprint
-   records keyed by `(paper_id, model_pair_id)`. A test asserts
-   that across 50 papers, every paper produced at least one Claude
-   call and one OpenAI call, with non-overlapping prompt hashes per
-   field. Faking multi-LLM agreement by running one model twice
-   (whatever the temperature) is a regression and the build fails.
-   The whole calibration strategy depends on this rule; cutting it
-   invalidates everything downstream.
+   template, send it to their respective subscription chat
+   interface, parse the response, and write the result to
+   `fingerprint_staging` independently. No "skip the second model
+   when the first is confident" optimisation. No re-using the first
+   model's parsed output as context for the second. No batching that
+   lets two papers' contexts mingle in either adapter. The
+   adjudication step's input must be two structurally-independent
+   fingerprint records keyed by `(paper_id, model_pair_id)`. A test
+   asserts that across 50 papers, every paper produced at least one
+   Claude conversation and one ChatGPT conversation, with
+   non-overlapping prompt hashes per field. Faking multi-LLM
+   agreement by running one model twice (whatever the sampling
+   parameter) is a regression and the build fails. The whole
+   calibration strategy depends on this rule; cutting it invalidates
+   everything downstream.
+
+   **Sanctioned exception — adjudication UI display only.** The
+   adjudication queue UI displays both verdicts side-by-side for
+   the human adjudicator (DK or instructor). This is the only
+   context where the two outputs sit together. The exception
+   applies to *display*, never to *extraction* or *automated
+   downstream consumption*. Code that reads both verdicts
+   simultaneously must be the adjudication-UI render path, period.
 
 9. **Confidence is reported with a distributional summary, not a
-   single point estimate.** Every per-field confidence in
-   `fingerprint_staging` records (a) the point estimate, (b) the
-   per-token logprob mean for the field assertion's tokens, (c)
-   self-consistency across three samples at temperature 0.3, and (d)
-   a list of any field-assertion tokens whose logprob falls below
-   the per-field minimum. Adjudication-queue routing reads (c) — a
-   field that drifts across self-consistency samples is queued
-   even if the point confidence is above the 0.85 threshold. A
-   reporting test runs the calibration set and asserts that no
+   single point estimate.** Subscription chat interfaces do not
+   expose per-token logprobs, so the distributional summary is built
+   from sampling rather than from the underlying probability stream.
+   Every per-field confidence in `fingerprint_staging` records:
+   (a) the point estimate (the model's self-reported confidence in
+   the structured response, parsed from a confidence field in the
+   conversation output);
+   (b) **self-consistency across five samples** at the chat
+   interface's nearest equivalent of temperature 0.3 — for Claude
+   Desktop / Cowork, this is the default conversational
+   distribution at "balanced" creativity; for ChatGPT Plus,
+   equivalent. Five rather than three (per DK 2026-04-25, Q6) for a
+   tighter variance estimate;
+   (c) a sampling-based logprob proxy: the across-sample agreement
+   rate on the field's primary value, scaled to [0, 1]. The empirical
+   correlation between this proxy and Anthropic-API logprobs (where
+   the API has been used historically for this lab) is documented
+   in `atlas_shared/contracts/SAMPLING_LOGPROB_PROXY_2026-04-25.md`
+   and is sufficient for adjudication routing;
+   (d) for list-valued fields (effect sizes, rhetorical flags,
+   sample-composition entries), the per-element agreement rate
+   across the five samples.
+
+   Adjudication-queue routing reads (b) and (c) — a field that
+   drifts across self-consistency samples is queued even if the
+   point confidence is above the 0.85 threshold.
+
+   A reporting test runs the calibration set and asserts that no
    field's confidence distribution has its mass spiked at exactly
    the 0.85 threshold or any single threshold-adjacent value
    (0.86–0.89): that pattern indicates threshold-gaming and the
    build fails.
 
-## 5. Failure handling
+## 5. Failure handling — log-and-continue (revised 2026-04-25, Q15)
 
-If any step errors in a way that is not a simple code fix, stop.
-Post the failing command, the full error output, and a one-sentence
-hypothesis about the cause to `COORDINATION.md` under `### CW
+Per DK's 2026-04-25 instruction, the build operates *ballistically*:
+hard-rule violations and per-paper extraction failures are recorded
+and the next paper is processed. The build does not halt for human
+intervention mid-run. Review happens after the run completes.
+
+### 5.1 Per-paper hard-rule violations
+
+When a hard-rule violation is detected on a specific paper during
+extraction (e.g., Hard Rule 7's LLM-required canary fails because
+the per-field prompt was misconfigured for that paper, or Hard
+Rule 8's independence check sees the second model timed out and a
+shortcut was attempted), the violation is recorded and the paper
+is held back from the live aggregation:
+
+- A row is written to a new table `hard_rule_violations` with
+  columns: `paper_id`, `rule_id` (e.g., `HARD_RULE_7`,
+  `HARD_RULE_8`, `HARD_RULE_9`), `field_name`, `violation_state`
+  (machine-readable JSON capturing prompt hash, conversation IDs,
+  parsed responses, and the specific assertion that failed),
+  `violation_timestamp`, `requires_dk_review` (boolean, default
+  TRUE).
+- The paper's fingerprint is *not* committed to
+  `paper_quality_fingerprints`. It stays in `fingerprint_staging`
+  with status `held_for_review`.
+- The build proceeds to the next paper. There is no halt.
+- A summary row is added to a `holding_pen` view that DK reads
+  after the run.
+
+A migration script ships in Commit 7 (alongside the schema
+migration) creating `hard_rule_violations`, `holding_pen`, and the
+status enum addition.
+
+### 5.2 Build-time errors that halt anyway
+
+Two classes of error still halt the build, because they invalidate
+*every subsequent paper*, not just the one in flight:
+
+1. **Calibration-set precision below 70 % on any field after
+   Commit 6.** The extractor is not trustworthy for that field on
+   any paper; continuing produces 1 400 unreliable fingerprints.
+2. **Schema migration failure or test-suite regression after any
+   commit.** The next commit cannot land cleanly on broken
+   foundations.
+
+In both cases, post the failing command, the full error output, and
+a one-sentence hypothesis to `COORDINATION.md` under `### CW
 paper-quality build — blocker`. Do not guess past the error.
 
-If the calibration-report precision on any field falls below 70 %
-after Commit 6, stop. That is the panel's stop-condition: the
-extractor is not trustworthy for that field and DK needs to decide
-whether to exclude the field or tune the prompt.
+### 5.3 Subscription-interface errors
+
+Rate-limit errors, authentication-expiry errors, and conversation-
+context-overflow errors from the subscription chat interfaces are
+*expected* and are handled with retry-with-backoff up to three
+attempts per paper. A fourth failure is recorded as a hard-rule
+violation per §5.1 and the paper is held. The retry policy is
+implemented in `atlas_shared.subscription_adapter` and shared
+between the Claude and ChatGPT adapters.
 
 ## 6. Reporting
 
@@ -363,11 +505,22 @@ At the end of the build, post to `COORDINATION.md`:
   (< 50 mean tokens for a semantic field) or zero calls in either
   column triggers an automatic flag for DK review.
 - **Self-consistency variance** per LLM-required field across the
-  three-sample temperature-0.3 runs: mean Jaccard similarity for
-  list-valued fields, mean absolute difference for numeric fields.
-  Variance close to zero on a field where the calibration set shows
-  legitimate paper-to-paper variation indicates a deterministic
-  shortcut and is a flag.
+  five-sample runs (per DK 2026-04-25, Q6): mean Jaccard similarity
+  for list-valued fields, mean absolute difference for numeric
+  fields, Krippendorff's α for categorical fields. Variance close
+  to zero on a field where the calibration set shows legitimate
+  paper-to-paper variation indicates a deterministic shortcut and
+  is a flag.
+- **Hard-rule-violation tally** from `hard_rule_violations`: count
+  per rule, per field, per offending model adapter; one-line summary
+  of the most common violation pattern. The tally is the primary
+  artefact DK reads to decide what to do with the
+  `held_for_review` papers.
+- **Subscription-interface error tally**: count of rate-limit
+  retries, authentication-expiry events, and context-overflow
+  events per adapter. A spike here indicates the throughput plan
+  needs revision before the retrofit pass on the 1 400-paper
+  corpus.
 - **Confidence-distribution histogram** per LLM-required field
   across the calibration run: ten bins from 0.0 to 1.0, count of
   fields landing in each bin. A bin spike at 0.85–0.89 across
@@ -433,6 +586,15 @@ state shared with this build's processes. The two-document
 arrangement means that even if a shortcut survives the build's
 internal tests, the testing prompt's adversarial probes will catch
 it before the layer reaches real papers.
+
+The subscription-only access constraint (§1.5) and the
+log-and-continue failure semantics (§5) work together: a build that
+runs ballistically through subscription chat interfaces, recording
+violations rather than halting, can process the 1 400-paper corpus
+in the background over weeks without human intervention. Halt-and-
+wait semantics paired with subscription rate limits would make the
+retrofit functionally impossible. Together, the two design choices
+are what make the layer operationally feasible at all.
 
 ---
 
