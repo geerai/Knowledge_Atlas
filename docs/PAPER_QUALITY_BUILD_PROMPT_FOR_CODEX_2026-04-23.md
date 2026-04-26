@@ -5,11 +5,14 @@
 `/Users/davidusa/REPOS/` on DK's Mac, plus push rights on
 `github.com/dkirsh/atlas_shared`, `github.com/dkirsh/Knowledge_Atlas`,
 and the Article_Eater repo.
-**Authorising reviewer**: DK, 2026-04-23.
+**Authorising reviewer**: DK, 2026-04-23. Hardened 2026-04-25.
 **Companion reading**:
 `PAPER_QUALITY_PANEL_CONSULTATION_2026-04-23.md` (methodology);
 `PAPER_QUALITY_SYSTEM_DESIGN_2026-04-23.md` (ground-truth
-specification). Read both before writing code.
+specification);
+`PAPER_QUALITY_TESTING_PROMPT_FOR_CODEX_2026-04-25.md` (adversarial
+tests run *after* this build completes — read it now so you understand
+which behaviours will be probed). Read all three before writing code.
 
 ---
 
@@ -129,10 +132,46 @@ twenty golden-file tests, each with a fixture PDF excerpt and an
 expected fingerprint. Use the 20-paper calibration subset DK
 curates in `atlas_shared/tests/fixtures/paper_quality_calibration/`.
 The first five fixtures must span: lab experiment, field study,
-secondary analysis, meta-analysis, theoretical paper. Add a
-calibration-run script that reports precision/recall per field over
-the full 100-paper calibration set; run it and commit the baseline
-report.
+secondary analysis, meta-analysis, theoretical paper.
+
+**Adversarial fixtures (mandatory addition, four extra fixtures
+beyond the twenty).** These are designed to catch heuristic
+shortcuts. Every one must extract correctly via LLM and produce a
+distinct flag in the fingerprint when it does:
+
+1. *Multi-effect paper* — a primary empirical paper that reports
+   five effect sizes across three studies and whose abstract foregrounds
+   the largest. The fixture's expected fingerprint records all five
+   effect sizes with their CIs and flags abstract–results emphasis
+   asymmetry. A regex-based extractor will mis-pick the single largest
+   effect; the test fails if `effect_sizes_count != 5`.
+2. *OSF-mentioned-but-not-preregistered paper* — mentions OSF in the
+   discussion as a place data will be deposited but has no
+   preregistration URL or timestamp. The expected fingerprint marks
+   `preregistered = False` and `osf_present_but_not_prereg = True`. A
+   keyword extractor will mark this preregistered; the test fails if
+   `preregistered == True`.
+3. *Scattered-sample paper* — sample composition is described in four
+   separate paragraphs (recruitment in §2.1, demographics in §2.3,
+   exclusions in §2.5, final analytic sample in §3.1). The expected
+   fingerprint records the final analytic N and the country
+   composition, and notes the reconstruction. A pattern-based extractor
+   will record the recruitment N as the sample N; the test fails if
+   `sample_n_total != analytic_N`.
+4. *Hedged construct paper* — the construct claim uses hedging language
+   ("may suggest", "consistent with", "appears to support") that a
+   regex will pass over. The expected fingerprint records the hedge
+   spans and elevates the construct-validity verdict to multi-LLM
+   adjudication. A keyword detector will record an unqualified claim;
+   the test fails if `rhetorical_hedge_count == 0`.
+
+If any of the four adversarial fixtures passes without flags, the
+extractor is using shortcuts and the build halts pending DK review.
+This is non-negotiable.
+
+Add a calibration-run script that reports precision/recall per field
+over the full 20-paper anchor set plus the four adversarial fixtures;
+run it and commit the baseline report.
 
 After Pass 2: `pytest -q` in Article_Eater stays green; the
 calibration-report baseline is recorded in
@@ -181,6 +220,19 @@ admin adjudication queue with a synthetic low-confidence fingerprint;
 manual smoke through the claim-strengths block on a fixture claim;
 overseer rollup script produces a valid markdown file.
 
+**Forced-disagreement smoke (mandatory addition).** Beyond the
+single low-confidence fingerprint, construct a deliberately
+disagreeing pair: the same paper run through both extraction
+adapters with the second adapter's prompt nudged to produce a
+different construct-validity verdict. Confirm that the adjudication
+queue (a) catches the disagreement, (b) presents both candidate
+verdicts side-by-side with the source excerpts each cited, and (c)
+records the adjudication outcome with the `WEIGHTING_FUNCTION_VERSION`
+and `model_pair_id` so the calibration history can attribute drift
+correctly. A queue that silently picks the higher-confidence verdict
+without surfacing the disagreement is a regression and the build
+fails.
+
 ### Pass 4 — integration + master doc (commit 12)
 
 **Commit 12** — the integration pass that makes the layer live end
@@ -223,6 +275,61 @@ to end:
    script with a later date suffix ships in the same commit.
 6. **No force-push. No rebase of shared history.** Branch work only.
 
+7. **LLM-required fields cannot be extracted by regex, keyword
+   match, or other heuristic.** Of the eleven fingerprint fields,
+   seven are *semantic* and *must* be extracted by LLM call:
+   construct claim parsing, sample composition narrative,
+   multiple-comparisons handling, conflict-of-interest disclosure
+   interpretation, replication-record search, rhetorical-flag
+   detection, and effect-size precision (because units, direction,
+   and CI structure require semantic reading, not regex). The
+   remaining four (preregistration URL, data-availability statement
+   text, code-availability statement text, raw N digits) may use
+   programmatic verification *as a redundant check after the LLM
+   call*, never *instead of* it. Each LLM-required field's unit test
+   asserts the LLM was actually invoked: it counts API calls, checks
+   the model name in the call log, and fails if zero calls were
+   made. A future PR that swaps in a regex shortcut breaks the test
+   suite by construction. The four programmatic-eligible fields
+   still log every regex match for audit. There is no "fast path"
+   that disables LLM calls, even temporarily, even in CI. If the
+   build needs a faster local-development mode, gate it behind an
+   explicit `PAPER_QUALITY_DEV_FAST=1` env variable that the test
+   suite refuses to honour.
+
+8. **Multi-LLM agreement runs both adapters as independent
+   processes.** The Claude-class and OpenAI-class extractions must
+   each construct their own prompt from the per-field prompt
+   template, send it to their respective endpoint, parse the
+   response, and write the result to `fingerprint_staging`
+   independently. No "skip the second model when the first is
+   confident" optimisation. No re-using the first model's parsed
+   output as context for the second. No batching that lets two
+   papers' contexts mingle in either adapter. The adjudication
+   step's input must be two structurally-independent fingerprint
+   records keyed by `(paper_id, model_pair_id)`. A test asserts
+   that across 50 papers, every paper produced at least one Claude
+   call and one OpenAI call, with non-overlapping prompt hashes per
+   field. Faking multi-LLM agreement by running one model twice
+   (whatever the temperature) is a regression and the build fails.
+   The whole calibration strategy depends on this rule; cutting it
+   invalidates everything downstream.
+
+9. **Confidence is reported with a distributional summary, not a
+   single point estimate.** Every per-field confidence in
+   `fingerprint_staging` records (a) the point estimate, (b) the
+   per-token logprob mean for the field assertion's tokens, (c)
+   self-consistency across three samples at temperature 0.3, and (d)
+   a list of any field-assertion tokens whose logprob falls below
+   the per-field minimum. Adjudication-queue routing reads (c) — a
+   field that drifts across self-consistency samples is queued
+   even if the point confidence is above the 0.85 threshold. A
+   reporting test runs the calibration set and asserts that no
+   field's confidence distribution has its mass spiked at exactly
+   the 0.85 threshold or any single threshold-adjacent value
+   (0.86–0.89): that pattern indicates threshold-gaming and the
+   build fails.
+
 ## 5. Failure handling
 
 If any step errors in a way that is not a simple code fix, stop.
@@ -249,6 +356,23 @@ At the end of the build, post to `COORDINATION.md`:
 - Any deviations from this prompt and why.
 - Adjudication-queue depth after the synthetic smoke test (expect
   zero before real papers enter).
+- **Per-field LLM call counts** across the 24-fixture calibration
+  run: one row per field, columns for Claude-class call count,
+  OpenAI-class call count, mean tokens per call, and total
+  wall-clock seconds. A field with suspiciously low token counts
+  (< 50 mean tokens for a semantic field) or zero calls in either
+  column triggers an automatic flag for DK review.
+- **Self-consistency variance** per LLM-required field across the
+  three-sample temperature-0.3 runs: mean Jaccard similarity for
+  list-valued fields, mean absolute difference for numeric fields.
+  Variance close to zero on a field where the calibration set shows
+  legitimate paper-to-paper variation indicates a deterministic
+  shortcut and is a flag.
+- **Confidence-distribution histogram** per LLM-required field
+  across the calibration run: ten bins from 0.0 to 1.0, count of
+  fields landing in each bin. A bin spike at 0.85–0.89 across
+  multiple fields indicates threshold-gaming and the build does not
+  ship pending DK sign-off.
 
 Tag CW on COORDINATION.md when done.
 
@@ -274,6 +398,43 @@ merge to `master`/`main` in the standard order: atlas_shared first
 (because Knowledge_Atlas and Article_Eater depend on it), then
 Article_Eater, then Knowledge_Atlas.
 
+After merge, run the testing prompt
+(`PAPER_QUALITY_TESTING_PROMPT_FOR_CODEX_2026-04-25.md`) against the
+landed branches before the layer goes live to real papers. The
+testing prompt is the second gate; this build prompt is only the
+first.
+
+## 9. Why these rules look paranoid
+
+These hardening rules — particularly Hard Rules 7, 8, and 9, the
+adversarial fixtures, the forced-disagreement smoke, and the
+distributional confidence reporting — exist because a previous
+generation of automation in this lab has shown a reliable habit of
+substituting Python heuristics for LLM calls when work feels
+repetitive, of parallelising in ways that re-use one model's output
+as the other model's "agreement" check, and of converging confidence
+estimates onto threshold-adjacent values that bypass adjudication.
+Those shortcuts are individually plausible engineering decisions
+that, taken together, invalidate the calibration strategy and
+silently degrade fingerprint quality below what the design package
+claims.
+
+The rules in this document are written so that each shortcut, if
+attempted, fails a specific test rather than slipping through. The
+rules are not optional and the tests are not adjustable from inside
+the build branch. If a rule looks unnecessary on a particular paper,
+post the case to `COORDINATION.md` under `### CW paper-quality build
+— rule challenge` and wait for DK's response; do not relax the rule.
+
+A separate testing prompt
+(`PAPER_QUALITY_TESTING_PROMPT_FOR_CODEX_2026-04-25.md`) probes the
+same failure modes from the outside after the build lands, with no
+state shared with this build's processes. The two-document
+arrangement means that even if a shortcut survives the build's
+internal tests, the testing prompt's adversarial probes will catch
+it before the layer reaches real papers.
+
 ---
 
-*End of build prompt.*
+*End of build prompt. Companion testing prompt:
+`PAPER_QUALITY_TESTING_PROMPT_FOR_CODEX_2026-04-25.md`.*
