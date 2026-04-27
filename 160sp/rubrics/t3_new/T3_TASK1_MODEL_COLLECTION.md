@@ -131,11 +131,20 @@ In the Marble web viewer, click Export → **High-quality mesh (GLB)**. This run
 
 > **Important:** The exported mesh is a **single fused object** — all walls, ceiling, floor are one continuous surface. You cannot select individual walls yet. That's what Step 3 fixes.
 
-#### Step 3: Segment in Blender (AI-assisted)
+#### Step 3: Segment the fused mesh into separate architectural elements
 
-The fused mesh must be separated into discrete architectural elements (ceiling, walls, floor, furniture). There are three approaches, from manual to AI-assisted:
+The Marble export is a single continuous surface. To make it parametrically modifiable, you must separate it into individual objects (ceiling, walls, floor, furniture) and assign PBR materials to each. This is a core part of the assignment — **you are expected to use at least one of the AI-assisted approaches below**, not do everything by hand.
 
-**Approach A — Manual segmentation (~30 min per model):**
+---
+
+### Controlling Blender: Manual, AI-Assisted, and Fully Automated
+
+There are four approaches to Blender mesh segmentation, ranging from fully manual to fully automated. The choice is yours, but you must **document which approach you used and evaluate its accuracy.**
+
+#### Approach A — Manual segmentation in Blender (~30-45 min per model)
+
+This is the baseline — every student should know how to do this even if they automate it later.
+
 1. Import GLB: `File → Import → glTF 2.0`
 2. Enter Edit Mode (`Tab`)
 3. Select ceiling faces: `Select → Select All by Trait → Normal` (faces pointing downward)
@@ -143,40 +152,117 @@ The fused mesh must be separated into discrete architectural elements (ceiling, 
 5. Name the new object "Ceiling" in the Outliner
 6. Repeat for floor (upward normals), each wall (by face orientation), furniture
 7. Assign PBR materials to each separated object
-8. Export: `File → Export → glTF 2.0` with "Selected Objects" checked
+8. Export: `File → Export → glTF 2.0`
 
-**Approach B — AI-assisted via BlenderGPT (~10 min per model):**
+**Effectiveness:** 100% accurate but slow. Use for your first 1-2 models to understand the geometry, then automate.
 
-[BlenderGPT](https://github.com/gd3kr/BlenderGPT) (4.9k stars, MIT license) is a Blender addon that lets you control Blender with natural language via GPT-4. Install it, then:
+---
+
+#### Approach B — BlenderMCP: Claude/Cursor controls Blender via MCP (recommended)
+
+[**BlenderMCP**](https://github.com/ahujasid/blender-mcp) (20.7k ★, MIT license) connects Blender to Claude AI through the [Model Context Protocol](https://modelcontextprotocol.io/). Claude can see your Blender viewport, execute Python code, create/modify/delete objects, apply materials, and download Poly Haven assets — all through natural language conversation.
+
+**Why this is the most powerful option:** Unlike BlenderGPT, BlenderMCP gives the LLM **viewport screenshots** so it can see what it's doing and correct errors. It also integrates with Poly Haven for HDRIs and materials, which is directly useful for our VR pipeline.
+
+**Setup:**
+1. Install `uv`: `brew install uv` (Mac) or `powershell -c "irm https://astral.sh/uv/install.ps1 | iex"` (Windows)
+2. Download `addon.py` from the [repo](https://github.com/ahujasid/blender-mcp), install it in Blender: `Edit → Preferences → Add-ons → Install`
+3. In Blender sidebar (`N`), find the "BlenderMCP" tab → click "Connect to Claude"
+4. Configure your AI client:
+
+**For Claude Desktop** (add to `claude_desktop_config.json`):
+```json
+{
+  "mcpServers": {
+    "blender": {
+      "command": "uvx",
+      "args": ["blender-mcp"]
+    }
+  }
+}
+```
+
+**For Cursor** (add to `.cursor/mcp.json`):
+```json
+{
+  "mcpServers": {
+    "blender": {
+      "command": "uvx",
+      "args": ["blender-mcp"]
+    }
+  }
+}
+```
+
+**Then tell Claude/Cursor:**
+```
+"I've imported a Marble-exported GLB of a room interior. It's a single 
+fused mesh. I need you to:
+1. Take a screenshot to see the current scene
+2. Select all downward-facing faces (normal Z < -0.8) and separate them 
+   as a new object called 'Ceiling'
+3. Select all upward-facing faces (normal Z > 0.8) and separate them 
+   as 'Floor'
+4. Use face normal direction to separate remaining faces into 
+   'Wall_North', 'Wall_South', 'Wall_East', 'Wall_West'
+5. Assign Principled BSDF materials to each object
+6. Take a final screenshot to verify"
+```
+
+**Effectiveness:** ~85-90% accurate for rectangular rooms. The LLM can see the viewport and self-correct. Irregular room shapes may need manual cleanup. Expect to iterate 2-3 prompts per model. Total time: ~10-15 min per model including verification.
+
+**Additional capabilities relevant to T3:**
+- Download Poly Haven HDRIs and materials directly (useful for Task 2 lighting)
+- Generate 3D models via Hyper3D Rodin integration
+- Export scene information as JSON for the AI front-end
+
+---
+
+#### Approach C — BlenderGPT: Natural language inside Blender (~10 min per model)
+
+[**BlenderGPT**](https://github.com/gd3kr/BlenderGPT) (4.9k ★, MIT license) is a Blender addon that takes natural language → GPT-4 generates Blender Python (`bpy`) code → executes it directly inside Blender.
+
+**Setup:** Download the ZIP from GitHub → `Edit → Preferences → Add-ons → Install` → paste your OpenAI API key in addon preferences. Open the sidebar (`N`) → find "GPT-4 Assistant" tab.
+
+**Key difference from BlenderMCP:** BlenderGPT runs entirely inside Blender (no external MCP server) but has **no viewport awareness** — it can't see what it did. It writes code blindly based on your description. This means it works well when you describe geometry precisely (face normals, coordinates) but can't self-correct visual errors.
+
+**Segmentation prompts:**
+```
+"Select all faces on the active mesh object whose normal Z component is 
+less than -0.8. Separate the selected faces into a new object. Rename 
+that new object to 'Ceiling'."
+```
 
 ```
-Prompt: "Select all faces on the imported mesh that face downward 
-(normal Z < -0.8). Separate them into a new object called 'Ceiling'. 
-Then select all faces facing upward (normal Z > 0.8) and separate them 
-into a new object called 'Floor'."
+"Select all faces whose normal Z component is greater than 0.8. 
+Separate into a new object called 'Floor'."
 ```
 
 ```
-Prompt: "For the remaining mesh, select all faces facing in the -Y 
-direction (normal Y < -0.7) and separate them into 'Wall_North'. 
-Repeat for +Y as 'Wall_South', -X as 'Wall_West', +X as 'Wall_East'."
+"For the remaining mesh, select faces where the absolute Y component 
+of the normal exceeds 0.7 and the Y component is negative. Separate 
+into 'Wall_North'. Then select faces where Y normal > 0.7 and 
+separate into 'Wall_South'. Repeat for X axis: negative X normal 
+→ 'Wall_West', positive X normal → 'Wall_East'."
 ```
 
 ```
-Prompt: "Assign a new Principled BSDF material to each separated 
-object. Set Ceiling to white (0.9, 0.9, 0.9), Floor to gray 
-(0.4, 0.4, 0.4), all walls to light beige (0.85, 0.82, 0.75). 
-Set roughness to 0.7 for all."
+"Assign a new Principled BSDF material to each separated object. 
+Set Ceiling base color to (0.9, 0.9, 0.9), Floor to (0.4, 0.4, 0.4), 
+all walls to (0.85, 0.82, 0.75). Set roughness 0.7 for all."
 ```
 
-**What the LLM actually does:** It generates Blender Python (`bpy`) code and executes it. The LLM doesn't "see" the mesh — it writes selection scripts based on face normals. This works well for architectural geometry (walls are planar) and poorly for organic shapes.
+**Effectiveness:** ~80% for rectangular rooms. Without viewport feedback, errors accumulate — you'll need to visually inspect in Blender and fix manually. Total time: ~10-15 min per model.
 
-**Approach C — Headless Blender Python script (fully automatable):**
+---
 
-You can write the segmentation logic once and apply it to every Marble export:
+#### Approach D — Headless Blender Python script (fully automated, no AI needed)
+
+This is the fastest option for batch processing. You write the segmentation logic once as a Python script, then run it headlessly (no GUI) on every model:
 
 ```python
-# segment_marble_export.py — Run: blender --background --python segment_marble_export.py -- input.glb output.glb
+# segment_marble_export.py
+# Run: blender --background --python segment_marble_export.py -- input.glb output.glb
 import bpy, bmesh, sys, math
 
 argv = sys.argv[sys.argv.index("--") + 1:]
@@ -232,9 +318,26 @@ for obj in bpy.context.scene.objects:
 bpy.ops.export_scene.gltf(filepath=output_path, export_format='GLB')
 ```
 
-Run it: `blender --background --python segment_marble_export.py -- marble_room.glb room_segmented.glb`
+Run: `blender --background --python segment_marble_export.py -- marble_room.glb room_segmented.glb`
 
-This is fully automatable — one command per model, no GUI interaction needed.
+Batch all models: `for f in marble_exports/*.glb; do blender --background --python segment_marble_export.py -- "$f" "segmented/$(basename $f)"; done`
+
+**Effectiveness:** ~75-80% for simple rectangular rooms. Fails on L-shaped rooms, angled walls, curved surfaces, or rooms where furniture faces look similar to wall faces. The script has no visual judgment — it's purely geometric. **You must visually inspect every output in Blender and fix misclassified faces manually.** This is the ruthless validation step.
+
+**Advantage:** Zero cost, zero API keys, processes 20 models in under 5 minutes. The human review step is where you earn the grade.
+
+---
+
+### Which approach should you use?
+
+| Approach | Stars | API cost | Viewport aware | Batch mode | Accuracy | Best for |
+|---|---|---|---|---|---|---|
+| **A: Manual** | — | $0 | N/A (you are the eyes) | ❌ | 100% | Learning; fixing AI errors |
+| **B: BlenderMCP** | 20.7k | Claude API | ✅ Yes (screenshots) | ❌ | ~85-90% | Best single-model workflow |
+| **C: BlenderGPT** | 4.9k | OpenAI API | ❌ No | ❌ | ~80% | Quick iteration in Blender |
+| **D: Headless script** | — | $0 | ❌ No | ✅ Yes | ~75-80% | Batch processing 20 models |
+
+**Recommended workflow:** Use **Approach D** (headless script) to batch-process all models, then **visually inspect each one in Blender** and use **Approach A or B** to fix errors. Document every correction — this is your ruthless validation data.
 
 #### Marble pricing
 
@@ -378,7 +481,8 @@ Write a ruthless validation prompt for your catalog. Run it on at least 5 models
 | `Outcome_Contractor/contracts/oc_export/outcome_vocab.json` | 839 effect terms — the dependent variables these manipulations affect |
 | `160sp/context/context_vr_production.md` | VR production context including K-ATLAS evidence model and scene specification format |
 | [World Labs Marble](https://marble.worldlabs.ai/) | Photo/text → 3D world generation; [API docs](https://docs.worldlabs.ai/api); [SparkJS](https://sparkjs.dev/) for Gaussian Splat rendering |
-| [BlenderGPT](https://github.com/gd3kr/BlenderGPT) (4.9k ★) | Natural language → Blender Python code execution; use for AI-assisted mesh segmentation |
+| [BlenderMCP](https://github.com/ahujasid/blender-mcp) (20.7k ★) | Claude/Cursor → Blender via MCP; viewport-aware AI control with Poly Haven integration |
+| [BlenderGPT](https://github.com/gd3kr/BlenderGPT) (4.9k ★) | Natural language → Blender Python code execution inside Blender; no viewport awareness |
 | Blender CLI: `blender --background --python script.py` | Run segmentation/conversion scripts headlessly (no GUI); batch-process all models |
 
 ---
