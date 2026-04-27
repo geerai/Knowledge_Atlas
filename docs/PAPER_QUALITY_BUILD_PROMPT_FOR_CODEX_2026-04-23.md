@@ -97,6 +97,77 @@ on the construct-validity field at the required cadence), stop and
 post the blocker per the standard procedure. Do not silently fall
 back to API.
 
+**Implementation note (revised 2026-04-25)**: The CLI subprocess
+pattern used by `atlas_shared.cli_adjudicator` is the canonical
+adapter. `claude -p --output-format json` for Claude-class;
+`codex exec -m <model>` for OpenAI-class. Both authenticate via
+subscription OAuth login, never API keys. The build extends the
+existing pattern with eleven per-field prompts and the paper-quality
+output schema; it does not invent new harness infrastructure.
+
+## 1.6 Coordination model — blackboard, not heartbeat (added 2026-04-25)
+
+Per DK 2026-04-25: the existing HTTP coordination server has decayed
+into disuse (state file timestamps from 2026-03-11 / 03-12 despite
+substantial multi-agent work since), and the failure mode is
+structural rather than disciplinary. This build adopts a *blackboard
+architecture* in which the database itself is the source of truth
+and self-report is decorative.
+
+**Read first**: `docs/PAPER_QUALITY_BLACKBOARD_DESIGN_2026-04-25.md`.
+That document specifies the tables, the worker loop, the JSON
+mirror cadence, and the failure-recovery semantics in full. It is
+companion reading for this prompt and you must follow its rules.
+
+Summary for orientation:
+
+- Two new tables (`paper_quality_batches`, `paper_quality_jobs`)
+  and one view (`paper_quality_progress`) added to
+  `pipeline_lifecycle_full.db` in Commit 7.
+- Work is batched: 25–30 papers per batch (per DK Q-2 of 2026-04-25,
+  smaller than the 350-paper ranges originally proposed).
+- Workers claim one batch at a time via atomic DB update; finish all
+  papers in it; claim another. No upfront partition of the corpus.
+- Per-paper progress signal: `last_progress_at` is updated after
+  each paper completion. 30-min stall → `timeout_warning`; 4-hour
+  stall → batch becomes `reclaimable`. Per DK: no preemptive
+  reclamation; the 4-hour timeout is a tail-only mechanism.
+- Cross-sandbox visibility via `data/paper_quality_progress.json`,
+  updated per-paper, committed locally frequently, pushed to GitHub
+  every roughly 50 papers (per DK Q-3 of 2026-04-25).
+- Heartbeats remain advisory for the dashboard; they are not
+  load-bearing for any work-claiming or completion semantics.
+
+**Concurrency given DK's subscriptions** (Codex Pro, Claude Max,
+high-tier Gemini):
+
+- 4 Claude CLI workers, 4 Codex CLI workers, 1-2 Gemini verifiers,
+  1 mirror/dashboard process.
+- Combined extraction throughput at peak: ~130 papers fully
+  processed per day, completing the 1 400-paper retrofit in
+  ~11 working days (5-sample SC) or ~7-8 days (3-sample SC on
+  retrofit only, 5-sample on calibration).
+
+A new commit in the execution plan handles the blackboard
+initialiser:
+
+**Commit 6.5 (new)** —
+`scripts/paper_quality_blackboard_init.py`:
+the pre-flight script that generates the manifest (4 200 jobs in
+150 batches), populates `paper_quality_jobs` and
+`paper_quality_batches` rows, writes the empty mirror at
+`data/paper_quality_progress.json`, and commits/pushes. Idempotent
+(safe to re-run; `INSERT OR IGNORE`). Lands between Pass 2's golden-
+file tests (Commit 6) and Pass 3's schema migration (Commit 7).
+
+**Worker loop wrapper** —
+`atlas_shared/src/atlas_shared/worker_loop.py` (added in Commit 1
+alongside the dataclass): the shared loop that the three adapter
+wrappers (Claude CLI, Codex CLI, Gemini) all import. Contains the
+`claim_next_batch`, `mark_paper_done`, `record_hard_rule_violation`,
+`refresh_mirror_for_paper`, `commit_local`, `push_to_github`
+helpers. Per the design doc §4.
+
 ## 2. Pre-flight
 
 ```bash
@@ -235,7 +306,11 @@ calibration-report baseline is recorded in
 Knowledge_Atlas: the three tables and two views from §4 of the
 design document, plus the new `hard_rule_violations` and
 `holding_pen` view from §5.1, plus the `paper_interpretation`
-stub table from PQ-INTERP-001 (per DK 2026-04-25, Q21).
+stub table from PQ-INTERP-001 (per DK 2026-04-25, Q21), plus the
+`paper_quality_batches` and `paper_quality_jobs` tables and the
+`paper_quality_progress` view from
+`PAPER_QUALITY_BLACKBOARD_DESIGN_2026-04-25.md` (added 2026-04-25
+per §1.6 of this prompt).
 
 The `paper_interpretation` stub has columns:
 `paper_id PRIMARY KEY`, `interpretation_cue TEXT NULL`,
