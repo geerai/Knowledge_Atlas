@@ -1,22 +1,47 @@
-# Track 2 · Task 2: Build the Topic Proposer & Search Pipeline
+# Track 2 · Task 2: Build the Search Pipeline (Abstract-First Triage)
 
 **Track:** Article Finder  
-**What it does:** Reads the gap analysis data in Article Eater's 166 PNU templates, proposes searches to fill those gaps, runs the searches, collects citations, and vets them through the contribute page you fixed in Task 1.  
-**What you build:** A pipeline with a visible dashboard showing what gaps exist, what searches were proposed, and what the results were.
+**What you build:** A pipeline that identifies knowledge gaps in the Article Eater's 166 PNU templates, searches for papers that could fill them using free APIs (Semantic Scholar, CrossRef, PubMed), triages candidates at the abstract level before downloading anything, and produces a PRISMA-style dashboard proving the pipeline works.  
+**Core lesson:** Don't vibe-code a search. *Target* your searches using VOI (Value of Information), *triage* at the cheapest level (abstracts, not PDFs), and *prove* your pipeline produces audit-ready results.
+
+---
+
+## What Is PRISMA and Why You're Building One
+
+PRISMA (**Preferred Reporting Items for Systematic Reviews and Meta-Analyses**) is the international gold standard for conducting and reporting systematic literature searches. Published in 2009, updated 2020, it forces researchers to document their search funnel transparently:
+
+```
+Records identified through database searching        (n = ?)
+    ↓
+Duplicates removed                                    (n = ?)
+    ↓
+Records screened by title + abstract                  (n = ?)  →  Excluded (n = ?)
+    ↓
+Full-text articles assessed for eligibility           (n = ?)  →  Excluded with reasons (n = ?)
+    ↓
+Studies included in final synthesis                   (n = ?)
+```
+
+Your pipeline **is** an automated PRISMA funnel. Your dashboard must show these exact numbers. This is the proof that you didn't just dump random papers into the system.
 
 ---
 
 ## What This Assignment Teaches
 
-Task 1 taught you to **fix** existing code by wiring things together. Task 2 teaches you to **design** a new pipeline from scratch — using AI to build it, but owning the spec, the data flow, and the proof that it works.
+Task 1 taught you to **fix** existing code. Task 2 teaches you to **design a research pipeline** — not just "find papers," but find the *right* papers for *specific* knowledge gaps, using the scoring infrastructure that already exists in the codebase.
 
-The pipeline has three stages:
+The pipeline has three stages, each cheaper than the next:
 
 ```
-GAPS in the knowledge base → SEARCHES to fill them → RESULTS vetted by the classifier
+Stage 1: IDENTIFY gaps → score by VOI → generate targeted queries
+    ↓ (cost: zero — just reading local JSON files)
+Stage 2: SEARCH APIs → collect abstracts → triage by classifier + VOI
+    ↓ (cost: low — free API calls, no PDFs downloaded)
+Stage 3: DOWNLOAD PDFs → only for papers that passed triage
+    ↓ (cost: high — only do this for winners)
 ```
 
-You need to spec each stage, delegate the build, and prove the pipeline produces useful results.
+The key insight: **you never download a PDF to decide if it's relevant.** You triage at the abstract level using free APIs.
 
 ---
 
@@ -25,169 +50,214 @@ You need to spec each stage, delegate the build, and prove the pipeline produces
 You should already have the four repositories from Task 1:
 - `Knowledge_Atlas` — the site (with your fixed contribute page from Task 1)
 - `Article_Finder` — the discovery pipeline
-- `Article_Eater` — the extraction engine (contains the gap data)
+- `Article_Eater` — the extraction engine (contains the gap data AND the VOI functions)
 - `atlas_shared` — the shared classifier (installed as `pip install -e .`)
 
 ---
 
-## Phase 1: Understand the Gap Data
+## Phase 1: Understand the Gap Data and the VOI System
 
-The Article Eater has 166 PNU (Plausible Neural Underpinning) templates. Each template describes a mechanism chain — how an environmental feature (e.g., ceiling height) leads to a psychological outcome (e.g., creativity) through neural processes. Each step in the chain has a **confidence score**. Low-confidence steps are **gaps** — places where the evidence is thin.
+### 1A. Understand the PNU templates
 
-### 1A. Ask your AI to explain the template structure
+The Article Eater has 166 PNU (Plausible Neural Underpinning) templates. Each describes a mechanism chain: how an environmental feature (e.g., ceiling height) leads to a psychological outcome (e.g., creativity) through neural processes. Each step has a **confidence score**. Low-confidence steps are **knowledge gaps**.
 
-Pick 3 templates from `Article_Eater/data/templates/` (e.g., `T2.json`, `T4.json`, `T13.json`). Give them to your AI and ask:
+Pick 3 templates from `Article_Eater/data/templates/`. Ask your AI:
 
-> *"These are PNU templates from the Knowledge Atlas. Each one has a `mechanism_chain` — a series of steps linking an environmental feature to a psychological outcome. Walk me through one template completely: what does each step represent, what does `confidence` mean for each step, and what does a low-confidence step tell us?"*
+> *"These are PNU templates from the Knowledge Atlas. Walk me through one template completely: what does each step in the `mechanism_chain` represent, what does `confidence` mean for each step, and what does a low-confidence step (< 0.5) tell us about what's missing from the research corpus?"*
 
-> *"Then look at all three templates and identify: which steps have confidence below 0.5? Those are the gaps. For each gap, tell me: what specific knowledge is missing, and what kind of study would fill it?"*
+> *"Now look at all three templates and identify: which steps have confidence below 0.5? For each gap, tell me what specific study would fill it."*
 
-### 1B. Ask your AI to explain the 4 types of VOI analysis
+### 1B. Understand the VOI scoring system
 
-The Article Eater also has an Expected Value of Information (EVOI) framework that prioritizes which gaps matter most. Ask:
+The Article Eater already has **7 VOI functions** for scoring knowledge gaps. You will use three of them. Ask your AI:
 
-> *"The Knowledge Atlas uses Value of Information analysis to prioritize research gaps. There are four types of gaps that VOI can identify. Look at this gap type enum from `Article_Eater/src/types/reduction.ts`:*
-> ```
-> MISSING_NODE — A required mechanism is completely unknown
-> MISSING_EDGE — Connection between known nodes is unproven  
-> AMBIGUOUS_DIRECTION — Correlation exists, direction unknown
-> UNKNOWN_INTERACTION — How two mechanisms combine is unknown
-> ```
-> *Also look at `GapReport` in `src/types/crossReference.ts` which tracks `missing_mechanisms` and `recommendation` per template domain.*
-> 
-> *Explain each gap type with a concrete example from neuroarchitecture. Then explain: if I wanted to find papers that could fill a MISSING_EDGE gap, what kind of search query would I need? How would it differ from a search to fill an AMBIGUOUS_DIRECTION gap?"*
+> *"Read these three files from Article_Eater and explain what each VOI function does:*
+> 1. *`src/services/voi_search.py` — find the `VOICalculator` class and its `calculate_voi()` method*
+> 2. *`src/cmr/voi_scoring.py` — find `score_voi()` and `aggregate_paper_voi()`*
+> 3. *`src/services/discovery_funnel.py` — find `classify_closure()`*
+>
+> *For each function, explain: What inputs does it take? What does the output score mean? When would a gap get a HIGH score vs. a LOW score?"*
 
-### 1C. Get a boxology diagram of the full pipeline you'll build
+**What you should learn from this:**
+- `VOICalculator.calculate_voi()` scores gaps by combining structural VOI (how central is this belief in the network?) with epistemic VOI (how uncertain are we?). A gap with VOI=0.82 at a hub node matters more than a gap with VOI=0.3 at a leaf node.
+- `score_voi()` scores individual findings: a contradiction against a well-calibrated template = 1.0 (highest); a confirmation of something we already know = 0.2 (lowest).
+- `classify_closure()` tells you if finding a paper actually closed the gap: FULL (VOI dropped below 0.1), PARTIAL (≥30% reduction), NONE, or NEGATIVE (the paper made things worse).
 
-> *"I need to build a pipeline that: (1) reads gap data from PNU templates, (2) proposes search queries to fill those gaps, (3) runs the searches, (4) collects citations, and (5) vets them through a classifier. Draw a box-and-arrow diagram showing the entire data flow, from template gaps to vetted citations."*
+### 1C. Understand the existing API clients
 
-**Your deliverable:** The boxology diagram, plus a list of 5 specific gaps you found in the templates with their confidence scores and what's missing.
+The Article Eater already has **working API clients** for searching the literature. Ask your AI:
+
+> *"Read `Article_Eater/src/services/paper_fetcher.py`. Find the `SemanticScholarClient`, `CrossRefClient`, and `PubMedClient` classes. For each:*
+> 1. *What API does it call?*
+> 2. *What does `search(query, max_results)` return?*
+> 3. *Does the `PaperMetadata` result include the `abstract`?*
+> 4. *What are the rate limits? (Look at the `_RateLimiter` init in each class)*
+> 5. *Do I need an API key?*"
+
+**What you should learn from this:**
+- Semantic Scholar: free, no key needed, but rate-limited to ~20 requests/minute without a key. Returns title, abstract, authors, year, citation count, open_access status, and study type.
+- CrossRef: free, no key needed, uses "polite pool" (your email in the User-Agent header). Returns title, abstract, authors, DOI, venue, references.
+- PubMed: free, optional API key (faster with one). Returns title, abstract, authors, MeSH terms.
+- **All three return abstracts.** You never need to download a PDF to decide if a paper is relevant.
+
+### 1D. Get a boxology diagram
+
+> *"Draw a box-and-arrow diagram of this complete pipeline:*
+> 1. *Read PNU templates → extract gaps with confidence < 0.5*
+> 2. *Score gaps using VOICalculator → sort by priority*
+> 3. *Generate search queries using QueryGenerator (with cross-field vocabulary)*
+> 4. *Hit Semantic Scholar + CrossRef APIs → collect abstracts*
+> 5. *Triage abstracts: run through atlas_shared classifier + score_voi*
+> 6. *Classify each paper as ACCEPT / EDGE_CASE / REJECT*
+> 7. *Download PDFs only for ACCEPT + EDGE_CASE papers*
+> 8. *Assess gap closure using classify_closure()*
+> 9. *Display PRISMA funnel on dashboard"*
+
+**Your deliverable:** The boxology diagram, plus a list of 5 specific gaps you found in the templates with their confidence scores and VOI priorities.
 
 ---
 
 ## Phase 2: Spec — Write the Pipeline Contract
 
-Your contract must specify three sub-systems:
-
-### 2A. The Topic Proposer
-
-This reads template gaps and outputs search proposals.
+### 2A. The Gap Extractor + VOI Scorer
 
 ```markdown
-## Topic Proposer Contract
+## Gap Extractor Contract
 
 ### Inputs
 - PNU template JSON files from Article_Eater/data/templates/
-- The 30 research questions from the atlas (Q01–Q30, as defined in ka_auth_server.py)
+- Web of Belief (from Article_Eater database)
 
 ### Processing
-For each template with low-confidence steps (< 0.5):
-1. Identify the gap: which step, what type, what's missing
-2. Map the gap to the closest research question(s) from Q01–Q30
-3. Generate search queries in THREE formats:
-   a. Google AI Scholar search query (natural language question)
-   b. Google Scholar keyword query (structured keywords + boolean operators)
-   c. A 2–3 sentence summary of the topic for human review
+For each template:
+1. Walk the mechanism_chain
+2. Extract steps with confidence < 0.5
+3. Also extract: key_references not in our corpus,
+   competing_accounts, and falsification_conditions (rebuttals)
+4. Score each gap using VOICalculator.calculate_voi():
+   - Gap type: MECHANISM (low-confidence steps), VALIDATION (missing refs),
+     DIRECTION (competing accounts), BOUNDARY (rebuttals)
+   - Returns: combined_voi, structural_voi, epistemic_voi
 
 ### Outputs (per gap)
 - template_id and step number
-- gap_type (MISSING_NODE, MISSING_EDGE, AMBIGUOUS_DIRECTION, UNKNOWN_INTERACTION)
-- confidence_current (the step's current confidence)
-- matched_question_ids (which of Q01–Q30 this maps to)
-- search_queries: { ai_scholar: "...", keyword: "...", summary: "..." }
+- gap_type (MECHANISM, VALIDATION, DIRECTION, BOUNDARY)
+- confidence_current
+- voi_score (combined), structural_voi, epistemic_voi
+- description (what is missing)
 
 ### Success conditions
 - At least 10 gaps identified across the 166 templates
-- Each gap has all three query formats
-- Queries are specific enough to find relevant papers (not just "neuroarchitecture")
+- Gaps are sorted by VOI score (highest first)
+- Each gap has a gap_type and a description of what's missing
 ```
 
-### 2B. The Search Runner
-
-This takes the proposed queries and runs them.
-
-> *Ask your AI: "What APIs or methods can I use to search Google Scholar programmatically? What about the new Google AI Scholar? What are the rate limits and terms of service? If programmatic access isn't available, what's the best manual workflow?"*
+### 2B. The Search Runner (Abstract-First)
 
 ```markdown
 ## Search Runner Contract
 
 ### Inputs
-- Search proposals from the Topic Proposer
+- Scored gaps from the Gap Extractor (top 10–20 by VOI)
 
 ### Processing
-For each search proposal:
-1. Run the AI Scholar query OR the keyword query
-2. Collect the top 10–20 results (title, authors, year, DOI/URL, snippet)
-3. Store results as structured JSON
+For each gap:
+1. Generate queries using QueryGenerator.generate_queries()
+   (from src/services/voi_search.py)
+2. Optionally expand queries using CrossFieldVocabulary.expand_query()
+3. Call PaperFetcher.search() with sources=['semantic_scholar', 'pubmed']
+4. Collect PaperMetadata results (title, abstract, DOI, year, study_type,
+   citation_count, open_access)
+5. De-duplicate by DOI
 
 ### Outputs (per search)
-- search_query used
-- results: [ { title, authors, year, doi, url, snippet } ]
-- result_count
-- search_timestamp
+- gap_id and query used
+- results: [ PaperMetadata with abstracts ]
+- result_count, search_timestamp
 
 ### Success conditions
-- At least 5 searches executed
-- Results are structured JSON, not raw HTML
-- Each result has at least title and either DOI or URL
+- At least 5 gaps searched
+- Results include abstracts (not just titles)
+- Rate limits respected (≤ 20 req/min for Semantic Scholar)
+- Results stored as structured JSON
 ```
 
-### 2C. The Vetting Pipeline
+### 2C. The Abstract Triage (Classifier + VOI)
 
-This takes collected citations and runs them through the classifier (your Task 1 contribute page).
+This is the critical stage — where you decide which papers are worth downloading.
 
 ```markdown
-## Vetting Pipeline Contract
+## Abstract Triage Contract
 
 ### Inputs
-- Citation results from the Search Runner
+- PaperMetadata results from the Search Runner (with abstracts)
 
 ### Processing
-For each citation:
-1. Submit to the contribute endpoint (from Task 1)
-2. Receive classification: accepted / edge_case / rejected
-3. Accepted and edge-case papers are stored
+For each paper:
+1. Run the abstract through atlas_shared classifier:
+   - Does this paper match one of Q01–Q30?
+   - What topic does it map to?
+2. Score the abstract using score_voi() from cmr/voi_scoring.py:
+   - Does the abstract suggest contradiction (1.0), gap-fill (0.8),
+     extension (0.6), or confirmation (0.2)?
+3. Classify the paper:
+   - ACCEPT: on-topic AND voi_score ≥ 0.5
+   - EDGE_CASE: on-topic but voi_score < 0.5, OR borderline topic match
+   - REJECT: off-topic
 
-### Outputs
-- Per citation: article_type, verdict, matched_topic, confidence
-- Summary: N searched → M accepted → K edge cases → J rejected
+### Outputs (per paper)
+- doi, title, authors, year
+- classifier_verdict: { matched_topic, confidence }
+- voi_score, voi_bucket (high / medium / low)
+- triage_decision: ACCEPT / EDGE_CASE / REJECT
+- triage_reason: why this decision was made
 
 ### Success conditions
-- At least 20 citations vetted
-- Accepted papers appear in the database
-- The full pipeline runs end-to-end: gap → search → citation → vet → store
+- At least 30 abstracts triaged
+- ACCEPT and EDGE_CASE papers stored separately from REJECTs
+- The triage log is human-readable (not just "accepted: true")
 ```
 
-### 2D. The Dashboard
+### 2D. The PRISMA Dashboard
 
-> *Ask your AI: "I need a web page that shows the status of this pipeline. It should display: (1) which gaps were identified and their priority, (2) what searches were proposed, (3) what results came back, and (4) which results passed vetting. Design a layout for this dashboard. It should update as the pipeline runs."*
+> *Ask your AI: "I need a web page that shows a PRISMA-style funnel for my search pipeline. It should display:*
+> 1. *How many gaps were identified and their VOI scores*
+> 2. *How many queries were run and against which APIs*
+> 3. *How many abstracts were collected*
+> 4. *How many passed classifier triage (ACCEPT vs EDGE_CASE vs REJECT)*
+> 5. *How many PDFs were downloaded (if any)*
+> 6. *Gap closure assessment: did any found papers actually reduce VOI?*
+>
+> *Design a layout for this dashboard. It must show the PRISMA funnel numbers and update as the pipeline runs. Data must persist after page refresh."*
 
 **Your deliverable:** The complete contract for all four sub-systems, plus the dashboard wireframe.
 
 ---
 
-## Phase 3: Fix — Delegate to Your AI
+## Phase 3: Build — Delegate to Your AI
 
 Give your AI the four contracts and ask it to build:
 
-1. A Python script that reads templates, identifies gaps, and generates search proposals
-2. A search execution module (automated if possible, manual-assist if not)
-3. Integration with the Task 1 contribute endpoint for vetting
+1. A Python script that reads templates, extracts gaps, scores by VOI, and generates search queries
+2. A search module that calls Semantic Scholar + CrossRef APIs and collects abstracts
+3. An abstract triage module that runs classifier + VOI scoring
 4. A dashboard page (`ka_topic_proposer.html` or similar)
 
-### Questions you must ask your AI to verify the build
+### Verification questions you MUST ask
 
 > *"Show me how you read the mechanism_chain from a template JSON. Which field do you check for low confidence? What threshold do you use?"*
 
-> *"Show me the search queries you generate for a specific gap. Are they specific enough? If I searched Google Scholar for your keyword query right now, would the first page of results be relevant to the gap?"*
+> *"Show me the VOI scores for 3 gaps. Explain why one scored higher than another. Is the ranking reasonable?"*
 
-> *"How do you connect the search results to the vetting endpoint from Task 1? Show me the exact API call."*
+> *"Show me the API call to Semantic Scholar. What fields are you requesting? Does the response include the abstract?"*
 
-> *"What happens if a search returns zero results? Does the pipeline crash or handle it gracefully?"*
+> *"Run a search for one gap. Show me the raw API response. How many results have abstracts vs. how many are abstract-less?"*
 
-> *"How does the dashboard get its data? Does it read from a file, a database, or the pipeline's memory? What happens if I refresh the page — do I lose the data?"*
+> *"Show me how the classifier decides if an abstract is on-topic. What happens if the abstract is too short for the classifier?"*
 
-> *"Show me how you distinguish which research question (Q01–Q30) a gap maps to. What matching logic do you use?"*
+> *"What happens if a search returns zero results? Is that a pipeline failure, or a valid 'null result' that should be recorded? (Hint: null results are scientifically important — they mean the gap may be genuinely unfilled.)"*
+
+> *"How does the dashboard get its data? Does it read from a file, a database, or memory? What happens if I refresh the page?"*
 
 **Your deliverable:** Working code, plus a log of which verification questions revealed problems.
 
@@ -195,73 +265,102 @@ Give your AI the four contracts and ask it to build:
 
 ## Phase 4: Prove — Run the Pipeline End-to-End
 
-### Step 1: Run the Topic Proposer
+### Step 1: Run the Gap Extractor
 
 ```bash
-python3 topic_proposer.py --templates Article_Eater/data/templates/
+python3 gap_extractor.py --templates Article_Eater/data/templates/
 ```
 
 Verify:
 - [ ] At least 10 gaps identified
-- [ ] Each gap has template_id, step number, confidence, gap_type
-- [ ] Each gap has 3 search query formats
-- [ ] Queries are specific (not just "neuroscience")
+- [ ] Gaps sorted by VOI score
+- [ ] Each gap has template_id, step number, confidence, gap_type, voi_score
 
-### Step 2: Run at least 5 searches
+### Step 2: Run the Search Runner
 
-Either automated or manual — but record each search:
+```bash
+python3 search_runner.py --gaps gap_results.json --sources semantic_scholar,crossref
+```
 
-| Search # | Gap source | Query used | Results found | Top result relevant? |
-|----------|-----------|-----------|---------------|---------------------|
-| 1 | T2 step 3 | "resolvable prediction error aesthetic pleasure architecture" | | |
-| 2 | | | | |
-| 3 | | | | |
-| 4 | | | | |
-| 5 | | | | |
+Verify:
+- [ ] At least 5 gaps searched
+- [ ] Results include abstracts
+- [ ] Rate limits respected
+- [ ] Null results recorded (not silently dropped)
 
-### Step 3: Vet at least 20 citations through the classifier
+### Step 3: Run Abstract Triage
 
-Submit the collected citations through your Task 1 contribute endpoint:
+```bash
+python3 abstract_triage.py --results search_results.json
+```
 
-| Total citations vetted | Accepted | Edge cases | Rejected |
-|-----------------------|----------|------------|----------|
-| | | | |
+Verify:
+- [ ] At least 30 abstracts triaged
+- [ ] Each paper classified as ACCEPT / EDGE_CASE / REJECT
+- [ ] ACCEPT papers stored in lifecycle DB
+- [ ] EDGE_CASE papers stored separately with flags
 
-### Step 4: Check the dashboard
+### Step 4: Fill in the PRISMA funnel
 
-- [ ] Dashboard shows the identified gaps
-- [ ] Dashboard shows the search queries and result counts
-- [ ] Dashboard shows the vetting results (accepted/edge/rejected)
-- [ ] Dashboard data persists after page refresh
+| Funnel Stage | Count |
+|---|---|
+| Gaps identified (total) | |
+| Gaps searched (top VOI) | |
+| API queries executed | |
+| Records returned (with abstracts) | |
+| Duplicates removed | |
+| Records screened by classifier | |
+| → ACCEPT (on-topic, high VOI) | |
+| → EDGE_CASE (borderline) | |
+| → REJECT (off-topic) | |
+| PDFs downloaded (if any) | |
+| Gaps with closure assessment | |
 
 ### Step 5: Trace one paper end-to-end
 
-Pick ONE paper that made it through the entire pipeline and document its journey:
+Pick ONE paper that made it through the entire pipeline and document:
 
 ```
-Gap: Template T__ step __ (confidence: 0.__)  
-  → Gap type: _______________
+Gap source: Template T__ step __ (confidence: 0.__)
+  VOI score: 0.__ (gap_type: ___________)
   → Search query: "_______________"
+  → API source: Semantic Scholar / CrossRef / PubMed
   → Found: [paper title] by [authors] ([year])
-  → Vetted: [accepted / edge_case]
-  → Article type: [empirical / review / ...]
-  → Stored at: [path]
-  → DB entry: [paper_id]
+  → Abstract: [first 100 chars...]
+  → Classifier verdict: topic=Q__, confidence=0.__
+  → VOI assessment: score=0.__, bucket=high/medium/low
+  → Triage decision: ACCEPT / EDGE_CASE
+  → Stored at: [path / DB entry]
 ```
 
-**Your deliverable:** The validation matrix, the vetting summary, and one end-to-end trace.
+### Step 6: Report null results
+
+If any high-VOI gaps returned zero search results, document them:
+
+```
+Gap: Template T__ step __ (VOI: 0.__)
+  Description: _______________
+  Searches tried: [list queries]
+  Result: NO PAPERS FOUND
+  Implication: This gap may be genuinely unfilled in the literature.
+               This is a research opportunity, not a pipeline failure.
+```
+
+**Your deliverable:** The PRISMA funnel table, one end-to-end trace, and null result report.
 
 ---
 
 ## What You Submit
 
 | Item | What it is |
-|------|-----------|
-| **Gap analysis** (Phase 1) | Boxology diagram + 5 specific gaps from templates |
-| **Pipeline contract** (Phase 2) | Spec for Topic Proposer, Search Runner, Vetting Pipeline, and Dashboard |
-| **Working code** (Phase 3) | Topic proposer script, search runner, dashboard page |
+|---|---|
+| **Gap analysis** (Phase 1) | Boxology diagram + 5 specific gaps with VOI scores |
+| **Pipeline contract** (Phase 2) | Spec for Gap Extractor, Search Runner, Abstract Triage, Dashboard |
+| **Working code** (Phase 3) | Gap extractor, search runner, triage module, dashboard page |
 | **Verification log** (Phase 3) | Which questions you asked AI, which revealed problems |
-| **Validation results** (Phase 4) | Gap count, search results, vetting summary, end-to-end trace |
+| **PRISMA funnel** (Phase 4) | The completed funnel table with real numbers |
+| **End-to-end trace** (Phase 4) | One paper traced from gap → search → abstract → triage → store |
+| **Null result report** (Phase 4) | High-VOI gaps where no papers were found |
 | **File manifest** (Phase 4) | `git diff` and `git status` output |
 
 **How to generate your manifest:**
@@ -273,25 +372,49 @@ git status --short
 
 ---
 
-## Files You Must Submit
+## Files You Must Change or Create
 
 | File | Change Type | What It Does |
-|------|------------|-------------|
-| `topic_proposer.py` (or similar) | New | Reads templates, identifies gaps, generates search proposals |
-| Search results JSON | New | Structured results from executed searches |
-| Dashboard page (e.g., `ka_topic_proposer.html`) | New | Shows gaps, searches, and vetting results |
-| `data/storage/` | New files | Stored PDFs/citations for accepted papers |
-| Database | Modified | New entries for vetted papers |
+|---|---|---|
+| `gap_extractor.py` (or similar) | New | Reads templates, extracts gaps, scores by VOI |
+| `search_runner.py` (or similar) | New | Calls Semantic Scholar/CrossRef APIs, collects abstracts |
+| `abstract_triage.py` (or similar) | New | Runs classifier + VOI scoring on abstracts |
+| Search results JSON | New | Structured results with abstracts |
+| Triage results JSON | New | ACCEPT/EDGE_CASE/REJECT decisions with reasons |
+| Dashboard page (`ka_topic_proposer.html`) | New | PRISMA funnel + gap status |
+| Database | Modified | New entries for triaged papers |
 
 ---
 
 ## Grading
 
-| Criterion | What we check |
-|-----------|--------------|
-| **Gap analysis** | You correctly identified low-confidence steps and their gap types |
-| **Spec quality** | Contract covers all 4 sub-systems with testable success conditions |
-| **Search quality** | Generated queries are specific enough to find relevant papers |
-| **End-to-end pipeline** | At least one paper traced from gap → search → vet → store |
-| **Dashboard** | Shows pipeline status, persists data |
-| **Verification questions** | You caught problems in the AI's implementation |
+| Criterion | Points | What we check |
+|---|---|---|
+| **Gap extraction** | 15 | Correctly identified low-confidence steps and scored by VOI |
+| **VOI understanding** | 10 | Can explain why one gap scores higher than another |
+| **API integration** | 15 | Successfully queried Semantic Scholar/CrossRef, got abstracts back |
+| **Abstract triage** | 20 | Classifier + VOI scoring produces defensible ACCEPT/EDGE_CASE/REJECT |
+| **PRISMA funnel** | 15 | Dashboard shows real numbers at each stage |
+| **End-to-end trace** | 10 | One paper traced from gap → API → abstract → triage → store |
+| **Null results** | 5 | Documented gaps where no papers exist (not treated as failures) |
+| **Verification questions** | 10 | Caught real problems in the AI's implementation |
+
+---
+
+## Existing Code You Should Know About
+
+These files already exist in Article_Eater. **You do not need to write them.** You need to *use* them.
+
+| File | What it provides |
+|---|---|
+| `src/services/voi_search.py` | `VOICalculator.calculate_voi()` — scores gaps by structural + epistemic value |
+| `src/services/voi_search.py` | `QueryGenerator.generate_queries()` — turns gaps into search queries |
+| `src/services/voi_search.py` | `CrossFieldVocabulary.expand_query()` — adds cross-discipline synonyms |
+| `src/cmr/voi_scoring.py` | `score_voi()` — scores findings (contradiction=1.0, confirmation=0.2) |
+| `src/cmr/voi_scoring.py` | `aggregate_paper_voi()` — paper-level VOI summary |
+| `src/services/discovery_funnel.py` | `classify_closure()` — FULL/PARTIAL/NONE/NEGATIVE gap closure |
+| `src/services/paper_fetcher.py` | `SemanticScholarClient.search()` — free API, returns abstracts |
+| `src/services/paper_fetcher.py` | `CrossRefClient.search()` — free API, returns abstracts |
+| `src/services/paper_fetcher.py` | `PubMedClient.search()` — free API, returns abstracts |
+| `src/services/paper_fetcher.py` | `PaperFetcher.search()` — unified multi-source search |
+| `src/services/paper_fetcher.py` | `estimate_study_type()` — auto-classifies study type from abstract |

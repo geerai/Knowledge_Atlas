@@ -1,25 +1,18 @@
 #!/usr/bin/env python3
 """
-T2 Task 2 — Grading & Comment Tool
-====================================
+T2 Task 2 — Grading & Comment Tool (PRISMA / Abstract-First Architecture)
+==========================================================================
 Run against a student's Knowledge_Atlas clone to assign grades and comments
-for the "Topic Proposer & Search Pipeline" assignment.
+for the "Search Pipeline (Abstract-First Triage)" assignment.
 
 Usage
 -----
     python3 t2_task2_grader.py /path/to/student/Knowledge_Atlas
-
-    # Auto-only mode (no manual prompts)
     python3 t2_task2_grader.py --auto-only /path/to/student/Knowledge_Atlas
-
-The grader:
-  1. Runs automated tests checking pipeline artifacts exist and are well-formed
-  2. Prompts the TA for manual rubric scores (spec quality, search quality, etc.)
-  3. Computes a weighted total
-  4. Writes a grade report to  <student_repo>/160sp/rubrics/t2/GRADE_REPORT_T2.md
 """
 
 import argparse
+import ast
 import json
 import os
 import re
@@ -65,292 +58,273 @@ class GradeReport:
 
 
 # ════════════════════════════════════════════════
-# AUTOMATED TESTS
+# HELPERS
 # ════════════════════════════════════════════════
 
-def find_topic_proposer(repo: Path) -> Optional[Path]:
-    """Find the topic proposer script."""
-    candidates = [
-        "topic_proposer.py",
-        "search_pipeline.py",
-        "gap_analyzer.py",
-        "proposer.py",
-        "160sp/topic_proposer.py",
-        "scripts/topic_proposer.py",
-    ]
-    for c in candidates:
-        p = repo / c
-        if p.exists():
-            return p
-    # Search for any python file mentioning "mechanism_chain" or "gap"
-    for py in repo.glob("*.py"):
-        try:
-            source = py.read_text(errors="replace")
-            if "mechanism_chain" in source or "gap_type" in source:
-                return py
-        except Exception:
-            pass
-    return None
+def _find_py(repo: Path, hints: list[str], content_markers: list[str]) -> list[Path]:
+    """Find Python files by name hints or content markers."""
+    found = []
+    for h in hints:
+        for p in repo.rglob(h):
+            if p.is_file():
+                found.append(p)
+    if not found:
+        for py in repo.glob("*.py"):
+            try:
+                src = py.read_text(errors="replace")
+                if any(m in src for m in content_markers):
+                    found.append(py)
+            except Exception:
+                pass
+    return found
 
 
-def find_dashboard(repo: Path) -> Optional[Path]:
-    """Find the dashboard HTML page."""
-    candidates = [
-        "ka_topic_proposer.html",
-        "ka_search_dashboard.html",
-        "ka_pipeline_dashboard.html",
-        "topic_proposer.html",
-        "search_pipeline.html",
-        "160sp/ka_topic_proposer.html",
-    ]
-    for c in candidates:
-        p = repo / c
-        if p.exists():
-            return p
-    return None
+def _source_contains(path: Path, markers: list[str]) -> list[str]:
+    """Return which markers appear in the source file."""
+    try:
+        src = path.read_text(errors="replace")
+        return [m for m in markers if m in src]
+    except Exception:
+        return []
 
 
-def find_search_results(repo: Path) -> list[Path]:
-    """Find search result JSON files."""
+def _all_py_sources(repo: Path) -> list[tuple[Path, str]]:
+    """Read all Python files at top level and common subdirs."""
     results = []
-    for pattern in ["search_results*.json", "data/search*.json",
-                     "data/storage/search*.json", "**/search_results*.json"]:
-        results.extend(repo.glob(pattern))
+    for pattern in ["*.py", "scripts/*.py", "pipeline/*.py", "src/*.py"]:
+        for p in repo.glob(pattern):
+            try:
+                results.append((p, p.read_text(errors="replace")))
+            except Exception:
+                pass
     return results
 
 
-def test_topic_proposer_exists(repo: Path) -> TestResult:
-    """Check that a topic proposer script exists."""
-    name = "Topic proposer script exists"
-    script = find_topic_proposer(repo)
-    if script:
+# ════════════════════════════════════════════════
+# AUTOMATED TESTS
+# ════════════════════════════════════════════════
+
+def test_gap_extractor_exists(repo: Path) -> TestResult:
+    """Check that a gap extractor / topic proposer script exists."""
+    name = "Gap extractor script exists"
+    found = _find_py(repo,
+        ["gap_extractor.py", "topic_proposer.py", "search_pipeline.py",
+         "gap_analyzer.py", "proposer.py"],
+        ["mechanism_chain", "gap_type", "voi_score"])
+    if found:
         return TestResult(name, True, "critical",
-                          f"Found: {script.relative_to(repo)}")
+                          f"Found: {', '.join(str(f.relative_to(repo)) for f in found)}")
+    return TestResult(name, False, "critical", "No gap extractor script found")
+
+
+def test_reads_templates_and_confidence(repo: Path) -> TestResult:
+    """Check the extractor reads PNU templates and checks confidence."""
+    name = "Reads templates + checks confidence"
+    sources = _all_py_sources(repo)
+    for path, src in sources:
+        reads_json = "json.load" in src or "json.loads" in src
+        reads_chain = "mechanism_chain" in src
+        reads_conf = "confidence" in src and ("< 0.5" in src or "<0.5" in src or "threshold" in src)
+        if reads_json and reads_chain:
+            detail = "Reads JSON + mechanism_chain"
+            if reads_conf:
+                detail += " + confidence threshold"
+            return TestResult(name, True, "critical", f"{detail} ({path.name})")
     return TestResult(name, False, "critical",
-                      "No topic proposer script found")
+                      "No script reads mechanism_chain from template JSON")
 
 
-def test_topic_proposer_reads_templates(repo: Path) -> TestResult:
-    """Check that the proposer reads PNU template JSON files."""
-    name = "Proposer reads template data"
-    script = find_topic_proposer(repo)
-    if not script:
-        return TestResult(name, False, "critical", "No proposer script found")
-
-    source = script.read_text(errors="replace")
-    reads_json = "json.load" in source or "json.loads" in source
-    reads_chain = "mechanism_chain" in source
-    reads_conf = "confidence" in source
-
-    if reads_json and reads_chain and reads_conf:
-        return TestResult(name, True, "critical",
-                          "Reads JSON, accesses mechanism_chain, checks confidence")
-    elif reads_json and (reads_chain or reads_conf):
-        return TestResult(name, True, "critical",
-                          "Reads JSON and partially accesses template structure")
-    elif reads_json:
-        return TestResult(name, False, "critical",
-                          "Reads JSON but doesn't access mechanism_chain or confidence")
-    else:
-        return TestResult(name, False, "critical",
-                          "Does not appear to read template JSON files")
-
-
-def test_generates_search_queries(repo: Path) -> TestResult:
-    """Check that the proposer generates search queries."""
-    name = "Generates search queries"
-    script = find_topic_proposer(repo)
-    if not script:
-        return TestResult(name, False, "important", "No proposer script found")
-
-    source = script.read_text(errors="replace")
-    has_query = ("search_quer" in source.lower() or
-                 "query" in source.lower() or
-                 "keyword" in source.lower())
-    has_multiple_formats = (
-        ("ai_scholar" in source or "natural_language" in source or
-         "scholar" in source.lower()) and
-        ("keyword" in source.lower() or "boolean" in source.lower())
-    )
-
-    if has_multiple_formats:
-        return TestResult(name, True, "important",
-                          "Generates multiple search query formats")
-    elif has_query:
-        return TestResult(name, True, "important",
-                          "Generates search queries (single format)")
-    else:
-        return TestResult(name, False, "important",
-                          "No search query generation found")
-
-
-def test_gap_type_awareness(repo: Path) -> TestResult:
-    """Check if the proposer is aware of gap types."""
-    name = "Gap type classification"
-    script = find_topic_proposer(repo)
-    if not script:
-        return TestResult(name, False, "important", "No proposer script found")
-
-    source = script.read_text(errors="replace")
-    gap_types = ["MISSING_NODE", "MISSING_EDGE", "AMBIGUOUS_DIRECTION",
-                 "UNKNOWN_INTERACTION", "gap_type"]
-    found = [g for g in gap_types if g in source]
-
+def test_voi_integration(repo: Path) -> TestResult:
+    """Check if VOI scoring functions are imported/used."""
+    name = "VOI scoring integration"
+    voi_markers = ["VOICalculator", "calculate_voi", "score_voi",
+                   "voi_score", "classify_closure", "voi_search",
+                   "aggregate_paper_voi"]
+    sources = _all_py_sources(repo)
+    found = []
+    for path, src in sources:
+        hits = [m for m in voi_markers if m in src]
+        if hits:
+            found.extend(hits)
+    found = list(set(found))
     if len(found) >= 2:
         return TestResult(name, True, "important",
-                          f"Found gap type awareness: {found}")
+                          f"Uses VOI functions: {found}")
     elif found:
         return TestResult(name, True, "important",
-                          f"Partial gap type awareness: {found}")
-    else:
-        return TestResult(name, False, "important",
-                          "No gap type classification found — "
-                          "proposer doesn't distinguish gap types")
+                          f"Partial VOI use: {found}")
+    return TestResult(name, False, "important",
+                      "No VOI scoring functions found in any script")
+
+
+def test_api_integration(repo: Path) -> TestResult:
+    """Check if Semantic Scholar / CrossRef / PubMed APIs are used."""
+    name = "API integration (Semantic Scholar / CrossRef / PubMed)"
+    api_markers = ["SemanticScholarClient", "CrossRefClient", "PubMedClient",
+                   "PaperFetcher", "paper_fetcher", "api.semanticscholar",
+                   "api.crossref", "semantic_scholar", "crossref"]
+    sources = _all_py_sources(repo)
+    found = []
+    for path, src in sources:
+        hits = [m for m in api_markers if m in src]
+        if hits:
+            found.extend(hits)
+    found = list(set(found))
+    if found:
+        return TestResult(name, True, "critical",
+                          f"API clients used: {found}")
+    return TestResult(name, False, "critical",
+                      "No Semantic Scholar / CrossRef / PubMed integration found")
+
+
+def test_abstract_triage(repo: Path) -> TestResult:
+    """Check if abstract-level triage is implemented (classifier + VOI on abstracts)."""
+    name = "Abstract-level triage (classifier + VOI before PDF download)"
+    triage_markers = ["abstract", "triage", "ACCEPT", "EDGE_CASE", "REJECT",
+                      "classifier", "classify", "AdaptiveClassifier"]
+    sources = _all_py_sources(repo)
+    abstract_ref = False
+    triage_logic = False
+    for path, src in sources:
+        if "abstract" in src.lower() and ("classify" in src.lower() or "score_voi" in src):
+            abstract_ref = True
+        if ("ACCEPT" in src and "REJECT" in src) or "triage" in src.lower():
+            triage_logic = True
+    if abstract_ref and triage_logic:
+        return TestResult(name, True, "critical",
+                          "Abstract triage with classifier + accept/reject logic")
+    elif abstract_ref or triage_logic:
+        return TestResult(name, True, "important",
+                          "Partial triage logic found")
+    return TestResult(name, False, "critical",
+                      "No abstract-level triage found — may be downloading PDFs blindly")
 
 
 def test_search_results_exist(repo: Path) -> TestResult:
-    """Check that search results were actually produced."""
+    """Check that search results were produced."""
     name = "Search results exist"
-    results = find_search_results(repo)
+    results = []
+    for pattern in ["search_results*.json", "data/search*.json",
+                     "data/storage/search*.json", "**/search_results*.json",
+                     "triage_results*.json", "**/triage*.json"]:
+        results.extend(repo.glob(pattern))
     if results:
-        total_results = 0
+        total = 0
         for r in results:
             try:
                 data = json.loads(r.read_text())
                 if isinstance(data, list):
-                    total_results += len(data)
+                    total += len(data)
                 elif isinstance(data, dict) and "results" in data:
-                    total_results += len(data["results"])
+                    total += len(data["results"])
             except Exception:
                 pass
         return TestResult(name, True, "critical",
-                          f"Found {len(results)} result file(s) "
-                          f"with {total_results} total results")
-    return TestResult(name, False, "critical",
-                      "No search result JSON files found")
+                          f"{len(results)} result file(s), {total} total entries")
+    return TestResult(name, False, "critical", "No search result JSON files found")
 
 
-def test_dashboard_exists(repo: Path) -> TestResult:
-    """Check that a dashboard page exists."""
-    name = "Dashboard page exists"
-    dashboard = find_dashboard(repo)
-    if dashboard:
-        source = dashboard.read_text(errors="replace")
-        has_gap_display = ("gap" in source.lower() and
-                           ("template" in source.lower() or
-                            "confidence" in source.lower()))
-        has_results_display = ("result" in source.lower() or
-                               "search" in source.lower())
-        features = []
-        if has_gap_display:
-            features.append("gaps")
-        if has_results_display:
-            features.append("results")
-        return TestResult(name, True, "important",
-                          f"Found: {dashboard.name} — displays: {features}")
+def test_prisma_dashboard(repo: Path) -> TestResult:
+    """Check that a PRISMA-style dashboard exists."""
+    name = "PRISMA dashboard exists"
+    candidates = ["ka_topic_proposer.html", "ka_search_dashboard.html",
+                   "ka_pipeline_dashboard.html", "topic_proposer.html",
+                   "search_pipeline.html", "prisma_dashboard.html"]
+    for c in candidates:
+        p = repo / c
+        if p.exists():
+            src = p.read_text(errors="replace").lower()
+            has_funnel = any(w in src for w in ["funnel", "prisma", "screened",
+                                                  "identified", "included"])
+            has_counts = any(w in src for w in ["accept", "reject", "edge",
+                                                  "triage", "result"])
+            features = []
+            if has_funnel:
+                features.append("PRISMA funnel")
+            if has_counts:
+                features.append("triage counts")
+            return TestResult(name, True, "important",
+                              f"Found: {c} — features: {features}")
     return TestResult(name, False, "important", "No dashboard page found")
 
 
 def test_dashboard_persistence(repo: Path) -> TestResult:
-    """Check that dashboard reads from persistent storage, not memory."""
+    """Check dashboard reads from persistent storage."""
     name = "Dashboard data persistence"
-    dashboard = find_dashboard(repo)
-    if not dashboard:
-        return TestResult(name, False, "minor", "No dashboard found")
+    for c in ["ka_topic_proposer.html", "ka_search_dashboard.html",
+              "ka_pipeline_dashboard.html", "topic_proposer.html"]:
+        p = repo / c
+        if p.exists():
+            src = p.read_text(errors="replace")
+            if any(k in src for k in ["fetch(", "localStorage", ".json",
+                                        "XMLHttpRequest", "sqlite"]):
+                return TestResult(name, True, "minor",
+                                  "Dashboard uses persistent data source")
+            return TestResult(name, False, "minor",
+                              "Dashboard may not persist data after refresh")
+    return TestResult(name, False, "minor", "No dashboard found")
 
-    source = dashboard.read_text(errors="replace")
-    persistent = ("fetch(" in source or "XMLHttpRequest" in source or
-                   "localStorage" in source or
-                   ".json" in source or "sqlite" in source.lower())
-    if persistent:
-        return TestResult(name, True, "minor",
-                          "Dashboard reads from persistent source (API/file/localStorage)")
+
+def test_null_result_handling(repo: Path) -> TestResult:
+    """Check if null results (zero papers found) are handled."""
+    name = "Null result handling"
+    sources = _all_py_sources(repo)
+    for path, src in sources:
+        if any(m in src.lower() for m in ["null result", "no results",
+                                            "zero results", "no papers found",
+                                            "result_count == 0", "len(results) == 0"]):
+            return TestResult(name, True, "minor",
+                              f"Null results handled in {path.name}")
     return TestResult(name, False, "minor",
-                      "Dashboard may not persist data — no fetch/file/storage calls found")
+                      "No null result handling found — pipeline may crash on empty searches")
 
 
-def test_vetting_integration(repo: Path) -> TestResult:
-    """Check if the pipeline integrates with the Task 1 vetting endpoint."""
-    name = "Vetting integration (Task 1 endpoint)"
-    # Check all Python files for endpoint calls
-    for py in list(repo.glob("*.py")) + list(repo.glob("scripts/*.py")):
-        try:
-            source = py.read_text(errors="replace")
-            has_submit = ("/api/articles/submit" in source or
-                          "submit" in source.lower() and
-                          "requests.post" in source)
-            has_classify = ("classify" in source.lower() or
-                            "classifier" in source.lower() or
-                            "AdaptiveClassifier" in source)
-            if has_submit or has_classify:
-                return TestResult(name, True, "important",
-                                  f"Found vetting integration in {py.name}")
-        except Exception:
-            pass
+def test_classifier_integration(repo: Path) -> TestResult:
+    """Check classifier integration from atlas_shared."""
+    name = "Classifier integration (atlas_shared)"
+    sources = _all_py_sources(repo)
+    for path, src in sources:
+        if any(m in src for m in ["atlas_shared", "AdaptiveClassifier",
+                                    "classifier_system", "classify"]):
+            return TestResult(name, True, "important",
+                              f"Classifier integration in {path.name}")
     return TestResult(name, False, "important",
-                      "No integration with Task 1 contribute/submit endpoint found")
+                      "No atlas_shared classifier integration found")
 
 
-def test_q01_q30_mapping(repo: Path) -> TestResult:
-    """Check if the proposer maps gaps to research questions Q01–Q30."""
-    name = "Research question mapping (Q01–Q30)"
-    script = find_topic_proposer(repo)
-    if not script:
-        return TestResult(name, False, "minor", "No proposer script found")
-
-    source = script.read_text(errors="replace")
-    has_question_mapping = (
-        "question_id" in source or "Q01" in source or
-        "research_question" in source.lower() or
-        "atlas_topic" in source
-    )
-    if has_question_mapping:
-        return TestResult(name, True, "minor",
-                          "Maps gaps to research questions")
-    return TestResult(name, False, "minor",
-                      "No research question mapping found")
-
-
-def find_db_path(repo: Path) -> Optional[Path]:
-    """Find the article database."""
+def test_db_entries(repo: Path) -> TestResult:
+    """Check if vetted papers appear in the database."""
+    name = "Vetted papers stored in database"
     for candidate in [repo / "data" / "ka_auth.db", repo / "ka_auth.db"]:
         if candidate.exists():
-            return candidate
-    return None
-
-
-def test_vetted_papers_in_db(repo: Path) -> TestResult:
-    """Check if any vetted papers from the search pipeline appear in the DB."""
-    name = "Vetted papers stored in database"
-    db_path = find_db_path(repo)
-    if not db_path:
-        return TestResult(name, False, "important", "Article database not found")
-    try:
-        db = sqlite3.connect(str(db_path), timeout=5.0)
-        db.row_factory = sqlite3.Row
-        count = db.execute("SELECT COUNT(*) FROM articles").fetchone()[0]
-        db.close()
-        if count > 0:
-            return TestResult(name, True, "important",
-                              f"{count} articles in database")
-        return TestResult(name, False, "important",
-                          "articles table exists but is empty")
-    except Exception as e:
-        return TestResult(name, False, "important", f"DB check failed: {e}")
+            try:
+                db = sqlite3.connect(str(candidate), timeout=5.0)
+                count = db.execute("SELECT COUNT(*) FROM articles").fetchone()[0]
+                db.close()
+                if count > 0:
+                    return TestResult(name, True, "important",
+                                      f"{count} articles in database")
+                return TestResult(name, False, "important",
+                                  "articles table exists but is empty")
+            except Exception as e:
+                return TestResult(name, False, "important", f"DB error: {e}")
+    return TestResult(name, False, "important", "Database not found")
 
 
 # ════════════════════════════════════════════════
-# MANUAL RUBRIC
+# MANUAL RUBRIC (matches assignment grading table)
 # ════════════════════════════════════════════════
 
 RUBRIC_CRITERIA = [
-    RubricScore("Gap analysis: Correctly identified low-confidence steps and gap types", 15),
-    RubricScore("Spec quality: Contract covers Topic Proposer, Search Runner, Vetting, Dashboard", 15),
-    RubricScore("Search quality: Queries are specific and produce relevant results", 15),
-    RubricScore("End-to-end pipeline: At least one paper traced gap → search → vet → store", 20),
-    RubricScore("Dashboard: Shows gaps, searches, results; data persists", 10),
-    RubricScore("Verification questions: Caught problems in AI's implementation", 10),
-    RubricScore("Automated tests: Pipeline artifacts exist and are well-formed (auto-scored)", 15),
+    RubricScore("Gap extraction: Identified low-confidence steps, scored by VOI", 15),
+    RubricScore("VOI understanding: Can explain why one gap scores higher than another", 10),
+    RubricScore("API integration: Queried Semantic Scholar/CrossRef, got abstracts back", 15),
+    RubricScore("Abstract triage: Classifier + VOI → defensible ACCEPT/EDGE_CASE/REJECT", 20),
+    RubricScore("PRISMA funnel: Dashboard shows real numbers at each stage", 15),
+    RubricScore("End-to-end trace: One paper traced gap → API → abstract → triage → store", 10),
+    RubricScore("Null results: Documented gaps where no papers exist", 5),
+    RubricScore("Verification questions: Caught real problems in AI's implementation", 10),
+    RubricScore("Automated tests (auto-scored)", 15),
 ]
 
 
@@ -360,14 +334,10 @@ def prompt_manual_score(criterion: RubricScore) -> RubricScore:
     print(f"  {criterion.criterion}")
     print(f"  Max points: {criterion.max_points}")
     print(f"{'─' * 60}")
-
     while True:
         try:
             raw = input(f"  Score (0–{criterion.max_points}): ").strip()
-            if raw == "":
-                score = 0
-                break
-            score = int(raw)
+            score = int(raw) if raw else 0
             if 0 <= score <= criterion.max_points:
                 break
             print(f"  Must be between 0 and {criterion.max_points}")
@@ -376,7 +346,6 @@ def prompt_manual_score(criterion: RubricScore) -> RubricScore:
         except (EOFError, KeyboardInterrupt):
             score = 0
             break
-
     comment = input("  Comment (optional): ").strip()
     criterion.points = score
     criterion.comment = comment
@@ -400,52 +369,46 @@ def compute_auto_score(results: list[TestResult]) -> tuple[int, int]:
 
 def render_report(report: GradeReport) -> str:
     """Render the grade report as markdown."""
-    lines = []
-    lines.append("# T2 Task 2 — Grade Report")
-    lines.append("")
-    lines.append(f"**Student:** {report.student_name or '(not set)'}")
-    lines.append(f"**Email:** {report.student_email or '(not set)'}")
-    lines.append(f"**Grader:** {report.grader or '(not set)'}")
-    lines.append(f"**Date:** {report.timestamp}")
-    lines.append("")
-    lines.append("---")
-    lines.append("")
-    lines.append(f"## Total: {report.total_points} / {report.max_points}")
-    lines.append("")
-
-    lines.append("## Rubric Scores")
-    lines.append("")
-    lines.append("| Criterion | Score | Comment |")
-    lines.append("|-----------|-------|---------|")
+    lines = [
+        "# T2 Task 2 — Grade Report (Search Pipeline / Abstract-First Triage)",
+        "",
+        f"**Student:** {report.student_name or '(not set)'}",
+        f"**Email:** {report.student_email or '(not set)'}",
+        f"**Grader:** {report.grader or '(not set)'}",
+        f"**Date:** {report.timestamp}",
+        "",
+        "---",
+        "",
+        f"## Total: {report.total_points} / {report.max_points}",
+        "",
+        "## Rubric Scores",
+        "",
+        "| Criterion | Score | Comment |",
+        "|-----------|-------|---------|",
+    ]
     for s in report.rubric_scores:
         comment = s.comment.replace("|", "\\|") if s.comment else "—"
         lines.append(f"| {s.criterion} | {s.points}/{s.max_points} | {comment} |")
-    lines.append("")
 
-    lines.append("## Automated Test Results")
-    lines.append("")
-    lines.append("| Test | Status | Weight | Details |")
-    lines.append("|------|--------|--------|---------|")
+    lines += [
+        "",
+        "## Automated Test Results",
+        "",
+        "| Test | Status | Weight | Details |",
+        "|------|--------|--------|---------|",
+    ]
     for t in report.auto_tests:
         icon = "✅" if t.passed else "❌"
         details = t.details.replace("|", "\\|")[:100]
         lines.append(f"| {t.name} | {icon} | {t.weight} | {details} |")
-    lines.append("")
 
     if report.file_manifest:
-        lines.append("## File Manifest")
-        lines.append("")
-        lines.append("```")
-        for f in report.file_manifest:
-            lines.append(f)
-        lines.append("```")
-        lines.append("")
+        lines += ["", "## File Manifest", "", "```"]
+        lines.extend(report.file_manifest)
+        lines += ["```", ""]
 
     if report.overall_comment:
-        lines.append("## Overall Comments")
-        lines.append("")
-        lines.append(report.overall_comment)
-        lines.append("")
+        lines += ["", "## Overall Comments", "", report.overall_comment, ""]
 
     return "\n".join(lines)
 
@@ -478,7 +441,7 @@ def collect_file_manifest(repo: Path) -> list[str]:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Grade a student's T2 Task 2 submission")
+        description="Grade a student's T2 Task 2 submission (PRISMA pipeline)")
     parser.add_argument("repo", type=Path,
                         help="Path to the student's Knowledge_Atlas clone")
     parser.add_argument("--student-name", default="")
@@ -495,10 +458,9 @@ def main():
         sys.exit(1)
 
     print("=" * 60)
-    print("  T2 Task 2 Grader — Topic Proposer & Search Pipeline")
+    print("  T2 Task 2 Grader — Search Pipeline (Abstract-First Triage)")
     print("=" * 60)
-    print(f"  Repo: {repo}")
-    print()
+    print(f"  Repo: {repo}\n")
 
     student_name = args.student_name or input("Student name: ").strip()
     student_email = args.student_email or input("Student email: ").strip()
@@ -509,17 +471,19 @@ def main():
     print("  Running automated tests...")
     print("=" * 60)
 
-    auto_results = []
-    auto_results.append(test_topic_proposer_exists(repo))
-    auto_results.append(test_topic_proposer_reads_templates(repo))
-    auto_results.append(test_generates_search_queries(repo))
-    auto_results.append(test_gap_type_awareness(repo))
-    auto_results.append(test_search_results_exist(repo))
-    auto_results.append(test_dashboard_exists(repo))
-    auto_results.append(test_dashboard_persistence(repo))
-    auto_results.append(test_vetting_integration(repo))
-    auto_results.append(test_q01_q30_mapping(repo))
-    auto_results.append(test_vetted_papers_in_db(repo))
+    auto_results = [
+        test_gap_extractor_exists(repo),
+        test_reads_templates_and_confidence(repo),
+        test_voi_integration(repo),
+        test_api_integration(repo),
+        test_abstract_triage(repo),
+        test_search_results_exist(repo),
+        test_prisma_dashboard(repo),
+        test_dashboard_persistence(repo),
+        test_null_result_handling(repo),
+        test_classifier_integration(repo),
+        test_db_entries(repo),
+    ]
 
     for r in auto_results:
         icon = "✅" if r.passed else "❌"
@@ -542,7 +506,6 @@ def main():
         print("\n" + "=" * 60)
         print("  Manual rubric scoring")
         print("=" * 60)
-
         for criterion in RUBRIC_CRITERIA:
             if "auto-scored" in criterion.criterion.lower():
                 criterion.points = auto_score
@@ -602,7 +565,7 @@ def main():
     if output_path is None:
         output_dir = repo / "160sp" / "rubrics" / "t2"
         output_dir.mkdir(parents=True, exist_ok=True)
-        output_path = output_dir / "GRADE_REPORT_T2.md"
+        output_path = output_dir / "GRADE_REPORT_T2_TASK2.md"
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(render_report(report))
