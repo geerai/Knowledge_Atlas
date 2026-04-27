@@ -78,90 +78,87 @@ The key differences:
 
 ## Phase 2: Build the Gap Extractor
 
-### 2A. Write the contract
+### 2A. Write YOUR OWN contract
 
-```markdown
-## Gap Extractor Contract
+> **Contract objective:** "I want a program that reads PNU template JSON files and tells me which knowledge gaps are most worth searching for."
+> **Contract is with:** The `VOICalculator` in `Article_Eater/src/services/voi_search.py` and the PNU templates in `Article_Eater/data/templates/`.
+> **Prompt hint:** *"I need to write a contract for a gap extraction program. The program reads PNU template JSON files, walks their mechanism_chain, and uses VOICalculator.calculate_voi() to score each gap. Help me write the Inputs, Processing, Outputs, and Success Conditions sections."*
 
-### Inputs
-- PNU template JSON files from Article_Eater/data/templates/
+Before you ask an AI to build anything, you must write the contract yourself. This is the most important skill in this course: **if you can't spec what you want, you can't verify what you get.**
 
-### Processing
-For each template:
-1. Walk the mechanism_chain
-2. Extract steps with confidence < 0.5
-3. Also extract: key_references not in our corpus,
-   competing_accounts, and falsification_conditions
-4. Score each gap using VOICalculator.calculate_voi()
+Your contract must have these four sections:
 
-### Outputs (per gap)
-- template_id, step_number, step_description
-- gap_type (MECHANISM, VALIDATION, DIRECTION, BOUNDARY)
-- confidence_current
-- voi_score (combined)
-- description of what knowledge is missing
+1. **Inputs** — What files does the program read? What format are they?
+2. **Processing** — What does the program do, step by step?
+3. **Outputs** — What does the program produce? What fields? What format?
+4. **Success conditions** — How do you know it worked? Be specific. "It works" is not a success condition. "Extracts at least 10 gaps across 166 templates, each with template_id, step_number, confidence < 0.5, and gap_type" IS a success condition.
 
-### Success conditions
-- At least 10 gaps identified across the 166 templates
-- Gaps sorted by VOI score (highest priority first)
-- Each gap has a gap_type and description
-```
+**Minimum bar** (your contract must cover at least these):
+- Reads PNU template JSON files and walks `mechanism_chain`
+- Extracts steps with confidence below a threshold you specify
+- Scores each gap using `VOICalculator.calculate_voi()`
+- Outputs structured JSON with gap_type, voi_score, and what's missing
 
-### 2B. Delegate to your AI
+### 2B. Write your tests BEFORE building
 
-Give your AI the contract and ask it to build a Python script. Then verify:
+Ask your AI:
+
+> *"Given my contract, what are 5 things that could go wrong? For each, write a test I can run to check. For example: 'What if a template has no mechanism_chain field?'"*
+
+Write your tests as a checklist:
+- [ ] Handles templates with no low-confidence steps (skips, doesn't crash)
+- [ ] VOI scores are between 0 and 1
+- [ ] Output JSON is valid and parseable
+- [ ] At least 10 gaps found (if fewer, is the threshold wrong?)
+- [ ] Gaps are sorted by VOI (highest first)
+
+### 2C. Delegate to your AI, then validate
+
+Give your AI the contract and ask it to build a Python script. Then run your tests:
 
 > *"Show me how you read the mechanism_chain from a template. Which field has the confidence? What threshold do you use?"*
 
 > *"Show me the VOI scores for 3 gaps. Why does one score higher than another?"*
 
-> *"What happens if a template has no low-confidence steps? Do you skip it silently or log it?"*
+> *"Run the script on 3 templates. Does the output match my contract's output spec? Show me the JSON."*
 
 ---
 
 ## Phase 3: Generate Search Queries
 
-### 3A. Write the query generator contract
+### 3A. Write YOUR OWN query generator contract
 
-```markdown
-## Query Generator Contract
+> **Contract objective:** "I want a program that takes my ranked gap list and generates search queries I can use to find papers that fill those gaps."
+> **Contract is with:** The `QueryGenerator` in `Article_Eater/src/services/voi_search.py` and the patterns in `ka_google_search_guide.html`.
+> **Prompt hint:** *"I need to write a contract for a query generator. It takes a JSON list of knowledge gaps (with VOI scores) and produces two search queries per gap: a Google AI Citation natural-language query and a Google Scholar Boolean query. Help me write the contract."*
 
-### Inputs
-- Ranked gap list from the Gap Extractor (top 20 by VOI)
+Same discipline as Phase 2: **you** write the contract. Include:
+1. **Inputs** — the gap list from Phase 2
+2. **Processing** — how queries are generated (reference `ka_google_search_guide.html`)
+3. **Outputs** — what fields per gap (both query types + gap summary)
+4. **Success conditions** — at minimum:
+   - At least 10 gaps have both AI Citation and Boolean queries
+   - AI Citation queries are full sentences following the 5-component pattern
+   - Boolean queries use `"exact phrases"`, `AND`, `OR`, and `-review`
+   - At least 3 queries tested manually in Google with relevant first-page results
 
-### Processing
-For each gap:
-1. Read the gap description and the template's mechanism chain
-2. Generate a Google AI Citation query using the patterns from 
-   ka_google_search_guide.html (evidence-seeking or mechanism patterns)
-3. Generate a Google Scholar Boolean query using:
-   - Exact-phrase quotes for key concepts
-   - OR for synonyms  
-   - AND to combine facets
-   - -review to exclude review articles (when seeking primary research)
-   - intitle: for high-precision searches
+### 3B. Write your validation tests
 
-### Outputs (per gap)
-- gap_id, template_id, voi_score
-- ai_citation_query: full natural language question
-- boolean_query: structured keyword query
-- gap_summary: 2-3 sentence description for human review
+> *"What makes a bad Boolean query? Give me 3 examples of common mistakes and how to detect them automatically."*
 
-### Success conditions
-- At least 10 gaps have both query types
-- AI Citation queries follow the 5-component pattern 
-  (evidence type, mechanism, environment, population, theory)
-- Boolean queries use proper operators (not just comma-separated words)
-- Queries are specific enough to find relevant papers
-```
+Your validation checklist:
+- [ ] No Boolean query is just comma-separated words (must have AND/OR)
+- [ ] Every AI Citation query ends with `?` and is > 50 characters
+- [ ] Every Boolean query has at least one `"exact phrase"`
+- [ ] At least 3 queries produce relevant results when tested in Google
 
-### 3B. Use the query generation prompt
+### 3C. Use the query generation prompt
 
 We provide a prompt template to help generate high-quality queries. See `query_generator_skill.md` in this rubrics folder.
 
 > *Give your AI the prompt template along with 3 gaps from your extractor. Ask it to generate queries. Then manually test one AI Citation query in Google — does the first page of results contain relevant papers?*
 
-### 3C. Verification questions
+### 3D. Verification questions
 
 > *"Show me the Boolean query for one gap. Does it use exact-phrase quotes? Does it have OR groups for synonyms? Would Google Scholar parse this correctly?"*
 
@@ -247,6 +244,12 @@ Pick 3 queries and paste the AI Citation version into Google. For each:
 | **Boolean queries** | 10 | Proper AND/OR/quotes, not just comma-separated words |
 | **Spot-check** | 5 | Tested 3 queries manually in Google, reported results |
 | **Verification questions** | 10 | Caught problems in AI's implementation |
+
+---
+
+## A Note About Reuse
+
+The contract → success conditions → test → validate workflow you're learning here is not a one-off. **You will reuse this exact approach in Task 3** (where you execute searches and triage results through a PRISMA funnel) and in every subsequent task. The PRISMA funnel in particular becomes a recurring deliverable — any time you add papers to the corpus, you must show the funnel proving you did it rigorously.
 
 ---
 

@@ -100,44 +100,35 @@ Ask your AI:
 
 ## Phase 2: Build the Search Runner
 
-### 2A. Write the contract
+### 2A. Write YOUR OWN search runner contract
 
-```markdown
-## Search Runner Contract
+> **Contract objective:** "I want a program that takes my search queries and runs them against Google Scholar via SerpAPI, collecting structured results."
+> **Contract is with:** The SerpAPI `google_scholar` engine and your query pairs from Task 2.
+> **Prompt hint:** *"I need a contract for a search runner that sends Boolean queries to SerpAPI's Google Scholar endpoint, extracts DOIs from result URLs, de-duplicates by title, and records null results. Help me write Inputs, Processing, Outputs, and Success Conditions."*
 
-### Inputs
-- Query pairs from Task 2 (query_results.json)
-- SerpAPI key (from environment variable SERPAPI_KEY)
+Same discipline as Task 2: **you** write the contract with Inputs, Processing, Outputs, and Success Conditions.
 
-### Processing
-For each gap (top 10-15 by VOI):
-1. Send the Boolean query to SerpAPI's Google Scholar endpoint
-2. Collect top 10 results per query
-3. Extract: title, snippet, link, publication_info, citation_count
-4. Extract DOI from link URL if possible (regex: 10.\d{4,}/.+)
-5. De-duplicate by title (fuzzy match)
-6. Store raw results as JSON
+**Minimum bar** your contract must cover:
+- Takes query pairs from Task 2 as input
+- Sends Boolean queries to SerpAPI's `google_scholar` engine
+- Extracts DOI from result URLs where possible
+- De-duplicates by title
+- Records null results (gap searched, zero papers found)
+- Tracks API credit usage
 
-### Outputs (per search)
-- gap_id, query_used, query_type (boolean)
-- results: [ { title, snippet, link, doi, authors, year, citations } ]
-- result_count, search_timestamp
-- serpapi_credits_used
+### 2B. Write your tests BEFORE building
 
-### Success conditions
-- At least 5 gaps searched
-- Rate limits respected (don't burn all 250 searches)
-- Results stored as structured JSON
-- Null results recorded (gap searched, zero papers found)
-```
+Your test checklist:
+- [ ] SerpAPI call uses `engine: google_scholar` (not regular Google)
+- [ ] Each search costs exactly 1 credit (verify in SerpAPI dashboard)
+- [ ] Total searches stay under 250
+- [ ] Zero-result searches are recorded, not skipped
+- [ ] Output JSON is valid and parseable
+- [ ] DOI extraction regex works on 3 sample URLs
 
-### 2B. SerpAPI integration
+### 2C. Build and validate
 
-Ask your AI to build it. Then verify:
-
-> *"Show me the exact SerpAPI call. What engine are you using? What parameters?"*
-
-The call should look like:
+Ask your AI to build it. The SerpAPI call should look like:
 ```python
 import serpapi
 params = {
@@ -149,7 +140,9 @@ params = {
 results = serpapi.search(params)
 ```
 
-> *"What happens if a search returns zero results? Do you record it as a null result or skip it?"*
+Then run your tests and verify:
+
+> *"Show me the exact SerpAPI call. What engine are you using? What parameters?"*
 
 > *"How many API credits does each search cost? How many searches will my pipeline run total? Will I stay under 250?"*
 
@@ -157,44 +150,38 @@ results = serpapi.search(params)
 
 ## Phase 3: Collect Abstracts
 
-### 3A. Write the abstract collector contract
+### 3A. Write YOUR OWN abstract collector contract
 
-```markdown
-## Abstract Collector Contract
+> **Contract objective:** "I want a program that takes SerpAPI results (which have snippets, not abstracts) and finds the full abstract for each paper from free academic APIs."
+> **Contract is with:** The `SemanticScholarClient`, `CrossRefClient`, `PubMedClient` in `Article_Eater/src/services/paper_fetcher.py`, and the OpenAlex API.
+> **Prompt hint:** *"I need a contract for an abstract collector. It takes search results with DOIs and tries to find full abstracts from Semantic Scholar, CrossRef, PubMed, and OpenAlex in fallback order. Papers with no abstract from any source get tagged MISSING_ABSTRACT. Help me write the contract."*
 
-### Inputs
-- Search results from the Search Runner (with DOIs where available)
+**Minimum bar** your contract must cover:
+- Takes SerpAPI results as input (with DOIs where available)
+- Tries multiple abstract sources in fallback order (S2 → CrossRef → PubMed → OpenAlex)
+- For papers without DOIs, falls back to title-based search
+- Tags papers with no abstract as `MISSING_ABSTRACT` (not silently dropped)
+- Records which source provided the abstract
+- Respects rate limits (Semantic Scholar: ≤ 20 req/min without API key)
 
-### Processing
-For each search result:
-1. If DOI available:
-   a. Try SemanticScholarClient.fetch_by_doi(doi) → check for abstract
-   b. If no abstract: try CrossRefClient.fetch(doi) → check for abstract
-   c. If no abstract: try OpenAlex (api.openalex.org/works/doi:XXX)
-2. If no DOI:
-   a. Try SemanticScholarClient.search(title) → check for abstract
-   b. Try PubMedClient.search(title) → check for abstract
-3. If all sources fail → tag as MISSING_ABSTRACT
-4. Also collect: study_type (from estimate_study_type()), open_access status
+**Success conditions you must define:**
+- What % abstract hit rate is acceptable? (aim for ≥ 70% on papers with DOIs)
+- What counts as a "found" abstract vs. a snippet?
+- How do you handle ambiguous title matches?
 
-### Outputs (per paper)
-- title, doi, authors, year, venue
-- abstract (full text or null)
-- abstract_source (semantic_scholar / crossref / pubmed / openalex / none)
-- study_type (rct, experimental, meta_analysis, review, etc.)
-- open_access (true/false)
+### 3B. Write your tests BEFORE building
 
-### Success conditions
-- Abstract found for ≥ 70% of papers with DOIs
-- MISSING_ABSTRACT papers logged (not silently dropped)
-- Rate limits respected (Semantic Scholar: ≤ 20 req/min without API key)
-```
+- [ ] Fallback chain actually tries multiple sources (not just Semantic Scholar)
+- [ ] Rate limiting delays are present (check for `time.sleep` or `_RateLimiter`)
+- [ ] MISSING_ABSTRACT count is tracked and reported
+- [ ] Each paper's `abstract_source` field is set correctly
+- [ ] Output includes `study_type` from `estimate_study_type()`
 
-### 3B. Verification questions
+### 3C. Build and validate
 
 > *"Show me the fallback chain. If Semantic Scholar has no abstract for a DOI, what's the next source you try?"*
 
-> *"How do you handle rate limits? Semantic Scholar throttles to ~20 req/min without an API key. Do you add delays?"*
+> *"How do you handle rate limits? Do you add delays between API calls?"*
 
 > *"For papers without DOIs, how do you search by title? What happens if the title match is ambiguous?"*
 
@@ -202,38 +189,32 @@ For each search result:
 
 ## Phase 4: Triage Abstracts
 
-### 4A. Write the triage contract
+### 4A. Write YOUR OWN triage contract
 
-```markdown
-## Abstract Triage Contract
+> **Contract objective:** "I want a program that reads each paper's abstract and decides: is this paper worth downloading?"
+> **Contract is with:** The `atlas_shared` classifier (from Task 1) and `score_voi()` from `Article_Eater/src/cmr/voi_scoring.py`.
+> **Prompt hint:** *"I need a contract for an abstract triage module. It runs each abstract through the atlas_shared topic classifier, then scores it with score_voi(). Output is a 4-way classification: ACCEPT, EDGE_CASE, REJECT, or MISSING_ABSTRACT, each with a human-readable reason. Help me write the contract."*
 
-### Inputs
-- Papers with abstracts from the Abstract Collector
+**Minimum bar** your contract must cover:
+- Runs each abstract through `atlas_shared` classifier (topic matching)
+- Scores each abstract using `score_voi()` from `cmr/voi_scoring.py`
+- Produces a 4-way classification: ACCEPT / EDGE_CASE / REJECT / MISSING_ABSTRACT
+- Each decision includes a human-readable `triage_reason`
+- ACCEPT papers stored in lifecycle DB; EDGE_CASE stored separately
 
-### Processing
-For each paper with an abstract:
-1. Run abstract through atlas_shared classifier:
-   - Does this paper match one of Q01-Q30?
-   - What topic? What confidence?
-2. Score using score_voi() from cmr/voi_scoring.py
-3. Classify:
-   - ACCEPT: on-topic AND voi_score ≥ 0.5
-   - EDGE_CASE: on-topic but voi_score < 0.5, OR borderline topic
-   - REJECT: off-topic
-   - MISSING_ABSTRACT: no abstract available (skip triage)
+**Success conditions you must define:**
+- What's the minimum number of papers triaged?
+- What classifier confidence threshold separates on-topic from off-topic?
+- What VOI threshold separates ACCEPT from EDGE_CASE?
 
-### Outputs (per paper)
-- triage_decision: ACCEPT / EDGE_CASE / REJECT / MISSING_ABSTRACT
-- classifier_verdict: { matched_topic, confidence }
-- voi_score, voi_bucket (high / medium / low)
-- triage_reason: human-readable explanation
+### 4B. Write your tests BEFORE building
 
-### Success conditions
-- At least 30 papers triaged
-- ACCEPT papers stored in lifecycle DB
-- EDGE_CASE papers stored separately with flags
-- REJECT and MISSING_ABSTRACT papers logged
-```
+- [ ] Every triaged paper has a `triage_decision` field
+- [ ] Every triaged paper has a `triage_reason` (not empty)
+- [ ] ACCEPT papers appear in the database
+- [ ] EDGE_CASE papers are stored but flagged
+- [ ] REJECT papers are logged (not silently dropped)
+- [ ] MISSING_ABSTRACT papers skip triage (not scored as REJECT)
 
 ---
 
@@ -359,6 +340,12 @@ Papers with MISSING_ABSTRACT: N out of M total
 | **End-to-end trace** | 10 | One paper fully traced through pipeline |
 | **Null results + MISSING_ABSTRACT** | 5 | Documented, not treated as failures |
 | **Verification questions** | 10 | Caught real problems in AI's implementation |
+
+---
+
+## A Note About Reuse
+
+The contract → success conditions → test → validate workflow is not a one-off. **You will reuse this PRISMA approach in every future task** that involves adding papers to the corpus. Your PRISMA dashboard should be designed for reuse — when you run new searches in future tasks, the same funnel should update with new numbers. Think of it as infrastructure, not a throwaway deliverable.
 
 ---
 
