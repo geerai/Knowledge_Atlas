@@ -313,6 +313,18 @@ You should already have the four repositories from Task 1:
 
 ## Phase 1: Understand the Gap Data and VOI System
 
+### What we verified
+
+We ran the full gap extraction pipeline to confirm it works. Here are the real numbers:
+- **166 PNU templates** exist in `Article_Eater/data/templates/` (each is a JSON file)
+- **337 gaps** found with confidence < 0.6, across **139 templates** (most templates have 2-3 gaps)
+- **1,578 papers** already in the corpus inventory (so you need to de-duplicate against these)
+- The probe tool (`probe-collection-pdf`) correctly returns `sha256_exact` for known papers
+- The `VOICalculator`, `QueryGenerator`, and `GapDetector` classes all exist in `voi_search.py`
+- The `SemanticScholarClient`, `CrossRefClient`, and `PubMedClient` all exist in `paper_fetcher.py` as real (not mock) implementations
+
+The pipeline is doable. These numbers should calibrate your expectations.
+
 ### 1A. Understand the PNU templates
 
 The Article Eater has 166 PNU (Plausible Neural Underpinning) templates. Each describes a mechanism chain: how an environmental feature (e.g., ceiling height) leads to a psychological outcome (e.g., creativity) through neural processes. Each step has a **confidence score**. Low-confidence steps are **knowledge gaps**.
@@ -380,17 +392,18 @@ The key differences:
 - **AI Citation** uses full sentences with theory names and mechanism descriptions. Google's AI understands synonyms and intent.
 - **Boolean** uses exact keywords connected by AND/OR with quotes for phrases. Add `-review` to exclude review articles when you want primary research. Use `intitle:` to require terms in the title.
 
-### 1D. Get a boxology diagram of the full pipeline
+### 1E. Get a boxology diagram of the full pipeline
 
 > *"Draw a box-and-arrow diagram of this complete pipeline (Tasks 2 and 3 combined):*
-> 1. *Read PNU templates → extract gaps with confidence < 0.5*
+> 1. *Read 166 PNU templates → extract 337 gaps with confidence < 0.6*
 > 2. *Score gaps using VOICalculator → sort by priority*
 > 3. *Generate search queries (AI Citation + Boolean)*
 > 4. *Execute searches via SerpAPI → get titles, snippets, DOIs*
-> 5. *Collect full abstracts via Semantic Scholar / CrossRef / PubMed / OpenAlex*
-> 6. *Triage abstracts through classifier + VOI scoring*
-> 7. *Classify papers: ACCEPT / EDGE_CASE / REJECT / MISSING_ABSTRACT*
-> 8. *Display PRISMA funnel on dashboard"*
+> 5. *Check each result against 1,578-paper corpus inventory → mark DUPLICATEs*
+> 6. *Collect full abstracts via Semantic Scholar / CrossRef / PubMed / OpenAlex*
+> 7. *Triage abstracts through classifier + VOI scoring*
+> 8. *Classify papers: ACCEPT / EDGE_CASE / REJECT / MISSING_ABSTRACT*
+> 9. *Display PRISMA funnel on dashboard"*
 
 **Your deliverable:** The boxology diagram, plus a list of 5 specific gaps with confidence scores.
 
@@ -575,20 +588,33 @@ The contract → success conditions → test → validate workflow you're learni
 
 ## Existing Code You Should Know About
 
+### In Article_Eater (the extraction engine)
+
 | File | What it provides |
 |---|---|
-| `src/services/voi_search.py` | `VOICalculator.calculate_voi()` — scores gaps |
-| `src/services/voi_search.py` | `QueryGenerator.generate_queries()` — baseline query generation |
-| `src/services/voi_search.py` | `CrossFieldVocabulary.expand_query()` — cross-discipline synonyms |
-| `pipeline_lifecycle_full.db` | Table `pdf_corpus_inventory` — every PDF and its state (CURRENT_GOLD, staged, etc.) |
-| `pdf_corpus_inventory/latest.csv` | Readable export of the corpus inventory — check what you already have |
-| `pdf_identity_inventory/latest.csv` | Dedupe info — catch duplicate papers under different names |
-| `course_scaffolding.py probe-collection-pdf` | Foolproof duplicate check — run on any PDF to see if it's already in the corpus |
-| `ae_waiting_room_probe.py` | `probe_pdf_against_article_eater()` — same check, callable from Python |
-| `build_pdf_corpus_inventory_surface.py` | Builds the inventory surface from the lifecycle DB |
-| `refresh_v7_state_surfaces.py` | Regenerates all state surfaces (run this to get fresh data) |
+| `src/services/voi_search.py` | `VOICalculator.calculate_voi()` — scores gaps; `QueryGenerator.generate_queries()` — baseline query generation; `CrossFieldVocabulary.expand_query()` — cross-discipline synonyms; `GapDetector` — finds low-confidence mechanism steps |
+| `src/services/paper_fetcher.py` | `SemanticScholarClient`, `CrossRefClient`, `PubMedClient` — real API clients for abstract retrieval (note: Mock versions also exist in this file, use the real ones) |
+| `src/cmr/voi_scoring.py` | `score_voi()` — scores findings/abstracts for value of information |
+| `data/templates/` | 166 PNU template JSON files (your gap data source) |
+| `scripts/course_scaffolding.py` | Command-line tool with `probe-collection-pdf` subcommand |
+| `coordination/reports/pdf_corpus_inventory/latest.csv` | 1,578-row export of every paper and its state |
+| `coordination/reports/pdf_identity_inventory/latest.csv` | Dedupe info — catch duplicate papers under different names |
+
+### In Article_Finder (the discovery pipeline)
+
+| File | What it provides |
+|---|---|
+| `ingest/ae_waiting_room_probe.py` | `probe_pdf_against_article_eater()` — programmatic duplicate check |
+| `tests/test_import.py` | Contains `test_cataloger_skips_article_eater_duplicate_before_db_insert` — proves the probe works |
+
+### In Knowledge_Atlas
+
+| File | What it provides |
+|---|---|
+| `ka_contribute_public.html` | The contribute page you fix in Task 1 |
+| `160sp/pipeline_lifecycle_full.db` | Lifecycle database — table `pdf_corpus_inventory` |
 | `160sp/ka_google_search_guide.html` | Full tutorial on writing AI Citation queries |
-| `query_generator_skill.md` | Prompt template for generating queries from gaps |
+| `160sp/rubrics/t2/query_generator_skill.md` | Prompt template for generating queries from gaps |
 ---
 
 # Task 3: Search Execution & Abstract-First Triage
@@ -636,6 +662,37 @@ Your dashboard must show these numbers. This is proof that your pipeline works.
 You need these files from Task 2:
 - `gap_results.json` — ranked gaps with VOI scores
 - `query_results.json` — AI Citation + Boolean query pairs per gap
+
+### Verify the probe tool works
+
+Before you build the pipeline, confirm that the duplicate detection tool works. Test it on any PDF already in the corpus:
+
+```bash
+python3 Article_Eater/scripts/course_scaffolding.py \
+  probe-collection-pdf --pdf-path /path/to/any/known/paper.pdf
+```
+
+You should see output like this (actual output from our test):
+
+```json
+{
+  "is_known_duplicate": true,
+  "strongest_match_type": "sha256_exact",
+  "strongest_match_paper_id": "PDF-0425",
+  "matches": [
+    {
+      "paper_id": "PDF-0425",
+      "match_type": "sha256_exact",
+      "similarity_score": 1.0,
+      "title": "Assessing the influence of repeated exposures...",
+      "ingest_status": "admitted",
+      "in_current_gold": false
+    }
+  ]
+}
+```
+
+If `strongest_match_type` is `sha256_exact` or `doi_exact`, the paper is already in the corpus. **Do not re-ingest it.** This tool is your safety net against wasting time on duplicates.
 
 ---
 
