@@ -116,83 +116,210 @@ Document what broke, fix it, re-run. This is the most valuable engineering learn
 
 ---
 
-## Phase 2: Build the tag browser
+## Phase 2: Build the image viewer
 
-Now that you have annotations, build a viewer.
+Now that you have `annotations.json`, build a standalone HTML viewer. We've prototyped this and confirmed it's feasible as a single HTML file with inline CSS and JavaScript — no framework, no backend, no build step.
 
-> **Contract objective:** "I want a standalone HTML page where I can browse images by selecting tag categories from the Tagging_Contractor registry."
-> **Contract is with:** The registry (`registry_v0.2.8.json`), your `collection.json`, and your `annotations.json`.
-> **Prompt hint:** *"Build an HTML page that reads the tag registry JSON and shows the high-level tag domains as checkboxes. When I check a domain, show all images from annotations.json that have tags in that domain with score above a threshold. Show thumbnails in a grid with room type and key tags."*
+> **Contract objective:** "I want a standalone HTML page that loads `annotations.json` and the tag registry, and lets users browse images by tag domain or by human effect."
 
-Write YOUR OWN contract. Include inputs, processing, outputs, success conditions.
+### Architecture: one HTML file, three data files
 
-### Two search modes
+```
+ka_image_viewer.html      ← your viewer (HTML + CSS + JS, all inline)
+annotations.json          ← your Phase 1 output (500 images × 6 tag scores)
+effect_tag_mapping.json   ← maps Outcome_Contractor effects to tag IDs
+collection.json           ← your Task 1 image manifest (paths + provenance)
+```
 
-**Mode 1: Search by Tag (from Tagging_Contractor)**
+The viewer loads these JSON files at startup with `fetch()`. Everything runs client-side.
 
-The user picks environmental features they want to see. The tag categories come from the registry's domain hierarchy:
+### Component 1: Mode selector (tag mode vs. effect mode)
 
-| Domain | Example tags | What a user might search for |
-|---|---|---|
-| Lighting | daylight ratio, glare, light warmth | "Show me spaces with strong daylighting" |
-| Spatial | ceiling height, openness, enclosure | "Show me high-ceiling spaces" |
-| Biophilia | plant count, water view, natural materials | "Show me biophilic interiors" |
-| Social-Spatial | sociopetal seating, prospect, privacy | "Show me conversation-friendly layouts" |
-| Materials | wood, concrete, glass | "Show me warm material palettes" |
-| Color | warmth, saturation, contrast | "Show me cool-toned interiors" |
-| Visual Complexity | clutter, symmetry, entropy | "Show me visually calm spaces" |
+Two tab buttons at the top. When the user clicks a tab, the filter bar switches.
 
-Use the registry's 44 domains as high-level categories. Dropdowns or checkboxes. When a user selects a domain, show all images tagged with any tag in that domain.
+```
+┌─────────────────────────────────────────────────────┐
+│  🏷️ [Search by Tag]   🧠 [Search by Effect]        │
+└─────────────────────────────────────────────────────┘
+```
 
-**Mode 2: Search by Effect (from Outcome_Contractor)**
+- **Tag mode:** Shows domain checkboxes from the Tagging_Contractor registry
+- **Effect mode:** Shows domain checkboxes from the Outcome_Contractor vocab
 
-Instead of asking "what does this space *look like*?", the user asks "what does this space *do to people*?"
+### Component 2: Filter bar
 
-The Outcome_Contractor has 839 effect terms organized into 7 domains:
+**In tag mode:** One checkbox per tag domain, generated dynamically from the registry. Group the 44 domains into manageable categories:
 
-| Domain | # Terms | Example effects |
-|---|---|---|
-| Cognitive | 100 | Attention, Concentration, Creativity, Memory, Wayfinding |
-| Affective | 94 | Stress, Restoration, Mood, Comfort, Awe |
-| Behavioral | 147 | Collaboration, Productivity, Creative Output, Exploration |
-| Social | 128 | Collaboration, Trust, Communication, Privacy |
-| Physiological | 131 | Alertness, Fatigue, Sleep Quality, Cortisol |
-| Neural | 107 | Amygdala, Prefrontal, Default Mode Network |
-| Health | 132 | Flourishing, Well-being, Recovery |
+```
+┌─────────────────────────────────────────────────────┐
+│ 🔍 [Search images, tags, effects...              ]  │
+│                                                     │
+│ ☐ Social-Spatial (18)  ☐ Lighting (41)             │
+│ ☐ Spatial Config (39)  ☐ Biophilia (20)            │
+│ ☐ Materials (14)       ☐ Complexity (22)           │
+│ ☐ Color (14)           ☐ ...more                   │
+└─────────────────────────────────────────────────────┘
+```
 
-Present the 7 domains as top-level checkboxes. Let users drill into sub-effects. Use the constitutive bridges (`constitutive_bridges.json`) to resolve which effects roll up into which — so selecting "Restoration" also pulls in "Stress Recovery" and "Attention Restoration."
+**In effect mode:** One checkbox per Outcome_Contractor domain:
 
-**How effects connect to images:** The PNU templates link environmental features to outcomes. If a PNU says "daylight → circadian entrainment → alertness," then images tagged with high daylight scores should appear when the user searches for "alertness." Build a `effect_tag_mapping.json` that maps effects to tags. You can generate it by asking your AI to read the PNU templates:
+```
+┌─────────────────────────────────────────────────────┐
+│ ☐ Cognitive (100)    ☐ Affective (94)              │
+│ ☐ Behavioral (147)  ☐ Social (128)                 │
+│ ☐ Physiological (131)  ☐ Neural (107)              │
+│ ☐ Health (132)                                      │
+└─────────────────────────────────────────────────────┘
+```
+
+**How to build the domain checkboxes:**
+
+```javascript
+// Load registry, extract unique domains, count tags per domain
+const registry = await fetch('registry_v0.2.8.json').then(r => r.json());
+const domains = {};
+for (const [tid, tag] of Object.entries(registry.tags)) {
+  const d = tag.domain || 'unknown';
+  domains[d] = (domains[d] || 0) + 1;
+}
+// Render as checkbox inputs
+filterBar.innerHTML = Object.entries(domains)
+  .sort((a,b) => b[1] - a[1])
+  .map(([name, count]) => 
+    `<input type="checkbox" id="d-${name}" onchange="render()">` +
+    `<label for="d-${name}">${name} (${count})</label>`
+  ).join('');
+```
+
+### Component 3: Image grid
+
+A CSS Grid of image cards. Each card shows:
+- **Thumbnail** (the actual image from `collection.json` paths)
+- **Image name** (from filename)
+- **Room type** (from collection metadata)
+- **Tag count** ("6 tags")
+- **Top tag score** as a colored bar (green > 0.6, yellow 0.3-0.6, red < 0.3)
+- **Score label** ("interactional visibility: 3.2/4.0")
+
+```css
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+```
+
+**Filtering logic:** When checkboxes are selected, filter `annotations.json` to show only images that have tags in the selected domains with scores above a threshold (e.g., > 0.5).
+
+**Pagination:** For 500 images, implement lazy loading or "Load more" to avoid DOM overload. Show 50 images per page.
+
+### Component 4: Image detail modal
+
+When the user clicks a card, show a modal with:
+
+```
+┌─────────────────────────────────────────────────────┐
+│                                              [×]    │
+│  test open office                                   │
+│  Room: office · Source: Unsplash · License: CC0     │
+│                                                     │
+│  ┌─────────────────────────────────────────────┐    │
+│  │                                             │    │
+│  │          [Full-size image]                   │    │
+│  │                                             │    │
+│  └─────────────────────────────────────────────┘    │
+│                                                     │
+│  Tags & Scores                                      │
+│  ┌─────────────────────────────────────────────┐    │
+│  │ interactional visibility    3.2/4.0  ████░  │    │
+│  │   partition_score: 0.150                    │    │
+│  │   openness: 0.820                           │    │
+│  │   partition_coverage: 0.080                 │    │
+│  ├─────────────────────────────────────────────┤    │
+│  │ sociopetal seating          1.8/4.0  ██░░░  │    │
+│  │   facing_pairs: 2                           │    │
+│  │   cluster_size: 3                           │    │
+│  └─────────────────────────────────────────────┘    │
+│                                                     │
+│  Linked Effects                                     │
+│  [Social] ← interactional visibility, sociopetal    │
+│  [Cognitive] ← interactional visibility             │
+└─────────────────────────────────────────────────────┘
+```
+
+Key elements:
+- **Score bars:** Colored bars proportional to the 0-4 Likert value
+- **Evidence table:** Show every key-value pair from the `evidence` dict in the annotation
+- **Linked effects:** For each Outcome_Contractor domain that maps to tags present on this image, show the domain name and which tags triggered it. Use `effect_tag_mapping.json` for this.
+- **Provenance:** Source URL, photographer, license from `collection.json`
+
+### Component 5: Effect explanations (effect mode only)
+
+When browsing by effect, each card should show WHY it matched:
+
+```
+tag → mechanism → effect
+
+Example: "interactional visibility (3.2/4.0) → mutual awareness → Social outcomes"
+```
+
+Build this from the `ae_outcome_lookup.json` and PNU templates.
+
+### How to build `effect_tag_mapping.json`
+
+This is the bridge between the Outcome_Contractor's 7 domains and the Tagging_Contractor's tag IDs. You need it for effect-mode filtering.
+
+**Option A (recommended — use existing data):**
+
+```python
+# Start from ae_outcome_lookup.json (2,114 pre-built term→outcome mappings)
+import json
+lookup = json.load(open('Outcome_Contractor/contracts/oc_export/ae_outcome_lookup.json'))
+# This maps text terms → outcome IDs
+# Cross-reference with your tag IDs to build domain-level mapping
+```
+
+**Option B (manual, for your 6 tags):**
+
+Since you only have 6 detectors, you can manually map them to effects:
 
 ```json
 {
   "effect_to_tags": {
-    "cog.attention": ["lighting.daylight_ratio", "complexity.edge_density", "spatial.openness"],
-    "affect.restoration": ["biophilia.plant_count", "biophilia.water_view", "lighting.daylight_ratio"],
-    "behav.creativity": ["spatial.ceiling_height", "color.warmth", "complexity.visual_complexity"],
-    "social.collaboration": ["social.sociopetal_seating", "social.interactional_visibility"]
+    "social": ["social.interactional_visibility", "social.sociopetal_seating",
+               "social.dyadic_intimacy", "social.shared_attention_anchor"],
+    "cog": ["social.interactional_visibility"],
+    "affect": ["social.sociopetal_seating", "social.dyadic_intimacy"],
+    "behav": ["social.sociopetal_seating", "social.interactional_visibility"]
   }
 }
 ```
 
-**Success conditions:**
-- [ ] All 44 tag domains appear as filterable categories
-- [ ] All 7 Outcome_Contractor domains appear as filterable categories with drill-down
-- [ ] Free text search works across tag names, room types, and effect names
-- [ ] Grid handles 500 images without freezing (lazy loading or pagination)
-- [ ] Clicking an image shows detail view with all tags, confidence scores, linked effects, and provenance
-- [ ] Effect filtering shows the chain: tag → mechanism → effect
+Ask your AI: *"Given these 6 latent tags and their registry definitions, which Outcome_Contractor domains (Cognitive, Affective, Behavioral, Social, Physiological, Neural, Health) does each tag relate to? Use the PNU templates in Article_Eater/data/templates/ for evidence."*
+
+### Success conditions
+
+- [ ] Viewer loads `annotations.json`, `collection.json`, and `effect_tag_mapping.json` at startup
+- [ ] Tag mode: domain checkboxes generated from registry, filtering shows only matching images
+- [ ] Effect mode: 7 domain checkboxes from Outcome_Contractor, filtering uses the effect→tag mapping
+- [ ] Free text search works across image names, room types, tag names, and effect names
+- [ ] Image grid handles 500 images (lazy loading or pagination — 50 per page)
+- [ ] Clicking a card opens detail modal with all tags, scores, evidence, effects, and provenance
+- [ ] Score bars are color-coded (green/yellow/red) and proportional to value
+- [ ] No backend needed — works as a standalone HTML file opened directly in a browser
+- [ ] Both modes can be combined (e.g., "Social-Spatial" tag domain + "Cognitive" effect domain)
 
 ---
 
 ## Phase 3: Polish and integrate
 
-- [ ] Both search modes (tag and effect) can be combined
-- [ ] Image detail view shows BOTH tags and linked effects
-- [ ] Provenance is visible (source URL, photographer, license) on every image
-- [ ] Annotation scores are shown as visual bars or badges
-- [ ] Data persists — reads from JSON files, no backend required
-- [ ] Works as a standalone HTML file that can be opened in any browser
+- [ ] Score distributions look correct (not all 0.0, not all 4.0)
+- [ ] Provenance is visible on every image (source URL, photographer, license)
+- [ ] Annotation scores shown as visual bars with value labels
+- [ ] Modal close on Escape key and overlay click
+- [ ] Responsive layout (works on mobile and desktop)
+- [ ] Page title and subtitle describe what the tool does
+- [ ] Empty state ("No images match your filters") when nothing matches
 
 Write YOUR OWN contract and tests for this phase.
 
