@@ -111,7 +111,23 @@ For matching by DOI or title, use the companion table:
 **Dedupe source:** `pipeline_lifecycle_full.db`, table `pdf_identity_inventory`  
 **CSV:** `pdf_identity_inventory/latest.csv`
 
-To refresh these tables before starting:
+### Foolproof duplicate check (use this)
+
+If you have a PDF in hand and want to know whether it's already anywhere in the pipeline or corpus, use the probe tool:
+
+```bash
+python3 /Users/davidusa/REPOS/Article_Eater_PostQuinean_v1_recovery/scripts/course_scaffolding.py \
+  probe-collection-pdf --pdf-path /absolute/path/to/file.pdf
+```
+
+**Interpreting results:**
+- `sha256_exact` or `doi_exact` → **Existing duplicate. Do not re-ingest.**
+- `title_fuzzy` or `page_text_match` → Possible duplicate. Inspect manually before deciding.
+- No match → New paper, safe to triage and store.
+
+If you are working inside Article Finder code (not at the terminal), use `probe_pdf_against_article_eater(...)` in `ae_waiting_room_probe.py`. The test that proves this works is `test_cataloger_skips_article_eater_duplicate_before_db_insert` in `test_import.py`.
+
+To refresh the inventory tables before starting:
 ```bash
 python refresh_v7_state_surfaces.py
 ```
@@ -384,5 +400,7 @@ The contract → success conditions → test → validate workflow is not a one-
 | `pipeline_lifecycle_full.db` | Table `pdf_corpus_inventory` — every PDF and its state |
 | `pdf_corpus_inventory/latest.csv` | Readable export — check what's already in the corpus |
 | `pdf_identity_inventory/latest.csv` | Dedupe info — catch duplicate papers under different names |
+| `course_scaffolding.py probe-collection-pdf` | Foolproof duplicate check — run on any PDF to see if it's already in the corpus |
+| `ae_waiting_room_probe.py` | `probe_pdf_against_article_eater()` — same check, callable from Python |
 | `refresh_v7_state_surfaces.py` | Regenerates all state surfaces (run before starting) |
 | `atlas_shared` | Topic classifier (from Task 1) |

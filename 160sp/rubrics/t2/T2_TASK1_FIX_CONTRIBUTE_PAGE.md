@@ -101,6 +101,24 @@ Write a contract called **"Classifier Integration Contract"** that specifies exa
   - Rejected papers: shown in results but NOT stored
 - **Success conditions:** At least 3 specific test cases with expected outcomes
 
+### Check for duplicates before storing
+
+Before storing any contributed PDF, check if it's already in the corpus. We provide a foolproof probe that works even on hard-to-read files:
+
+```bash
+python3 /Users/davidusa/REPOS/Article_Eater_PostQuinean_v1_recovery/scripts/course_scaffolding.py \
+  probe-collection-pdf --pdf-path /absolute/path/to/file.pdf
+```
+
+**Interpreting results:**
+- `sha256_exact` or `doi_exact` → **This file is already in the corpus. Do not re-ingest it.**
+- `title_fuzzy` or `page_text_match` → Possible duplicate. Inspect manually before deciding.
+- No match → Safe to store as a new paper.
+
+If you are working inside Article Finder code (not at the terminal), use the function `probe_pdf_against_article_eater(...)` in `ae_waiting_room_probe.py`.
+
+Your contract's storage rules must include this check. A submission that stores duplicates is a bug.
+
 ### Ask your AI about storage
 
 You need to know where PDFs go and where database entries go. Ask:
@@ -117,7 +135,7 @@ sqlite3 Knowledge_Atlas/160sp/pipeline_lifecycle_full.db ".schema lifecycle_even
 sqlite3 Knowledge_Atlas/160sp/pipeline_lifecycle_full.db "SELECT stage_name, stage_order FROM stage_definitions ORDER BY stage_order;"
 ```
 
-**Your deliverable:** The completed contract with storage paths and database column values filled in.
+**Your deliverable:** The completed contract with storage paths, database column values, and duplicate-check logic filled in.
 
 ---
 

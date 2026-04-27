@@ -24,9 +24,9 @@ The Article Eater has 166 PNU (Plausible Neural Underpinning) templates. Each de
 
 Pick 3 templates from `Article_Eater/data/templates/`. Ask your AI:
 
-> *"These are PNU templates from the Knowledge Atlas. Walk me through one template completely: what does each step in the `mechanism_chain` represent, what does `confidence` mean for each step, and what does a low-confidence step (< 0.5) tell us about what's missing from the research corpus?"*
+> *"These are PNU templates from the Knowledge Atlas. Walk me through one template completely: what does each step in the `mechanism_chain` represent, what does `confidence` mean for each step, and what does a low-confidence step (< 0.6) tell us about what's missing from the research corpus?"*
 
-> *"Now look at all three templates and identify: which steps have confidence below 0.5? For each gap, tell me what specific study would fill it."*
+> *"Now look at all three templates and identify: which steps have confidence below 0.6? For each gap, tell me what specific study would fill it."*
 
 ### 1B. Understand the VOI scoring system
 
@@ -116,7 +116,7 @@ Your contract must have these four sections:
 1. **Inputs** — What files does the program read? What format are they?
 2. **Processing** — What does the program do, step by step?
 3. **Outputs** — What does the program produce? What fields? What format?
-4. **Success conditions** — How do you know it worked? Be specific. "It works" is not a success condition. "Extracts at least 10 gaps across 166 templates, each with template_id, step_number, confidence < 0.5, and gap_type" IS a success condition.
+4. **Success conditions** — How do you know it worked? Be specific. "It works" is not a success condition. "Extracts at least 10 gaps across 166 templates, each with template_id, step_number, confidence < 0.6, and gap_type" IS a success condition.
 
 **Minimum bar** (your contract must cover at least these):
 - Reads PNU template JSON files and walks `mechanism_chain`
@@ -288,6 +288,8 @@ The contract → success conditions → test → validate workflow you're learni
 | `pipeline_lifecycle_full.db` | Table `pdf_corpus_inventory` — every PDF and its state (CURRENT_GOLD, staged, etc.) |
 | `pdf_corpus_inventory/latest.csv` | Readable export of the corpus inventory — check what you already have |
 | `pdf_identity_inventory/latest.csv` | Dedupe info — catch duplicate papers under different names |
+| `course_scaffolding.py probe-collection-pdf` | Foolproof duplicate check — run on any PDF to see if it's already in the corpus |
+| `ae_waiting_room_probe.py` | `probe_pdf_against_article_eater()` — same check, callable from Python |
 | `build_pdf_corpus_inventory_surface.py` | Builds the inventory surface from the lifecycle DB |
 | `refresh_v7_state_surfaces.py` | Regenerates all state surfaces (run this to get fresh data) |
 | `160sp/ka_google_search_guide.html` | Full tutorial on writing AI Citation queries |
