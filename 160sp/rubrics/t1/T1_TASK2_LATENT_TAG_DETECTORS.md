@@ -13,7 +13,7 @@ In Task 1, you collected 500 architectural interior photographs with provenance.
 
 ### What the instructor already did (Sprint 1)
 
-Before this course began, the instructor completed Sprint 1: integrating 58 latent variables (L01–L58) from the Environment–Cognition Taxonomy V2.6 into the Tagging Contractor registry. This means:
+Before this course began, the instructor completed Sprint 1: integrating the 18 Social Interaction latent variables (L41–L58) from the Environment–Cognition Taxonomy V2.6 into the Tagging Contractor registry. This means:
 
 - Every latent tag (like L44 Sociopetal Seating, L17 Prospect, L42 Interactional Visibility) **already exists in the registry** with a full semantic contract
 - Each entry has a `definition_long` explaining what the tag means in human terms
