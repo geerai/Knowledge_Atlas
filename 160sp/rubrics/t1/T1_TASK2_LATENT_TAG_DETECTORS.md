@@ -1,7 +1,7 @@
 # Track 1 · Task 2: Build Latent Tag Detectors
 
 **Track:** Image Tagger  
-**Prerequisite:** Task 1 is complete — the instructor has collected ~10,000 interior photographs with provenance, organized by room type. Your image collection is ready.  
+**Prerequisite:** Task 1 (you need your 500 images with provenance)  
 **Points:** 75  
 **What you'll have when you're done:** Working Python detectors for 6 latent environmental tags, each backed by a design note, a typed contract, and a test suite that runs against a gold-set of labeled images.
 
@@ -9,30 +9,48 @@
 
 ## The big picture
 
-In Task 1, we collected thousands of architectural interior photographs. Now we need to *tag* them — not with simple labels like "living room" or "bedroom," but with latent environmental features that affect human cognition and behavior.
+In Task 1, you collected 500 architectural interior photographs with provenance. Now you need to *tag* them — not with simple labels like "living room" or "bedroom," but with latent environmental features that affect human cognition and behavior.
 
-The Tagging Contractor registry has 424 tags. Some are easy to detect from a photo (is there a plant? what color are the walls?). But the interesting ones — the ones that predict how people *feel* and *perform* in a space — are harder. Tags like "Sociopetal Seating" (are the chairs arranged for conversation?), "Interactional Visibility" (can people see each other across the room?), and "Chance-Encounter Potential" (does the layout create random meetings?) can't be detected with a single CLIP call. They require geometric reasoning over segmentation masks, depth maps, and spatial layouts.
+### What the instructor already did (Sprint 1)
 
-Your job is to implement detectors for 6 of these latent tags. Each detector is a short Python function (~100-150 lines) that takes an image and returns a score.
+Before this course began, the instructor completed Sprint 1: integrating 58 latent variables (L01–L58) from the Environment–Cognition Taxonomy V2.6 into the Tagging Contractor registry. This means:
 
-**You are NOT training neural networks.** You are writing geometric and logical predicates that compute over intermediate representations (depth maps, segmentation masks, skeleton maps) that the tagger already produces. Think of it as computational geometry, not deep learning.
+- Every latent tag (like L44 Sociopetal Seating, L17 Prospect, L42 Interactional Visibility) **already exists in the registry** with a full semantic contract
+- Each entry has a `definition_long` explaining what the tag means in human terms
+- Each entry has a `method_family` specifying *how* to detect it from an image
+- Each entry has `extractability` flags telling you whether it can be detected from 2D photos
 
----
+You can read these entries yourself:
+```bash
+python3 -c "
+import json
+r = json.load(open('Tagging_Contractor/core/trs-core/v0.2.8/registry/registry_v0.2.8.json'))
+tags = r['tags']
+# Look at one latent tag
+for tid, t in tags.items():
+    if 'sociopetal' in t.get('canonical_name','').lower() or 'L44' in tid:
+        print(json.dumps(t, indent=2))
+        break
+"
+```
 
-## What the instructor already built (your starting point)
+**The registry is your source of truth.** Your detectors must match the registry's vocabulary. If your detector drifts from the `definition_long`, the semantic audit gate will catch it.
 
-The instructor completed Task 1: image collection. You receive:
+### What you bring from Task 1
 
-- **~10,000 images** organized by room type, with full provenance (source URL, license, photographer)
-- **`collection.json`** — the manifest with metadata per image
-- **`space_types.json`** — the 15+ room-type taxonomy
-- **Sprint 1 intermediate outputs** — for a gold-set of images, the tagger has already computed:
-  - COCO-133 segmentation masks (people, furniture, objects)
-  - Monocular depth maps
-  - Skeletonized floor masks
-  - Basic VLM/CLIP tag predictions
+- Your **500 images** organized by room type, with provenance
+- Your **`space_types.json`** taxonomy
+- Your **collection page** for browsing and managing images
 
-You do NOT need to collect images or set up the pipeline. Your job starts at the detector level.
+### What the tagger provides (intermediate representations)
+
+For a gold-set of images, the tagger has already computed:
+- **COCO-133 segmentation masks** (people, furniture, objects)
+- **Monocular depth maps** (estimated distance per pixel)
+- **Skeletonized floor masks** (circulation paths extracted from floor regions)
+- **Basic VLM/CLIP tag predictions** (simple visual features already detected)
+
+Your job is to write detectors that compute *on top of* these intermediate representations. You are NOT training neural networks. You are writing geometric and logical predicates — computational geometry, not deep learning.
 
 ---
 
