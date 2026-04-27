@@ -1,309 +1,254 @@
-# Track 1 · Task 1: Image Collection Pipeline
+# Track 1 · Task 1: Build an Image Collection
 
 **Track:** Image Tagger  
-**What you build:** Explore the Tagging Contractor's 424-tag registry to understand what we need to detect in architectural images, curate your own list of open-source image databases, build an automated image search pipeline, and deliver 500 images with full provenance into a collection dashboard.  
-**Core lesson:** Before you can tag or train anything, you need images — and every image needs to say where it came from and what license it carries. This is infrastructure.
+**Points:** 75  
+**What you'll have when you're done:** 500 openly-licensed photographs of architectural interiors, organized by room type, with every image traceable to the web page you found it on.
 
 ---
 
-## What You're Working With
+## The big picture
 
-### The three repos
+The Knowledge Atlas studies how buildings affect people — how ceiling height changes your thinking, how daylight shifts your mood, how clutter raises your stress. To study these things computationally, we need thousands of photographs of real interior spaces. Your job is to collect 500 of them.
 
-| Repo | What it provides | What you need from it |
-|---|---|---|
-| `Tagging_Contractor` | **424 tags** organized by domain (Lighting, Spatial, Materials, Color, Biophilia, etc.) with definitions, aliases, extractability flags, and extraction methods | The tag hierarchy — which tags can be detected from 2D images |
-| `Outcome_Contractor` | **Human-side vocabulary** — cognitive, affective, behavioral effects (attention, stress, mood, productivity) | Context for WHY we need certain images (what effect are we testing?) |
-| `image-tagger` | The Image Tagger app itself — Explorer, Workbench, Admin upload API | Where your images will eventually go |
+But "collect" doesn't mean "drag images off Google." Every image must:
 
-### The tag registry
+1. **Be openly licensed** — Creative Commons, public domain, or equivalent. No copyright violations.
+2. **Have provenance** — For every image you know: where you found it, who took it, and what license it carries.
+3. **Be categorized** — You know what kind of room it shows.
 
-The canonical registry lives at:
-```
-Tagging_Contractor/core/trs-core/v0.2.8/registry/registry_v0.2.8.json
-```
+You'll build the tools to do this efficiently, then use those tools to collect your 500.
 
-Each of the 424 tags has these fields:
+---
+
+## The 15 room types
+
+We need images across a range of interior spaces. Use these 15 categories:
+
+| # | Room Type | What to search for | Why we need it |
+|---|---|---|---|
+| 1 | `living_room` | living room, lounge, sitting room | Furniture layout, daylight, biophilia, color warmth |
+| 2 | `bedroom` | bedroom, sleeping quarters | Lighting warmth, enclosure, materials, tranquility |
+| 3 | `kitchen` | kitchen, cooking area | Component detection (cabinets, counters), materials, layout |
+| 4 | `bathroom` | bathroom, restroom, washroom | Materials (tile, glass), fixtures, spatial geometry |
+| 5 | `office` | office interior, workspace, workstation | Task lighting, spatial openness, visual complexity |
+| 6 | `classroom` | classroom, lecture hall, seminar room | Social-spatial layout, lighting, legibility |
+| 7 | `hospital` | hospital room, clinic interior, patient room | Safety, materials, lighting, wayfinding |
+| 8 | `restaurant` | restaurant interior, café, dining room | Social density, lighting ambiance, material warmth |
+| 9 | `lobby` | hotel lobby, building lobby, atrium | Spatial volume, ceiling height, prospect-refuge |
+| 10 | `corridor` | hallway, corridor, passage | Spatial geometry, wayfinding, enclosure ratio |
+| 11 | `library` | library interior, reading room | Cognitive restoration, natural light, visual order |
+| 12 | `retail` | retail store, shop interior, showroom | Color, lighting, visual complexity, layout |
+| 13 | `museum` | museum gallery, exhibition space | Spatial volume, lighting, visual complexity |
+| 14 | `worship` | church interior, temple, mosque | Ceiling height, geometry, fractal patterns, affect |
+| 15 | `gym` | gym, fitness center, sports hall | Spatial openness, materials, lighting intensity |
+
+> **You may add up to 5 more categories** if you find important gaps. But these 15 are your minimum.
+
+Save this as `space_types.json` in your repo. Format:
 ```json
 {
-  "affect.cozy": {
-    "canonical_name": "Cozy",
-    "domain": "Affect",
-    "definition": "...",
-    "aliases": ["Cozy", "feels Cozy", "sense of Cozy"],
-    "extractability": {
-      "from_2d": "yes",       // ← CAN we detect this from a photo?
-      "from_3d_vr": "partial",
-      "region_support": false
-    },
-    "extraction": {
-      "method_family": "VLM/CLIP semantic classifier",
-      "compute_from": "2D_semantic"
-    }
+  "living_room": {
+    "search_terms": ["living room interior", "lounge interior", "sitting room"],
+    "why": "Furniture layout, daylight, biophilia, color warmth"
+  },
+  "bedroom": {
+    "search_terms": ["bedroom interior", "sleeping quarters"],
+    "why": "Lighting warmth, enclosure, materials, tranquility"
   }
 }
 ```
 
-**The key field is `extractability.from_2d`.** Tags where this is `"yes"` or `"partial"` are the ones we can detect from photographs. Tags where this is `"no"` need sensors, 3D models, or metadata — we can't detect them from images alone.
+---
 
-### Tag domains (what you'll search for)
+## Phase 1: Find your image sources
 
-| Domain | Tags | Examples |
+You need to find at least **5 websites or databases** where you can get openly-licensed architectural photographs. Some have free APIs. Some you'll browse manually. All must have clear licensing.
+
+### What "openly licensed" means
+
+| License | OK to use? | Attribution needed? |
 |---|---|---|
-| Luminous Environment | 41 | daylight ratio, glare, light warmth, contrast |
-| Spatial Configuration | 39 | ceiling height, room volume, openness, enclosure |
-| Visual Complexity & Order | 22 | clutter, symmetry, edge density, entropy |
-| Biophilic Elements | 20 | plant count, water view, natural materials, fractals |
-| Social-Spatial | 18 | seating arrangement, privacy, prospect-refuge |
-| Control & Personalization | 16 | adjustable lighting, furniture movability |
-| CNfA (Cognitive Neuroarchitecture) | 48 | fractal dimension, coherence, mystery, legibility |
-| Architecture / Components | 39 | ceiling type, wall material, kitchen layout, bathroom |
-| Color | 14 | warmth, saturation, lightness contrast |
-| Materials & Texture | 23 | wood, concrete, glass, roughness |
+| CC0 (Public Domain) | ✅ Yes | No |
+| CC-BY | ✅ Yes | Yes — credit the photographer |
+| CC-BY-SA | ✅ Yes | Yes — credit and share alike |
+| Unsplash License | ✅ Yes | Attribution appreciated, not required |
+| Pexels License | ✅ Yes | No attribution required |
+| CC-NC (Non-Commercial) | ⚠️ Check | OK for academic research, not commercial |
+| All Rights Reserved / © | ❌ No | Cannot use |
 
----
+### Starting points (you must find more)
 
-## Phase 1: Explore the Tag Hierarchy
+- **Unsplash** (unsplash.com) — High-quality, free API, good architectural content
+- **Pexels** (pexels.com) — Free API, no attribution needed
+- **Flickr** (flickr.com) — API with CC license filtering, large architecture groups
+- **Wikimedia Commons** (commons.wikimedia.org) — CC/public domain, building interiors
+- **Pixabay** (pixabay.com) — Free, CC0-equivalent license
 
-### 1A. Read the registry
+### Your deliverable: `image_sources.json`
 
-Ask your AI:
+> **Contract objective:** "I want a tested, documented list of image sources I can use to collect 500 interior photos."
+> **Contract is with:** Public image APIs and websites.
+> **Prompt hint:** *"I need to find 5+ sources of openly-licensed architectural interior photos. For each: does it have an API? What license? How do I search it? Test one query and tell me how many results."*
 
-> *"Read the Tagging Contractor registry at `Tagging_Contractor/core/trs-core/v0.2.8/registry/registry_v0.2.8.json`. How many tags are there? Group them by domain. Which domains have the most tags? For each domain, list 3 example tags."*
+Write YOUR OWN contract for this phase. Include Inputs, Processing, Outputs, and Success Conditions.
 
-### 1B. Filter to searchable tags
+**Success conditions (minimum):**
+- [ ] At least 5 sources documented
+- [ ] Each source has: name, URL, license type, API availability (yes/no)
+- [ ] At least 3 sources tested with a sample query
+- [ ] Each tested source shows how many results the sample query returned
 
-> *"Filter the registry to tags where `extractability.from_2d` is `'yes'` or `'partial'`. How many remain? These are the tags we can detect from photographs."*
-
-### 1C. Build a simplified space-type taxonomy
-
-> **Contract objective:** "I want a simplified taxonomy of 20-30 architectural interior space types that maps to the tag registry domains."
-> **Contract is with:** The `Tagging_Contractor` registry and the image databases you'll search.
-> **Prompt hint:** *"Based on the tag registry domains, create a taxonomy of interior space types that would give us good coverage. For example: living_room, bedroom, office, classroom, hospital_corridor, restaurant, lobby, etc. For each space type, list which tag domains are most likely present."*
-
-Write YOUR OWN contract for this. Your contract must include:
-
-1. **Inputs** — the registry JSON
-2. **Processing** — how you group tags into searchable space types
-3. **Outputs** — a JSON taxonomy file: `{ "living_room": { "expected_tags": [...], "search_terms": [...] }, ... }`
-4. **Success conditions** — at least 20 space types, each maps to ≥ 3 registry tags, covers all major domains
-
-**Deliverable:** `space_type_taxonomy.json` — your simplified taxonomy mapping space types to tag domains and search terms.
-
----
-
-## Phase 2: Curate Open-Source Image Databases
-
-### 2A. Research available sources
-
-> **Contract objective:** "I want a curated, tested list of image databases where I can find CC-licensed architectural interior photographs."
-> **Contract is with:** Free public image APIs and open datasets.
-> **Prompt hint:** *"Find at least 5 sources of open-source/CC-licensed architectural interior images. For each source: what API does it offer (if any)? What license types? How many architectural images does it have? Can I filter by room type? Give me the API documentation URL."*
-
-Start with these leads (but don't stop here):
-- **Unsplash** — free API, requires attribution, good architectural content
-- **Pexels** — free API, no attribution required, interior photos
-- **Flickr** — API with CC license filtering, large architecture community
-- **Wikimedia Commons** — CC/public domain, building interiors
-- **Google Custom Search** — 100 free queries/day, license-filterable
-- **Open Images Dataset (Google)** — labeled images, some indoor scenes
-- **SUN Database** — scene recognition dataset with room types
-- **Places365** — MIT scene dataset with interior categories
-
-### 2B. Write YOUR OWN database curation contract
-
-Your contract must include:
-1. **Inputs** — your space type taxonomy
-2. **Processing** — for each database: test the API, verify license, estimate image count
-3. **Outputs** — a curated database list as JSON:
 ```json
 {
-  "databases": [
+  "sources": [
     {
       "name": "Unsplash",
+      "url": "https://unsplash.com",
       "api_url": "https://api.unsplash.com/",
-      "api_type": "REST",
-      "license": "Unsplash License (free, attribution requested)",
-      "auth_required": true,
-      "rate_limit": "50 req/hour (free)",
-      "architectural_coverage": "good",
-      "room_type_filter": false,
+      "has_api": true,
+      "license": "Unsplash License (free, attribution appreciated)",
+      "rate_limit": "50 requests/hour (free tier)",
       "tested": true,
       "test_query": "modern living room interior",
-      "test_result_count": 1247,
-      "notes": "High quality but no room-type faceting"
+      "test_results": 1247
     }
   ]
 }
 ```
-4. **Success conditions** — at least 5 databases tested, at least 3 with working APIs, combined coverage ≥ 10k images
-
-### 2C. Validate
-
-- [ ] Each database entry has a `tested: true` flag
-- [ ] Each tested database has a `test_query` and `test_result_count`
-- [ ] At least 3 databases have working API access
-- [ ] Licenses are documented and allow non-commercial research use
-
-**Deliverable:** `image_databases.json`
 
 ---
 
-## Phase 3: Build the Image Search Pipeline
+## Phase 2: Build the search pipeline
 
-### 3A. Write YOUR OWN search pipeline contract
+Now automate it. Write a Python script that takes a room type and a source, runs the search, and saves the results.
 
-> **Contract objective:** "I want a Python script that takes my space-type taxonomy and searches my curated databases for images matching each space type."
-> **Contract is with:** The image database APIs from Phase 2 and your taxonomy from Phase 1.
-> **Prompt hint:** *"I need a search pipeline that loops through my space types, queries each database API, downloads image metadata (URL, title, license, source), and stores results as JSON. It must only collect openly licensed images and must track provenance."*
+> **Contract objective:** "I want a script that searches my image sources for photos of each room type and saves the results as JSON."
+> **Contract is with:** Your image source APIs and `space_types.json`.
+> **Prompt hint:** *"Build a Python script that reads space_types.json, loops through each room type, queries the Unsplash/Pexels/Flickr API for that room type's search terms, and saves results as JSON. Each result must include: image URL, thumbnail URL, photographer name, source name, source page URL, and license."*
 
-**Minimum bar** your contract must cover:
-- Reads `space_type_taxonomy.json` for search terms
-- Reads `image_databases.json` for API endpoints
-- For each space type × database: runs the search query
-- Collects per image: `url`, `thumbnail_url`, `title`, `photographer`, `license`, `source_database`, `source_page_url`
-- De-duplicates by URL
-- Respects rate limits
-- Stores results as structured JSON
+Write YOUR OWN contract. Then write your tests BEFORE building:
 
-**Success conditions you must define:**
-- How many images per space type?
-- What's the minimum total across all space types?
-- What fields are required vs. optional per image?
+- [ ] API keys are in environment variables, not hardcoded
+- [ ] Rate limits are respected (check for `time.sleep`)
+- [ ] Every image result has: `url`, `source_name`, `source_page_url`, `license`
+- [ ] Output JSON is valid
+- [ ] Zero-result searches are logged, not silently skipped
 
-### 3B. Write your tests BEFORE building
+### What each image record must look like
 
-- [ ] API calls use the correct authentication (API keys in env vars, not hardcoded)
-- [ ] Rate limits respected (check for `time.sleep` or rate limiting)
-- [ ] Only CC-licensed or public domain images collected (check license field)
-- [ ] Every image has a `source_page_url` (the web page where the image was found)
-- [ ] Every image has a `source_database` (which database it came from)
-- [ ] Output JSON is valid and parseable
-- [ ] De-duplication works (no duplicate URLs in output)
-
-### 3C. Build and validate
-
-> *"Show me the API call for one database. What parameters does it use? What does the response look like?"*
-
-> *"How do you filter for license type? Show me the logic that rejects non-open images."*
-
-> *"Run a test search for 'modern living room'. How many results? Do they look relevant?"*
+```json
+{
+  "url": "https://images.unsplash.com/photo-abc123",
+  "thumbnail_url": "https://images.unsplash.com/photo-abc123?w=400",
+  "title": "Modern minimalist living room",
+  "photographer": "Jane Doe",
+  "source_name": "Unsplash",
+  "source_page_url": "https://unsplash.com/photos/abc123",
+  "license": "Unsplash License",
+  "space_type": "living_room",
+  "search_query": "modern living room interior",
+  "collected_at": "2026-05-01T12:00:00Z"
+}
+```
 
 **Deliverable:** `search_pipeline.py` + `search_results.json`
 
 ---
 
-## Phase 4: Build the Collection Dashboard
+## Phase 3: Build the collection page
 
-### 4A. Write YOUR OWN collection page contract
+Build a web page where you can browse search results, accept or reject images, upload local files, and track your progress toward 500.
 
-> **Contract objective:** "I want an interactive web page where I can search for images, browse results, accept/reject them into my collection, and upload images from local files or folders — all with provenance tracking."
-> **Contract is with:** The Image Tagger's upload API (`POST /v1/admin/upload`) and your search pipeline.
-> **Prompt hint:** *"I need an HTML page with: (1) a search interface that queries my image databases, (2) a grid viewer showing results with thumbnails, (3) accept/reject buttons per image, (4) a file/folder upload zone, (5) provenance fields for each image (source URL, source name), (6) a collection counter showing progress toward 500."*
+> **Contract objective:** "I want an interactive page where I can manage my image collection — search, browse, accept/reject, upload, and export."
+> **Contract is with:** Your search results and the Image Tagger upload API.
+> **Prompt hint:** *"Build an HTML page with these features: (1) a search bar that loads results from search_results.json, (2) a thumbnail grid with accept/reject buttons, (3) a file upload zone for drag-and-drop, (4) provenance fields that are required before accepting, (5) a progress counter showing N/500, (6) an export button that downloads the collection as JSON."*
 
-**Required features:**
+### Required features
 
 | Feature | What it does |
 |---|---|
-| **Search bar** | Queries image databases by keyword or space type |
-| **Results grid** | Shows thumbnails with title, source, license badge |
-| **Accept / Reject** | Adds image to collection or marks as rejected |
-| **File upload** | Drag-and-drop for single images, multiple files, or folders |
-| **Provenance fields** | Per image: (1) source URL (auto-filled from search, manual for uploads), (2) source name (e.g., "Unsplash", "Architectural Digest", "House") |
-| **License indicator** | Shows CC-BY, CC0, Public Domain, etc. |
-| **Collection counter** | Shows `N / 500` progress |
-| **Export** | Exports collection as JSON with full provenance |
+| **Search / filter** | Filter images by room type or keyword |
+| **Thumbnail grid** | Shows images with title, source, license |
+| **Accept / Reject** | Accept into collection or reject |
+| **Upload** | Drag-and-drop for local files or folders |
+| **Provenance fields** | Source URL and source name — required before accepting |
+| **Progress counter** | Shows how many images you've collected out of 500 |
+| **Export** | Downloads `collection.json` with all provenance |
 
-### 4B. Provenance requirements (non-negotiable)
+### Provenance is non-negotiable
 
-Every image in your collection MUST have:
+Every image in your collection must have these fields filled in:
 
-```json
-{
-  "image_id": "img_001",
-  "url": "https://unsplash.com/photos/abc123",
-  "thumbnail_url": "...",
-  "source_database": "Unsplash",
-  "source_page_url": "https://unsplash.com/photos/abc123",
-  "source_name": "Unsplash",
-  "photographer": "Jane Doe",
-  "license": "Unsplash License",
-  "license_url": "https://unsplash.com/license",
-  "space_type": "living_room",
-  "collected_at": "2026-05-01T12:00:00Z",
-  "collected_by": "student_name"
-}
-```
+| Field | Required? | Auto-filled from search? |
+|---|---|---|
+| `source_page_url` | ✅ Yes | Yes (from API) |
+| `source_name` | ✅ Yes | Yes (from API) |
+| `photographer` | Best effort | Usually (from API) |
+| `license` | ✅ Yes | Yes (from API) |
+| `space_type` | ✅ Yes | Yes (from search) |
 
-For images uploaded from local files (not from search), the student must manually fill in:
-- `source_page_url` — where did you find this image?
-- `source_name` — what publication/site was it from?
-- `license` — what license applies?
+For **manually uploaded** images (not from search), the student must type in the source URL and source name. If you don't know where an image came from, **don't add it**.
 
-**If you cannot determine the source or license of an image, do not add it to the collection.**
+Write YOUR OWN contract and tests for this phase.
 
-### 4C. Write your tests
-
-- [ ] Search returns results from at least 2 databases
-- [ ] Accept button adds image to collection JSON
-- [ ] Reject button marks image as rejected (not in collection)
-- [ ] File upload accepts .jpg, .png, .webp
-- [ ] Provenance fields are required (form won't submit without them)
-- [ ] Collection counter updates in real time
-- [ ] Export produces valid JSON with all required provenance fields
-- [ ] Data persists after page refresh (localStorage or JSON file)
-
-**Deliverable:** `ka_image_collection.html` (or equivalent)
+**Deliverable:** `ka_image_collection.html`
 
 ---
 
-## Phase 5: Collect 500 Images
+## Phase 4: Collect 500 images
 
-### 5A. Collection strategy
+Use your pipeline and collection page to gather 500 images.
 
-Your 500 images should cover your taxonomy. Aim for:
-- At least 15 of your 20+ space types represented
-- At least 10 images per space type (for the top 10 types)
-- A mix of databases (not all from one source)
-- Full provenance on every image
+### Distribution targets
 
-### 5B. Collection report
-
-| Metric | Your Count |
+| Requirement | Target |
 |---|---|
-| Total images collected | /500 |
-| Space types represented | /20+ |
-| Databases used | |
-| Images with full provenance | /500 |
+| Total images | 500 |
+| Room types covered | ≥ 12 of the 15 |
+| Images per top-10 room type | ≥ 15 each |
+| Sources used | ≥ 3 different databases |
+| Images with full provenance | 500 / 500 |
+
+### Spot-check your provenance
+
+Pick **10 random images** from your collection. For each one:
+1. Open the `source_page_url` in a browser. Does the page exist?
+2. Does the license on the page match what you recorded?
+3. Is the photographer credit correct?
+
+Record what you find. Discrepancies happen — the point is that you checked.
+
+### Collection report
+
+Fill in this table:
+
+| Metric | Your count |
+|---|---|
+| Total images | /500 |
+| Room types represented | /15 |
 | Images from search pipeline | |
 | Images from manual upload | |
+| Sources used | |
+| Provenance spot-check: pages exist | /10 |
+| Provenance spot-check: license matches | /10 |
 
-### 5C. Spot-check provenance
-
-Pick 10 random images from your collection. For each:
-1. Open the `source_page_url` — does the page exist?
-2. Does the license match what you recorded?
-3. Is the photographer name correct?
-
-Report any discrepancies.
+**Deliverables:** `collection.json` + collection report (in your submission)
 
 ---
 
-## What You Submit
+## What you submit
 
-| Item | What it is |
+| Item | Filename |
 |---|---|
-| **Space-type taxonomy** | `space_type_taxonomy.json` — 20+ types mapped to registry tags |
-| **Database list** | `image_databases.json` — curated, tested database entries |
-| **Search pipeline** | `search_pipeline.py` — automated image search script |
-| **Search results** | `search_results.json` — raw results from all searches |
-| **Collection dashboard** | `ka_image_collection.html` — working interactive page |
-| **Image collection** | `collection.json` — 500 images with full provenance |
-| **Collection report** | Summary table with counts per space type + database |
-| **Provenance spot-check** | 10 images verified against their source URLs |
-| **Contracts** | Your written contracts for each phase (in markdown or docstrings) |
-| **Test checklists** | Your test checklists with pass/fail results |
-| **File manifest** | `git diff --name-only HEAD` and `git status --short` |
+| Space types | `space_types.json` |
+| Image sources | `image_sources.json` |
+| Search pipeline | `search_pipeline.py` |
+| Search results | `search_results.json` |
+| Collection page | `ka_image_collection.html` |
+| Image collection | `collection.json` (500 images with provenance) |
+| Collection report | Table above, filled in |
+| Contracts + tests | Your written contracts and test checklists |
+| File manifest | `git diff --name-only HEAD` and `git status --short` |
 
 ---
 
@@ -311,32 +256,28 @@ Report any discrepancies.
 
 | Criterion | Points | What we check |
 |---|---|---|
-| **Contracts + success conditions + tests** | 20 | Written BEFORE building; specific, not vague (CONTRACT GATE) |
-| **Taxonomy** | 10 | ≥ 20 space types, maps to registry tags, covers domains |
-| **Database curation** | 10 | ≥ 5 tested, APIs verified, licenses documented |
-| **Search pipeline** | 10 | Automated, respects licenses, tracks provenance |
-| **Collection dashboard** | 10 | Search + browse + upload + provenance fields + export |
-| **500 images with provenance** | 10 | Full provenance, ≥ 15 space types, source diversity |
-| **Verification questions** | 5 | Caught problems in AI's implementation |
+| **Contracts + tests** | 20 | Written BEFORE building. Specific, not vague. **(CONTRACT GATE)** |
+| **Image sources** | 10 | ≥ 5 sources, ≥ 3 tested, licenses documented |
+| **Search pipeline** | 10 | Automated, respects rate limits, tracks provenance |
+| **Collection page** | 15 | Search + browse + upload + provenance + export |
+| **500 images** | 15 | Full provenance, ≥ 12 room types, ≥ 3 sources |
+| **Verification** | 5 | Spot-checked provenance, caught AI implementation issues |
 
-> ⛔ **Contract gate**: If your contracts, success conditions, and tests are insufficient, your submission will be flagged as *not ready for integration* regardless of other scores. See Track 2 for examples of adequate contracts.
-
----
-
-## A Note About Reuse
-
-The space-type taxonomy, database list, and search pipeline you build here become infrastructure for the rest of Track 1. In Task 2 (tagging), you'll tag images from this collection. In Task 3 (inter-rater), you'll run agreement tests on these images. In Task 4 (classifier), you'll train on them. **Build it right now so you don't have to rebuild it later.**
+> ⛔ **Contract gate**: If your contracts and tests are missing or vague ("it works"), your submission will be flagged and your images will not be integrated into the Atlas. Write real contracts with real success conditions.
 
 ---
 
-## Existing Code You Should Know About
+## Reuse
 
-| File | What it provides |
+Your image sources, search pipeline, and collection page are infrastructure. In Task 2, you'll tag these images. In Task 3, you'll run inter-rater agreement on them. In Task 4, you'll train a classifier on them. Build it right the first time.
+
+---
+
+## Existing code you should know about
+
+| Repo / File | What it gives you |
 |---|---|
-| `Tagging_Contractor/core/trs-core/v0.2.8/registry/registry_v0.2.8.json` | The 424-tag registry with domains, definitions, and extractability |
+| `Tagging_Contractor/core/trs-core/v0.2.8/registry/registry_v0.2.8.json` | 424 tags organized by domain — tells you what features matter in each room type |
 | `Tagging_Contractor/Tagging_Contractor_What_it_is_and_How_to_use_it.md` | How the tagging system works |
-| `Tagging_Contractor/contracts/localized_image_tags.schema.json` | JSON schema for tagged image output |
-| `Outcome_Contractor/README.md` | Human-side outcome vocabulary |
-| `image-tagger/docs/CONTRACT.md` | Image Tagger API contract (upload, explore, workbench) |
-| `./bin/tc audit-tags` | Audit tool for tag completeness |
-| `./bin/tc audit-semantics` | Semantics completeness gate |
+| `image-tagger/docs/CONTRACT.md` | Image Tagger API — the upload endpoint your images will eventually go into |
+| `Outcome_Contractor/README.md` | The human-side vocabulary (cognitive, affective effects) — context for why we need these images |
