@@ -1,0 +1,56 @@
+{
+  "students": [
+    {
+      "student_id": "smith_jane",
+      "first_name": "Jane",
+      "last_name": "Smith",
+      "email": "jsmith@example.edu",
+      "track": "t1",
+      "submission_dir": "",
+      "submissions": {
+        "task_1": {"task": 1, "status": "submitted", "submitted_at": "2026-05-10T23:59:00Z", "grade": null, "report_path": ""},
+        "task_2": {"task": 2, "status": "missing", "submitted_at": null, "grade": null, "report_path": ""},
+        "task_3": {"task": 3, "status": "missing", "submitted_at": null, "grade": null, "report_path": ""}
+      }
+    },
+    {
+      "student_id": "doe_john",
+      "first_name": "John",
+      "last_name": "Doe",
+      "email": "jdoe@example.edu",
+      "track": "t2",
+      "submission_dir": "",
+      "submissions": {
+        "task_1": {"task": 1, "status": "submitted", "submitted_at": "2026-05-08T18:30:00Z", "grade": null, "report_path": ""},
+        "task_2": {"task": 2, "status": "late", "submitted_at": "2026-05-13T02:15:00Z", "grade": null, "report_path": ""},
+        "task_3": {"task": 3, "status": "missing", "submitted_at": null, "grade": null, "report_path": ""}
+      }
+    },
+    {
+      "student_id": "park_min",
+      "first_name": "Min",
+      "last_name": "Park",
+      "email": "mpark@example.edu",
+      "track": "t3",
+      "submission_dir": "",
+      "submissions": {
+        "task_1": {"task": 1, "status": "submitted", "submitted_at": "2026-05-09T20:00:00Z", "grade": null, "report_path": ""},
+        "task_2": {"task": 2, "status": "submitted", "submitted_at": "2026-05-15T15:45:00Z", "grade": null, "report_path": ""},
+        "task_3": {"task": 3, "status": "missing", "submitted_at": null, "grade": null, "report_path": ""}
+      }
+    },
+    {
+      "student_id": "lee_alex",
+      "first_name": "Alex",
+      "last_name": "Lee",
+      "email": "alee@example.edu",
+      "track": "t1",
+      "submission_dir": "",
+      "submissions": {
+        "task_1": {"task": 1, "status": "missing", "submitted_at": null, "grade": null, "report_path": ""},
+        "task_2": {"task": 2, "status": "missing", "submitted_at": null, "grade": null, "report_path": ""},
+        "task_3": {"task": 3, "status": "missing", "submitted_at": null, "grade": null, "report_path": ""}
+      }
+    }
+  ]
+}

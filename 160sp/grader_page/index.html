@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>160sp Grader Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f1117;--surface:#1a1d27;--surface2:#252833;--border:#2e3240;--text:#e4e6ed;--text2:#9ca3b4;--accent:#6c63ff;--accent2:#8b83ff;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;--radius:12px}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{background:linear-gradient(135deg,#1e1b4b,#312e81);padding:24px 32px;border-bottom:1px solid var(--border)}
+.header h1{font-size:22px;font-weight:700;background:linear-gradient(90deg,#a78bfa,#6c63ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header p{color:var(--text2);font-size:13px;margin-top:4px}
+.container{max-width:1200px;margin:0 auto;padding:24px}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px;backdrop-filter:blur(10px)}
+.panel h2{font-size:15px;font-weight:600;margin-bottom:16px;color:var(--text2);text-transform:uppercase;letter-spacing:1px}
+.controls{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end}
+.control-group{display:flex;flex-direction:column;gap:6px}
+.control-group label{font-size:12px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:.5px}
+.radio-group{display:flex;gap:8px}
+.radio-group label{display:flex;align-items:center;gap:6px;padding:8px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;transition:all .2s}
+.radio-group input{display:none}
+.radio-group input:checked+span{color:var(--accent)}
+.radio-group label:has(input:checked){border-color:var(--accent);background:rgba(108,99,255,.1)}
+select{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:8px;font-size:13px;min-width:180px;font-family:inherit}
+select:focus{outline:none;border-color:var(--accent)}
+.btn{padding:10px 20px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 15px rgba(108,99,255,.3)}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+.btn-sm{padding:5px 10px;font-size:11px;border-radius:6px}
+.btn-green{background:var(--green);color:#000}.btn-red{background:var(--red);color:#000}.btn-yellow{background:var(--yellow);color:#000}
+#results{display:none}
+.result-section{background:var(--surface2);border-radius:10px;padding:16px;margin-bottom:14px;border-left:3px solid var(--accent)}
+.result-section h3{font-size:14px;font-weight:600;margin-bottom:10px;color:var(--accent2)}
+.result-section p,.result-section li{font-size:13px;line-height:1.6;color:var(--text2)}
+.result-section ul{padding-left:16px}
+.score-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-weight:700;font-size:18px}
+.score-high{background:rgba(52,211,153,.15);color:var(--green)}
+.score-mid{background:rgba(251,191,36,.15);color:var(--yellow)}
+.score-low{background:rgba(248,113,113,.15);color:var(--red)}
+.gate-pass{color:var(--green)}.gate-fail{color:var(--red)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:10px 12px;background:var(--surface2);color:var(--text2);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;position:sticky;top:0}
+td{padding:8px 12px;border-bottom:1px solid var(--border)}
+tr:hover td{background:rgba(108,99,255,.05)}
+.status-submitted{color:var(--green)}.status-late{color:var(--red)}.status-missing{color:var(--text2)}
+.check-table td:nth-child(3){font-weight:600}
+.pass{color:var(--green)}.fail{color:var(--red)}.warn{color:var(--yellow)}.skip{color:var(--text2)}
+.repo-item{display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg);border-radius:8px;margin-bottom:6px;font-size:12px}
+.repo-item code{background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:11px}
+.ruthless-output{background:var(--bg);border-radius:8px;padding:12px;font-family:monospace;font-size:12px;color:var(--text2);max-height:200px;overflow-y:auto}
+.loading{text-align:center;padding:40px;color:var(--text2)}.spinner{display:inline-block;width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.export-bar{display:flex;gap:8px;margin-top:12px}
+.fade-in{animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🎓 160sp Grader Dashboard</h1>
+  <p>Knowledge Atlas — Autograder Suite · 3 Tracks · 9 Tasks · 675 Points Total</p>
+</div>
+<div class="container">
+  <!-- GRADING CONTROLS -->
+  <div class="panel">
+    <h2>Grade Submission</h2>
+    <div class="controls">
+      <div class="control-group">
+        <label>Track</label>
+        <div class="radio-group" id="trackSelect">
+          <label><input type="radio" name="track" value="t1"><span>🏷️ Track 1</span></label>
+          <label><input type="radio" name="track" value="t2"><span>📄 Track 2</span></label>
+          <label><input type="radio" name="track" value="t3"><span>🥽 Track 3</span></label>
+        </div>
+      </div>
+      <div class="control-group">
+        <label>Task</label>
+        <div class="radio-group" id="taskSelect">
+          <label><input type="radio" name="task" value="1"><span>Task 1</span></label>
+          <label><input type="radio" name="task" value="2"><span>Task 2</span></label>
+          <label><input type="radio" name="task" value="3"><span>Task 3</span></label>
+        </div>
+      </div>
+      <div class="control-group">
+        <label>Student</label>
+        <select id="studentSelect"><option value="">Loading...</option></select>
+      </div>
+      <div class="control-group">
+        <label>&nbsp;</label>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary" onclick="runGrade()">🎯 Grade This</button>
+          <button class="btn btn-secondary" onclick="requestReview()">📋 Request Review</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results"></div>
+
+  <!-- ROSTER -->
+  <div class="panel">
+    <h2>Class Roster</h2>
+    <div style="overflow-x:auto">
+      <table id="rosterTable">
+        <thead><tr>
+          <th>Name</th><th>Track</th><th>Task 1</th><th>Task 2</th><th>Task 3</th><th>Total</th><th>Email</th>
+        </tr></thead>
+        <tbody id="rosterBody"></tbody>
+      </table>
+    </div>
+    <div class="export-bar">
+      <button class="btn btn-secondary btn-sm" onclick="exportCSV('grades')">📊 Export Grades CSV</button>
+      <button class="btn btn-secondary btn-sm" onclick="exportCSV('roster')">📋 Export Roster CSV</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = '';
+const TRACK_NAMES = {t1:'Image Tagger',t2:'Article Finder',t3:'VR Studio'};
+
+async function loadRoster(){
+  try{
+    const r = await fetch(API+'/api/roster');
+    const d = await r.json();
+    renderRoster(d.students);
+    populateStudentDropdown(d.students);
+  }catch(e){renderOfflineRoster()}
+}
+
+function renderOfflineRoster(){
+  try{
+    // Fallback: load from embedded data
+    const students = [
+      {student_id:'smith_jane',first_name:'Jane',last_name:'Smith',email:'jsmith@example.edu',track:'t1',task_1_status:'submitted',task_1_grade:null,task_2_status:'missing',task_2_grade:null,task_3_status:'missing',task_3_grade:null,total:0},
+      {student_id:'doe_john',first_name:'John',last_name:'Doe',email:'jdoe@example.edu',track:'t2',task_1_status:'submitted',task_1_grade:null,task_2_status:'late',task_2_grade:null,task_3_status:'missing',task_3_grade:null,total:0},
+      {student_id:'park_min',first_name:'Min',last_name:'Park',email:'mpark@example.edu',track:'t3',task_1_status:'submitted',task_1_grade:null,task_2_status:'submitted',task_2_grade:null,task_3_status:'missing',task_3_grade:null,total:0},
+      {student_id:'lee_alex',first_name:'Alex',last_name:'Lee',email:'alee@example.edu',track:'t1',task_1_status:'missing',task_1_grade:null,task_2_status:'missing',task_2_grade:null,task_3_status:'missing',task_3_grade:null,total:0}
+    ];
+    renderRoster(students);
+    populateStudentDropdown(students);
+  }catch(e){}
+}
+
+function renderRoster(students){
+  const tbody = document.getElementById('rosterBody');
+  tbody.innerHTML = students.map(s => {
+    const fmtGrade = (g,st) => {
+      if(g !== null) return `<span class="score-${g>=60?'high':g>=40?'mid':'low'}">${g.toFixed(0)}</span>`;
+      if(st==='submitted') return '<span class="status-submitted">✓ pending</span>';
+      if(st==='late') return '<span class="status-late">🔴 late</span>';
+      return '<span class="status-missing">—</span>';
+    };
+    return `<tr>
+      <td><strong>${s.last_name}, ${s.first_name}</strong></td>
+      <td>${s.track.toUpperCase()}</td>
+      <td>${fmtGrade(s.task_1_grade,s.task_1_status)}</td>
+      <td>${fmtGrade(s.task_2_grade,s.task_2_status)}</td>
+      <td>${fmtGrade(s.task_3_grade,s.task_3_status)}</td>
+      <td><strong>${s.total||0}</strong></td>
+      <td style="color:var(--text2);font-size:12px">${s.email}</td>
+    </tr>`;
+  }).join('');
+}
+
+function populateStudentDropdown(students){
+  const sel = document.getElementById('studentSelect');
+  sel.innerHTML = '<option value="all">All Students</option>' + 
+    students.map(s => `<option value="${s.student_id}">${s.last_name}, ${s.first_name} (${s.track.toUpperCase()})</option>`).join('');
+}
+
+async function runGrade(){
+  const track = document.querySelector('input[name="track"]:checked')?.value;
+  const task = document.querySelector('input[name="task"]:checked')?.value;
+  const student = document.getElementById('studentSelect').value;
+  if(!track||!task){alert('Select a track and task');return}
+
+  const resultsDiv = document.getElementById('results');
+  resultsDiv.style.display = 'block';
+  resultsDiv.innerHTML = '<div class="panel loading"><div class="spinner"></div><p style="margin-top:12px">Running autograder...</p></div>';
+
+  try{
+    const r = await fetch(API+'/api/grade',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({track, task:parseInt(task), student_id:student})
+    });
+    const report = await r.json();
+    if(report.error){resultsDiv.innerHTML=`<div class="panel"><p style="color:var(--red)">Error: ${report.error}</p></div>`;return}
+    renderReport(report);
+    loadRoster(); // Refresh grades
+  }catch(e){
+    resultsDiv.innerHTML = `<div class="panel"><p style="color:var(--yellow)">Server not running. Start with: <code>python3 server.py</code></p></div>`;
+  }
+}
+
+function renderReport(rpt){
+  const resultsDiv = document.getElementById('results');
+  const pct = rpt.max_points>0 ? (rpt.total_earned/rpt.max_points*100) : 0;
+  const scoreClass = pct>=80?'score-high':pct>=50?'score-mid':'score-low';
+  
+  let html = '<div class="fade-in">';
+  
+  // Task Question
+  html += `<div class="panel"><div class="result-section" style="border-left-color:var(--blue)">
+    <h3>📝 Task Question</h3>
+    <p><strong>${rpt.task_title||''}</strong></p>
+    <p style="margin-top:6px">${rpt.task_description||''}</p>
+  </div></div>`;
+
+  // Score + Summary
+  html += `<div class="panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h2 style="margin:0">Results — ${rpt.student_id}</h2>
+      <div>
+        <span class="score-badge ${scoreClass}">${rpt.total_earned.toFixed(0)} / ${rpt.max_points}</span>
+        <span class="${rpt.gate_passed?'gate-pass':'gate-fail'}" style="margin-left:12px;font-size:13px">
+          Gate: ${rpt.gate_passed?'✅ Passed':'❌ FAILED'}</span>
+      </div>
+    </div>`;
+
+  // What They Did
+  if(rpt.summary){
+    html += `<div class="result-section"><h3>📋 What They Did</h3><p>${rpt.summary}</p></div>`;
+  }
+
+  // Critique
+  html += '<div class="result-section"><h3>🔍 Critique</h3><ul>';
+  (rpt.strengths||[]).forEach(s => html += `<li class="pass">✅ <strong>Strong:</strong> ${s}</li>`);
+  (rpt.weaknesses||[]).forEach(w => html += `<li class="warn">⚠️ <strong>Weak:</strong> ${w}</li>`);
+  (rpt.missing||[]).forEach(m => html += `<li class="fail">❌ <strong>Missing:</strong> ${m}</li>`);
+  html += '</ul></div>';
+
+  // Check Details Table
+  html += `<div class="result-section"><h3>📊 Check Details</h3>
+    <table class="check-table"><thead><tr><th>Criterion</th><th>Points</th><th>Result</th><th>Detail</th></tr></thead><tbody>`;
+  (rpt.checks||[]).forEach(c => {
+    const cls = c.result.toLowerCase();
+    const gate = c.is_gate ? ' 🚪' : '';
+    html += `<tr><td>${c.criterion}${gate}</td><td>${c.earned.toFixed(0)}/${c.possible.toFixed(0)}</td>
+      <td class="${cls}">${c.result}</td><td style="color:var(--text2);font-size:12px">${c.detail}</td></tr>`;
+  });
+  html += '</tbody></table></div>';
+
+  // Repo Items
+  if(rpt.repo_items && rpt.repo_items.length){
+    html += '<div class="result-section"><h3>📦 Repo-Worthy Items</h3>';
+    rpt.repo_items.forEach(ri => {
+      const icon = {ready:'✅',needs_review:'⚠️',blocked:'❌'}[ri.status]||'?';
+      html += `<div class="repo-item">
+        ${icon} <code>${ri.filename}</code> → <code>${ri.target_repo}/${ri.target_path}</code>
+        <span style="color:var(--text2)">(${ri.status})</span>
+        <button class="btn btn-sm btn-green" onclick="reviewItem('${rpt.student_id}','${rpt.track}',${rpt.task},'${ri.filename}','approve')">Approve</button>
+        <button class="btn btn-sm btn-red" onclick="reviewItem('${rpt.student_id}','${rpt.track}',${rpt.task},'${ri.filename}','reject')">Reject</button>
+        <button class="btn btn-sm btn-yellow" onclick="reviewItem('${rpt.student_id}','${rpt.track}',${rpt.task},'${ri.filename}','request_changes')">Changes</button>
+      </div>`;
+    });
+    html += '</div>';
+  }
+
+  // Ruthless Output
+  if(rpt.ruthless_comments && rpt.ruthless_comments.length){
+    html += '<div class="result-section"><h3>⚡ Ruthless Test Output</h3><div class="ruthless-output">';
+    rpt.ruthless_comments.forEach(c => html += c + '\n');
+    html += '</div></div>';
+  }
+
+  html += '</div></div>'; // close panel + fade-in
+  resultsDiv.innerHTML = html;
+}
+
+async function reviewItem(sid, track, task, filename, action){
+  try{
+    await fetch(API+'/api/review',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({student_id:sid, track, task, filename, action})
+    });
+    alert(`${action.replace('_',' ')} → ${filename}`);
+  }catch(e){alert('Server not running')}
+}
+
+function requestReview(){alert('Review request logged. Manual TA audit will be scheduled.')}
+
+function exportCSV(type){
+  window.open(API+`/api/export/${type}`);
+}
+
+// Init
+loadRoster();
+</script>
+</body>
+</html>
