@@ -31,45 +31,79 @@ You're going to close both gaps: first annotate everything, then build the viewe
 
 Before you can browse annotations, you need to produce them. This is the moment of truth for your Task 2 detectors: do they actually work at scale?
 
+### What we learned from prototyping this task
+
+We prototyped the full pipeline for one latent tag (L42 Interactional Visibility) to verify everything works. Here's what you need to know:
+
+**Dependencies are minimal.** You only need `Pillow` (PIL) and `numpy`. No deep learning frameworks are required — your detectors compute geometric predicates over image statistics, not neural network features.
+
+**Proxy features work.** The registry says L42 requires "floor-plan-augmented isovist computation." You don't have floor plans. That's fine. The registry acknowledges this: the 2D proxy approach uses edge density, brightness variance, and partition coverage as stand-ins for the full isovist. Your detectors should document what they're proxying and why.
+
+**Directional accuracy is what matters.** Our prototype scored an open office at 2.4/4.0 and a cubicle farm at 1.9/4.0 — correct direction, modest separation. That's expected for a proxy approach without real depth maps. If your detector separates high-visibility from low-visibility spaces in the right direction, it's working.
+
+**Use the registry's output format.** Each tag in the registry has a `value_type` (binary, ordinal, continuous) and a `value_range`. The social interaction tags use `ordinal` with range `[0, 4]` (Likert scale). Your annotations must use the registry's `tag_id` as the key, not an invented name.
+
+**Set confidence honestly.** Without real depth maps or segmentation, your confidence should be low (0.2-0.4). If you add a real depth model like MiDaS, confidence goes up. Document what confidence means in your detector's docstring.
+
 ### 1A. Write the batch runner contract
 
 > **Contract objective:** "I want a script that runs all 6 of my latent tag detectors on every image in `collection.json` and produces a single `annotations.json` file with scores per image."
 > **Contract is with:** Your 6 detector functions (from Task 2) and your `collection.json` (from Task 1).
-> **Prompt hint:** *"I have 6 detector functions and 500 images. Write a batch runner that loads each image, computes the intermediate representations (segmentation mask, depth map, skeleton) if not already cached, runs all 6 detectors, and writes the results to annotations.json. It must handle failures gracefully — if one detector crashes on one image, log the error and continue."*
+> **Prompt hint:** *"I have 6 detector functions and 500 images. Write a batch runner that loads each image, runs all 6 detectors using PIL and numpy, and writes the results to annotations.json. It must handle failures gracefully — if one detector crashes on one image, log the error and continue. I only need Pillow and numpy, no ML frameworks."*
 
 **Your contract must cover:**
 - Reads image paths from `collection.json`
-- For each image, loads or computes intermediate representations (seg mask, depth map, skeleton)
-- Runs all 6 detectors, collecting `TagResult` per detector per image
-- Writes a single `annotations.json` with this structure:
+- For each image, loads the image with PIL and computes proxy features (edge density, brightness stats, color statistics)
+- Runs all 6 detectors, collecting results per detector per image
+- Writes a single `annotations.json` following the `image_tagger_observation` schema:
 
 ```json
 {
   "version": "1.0",
   "generated_at": "2026-04-27T...",
-  "detectors": ["L44", "L42", "L48", "L49", "L53", "L54"],
+  "detectors": ["social.interactional_visibility", "social.sociopetal_seating",
+                "social.dyadic_intimacy", "social.small_group_conversation",
+                "social.shared_attention_anchor", "social.boundary_permeability"],
   "images": {
     "img_001.jpg": {
       "room_type": "living_room",
       "tags": {
-        "L44_sociopetal_seating": {"score": 0.72, "confidence": 0.65},
-        "L42_interactional_visibility": {"score": 0.85, "confidence": 0.71},
-        "L48_dyadic_intimacy": {"score": 0.31, "confidence": 0.55}
+        "social.sociopetal_seating": {
+          "value": 2.8,
+          "value_type": "ordinal",
+          "confidence": 0.35,
+          "evidence": {
+            "facing_pairs": 3,
+            "cluster_size": 4,
+            "depth_source": "proxy"
+          }
+        },
+        "social.interactional_visibility": {
+          "value": 3.2,
+          "value_type": "ordinal",
+          "confidence": 0.30,
+          "evidence": {
+            "partition_score": 0.15,
+            "openness_score": 0.82,
+            "partition_coverage": 0.08
+          }
+        }
       }
-    },
-    "img_002.jpg": { ... }
+    }
   },
   "errors": {
-    "img_099.jpg": {"detector": "L53", "error": "segmentation mask not found"}
+    "img_099.jpg": {"detector": "social.shared_attention_anchor", "error": "image too dark for edge detection"}
   },
   "stats": {
     "total_images": 500,
     "images_annotated": 497,
     "images_with_errors": 3,
-    "mean_scores": {"L44": 0.38, "L42": 0.52, ...}
+    "mean_scores": {"social.sociopetal_seating": 1.85, "social.interactional_visibility": 2.10}
   }
 }
 ```
+
+**Key:** Use the registry's `tag_id` (e.g., `social.interactional_visibility`), NOT an invented name. Use `value` (not `score`) with the tag's `value_type` and `value_range` from the registry.
 
 ### 1B. Write your tests BEFORE running
 
@@ -90,17 +124,17 @@ After it finishes, check:
 
 > *"How many images were annotated? How many had errors? Show me the score distribution for each detector — are they plausible?"*
 
-**Reality check:** If a detector scores > 0.5 on more than 80% of images, something is wrong — not every space has sociopetal seating. If a detector scores < 0.1 on everything, it might not be working. Plot histograms of scores per detector and sanity-check them.
+**Reality check:** These are 0-4 Likert scores. If a detector scores > 2.5 on more than 80% of images, something is wrong — not every space has sociopetal seating. If a detector scores < 0.5 on everything, it might not be working. Our prototype found means around 1.9-2.4 across room types, which is plausible.
 
 ```python
 # Quick sanity check
 import json
 ann = json.load(open("annotations.json"))
 for det in ann["detectors"]:
-    scores = [img["tags"].get(det, {}).get("score", 0) 
+    scores = [img["tags"][det]["value"]
               for img in ann["images"].values() if det in img.get("tags", {})]
     print(f"{det}: mean={sum(scores)/len(scores):.2f}, "
-          f">0.5: {sum(1 for s in scores if s > 0.5)}/{len(scores)}")
+          f">2.5: {sum(1 for s in scores if s > 2.5)}/{len(scores)}")
 ```
 
 ### 1D. Fix detector issues discovered at scale
