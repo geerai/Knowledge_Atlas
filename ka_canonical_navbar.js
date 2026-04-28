@@ -35,6 +35,7 @@
 
   const REGIME_ITEMS = {
     global: [
+      { id:'search',     label:'⌕ Search',             href:'ka_search.html' },
       { id:'articles',   label:'Articles',             href:'ka_articles.html' },
       { id:'topics',     label:'Topics',               href:'ka_topics.html' },
       { id:'theories',   label:'Theories',             href:'ka_theories.html' },
@@ -44,6 +45,7 @@
       { id:'about',      label:'About',                href:'ka_about.html' },
     ],
     '160sp': [
+      { id:'search',   label:'⌕ Search', href:'ka_search.html', global:true },
       { id:'syllabus', label:'Syllabus', href:'ka_schedule.html' },
       { id:'a0',       label:'A0',       href:'week2_exercises.html' },
       { id:'a1',       label:'A1',       href:'week3_agenda.html' },
@@ -347,9 +349,17 @@
   /* ─── HTML builders ──────────────────────────────────────── */
 
   function buildBrand(regime) {
-    const home = (regime === '160sp' && !currentlyIn160sp()) ? '160sp/ka_schedule.html'
+    // Wordmark/logo rule (Prof. Kirsh, 2026-04-27):
+    //   * On a portal page (any 160sp page using THIS canonical navbar)
+    //     → return to GLOBAL home.
+    //   * On a global page → stay at global home.
+    // Journey pages (t*_intro.html, t*_task*.html) use the inline top-nav
+    // from _track_pages_shared.css and set their own wordmark target —
+    // task pages → journey home, intros → portal — so they bypass this
+    // builder entirely.
+    const home = (regime === '160sp' && !currentlyIn160sp()) ? '../ka_home.html'
               : (regime === 'global' && currentlyIn160sp())  ? '../ka_home.html'
-              : (regime === '160sp')                         ? 'ka_schedule.html'
+              : (regime === '160sp')                         ? '../ka_home.html'
               :                                                'ka_home.html';
     // Canonical Atlas logo: the linked-node mark already used on the login,
     // register, and user pages. This is the repo's recurring brand object,
@@ -379,9 +389,18 @@
 
   function buildLinks(regime, activeId) {
     const items = REGIME_ITEMS[regime] || [];
-    const prefix = prefixFor(regime, currentlyIn160sp());
+    const inClass = currentlyIn160sp();
+    const prefix = prefixFor(regime, inClass);
     return items.map(it => {
-      const href = prefix + it.href;
+      // Items flagged global:true live at the root of the repo, not inside
+      // the regime's directory. From a 160sp page they need '../'; from a
+      // root-level page they are already adjacent.
+      let href;
+      if (it.global) {
+        href = (inClass ? '../' : '') + it.href;
+      } else {
+        href = prefix + it.href;
+      }
       const cls = 'ka-link' + (it.id === activeId ? ' active' : '');
       const stubBadge = it.stub ? ' <span class="stub">stub</span>' : '';
       return `<a class="${cls}" href="${esc(href)}" data-ka-id="${esc(it.id)}">${esc(it.label)}${stubBadge}</a>`;
@@ -398,6 +417,12 @@
       parts.push(`
         <a class="ka-pill ka-pill-admin" href="${esc(adminHref)}" title="Admin console">
           <span>★ Admin</span>
+        </a>`);
+      // Grader's Page (AG's autograder UI). Local stdlib server at :5050;
+      // instructor must run `python3 160sp/grader_page/server.py` first.
+      parts.push(`
+        <a class="ka-pill ka-pill-admin" href="http://localhost:5050/" target="_blank" rel="noopener" title="AG autograder dashboard (instructor must run server.py first)">
+          <span>🎓 Grader</span>
         </a>`);
     }
 

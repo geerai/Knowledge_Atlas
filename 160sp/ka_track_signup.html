@@ -195,48 +195,45 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
       <!-- Track 1 -->
       <div class="track-card track1">
         <h3>Track 1: Image Tagger</h3>
-        <p><strong>What you'll build:</strong> A tool and workflow for annotating architectural photographs with evidence-backed psychological constructs. Your system will verify that each tag is supported by the K-ATLAS evidence base — no invention, only evidence-driven classification.</p>
+        <p><strong>What you'll build:</strong> A 500-image collection of openly-licensed architectural interiors with full provenance, six geometric detectors for latent social-spatial tags, and a standalone image viewer that lets anyone browse the corpus by tag domain or by human effect.</p>
         <div class="track-desc">
-          <strong>Week-by-week:</strong><br/>
-          Week 4: Design annotation schema and tag hierarchy. Build prototype tool.<br/>
-          Week 5: Pilot annotation on 200 images. Refine schema based on results.<br/>
-          Week 6: Full annotation run on 1,000 images. Validation and quality control.<br/>
-          Week 7: Final deliverables, usability feedback, integration testing.
+          <strong>Three tasks &middot; 75 + 75 + 75 points:</strong><br/>
+          Task 1: Build an image collection &mdash; 500 images, &ge; 12 room types, full provenance.<br/>
+          Task 2: Build six latent-tag detectors &mdash; Sociopetal Seating, Prospect, Interactional Visibility, etc.<br/>
+          Task 3: Annotate the full collection and ship a standalone tag-and-effect viewer.
         </div>
         <div class="card-links">
-          <a href="ka_tag_assignment.html" class="card-link card-link-primary">Full Assignment →</a>
+          <a href="t1_intro.html" class="card-link card-link-primary">Track Overview &rarr;</a>
         </div>
       </div>
 
       <!-- Track 2 -->
       <div class="track-card track2">
         <h3>Track 2: Article Finder</h3>
-        <p><strong>What you'll build:</strong> A query engine and batch retrieval system that finds relevant peer-reviewed articles for K-ATLAS research questions. Your system will handle deduplication, verify schema compliance, and maintain database integrity under real-world search conditions.</p>
+        <p><strong>What you'll build:</strong> A PRISMA-compliant article-discovery pipeline. Fix the broken contribute page, extract knowledge gaps from PNU templates, score them by Value of Information, generate targeted queries, run them through SerpAPI, triage abstracts, and report the funnel on a public dashboard.</p>
         <div class="track-desc">
-          <strong>Week-by-week:</strong><br/>
-          Week 4: Design query protocol. Build API connectors to Google Scholar and PubMed.<br/>
-          Week 5: Implement deduplication and schema validation. Test on 50 example queries.<br/>
-          Week 6: Scale to 130 K-ATLAS questions. Handle edge cases and failure modes.<br/>
-          Week 7: Final retrieval of 150+ curated citations. Integration with main system.
+          <strong>Three tasks &middot; 75 + 60 + 75 points (+20 contract bonus on Tasks 2 &amp; 3):</strong><br/>
+          Task 1: Fix the contribute page &mdash; wire in the classifier, store accepted/edge-case papers.<br/>
+          Task 2: Gap targeting &mdash; extract gaps, VOI-score them, generate AI-citation and Boolean queries.<br/>
+          Task 3: Search execution &mdash; SerpAPI, abstract fallback chain, triage, PRISMA dashboard.
         </div>
         <div class="card-links">
-          <a href="ka_article_finder_assignment.html" class="card-link card-link-primary">Full Assignment →</a>
+          <a href="t2_intro.html" class="card-link card-link-primary">Track Overview &rarr;</a>
         </div>
       </div>
 
       <!-- Track 3 -->
       <div class="track-card track3">
-        <h3>Track 3: AI & VR</h3>
-        <p><strong>What you'll build:</strong> Interactive 3D environments that visualize epistemological concepts and warrant structures. Your prototypes will run in Unreal Engine or A-Frame and include sensor logging so users can see how their exploration affects the evidence graph.</p>
+        <h3>Track 3: VR Studio</h3>
+        <p><strong>What you'll build:</strong> A pipeline that lets neuroarchitecture researchers modify 3D rooms via natural language. Collect VR-ready interior models (including some generated from photographs via World Labs Marble), prove every environmental factor is parametrically controllable, and ship an LLM front-end that turns "warm cozy library with 4-metre ceilings" into instant scene changes.</p>
         <div class="track-desc">
-          <strong>Week-by-week:</strong><br/>
-          Week 4: Learn engine, design environment spec, create initial 3D models.<br/>
-          Week 5: Implement interactive warrant visualization and user navigation.<br/>
-          Week 6: Add sensor logging and state persistence. Test interaction paradigm.<br/>
-          Week 7: Polish, documentation, final demo, transition to fall continuity.
+          <strong>Three tasks &middot; 75 + 75 + 75 points:</strong><br/>
+          Task 1: Collect &amp; catalog &ge; 20 VR-ready 3D models with per-wall mesh annotations.<br/>
+          Task 2: Build the A-Frame viewer with real-time sliders for all 8 manipulation classes.<br/>
+          Task 3: Wire up a constrained-JSON AI front-end with a viability validation gate.
         </div>
         <div class="card-links">
-          <a href="ka_vr_assignment.html" class="card-link card-link-primary">Full Assignment →</a>
+          <a href="t3_intro.html" class="card-link card-link-primary">Track Overview &rarr;</a>
         </div>
       </div>
 

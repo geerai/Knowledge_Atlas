@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search · Knowledge Atlas</title>
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --navy:#1C3D3A; --teal:#2A7868; --teal-lt:#5AC8AA; --teal-bg:#E6F5F0;
+      --amber:#E8872A; --amber-lt:#FFF3E0; --amber-dk:#9a5010;
+      --cream:#F7F4EF; --ink:#2C2C2C; --muted:#6B6B6B; --border:#D8D0C5;
+      --white:#FFFFFF; --rose:#A84F6B; --rose-lt:#F8EBF0;
+      --blue:#3A6EA8; --blue-lt:#EBF2F8;
+    }
+    html, body { background: var(--cream); color: var(--ink); font-family: Arial, sans-serif; line-height: 1.55; }
+    body { min-height: 100vh; }
+
+    /* TOP NAV — kept simple. The wordmark always returns to global home. */
+    .top-nav {
+      position: fixed; top:0; left:0; right:0; height:56px; z-index:1000;
+      background: var(--navy); color:#fff;
+      display:flex; align-items:center; gap:1rem;
+      padding: 0 24px; box-shadow: 0 1px 3px rgba(0,0,0,.12);
+    }
+    .top-nav .wordmark {
+      font-family: Georgia, serif; font-size: 1.05rem; font-weight: 600;
+      color: #F5A623; text-decoration: none;
+    }
+    .top-nav .wordmark:hover { color:#fff; }
+    .top-nav .nav-center { flex:1; display:flex; justify-content:center; gap:14px; flex-wrap:wrap; font-size:13px; }
+    .top-nav .nav-center a { color:#B8D4CE; text-decoration:none; padding:4px 6px; border-radius:4px; }
+    .top-nav .nav-center a:hover { color:#fff; }
+    .top-nav .nav-center a.active { color:#F5A623; }
+
+    /* HERO */
+    .hero {
+      margin-top: 56px;
+      background: linear-gradient(135deg, var(--navy) 0%, #163230 100%);
+      color:#fff; padding: 38px 24px 28px; text-align:center;
+    }
+    .hero h1 { font-family: Georgia, serif; font-size: 1.7rem; font-weight: 400; margin-bottom: 6px; }
+    .hero .sub { font-size: 0.92rem; color: #b8d8d4; max-width: 620px; margin: 0 auto 22px; }
+    .hero .search-shell {
+      max-width: 720px; margin: 0 auto;
+      background: #fff; border-radius: 10px;
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 8px 6px 14px; box-shadow: 0 4px 16px rgba(0,0,0,.12);
+    }
+    .hero .search-shell input[type="search"] {
+      flex: 1; border: none; outline: none;
+      font-size: 1.05rem; padding: 12px 6px; color: var(--ink);
+      background: transparent;
+    }
+    .hero .search-shell .search-icon {
+      font-size: 1.1rem; color: var(--muted);
+    }
+    .hero .search-shell .clear-btn {
+      border:none; background:transparent; color: var(--muted);
+      font-size: 1.2rem; cursor: pointer; padding: 4px 10px; border-radius: 4px;
+    }
+    .hero .search-shell .clear-btn:hover { background: #f0e8d8; color: var(--ink); }
+
+    /* PAGE GRID */
+    .page-grid {
+      max-width: 1200px; margin: 24px auto 80px; padding: 0 24px;
+      display: grid; grid-template-columns: 220px 1fr; gap: 32px;
+    }
+    @media (max-width: 900px) { .page-grid { grid-template-columns: 1fr; } }
+
+    /* LEFT FILTERS */
+    .filters {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px 12px; font-size: 0.85rem;
+      align-self: start; position: sticky; top: 80px;
+    }
+    .filters h2 {
+      font-family: Georgia, serif; font-size: 0.78rem;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+    .filters .filter-row { display:flex; align-items:center; justify-content:space-between; padding: 5px 4px; cursor: pointer; border-radius:4px; }
+    .filters .filter-row:hover { background: var(--teal-bg); color: var(--teal); }
+    .filters .filter-row input { margin-right: 8px; }
+    .filters .filter-row.active { background: var(--teal-bg); color: var(--teal); font-weight: 600; }
+    .filters .filter-row .count { font-size: 0.72rem; color: var(--muted); padding-left: 6px; }
+    .filters .filter-divider { height:1px; background: var(--border); margin: 10px 0; }
+    .filters .reset-btn {
+      width: 100%; padding: 6px 8px; border:1px solid var(--border);
+      background: #fff; cursor: pointer; border-radius: 4px;
+      font-size: 0.78rem; color: var(--muted);
+    }
+    .filters .reset-btn:hover { color: var(--rose); border-color: var(--rose); }
+
+    @media (max-width: 900px) {
+      .filters { position: static; }
+    }
+
+    /* RESULTS */
+    .results-meta {
+      font-size: 0.85rem; color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .result {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px 18px; margin-bottom: 10px;
+      transition: box-shadow 0.12s, border-color 0.12s;
+    }
+    .result:hover { border-color: var(--teal); box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .result-head { display:flex; align-items:center; gap:8px; margin-bottom: 4px; }
+    .result-head .area-pill {
+      font-size: 0.65rem; padding: 2px 8px; border-radius: 10px;
+      letter-spacing: 0.04em; font-weight: 700; text-transform: uppercase;
+    }
+    .area-pill.area-160sp-other,
+    .area-pill.area-track-overview,
+    .area-pill.area-track-task,
+    .area-pill.area-track-submission,
+    .area-pill.area-160sp-syllabus { background: var(--teal-bg); color: var(--teal); }
+    .area-pill.area-evidence,
+    .area-pill.area-gaps        { background: var(--amber-lt); color: var(--amber-dk); }
+    .area-pill.area-articles,
+    .area-pill.area-topics      { background: var(--blue-lt); color: var(--blue); }
+    .area-pill.area-contribute  { background: var(--rose-lt); color: var(--rose); }
+    .area-pill.area-admin,
+    .area-pill.area-site-utility { background: #efe9e0; color: #6a6258; }
+    .area-pill.area-home        { background: var(--teal); color: #fff; }
+    .area-pill.area-other       { background: #f4efe6; color: #888; }
+
+    .result-head .track-pill {
+      font-size: 0.65rem; padding: 2px 8px; border-radius: 10px;
+      letter-spacing: 0.04em; font-weight: 600;
+      background: #fff; border: 1px solid var(--border); color: var(--muted);
+    }
+    .track-pill.track-track1 { color: #2A7868; border-color: #b3dfd5; }
+    .track-pill.track-track2 { color: #9a5010; border-color: #ecc8a0; }
+    .track-pill.track-track3 { color: #3A6EA8; border-color: #b8cce8; }
+    .track-pill.track-track4 { color: #A84F6B; border-color: #e8c0d0; }
+
+    .result-title {
+      font-family: Georgia, serif; font-size: 1.05rem;
+      color: var(--navy); text-decoration: none;
+      display:block; margin-bottom: 6px;
+    }
+    .result-title:hover { text-decoration: underline; }
+    .result-path {
+      font-family: ui-monospace, Menlo, monospace; font-size: 0.74rem; color: var(--muted);
+      margin-bottom: 8px; word-break: break-all;
+    }
+    .result-snippet { font-size: 0.85rem; color: #444; line-height: 1.55; }
+    .result-snippet mark { background: #fff3c4; color: #5a4500; padding: 0 2px; border-radius: 2px; }
+
+    .empty {
+      text-align: center; padding: 40px 24px; color: var(--muted);
+    }
+    .empty h3 { font-family: Georgia, serif; color: var(--navy); margin-bottom: 8px; }
+    .empty .suggestions { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top: 14px; }
+    .empty .suggestions button {
+      background: #fff; border:1px solid var(--border); border-radius: 14px;
+      padding: 4px 12px; font-size: 0.82rem; color: var(--ink); cursor: pointer;
+    }
+    .empty .suggestions button:hover { background: var(--teal-bg); color: var(--teal); border-color: var(--teal); }
+
+    .footer {
+      max-width: 1200px; margin: 0 auto; padding: 24px;
+      font-size: 0.8rem; color: var(--muted); border-top: 1px solid var(--border);
+    }
+    .footer a { color: var(--teal); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <nav class="top-nav">
+    <a class="wordmark" href="ka_home.html" aria-label="Knowledge Atlas — global home">Knowledge Atlas</a>
+    <div class="nav-center">
+      <a href="ka_topics.html">Explore</a>
+      <a href="ka_evidence.html">Evidence</a>
+      <a href="ka_gaps.html">Gaps</a>
+      <a href="ka_article_search.html">Articles</a>
+      <a href="ka_contribute.html">Contribute</a>
+      <a href="ka_search.html" class="active">Search</a>
+      <a href="ka_sitemap.html">Site map</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <h1>Search the Knowledge Atlas</h1>
+    <p class="sub">Find pages, track assignments, evidence, gaps, and contributors across the whole site.</p>
+    <div class="search-shell">
+      <span class="search-icon" aria-hidden="true">⌕</span>
+      <input id="q" type="search" autofocus
+             placeholder="Try: ceiling height, prospect, task 2, biophilic, persona, restoration…"
+             aria-label="Search">
+      <button class="clear-btn" id="clear-btn" type="button" title="Clear" aria-label="Clear search">×</button>
+    </div>
+  </header>
+
+  <div class="page-grid">
+
+    <aside class="filters" aria-label="Filter by area">
+      <h2>Filter by area</h2>
+      <div id="filter-list">
+        <!-- populated from index -->
+      </div>
+      <div class="filter-divider"></div>
+      <button class="reset-btn" id="reset-filters" type="button">Reset filters</button>
+    </aside>
+
+    <main>
+      <div class="results-meta" id="results-meta">Loading index…</div>
+      <div id="results"></div>
+    </main>
+
+  </div>
+
+  <footer class="footer">
+    <p>
+      Static search across <span id="indexed-count">…</span> pages.
+      The index is rebuilt by <code>scripts/build_search_index.py</code>; if a page you expect is missing,
+      run that script and reload. <a href="ka_sitemap.html">Browse the site map</a> ·
+      <a href="ka_home.html">Global home</a>.
+    </p>
+    <p style="margin-top:6px">Index generated <span id="index-when">—</span>.</p>
+  </footer>
+
+  <script>
+  (function(){
+    'use strict';
+
+    // -----------------------------------------------------------------
+    // Configuration
+    // -----------------------------------------------------------------
+    const INDEX_URL = 'search_index.json';
+    const MAX_RESULTS = 80;
+
+    // Friendly labels for the area buckets
+    const AREA_LABEL = {
+      'home':            'Home',
+      'topics':          'Topics',
+      'articles':        'Articles',
+      'evidence':        'Evidence',
+      'gaps':            'Gaps',
+      'contribute':      'Contribute',
+      'track-overview':  'COGS 160 — Track overview',
+      'track-task':      'COGS 160 — Track task',
+      'track-submission':'COGS 160 — Submissions',
+      '160sp-syllabus':  'COGS 160 — Syllabus',
+      '160sp-other':     'COGS 160 — Other',
+      'admin':           'Admin',
+      'site-utility':    'Site utility',
+      'other':           'Other'
+    };
+
+    // Stopwords stripped from queries to avoid stupid matches
+    const STOPWORDS = new Set(['the','a','an','of','for','to','and','or','in','on','is','are','be','this','that','what','how','why']);
+
+    // -----------------------------------------------------------------
+    // State
+    // -----------------------------------------------------------------
+    let INDEX = [];
+    let activeAreas = new Set();   // empty = all
+    let lastQuery = '';
+
+    // -----------------------------------------------------------------
+    // Tokenize and score
+    // -----------------------------------------------------------------
+    function tokenize(s){
+      return (s || '').toLowerCase()
+        .replace(/[^\w\s\-]/g, ' ')
+        .split(/\s+/)
+        .filter(t => t.length >= 2 && !STOPWORDS.has(t));
+    }
+
+    function score(page, tokens){
+      if (tokens.length === 0) return 0;
+      const title    = (page.title || '').toLowerCase();
+      const headings = page.headings.join(' ').toLowerCase();
+      const excerpt  = (page.excerpt || '').toLowerCase();
+      const path     = (page.path || '').toLowerCase();
+      let s = 0;
+      for (const t of tokens){
+        // Substring matches with weights
+        if (title.includes(t))    s += 8;
+        if (headings.includes(t)) s += 4;
+        if (excerpt.includes(t))  s += 1;
+        if (path.includes(t))     s += 3;
+      }
+      return s;
+    }
+
+    function highlight(text, tokens){
+      if (!text) return '';
+      let out = text;
+      // Take a window around the first token hit so the snippet contains the match
+      const lower = text.toLowerCase();
+      let firstHit = -1;
+      for (const t of tokens){
+        const idx = lower.indexOf(t);
+        if (idx !== -1 && (firstHit === -1 || idx < firstHit)) firstHit = idx;
+      }
+      let windowed;
+      if (firstHit === -1) {
+        windowed = text.slice(0, 240);
+      } else {
+        const start = Math.max(0, firstHit - 60);
+        const end   = Math.min(text.length, firstHit + 240);
+        windowed = (start > 0 ? '… ' : '') + text.slice(start, end) + (end < text.length ? ' …' : '');
+      }
+      // Escape, then re-mark
+      let safe = windowed.replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; });
+      for (const t of tokens){
+        const re = new RegExp('(' + t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+        safe = safe.replace(re, '<mark>$1</mark>');
+      }
+      return safe;
+    }
+
+    // -----------------------------------------------------------------
+    // Render
+    // -----------------------------------------------------------------
+    function render(){
+      const meta = document.getElementById('results-meta');
+      const results = document.getElementById('results');
+      const q = lastQuery.trim();
+      const tokens = tokenize(q);
+
+      // Filter by area
+      let pool = (activeAreas.size === 0)
+        ? INDEX.slice()
+        : INDEX.filter(p => activeAreas.has(p.area));
+
+      let scored;
+      if (tokens.length === 0){
+        // No query: show the curated landings sorted by area priority
+        scored = pool
+          .map(p => ({p, s: 0}))
+          .filter(x => ['home','track-overview','track-task','track-submission','topics','articles','evidence','gaps','contribute','160sp-syllabus','site-utility'].includes(x.p.area));
+      } else {
+        scored = pool.map(p => ({p, s: score(p, tokens)})).filter(x => x.s > 0);
+        scored.sort((a,b) => b.s - a.s || a.p.title.localeCompare(b.p.title));
+      }
+
+      const shown = scored.slice(0, MAX_RESULTS);
+
+      if (q && shown.length === 0){
+        meta.textContent = '';
+        results.innerHTML = `
+          <div class="empty">
+            <h3>No matches for "${q.replace(/[<>]/g,'')}"</h3>
+            <p>Try one of these instead:</p>
+            <div class="suggestions">
+              <button data-q="ceiling height">ceiling height</button>
+              <button data-q="prospect">prospect</button>
+              <button data-q="biophilic">biophilic</button>
+              <button data-q="persona">persona</button>
+              <button data-q="track 2">track 2</button>
+              <button data-q="contribute">contribute</button>
+              <button data-q="restoration">restoration</button>
+            </div>
+          </div>`;
+        results.querySelectorAll('button[data-q]').forEach(b => {
+          b.addEventListener('click', () => {
+            document.getElementById('q').value = b.dataset.q;
+            lastQuery = b.dataset.q;
+            render();
+          });
+        });
+        return;
+      }
+
+      if (q){
+        meta.textContent = `${scored.length} match${scored.length === 1 ? '' : 'es'} for "${q}"` +
+          (activeAreas.size ? ` in ${activeAreas.size} area${activeAreas.size === 1 ? '' : 's'}` : '');
+      } else {
+        meta.textContent = `Browse ${scored.length} curated pages` +
+          (activeAreas.size ? ` in selected area${activeAreas.size === 1 ? '' : 's'}` : '. Type a query above to search the full index.');
+      }
+
+      const html = shown.map(({p}) => {
+        const areaLabel = AREA_LABEL[p.area] || p.area;
+        const snippet = highlight(p.excerpt, tokens);
+        const trackPill = (p.track && p.track !== 'none')
+          ? `<span class="track-pill track-${p.track}">${p.track.replace('track', 'Track ')}</span>`
+          : '';
+        return `
+        <article class="result">
+          <div class="result-head">
+            <span class="area-pill area-${p.area}">${areaLabel}</span>
+            ${trackPill}
+          </div>
+          <a class="result-title" href="${p.url}">${highlightTitle(p.title, tokens)}</a>
+          <div class="result-path">${p.path}</div>
+          <div class="result-snippet">${snippet}</div>
+        </article>`;
+      }).join('');
+      results.innerHTML = html;
+    }
+
+    function highlightTitle(title, tokens){
+      let safe = (title || '').replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; });
+      for (const t of tokens){
+        const re = new RegExp('(' + t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+        safe = safe.replace(re, '<mark>$1</mark>');
+      }
+      return safe;
+    }
+
+    // -----------------------------------------------------------------
+    // Filters UI
+    // -----------------------------------------------------------------
+    function buildFilters(){
+      const counts = {};
+      INDEX.forEach(p => { counts[p.area] = (counts[p.area] || 0) + 1; });
+      const order = ['home','track-overview','track-task','track-submission','160sp-syllabus','160sp-other',
+                     'topics','articles','evidence','gaps','contribute','admin','site-utility','other'];
+      const list = document.getElementById('filter-list');
+      list.innerHTML = order
+        .filter(a => counts[a])
+        .map(a => `
+          <label class="filter-row" data-area="${a}">
+            <span><input type="checkbox" data-area-cb="${a}"> ${AREA_LABEL[a] || a}</span>
+            <span class="count">${counts[a]}</span>
+          </label>
+        `).join('');
+
+      list.querySelectorAll('input[data-area-cb]').forEach(cb => {
+        cb.addEventListener('change', () => {
+          const a = cb.dataset.areaCb;
+          if (cb.checked) activeAreas.add(a); else activeAreas.delete(a);
+          cb.closest('.filter-row').classList.toggle('active', cb.checked);
+          render();
+        });
+      });
+
+      document.getElementById('reset-filters').addEventListener('click', () => {
+        activeAreas.clear();
+        list.querySelectorAll('input[data-area-cb]').forEach(cb => cb.checked = false);
+        list.querySelectorAll('.filter-row.active').forEach(r => r.classList.remove('active'));
+        render();
+      });
+    }
+
+    // -----------------------------------------------------------------
+    // Boot
+    // -----------------------------------------------------------------
+    function setupSearchInput(){
+      const input = document.getElementById('q');
+      const clear = document.getElementById('clear-btn');
+      let debounce;
+      input.addEventListener('input', () => {
+        clearTimeout(debounce);
+        debounce = setTimeout(() => {
+          lastQuery = input.value;
+          render();
+          // Reflect query in the URL so it can be shared
+          const qs = lastQuery ? ('?q=' + encodeURIComponent(lastQuery)) : '';
+          if (window.history.replaceState) {
+            window.history.replaceState(null, '', window.location.pathname + qs);
+          }
+        }, 80);
+      });
+      clear.addEventListener('click', () => {
+        input.value = '';
+        lastQuery = '';
+        input.focus();
+        render();
+        if (window.history.replaceState) {
+          window.history.replaceState(null, '', window.location.pathname);
+        }
+      });
+      // Read ?q= on load
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get('q');
+      if (q) {
+        input.value = q;
+        lastQuery = q;
+      }
+    }
+
+    fetch(INDEX_URL, { cache: 'no-cache' })
+      .then(r => {
+        if (!r.ok) throw new Error('failed to load index');
+        return r.json();
+      })
+      .then(data => {
+        INDEX = data.pages || [];
+        document.getElementById('indexed-count').textContent = data.page_count || INDEX.length;
+        document.getElementById('index-when').textContent = (data.generated_at || '').replace('T', ' ').replace(/\..*/, '');
+        buildFilters();
+        setupSearchInput();
+        render();
+      })
+      .catch(err => {
+        document.getElementById('results-meta').innerHTML =
+          'Could not load <code>search_index.json</code>. Run <code>python3 scripts/build_search_index.py</code> from the repo root and reload.';
+      });
+  })();
+  </script>
+</body>
+</html>
