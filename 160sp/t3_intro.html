@@ -30,21 +30,26 @@
 
       <!-- HERO -->
       <header class="hero">
-        <div class="hero-track">TRACK 3 &mdash; VR STUDIO</div>
-        <h1>Track 3: VR Studio</h1>
+        <div class="hero-track">TRACK 3 &middot; VR STUDIO</div>
+        <h1>Track 3: VR Studio &mdash; Parametric Rooms for Environmental Cognition Research</h1>
         <p class="hero-sub">
-          Build a pipeline that turns natural-language instructions into
-          modified 3D rooms in real time &mdash; collect VR-ready interior
-          models, prove every environmental factor can be manipulated, and
-          ship an AI front-end that converts &ldquo;a cozy library with
-          4-metre ceilings and exposed brick on the north wall&rdquo; into
-          an instant scene change.
+          Every room in this track is generated parametrically by
+          Infinigen Indoors (Raistrick et&nbsp;al., 2024) &mdash; from the
+          floorplan down to the doorknob &mdash; and exposed to students
+          through a thin Python wrapper, never through Blender&rsquo;s UI.
+          The AI front-end you ship in Task&nbsp;3 translates a
+          natural-language instruction into a validated parameter dict,
+          calls the wrapper, and returns a glTF the browser displays in
+          seconds. The cohort&rsquo;s flagship deliverable is a single
+          shared parametric module: a <em>curved-wall worship room</em>
+          grounded in Vartanian et&nbsp;al. (2015) on the cathedral
+          effect.
         </p>
         <div class="hero-meta">
           <span class="hero-pill">3 tasks</span>
           <span class="hero-pill">10 weeks</span>
           <span class="hero-pill">75 + 75 + 75 points</span>
-          <span class="hero-pill">120+ fps target</span>
+          <span class="hero-pill">Flagship: curved-wall worship room</span>
         </div>
       </header>
 
@@ -52,34 +57,54 @@
       <section>
         <h2>What you&rsquo;ll build</h2>
         <p>
-          The Knowledge Atlas catalogues the empirical evidence that interior
-          environments alter human cognition and affect &mdash; ceiling
-          height changes thinking, daylight shifts mood, materials change the
-          feel of a room. A neuroarchitecture researcher who wants to
-          <em>test</em> these claims has to vary one feature while holding
-          everything else constant, which means she needs 3D rooms she can
-          modify parametrically. No existing product gives her that. Tools
-          like Veras and Decory produce 2D images, not editable 3D models;
-          Meshy and Luma generate new models, not parametric edits of
-          existing ones.
+          Environmental psychology rests on causal claims: ceiling height
+          changes thought, daylight changes mood, fractal patterning
+          changes affect. Testing those claims demands stimuli a
+          researcher can sweep one factor at a time while holding the
+          rest of the room constant. Veras and Decory output 2D images,
+          not 3D scenes. Meshy and Luma generate fresh models, not
+          parametric edits of existing ones. BuildingNet, ProcTHOR, and
+          HSSD ship beautiful artist-authored scenes, but the parameters
+          are baked into the geometry. None of these tools lets a
+          researcher request the Meyers-Levy high-ceiling condition on
+          a specified office.
         </p>
         <p>
-          You will close that gap. In Task 1 you assemble a library of at
-          least 20 VR-ready 3D interior models, each annotated so a program
-          knows which mesh is the ceiling, which is the north wall, which is
-          a window. In Task 2 you load those models in a browser-based VR
-          viewer and prove every factor can be modified in real time
-          &mdash; sliders for ceiling height, light intensity, material
-          roughness; per-wall material swatches; path-traced lighting that
-          converges in two seconds. In Task 3 you wire up a language model
-          that reads the user&rsquo;s instruction, returns a constrained
-          JSON spec, validates every field against your viability matrix,
-          and applies the modifications atomically.
+          Infinigen Indoors closes that gap. Princeton&rsquo;s Vision and
+          Learning Lab released it in 2024 under a BSD licence
+          (Raistrick et&nbsp;al., 2024; Khanna et&nbsp;al., 2024); every
+          surface, fixture, and prop is procedurally generated from a
+          parameter graph rather than retrieved from a library. Out of
+          the box it covers seven room types: kitchen, living room,
+          bedroom, bathroom, dining room, hallway, and office. You drive
+          it from Python with a JSON parameter dict and never touch
+          Blender&rsquo;s UI. We adopt it as the parametric backbone for
+          this track.
         </p>
         <p>
-          The result is the first tool that lets a researcher say &ldquo;give
-          me the Meyers-Levy high-ceiling condition on this office&rdquo; and
-          get a modified 3D stimulus in seconds instead of weeks.
+          You ship three deliverables on top of that backbone. In
+          Task&nbsp;1 you install Infinigen, render the seven built-in
+          rooms, and write a JSON-Schema parameter manifest for two
+          assigned room types &mdash; five to seven parameters apiece,
+          each citing the environmental-psychology literature that
+          motivates it. Rooms outside the seven covered classes get a
+          parameter extension proposal instead. In Task&nbsp;2 you wrap
+          Infinigen in a Python function that takes the manifest&rsquo;s
+          dict and exports glTF, then load that glTF in the browser
+          with Google&rsquo;s <code>&lt;model-viewer&gt;</code> web
+          component; the deliverable includes a parameter-sweep gallery
+          showing each parameter at three settings, plus a divergence
+          note comparing your room to its HSSD artist-authored
+          counterpart. In Task&nbsp;3 you add the AI front-end, ship
+          literature-grounded presets, and contribute one component to
+          the cohort&rsquo;s shared curved-wall worship room.
+        </p>
+        <p>
+          The cohort output is a research artefact, not a homework set:
+          the first open-source environmentally-instrumented parametric
+          room library, partially closing the gap that BuildingNet,
+          ProcTHOR, and HSSD do not fill. We will publish it with all
+          contributors named.
         </p>
       </section>
 
@@ -90,123 +115,254 @@
 
           <a class="task-card" href="t3_task1.html">
             <div class="task-card-num">TASK 1</div>
-            <div class="task-card-title">Collect &amp; Catalog VR-Ready 3D Interior Models</div>
+            <div class="task-card-title">Infinigen Setup, Coverage Survey, and Parameter Manifests</div>
             <div class="task-card-desc">
-              Source at least 20 openly-licensed glTF/GLB interior models
-              (Sketchfab, BlenderKit, Poly Haven, plus at least three
-              generated through World Labs Marble), evaluate each model
-              against eight manipulation classes, segment the meshes so
-              every wall is individually addressable, and produce a
-              <code>mesh_roles.json</code> per model.
+              Install Infinigen Indoors, render all seven built-in room
+              types, and author a JSON-Schema parameter manifest for two
+              assigned rooms with five to seven parameters each &mdash;
+              every parameter cited to environmental-psychology
+              literature. For room types Infinigen does not cover,
+              write a parameter extension proposal that names the
+              closest Infinigen class and proposes the new parameters.
             </div>
-            <div class="task-card-meta">4 phases &middot; 75 points</div>
+            <div class="task-card-meta">5 phases &middot; 75 points</div>
           </a>
 
           <a class="task-card" href="t3_task2.html">
             <div class="task-card-num">TASK 2</div>
-            <div class="task-card-title">VR Conversion &amp; Manual Factor Testing</div>
+            <div class="task-card-title">Render-to-Web Pipeline and Parameter Sweep Gallery</div>
             <div class="task-card-desc">
-              Build a browser-based A-Frame viewer with real-time slider
-              controls for all eight manipulation classes, including
-              per-wall material selection and at least HDRI-based realistic
-              lighting. Test every factor on at least ten models and produce
-              a factor viability matrix supported by before/after
-              screenshots.
+              Build a Python wrapper that takes a JSON parameter dict,
+              calls Infinigen, and exports glTF; load the result in the
+              browser with the <code>&lt;model-viewer&gt;</code> web
+              component; produce a parameter-sweep gallery that shows
+              every parameter at three settings; ship an HSSD
+              divergence note comparing your parametric room to its
+              artist-authored counterpart.
             </div>
-            <div class="task-card-meta">3 phases &middot; 75 points</div>
+            <div class="task-card-meta">4 phases &middot; 75 points</div>
           </a>
 
           <a class="task-card" href="t3_task3.html">
             <div class="task-card-num">TASK 3</div>
-            <div class="task-card-title">AI Front-End for Parametric Scene Modification</div>
+            <div class="task-card-title">AI Front-End, Literature Presets, and the Curved-Wall Worship Room</div>
             <div class="task-card-desc">
-              Add a natural-language input that runs through an LLM with a
-              constrained JSON schema, a validation gate that checks every
-              modification against your factor viability matrix, and a set
-              of research-derived presets (Meyers-Levy, prospect-refuge,
-              biophilic restoration). Every modification must apply
-              atomically and degrade gracefully when a model does not
-              support it.
+              Wrap an LLM that translates natural-language instructions
+              into validated parameter dicts; ship literature-grounded
+              presets per room type (Vartanian cathedral, Kaplan
+              restorative, Ulrich stress-recovery, Meyers-Levy
+              ceiling); evaluate the front-end across the cohort. Then
+              contribute one sub-component to the
+              <strong>cohort flagship</strong>: a curved-wall worship
+              room published as a single shared parametric module at
+              term end.
             </div>
-            <div class="task-card-meta">5 phases &middot; 75 points</div>
+            <div class="task-card-meta">5 phases &middot; 75 points &middot; cohort flagship deliverable</div>
           </a>
 
         </div>
       </section>
 
-      <!-- THE EIGHT MANIPULATION CLASSES -->
+      <!-- THE FIFTEEN ROOM TYPES -->
       <section>
-        <h2>The eight manipulation classes</h2>
+        <h2>The fifteen room types</h2>
         <p>
-          Every model and every viewer has to support the same eight classes
-          of environmental manipulation. These are derived from the
-          Tagging&nbsp;Contractor registry; together they cover 330 of the
-          424 tags. Your mesh annotations in Task 1 must allow every class;
-          your viewer in Task 2 must demonstrate every class; your AI
-          front-end in Task 3 must accept natural-language instructions
-          targeting every class.
+          The track covers fifteen room types. Seven sit inside
+          Infinigen&rsquo;s built-in coverage and require only a wrapper
+          and a parameter manifest. Eight sit outside it and require a
+          parameter extension proposal &mdash; you pick the closest
+          Infinigen class, read its source, and propose the additional
+          parameters that the new room type needs. One row, the
+          worship room, is the cohort&rsquo;s flagship.
         </p>
 
         <table class="data-table">
           <thead>
             <tr>
-              <th>Class</th>
-              <th>What researchers manipulate</th>
-              <th>Example slider</th>
+              <th>#</th>
+              <th>Room type</th>
+              <th>What to search for</th>
+              <th>Why we need it</th>
+              <th>Infinigen coverage</th>
+              <th>Student approach</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><strong>Geometry</strong></td>
-              <td>Ceiling height, room volume, enclosure ratio, isovist area</td>
-              <td>Ceiling height: 2.0 m &ndash; 6.0 m</td>
+              <td>1</td>
+              <td><code>living_room</code></td>
+              <td>living room, lounge, sitting room</td>
+              <td>Furniture layout, daylight, biophilia, colour warmth</td>
+              <td>Yes (built-in)</td>
+              <td>Wrap &amp; expose 5&ndash;7 parameters</td>
             </tr>
             <tr>
-              <td><strong>Lighting</strong></td>
-              <td>Illuminance, colour temperature (CCT), daylight vs artificial</td>
-              <td>CCT: 2700 K &ndash; 6500 K</td>
+              <td>2</td>
+              <td><code>bedroom</code></td>
+              <td>bedroom, sleeping quarters</td>
+              <td>Lighting warmth, enclosure, materials, tranquillity</td>
+              <td>Yes (built-in)</td>
+              <td>Wrap &amp; expose 5&ndash;7 parameters</td>
             </tr>
             <tr>
-              <td><strong>Materials</strong></td>
-              <td>Wood vs concrete vs glass; surface roughness; natural-material ratio</td>
-              <td>Wall roughness: 0.0 &ndash; 1.0</td>
+              <td>3</td>
+              <td><code>kitchen</code></td>
+              <td>kitchen, cooking area</td>
+              <td>Component detection (cabinets, counters), materials, layout</td>
+              <td>Yes (built-in)</td>
+              <td>Wrap &amp; expose 5&ndash;7 parameters</td>
             </tr>
             <tr>
-              <td><strong>Color</strong></td>
-              <td>Hue (warm vs cool), saturation, palette diversity</td>
-              <td>Wall colour swatches</td>
+              <td>4</td>
+              <td><code>bathroom</code></td>
+              <td>bathroom, restroom, washroom</td>
+              <td>Materials (tile, glass), fixtures, spatial geometry</td>
+              <td>Yes (built-in)</td>
+              <td>Wrap &amp; expose 5&ndash;7 parameters</td>
             </tr>
             <tr>
-              <td><strong>Biophilic elements</strong></td>
-              <td>Plant count, water features, view content (greenery vs built-up)</td>
-              <td>Window-view backdrop selector</td>
+              <td>5</td>
+              <td><code>office</code></td>
+              <td>office interior, workspace, workstation</td>
+              <td>Task lighting, spatial openness, visual complexity</td>
+              <td>Yes (built-in)</td>
+              <td>Wrap &amp; expose 5&ndash;7 parameters</td>
             </tr>
             <tr>
-              <td><strong>Furniture layout</strong></td>
-              <td>Seating count, sociopetal vs sociofugal arrangement, clutter density</td>
-              <td>Furniture visibility toggle</td>
+              <td>6</td>
+              <td><code>classroom</code></td>
+              <td>classroom, lecture hall, seminar room</td>
+              <td>Social-spatial layout, lighting, legibility</td>
+              <td>No &mdash; extend <code>office</code></td>
+              <td>Extension proposal (row spacing, board position, lighting flicker, colour palette)</td>
             </tr>
             <tr>
-              <td><strong>Acoustic properties</strong></td>
-              <td>Acoustic privacy, natural sound sources, ambient sound level</td>
-              <td>Ambient audio loop selector</td>
+              <td>7</td>
+              <td><code>hospital</code></td>
+              <td>hospital room, clinic, patient room</td>
+              <td>Safety, materials, lighting, wayfinding</td>
+              <td>No &mdash; extend <code>bedroom</code></td>
+              <td>Extension proposal (clinical-warm gradient, wayfinding contrast, fixture saturation)</td>
             </tr>
             <tr>
-              <td><strong>Visual complexity</strong></td>
-              <td>Fractal dimension, symmetry, ornament density</td>
-              <td>Partition depth: 0.0 m &ndash; 2.5 m</td>
+              <td>8</td>
+              <td><code>restaurant</code></td>
+              <td>restaurant, caf&eacute;, dining room</td>
+              <td>Social density, lighting ambience, material warmth</td>
+              <td>Partial &mdash; extend <code>dining_room</code></td>
+              <td>Extension proposal (table density, lighting intimacy, ceiling absorption)</td>
+            </tr>
+            <tr>
+              <td>9</td>
+              <td><code>lobby</code></td>
+              <td>hotel lobby, building lobby, atrium</td>
+              <td>Spatial volume, ceiling height, prospect-refuge</td>
+              <td>Partial &mdash; hybrid (corridor + great-room shell)</td>
+              <td>Extension proposal (prospect-refuge ratio, atrium height, art presence)</td>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td><code>corridor</code></td>
+              <td>hallway, corridor, passage</td>
+              <td>Spatial geometry, wayfinding, enclosure ratio</td>
+              <td>Yes (built-in <code>hallway</code>)</td>
+              <td>Wrap &amp; expose 5&ndash;7 parameters</td>
+            </tr>
+            <tr>
+              <td>11</td>
+              <td><code>library</code></td>
+              <td>library, reading room</td>
+              <td>Cognitive restoration, natural light, visual order</td>
+              <td>No &mdash; extend <code>living_room</code></td>
+              <td>Extension proposal (shelf density, daylight, colour, ceiling height)</td>
+            </tr>
+            <tr>
+              <td>12</td>
+              <td><code>retail</code></td>
+              <td>retail store, shop, showroom</td>
+              <td>Colour, lighting, visual complexity, layout</td>
+              <td>No &mdash; extend <code>living_room</code> shell</td>
+              <td>Extension proposal (lighting brightness, sightline length, colour palette)</td>
+            </tr>
+            <tr>
+              <td>13</td>
+              <td><code>museum</code></td>
+              <td>museum gallery, exhibition space</td>
+              <td>Spatial volume, lighting, visual complexity</td>
+              <td>No &mdash; extend <code>hallway</code></td>
+              <td>Extension proposal (ceiling height, focal/ambient ratio, wall saturation)</td>
+            </tr>
+            <tr>
+              <td>14</td>
+              <td><code>worship</code></td>
+              <td>church, temple, mosque interior</td>
+              <td>Ceiling height, geometry, fractal patterns, affect</td>
+              <td><strong>No &mdash; flagship</strong></td>
+              <td><strong>Cohort flagship: curved-wall geometry, Bezier walls, fractal patterning</strong></td>
+            </tr>
+            <tr>
+              <td>15</td>
+              <td><code>gym</code></td>
+              <td>gym, fitness centre, sports hall</td>
+              <td>Spatial openness, materials, lighting intensity</td>
+              <td>No &mdash; extend <code>living_room</code> shell</td>
+              <td>Extension proposal (openness ratio, ceiling height, materials, lighting)</td>
             </tr>
           </tbody>
         </table>
+      </section>
+
+      <!-- THE FLAGSHIP -->
+      <section class="callout-amber">
+        <h2>The flagship &mdash; curved-wall worship room</h2>
+        <p>
+          One room of the fifteen breaks Infinigen&rsquo;s
+          axis-aligned-box assumption: the worship room. Sacred
+          interiors are defined by curvature, by ceilings that arch and
+          rise, by fractal ornament that draws the eye upward.
+          Reproducing those features inside a parametric framework
+          designed for orthogonal residential geometry is genuine
+          engineering work. The cohort takes it on together.
+        </p>
+        <p>
+          We pick this room because the published evidence on its
+          environmental effect is the strongest in the fifteen.
+          Vartanian et&nbsp;al. (2015) demonstrated the cathedral
+          effect &mdash; high ceilings raise approach motivation and
+          shift cognitive style toward abstraction. Joye (2007) tied
+          biophilic awe to the same vertical and fractal cues that
+          religious architecture exploits. Bermudez et&nbsp;al. (2017)
+          reported neural correlates of contemplative experience inside
+          sacred space. A clean parametric implementation of these
+          features is therefore citable in its own right, not merely a
+          course exercise.
+        </p>
+        <p>
+          The implementation decomposes into sub-components: Bezier
+          wall paths, ceiling-height curve, fractal patterning
+          generator, light-source positioning, congregation-seating
+          arrangement. Each student in Track&nbsp;3 owns one
+          sub-component during Task&nbsp;3 and contributes it to the
+          single shared module
+          <code>Knowledge_Atlas/3d_rooms/worship_curved/</code>. At
+          term end the cohort merges its contributions into one
+          published parametric artefact with all contributors as
+          co-authors.
+        </p>
+        <p>
+          <strong>Tell the instructor in Week&nbsp;4 which
+          sub-component you want to own.</strong>
+        </p>
       </section>
 
       <!-- TOOLS / SETUP -->
       <section>
         <h2>Tools and accounts you&rsquo;ll need</h2>
         <p>
-          Track&nbsp;3 has more setup than the other tracks because it spans
-          three software ecosystems &mdash; the browser, Blender, and the
-          LLM API. Get these in place before the first sprint.
+          Track&nbsp;3 spans three layers: the Python that drives
+          Infinigen, the browser that renders the glTF, and the LLM
+          that translates language to parameters. Get these in place
+          before Sprint&nbsp;1.
         </p>
 
         <div class="repo-list">
@@ -217,77 +373,66 @@
               &nbsp;<span class="callout-pill-amber">Required</span>
             </div>
             <div class="repo-item-purpose">
-              Free and open-source. You&rsquo;ll use it to import glTF
-              models, segment fused meshes into named architectural
-              elements, and run headless Python scripts for batch
-              processing. Install via <code>brew install --cask blender</code>
-              (Mac) or the official installer.
+              Free and open-source. Installed but never opened by hand:
+              Infinigen drives Blender headlessly through Python. Install
+              via <code>brew install --cask blender</code> (Mac) or the
+              official installer.
             </div>
           </div>
 
           <div class="repo-item">
             <div class="repo-item-name">
-              <a href="https://github.com/ahujasid/blender-mcp" target="_blank" rel="noopener">BlenderMCP</a>
-              &nbsp;<span class="callout-pill-blue">Recommended</span>
+              <a href="https://infinigen.org" target="_blank" rel="noopener">Infinigen Indoors (Python 3.10+)</a>
+              &nbsp;<span class="callout-pill-amber">Required</span>
             </div>
             <div class="repo-item-purpose">
-              Model Context Protocol bridge that lets Claude or Cursor
-              control Blender via natural language with viewport awareness.
-              The most powerful AI-assisted segmentation option for Task 1.
-              <code>brew install uv</code> first, then follow the
-              <a href="https://github.com/ahujasid/blender-mcp">README</a>.
+              The parametric backbone for the whole track (Raistrick
+              et&nbsp;al., 2024; Khanna et&nbsp;al., 2024;
+              BSD-licensed). Course ships an
+              <code>infinigen_wrapper.py</code> that converts a JSON
+              parameter dict into an Infinigen scene call and exports
+              glTF; the upstream repo lives at
+              <a href="https://infinigen.org">infinigen.org</a>.
             </div>
           </div>
 
           <div class="repo-item">
             <div class="repo-item-name">
-              <a href="https://marble.worldlabs.ai/" target="_blank" rel="noopener">World Labs Marble</a>
-              &nbsp;<span class="callout-pill-amber">At least 3 worlds</span>
-            </div>
-            <div class="repo-item-purpose">
-              Photo &rarr; 3D world generator. The free plan gives you four
-              worlds, the Standard plan gives twelve. You must generate at
-              least three of your twenty models with Marble to demonstrate
-              the photo &rarr; 3D &rarr; parametric pipeline.
-            </div>
-          </div>
-
-          <div class="repo-item">
-            <div class="repo-item-name">
-              <a href="https://aframe.io/" target="_blank" rel="noopener">A-Frame</a>
+              <a href="https://modelviewer.dev/" target="_blank" rel="noopener"><code>&lt;model-viewer&gt;</code> web component</a>
               &nbsp;<span class="callout-pill-teal">Browser-based</span>
             </div>
             <div class="repo-item-purpose">
-              WebXR framework that wraps Three.js. Loads glTF natively, runs
-              in any browser, no install. Your Task&nbsp;2 viewer is a
-              single HTML file that drops in A-Frame via a CDN tag.
+              Required for Task&nbsp;2. Free, no install, CDN-hosted by
+              Google. One <code>&lt;model-viewer&gt;</code> tag in an
+              HTML file loads the glTF, supports orbit and AR, and
+              renders identically across browsers.
             </div>
           </div>
 
           <div class="repo-item">
             <div class="repo-item-name">
-              <a href="https://github.com/gkjohnson/three-gpu-pathtracer" target="_blank" rel="noopener">three-gpu-pathtracer</a>
-              &nbsp;<span class="callout-pill-blue">Stretch goal</span>
-            </div>
-            <div class="repo-item-purpose">
-              Optional path-traced lighting library. Converges in ~2 seconds
-              on any modern laptop with WebGL&nbsp;2. Worth the upgrade for
-              the realism win on Task&nbsp;2; not required.
-            </div>
-          </div>
-
-          <div class="repo-item">
-            <div class="repo-item-name">
-              Gemini API key
+              LLM API key (Gemini, Claude, or OpenAI)
               &nbsp;<span class="callout-pill-amber">Required for Task 3</span>
             </div>
             <div class="repo-item-purpose">
-              Free at
+              Any of the three works. The wrapper requests JSON-mode
+              output via <code>responseMimeType: "application/json"</code>
+              (Gemini) or the equivalent constrained-decoding option on
+              Claude or OpenAI. Free Gemini keys at
               <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">aistudio.google.com</a>.
-              Use the <code>gemini-2.0-flash</code> model with
-              <code>responseMimeType: "application/json"</code> for
-              constrained-JSON parameter extraction. Other LLM APIs work
-              equivalently if you prefer.
+            </div>
+          </div>
+
+          <div class="repo-item">
+            <div class="repo-item-name">
+              <a href="https://www.ladybug.tools/honeybee.html" target="_blank" rel="noopener">Honeybee Rooms (Ladybug Tools)</a>
+              &nbsp;<span class="callout-pill-blue">Optional</span>
+            </div>
+            <div class="repo-item-purpose">
+              AGPL-licensed substrate for coupling a parametric room to
+              daylight, energy, or acoustic instrumentation. Optional
+              for any student who wants to extend their room with
+              physically-grounded environmental measurements.
             </div>
           </div>
 
@@ -298,9 +443,9 @@
       <section>
         <h2>Repos you&rsquo;ll need</h2>
         <p>
-          Track&nbsp;3 lives mostly in the <code>Knowledge_Atlas</code> repo,
-          but the AI front-end pulls from two sibling repos for vocabulary
-          and presets.
+          Track&nbsp;3 lives mostly in <code>Knowledge_Atlas</code>; two
+          sibling repos supply the construct vocabulary and the cited
+          literature.
         </p>
         <div class="repo-list">
 
@@ -309,31 +454,40 @@
               <a href="https://github.com/dkirsh/Knowledge_Atlas" target="_blank" rel="noopener">Knowledge_Atlas</a>
             </div>
             <div class="repo-item-purpose">
-              The Atlas itself &mdash; this is where your model catalog,
-              VR viewer, and AI front-end ship. All three Task deliverables
-              go in this repo on your <code>track3/your-name</code> branch.
+              Your <code>track3/your-name</code> branch ships parameter
+              manifests, Python wrappers, the
+              <code>&lt;model-viewer&gt;</code>-based browser viewer,
+              and (for Task&nbsp;3) the AI front-end. The flagship
+              curved-wall worship room ships in
+              <code>Knowledge_Atlas/3d_rooms/worship_curved/</code> as a
+              single cohort-published module.
             </div>
           </div>
 
           <div class="repo-item">
             <div class="repo-item-name">
               <a href="https://github.com/dkirsh/Tagging_Contractor" target="_blank" rel="noopener">Tagging_Contractor</a>
+              &nbsp;<span class="callout-pill-blue">read-only reference</span>
             </div>
             <div class="repo-item-purpose">
-              The 424-tag registry: 330 of those tags are continuous or
-              ordinal and represent manipulable environmental features.
-              Reference for which factors map to which manipulation classes.
+              The 442-tag registry (post-Sprint&nbsp;1) defines the
+              construct vocabulary your parameters should map to. Every
+              parameter you expose in a manifest should reference a
+              registered tag wherever one exists.
             </div>
           </div>
 
           <div class="repo-item">
             <div class="repo-item-name">
               <a href="https://github.com/dkirsh/Article_Eater" target="_blank" rel="noopener">Article_Eater</a>
+              &nbsp;<span class="callout-pill-blue">read-only reference</span>
             </div>
             <div class="repo-item-purpose">
-              The 166 PNU templates that describe what neuroarchitecture
-              researchers actually manipulate in the published literature
-              &mdash; the source of evidence for your Task&nbsp;3 presets.
+              The 166 PNU templates supply the published
+              environment-psychology literature your Task&nbsp;3
+              presets cite. Pull the citation, the effect size, and the
+              parameter range from the template and embed them in your
+              preset metadata.
             </div>
           </div>
 
@@ -344,19 +498,19 @@
       <section>
         <h2>How to read these pages</h2>
         <p>
-          Click any task on the left to see the full assignment.  Every task
-          page has the same layout: a hero with the points and prerequisites,
-          a section explaining why the work matters, the phases broken into
-          contracts and deliverables, the success conditions, the grading
-          rubric, and the GitHub submission instructions.
+          Click any task on the left to see the full assignment. Every
+          task page has the same layout: a hero with the points and
+          prerequisites, a section explaining why the work matters, the
+          phases broken into contracts and deliverables, the success
+          conditions, the grading rubric, and the GitHub submission
+          instructions.
         </p>
         <p>
-          The contracts you write in each phase are graded as carefully as
-          the working code &mdash; vague contracts are flagged at the
-          contract gate and keep your work out of the integrated pipeline.
-          Read the &ldquo;Contract objective&rdquo; box at the start of each
-          phase and write your contract <em>before</em> you ask any AI to
-          build anything.
+          Contracts come before code. Each phase opens with a
+          &ldquo;Contract objective&rdquo; box; write your contract
+          before you ask any AI to build anything. Vague contracts are
+          flagged at the contract gate and held out of the integrated
+          pipeline until they tighten.
         </p>
       </section>
 
@@ -367,9 +521,9 @@
         <p>
           Track&nbsp;3 uses a single git branch per student &mdash;
           <code>track3/your-name</code> &mdash; across all three tasks.
-          Each completed task is submitted as its own Pull Request to the
-          instructor. The full mechanics are on each task page; here&rsquo;s
-          the lifecycle in one paragraph:
+          Each completed task is submitted as its own Pull Request to
+          the instructor. The full mechanics are on each task page;
+          here&rsquo;s the lifecycle in one paragraph:
         </p>
 
         <ol>
@@ -379,26 +533,29 @@
             <code>track3/your-name</code> off
             <code>upstream/main</code>.</li>
           <li><strong>Continuously while working:</strong> commit small,
-            push at the end of each session.  Models, mesh annotations, and
-            HTML files all live on this single branch.</li>
-          <li><strong>At the end of each task:</strong> open a Pull Request
-            from your branch to <code>dkirsh:main</code>, title it
+            push at the end of each session. Parameter manifests,
+            Python wrappers, viewer HTML, and preset JSON all live on
+            this single branch.</li>
+          <li><strong>At the end of each task:</strong> open a Pull
+            Request from your branch to <code>dkirsh:main</code>, title
+            it
             <code>Track 3 &middot; Task N: ... &mdash; your name</code>,
-            paste your file manifest, tag <code>@dkirsh</code>, and do not
-            merge.</li>
-          <li><strong>Across tasks:</strong> keep using the same branch;
-            additional task PRs are opened against the previous task&rsquo;s
-            merge commit.</li>
+            paste your file manifest, tag <code>@dkirsh</code>, and do
+            not merge.</li>
+          <li><strong>Across tasks:</strong> keep using the same
+            branch; additional task PRs are opened against the previous
+            task&rsquo;s merge commit.</li>
         </ol>
 
         <p>
-          The detailed commands and the per-task PR title format are on each
-          task page under &ldquo;Submit Task N on GitHub.&rdquo;  Track&nbsp;3
-          submissions also include
-          <strong>screenshots and short screen recordings</strong> as
-          deliverables; pointers go in your PR body and the actual files go
-          in a <code>track3/&lt;your-name&gt;/media/</code> directory on
-          your branch.
+          Track&nbsp;3 submissions also include
+          <strong>screenshots and short screen recordings</strong> of
+          the parameter-sweep gallery and the AI front-end demos;
+          pointers go in your PR body and the actual files go in a
+          <code>track3/&lt;your-name&gt;/media/</code> directory on
+          your branch. The cohort flagship worship-room module is
+          collaboratively merged at term end via a single shared PR
+          that lists every contributing student as co-author.
         </p>
       </section>
 

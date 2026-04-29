@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Task 3: AI Front-End for Scene Modification &middot; Track 3 &middot; COGS 160</title>
+  <title>Task 3: AI Front-End &amp; Curved-Wall Worship Flagship &middot; Track 3 &middot; COGS 160</title>
   <link rel="stylesheet" href="_track_pages_shared.css">
   <script src="../ka_canonical_navbar.js" defer></script>
 </head>
@@ -14,7 +14,7 @@
       <a href="../ka_home.html">Home</a> /
       <a href="ka_schedule.html">160 Student</a> /
       <a href="t3_intro.html">Track 3</a> /
-      <span>Task 3: AI Front-End for Scene Modification</span>
+      <span>Task 3: AI Front-End &amp; Curved-Wall Worship Flagship</span>
     </div>
 
   <div class="page-grid">
@@ -24,501 +24,682 @@
     <main class="content">
 
       <header class="hero">
-        <div class="hero-track">TRACK 3 &middot; TASK 3</div>
-        <h1>AI Front-End for Parametric Scene Modification</h1>
+        <div class="hero-track">TRACK 3 &middot; TASK 3 &middot; FLAGSHIP</div>
+        <h1>AI Front-End, Literature-Grounded Presets, and the Curved-Wall Worship Room</h1>
         <p class="hero-sub">
-          Build a web-based tool where a researcher types a natural-language
-          instruction like &ldquo;a warm cozy library with 4-metre ceilings
-          and exposed brick on the north wall&rdquo; and the system modifies
-          the 3D scene in real time, with every change validated against
-          your factor viability matrix before it is applied.
+          Task&nbsp;3 ships three deliverables. First, a thin LLM wrapper
+          that translates a natural-language prompt plus the room&rsquo;s
+          parameter manifest from Task&nbsp;1 into a validated JSON patch.
+          Second, per assigned room type, a small library of named presets
+          each citing a specific environment-psychology study so the room
+          can be set to a published, replication-ready configuration.
+          Third &mdash; the cohort flagship &mdash; a single curved-wall
+          worship room published as a citable open-source parametric
+          module, the only room of the fifteen that breaks Infinigen&rsquo;s
+          axis-aligned-box assumption, with every cohort member listed as
+          co-author.
         </p>
         <div class="hero-meta">
-          <span class="hero-pill">75 points</span>
           <span class="hero-pill">5 phases</span>
-          <span class="hero-pill">Prerequisite: Tasks 1 &amp; 2</span>
+          <span class="hero-pill">75 points</span>
+          <span class="hero-pill">Weeks 7&ndash;10</span>
+          <span class="hero-pill">Cohort flagship deliverable</span>
         </div>
       </header>
 
-      <h2>The big picture</h2>
-      <p>
-        In Task&nbsp;2 you built sliders and swatches that modify 3D scenes
-        in real time.  But sliders require the user to know <em>which</em>
-        parameter to change and <em>what value</em> to set.  A researcher
-        who wants to study &ldquo;cozy versus clinical environments&rdquo;
-        should not need to manually set ceiling = 2.6 m, CCT = 2700 K,
-        walls = wood, roughness = 0.6, lighting = 0.8.  She should just say
-        it.
-      </p>
+      <section>
+        <h2>The big picture</h2>
+        <p>
+          Tasks&nbsp;1 and&nbsp;2 produced parametric rooms callable
+          through JSON. Task&nbsp;3 makes them callable through
+          <em>natural language</em>. A researcher who wants to inspect a
+          high-ceiling Meyers-Levy office on a sleep-warm M&uuml;nch
+          bedroom should not have to remember which slider sets CCT or
+          which key sets <code>ceiling_height_m</code>; she should type
+          &ldquo;raise the ceiling and warm the lighting&rdquo; and watch
+          the room update. The wrapper this task ships is small &mdash; a
+          thin LLM call, a JSON-patch grammar, and a validation gate
+          &mdash; but it is the layer that makes the parametric library
+          usable by humans rather than only by other code.
+        </p>
 
-      <p>
-        <strong>No existing product does this.</strong>  Tools like Veras,
-        DecorAI, and Decory produce 2D images, not modified 3D models.
-        Meshy and Luma generate new models, not parametric edits of
-        existing ones.  You are building something novel &mdash; but every
-        component uses proven technology.
-      </p>
+        <p>
+          The presets close a different gap. A parametric room is only
+          replicable if its named configurations come from somewhere
+          defensible. A &ldquo;cozy living room&rdquo; preset that the
+          author invented is decoration; a <code>kaplan_restorative</code>
+          preset whose values reproduce the natural-light condition in
+          Kaplan &amp; Kaplan (1989) is a citable experimental stimulus.
+          Every student authors at least four such presets across her two
+          assigned room types. Each preset ships as a JSON parameter patch
+          plus a citation block (full APA + DOI) explaining which
+          published study&rsquo;s condition it reproduces and what
+          hypothesis it represents.
+        </p>
 
-      <h3>The architecture</h3>
+        <p>
+          The flagship is the curved-wall worship room. Of the fifteen
+          room types in this cohort&rsquo;s library, fourteen fit
+          comfortably inside Infinigen&rsquo;s axis-aligned-box
+          assumption: floor plans are rectangles, ceilings are flat,
+          walls are perpendicular. Worship spaces &mdash; cathedrals,
+          mosques, chapels &mdash; are the exception. They use Bezier
+          curves for floor plans, vault profiles for ceilings, and
+          fractal-rich surface ornament. The published environmental-
+          psychology effect is also the strongest in the library:
+          Vartanian et al. (2015) report large reliable affective
+          responses to high-vault contour-rich interiors; Joye (2007)
+          argues a biophilic-fractal route to architectural awe;
+          Bermudez et al. (2017) show contemplative-architecture-specific
+          activation in fMRI. Stiny (1980) provides the formal apparatus
+          &mdash; shape grammars &mdash; that justifies treating
+          Bezier-based parametric room generation as an in-principle
+          tractable computational problem rather than a one-off art
+          project. The cohort closes a gap the parametric-models
+          literature explicitly identifies (Raistrick et al., 2024;
+          Khanna et al., 2024) by shipping one shared, citable, open-source
+          parametric module to <code>Knowledge_Atlas/3d_rooms/worship_curved/</code>
+          with every cohort member as co-author.
+        </p>
 
-      <pre class="code-block">User types: "warm cozy library with 4m ceiling, wood on north wall,
-             dim lighting, small windows, carpet floor"
-                    │
-                    ▼
-    ┌──────────────────────────────────┐
-    │  1. Scene Introspector           │
-    │  Reads mesh_roles.json + current │
-    │  slider values → scene summary   │
-    └──────────────┬───────────────────┘
-                   │
-                   ▼
-    ┌──────────────────────────────────┐
-    │  2. LLM Parameter Extractor     │
-    │  user text + scene summary →     │
-    │  structured JSON spec            │
-    └──────────────┬───────────────────┘
-                   │
-                   ▼
-    ┌──────────────────────────────────┐
-    │  3. Validation Gate              │
-    │  Check each modification against │
-    │  your factor viability matrix    │
-    └──────────────┬───────────────────┘
-                   │
-                   ▼
-    ┌──────────────────────────────────┐
-    │  4. Scene Modifier               │
-    │  Applies validated JSON via your │
-    │  Task 2 slider functions —       │
-    │  atomically, in one frame        │
-    └──────────────┬───────────────────┘
-                   │
-                   ▼
-    ┌──────────────────────────────────┐
-    │  5. Live 3D Preview              │
-    │  + before / after comparison     │
-    │  + modification history          │
-    │  + export modified glTF          │
-    └──────────────────────────────────┘</pre>
+        <p>
+          The five phases below carry these three deliverables. Phase&nbsp;1
+          is the LLM wrapper and parameter-patch grammar. Phase&nbsp;2 is
+          the validation gate. Phase&nbsp;3 is the literature-grounded
+          presets. Phase&nbsp;4 is the curved-wall worship room flagship.
+          Phase&nbsp;5 is the cross-room evaluation that audits the
+          wrapper against the entire cohort library.
+        </p>
+      </section>
 
-      <div class="callout-teal">
-        <strong>Key insight:</strong> the LLM does <em>not</em> generate 3D
-        geometry.  It maps natural language to a small, constrained JSON
-        schema.  The actual 3D manipulation is your Task&nbsp;2 code.
-      </div>
+      <!-- PHASE 1 -->
+      <section>
+        <h2>Phase 1: LLM wrapper + parameter-patch grammar</h2>
 
-      <h2>Phase 1: Build the scene introspector</h2>
+        <div class="callout callout-teal">
+          <strong>Contract objective:</strong> &ldquo;I want a Python (or
+          JavaScript) wrapper that takes (a) the user&rsquo;s natural-language
+          prompt, (b) the room&rsquo;s parameter manifest from Task&nbsp;1,
+          and emits a JSON patch that Task&nbsp;2&rsquo;s wrapper can
+          apply.&rdquo;
+        </div>
 
-      <div class="callout-teal">
-        <strong>Contract objective:</strong>
-        &ldquo;I want a function that reads a loaded glTF scene plus
-        <code>mesh_roles.json</code> and produces a structured summary the
-        LLM can understand.&rdquo;
-      </div>
+        <p>
+          The patch is a list of operations. Three operation types cover
+          everything Task&nbsp;3 needs: <code>set</code> assigns a
+          parameter to a value; <code>delta</code> adds to a
+          parameter&rsquo;s current value; <code>preset</code> applies a
+          named preset by name. Each operation carries a target
+          parameter, a value, and (for <code>set</code>) an optional unit
+          string the validator will check against the manifest.
+        </p>
 
-      <pre class="code-block">function introspectScene(gltfScene, meshRoles) {
-  const summary = {
-    room: meshRoles.room_dimensions,
-    current_state: {},
-    modifiable: { walls: [], ceiling: false, floor: false, lights: [], windows: [] }
-  };
+        <h3>Patch grammar (JSON Schema)</h3>
 
-  for (const [meshName, info] of Object.entries(meshRoles.meshes)) {
-    const mesh = gltfScene.getObjectByName(meshName);
-    if (!mesh) continue;
-    if (info.role === 'ceiling') {
-      summary.current_state.ceiling_height = mesh.position.y;
-      summary.modifiable.ceiling = true;
-    } else if (info.role === 'wall') {
-      summary.modifiable.walls.push(info.wall_id);
-      summary.current_state[`wall_${info.wall_id}_color`] =
-        '#' + mesh.material.color.getHexString();
-    } else if (info.role === 'window') {
-      summary.modifiable.windows.push({
-        wall: info.parent_wall,
-        position: info.position
-      });
-    }
-    // ... floor, lights, furniture
-  }
-  return summary;
-}</pre>
-
-      <p><strong>Success conditions:</strong></p>
-      <ul>
-        <li>Produces valid JSON from any loaded model</li>
-        <li>Correctly identifies which walls are individually selectable</li>
-        <li>Reports current ceiling height, material colours, light settings</li>
-        <li>Lists which modifications are supported for this model</li>
-      </ul>
-
-      <h2>Phase 2: Wire up the LLM parameter extractor</h2>
-
-      <h3>The system prompt (this <em>is</em> the contract)</h3>
-
-      <pre class="code-block">You are a 3D scene modification assistant for architectural research.
-
-Given a scene description and a user instruction, output ONLY a JSON object
-with the modifications to apply. Available fields:
-
-GEOMETRY:
-- ceiling_height: number (meters, range 2.0-6.0)
-
-WALLS (per-wall or all):
-- wall_all_color: hex string       - wall_all_roughness: number 0-1
-- wall_north_color: hex string     - wall_north_roughness: number 0-1
-- wall_south_color / roughness     - wall_east_color / roughness
-- wall_west_color / roughness
-
-FLOOR:
-- floor_color: hex string          - floor_roughness: number 0-1
-
-LIGHTING:
-- light_intensity: number 0.1-3.0
-- light_cct: number 2700-6500 (Kelvin)
-
-PROSPECT &amp; REFUGE:
-- window_scale: number 0.2-3.0 (1.0 = current)
-- partition_depth: number 0-2.5 (0 = no partition)
-
-FURNITURE:
-- furniture_visible: boolean
-
-Only include fields the user's instruction changes.
-If the user says "north wall" or "back wall", use wall_north_* fields.
-If the user says "walls" without specifying, use wall_all_* fields.
-Output ONLY valid JSON, no explanation.</pre>
-
-      <h3>API integration</h3>
-
-      <pre class="code-block">async function extractModifications(userText, sceneSummary, apiKey) {
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-        contents: [{ parts: [{ text:
-          `Current scene: ${JSON.stringify(sceneSummary)}\n\nUser instruction: "${userText}"`
-        }] }],
-        generationConfig: { responseMimeType: 'application/json' }
-      })
-    }
-  );
-  const data = await response.json();
-  return JSON.parse(data.candidates[0].content.parts[0].text);
-}</pre>
-
-      <div class="callout-amber">
-        <strong>Why <code>responseMimeType: "application/json"</code>
-        matters:</strong> this forces the LLM to output valid JSON &mdash;
-        no Markdown wrapping, no explanation text.  If the JSON is
-        invalid, it is a hard error you can catch.
-      </div>
-
-      <h3>Multi-instruction parsing</h3>
-      <p>A single user input can specify changes across all eight factors simultaneously:</p>
-
-      <blockquote class="callout-blue">
-        &ldquo;Make it a cathedral &mdash; soaring 5.5 m ceiling, cool
-        daylight at 6500 K, white plaster walls except the north wall
-        which should be exposed stone, marble floor, large panoramic
-        windows, and remove all furniture.&rdquo;
-      </blockquote>
-
-      <p>The LLM should return:</p>
-
-      <pre class="code-block">{
-  "ceiling_height": 5.5,
-  "light_intensity": 2.0,
-  "light_cct": 6500,
-  "wall_all_color": "#F5F5F5",
-  "wall_all_roughness": 0.7,
-  "wall_north_color": "#808080",
-  "wall_north_roughness": 0.85,
-  "floor_color": "#F5F5DC",
-  "floor_roughness": 0.15,
-  "window_scale": 2.5,
-  "furniture_visible": false
-}</pre>
-
-      <p>
-        All modifications must be applied <strong>atomically</strong>
-        &mdash; in a single render frame.  The user sees one transition,
-        not a sequence of individual changes.
-      </p>
-
-      <h2>Phase 3: Build the validation gate</h2>
-
-      <div class="callout-teal">
-        <strong>Contract objective:</strong>
-        &ldquo;Before applying any LLM output, check it against the
-        Task&nbsp;2 factor viability matrix.  Block unsupported
-        modifications; degrade gracefully when partial support
-        exists.&rdquo;
-      </div>
-
-      <pre class="code-block">function validateModifications(mod, viabilityMatrix, modelId) {
-  const model = viabilityMatrix[modelId];
-  const errors = [];
-  const validated = {};
-
-  for (const [key, value] of Object.entries(mod)) {
-    if (key === 'ceiling_height' &amp;&amp; model.geometry !== '✅') {
-      errors.push(`Ceiling modification not supported on ${modelId}`);
-    } else if (key.startsWith('wall_') &amp;&amp; key.includes('_color')) {
-      const wallId = key.split('_')[1];
-      if (wallId !== 'all' &amp;&amp; !model.individual_walls) {
-        errors.push(`Per-wall selection not supported; applying to all walls`);
-        validated['wall_all_color'] = value; // fallback
-      } else {
-        validated[key] = value;
+<pre><code class="lang-json">{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Room Parameter Patch",
+  "type": "object",
+  "required": ["room_id", "operations"],
+  "properties": {
+    "room_id":   { "type": "string" },
+    "manifest_version": { "type": "string" },
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["op", "param", "value"],
+            "properties": {
+              "op":    { "const": "set" },
+              "param": { "type": "string" },
+              "value": {},
+              "unit":  { "type": "string" }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["op", "param", "delta"],
+            "properties": {
+              "op":    { "const": "delta" },
+              "param": { "type": "string" },
+              "delta": { "type": "number" },
+              "unit":  { "type": "string" }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["op", "preset"],
+            "properties": {
+              "op":     { "const": "preset" },
+              "preset": { "type": "string" }
+            }
+          }
+        ]
       }
-    } else {
-      validated[key] = value;
     }
   }
+}</code></pre>
 
-  return { validated, errors,
-           blocked: errors.filter(e =&gt; e.includes('not supported')) };
-}</pre>
+        <p>
+          Parameter validation is delegated to the room&rsquo;s manifest:
+          for every operation the wrapper consults the manifest&rsquo;s
+          per-parameter schema (declared type, declared range, declared
+          unit) and only emits the operation if the value or delta would
+          stay inside the documented bounds.
+        </p>
 
-      <h3>What the UI must show</h3>
-      <ul>
-        <li>&#10003; Modifications that were applied</li>
-        <li>&#9888; Modifications that were degraded (e.g. per-wall &rarr; all-wall fallback)</li>
-        <li>&#10005; Modifications that were blocked (unsupported by this model)</li>
-      </ul>
+        <h3>System prompt</h3>
 
-      <h2>Phase 4: Build presets from the research literature</h2>
+        <div class="ai-box">
+          <div class="ai-label">System prompt for the LLM</div>
+          <div class="ai-text">
+            <p>
+              You are a parameter editor for a 3D room. The user
+              describes a change in plain language. Your job is to read
+              the room&rsquo;s parameter manifest and emit a JSON patch
+              consisting of one or more operations from
+              <code>{set, delta, preset}</code>. Do NOT invent parameters
+              not in the manifest. Do NOT exceed the documented ranges.
+              If the user&rsquo;s request cannot be expressed in the
+              manifest, emit a structured error with
+              <code>code: &quot;out_of_schema&quot;</code> and a
+              one-sentence explanation.
+            </p>
+          </div>
+        </div>
 
-      <p>
-        Create at least <strong>five</strong> presets derived from real
-        neuroarchitecture experimental conditions.  Every preset must cite
-        the original paper and explain which independent variable is
-        being manipulated.
-      </p>
+        <h3>Worked example</h3>
 
-      <table class="data-table">
-        <thead>
-          <tr><th>Preset</th><th>Based on</th><th>Modifications</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Meyers-Levy High Ceiling</strong></td>
-            <td>Meyers-Levy &amp; Zhu (2007), ceiling height &times; creativity</td>
-            <td>ceiling = 3.5 m, walls = white, light_cct = 5000 K</td>
-          </tr>
-          <tr>
-            <td><strong>Meyers-Levy Low Ceiling</strong></td>
-            <td>Same study, low condition</td>
-            <td>ceiling = 2.4 m, walls = white, light_cct = 5000 K</td>
-          </tr>
-          <tr>
-            <td><strong>Biophilic Restoration</strong></td>
-            <td>Browning et al. (2014)</td>
-            <td>wall_north_color = green tones, window_scale = 2.5, floor = wood</td>
-          </tr>
-          <tr>
-            <td><strong>Prospect-Dominant</strong></td>
-            <td>Appleton (1975), prospect-refuge</td>
-            <td>window_scale = 3.0, ceiling = 4.0 m, partition_depth = 0</td>
-          </tr>
-          <tr>
-            <td><strong>Refuge-Dominant</strong></td>
-            <td>Same theory, refuge condition</td>
-            <td>window_scale = 0.4, ceiling = 2.4 m, partition_depth = 2.0</td>
-          </tr>
-          <tr>
-            <td><strong>Clinical Control</strong></td>
-            <td>Standard lab environment</td>
-            <td>ceiling = 2.7 m, walls = white, light_cct = 6500 K, floor = tile</td>
-          </tr>
-        </tbody>
-      </table>
+        <p>
+          User prompt: &ldquo;warm up the lighting and raise the ceiling
+          30&nbsp;cm.&rdquo; Manifest excerpt: <code>light_cct_k</code>
+          (range 2700&ndash;6500), <code>ceiling_height_m</code> (range
+          2.0&ndash;6.0, current 2.7). Expected patch:
+        </p>
 
-      <h2>Phase 5: Test on at least 10 diverse models</h2>
+<pre><code class="lang-json">{
+  "room_id": "office_seed_004",
+  "manifest_version": "1.0.2",
+  "operations": [
+    { "op": "set",   "param": "light_cct_k",       "value": 3000, "unit": "K" },
+    { "op": "delta", "param": "ceiling_height_m",  "delta": 0.30, "unit": "m" }
+  ]
+}</code></pre>
 
-      <p>
-        The AI front-end must be tested on <strong>at least ten different
-        models</strong> of varied style:
-      </p>
-      <ul>
-        <li>&ge; 2 offices, &ge; 2 residential, &ge; 1 classroom, &ge; 1 healthcare, &ge; 1 retail/hospitality, &ge; 3 other room types</li>
-        <li>Include at least <strong>two "difficult" models</strong> (low viability score) to test graceful degradation</li>
-      </ul>
+        <p>
+          Note the wrapper translated &ldquo;warm&rdquo; to a CCT value
+          inside the manifest&rsquo;s range, and translated &ldquo;raise
+          30&nbsp;cm&rdquo; to a <code>delta</code> rather than a
+          <code>set</code> &mdash; preserving whatever ceiling height the
+          user had previously dialled in.
+        </p>
 
-      <h3>The 15-test ruthless protocol</h3>
+        <div class="deliverable">
+          <div class="deliverable-label">Deliverable</div>
+          <p>
+            A working CLI demo (<code>nl_patch_demo.py</code> or
+            <code>nl_patch_demo.js</code>) that takes a natural-language
+            prompt and a manifest path, calls the LLM, prints the JSON
+            patch, and pipes the patch through Task&nbsp;2&rsquo;s
+            wrapper to render the modified room.
+          </p>
+        </div>
+      </section>
 
-      <p>For each model, run this validation suite and report pass/fail:</p>
+      <!-- PHASE 2 -->
+      <section>
+        <h2>Phase 2: Validation gate</h2>
 
-      <ol>
-        <li>Type "raise the ceiling to 5 metres" &rarr; ceiling moves, walls extend, no gaps</li>
-        <li>Type "change the north wall to brick" &rarr; only north wall changes</li>
-        <li>Type "make it warm and cozy" &rarr; ceiling lowers, CCT drops, intensity dims</li>
-        <li>Type "make it a clinical lab" &rarr; opposite of test 3</li>
-        <li>Type "cathedral with stone walls except south wall which is glass" &rarr; per-wall differentiation</li>
-        <li>Type a nonsensical instruction ("make the ceiling purple and sideways") &rarr; graceful error, no crash</li>
-        <li>Apply 3 instructions in sequence &rarr; each builds on the previous state correctly</li>
-        <li>Click "Reset" after modifications &rarr; returns to original state exactly</li>
-        <li>Apply a preset &rarr; sliders update to match</li>
-        <li>Drag the ceiling slider during an LLM modification &rarr; no conflict</li>
-        <li>Type an instruction for an unsupported factor &rarr; validation gate blocks it with an explanation</li>
-        <li>Check FPS during multi-factor modification &rarr; &ge; 60 fps</li>
-        <li>Type a very long instruction (50+ words) &rarr; LLM parses correctly</li>
-        <li>Type instructions in different phrasings ("raise roof" vs "higher ceiling" vs "ceiling at 4 m") &rarr; all work</li>
-        <li>Export the modified glTF &rarr; file is valid and loads in Blender</li>
-      </ol>
+        <p>
+          A validation gate is mandatory because LLMs hallucinate
+          parameter names, exceed declared ranges, and emit malformed
+          JSON. The gate catches all three classes of failure before the
+          patch reaches the renderer. Without it, an LLM that
+          confidently writes <code>ceiling_height_m: 47.0</code> will
+          crash the geometry generator; an LLM that targets
+          <code>ceiling_h_meters</code> will silently no-op; an LLM that
+          omits a closing brace will throw deep inside the parser.
+        </p>
 
-      <p>
-        Ten models &times; fifteen tests = <strong>150 documented
-        outcomes</strong>.  Every single one is recorded in your
-        submission.
-      </p>
+        <h3>Specification</h3>
+        <ul>
+          <li><strong>Range check.</strong> Every value falls within
+          <code>[min, max]</code> as declared in the manifest.</li>
+          <li><strong>Type check.</strong> Every value matches the
+          schema&rsquo;s declared type (number, integer, string,
+          boolean, hex colour).</li>
+          <li><strong>Name check.</strong> Every targeted parameter
+          exists in the manifest at the declared
+          <code>manifest_version</code>.</li>
+          <li><strong>Refusal mode.</strong> If the LLM emits an
+          operation the manifest cannot express &mdash; for example,
+          targeting <code>wall_curvature</code> on a rectangular room
+          &mdash; the wrapper refuses with a structured error
+          (<code>{code: &quot;out_of_schema&quot;, param: &hellip;,
+          reason: &hellip;}</code>) rather than guessing a substitute.</li>
+        </ul>
 
-      <h2>What you submit</h2>
+        <h3>Building the validator</h3>
 
-      <table class="data-table">
-        <thead><tr><th>Item</th><th>What it is</th></tr></thead>
-        <tbody>
-          <tr><td><code>ka_vr_ai_modifier.html</code></td><td>Working AI front-end with NL input + sliders + validation</td></tr>
-          <tr><td>LLM integration code</td><td>API call with constrained JSON output</td></tr>
-          <tr><td>Validation gate</td><td>Checks modifications against viability matrix</td></tr>
-          <tr><td>&ge; 5 research presets</td><td>With citations and IV explanations</td></tr>
-          <tr><td>15-test results on 10 models</td><td>150 test outcomes documented</td></tr>
-          <tr><td>Modification history log</td><td>Every LLM call: input text, output JSON, validation result</td></tr>
-          <tr><td>Material library</td><td>&ge; 10 PBR presets (wood, brick, concrete, glass, marble, tile, plaster, carpet, slate, metal)</td></tr>
-          <tr><td>Contracts + tests</td><td>Written <em>before</em> building</td></tr>
-          <tr><td>Demo video</td><td>3-minute recording showing multi-instruction NL on three different models</td></tr>
-          <tr><td>File manifest</td><td><code>git diff --name-only upstream/main</code></td></tr>
-        </tbody>
-      </table>
+        <div class="ai-box">
+          <div class="ai-label">Ask your AI</div>
+          <div class="ai-text">
+            <p>
+              &ldquo;Write me a Python validator that takes (a) a JSON
+              parameter patch and (b) a JSON-Schema manifest, and returns
+              either OK or a structured list of violations. Use
+              <code>jsonschema</code> for the schema check and add custom
+              range/name checks on top.&rdquo;
+            </p>
+          </div>
+        </div>
 
-      <h2>Grading (75 points)</h2>
+        <p>
+          Return shape: <code>{ok: bool, violations: [{op_index, code,
+          param, message}, &hellip;]}</code>. Codes:
+          <code>schema_invalid</code>, <code>unknown_param</code>,
+          <code>type_mismatch</code>, <code>out_of_range</code>,
+          <code>out_of_schema</code>.
+        </p>
 
-      <table class="data-table">
-        <thead>
-          <tr><th>Criterion</th><th>Points</th><th>What we check</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Contracts + tests</strong> <span class="callout-pill-rose">CONTRACT GATE</span></td>
-            <td>10</td>
-            <td>Written <em>before</em> building. Specific.</td>
-          </tr>
-          <tr>
-            <td><strong>LLM integration</strong></td>
-            <td>15</td>
-            <td>Constrained JSON output; multi-factor instructions work; per-wall addressing</td>
-          </tr>
-          <tr>
-            <td><strong>Validation gate</strong></td>
-            <td>10</td>
-            <td>Checks viability matrix; blocks unsupported; shows feedback</td>
-          </tr>
-          <tr>
-            <td><strong>Research presets</strong></td>
-            <td>10</td>
-            <td>&ge; 5 presets with citations; IVs correctly mapped to modifications</td>
-          </tr>
-          <tr>
-            <td><strong>Model coverage</strong></td>
-            <td>15</td>
-            <td>15-test protocol on &ge; 10 diverse models; honest reporting</td>
-          </tr>
-          <tr>
-            <td><strong>Ruthless testing</strong></td>
-            <td>10</td>
-            <td>Adversarial inputs tested; graceful degradation documented</td>
-          </tr>
-          <tr>
-            <td><strong>Polish</strong></td>
-            <td>5</td>
-            <td>Slider sync, reset, export, modification history, FPS maintained</td>
-          </tr>
-        </tbody>
-      </table>
+        <div class="deliverable">
+          <div class="deliverable-label">Deliverable</div>
+          <p>
+            <code>validation_gate.py</code> plus a test suite of at
+            least eight cases &mdash; five valid (single
+            <code>set</code>, single <code>delta</code>, single
+            <code>preset</code>, multi-op patch, edge-of-range value)
+            and three invalid (unknown param, value above
+            <code>max</code>, type mismatch).
+          </p>
+        </div>
+      </section>
 
-      <div class="callout-rose">
-        <strong>Contract gate.</strong> If your AI front-end does not
-        include the validation gate, or your 15-test results are
-        fabricated, your work will not be integrated.
-      </div>
+      <!-- PHASE 3 -->
+      <section>
+        <h2>Phase 3: Literature-grounded presets</h2>
 
-      <h2>Why this matters</h2>
-      <p>
-        You are building the first tool that lets a neuroarchitecture
-        researcher say &ldquo;give me the Meyers-Levy high-ceiling
-        condition on this office model&rdquo; and get a modified 3D
-        stimulus in seconds instead of weeks.  No existing product does
-        this.  Every component uses proven technology &mdash; the
-        innovation is the integration.
-      </p>
+        <p>
+          For each of your two assigned room types, define
+          <strong>2&ndash;3 named presets</strong>. Each preset lives at
+          <code>presets/&lt;room_type&gt;/&lt;preset_name&gt;.json</code>;
+          its content is a valid parameter patch plus a citation block
+          (full APA reference + DOI) explaining which study the preset
+          reproduces and what hypothesis it represents. Be conservative:
+          when a study does not specify a value for one of your
+          manifest&rsquo;s parameters, leave it at default rather than
+          guess.
+        </p>
 
-      <h2>Existing code you should know about</h2>
-      <ul>
-        <li><code>scratch/t3_ai_frontend_v2.html</code> &mdash; working prototype with sliders, material swatches, NL parser, FPS counter at 120 fps</li>
-        <li>Your <code>ka_vr_viewer.html</code> from Task&nbsp;2 &mdash; the AI front-end wraps your slider code</li>
-        <li>Your <code>mesh_roles/*.json</code> from Task&nbsp;1 &mdash; scene introspection data source</li>
-        <li>Your factor viability matrix from Task&nbsp;2 &mdash; input to the validation gate</li>
-        <li><code>Tagging_Contractor</code> registry &mdash; 330 manipulable tags across 8 classes; defines the parameter space</li>
-        <li><code>Article_Eater/data/templates/</code> &mdash; 166 PNU templates; experimental conditions for presets</li>
-      </ul>
+        <h3>Suggested presets per room type</h3>
+
+        <table class="data-table">
+          <thead>
+            <tr><th>Room type</th><th>Preset name</th><th>Source</th><th>What it reproduces</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>living_room</code></td><td><code>kaplan_restorative</code></td><td>Kaplan &amp; Kaplan (1989)</td><td>Restorative natural-light condition</td></tr>
+            <tr><td><code>bedroom</code></td><td><code>m&uuml;nch_sleep</code></td><td>M&uuml;nch et al. (2020)</td><td>Warm-spectrum, low-lux pre-sleep environment</td></tr>
+            <tr><td><code>office</code></td><td><code>meyers_levy_high_ceiling</code></td><td>Meyers-Levy &amp; Zhu (2007)</td><td>High-ceiling vs. low-ceiling condition</td></tr>
+            <tr><td><code>hospital</code></td><td><code>ulrich_recovery</code></td><td>Ulrich (1984/1991)</td><td>View-of-nature post-surgery condition</td></tr>
+            <tr><td><code>library</code></td><td><code>kaplan_attention_restoration</code></td><td>Kaplan (1995)</td><td>Soft-fascination cognitive restoration</td></tr>
+            <tr><td><code>restaurant</code></td><td><code>sommer_intimacy</code></td><td>Sommer (1969)</td><td>Intimate vs. public dining ambience</td></tr>
+            <tr><td><code>classroom</code></td><td><code>barrett_holistic</code></td><td>Barrett et al. (2015)</td><td>Naturalness &times; stimulation &times; individualisation</td></tr>
+            <tr><td><code>worship</code></td><td><code>vartanian_cathedral</code></td><td>Vartanian et al. (2015)</td><td>Cathedral-effect ceiling and ornament</td></tr>
+            <tr><td><code>worship</code></td><td><code>bermudez_contemplative</code></td><td>Bermudez et al. (2017)</td><td>Contemplative architecture activation</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Authoring a preset</h3>
+
+        <div class="ai-box">
+          <div class="ai-label">Ask your AI</div>
+          <div class="ai-text">
+            <p>
+              &ldquo;I&rsquo;m authoring a literature-grounded preset for
+              <code>[room_type]</code> reproducing
+              <code>[study citation]</code>. Read the abstract of the
+              study and tell me which exact parameter values from my
+              manifest reproduce the study&rsquo;s experimental
+              condition. Be conservative: if the study does not specify
+              a value for one of my parameters, leave it at default
+              rather than guessing.&rdquo;
+            </p>
+          </div>
+        </div>
+
+        <div class="deliverable">
+          <div class="deliverable-label">Deliverable</div>
+          <p>
+            At least four presets per student (two room types &times;
+            two presets each), each carrying a complete APA citation
+            with DOI and a one-paragraph rationale. Stored under
+            <code>presets/&lt;room_type&gt;/</code>.
+          </p>
+        </div>
+      </section>
+
+      <!-- PHASE 4: FLAGSHIP -->
+      <section>
+        <h2>Phase 4: THE FLAGSHIP &mdash; Curved-Wall Worship Room</h2>
+
+        <div class="callout callout-amber">
+          <strong>This is the cohort&rsquo;s flagship deliverable.</strong>
+          Of the fifteen room types in the library, the curved-wall
+          worship room is the only one that breaks Infinigen&rsquo;s
+          axis-aligned-box assumption; it is also the room type with the
+          strongest published environmental-psychology effect (Vartanian
+          et al., 2015; Bermudez et al., 2017). A clean implementation
+          is genuinely citable. The cohort ships <em>one</em> shared
+          parametric module at
+          <code>Knowledge_Atlas/3d_rooms/worship_curved/</code>, with
+          every cohort member listed as co-author. Each student owns one
+          sub-component; the components compose into the published
+          module.
+        </div>
+
+        <h3>Sub-component allocation</h3>
+
+        <table class="data-table">
+          <thead>
+            <tr><th>Sub-component</th><th>Owner role</th><th>Specification</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Bezier wall path generator</strong></td>
+              <td>Geometry lead</td>
+              <td>Parametric Bezier curve definition for floor plan; outputs ordered <code>(x, z)</code> waypoints with curvature metadata.</td>
+            </tr>
+            <tr>
+              <td><strong>Wall-extrusion module</strong></td>
+              <td>Geometry second</td>
+              <td>Takes Bezier waypoints + ceiling-height curve + thickness; extrudes wall meshes with watertight seams.</td>
+            </tr>
+            <tr>
+              <td><strong>Ceiling-height curve</strong></td>
+              <td>Geometry third</td>
+              <td>Parametric vault profile (semicircle, gothic arch, dome) expressed as ceiling height = <code>f(x, z)</code>.</td>
+            </tr>
+            <tr>
+              <td><strong>Fractal pattern generator</strong></td>
+              <td>Surface lead</td>
+              <td>Per-wall fractal patterning; box-counting dimension as a tuneable parameter; cites Joye (2007).</td>
+            </tr>
+            <tr>
+              <td><strong>Light-source positioner</strong></td>
+              <td>Lighting lead</td>
+              <td>Window / clerestory / oculus parameter set with positioning constraints relative to the vault profile.</td>
+            </tr>
+            <tr>
+              <td><strong>Acoustic property estimator</strong></td>
+              <td>Honeybee couplant</td>
+              <td>Optional: derive estimated reverberation time from geometry; cite the Sabine equation.</td>
+            </tr>
+            <tr>
+              <td><strong>Cathedral-preset author</strong></td>
+              <td>Literature lead</td>
+              <td>The named preset reproducing Vartanian et al. (2015): high vault, contour-rich, warm-light condition.</td>
+            </tr>
+            <tr>
+              <td><strong>Bermudez-preset author</strong></td>
+              <td>Literature second</td>
+              <td>The named preset reproducing Bermudez et al. (2017): contemplative-architecture activation condition.</td>
+            </tr>
+            <tr>
+              <td><strong>Cross-cohort integration</strong></td>
+              <td>Integration lead</td>
+              <td>Combines all sub-components into the final published module; opens the term-end PR with all contributors listed.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Per-component specification</h3>
+
+        <p>
+          Each sub-component ships as a typed Python module
+          (<code>worship_curved/&lt;component&gt;.py</code>) with a unit
+          test, a one-page rationale citing the relevant literature,
+          and an integration commit to the cohort-shared branch
+          <code>flagship/worship_curved</code>. The integration lead
+          opens the final PR at term end with all contributors listed in
+          the commit history.
+        </p>
+
+        <h3>Authoring rationale</h3>
+
+        <div class="ai-box">
+          <div class="ai-label">Ask your AI</div>
+          <div class="ai-text">
+            <p>
+              &ldquo;I&rsquo;m contributing the
+              <code>[sub-component]</code> to a cohort-published
+              parametric curved-wall worship room. Read
+              <code>[Vartanian 2015 / Joye 2007 / Bermudez 2017]</code>
+              and tell me: (a) which geometric or parametric features in
+              those studies most directly motivate my sub-component, (b)
+              what range of values is defensible based on the data in
+              those studies, (c) what cross-cultural variance the
+              studies acknowledge, (d) what the construct-validity risks
+              are if my sub-component is implemented carelessly. Be
+              specific about study findings, not generic about
+              architecture.&rdquo;
+            </p>
+          </div>
+        </div>
+
+        <div class="deliverable">
+          <div class="deliverable-label">Deliverable per student</div>
+          <p>
+            One sub-component module + unit tests + a 500-word rationale
+            citing the literature + a contribution commit to the
+            integration PR. The integration lead additionally owns the
+            term-end cohort PR.
+          </p>
+        </div>
+      </section>
+
+      <!-- PHASE 5 -->
+      <section>
+        <h2>Phase 5: Cross-room evaluation</h2>
+
+        <p>
+          Take the full library of parametric rooms &mdash; everyone&rsquo;s
+          manifests from Task&nbsp;1, everyone&rsquo;s pipelines from
+          Task&nbsp;2, everyone&rsquo;s presets from Task&nbsp;3 &mdash;
+          and evaluate the AI front-end against at least <strong>10
+          prompts per room</strong>. For each prompt, record:
+        </p>
+        <ol>
+          <li>What the user asked (the verbatim natural-language prompt).</li>
+          <li>What JSON patch the LLM emitted.</li>
+          <li>Whether the validation gate passed, degraded, or refused.</li>
+          <li>Whether the rendered result matches the user&rsquo;s
+          intent (a 0&ndash;5 subjective rating, with one-sentence
+          rationale).</li>
+        </ol>
+
+        <p>
+          Aggregate the findings into a final report that answers four
+          questions: which room types does the AI handle reliably; which
+          parameters are systematically misinterpreted; where does the
+          validation gate fire most often; and what improvements would
+          have the largest yield?
+        </p>
+
+        <div class="deliverable">
+          <div class="deliverable-label">Deliverable</div>
+          <p>
+            <code>evaluation_report.md</code> &mdash; 1500&ndash;2000
+            words, with per-room tables, a summary of the four findings,
+            and a prioritised list of improvements.
+          </p>
+        </div>
+      </section>
+
+      <!-- WHAT YOU SUBMIT -->
+      <section>
+        <h2>What you submit</h2>
+
+        <table class="data-table">
+          <thead>
+            <tr><th>Item</th><th>Filename / location</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>LLM wrapper + CLI demo</td><td><code>nl_patch_demo.py</code> (or <code>.js</code>) + system-prompt file</td></tr>
+            <tr><td>Validation gate</td><td><code>validation_gate.py</code> + test suite (&ge; 8 cases)</td></tr>
+            <tr><td>Literature-grounded presets</td><td><code>presets/&lt;room_type&gt;/&lt;preset_name&gt;.json</code> (&ge; 4 per student, with full APA + DOI)</td></tr>
+            <tr><td>Curved-wall worship sub-component</td><td><code>3d_rooms/worship_curved/&lt;your_component&gt;.py</code> + unit test + 500-word rationale</td></tr>
+            <tr><td>Integration commit</td><td>One commit on <code>flagship/worship_curved</code> branch</td></tr>
+            <tr><td>Cross-room evaluation report</td><td><code>evaluation_report.md</code> (1500&ndash;2000 words)</td></tr>
+            <tr><td>Demo recording</td><td>3-minute video showing the wrapper handling at least three rooms and one preset</td></tr>
+            <tr><td>File manifest</td><td><code>git diff --name-only upstream/main</code></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- GRADING -->
+      <section>
+        <h2>Grading (75 points)</h2>
+
+        <table class="data-table">
+          <thead>
+            <tr><th>Criterion</th><th>Points</th><th>What we check</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>LLM wrapper</strong></td><td>10</td><td>Reads manifest; emits valid <code>set/delta/preset</code> ops; CLI demo runs end-to-end on at least one of your assigned rooms.</td></tr>
+            <tr><td><strong>Validation gate</strong></td><td>10</td><td>Range, type, name checks all implemented; refusal mode emits structured error; test suite covers &ge; 8 cases (5 valid, 3 invalid).</td></tr>
+            <tr><td><strong>Literature-grounded presets</strong></td><td>15</td><td>&ge; 4 presets per student; each carries full APA citation + DOI; values defensibly map to the cited study&rsquo;s condition.</td></tr>
+            <tr><td><strong>Curved-wall worship sub-component</strong></td><td>25</td><td>Sub-component implements its specification; unit test passes; 500-word rationale cites Vartanian / Joye / Bermudez where relevant; integration commit lands on <code>flagship/worship_curved</code>.</td></tr>
+            <tr><td><strong>Cross-room evaluation report</strong></td><td>10</td><td>1500&ndash;2000 words; covers &ge; 10 prompts per room; answers all four required questions.</td></tr>
+            <tr><td><strong>File manifest</strong></td><td>5</td><td>Complete <code>git diff --name-only</code> in the PR body.</td></tr>
+            <tr><td><em>Total</em></td><td><strong>75</strong></td><td></td></tr>
+          </tbody>
+        </table>
+      </section>
 
       <!-- GITHUB SUBMISSION -->
       <section class="github-submission">
         <h2 id="submission">Submit Task 3 on GitHub</h2>
 
         <p>
-          Stay on the <code>track3/your-name</code> branch.  Open
-          Task&nbsp;3&rsquo;s PR against Task&nbsp;2&rsquo;s merge commit
-          using GitHub&rsquo;s compare feature.
+          Stay on the <code>track3/your-name</code> branch. Open
+          Task&nbsp;3&rsquo;s PR against Task&nbsp;2&rsquo;s merge
+          commit using GitHub&rsquo;s compare feature. Then, separately,
+          contribute one commit to the cohort-shared
+          <code>flagship/worship_curved</code> branch; the integration
+          lead opens the cohort flagship PR at term end.
         </p>
 
         <h3>Working on Task 3</h3>
-        <pre class="code-block">git checkout track3/&lt;your-name&gt;
+<pre><code class="lang-bash">git checkout track3/&lt;your-name&gt;
 git pull --rebase upstream main
 
 # Commit small as you go
-git add ka_vr_ai_modifier.html presets/ test_results/ demo.mp4
-git commit -m "task3: Gemini-backed NL → JSON modifier with viability validation"
+git add nl_patch_demo.py validation_gate.py presets/ evaluation_report.md
+git commit -m "task3: NL patch wrapper, validation gate, presets, eval"
 
-git push origin track3/&lt;your-name&gt;</pre>
+git push origin track3/&lt;your-name&gt;</code></pre>
+
+        <h3>Contributing to the flagship branch</h3>
+<pre><code class="lang-bash">git fetch upstream
+git checkout -b flagship/worship_curved upstream/flagship/worship_curved
+
+# Add your sub-component
+git add 3d_rooms/worship_curved/&lt;your_component&gt;.py \
+        3d_rooms/worship_curved/tests/test_&lt;your_component&gt;.py \
+        3d_rooms/worship_curved/rationale_&lt;your_component&gt;.md
+git commit -m "worship_curved: &lt;your component name&gt; (&lt;your name&gt;)"
+
+git push origin flagship/worship_curved</code></pre>
 
         <h3>Submitting Task 3 for review</h3>
         <ol>
-          <li>Push the latest: <code>git push origin track3/&lt;your-name&gt;</code></li>
-          <li>On GitHub, open a Pull Request from
+          <li>Push the latest:
+            <code>git push origin track3/&lt;your-name&gt;</code>.</li>
+          <li>Open a Pull Request from
             <code>&lt;YOUR-USERNAME&gt;:track3/&lt;your-name&gt;</code> to
-            <code>dkirsh:main</code> &mdash; use the compare feature with
+            <code>dkirsh:main</code>, using the compare feature with
             Task&nbsp;2&rsquo;s merge commit as the base.</li>
           <li>Title:
-            <code>Track 3 &middot; Task 3: AI Front-End for Scene Modification &mdash; &lt;your name&gt;</code></li>
-          <li>In the PR body, paste your file manifest, plus a short
-            paragraph naming the LLM you used, the rate of valid-JSON
-            outputs across your 150 tests, and the most surprising
-            instruction the system handled (or failed) gracefully.</li>
+            <code>Track 3 &middot; Task 3: AI Front-End, Presets, Worship Sub-component &mdash; &lt;your name&gt;</code>.</li>
+          <li>In the PR body, paste your file manifest, name the LLM you
+          used, name your worship sub-component, and report the headline
+          numbers from your evaluation (rate of valid-JSON outputs;
+          per-room intent-match rating).</li>
           <li>Add the label <code>track3-task3-review</code> and tag
             <code>@dkirsh</code>.</li>
-          <li>Leave the PR open.  <strong>Do not merge.</strong></li>
+          <li>Leave the PR open. <strong>Do not merge.</strong></li>
         </ol>
 
+        <h3>The cohort flagship PR (integration lead only)</h3>
         <p>
-          The 3-minute demo video goes in
-          <code>track3/&lt;your-name&gt;/media/task3/demo.mp4</code>
-          (or, for files larger than 50 MB, on the course shared drive
-          with the link in the PR body).  Test results and modification
-          history go in
-          <code>track3/&lt;your-name&gt;/test_results/task3/</code>.
+          At term end, the integration lead opens a separate
+          cohort-wide PR titled
+          <code>Track 3 Flagship: Curved-Wall Worship Room &mdash; Cohort SP 2026</code>
+          from <code>flagship/worship_curved</code> into
+          <code>main</code>. The PR body lists every contributor
+          (extracted from the commit history) and links each
+          sub-component&rsquo;s rationale file. The flagship PR is the
+          cohort&rsquo;s citable artefact &mdash; it is what shows up
+          when someone references the cohort&rsquo;s work in a paper.
         </p>
+
+        <div class="callout callout-rose">
+          <strong>Do not commit API keys.</strong> The LLM wrapper reads
+          its key from an environment variable. Repository secrets and
+          <code>.env</code> files are <em>never</em> committed. A single
+          leaked key has cost prior cohorts real money; the gate that
+          catches this is your own discipline.
+        </div>
+      </section>
+
+      <!-- EXISTING CODE -->
+      <section>
+        <h2>Existing code you should know about</h2>
+
+        <table class="data-table">
+          <thead>
+            <tr><th>Repo / file</th><th>What it gives you</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Your <code>3d_rooms/&lt;room_type&gt;/manifest.json</code> from Task&nbsp;1</td><td>Parameter manifest with declared types, ranges, units &mdash; the input the LLM wrapper consumes.</td></tr>
+            <tr><td>Your Task&nbsp;2 wrapper</td><td>The renderer that consumes a JSON patch and emits an updated room. The Task&nbsp;3 LLM wrapper sits in front of it.</td></tr>
+            <tr><td><code>3d_rooms/worship_curved/</code> (cohort branch)</td><td>The shared flagship module. Each student commits one sub-component here.</td></tr>
+            <tr><td><code>presets/</code> (per-student)</td><td>Stores literature-grounded presets keyed by room type.</td></tr>
+            <tr><td><code>Article_Eater/data/templates/</code></td><td>166 PNU templates for environmental-psychology literature lookups; useful when authoring a preset citation block.</td></tr>
+            <tr><td><code>Tagging_Contractor</code> registry</td><td>Tag vocabulary that overlaps with the manifest&rsquo;s parameter space; useful when the LLM needs to map natural-language descriptors to manifest keys.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- REFERENCES -->
+      <section>
+        <h2>References</h2>
+        <ul class="ref-list">
+          <li>Barrett, P., Davies, F., Zhang, Y., &amp; Barrett, L. (2015). The impact of classroom design on pupils&rsquo; learning: Final results of a holistic, multi-level analysis. <em>Building and Environment, 89</em>, 118&ndash;133. https://doi.org/10.1016/j.buildenv.2015.02.013</li>
+          <li>Bermudez, J., Krizaj, D., Lipschitz, D. L., Bueler, C. E., Rogowska, J., Yurgelun-Todd, D., &amp; Nakamura, Y. (2017). Externally-induced meditative states: An exploratory fMRI study of architects&rsquo; responses to contemplative architecture. <em>Frontiers of Architectural Research, 6</em>(2), 123&ndash;136. https://doi.org/10.1016/j.foar.2017.02.002</li>
+          <li>Cronbach, L. J., &amp; Meehl, P. E. (1955). Construct validity in psychological tests. <em>Psychological Bulletin, 52</em>(4), 281&ndash;302. https://doi.org/10.1037/h0040957</li>
+          <li>Joye, Y. (2007). Architectural lessons from environmental psychology: The case of biophilic architecture. <em>Review of General Psychology, 11</em>(4), 305&ndash;328. https://doi.org/10.1037/1089-2680.11.4.305</li>
+          <li>Kaplan, R., &amp; Kaplan, S. (1989). <em>The experience of nature: A psychological perspective</em>. Cambridge University Press.</li>
+          <li>Khanna, M., Liu, Y., Wang, T., et&nbsp;al. (2024). Procedural generation of indoor scenes for embodied AI: A survey. <em>arXiv preprint arXiv:2404.xxxx</em>.</li>
+          <li>Meyers-Levy, J., &amp; Zhu, R. (J.). (2007). The influence of ceiling height: The effect of priming on the type of processing that people use. <em>Journal of Consumer Research, 34</em>(2), 174&ndash;186. https://doi.org/10.1086/519146</li>
+          <li>M&uuml;nch, M., Wirz-Justice, A., Brown, S. A., Kantermann, T., Martiny, K., Stefani, O., Vetter, C., Wright, K. P., Wulff, K., &amp; Skene, D. J. (2020). The role of daylight for humans: Gaps in current knowledge. <em>Clocks &amp; Sleep, 2</em>(1), 61&ndash;85. https://doi.org/10.3390/clockssleep2010008</li>
+          <li>Raistrick, A., Lipson, L., Ma, Z., et&nbsp;al. (2024). Infinigen Indoors: Photorealistic indoor scenes using procedural generation. <em>Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)</em>.</li>
+          <li>Sommer, R. (1969). <em>Personal space: The behavioral basis of design</em>. Prentice-Hall.</li>
+          <li>Stiny, G. (1980). Introduction to shape and shape grammars. <em>Environment and Planning B: Planning and Design, 7</em>(3), 343&ndash;351. https://doi.org/10.1068/b070343</li>
+          <li>Ulrich, R. S. (1984). View through a window may influence recovery from surgery. <em>Science, 224</em>(4647), 420&ndash;421. https://doi.org/10.1126/science.6143402</li>
+          <li>Vartanian, O., Navarrete, G., Chatterjee, A., Fich, L. B., Gonzalez-Mora, J. L., Leder, H., Modro&ntilde;o, C., Nadal, M., Rostrup, N., &amp; Skov, M. (2015). Architectural design and the brain: Effects of ceiling height and perceived enclosure on beauty judgments and approach-avoidance decisions. <em>Journal of Environmental Psychology, 41</em>, 10&ndash;18. https://doi.org/10.1016/j.jenvp.2014.11.006</li>
+        </ul>
       </section>
 
     </main>
   </div>
 
   <nav class="track-footer-nav" aria-label="Within-track navigation">
-    <a href="t3_task2.html" class="prev">&larr; Task 2: VR Conversion &amp; Factor Testing</a>
+    <a href="t3_task2.html" class="prev">&larr; Task 2: Parametric Wrappers</a>
     <a href="t3_intro.html" class="next">Track Overview &rarr;</a>
   </nav>
 

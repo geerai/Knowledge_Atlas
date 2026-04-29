@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Task 2: VR Conversion &amp; Factor Testing &middot; Track 3 &middot; COGS 160</title>
+  <title>Task 2: Render Pipeline &amp; Sweep Gallery &middot; Track 3 &middot; COGS 160</title>
   <link rel="stylesheet" href="_track_pages_shared.css">
   <script src="../ka_canonical_navbar.js" defer></script>
 </head>
@@ -14,7 +14,7 @@
       <a href="../ka_home.html">Home</a> /
       <a href="ka_schedule.html">160 Student</a> /
       <a href="t3_intro.html">Track 3</a> /
-      <span>Task 2: VR Conversion &amp; Factor Testing</span>
+      <span>Task 2: Render Pipeline &amp; Sweep Gallery</span>
     </div>
 
   <div class="page-grid">
@@ -23,448 +23,495 @@
 
     <main class="content">
 
+      <!-- HERO -->
       <header class="hero">
         <div class="hero-track">TRACK 3 &middot; TASK 2</div>
-        <h1>VR Conversion &amp; Manual Factor Testing</h1>
+        <h1>Render-to-Web Pipeline and Parameter-Sweep Gallery</h1>
         <p class="hero-sub">
-          Load at least ten of your models in a browser-based A-Frame
-          viewer, build real-time slider controls for all eight
-          manipulation classes, and produce a factor viability matrix
-          supported by before/after screenshots.
+          A Python wrapper turns the Task&nbsp;1 JSON manifest into a glTF
+          file; a browser viewer renders it; a static gallery sweeps each
+          parameter at low/mid/high; an HSSD divergence note documents
+          what your parametric room captures and what an artist-authored
+          room captures that yours cannot.
         </p>
         <div class="hero-meta">
+          <span class="hero-pill">4 phases</span>
           <span class="hero-pill">75 points</span>
-          <span class="hero-pill">3 phases</span>
-          <span class="hero-pill">Prerequisite: Task 1</span>
-          <span class="hero-pill">120+ fps target</span>
+          <span class="hero-pill">Weeks 5&ndash;7</span>
         </div>
       </header>
 
-      <h2>The big picture</h2>
-      <p>
-        In Task&nbsp;1 you cataloged twenty-plus 3D models and annotated
-        every mesh.  Now you must <strong>prove</strong> those annotations
-        are correct by actually loading the models in a browser and
-        manually testing every manipulation.  This is not a demo. It is
-        validation engineering &mdash; and the matrix you produce is the
-        input to Task&nbsp;3&rsquo;s validation gate.
-      </p>
+      <!-- THE BIG PICTURE -->
+      <section>
+        <h2>The big picture</h2>
+        <p>
+          A parametric room is only useful for research if a researcher
+          can <em>see</em> the result of varying a parameter. In Task&nbsp;1
+          you defined the manifest &mdash; the dictionary of knobs the
+          generator exposes. Task&nbsp;2 closes the loop. JSON in, glTF
+          out, render in the browser, in seconds. Once that loop is fast,
+          a sweep is just a script and a grid of thumbnails.
+        </p>
+        <p>
+          The closing deliverable is not a polish exercise. It is an
+          <strong>HSSD divergence note</strong>. The Habitat Synthetic
+          Scenes Dataset (HSSD-200; Khanna et al.,&nbsp;2024) gives us
+          211 artist-authored full houses. The same paper reports a
+          striking finding: 122 well-modelled HSSD scenes outperformed
+          ten thousand procedurally generated scenes on real-world
+          transfer. That result is itself a teaching moment. A
+          researcher who uses your tool needs to know what a parametric
+          room buys them (controlled sweeps, factorial designs) and what
+          it costs them (idiosyncratic detail, lived-in clutter,
+          asymmetric layouts).
+        </p>
+        <p>
+          So Task&nbsp;2 has two faces. One face is engineering &mdash; a
+          working pipeline from JSON to a rendered scene in a browser
+          tab. The other face is epistemic &mdash; an honest written
+          comparison between what your parametric room captures and what
+          an artist-authored room captures, for the same room type. The
+          grade rewards both.
+        </p>
+      </section>
 
-      <h3>Why A-Frame, not Unity or Unreal</h3>
-      <table class="data-table">
-        <thead>
-          <tr><th>Platform</th><th>Learning curve</th><th>Verdict</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>A-Frame (WebXR)</strong></td>
-            <td>HTML + JS; loads glTF natively; runs in browser; zero install</td>
-            <td>&#10003; Use this</td>
-          </tr>
-          <tr>
-            <td>Unity</td>
-            <td>C#; 2-week onboarding; heavy project files</td>
-            <td>&#10005; Too slow for six weeks</td>
-          </tr>
-          <tr>
-            <td>Unreal</td>
-            <td>C++ / Blueprint; steepest curve; massive files</td>
-            <td>&#10005; Not feasible</td>
-          </tr>
-        </tbody>
-      </table>
-      <p>
-        You already know HTML and JavaScript from Tracks&nbsp;1 and 2.
-        A-Frame wraps Three.js, a glTF loads with one HTML tag, and
-        modifications are JavaScript property changes that execute at
-        <strong>120 fps</strong> in our prototype.
-      </p>
+      <!-- PHASE 1 -->
+      <section>
+        <h2>Phase 1: Build the Python wrapper</h2>
 
-      <h2>Phase 1: Build the interactive viewer</h2>
+        <div class="callout callout-teal">
+          <strong>Contract objective:</strong>
+          &ldquo;I want a Python script that takes a JSON parameter dict
+          matching my Task&nbsp;1 manifest, calls Infinigen Indoors,
+          exports the result as a glTF file, and writes a sidecar JSON
+          with the resolved parameters and render time.&rdquo;
+          <br><strong>Contract is with:</strong> the Task&nbsp;1 manifest
+          (<code>manifests/&lt;room&gt;.schema.json</code>), the Infinigen
+          Indoors Python API, and the Blender 4.x glTF exporter.
+        </div>
 
-      <div class="callout-teal">
-        <strong>Contract objective:</strong>
-        &ldquo;I want an HTML page that loads any of my glTF models and
-        provides real-time slider controls for each manipulation
-        class.&rdquo;
-        <br><strong>Contract is with:</strong> your glTF models, your
-        <code>mesh_roles.json</code> annotations from Task&nbsp;1, and
-        the Three.js / A-Frame API.
-      </div>
+        <h3>Wrapper signature</h3>
+        <p>The script is invoked from the command line, not from a notebook:</p>
 
-      <h3>Real-time sliders (continuous, instant feedback)</h3>
+<pre><code class="lang-bash">python3 scripts/infinigen_wrapper.py \
+  --manifest manifests/living_room.schema.json \
+  --params   params/living_room_default.json \
+  --out      renders/living_room_default.gltf</code></pre>
 
-      <table class="data-table">
-        <thead>
-          <tr><th>Slider</th><th>What it controls</th><th>Range</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Ceiling height</td><td><code>ceiling</code> mesh <code>position.y</code> + wall scale</td><td>2.0 m &ndash; 6.0 m</td></tr>
-          <tr><td>Wall roughness</td><td>Material roughness on selected wall(s)</td><td>0.0 &ndash; 1.0</td></tr>
-          <tr><td>Light intensity</td><td>Main light + ambient intensity</td><td>0.1 &ndash; 3.0</td></tr>
-          <tr><td>Color temperature</td><td>Light colour mapped from Kelvin</td><td>2700 K &ndash; 6500 K</td></tr>
-          <tr><td>Window scale</td><td>Window mesh scale</td><td>0.2&times; &ndash; 3.0&times;</td></tr>
-          <tr><td>Partition depth</td><td>Refuge partition visibility + depth</td><td>0.0 m &ndash; 2.5 m</td></tr>
-        </tbody>
-      </table>
+        <p>It produces two files alongside the glTF:</p>
+        <ul>
+          <li><code>renders/living_room_default.gltf</code> &mdash; the scene with embedded textures.</li>
+          <li><code>renders/living_room_default.meta.json</code> &mdash; the resolved parameters (after defaults and clamping), the manifest version, the Infinigen commit hash, and the wall-clock render time.</li>
+        </ul>
 
-      <h3>Discrete selectors (click to apply)</h3>
+        <h3>Infinigen &rarr; glTF: the export step</h3>
+        <p>
+          Infinigen Indoors ships with an Omniverse export path
+          (Raistrick et al.,&nbsp;2024). glTF is one Blender-headless
+          step beyond that: bake the scene, then call Blender's glTF
+          exporter from a script. The minimum command, run from your
+          repo root:
+        </p>
 
-      <table class="data-table">
-        <thead>
-          <tr><th>Selector</th><th>What it controls</th><th>Options</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Wall material swatches</td><td>Wall colour + roughness</td><td>Plaster, Brick, Concrete, Wood, White, Glass, Slate</td></tr>
-          <tr><td>Floor material swatches</td><td>Floor colour + roughness</td><td>Hardwood, Carpet, Tile, Polished</td></tr>
-          <tr><td>Wall selector</td><td>Which wall(s) are affected</td><td>All, North, South, East, West, Individual</td></tr>
-        </tbody>
-      </table>
+<pre><code class="lang-bash">blender --background --python scripts/infinigen_wrapper.py -- \
+  --manifest manifests/living_room.schema.json \
+  --params   params/living_room_default.json \
+  --out      renders/living_room_default.gltf</code></pre>
 
-      <div class="callout-amber">
-        <strong>Per-wall selection is non-negotiable.</strong> The user
-        must be able to click "North Wall" and change only that
-        wall&rsquo;s material. This is what your
-        <code>mesh_roles.json</code> <code>wall_id</code> annotations from
-        Task&nbsp;1 enable. A viewer without per-wall selection cannot be
-        used by the AI front-end.
-      </div>
+        <p>
+          The double-dash (<code>--</code>) tells Blender to pass
+          everything after it to your Python script rather than to
+          Blender itself. Inside the script, use Blender's Python API to
+          build the Infinigen scene and then call
+          <code>bpy.ops.export_scene.gltf(...)</code> with
+          <code>export_format='GLTF_EMBEDDED'</code> so the textures
+          travel with the geometry in a single file.
+        </p>
 
-      <h3>How wall selection works</h3>
-      <pre class="code-block">// mesh_roles.json tells us which mesh is which wall
-const roles = await fetch('mesh_roles/SKF_office_001.json').then(r =&gt; r.json());
+        <div class="ai-box">
+          <div class="ai-label">Ask your AI</div>
+          <div class="ai-text">
+            <p>&ldquo;I have an Infinigen <code>LivingRoom</code>
+            instance. Show me the exact Python code to (a) instantiate
+            it with parameter values from a JSON file, (b) bake the
+            scene into Blender, (c) export to a single glTF file with
+            embedded textures. Use Blender 4.x's
+            <code>bpy.ops.export_scene.gltf</code> API. Include error
+            handling for parameters that fall outside the manifest
+            ranges.&rdquo;</p>
+          </div>
+        </div>
 
-const walls = Object.entries(roles.meshes)
-  .filter(([name, info]) =&gt; info.role === 'wall')
-  .map(([name, info]) =&gt; ({ meshName: name, wallId: info.wall_id }));
+        <h3>Sidecar metadata</h3>
+        <p>
+          Every render writes a sidecar so the gallery and the divergence
+          note can read back exactly what produced the image:
+        </p>
 
-// When user selects "north" and clicks a material swatch:
-function setWallMaterial(wallId, color, roughness) {
-  const target = wallId === 'all' ? walls : walls.filter(w =&gt; w.wallId === wallId);
-  target.forEach(w =&gt; {
-    const mesh = scene.getObjectByName(w.meshName);
-    mesh.material.color.set(color);
-    mesh.material.roughness = roughness;
-  });
-}</pre>
+<pre><code class="lang-json">{
+  "manifest": "living_room.schema.json",
+  "manifest_version": "1.2",
+  "infinigen_commit": "a3f9c1e",
+  "params_resolved": {
+    "ceiling_height_m": 2.7,
+    "window_count": 2,
+    "wall_material": "plaster_warm",
+    "furniture_density": 0.6,
+    "lighting_kelvin": 3200,
+    "floor_material": "oak_natural"
+  },
+  "render_time_seconds": 41.7,
+  "rendered_at": "2026-05-12T14:22:09Z"
+}</code></pre>
 
-      <h3>How ceiling height works (the geometry challenge)</h3>
-      <pre class="code-block">function setCeilingHeight(newHeight) {
-  const ceiling = scene.getObjectByName(ceilingMeshName);
-  const originalHeight = roles.room_dimensions.height_m;
-  ceiling.position.y = newHeight;
+        <div class="deliverable">
+          <div class="deliverable-label">Deliverable</div>
+          <p>
+            Working <code>scripts/infinigen_wrapper.py</code> plus three
+            test renders per assigned room (default, perturbed-1,
+            perturbed-2), each with its <code>.meta.json</code> sidecar.
+            Six glTFs total across your two assigned rooms.
+          </p>
+        </div>
+      </section>
 
-  walls.forEach(w =&gt; {
-    const mesh = scene.getObjectByName(w.meshName);
-    mesh.scale.y = newHeight / originalHeight;
-    mesh.position.y = newHeight / 2;
-  });
+      <!-- PHASE 2 -->
+      <section>
+        <h2>Phase 2: Build the browser viewer</h2>
 
-  lights.forEach(l =&gt; { l.position.y = newHeight - 0.3; });
-}</pre>
+        <p>
+          Use Google's open-source
+          <a href="https://modelviewer.dev" target="_blank" rel="noopener"><code>&lt;model-viewer&gt;</code></a>
+          web component. It is free, CDN-hosted, no install, and ships
+          with realistic image-based lighting (IBL) and orbit controls
+          out of the box. We do not reach for Three.js here because
+          this task does not need custom shaders, post-processing, or
+          path tracing &mdash; we need a clean turntable view of a
+          single glTF, in eight lines of HTML.
+        </p>
 
-      <p>
-        These are JavaScript property changes &mdash; no re-rendering, no
-        re-compilation.  Slider dragging is perceptually instant and
-        measured at 120 fps in our prototype.
-      </p>
+        <h3>Minimum viable viewer</h3>
 
-      <h3>Lighting quality requirement</h3>
+<pre><code class="lang-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type="module"
+    src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"&gt;
+  &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;model-viewer
+    src="renders/living_room_default.gltf"
+    alt="Procedurally generated living room"
+    camera-controls
+    auto-rotate
+    shadow-intensity="1"
+    exposure="1"
+    style="width: 100%; height: 600px;"&gt;
+  &lt;/model-viewer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
 
-      <p>
-        Basic Three.js lights (<code>DirectionalLight</code> +
-        <code>AmbientLight</code>) produce flat, unrealistic scenes with
-        no light bounce, no colour bleeding, no ambient occlusion. For
-        research stimuli, this is unacceptable &mdash; 33 of the registry
-        lighting tags describe properties of <em>indirect</em> light.
-        Your viewer must implement <strong>at least one</strong> of these
-        lighting upgrades:
-      </p>
+        <p>
+          That is the entire baseline. Drop in a glTF, open the page,
+          drag to orbit. Now extend it.
+        </p>
 
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Level</th>
-            <th>Technique</th>
-            <th>What it adds</th>
-            <th>Implementation</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Level 2</strong> (minimum)</td>
-            <td>HDRI environment map + tone mapping</td>
-            <td>Realistic ambient from all directions; reflections on glossy surfaces</td>
-            <td>Load a <code>.hdr</code> from Poly Haven, set <code>scene.environment</code>, use <code>ACESFilmicToneMapping</code>. ~20 lines.</td>
-          </tr>
-          <tr>
-            <td><strong>Level 3</strong> (expected)</td>
-            <td>+ Screen-space ambient occlusion (SSAO)</td>
-            <td>Corners and crevices darken naturally; large realism boost</td>
-            <td>Add <code>SSAOPass</code> from Three.js post-processing. ~40 lines.</td>
-          </tr>
-          <tr>
-            <td><strong>Level 5</strong> (stretch)</td>
-            <td>Path tracing via <code>three-gpu-pathtracer</code></td>
-            <td>Full global illumination: light bounces between surfaces, colour bleeds, soft shadows, caustics</td>
-            <td>Replace <code>renderer.render()</code> with <code>pathTracer.renderSample()</code>. ~20 lines. See <a href="https://gkjohnson.github.io/three-gpu-pathtracer/example/bundle/interior.html">Interior Scene demo</a>.</td>
-          </tr>
-        </tbody>
-      </table>
+        <div class="ai-box">
+          <div class="ai-label">Ask your AI</div>
+          <div class="ai-text">
+            <p>&ldquo;Modify this <code>&lt;model-viewer&gt;</code>
+            viewer so that (a) it loads a different GLB based on a
+            query-string parameter (e.g.
+            <code>viewer.html?scene=perturbed-1</code>), (b) it shows
+            the parameter values from the sidecar JSON
+            (<code>.meta.json</code>) in a small overlay panel in the
+            top-right corner, (c) it switches between three pre-rendered
+            parameter settings via three buttons labelled
+            <em>default</em>, <em>perturbed-1</em>,
+            <em>perturbed-2</em>. Keep the page to one HTML file with
+            inline CSS and JS.&rdquo;</p>
+          </div>
+        </div>
 
-      <p>
-        The <code>three-gpu-pathtracer</code> Interior Scene demo runs on
-        standard laptop GPUs (MacBook Air M1 and up).  It uses WebGL&nbsp;2
-        (not WebGPU), renders at half resolution during interaction, and
-        reaches a visually clean 38 samples in about 30 seconds at rest.
-        At 370+ samples the result is publication-quality.  The library is
-        actively maintained, MIT-licensed, 1.7k GitHub stars.
-      </p>
+        <div class="deliverable">
+          <div class="deliverable-label">Deliverable</div>
+          <p>
+            A working <code>viewer.html</code> per assigned room,
+            committed under
+            <code>track3/&lt;your-name&gt;/viewer/</code>. Each viewer
+            must (a) load the three test renders from Phase&nbsp;1, (b)
+            display the resolved parameters from the sidecar, (c)
+            orbit-control with mouse and touch.
+          </p>
+        </div>
+      </section>
 
-      <p>The interactive UX for path tracing:</p>
+      <!-- PHASE 3 -->
+      <section>
+        <h2>Phase 3: Generate the parameter-sweep gallery</h2>
 
-      <pre class="code-block">SLIDER DRAG:     Scene goes noisy (like a Blender viewport) — still responsive
-SLIDER RELEASE:  pathTracer.updateMaterials() + pathTracer.reset()
-                 Image converges to clean GI in ~2 seconds
-EXPORT:          Capture converged frame as the research stimulus</pre>
+        <p>
+          For each of your two assigned rooms, generate one render at
+          three settings of <em>each</em> exposed parameter (low / mid /
+          high), holding all other parameters at their defaults. With
+          six parameters per manifest &times; three settings each, that
+          is <strong>18 renders per room</strong> &mdash; 36 renders
+          total across your two rooms.
+        </p>
 
-      <h3>HDRI sources (all CC0, free)</h3>
-      <ul>
-        <li><a href="https://polyhaven.com/hdris" target="_blank" rel="noopener">Poly Haven HDRIs</a> &mdash; filter "indoor". Download &ge; 3 at different colour temps (warm interior, neutral studio, cool overcast).</li>
-        <li><a href="https://ambientcg.com" target="_blank" rel="noopener">Ambient CG</a> &mdash; CC0 HDRIs and matching PBR material textures.</li>
-      </ul>
+        <p>
+          The gallery is a single static HTML page that lays the 18
+          renders out as a grid. Each tile is a thumbnail (use the glTF
+          rendered to a PNG, or embed a small <code>&lt;model-viewer&gt;</code>
+          per tile if your machine can run them) with the parameter name
+          and the parameter value labelled underneath.
+        </p>
 
-      <h2>Phase 2: Test each model &times; each factor</h2>
+        <h3>Grid specification</h3>
+        <table class="data-table">
+          <thead>
+            <tr><th>Property</th><th>Specification</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Rows</td><td>One row per parameter (six rows)</td></tr>
+            <tr><td>Columns</td><td>Three columns: low, mid, high</td></tr>
+            <tr><td>Tile contents</td><td>Render thumbnail; parameter name; parameter value</td></tr>
+            <tr><td>Tile size</td><td>320 &times; 240&nbsp;px (or larger if your screen allows)</td></tr>
+            <tr><td>Header</td><td>Room type, date generated, link to the manifest used</td></tr>
+            <tr><td>Footer</td><td>Total render time, Infinigen commit, your name</td></tr>
+          </tbody>
+        </table>
 
-      <p>
-        Load each of your top ten models (viability score &ge; 4 from
-        Task&nbsp;1) and systematically test all eight manipulation
-        classes.  For each model &times; factor combination, record one
-        of these outcomes:
-      </p>
+        <div class="ai-box">
+          <div class="ai-label">Ask your AI</div>
+          <div class="ai-text">
+            <p>&ldquo;I have a parameter manifest with 6 parameters and a
+            Python wrapper that turns a JSON dict into a glTF. Write me
+            a build script that emits 18 renders for one room (each
+            parameter at low/mid/high, all other parameters at default)
+            plus a static HTML gallery page that displays all 18 with
+            their parameter labels. The script should be idempotent
+            &mdash; re-running it should skip any render whose
+            <code>.meta.json</code> sidecar is already up to
+            date.&rdquo;</p>
+          </div>
+        </div>
 
-      <table class="data-table">
-        <thead>
-          <tr><th>Symbol</th><th>Meaning</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>&#10003;</td><td>Works correctly &mdash; the visual change is clearly visible</td></tr>
-          <tr><td>&#9888;</td><td>Partially works &mdash; e.g. shared material affects multiple walls when only one was selected</td></tr>
-          <tr><td>&#10005;</td><td>Does not work &mdash; e.g. no separate ceiling mesh</td></tr>
-          <tr><td>n/a</td><td>Not applicable &mdash; e.g. no acoustic meshes to modify</td></tr>
-        </tbody>
-      </table>
+        <div class="callout callout-amber">
+          <strong>Hold all other parameters constant.</strong> The point
+          of a sweep is to isolate the effect of one knob. If you
+          accidentally vary two parameters between adjacent tiles, the
+          sweep no longer reads as a sweep. The build script must drive
+          this discipline mechanically &mdash; do not hand-edit the JSON
+          dicts.
+        </div>
 
-      <p>The result is a 10&times;8 factor viability matrix:</p>
+        <div class="deliverable">
+          <div class="deliverable-label">Deliverable</div>
+          <p>
+            One <code>gallery.html</code> per assigned room (two total)
+            plus 36 renders + sidecars committed under
+            <code>track3/&lt;your-name&gt;/gallery/</code>.
+          </p>
+        </div>
+      </section>
 
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Geometry</th>
-            <th>Lighting</th>
-            <th>Materials</th>
-            <th>Color</th>
-            <th>Biophilic</th>
-            <th>Furniture</th>
-            <th>Acoustic</th>
-            <th>Complexity</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Model 1</td><td>&#10003;</td><td>&#10003;</td><td>&#9888;</td><td>&#10003;</td><td>&#10005;</td><td>&#10003;</td><td>n/a</td><td>&#9888;</td></tr>
-          <tr><td>Model 2</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>n/a</td><td>&#10003;</td></tr>
-          <tr><td>...</td><td colspan="8" style="text-align:center; color:var(--muted);">Fill in for all 10 models</td></tr>
-        </tbody>
-      </table>
+      <!-- PHASE 4 -->
+      <section>
+        <h2>Phase 4: HSSD divergence note</h2>
 
-      <h3>Testing protocol for each factor</h3>
-      <ol>
-        <li>Set the slider to its <strong>lowest</strong> value (e.g. ceiling = 2.0 m)</li>
-        <li>Take a screenshot</li>
-        <li>Set to the <strong>highest</strong> value (e.g. ceiling = 6.0 m)</li>
-        <li>Take a screenshot</li>
-        <li>Record: did it work? what broke? how long did the modification take?</li>
-      </ol>
+        <h3>What HSSD-200 is</h3>
+        <p>
+          The Habitat Synthetic Scenes Dataset (HSSD-200; Khanna et
+          al.,&nbsp;2024) is an artist-authored dataset of 211 full
+          houses with 18,656 individual object instances, distributed
+          under CC-BY-NC. The 2024 paper makes one finding worth
+          memorising: agents trained on just <strong>122 well-modelled
+          HSSD scenes</strong> outperformed agents trained on
+          <strong>ten thousand procedurally generated scenes</strong> on
+          a real-world transfer task. Quality of authoring beat quantity
+          of generation, by a wide margin.
+        </p>
 
-      <h3>Extended manipulation classes</h3>
-      <p>
-        Beyond the six original sliders, your viewer should also support
-        these where the model allows:
-      </p>
+        <p>
+          HSSD is the right comparison object for your parametric room.
+          Same room types. Different generation philosophy. Different
+          strengths.
+        </p>
 
-      <table class="data-table">
-        <thead>
-          <tr><th>Class</th><th>What to test</th><th>How to implement</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Window placement</td>
-            <td>Move window mesh from one wall to another</td>
-            <td>Re-parent window to different wall mesh; update position</td>
-          </tr>
-          <tr>
-            <td>Furniture density</td>
-            <td>Show / hide furniture meshes</td>
-            <td>Toggle <code>mesh.visible</code> on furniture-role meshes</td>
-          </tr>
-          <tr>
-            <td>View content</td>
-            <td>Change what is visible through the window</td>
-            <td>Swap the window mesh&rsquo;s emissive texture or backdrop</td>
-          </tr>
-          <tr>
-            <td>Partition walls</td>
-            <td>Add / remove internal dividers</td>
-            <td>Toggle visibility of partition-role meshes</td>
-          </tr>
-          <tr>
-            <td>Floor-plan proportions</td>
-            <td>Make the room wider or narrower</td>
-            <td>Scale floor + walls + ceiling on X or Z</td>
-          </tr>
-        </tbody>
-      </table>
+        <h3>What you write</h3>
+        <p>
+          For each of your two assigned rooms, find the closest HSSD
+          scene by room type. Open both the HSSD scene and your
+          parametric default render side-by-side in a browser. Then
+          write a 600&ndash;1000 word divergence note that covers the
+          following four questions, in order:
+        </p>
 
-      <h2>Phase 3: Write ruthless validation tests</h2>
+        <table class="data-table">
+          <thead>
+            <tr><th>Section</th><th>What to address</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>(a) Shared coverage</strong></td>
+              <td>What does your parametric room capture that the HSSD
+              scene also captures? Architectural geometry, basic
+              materials, plausible lighting, recognisable furniture
+              categories.</td>
+            </tr>
+            <tr>
+              <td><strong>(b) Parametric-only</strong></td>
+              <td>What does your room capture that HSSD does <em>not</em>?
+              The sweeps themselves. Your room exists in 18 versions; the
+              HSSD scene exists in one. Factorial designs, between-condition
+              comparisons, controlled stimulus variation &mdash; these are
+              parametric-only affordances.</td>
+            </tr>
+            <tr>
+              <td><strong>(c) HSSD-only</strong></td>
+              <td>What does HSSD capture that your room does not?
+              Idiosyncratic detail, asymmetric layouts, lived-in clutter,
+              wear and tear, the small inconsistencies that make a real
+              room read as real. Be specific &mdash; name three concrete
+              items in the HSSD scene that your generator could not
+              produce.</td>
+            </tr>
+            <tr>
+              <td><strong>(d) Implications</strong></td>
+              <td>For a researcher choosing stimuli: which kind of study
+              wants which kind of room? Sweeps and dose-response designs
+              prefer parametric. Naturalistic scene perception, ecological
+              validity, and real-world transfer prefer HSSD. State your
+              recommendation as a rule a colleague could follow.</td>
+            </tr>
+          </tbody>
+        </table>
 
-      <p>
-        For each model you tested, write a <strong>ruthless prompt</strong>
-        that an AI cannot pass unless the viewer actually works.  Run this
-        on every model.  The results go into the factor viability matrix.
-      </p>
+        <div class="callout callout-blue">
+          <strong>This is an epistemic deliverable, not a polish
+          exercise.</strong> The point is not to make your parametric
+          room look as good as HSSD. It will not. The point is to write
+          honestly about the divergence so the next researcher who
+          picks up your tool knows what they are buying and what they
+          are giving up. Khanna et al.'s 122-vs-10,000 finding is the
+          background result; your divergence note is the local instance
+          of it.
+        </div>
 
-      <div class="ai-box">
-        <em>Load model SKF_office_001 in the viewer. Execute these 12 tests
-        in sequence:</em>
-        <ol>
-          <li><em>Set ceiling to 2.0 m. Is the ceiling visually at desk
-          height? If not, the scale is wrong.</em></li>
-          <li><em>Set ceiling to 5.0 m. Do the walls extend to meet it,
-          or is there a gap?</em></li>
-          <li><em>Select <strong>only</strong> the north wall. Change it to
-          brick. Verify: south, east, and west walls are
-          unchanged.</em></li>
-          <li><em>Set colour temperature to 2700 K. Does the room look
-          warm? Set to 6500 K. Does it look clinical?</em></li>
-          <li><em>Set window scale to 3.0&times;. Does the window mesh
-          overlap adjacent walls?</em></li>
-          <li><em>Set window scale to 0.2&times;. Is the window still
-          visible or does it disappear?</em></li>
-          <li><em>Change floor to marble (roughness 0.15). Does it look
-          reflective?</em></li>
-          <li><em>Hide all furniture meshes. Is only architecture
-          remaining?</em></li>
-          <li><em>Check the FPS counter during slider drag. Is it &ge; 60
-          fps throughout?</em></li>
-          <li><em>Set all sliders to extreme values simultaneously. Does
-          anything z-fight or overlap?</em></li>
-          <li><em>Reset to defaults. Does the model return to its original
-          state exactly?</em></li>
-          <li><em>Open the browser console. Are there any JavaScript
-          errors?</em></li>
-        </ol>
-        <em>Report pass / fail for each test.</em>
-      </div>
+        <div class="deliverable">
+          <div class="deliverable-label">Deliverable</div>
+          <p>
+            One <code>divergence_note.md</code> per assigned room (two
+            total), 600&ndash;1000 words each, committed under
+            <code>track3/&lt;your-name&gt;/divergence/</code>. Include
+            screenshots of both the HSSD scene and your parametric
+            default in a <code>screenshots/</code> subfolder, referenced
+            by relative path from the note.
+          </p>
+        </div>
+      </section>
 
-      <h2>What you submit</h2>
+      <!-- WHAT YOU SUBMIT -->
+      <section>
+        <h2>What you submit</h2>
+        <table class="data-table">
+          <thead>
+            <tr><th>Item</th><th>Filename / Path</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Python wrapper</td><td><code>scripts/infinigen_wrapper.py</code></td></tr>
+            <tr><td>Test renders (3 per room &times; 2 rooms)</td><td><code>track3/&lt;your-name&gt;/renders/*.gltf</code> + <code>*.meta.json</code></td></tr>
+            <tr><td>Browser viewer (one per room)</td><td><code>track3/&lt;your-name&gt;/viewer/&lt;room&gt;.html</code></td></tr>
+            <tr><td>Sweep gallery (one per room)</td><td><code>track3/&lt;your-name&gt;/gallery/&lt;room&gt;.html</code></td></tr>
+            <tr><td>Sweep renders (18 per room &times; 2 rooms)</td><td><code>track3/&lt;your-name&gt;/gallery/&lt;room&gt;/*.gltf</code></td></tr>
+            <tr><td>Divergence notes (one per room)</td><td><code>track3/&lt;your-name&gt;/divergence/&lt;room&gt;.md</code></td></tr>
+            <tr><td>HSSD comparison screenshots</td><td><code>track3/&lt;your-name&gt;/divergence/screenshots/</code></td></tr>
+            <tr><td>File manifest</td><td><code>git diff --name-only upstream/main</code></td></tr>
+          </tbody>
+        </table>
+      </section>
 
-      <table class="data-table">
-        <thead><tr><th>Item</th><th>What it is</th></tr></thead>
-        <tbody>
-          <tr><td><code>ka_vr_viewer.html</code></td><td>Interactive viewer with sliders + material swatches + per-wall selection</td></tr>
-          <tr><td>Factor viability matrix</td><td>10 models &times; 8 factors, each &#10003; / &#9888; / &#10005;</td></tr>
-          <tr><td>Before / after screenshots</td><td>Every factor &times; every model &mdash; minimum 80 screenshots</td></tr>
-          <tr><td>Ruthless validation results</td><td>Pass / fail for the 12-test protocol on each model</td></tr>
-          <tr><td>Modification log</td><td>What broke at scale and how you fixed it</td></tr>
-          <tr><td>Contracts + tests</td><td>Written <em>before</em> building</td></tr>
-          <tr><td>File manifest</td><td><code>git diff --name-only upstream/main</code></td></tr>
-        </tbody>
-      </table>
+      <!-- GRADING -->
+      <section>
+        <h2>Grading (75 points)</h2>
+        <table class="data-table">
+          <thead>
+            <tr><th>Criterion</th><th>Points</th><th>What we check</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Wrapper correctness</strong></td>
+              <td>20</td>
+              <td>JSON in, glTF out, sidecar written. Parameters out of
+              range raise a clear error. Idempotent reruns.</td>
+            </tr>
+            <tr>
+              <td><strong>Viewer functioning</strong></td>
+              <td>10</td>
+              <td>Loads each render; shows resolved parameters; orbit
+              controls work in mouse and touch.</td>
+            </tr>
+            <tr>
+              <td><strong>Gallery completeness</strong> (&times;2 rooms)</td>
+              <td>20</td>
+              <td>18 renders per room at the correct settings; only one
+              parameter varies per row; labels accurate.</td>
+            </tr>
+            <tr>
+              <td><strong>Divergence notes</strong> (&times;2)</td>
+              <td>20</td>
+              <td>All four sections present (shared, parametric-only,
+              HSSD-only, implications); concrete examples; honest
+              about what your tool cannot do.</td>
+            </tr>
+            <tr>
+              <td><strong>File manifest</strong></td>
+              <td>5</td>
+              <td>Complete; matches the directory structure above.</td>
+            </tr>
+            <tr>
+              <td><strong>Total</strong></td>
+              <td><strong>75</strong></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
 
-      <h2>Grading (75 points)</h2>
-
-      <table class="data-table">
-        <thead>
-          <tr><th>Criterion</th><th>Points</th><th>What we check</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Contracts + tests</strong> <span class="callout-pill-rose">CONTRACT GATE</span></td>
-            <td>10</td>
-            <td>Written <em>before</em> building. Specific.</td>
-          </tr>
-          <tr>
-            <td><strong>Viewer functionality</strong></td>
-            <td>20</td>
-            <td>All eight factors controllable; per-wall selection; sliders real-time</td>
-          </tr>
-          <tr>
-            <td><strong>Model coverage</strong></td>
-            <td>15</td>
-            <td>&ge; 10 models tested, &ge; 5 room types</td>
-          </tr>
-          <tr>
-            <td><strong>Factor viability matrix</strong></td>
-            <td>15</td>
-            <td>Accurate, supported by screenshots, failures documented</td>
-          </tr>
-          <tr>
-            <td><strong>Ruthless validation</strong></td>
-            <td>10</td>
-            <td>12-test protocol run on all models, results honest</td>
-          </tr>
-          <tr>
-            <td><strong>Verification</strong></td>
-            <td>5</td>
-            <td>Caught problems, documented fixes</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="callout-rose">
-        <strong>Contract gate.</strong> If your viewer does not include
-        per-wall selection or your viability matrix is fabricated, your
-        work will not be integrated.
-      </div>
-
-      <h2>Existing code you should know about</h2>
-      <ul>
-        <li><code>scratch/t3_ai_frontend_v2.html</code> &mdash; working prototype with sliders, material swatches, FPS counter, and NL parser.  Study this before building.</li>
-        <li><a href="https://aframe.io/" target="_blank" rel="noopener">A-Frame documentation</a> &mdash; entity-component system, glTF loading, light components.</li>
-        <li>Three.js <code>GLTFLoader</code> docs &mdash; how to traverse loaded glTF scene graphs.</li>
-        <li>Your <code>mesh_roles/*.json</code> from Task&nbsp;1 &mdash; the mesh-to-role mappings your viewer consumes.</li>
-      </ul>
-
-      <h2>Why this matters</h2>
-      <p>
-        Your viewer is the testing harness for Task&nbsp;3&rsquo;s AI
-        front-end.  Every slider you build here becomes a parameter the
-        LLM can control via natural language.  Your factor viability
-        matrix tells Task&nbsp;3 exactly which modifications are safe to
-        expose for which models.
-      </p>
+        <div class="callout callout-rose">
+          <strong>Honest divergence beats polished praise.</strong> A
+          divergence note that lists three concrete things HSSD captures
+          and yours cannot will earn full marks for section (c). A note
+          that hand-waves about &ldquo;richness&rdquo; will not.
+        </div>
+      </section>
 
       <!-- GITHUB SUBMISSION -->
       <section class="github-submission">
         <h2 id="submission">Submit Task 2 on GitHub</h2>
 
         <p>
-          Stay on the same <code>track3/your-name</code> branch you used
-          for Task&nbsp;1.  Open Task&nbsp;2&rsquo;s PR against
-          Task&nbsp;1&rsquo;s merge commit using GitHub&rsquo;s
-          <em>compare</em> feature.
+          Stay on the same <code>track3/&lt;your-name&gt;</code> branch
+          you used for Task&nbsp;1. Commit each phase's deliverables
+          incrementally and push at the end of each work session.
         </p>
 
         <h3>Working on Task 2</h3>
-        <pre class="code-block">git checkout track3/&lt;your-name&gt;
+<pre><code class="lang-bash">git checkout track3/&lt;your-name&gt;
 git pull --rebase upstream main
 
 # Commit small as you go
-git add ka_vr_viewer.html screenshots/ viability_matrix.csv ruthless_validation.md
-git commit -m "task2: A-Frame viewer with HDRI lighting + per-wall selection"
+git add scripts/infinigen_wrapper.py
+git commit -m "task2: infinigen wrapper, JSON -> glTF + sidecar"
 
-git push origin track3/&lt;your-name&gt;</pre>
+git add track3/&lt;your-name&gt;/viewer/ track3/&lt;your-name&gt;/gallery/
+git commit -m "task2: model-viewer pages and 18-tile sweep gallery"
+
+git add track3/&lt;your-name&gt;/divergence/
+git commit -m "task2: HSSD divergence notes for both rooms"
+
+git push origin track3/&lt;your-name&gt;</code></pre>
 
         <h3>Submitting Task 2 for review</h3>
         <ol>
@@ -472,32 +519,100 @@ git push origin track3/&lt;your-name&gt;</pre>
           <li>On GitHub, open a Pull Request from
             <code>&lt;YOUR-USERNAME&gt;:track3/&lt;your-name&gt;</code> to
             <code>dkirsh:main</code> &mdash; use the compare feature with
-            Task&nbsp;1&rsquo;s merge commit as the base.</li>
+            Task&nbsp;1's merge commit as the base.</li>
           <li>Title:
-            <code>Track 3 &middot; Task 2: VR Conversion &amp; Factor Testing &mdash; &lt;your name&gt;</code></li>
+            <code>Track 3 &middot; Task 2: Render Pipeline and Sweep Gallery &mdash; &lt;your name&gt;</code></li>
           <li>In the PR body, paste your file manifest, plus a short
-            paragraph describing your lighting upgrade level (Level 2 / 3 /
-            5), the FPS you measured, and the most interesting failure your
-            ruthless validation found.</li>
+            paragraph naming the two rooms you swept and the most
+            interesting divergence you found between your parametric
+            output and the HSSD comparison.</li>
           <li>Add the label <code>track3-task2-review</code> and tag
             <code>@dkirsh</code>.</li>
-          <li>Leave the PR open.  <strong>Do not merge.</strong></li>
+          <li>Leave the PR open. <strong>Do not merge.</strong></li>
         </ol>
 
-        <p>
-          Screenshots and short screen recordings go in
-          <code>track3/&lt;your-name&gt;/media/task2/</code> on your branch.
-          For files larger than 50 MB, use Git LFS or upload to the course
-          shared drive and link from the PR body.
-        </p>
+        <div class="callout callout-rose">
+          <strong>Do not commit large render binaries directly.</strong>
+          Renders + sidecars over 50&nbsp;MB total per room should go
+          through Git LFS or to external blob storage with stable URLs
+          referenced from the gallery and viewer pages. A repo bloated
+          with 200&nbsp;MB of glTFs will be sent back for cleanup.
+        </div>
+      </section>
+
+      <!-- EXISTING CODE -->
+      <section>
+        <h2>Existing code you should know about</h2>
+        <table class="data-table">
+          <thead>
+            <tr><th>Resource</th><th>What it gives you</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>Knowledge_Atlas/scripts/infinigen_wrapper.py</code></td>
+              <td>The Task&nbsp;1 deliverable. Task&nbsp;2 extends it with the glTF export path and sidecar metadata.</td>
+            </tr>
+            <tr>
+              <td><a href="https://modelviewer.dev" target="_blank" rel="noopener"><code>&lt;model-viewer&gt;</code> web component</a></td>
+              <td>Google's open-source glTF viewer. CDN-hosted, no install. Read the &ldquo;Loading&rdquo; and &ldquo;Augmented Reality&rdquo; pages.</td>
+            </tr>
+            <tr>
+              <td><a href="https://3dlg-hcvc.github.io/hssd/" target="_blank" rel="noopener">HSSD-200 dataset access</a></td>
+              <td>211 artist-authored houses, CC-BY-NC. Browse here for the room you need to compare against.</td>
+            </tr>
+            <tr>
+              <td><a href="https://infinigen.org" target="_blank" rel="noopener">Infinigen Indoors</a></td>
+              <td>The procedural-room generator your wrapper drives. Read the export-to-Omniverse page; glTF is one Blender step beyond it.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- REFERENCES -->
+      <section>
+        <h2>References</h2>
+        <ul>
+          <li>
+            Khanna, M., Mao, Y., Jiang, H., Haresh, S., Schacklett, B.,
+            Batra, D., Clegg, A., Undersander, E., Chang, A. X., &amp;
+            Savva, M. (2024). Habitat Synthetic Scenes Dataset (HSSD-200):
+            An analysis of 3D scene scale and realism tradeoffs for
+            ObjectGoal navigation. <em>Proceedings of the IEEE/CVF
+            Conference on Computer Vision and Pattern Recognition
+            (CVPR)</em>.
+          </li>
+          <li>
+            Raistrick, A., Mei, L., Kayan, K., Yan, D., Zuo, Y., Han, B.,
+            Wen, H., Parakh, M., Alexandropoulos, S., Lipson, L., Ma, Z.,
+            &amp; Deng, J. (2024). Infinigen Indoors: Photorealistic
+            indoor scenes using procedural generation.
+            <em>Proceedings of the IEEE/CVF Conference on Computer Vision
+            and Pattern Recognition (CVPR)</em>.
+          </li>
+          <li>
+            Roberts, M., Ramapuram, J., Ranjan, A., Kumar, A., Bautista,
+            M. A., Paczan, N., Webb, R., &amp; Susskind, J. M. (2021).
+            Hypersim: A photorealistic synthetic dataset for holistic
+            indoor scene understanding. <em>Proceedings of the IEEE/CVF
+            International Conference on Computer Vision (ICCV)</em>.
+          </li>
+          <li>
+            Google. (2024). <em>&lt;model-viewer&gt; documentation</em>.
+            Retrieved from <a href="https://modelviewer.dev" target="_blank" rel="noopener">https://modelviewer.dev</a>
+          </li>
+          <li>
+            Three.js authors. (2024). <em>Three.js documentation</em>.
+            Retrieved from <a href="https://threejs.org/docs/" target="_blank" rel="noopener">https://threejs.org/docs/</a>
+          </li>
+        </ul>
       </section>
 
     </main>
   </div>
 
   <nav class="track-footer-nav" aria-label="Within-track navigation">
-    <a href="t3_task1.html" class="prev">&larr; Task 1: Collect &amp; Catalog 3D Models</a>
-    <a href="t3_task3.html" class="next">Task 3: AI Front-End &rarr;</a>
+    <a href="t3_task1.html" class="prev">&larr; Task 1: Parameter Manifest</a>
+    <a href="t3_task3.html" class="next">Task 3 &rarr;</a>
   </nav>
 
   <footer class="site-footer">

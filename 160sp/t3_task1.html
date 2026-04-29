@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Task 1: Collect &amp; Catalog 3D Models &middot; Track 3 &middot; COGS 160</title>
+  <title>Task 1: Infinigen Setup &amp; Parameter Manifests &middot; Track 3 &middot; COGS 160</title>
   <link rel="stylesheet" href="_track_pages_shared.css">
   <script src="../ka_canonical_navbar.js" defer></script>
 </head>
@@ -14,7 +14,7 @@
       <a href="../ka_home.html">Home</a> /
       <a href="ka_schedule.html">160 Student</a> /
       <a href="t3_intro.html">Track 3</a> /
-      <span>Task 1: Collect &amp; Catalog 3D Models</span>
+      <span>Task 1: Infinigen Setup &amp; Parameter Manifests</span>
     </div>
 
   <div class="page-grid">
@@ -25,495 +25,481 @@
 
       <header class="hero">
         <div class="hero-track">TRACK 3 &middot; TASK 1</div>
-        <h1>Collect &amp; Catalog VR-Ready 3D Interior Models</h1>
+        <h1>Infinigen Setup, Coverage Survey, and Parameter Manifests</h1>
         <p class="hero-sub">
-          Curate a library of at least 20 VR-ready 3D interior models,
-          evaluate each against eight manipulation classes, segment the
-          meshes so every wall is individually addressable, and produce a
-          <code>mesh_roles.json</code> that the Task&nbsp;3 AI front-end
-          will consume.
+          For each room type you are assigned, you will ship a
+          JSON-Schema parameter manifest &mdash; a typed,
+          range-constrained, citation-backed list of the five to seven
+          knobs an LLM front-end is allowed to turn. You do not segment
+          meshes. You do not author 3D files. You design the parameter
+          contract that downstream tasks honour.
         </p>
         <div class="hero-meta">
+          <span class="hero-pill">5 phases</span>
           <span class="hero-pill">75 points</span>
-          <span class="hero-pill">4 phases</span>
-          <span class="hero-pill">No prerequisites</span>
+          <span class="hero-pill">Weeks 3&ndash;5</span>
         </div>
       </header>
 
-      <h2>The big picture</h2>
-      <p>
-        The Knowledge Atlas catalogues evidence that specific environmental
-        features alter human cognition and affect.  To <em>test</em> these
-        relationships in VR, a researcher needs 3D rooms where every factor
-        &mdash; ceiling height, wall materials, lighting, window size,
-        furniture density &mdash; can be varied independently while holding
-        the others constant.  Most 3D models on the open web cannot do
-        this: they are single fused meshes, or they have baked lightmaps
-        that cannot be swapped, or they are at arbitrary scale.  Your job
-        is to collect models that can.
-      </p>
+      <section>
+        <h2>The big picture</h2>
+        <p>
+          Track&nbsp;3 builds the parametric backbone of the Knowledge
+          Atlas&rsquo;s VR pipeline on top of <strong>Infinigen
+          Indoors</strong> (Raistrick et al., 2024), the Princeton VLL
+          procedural-generation system released under the BSD licence.
+          Students never touch Blender&rsquo;s graphical interface.
+          A parametric room, in this codebase, is a Python entity whose
+          geometry, materials, and arrangement regenerate from a small
+          set of named, typed, range-constrained parameters; turning the
+          knobs sweeps the room through a controlled space of
+          variations. An LLM front-end (your Task&nbsp;3 deliverable)
+          will read the parameter schema and write valid patches in
+          response to natural-language prompts such as &ldquo;raise the
+          ceiling and warm the lighting.&rdquo;
+        </p>
+        <p>
+          The single most important artefact a Track&nbsp;3 student
+          ships is therefore the <em>parameter manifest</em>: a JSON
+          Schema document specifying which five to seven parameters per
+          room type are exposed, what each parameter means, what units
+          and ranges it accepts, and what published
+          environmental-psychology evidence motivates exposing it at
+          all. The manifest is, in Cronbach &amp; Meehl&rsquo;s (1955)
+          sense, a construct-validity document. Each parameter you
+          expose is a claim that this knob corresponds to a measurable
+          construct in the literature; each range you set is a claim
+          about the band over which that construct has been studied.
+          When Vartanian et al.&rsquo;s (2015) cathedral-effect work
+          finds that ceilings between 2.4&nbsp;m and 3.0&nbsp;m
+          modulate abstract-thinking measures, your
+          <code>ceiling_height_m</code> parameter inherits both the
+          construct and the band.
+        </p>
+        <p>
+          Infinigen ships with seven indoor room types out of the box:
+          kitchen, living room, bedroom, bathroom, dining room,
+          hallway, and office. Eight types from the cohort&rsquo;s
+          fifteen are not yet covered: classroom, hospital, restaurant,
+          lobby, library, retail, museum, gym, and worship. For
+          un-covered types you will draft an <em>extension proposal</em>
+          &mdash; a parameter manifest that specifies how the closest
+          existing Infinigen entity should be adapted &mdash; as if it
+          will eventually be implemented. Worship is reserved for the
+          cohort&rsquo;s flagship Task&nbsp;3 deliverable and is
+          excluded from Task&nbsp;1.
+        </p>
+      </section>
 
-      <h2>What makes a model "VR-ready"</h2>
-      <p>
-        Five hard constraints separate models you can use from models you
-        cannot.  The first three are about how the model is structured;
-        the last two are about file size and licence.
-      </p>
+      <section>
+        <h2>What &ldquo;parametric&rdquo; means here</h2>
+        <p>
+          In this track, &ldquo;parametric&rdquo; carries the strong
+          sense used in procedural geometry: <em>geometry, materials,
+          and arrangement are generated by mathematical rules whose
+          parameters can be swept</em> (Raistrick et al., 2024). It is
+          not the looser sense in which a CAD-authored scene with
+          movable furniture is sometimes called parametric. The
+          theoretical lineage runs through Stiny&rsquo;s (1980) shape
+          grammars: a room is the output of a generative procedure, and
+          the parameters are the controllable inputs to that procedure.
+          A parameter you expose must therefore correspond to a real
+          knob in the generator&rsquo;s code &mdash; not a label on a
+          finished mesh.
+        </p>
+      </section>
 
-      <table class="data-table">
-        <thead>
-          <tr><th>Constraint</th><th>What it means</th><th>How to verify</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Separable named meshes</strong></td>
-            <td>The ceiling is a separate mesh from the walls; each wall is individually identifiable.</td>
-            <td>Open in Blender &rarr; check the Outliner. Named objects like <code>Ceiling</code>, <code>Wall_North</code>, <code>Floor</code> = viable. One object called <code>mesh_001</code> = not viable.</td>
-          </tr>
-          <tr>
-            <td><strong>PBR materials</strong></td>
-            <td>Materials use base-colour, roughness, metalness slots &mdash; not a single pre-baked lightmap.</td>
-            <td>Look at the material panel. If you see Principled BSDF, you are good. If you see only a baked diffuse texture, you cannot swap materials.</td>
-          </tr>
-          <tr>
-            <td><strong>Architectural scale</strong></td>
-            <td>Real-world units, in metres. Ceiling-height manipulation requires knowing the actual height.</td>
-            <td>Measure the model in Blender. A 6&nbsp;m &times; 5&nbsp;m office should read as 6 and 5 in the dimensions panel, not 0.06 or 600.</td>
-          </tr>
-          <tr>
-            <td><strong>VR-compatible polygon count</strong></td>
-            <td>Less than 500K polygons per scene; less than 20 unique materials; textures &le; 4096&times;4096.</td>
-            <td>Blender shows the polygon count in the top bar. Check texture sizes in the material panel.</td>
-          </tr>
-          <tr>
-            <td><strong>Open licence</strong></td>
-            <td>CC0, CC-BY, or CC-BY-SA. No "editorial use only" or "All Rights Reserved."</td>
-            <td>Read the licence on the source page <em>before</em> downloading. Record it in your catalog.</td>
-          </tr>
-        </tbody>
-      </table>
+      <section>
+        <h2>Phase 1 &mdash; Install Infinigen Indoors</h2>
 
-      <h2>Phase 1: Find model sources</h2>
+        <h3>Required tooling</h3>
+        <ul>
+          <li><strong>Blender 4.x</strong> (CLI access only; no GUI work)</li>
+          <li><strong>Python 3.10+</strong> with a clean virtual environment</li>
+          <li><strong>Infinigen Indoors</strong> from <code>princeton-vl/infinigen</code> (BSD licence)</li>
+          <li><strong>Course-supplied wrapper</strong>: <code>Knowledge_Atlas/scripts/infinigen_wrapper.py</code></li>
+          <li><code>git</code>, <code>jq</code>, and <code>jsonschema</code> (for manifest validation)</li>
+        </ul>
 
-      <div class="callout-teal">
-        <strong>Contract objective:</strong>
-        &ldquo;I want a tested, documented list of 3D model sources I can
-        use to collect VR-ready interior models.&rdquo;
-        <br><strong>Contract is with:</strong> 3D-model repositories and
-        their APIs.
-      </div>
+        <h3>Install sequence</h3>
+<pre><code class="lang-bash"># 1. Create a clean Python environment
+python3 -m venv ~/venvs/infinigen
+source ~/venvs/infinigen/bin/activate
+pip3 install --upgrade pip
 
-      <p>
-        Find at least <strong>five</strong> sources of openly-licensed
-        architectural-interior 3D models in glTF, GLB, FBX, or OBJ format.
-        For each, document the licence, whether the source has an API, the
-        format, and whether the models have separable meshes.  Test one
-        search per source so you have evidence the documentation is
-        accurate.
-      </p>
+# 2. Clone Infinigen Indoors and install in editable mode
+git clone https://github.com/princeton-vl/infinigen.git ~/code/infinigen
+cd ~/code/infinigen
+pip3 install -e ".[indoors]"
 
-      <p>Useful starting points (you must find more):</p>
-      <ul>
-        <li><strong>Sketchfab</strong> &mdash; CC-licensed, API available, glTF download, many architectural interiors</li>
-        <li><strong>BlenderKit</strong> &mdash; free tier, natively separable meshes</li>
-        <li><strong>Poly Haven</strong> &mdash; CC0, excellent HDRIs and some room models</li>
-        <li><strong>3D Warehouse</strong> &mdash; SketchUp models with groups/components, export via Blender</li>
-        <li><strong>TurboSquid</strong> (free section) &mdash; check licence per model</li>
-        <li><strong>CGTrader</strong> (free section) &mdash; mixed quality, check licence</li>
-      </ul>
+# 3. Install the manifest validator the course uses
+pip3 install jsonschema
 
-      <h3>Advanced source: World Labs Marble</h3>
-      <p>
-        <a href="https://marble.worldlabs.ai/" target="_blank" rel="noopener">World Labs Marble</a>
-        generates explorable 3D worlds from a single photograph or text
-        prompt.  This is directly relevant to neuroarchitecture research
-        &mdash; Champalimaud Foundation and King&rsquo;s College London
-        already use Marble to generate patient-specific VR environments
-        for OCD exposure therapy.  Use Marble for at least <strong>three
-        of your twenty models</strong> so you demonstrate the photo &rarr;
-        3D &rarr; parametric pipeline.
-      </p>
+# 4. Smoke test: generate a default living room headlessly
+python3 -m infinigen_examples.generate_indoors \
+  --task indoor_scene_trial \
+  --output_folder ~/infinigen_out/smoke_test \
+  --seed 0 \
+  --configs singleroom.gin fast_solve.gin \
+  --pipeline_configs local_64GB.gin
 
-      <p>
-        The free plan gives four worlds, the Standard plan gives twelve,
-        and the API plan is pay-per-use.  Generation times: text or image
-        &rarr; pano about 30 seconds, pano &rarr; full world about five
-        minutes, high-quality mesh export about an hour.
-      </p>
+# 5. Confirm output
+ls ~/infinigen_out/smoke_test
+cat ~/infinigen_out/smoke_test/scene.json | head -40</code></pre>
 
-      <p>Generate from a text prompt via the API:</p>
-      <pre class="code-block">curl -X POST 'https://api.worldlabs.ai/marble/v1/worlds:generate' \
-  -H 'Content-Type: application/json' \
-  -H 'WLT-Api-Key: YOUR_API_KEY' \
-  -d '{
-    "display_name": "Clinical Office Baseline",
-    "model": "marble-1.1",
-    "world_prompt": {
-      "type": "text",
-      "text_prompt": "A clinical white office with 3m ceilings, fluorescent lighting, one window on the south wall, a desk and two chairs"
+        <div class="ai-box">
+          <div class="ai-label">Ask your AI</div>
+          <div class="ai-text">
+            <p><em>I have just installed Infinigen Indoors. Walk me
+            through running the built-in <code>living_room</code>
+            generator end-to-end: what command, what configuration
+            files (<code>.gin</code>), what output files land where,
+            and how to view the result in Blender&rsquo;s CLI without
+            opening the UI. Identify any environment variables I need
+            to set, and tell me how to inspect the scene graph from the
+            terminal.</em></p>
+          </div>
+        </div>
+
+        <div class="callout callout-amber">
+          <strong>Do not open Blender&rsquo;s GUI for this task.</strong>
+          Every interaction is via Python or CLI. If you find yourself
+          double-clicking a <code>.blend</code> file you are off-track:
+          stop, read the wrapper docstring, and drive the generator
+          from a script.
+        </div>
+
+        <div class="deliverable">
+          <div class="deliverable-label">Deliverable</div>
+          <p>A screenshot of the smoke-test terminal output <em>and</em>
+          the full terminal log committed to
+          <code>track3/your-name/setup/</code> as
+          <code>install_log.txt</code> plus
+          <code>smoke_test_screenshot.png</code>.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Phase 2 &mdash; Coverage survey</h2>
+        <p>
+          For each of Infinigen&rsquo;s seven built-in indoor room
+          types, run the generator twice &mdash; once at default
+          parameters and once at one randomised seed &mdash; and
+          document the entity hierarchy. Each Infinigen room is a tree
+          of named entities (<code>Wall</code>, <code>CeilingLight</code>,
+          <code>WindowFrame</code>, <code>Couch</code>, and so on). Your
+          job is to list the top-level entities and the parameters they
+          expose, so that Phase&nbsp;3 can pick a defensible subset.
+        </p>
+
+        <h3>What to record per room type</h3>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Room type</th>
+              <th>Infinigen entity</th>
+              <th>Top-3 most-exposed parameters</th>
+              <th>Units</th>
+              <th>Range</th>
+              <th>What they affect visually</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>living_room</code></td>
+              <td><code>infinigen.entities.LivingRoom</code></td>
+              <td><code>ceiling_height</code>, <code>furniture_density</code>, <code>window_area_ratio</code></td>
+              <td>m, 0&ndash;1, 0&ndash;1</td>
+              <td>2.0&ndash;3.5, 0&ndash;1, 0&ndash;0.6</td>
+              <td>Volume; clutter; daylight admission</td>
+            </tr>
+            <tr>
+              <td><code>kitchen</code></td>
+              <td>(fill in)</td>
+              <td>(fill in)</td>
+              <td>(fill in)</td>
+              <td>(fill in)</td>
+              <td>(fill in)</td>
+            </tr>
+            <tr>
+              <td colspan="6"><em>&hellip; rows for bedroom, bathroom, dining, hallway, office &hellip;</em></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="ai-box">
+          <div class="ai-label">Ask your AI</div>
+          <div class="ai-text">
+            <p><em>Read the source of
+            <code>infinigen.entities.LivingRoom</code> and tell me
+            which of its parameters most strongly change (a) ceiling
+            height, (b) furniture density, (c) daylight intensity,
+            (d) wall materials. For each, give me the exact parameter
+            name as it appears in the Python source, the type, the
+            range, the unit, and the line number where it is
+            declared.</em></p>
+          </div>
+        </div>
+
+        <div class="deliverable">
+          <div class="deliverable-label">Deliverable</div>
+          <p><code>track3/your-name/coverage_survey.md</code> &mdash; a
+          markdown report with the table above filled in for all seven
+          built-in room types, plus, for each row, a one-paragraph
+          observation on which parameters look most useful for
+          environmental-psychology manipulations and which look like
+          internal scaffolding the LLM should never touch.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Phase 3 &mdash; Author parameter manifests for two assigned rooms</h2>
+        <p>
+          The instructor will assign each student two of the seven
+          built-in room types. For each, write a JSON-Schema parameter
+          manifest exposing five to seven parameters. Each parameter
+          must declare its name, type, units, range, default,
+          one-line description, and at least one published
+          environmental-psychology citation. <strong>At least one
+          parameter per manifest must cite a specific empirical
+          study</strong> from the references list (Vartanian et al.,
+          2015; Kaplan &amp; Kaplan, 1989; Ulrich, 1991; M&uuml;nch et
+          al., 2020; Meyers-Levy &amp; Zhu, 2007; Joye, 2007).
+        </p>
+
+        <h3>Worked example: <code>living_room.manifest.json</code></h3>
+<pre><code class="lang-bash">{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ka://manifests/living_room.v1",
+  "title": "Living Room Parameter Manifest",
+  "description": "Six knobs an LLM front-end may turn for living_room.",
+  "infinigen_entity": "infinigen.entities.LivingRoom",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "ceiling_height_m": {
+      "type": "number",
+      "minimum": 2.0,
+      "maximum": 3.5,
+      "default": 2.7,
+      "unit": "m",
+      "description": "Floor-to-ceiling clear height.",
+      "citation": "Meyers-Levy &amp; Zhu (2007); Vartanian et al. (2015)",
+      "rationale": "Higher ceilings shift cognition toward abstract, relational processing."
+    },
+    "daylight_intensity": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "default": 0.6,
+      "unit": "normalised",
+      "description": "Scalar on the sun light contribution.",
+      "citation": "Kaplan &amp; Kaplan (1989); M&uuml;nch et al. (2020)",
+      "rationale": "Daylight access modulates restoration and circadian alertness."
+    },
+    "wall_warmth_index": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "default": 0.5,
+      "unit": "normalised",
+      "description": "0 = cool palette / hard materials; 1 = warm palette / soft materials.",
+      "citation": "Ulrich (1991)",
+      "rationale": "Material warmth contributes to perceived stress reduction."
+    },
+    "furniture_density": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "default": 0.4,
+      "unit": "normalised",
+      "description": "Scalar on furniture-placement probability per zone.",
+      "citation": "Joye (2007)",
+      "rationale": "Crowding and clutter drive cognitive load."
+    },
+    "biophilia_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 8,
+      "default": 2,
+      "unit": "count",
+      "description": "Number of plant entities placed in the room.",
+      "citation": "Kaplan &amp; Kaplan (1989); Ulrich (1991)",
+      "rationale": "Indoor greenery is a robust restoration cue."
+    },
+    "colour_palette_id": {
+      "type": "string",
+      "enum": ["neutral_warm", "neutral_cool", "high_contrast", "monochrome", "saturated"],
+      "default": "neutral_warm",
+      "description": "Named palette token resolved by the wrapper.",
+      "citation": "Meyers-Levy &amp; Zhu (2007)",
+      "rationale": "Colour temperature interacts with ceiling height on mood and cognition."
     }
-  }'</pre>
-
-      <p>
-        In the Marble web viewer, click <em>Export &rarr; High-quality mesh
-        (GLB)</em>.  This runs server-side for about an hour and produces
-        a 600K-triangle textured mesh plus a 1M-triangle vertex-colour
-        mesh.  <strong>The exported mesh is a single fused object</strong>
-        &mdash; all walls, ceiling, and floor are one continuous surface.
-        Phase 2 separates it into individual objects.
-      </p>
-
-      <p><strong>Deliverable for this phase:</strong>
-      <code>model_sources.json</code> with at least five sources, three of
-      them tested.</p>
-
-      <h2>Phase 2: Segment Marble exports into named architectural elements</h2>
-
-      <p>
-        A fused mesh is not parametrically modifiable.  You must separate
-        it into ceiling, walls, floor, windows, and furniture, and assign
-        PBR materials to each.  This is a core part of the assignment
-        &mdash; you are expected to use at least one AI-assisted approach,
-        not do everything by hand.  You must <em>document which approach
-        you used</em> and <em>evaluate its accuracy</em>.
-      </p>
-
-      <h3>The four approaches</h3>
-
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Approach</th>
-            <th>Tooling</th>
-            <th>API cost</th>
-            <th>Viewport-aware</th>
-            <th>Accuracy</th>
-            <th>Best for</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>A. Manual in Blender</strong></td>
-            <td>Edit Mode + Select by Trait</td>
-            <td>$0</td>
-            <td>You are the eyes</td>
-            <td>100%</td>
-            <td>Learning; fixing AI errors</td>
-          </tr>
-          <tr>
-            <td><strong>B. BlenderMCP</strong></td>
-            <td>Claude or Cursor via Model Context Protocol</td>
-            <td>Claude API</td>
-            <td>&#10003; (screenshots)</td>
-            <td>~85&ndash;90%</td>
-            <td>Best single-model workflow</td>
-          </tr>
-          <tr>
-            <td><strong>C. BlenderGPT</strong></td>
-            <td>GPT-4 inside Blender, no viewport feedback</td>
-            <td>OpenAI API</td>
-            <td>&#10005;</td>
-            <td>~80%</td>
-            <td>Quick iteration in Blender</td>
-          </tr>
-          <tr>
-            <td><strong>D. Headless Python script</strong></td>
-            <td><code>blender --background --python ...</code></td>
-            <td>$0</td>
-            <td>&#10005;</td>
-            <td>~75&ndash;80%</td>
-            <td>Batch-processing 20 models</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="callout-amber">
-        <strong>Recommended workflow:</strong> use Approach D (headless
-        script) to batch-process all your models, then visually inspect
-        every output in Blender and use Approach A or B to fix the errors.
-        Document every correction &mdash; that is your ruthless validation
-        data and earns the grade.
-      </div>
-
-      <h3>The headless segmentation script</h3>
-      <p>
-        Approach D classifies faces by their normal direction.  Save this
-        as <code>segment_marble_export.py</code> in your branch:
-      </p>
-
-      <pre class="code-block">import bpy, bmesh, sys, math
-
-argv = sys.argv[sys.argv.index("--") + 1:]
-input_path, output_path = argv[0], argv[1]
-
-bpy.ops.wm.read_factory_settings(use_empty=True)
-bpy.ops.import_scene.gltf(filepath=input_path)
-obj = [o for o in bpy.context.scene.objects if o.type == 'MESH'][0]
-bpy.context.view_layer.objects.active = obj
-
-bpy.ops.object.mode_set(mode='EDIT')
-bm = bmesh.from_edit_mesh(obj.data)
-
-def classify_face(face):
-    n = face.normal
-    if n.z >  0.7: return 'Floor'
-    if n.z < -0.7: return 'Ceiling'
-    angle = math.atan2(n.y, n.x)
-    if -0.785 &lt; angle &lt;= 0.785: return 'Wall_East'
-    if  0.785 &lt; angle &lt;= 2.356: return 'Wall_North'
-    if  angle &gt;  2.356 or angle &lt;= -2.356: return 'Wall_West'
-    return 'Wall_South'
-
-for role in ['Ceiling', 'Floor', 'Wall_North', 'Wall_South', 'Wall_East', 'Wall_West']:
-    bpy.ops.mesh.select_all(action='DESELECT')
-    bm = bmesh.from_edit_mesh(obj.data)
-    for face in bm.faces:
-        if classify_face(face) == role:
-            face.select = True
-    bmesh.update_edit_mesh(obj.data)
-    bpy.ops.mesh.separate(type='SELECTED')
-    new_obj = [o for o in bpy.context.scene.objects
-               if o.name.startswith(obj.name) and o != obj][-1]
-    new_obj.name = role
-
-bpy.ops.object.mode_set(mode='OBJECT')
-
-for obj in bpy.context.scene.objects:
-    if obj.type != 'MESH': continue
-    mat = bpy.data.materials.new(name=f"PBR_{obj.name}")
-    mat.use_nodes = True
-    bsdf = mat.node_tree.nodes["Principled BSDF"]
-    bsdf.inputs['Roughness'].default_value = 0.7
-    obj.data.materials.clear()
-    obj.data.materials.append(mat)
-
-bpy.ops.export_scene.gltf(filepath=output_path, export_format='GLB')</pre>
-
-      <p>Run it on every Marble export:</p>
-      <pre class="code-block">for f in marble_exports/*.glb; do
-  blender --background --python segment_marble_export.py -- "$f" "segmented/$(basename $f)"
-done</pre>
-
-      <p>
-        The script fails on L-shaped rooms, angled walls, curved surfaces,
-        and rooms where furniture faces look like wall faces.  Visual
-        inspection is non-negotiable &mdash; every output must be opened
-        in Blender and manually checked.  Misclassified faces get fixed
-        with Approach A or B.
-      </p>
-
-      <h2>Phase 3: Evaluate every model against the eight manipulation classes</h2>
-
-      <div class="callout-teal">
-        <strong>Contract objective:</strong>
-        &ldquo;I want a catalog where every model is evaluated against
-        every manipulation class, with a viability score and notes on
-        what works.&rdquo;
-        <br><strong>Contract is with:</strong> the eight classes from the
-        Track Overview and your collected models.
-      </div>
-
-      <p>
-        For each model, evaluate it against all eight manipulation
-        classes.  Can you change the ceiling?  Swap the wall material on
-        an individual wall?  Hide the furniture?  Record the answer in a
-        Google Sheet (or CSV) with these columns:
-      </p>
-
-      <table class="data-table">
-        <thead><tr><th>Column</th><th>What it records</th></tr></thead>
-        <tbody>
-          <tr><td><code>model_id</code></td><td>Unique ID (e.g. <code>SKF_office_001</code>)</td></tr>
-          <tr><td><code>source</code> / <code>source_url</code></td><td>Where you got it</td></tr>
-          <tr><td><code>license</code></td><td>CC0 / CC-BY / CC-BY-SA</td></tr>
-          <tr><td><code>room_type</code></td><td>office / classroom / living_room / etc.</td></tr>
-          <tr><td><code>format</code></td><td>glTF / GLB / FBX (must convert to glTF)</td></tr>
-          <tr><td><code>poly_count</code></td><td>Total polygons</td></tr>
-          <tr><td><code>named_meshes</code></td><td>Yes / No &mdash; are architectural elements separate?</td></tr>
-          <tr><td><code>pbr_materials</code></td><td>Yes / No</td></tr>
-          <tr><td><code>realistic_scale</code></td><td>Yes / No &mdash; metres, not arbitrary?</td></tr>
-          <tr><td><code>individual_walls</code></td><td>Yes / No &mdash; can you select and modify each wall independently?</td></tr>
-          <tr><td><code>ceiling_modifiable</code></td><td>Yes / No</td></tr>
-          <tr><td><code>lighting_modifiable</code></td><td>Yes / No &mdash; are lights separate objects?</td></tr>
-          <tr><td><code>materials_modifiable</code></td><td>Yes / No</td></tr>
-          <tr><td><code>windows_identifiable</code></td><td>Yes / No</td></tr>
-          <tr><td><code>furniture_separable</code></td><td>Yes / No</td></tr>
-          <tr><td><code>viability_score</code></td><td>0&ndash;8 (count of modifiable classes)</td></tr>
-          <tr><td><code>resolution</code></td><td>Low / Medium / High</td></tr>
-          <tr><td><code>naturalness</code></td><td>1&ndash;5 (visual realism)</td></tr>
-          <tr><td><code>notes</code></td><td>Issues, conversion needed, what&rsquo;s missing</td></tr>
-        </tbody>
-      </table>
-
-      <p><strong>Minimum bar:</strong> at least 20 models, at least 10 with
-      viability score &ge; 4, at least 5 different room types, at least 3
-      different sources.</p>
-
-      <h2>Phase 4: Create mesh-annotation files</h2>
-
-      <p>
-        For each model, create a <code>mesh_roles.json</code> that maps
-        every mesh name to its semantic role.  This is the file the
-        Task&nbsp;3 AI front-end will read to know which mesh to modify
-        when the user says &ldquo;change the north wall.&rdquo;
-      </p>
-
-      <pre class="code-block">{
-  "model_id": "SKF_office_001",
-  "meshes": {
-    "Cube.003":  { "role": "ceiling", "notes": "single plane, height=3.0m" },
-    "Cube.004":  { "role": "wall", "wall_id": "north", "notes": "back wall" },
-    "Cube.005":  { "role": "wall", "wall_id": "south", "notes": "front wall with window cutout" },
-    "Cube.006":  { "role": "wall", "wall_id": "east" },
-    "Cube.007":  { "role": "wall", "wall_id": "west" },
-    "Plane.001": { "role": "floor" },
-    "Cube.010":  { "role": "window", "parent_wall": "south", "position": "center" },
-    "Cube.011":  { "role": "furniture", "subtype": "desk" },
-    "Cube.012":  { "role": "furniture", "subtype": "chair" },
-    "Lamp":      { "role": "light", "light_type": "point" }
   },
-  "room_dimensions": { "width_m": 6.0, "depth_m": 5.0, "height_m": 3.0 }
-}</pre>
+  "required": ["ceiling_height_m", "daylight_intensity"]
+}</code></pre>
 
-      <div class="callout-amber">
-        <strong>Each wall must have a <code>wall_id</code></strong>
-        (north / south / east / west or left / right / back / front). This is
-        what enables per-wall material and geometry changes in Tasks 2 and 3.
-        A model without per-wall IDs cannot be used for the AI front-end.
-      </div>
+        <div class="ai-box">
+          <div class="ai-label">Ask your AI</div>
+          <div class="ai-text">
+            <p><em>I&rsquo;m authoring a JSON-Schema parameter manifest
+            for <code>{room_type}</code>. The manifest exposes 5&ndash;7
+            parameters that an LLM front-end can change. For each
+            candidate parameter, tell me: (a) is it actually exposed by
+            Infinigen&rsquo;s <code>{room_type}</code> entity in the
+            current source, (b) what is the strongest published
+            environmental-psychology study that motivates including
+            it, with full citation, and (c) what range is defensible
+            given the bands actually studied? Push back hard if any
+            candidate is poorly motivated, redundant with another
+            parameter, or outside the empirical range.</em></p>
+          </div>
+        </div>
 
-      <h2>Phase 5: Write a ruthless validation prompt</h2>
+        <div class="deliverable">
+          <div class="deliverable-label">Deliverable</div>
+          <p>Two manifests in
+          <code>track3/your-name/manifests/</code> &mdash;
+          <code>{room_type_a}.manifest.json</code> and
+          <code>{room_type_b}.manifest.json</code> &mdash; plus a
+          one-page rationale document
+          <code>track3/your-name/manifests/RATIONALE.md</code> citing
+          every study in APA form and explaining each range choice.</p>
+        </div>
+      </section>
 
-      <p>
-        Before declaring a model "ready," test it with an
-        <strong>adversarial</strong> AI prompt designed to break things.
-        Instead of asking &ldquo;does it work?&rdquo;, you ask
-        &ldquo;in exactly which ways does it fail?&rdquo;
-      </p>
+      <section>
+        <h2>Phase 4 &mdash; Extension proposals for un-covered room types</h2>
+        <p>
+          Pick at least one room type from the eight Infinigen does
+          <em>not</em> cover (classroom, hospital, restaurant, lobby,
+          library, retail, museum, gym). For your chosen type, draft an
+          extension proposal: identify the closest existing Infinigen
+          entity, name five to seven additional parameters that would
+          adapt that entity to the new typology, and justify each with
+          published literature. Treat the proposal as a specification
+          for an engineer who will eventually implement the new entity.
+        </p>
 
-      <div class="ai-box">
-        <em>You are a hostile QA engineer. Your job is to find every way
-        this 3D model catalog entry could be wrong, misleading, or
-        unusable. For model {model_id}:</em>
-        <ol>
-          <li><em>Open the model in Blender. Count the actual meshes and
-          compare to the <code>mesh_roles.json</code>. Are any missing or
-          mislabelled?</em></li>
-          <li><em>Try to move the ceiling mesh up by 1 metre. Does the
-          room still look correct? Do walls gap?</em></li>
-          <li><em>Try to change the north wall material to a different
-          colour. Does only that wall change, or do others change too
-          (shared material)?</em></li>
-          <li><em>Check every material &mdash; is it PBR or is it a baked
-          texture that cannot be swapped?</em></li>
-          <li><em>Measure the room in Blender. Does it match
-          <code>room_dimensions</code> in the JSON?</em></li>
-          <li><em>Is the model oriented correctly (Y-up or Z-up)? Does the
-          "north" wall actually face north?</em></li>
-        </ol>
-        <em>Report every discrepancy found.</em>
-      </div>
+        <h3>Required structure of an extension proposal</h3>
+        <ul>
+          <li><strong>Target room type</strong> and the closest
+            existing Infinigen entity</li>
+          <li><strong>Gap analysis</strong>: what the existing entity
+            cannot express that the new typology requires</li>
+          <li><strong>Proposed new parameters</strong> in the same
+            JSON-Schema form as Phase&nbsp;3, marked
+            <code>"status": "proposed"</code></li>
+          <li><strong>Implementation hooks</strong>: which
+            <code>infinigen</code> source files would need editing
+            (file paths, not patches)</li>
+          <li><strong>Literature backing</strong> for each parameter</li>
+        </ul>
 
-      <p>
-        Write a ruthless validation prompt for your catalog and run it on
-        at least <strong>five</strong> of your models.  Document what
-        broke; document what you fixed.
-      </p>
+        <div class="callout callout-blue">
+          <strong>Worship is excluded from Phase&nbsp;4.</strong> Worship
+          spaces are the cohort&rsquo;s flagship Task&nbsp;3 deliverable
+          and are handled there with full instructor scaffolding. Do
+          not propose extensions for worship in this task.
+        </div>
 
-      <h2>What you submit</h2>
+        <div class="deliverable">
+          <div class="deliverable-label">Deliverable</div>
+          <p><code>track3/your-name/extension_proposals/{room_type}.proposal.md</code>
+          containing the five sections above plus the proposed
+          JSON-Schema fragment.</p>
+        </div>
+      </section>
 
-      <table class="data-table">
-        <thead><tr><th>Item</th><th>What it is</th></tr></thead>
-        <tbody>
-          <tr><td><code>model_sources.json</code></td><td>&ge; 5 sources, &ge; 3 tested</td></tr>
-          <tr><td>Google Sheet catalog</td><td>&ge; 20 models, all columns filled</td></tr>
-          <tr><td><code>models/</code> directory</td><td>All glTF / GLB files</td></tr>
-          <tr><td><code>mesh_roles/</code> directory</td><td>One <code>mesh_roles.json</code> per model</td></tr>
-          <tr><td>Conversion / segmentation scripts</td><td>Any Blender Python you wrote</td></tr>
-          <tr><td>Ruthless validation report</td><td>Adversarial prompt run on &ge; 5 models</td></tr>
-          <tr><td>Contracts + tests</td><td>Written <em>before</em> building</td></tr>
-          <tr><td>File manifest</td><td><code>git diff --name-only upstream/main</code></td></tr>
-        </tbody>
-      </table>
+      <section>
+        <h2>Phase 5 &mdash; Peer review</h2>
+        <p>
+          Each student peer-reviews two other students&rsquo; manifests.
+          The review is a construct-validity audit, not a typography
+          check. For each manifest you review, file at least three
+          concrete issues, in
+          <code>track3/your-name/peer_review_&lt;reviewee&gt;.md</code>.
+        </p>
+        <p>
+          Your review must check, for every parameter: (a) does the
+          parameter cite a real study, (b) does the cited study
+          actually support exposing this parameter (not just mention
+          the construct in passing), (c) are the units and ranges
+          defensible against the bands the literature reports, and
+          (d) does the parameter map cleanly to a JSON-Schema field
+          that an LLM could safely write to without producing illegal
+          Infinigen state? Treat &ldquo;safely&rdquo; literally: an
+          out-of-range write must fail validation rather than crash
+          the generator.
+        </p>
 
-      <h2>Grading (75 points)</h2>
+        <div class="deliverable">
+          <div class="deliverable-label">Deliverable</div>
+          <p>Two peer-review files committed to your branch, each with
+          at least three concrete construct-validity issues raised.</p>
+        </div>
+      </section>
 
-      <table class="data-table">
-        <thead><tr><th>Criterion</th><th>Points</th><th>What we check</th></tr></thead>
-        <tbody>
-          <tr>
-            <td><strong>Contracts + tests</strong> <span class="callout-pill-rose">CONTRACT GATE</span></td>
-            <td>15</td>
-            <td>Written <em>before</em> collecting. Specific success conditions.</td>
-          </tr>
-          <tr>
-            <td><strong>Model sources</strong></td>
-            <td>10</td>
-            <td>&ge; 5 sources, &ge; 3 tested, licences documented</td>
-          </tr>
-          <tr>
-            <td><strong>Model catalog</strong></td>
-            <td>15</td>
-            <td>&ge; 20 models, &ge; 10 viable, &ge; 5 room types, viability scores accurate</td>
-          </tr>
-          <tr>
-            <td><strong>Mesh annotations</strong></td>
-            <td>15</td>
-            <td>Per-wall IDs, roles correct, dimensions measured</td>
-          </tr>
-          <tr>
-            <td><strong>Ruthless validation</strong></td>
-            <td>10</td>
-            <td>Run on &ge; 5 models, failures documented, fixes applied</td>
-          </tr>
-          <tr>
-            <td><strong>Verification</strong></td>
-            <td>10</td>
-            <td>Spot-checked claims, caught discrepancies</td>
-          </tr>
-        </tbody>
-      </table>
+      <section>
+        <h2>What you submit</h2>
+        <table class="data-table">
+          <thead>
+            <tr><th>Item</th><th>Filename / location</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Install evidence</td><td><code>setup/install_log.txt</code> + <code>setup/smoke_test_screenshot.png</code></td></tr>
+            <tr><td>Coverage survey</td><td><code>coverage_survey.md</code></td></tr>
+            <tr><td>Two parameter manifests</td><td><code>manifests/{room_a}.manifest.json</code>, <code>manifests/{room_b}.manifest.json</code></td></tr>
+            <tr><td>Manifest rationale</td><td><code>manifests/RATIONALE.md</code></td></tr>
+            <tr><td>Extension proposal (&ge; 1)</td><td><code>extension_proposals/{room_type}.proposal.md</code></td></tr>
+            <tr><td>Two peer reviews</td><td><code>peer_review_&lt;reviewee_1&gt;.md</code>, <code>peer_review_&lt;reviewee_2&gt;.md</code></td></tr>
+            <tr><td>File manifest</td><td><code>git diff --name-only upstream/main</code></td></tr>
+          </tbody>
+        </table>
+      </section>
 
-      <div class="callout-rose">
-        <strong>Contract gate.</strong> If your contracts and tests are
-        missing or vague, your models will not be usable by the VR
-        pipeline.  Write real contracts with real success conditions.
-      </div>
+      <section>
+        <h2>Grading (75 points)</h2>
+        <table class="data-table">
+          <thead>
+            <tr><th>Criterion</th><th>Points</th><th>What we check</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Install + smoke test</strong></td><td>5</td><td>Smoke-test command runs; output committed; log readable</td></tr>
+            <tr><td><strong>Coverage survey completeness</strong></td><td>15</td><td>All seven built-in types documented; entity names accurate; parameter ranges traceable to source</td></tr>
+            <tr><td><strong>Manifest A quality</strong></td><td>15</td><td>Schema validates; every parameter has citation, range, unit, default; ranges defensible against literature</td></tr>
+            <tr><td><strong>Manifest B quality</strong></td><td>15</td><td>Same standard as Manifest A</td></tr>
+            <tr><td><strong>Extension proposal</strong></td><td>15</td><td>Closest entity identified; gap analysis specific; 5&ndash;7 proposed parameters; literature backing</td></tr>
+            <tr><td><strong>Peer reviews (&times;2)</strong></td><td>5</td><td>&ge; 3 concrete construct-validity issues per review; engages with citations, not surface form</td></tr>
+            <tr><td><strong>File manifest</strong></td><td>5</td><td><code>git diff</code> output present; matches deliverables list</td></tr>
+            <tr><td><strong>Total</strong></td><td><strong>75</strong></td><td></td></tr>
+          </tbody>
+        </table>
+      </section>
 
-      <h2>Existing code you should know about</h2>
-      <ul>
-        <li><code>Tagging_Contractor/core/trs-core/v0.2.8/registry/registry_v0.2.8.json</code> &mdash; 424 tags; 330 are continuous or ordinal and represent manipulable environmental features.</li>
-        <li><code>Article_Eater/data/templates/</code> &mdash; 166 PNU templates showing what IVs researchers actually manipulate.</li>
-        <li><code>Outcome_Contractor/contracts/oc_export/outcome_vocab.json</code> &mdash; 839 effect terms, the dependent variables those manipulations affect.</li>
-        <li><code>160sp/context/context_vr_production.md</code> &mdash; VR production context including K-ATLAS evidence model and scene-specification format.</li>
-        <li><a href="https://github.com/ahujasid/blender-mcp" target="_blank" rel="noopener">BlenderMCP</a> &mdash; viewport-aware AI control of Blender.</li>
-        <li><a href="https://github.com/gd3kr/BlenderGPT" target="_blank" rel="noopener">BlenderGPT</a> &mdash; natural language &rarr; Blender Python inside Blender.</li>
-        <li><code>blender --background --python script.py</code> &mdash; run segmentation scripts headlessly.</li>
-      </ul>
-
-      <h2>Why this matters</h2>
-      <p>
-        Your model library and mesh annotations are infrastructure.  In
-        Task&nbsp;2 you will manually test modifications in A-Frame.  In
-        Task&nbsp;3 you will build the AI front-end that uses your
-        <code>mesh_roles.json</code> files to know which mesh to modify.
-        Accurate annotations now save hours of debugging later.
-      </p>
-
-      <!-- GITHUB SUBMISSION -->
       <section class="github-submission">
         <h2 id="submission">Submit Task 1 on GitHub</h2>
 
         <p>
           Track&nbsp;3 uses a single git branch per student named
           <code>track3/your-name</code> (lowercase, hyphenated &mdash;
-          e.g. <code>track3/jane-doe</code>).  All three tasks live on
-          this same branch; you open one Pull Request per completed task.
+          e.g. <code>track3/jane-doe</code>). All three tasks live on
+          this same branch; you open one Pull Request per completed
+          task.
         </p>
 
+        <div class="callout callout-rose">
+          <strong>Do not commit Blender installer files, the Infinigen
+          virtual environment, or generator output.</strong> Add
+          <code>~/code/infinigen/</code>, <code>~/venvs/</code>, and
+          <code>~/infinigen_out/</code> equivalents to a local
+          <code>.gitignore</code>. The repo holds manifests and
+          documentation, not gigabytes of generated meshes.
+        </div>
+
         <h3>One-time setup (do once at the start of the track)</h3>
-        <pre class="code-block"># 1. Fork Knowledge_Atlas on GitHub (use the Fork button)
-#    Track 3 also pulls from Tagging_Contractor and Article_Eater for reference.
+<pre><code class="lang-bash"># 1. Fork Knowledge_Atlas on GitHub
+#    Track 3 also reads from Tagging_Contractor and Article_Eater.
 
 # 2. Clone your fork
 git clone git@github.com:&lt;YOUR-USERNAME&gt;/Knowledge_Atlas.git
@@ -524,17 +510,25 @@ git remote add upstream git@github.com:dkirsh/Knowledge_Atlas.git
 
 # 4. Create your track branch off the latest main
 git fetch upstream
-git checkout -b track3/&lt;your-name&gt; upstream/main</pre>
+git checkout -b track3/&lt;your-name&gt; upstream/main
+
+# 5. Make sure your .gitignore excludes infinigen output and venvs
+echo "infinigen_out/"      &gt;&gt; .gitignore
+echo "venvs/"              &gt;&gt; .gitignore
+echo "*.blend"             &gt;&gt; .gitignore
+echo "*.blend1"            &gt;&gt; .gitignore</code></pre>
 
         <h3>Working on Task 1</h3>
-        <pre class="code-block">git checkout track3/&lt;your-name&gt;
+<pre><code class="lang-bash">git checkout track3/&lt;your-name&gt;
 
-# Commit small as you go
-git add models/ mesh_roles/ scripts/segment_marble_export.py model_sources.json
-git commit -m "task1: marble export + headless segmentation script"
+git add 160sp/track3/&lt;your-name&gt;/setup/ \
+        160sp/track3/&lt;your-name&gt;/coverage_survey.md \
+        160sp/track3/&lt;your-name&gt;/manifests/ \
+        160sp/track3/&lt;your-name&gt;/extension_proposals/ \
+        160sp/track3/&lt;your-name&gt;/peer_review_*.md
+git commit -m "track3 task1: infinigen survey + manifests + extension proposal"
 
-# Push at the end of each session
-git push origin track3/&lt;your-name&gt;</pre>
+git push origin track3/&lt;your-name&gt;</code></pre>
 
         <h3>Submitting Task 1 for review</h3>
         <ol>
@@ -542,25 +536,65 @@ git push origin track3/&lt;your-name&gt;</pre>
           <li>On GitHub, open a Pull Request from
             <code>&lt;YOUR-USERNAME&gt;:track3/&lt;your-name&gt;</code> to
             <code>dkirsh:main</code></li>
-          <li>Title: <code>Track 3 &middot; Task 1: Collect &amp; Catalog 3D Models &mdash; &lt;your name&gt;</code></li>
+          <li>Title: <code>Track 3 &middot; Task 1: Infinigen Setup and Parameter Manifests &mdash; &lt;your name&gt;</code></li>
           <li>In the PR body, paste your file manifest
             (<code>git diff --name-only upstream/main</code>) plus a
-            short paragraph describing which segmentation approach you
-            used and what your ruthless validation found.</li>
+            one-paragraph summary of the two room types you authored
+            and the extension proposal you drafted.</li>
           <li>Add the label <code>track3-task1-review</code> and tag
             <code>@dkirsh</code>.</li>
-          <li>Leave the PR open.  <strong>Do not merge.</strong>
-            The instructor will review and either merge, request changes,
-            or comment for follow-up.</li>
+          <li>Leave the PR open. <strong>Do not merge.</strong></li>
         </ol>
-
-        <p>
-          When you start Task&nbsp;2, keep working on the same
-          <code>track3/your-name</code> branch.  Use GitHub's "compare"
-          feature to open Task&nbsp;2's PR against the previous task's
-          merge commit.
-        </p>
       </section>
+
+      <section>
+        <h2>Existing code you should know about</h2>
+        <table class="data-table">
+          <thead>
+            <tr><th>Repo / file</th><th>What it gives you</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>Knowledge_Atlas/scripts/infinigen_wrapper.py</code></td>
+              <td>Course-supplied Python wrapper. Reads a parameter dict
+              that conforms to one of your manifests, calls Infinigen,
+              and exports glTF. This is the contract your manifests
+              must satisfy.</td>
+            </tr>
+            <tr>
+              <td><code>Tagging_Contractor/core/trs-core/v0.2.8/registry/registry_v0.2.8.json</code></td>
+              <td>The 442-tag registry. Each parameter you expose
+              should map to one or more registry tags &mdash; that is
+              how Track&nbsp;1&rsquo;s image-side evidence connects to
+              Track&nbsp;3&rsquo;s scene-side controls.</td>
+            </tr>
+            <tr>
+              <td><code>Article_Eater/data/templates/</code></td>
+              <td>PNU templates citing the environmental-psychology
+              studies you will reference. Use these to find the
+              strongest published evidence behind each parameter
+              before you cite it.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>References</h2>
+        <ul class="references">
+          <li>Cronbach, L. J., &amp; Meehl, P. E. (1955). Construct validity in psychological tests. <em>Psychological Bulletin, 52</em>(4), 281&ndash;302. <a href="https://doi.org/10.1037/h0040957" target="_blank" rel="noopener">https://doi.org/10.1037/h0040957</a></li>
+          <li>Joye, Y. (2007). Architectural lessons from environmental psychology: The case of biophilic architecture. <em>Review of General Psychology, 11</em>(4), 305&ndash;328. <a href="https://doi.org/10.1037/1089-2680.11.4.305" target="_blank" rel="noopener">https://doi.org/10.1037/1089-2680.11.4.305</a></li>
+          <li>Kaplan, R., &amp; Kaplan, S. (1989). <em>The experience of nature: A psychological perspective.</em> Cambridge University Press.</li>
+          <li>Khanna, S., Knyazev, B., Wang, T.-Y., Pumarola, A., Ranjan, A., Mai, A., Liu, B., Yang, J., Tulsiani, S., Ramanan, D., &amp; Deng, J. (2024). Infinigen Indoors: Photorealistic indoor scenes using procedural generation [extended technical report]. Princeton Vision &amp; Learning Lab.</li>
+          <li>Meyers-Levy, J., &amp; Zhu, R. (2007). The influence of ceiling height: The effect of priming on the type of processing that people use. <em>Journal of Consumer Research, 34</em>(2), 174&ndash;186. <a href="https://doi.org/10.1086/519146" target="_blank" rel="noopener">https://doi.org/10.1086/519146</a></li>
+          <li>M&uuml;nch, M., Wirz-Justice, A., Brown, S. A., Kantermann, T., Martiny, K., Stefani, O., Vetter, C., Wright, K. P., Wulff, K., &amp; Skene, D. J. (2020). The role of daylight for humans: Gaps in current knowledge. <em>Clocks &amp; Sleep, 2</em>(1), 61&ndash;85. <a href="https://doi.org/10.3390/clockssleep2010008" target="_blank" rel="noopener">https://doi.org/10.3390/clockssleep2010008</a></li>
+          <li>Raistrick, A., Mei, L., Kayan, K., Yan, D., Zuo, Y., Han, B., Wen, H., Parakh, M., Alexandropoulos, S., Lipson, L., Ma, Z., &amp; Deng, J. (2024). Infinigen Indoors: Photorealistic indoor scenes using procedural generation. <em>Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR).</em></li>
+          <li>Stiny, G. (1980). Introduction to shape and shape grammars. <em>Environment and Planning B: Planning and Design, 7</em>(3), 343&ndash;351. <a href="https://doi.org/10.1068/b070343" target="_blank" rel="noopener">https://doi.org/10.1068/b070343</a></li>
+          <li>Ulrich, R. S. (1991). Effects of interior design on wellness: Theory and recent scientific research. <em>Journal of Health Care Interior Design, 3</em>, 97&ndash;109.</li>
+          <li>Vartanian, O., Navarrete, G., Chatterjee, A., Fich, L. B., Leder, H., Modro&ntilde;o, C., Rostrup, N., Skov, M., Corradi, G., &amp; Nadal, M. (2015). Architectural design and the brain: Effects of ceiling height and perceived enclosure on beauty judgments and approach-avoidance decisions. <em>Journal of Environmental Psychology, 41</em>, 10&ndash;18. <a href="https://doi.org/10.1016/j.jenvp.2014.11.006" target="_blank" rel="noopener">https://doi.org/10.1016/j.jenvp.2014.11.006</a></li>
+        </ul>
+      </section>
+
 
     </main>
   </div>

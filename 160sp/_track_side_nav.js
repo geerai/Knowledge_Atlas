@@ -63,9 +63,9 @@
       stub: false,
       items: [
         { id: 't3_intro',       href: 't3_intro.html',       label: 'Track Intro' },
-        { id: 't3_task1',       href: 't3_task1.html',       label: 'Task 1: Collect & Catalog 3D Models' },
-        { id: 't3_task2',       href: 't3_task2.html',       label: 'Task 2: VR Conversion & Factor Testing' },
-        { id: 't3_task3',       href: 't3_task3.html',       label: 'Task 3: AI Front-End for Scene Modification' },
+        { id: 't3_task1',       href: 't3_task1.html',       label: 'Task 1: Infinigen Setup & Manifests' },
+        { id: 't3_task2',       href: 't3_task2.html',       label: 'Task 2: Render Pipeline & Gallery' },
+        { id: 't3_task3',       href: 't3_task3.html',       label: 'Task 3: AI Front-End & Worship Flagship' },
         { id: 't3_submissions', href: 't3_submissions.html', label: 'Submissions' }
       ]
     },
