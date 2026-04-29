@@ -112,12 +112,28 @@
       <section>
         <h2>Phase 1 &mdash; Install Infinigen Indoors</h2>
 
+        <div class="callout callout-teal" style="margin: 12px 0;">
+          <strong>Scaffolds available — use them.</strong> The course ships
+          working starter scripts at <code>Knowledge_Atlas/scripts/track3/</code>
+          and a parametric-room template at <code>Knowledge_Atlas/3d_rooms/_scaffold/</code>.
+          You adapt these rather than write from scratch:
+          <ul>
+            <li><code>scripts/track3/setup_track3.sh</code> &mdash; one-command Blender + Infinigen + venv install with smoke test</li>
+            <li><code>scripts/track3/infinigen_wrapper.py</code> &mdash; JSON params &rarr; Infinigen &rarr; glTF (Task 2's central artefact, ready to use)</li>
+            <li><code>scripts/track3/extract_infinigen_params.py</code> &mdash; introspects an Infinigen room class and emits a draft manifest you adapt</li>
+            <li><code>scripts/track3/validation_gate.py</code> &mdash; JSON-Schema patch validator (Task 3 uses this)</li>
+            <li><code>scripts/track3/llm_wrapper_starter.py</code> &mdash; LLM function-calling adapter with the system prompt (Task 3)</li>
+            <li><code>3d_rooms/_scaffold/</code> &mdash; per-room scaffold: copy this folder for each new room you author</li>
+            <li><code>3d_rooms/_presets/</code> &mdash; three starter literature-grounded presets (Vartanian 2015, Kaplan 1989, Ulrich 1991)</li>
+          </ul>
+        </div>
+
         <h3>Required tooling</h3>
         <ul>
           <li><strong>Blender 4.x</strong> (CLI access only; no GUI work)</li>
           <li><strong>Python 3.10+</strong> with a clean virtual environment</li>
           <li><strong>Infinigen Indoors</strong> from <code>princeton-vl/infinigen</code> (BSD licence)</li>
-          <li><strong>Course-supplied wrapper</strong>: <code>Knowledge_Atlas/scripts/infinigen_wrapper.py</code></li>
+          <li><strong>Course-supplied wrapper</strong>: <code>Knowledge_Atlas/scripts/track3/infinigen_wrapper.py</code></li>
           <li><code>git</code>, <code>jq</code>, and <code>jsonschema</code> (for manifest validation)</li>
         </ul>
 
@@ -555,7 +571,7 @@ git push origin track3/&lt;your-name&gt;</code></pre>
           </thead>
           <tbody>
             <tr>
-              <td><code>Knowledge_Atlas/scripts/infinigen_wrapper.py</code></td>
+              <td><code>Knowledge_Atlas/scripts/track3/infinigen_wrapper.py</code></td>
               <td>Course-supplied Python wrapper. Reads a parameter dict
               that conforms to one of your manifests, calls Infinigen,
               and exports glTF. This is the contract your manifests

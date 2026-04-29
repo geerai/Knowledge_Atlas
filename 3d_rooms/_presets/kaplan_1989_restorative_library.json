@@ -1,0 +1,41 @@
+{
+  "_preset_name": "kaplan_1989_restorative_library",
+  "_room_type": "library",
+  "_human_label": "Kaplan & Kaplan 1989 restorative-library condition",
+  "_short_description": "Reproduces a high-restorativeness reading-room configuration consistent with Attention Restoration Theory (Kaplan & Kaplan, 1989): being-away from task demands, soft fascination through natural light and visual order, extent through coherent shelving, compatibility with quiet reading.",
+  "_published_finding": "Restorative environments produce measurable cognitive recovery on directed-attention tasks. Hartig et al. (1991, 1996) showed natural-element exposure improved attention task performance vs urban controls; Berman, Jonides & Kaplan (2008) extended to working memory.",
+  "_target_parameters": {
+    "daylight_intensity": 0.85,
+    "wall_warmth_index": 0.65,
+    "shelving_density": 0.8,
+    "ceiling_height_m": 4.5,
+    "color_palette_id": "natural_warm",
+    "ambient_noise_proxy_db": 30,
+    "biophilia_count": 4
+  },
+  "_apply_op": {
+    "op": "preset",
+    "preset_name": "kaplan_1989_restorative_library",
+    "_resolves_to": [
+      {"op": "set", "param": "daylight_intensity", "value": 0.85},
+      {"op": "set", "param": "ceiling_height_m", "value": 4.5},
+      {"op": "set", "param": "shelving_density", "value": 0.8},
+      {"op": "set", "param": "biophilia_count", "value": 4}
+    ]
+  },
+  "_caveats": [
+    "ART components (being-away, soft fascination, extent, compatibility) interact non-linearly. This preset weights soft fascination and extent more heavily; the BN's L17 structured-factor (Sprint 3 contest #1) will read the four components separately.",
+    "The Berman et al. (2008) effect was for nature exposure; an interior library is a partial proxy. The preset should be validated against rated PRS scores from human raters.",
+    "Cross-cultural variance for restorativeness is medium per Sprint 2 panel. Asian temple-libraries and Western academic libraries elicit similar restorative responses in Yang et al. (2018) cross-cultural replication, but the colour palette skew may need cultural adaptation."
+  ],
+  "_citation": {
+    "apa_primary": "Kaplan, R., & Kaplan, S. (1989). The experience of nature: A psychological perspective. Cambridge University Press.",
+    "apa_supporting": [
+      "Berman, M. G., Jonides, J., & Kaplan, S. (2008). The cognitive benefits of interacting with nature. Psychological Science, 19(12), 1207–1212.",
+      "Hartig, T., Korpela, K., Evans, G. W., & Gärling, T. (1997). A measure of restorative quality in environments. Scandinavian Housing and Planning Research, 14(4), 175–194."
+    ]
+  },
+  "_sprint": "3",
+  "_authored_by": "claude-cowork-sprint3",
+  "_authored_date": "2026-04-29"
+}

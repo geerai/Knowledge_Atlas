@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Track 3 — viewer starter</title>
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #F7F4EF; color: #2C2C2C; }
+    header { background: #1C3D3A; color: #fff; padding: 16px 24px; }
+    header h1 { font-family: Georgia, serif; font-size: 1.3rem; margin: 0; }
+    header .meta { font-size: 0.78rem; color: #B8D4CE; margin-top: 4px; letter-spacing: .04em; }
+    .layout { display: grid; grid-template-columns: 1fr 320px; gap: 24px; padding: 24px; max-width: 1400px; margin: 0 auto; }
+    @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+    model-viewer { width: 100%; height: 70vh; background: #2A2A2A; border-radius: 8px; }
+    .controls { background: #fff; border: 1px solid #D8D0C5; border-radius: 8px; padding: 18px; }
+    .controls h2 { font-family: Georgia, serif; font-size: 0.95rem; color: #1C3D3A; margin: 0 0 12px; padding-bottom: 6px; border-bottom: 2px solid #2A7868; }
+    .control { margin-bottom: 14px; }
+    .control label { display: block; font-size: 0.78rem; color: #6B6B6B; text-transform: uppercase; letter-spacing: .06em; font-weight: 600; margin-bottom: 4px; }
+    .control input[type="range"] { width: 100%; }
+    .control .value { font-family: SFMono-Regular, monospace; font-size: 0.85rem; color: #1C3D3A; float: right; }
+    .control select { width: 100%; padding: 6px; border: 1px solid #D8D0C5; border-radius: 4px; font-family: Arial, sans-serif; font-size: 0.85rem; }
+    .actions { margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .actions button { padding: 8px 14px; border: none; border-radius: 6px; font-family: Arial, sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+    .btn-primary { background: #2A7868; color: #fff; }
+    .btn-primary:hover { background: #1a5c4e; }
+    .btn-secondary { background: none; border: 1px solid #D8D0C5; color: #6B6B6B; }
+    .json-out { font-family: SFMono-Regular, monospace; font-size: 0.78rem; background: #1a2a28; color: #a8e8d0; padding: 10px 12px; border-radius: 6px; margin-top: 12px; overflow-x: auto; max-height: 200px; }
+    footer { background: #EDE8E0; padding: 14px 24px; font-size: 0.78rem; color: #6B6B6B; text-align: center; }
+    footer code { background: #fff; padding: 2px 5px; border-radius: 3px; font-size: 0.82rem; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Track 3 — Parametric Room Viewer (starter)</h1>
+  <div class="meta">Adapt this file. Bind the inputs to your manifest's parameters; call infinigen_wrapper.py via your build step.</div>
+</header>
+
+<div class="layout">
+  <div>
+    <model-viewer id="viewer"
+                  src="renders/living_room_default.gltf"
+                  alt="Parametric room"
+                  camera-controls
+                  auto-rotate
+                  shadow-intensity="1"
+                  exposure="0.95"
+                  environment-image="neutral">
+    </model-viewer>
+  </div>
+
+  <aside class="controls">
+    <h2>Parameters</h2>
+
+    <!-- TEMPLATE: one .control block per manifest parameter.
+         Replace these three with your manifest's actual parameters. -->
+
+    <div class="control">
+      <label>Ceiling height <span id="v_ceiling" class="value">2.7 m</span></label>
+      <input type="range" id="ceiling_height_m" min="2.0" max="3.5" step="0.1" value="2.7"
+             oninput="update('ceiling_height_m', this.value, ' m')">
+    </div>
+
+    <div class="control">
+      <label>Daylight intensity <span id="v_daylight" class="value">0.7</span></label>
+      <input type="range" id="daylight_intensity" min="0" max="1" step="0.05" value="0.7"
+             oninput="update('daylight_intensity', this.value, '')">
+    </div>
+
+    <div class="control">
+      <label>Wall warmth <span id="v_warmth" class="value">0.5</span></label>
+      <input type="range" id="wall_warmth_index" min="0" max="1" step="0.05" value="0.5"
+             oninput="update('wall_warmth_index', this.value, '')">
+    </div>
+
+    <!-- END TEMPLATE -->
+
+    <div class="actions">
+      <button class="btn-primary" onclick="rerender()">Re-render</button>
+      <button class="btn-secondary" onclick="resetDefaults()">Reset</button>
+      <button class="btn-secondary" onclick="copyParams()">Copy params</button>
+    </div>
+
+    <div id="json_out" class="json-out">{}</div>
+  </aside>
+</div>
+
+<footer>
+  Re-render runs <code>infinigen_wrapper.py --params params.json --out renders/...</code> in the background.
+  Without that backend wired up, the viewer shows the most recent pre-rendered glTF only.
+</footer>
+
+<script>
+  const PARAMS = {
+    ceiling_height_m: 2.7,
+    daylight_intensity: 0.7,
+    wall_warmth_index: 0.5,
+  };
+  function update(name, val, unit) {
+    PARAMS[name] = parseFloat(val);
+    const labelMap = {
+      ceiling_height_m: 'v_ceiling',
+      daylight_intensity: 'v_daylight',
+      wall_warmth_index: 'v_warmth',
+    };
+    const id = labelMap[name];
+    if (id) document.getElementById(id).textContent = val + unit;
+    document.getElementById('json_out').textContent = JSON.stringify(PARAMS, null, 2);
+  }
+  function rerender() {
+    // TODO: POST PARAMS to a small Python service that runs infinigen_wrapper.py
+    // and updates the model-viewer src to the new render path.
+    alert('Re-render: wire up your build step to call infinigen_wrapper.py with these params:\n\n'
+          + JSON.stringify(PARAMS, null, 2));
+  }
+  function resetDefaults() {
+    PARAMS.ceiling_height_m = 2.7; PARAMS.daylight_intensity = 0.7; PARAMS.wall_warmth_index = 0.5;
+    document.getElementById('ceiling_height_m').value = 2.7;
+    document.getElementById('daylight_intensity').value = 0.7;
+    document.getElementById('wall_warmth_index').value = 0.5;
+    document.getElementById('v_ceiling').textContent = '2.7 m';
+    document.getElementById('v_daylight').textContent = '0.7';
+    document.getElementById('v_warmth').textContent = '0.5';
+    document.getElementById('json_out').textContent = JSON.stringify(PARAMS, null, 2);
+  }
+  function copyParams() {
+    navigator.clipboard.writeText(JSON.stringify(PARAMS, null, 2));
+    alert('Copied to clipboard.');
+  }
+  document.getElementById('json_out').textContent = JSON.stringify(PARAMS, null, 2);
+</script>
+
+</body>
+</html>

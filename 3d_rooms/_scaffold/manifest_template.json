@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TODO_ROOM_NAME parameter manifest",
+  "_track3_room_type": "TODO_ROOM_TYPE",
+  "_authored_by": "TODO student name",
+  "_authored_date": "TODO YYYY-MM-DD",
+  "_subdomain_TODO_choose_one": [
+    "conversation", "encounter", "hosting", "presentation",
+    "group_assembly", "mingling", "territory", "peripheral_engagement",
+    "restoration", "aesthetic_affect", "cognitive_load", "wayfinding", "social_signal"
+  ],
+  "_panel_required_fields": {
+    "interaction_mode_TODO_choose_one": ["focused", "unfocused", "mixed"],
+    "valence_polarity_TODO_choose_one": ["positive", "negative", "neutral", "mixed"],
+    "temporal_window_TODO_choose_one": ["snapshot", "short_period", "sustained", "longitudinal"],
+    "cross_cultural_variance_TODO_choose_one": ["low", "medium", "high"]
+  },
+  "type": "object",
+  "properties": {
+    "ceiling_height_m": {
+      "type": "number",
+      "minimum": 2.0,
+      "maximum": 3.5,
+      "default": 2.7,
+      "x-unit": "metres",
+      "x-citation": "Vartanian, O., et al. (2015). Architectural design and the brain: Effects of ceiling height and perceived enclosure on beauty judgments and approach-avoidance decisions. Journal of Environmental Psychology, 41, 10-18.",
+      "x-rationale": "Worked example: ceiling height affects beauty judgement and approach-avoidance behaviour; documented in 8 of 15 V2.7 room types as a primary parameter."
+    },
+    "daylight_intensity": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "default": 0.7,
+      "x-unit": "fraction (0 = night, 1 = noon-overcast)",
+      "x-citation": "TODO Munch et al. 2020 (sleep) OR Boyce 2014 (visual comfort) — pick the citation that motivates daylight for YOUR room type",
+      "x-rationale": "TODO one sentence on why daylight matters for THIS room type"
+    },
+    "TODO_PARAM_3": {
+      "type": "TODO_choose_one_of_number_integer_string_boolean",
+      "minimum": "TODO_or_remove_if_not_numeric",
+      "maximum": "TODO_or_remove_if_not_numeric",
+      "default": "TODO_a_sensible_default",
+      "x-unit": "TODO",
+      "x-citation": "TODO APA citation supporting this parameter",
+      "x-rationale": "TODO one sentence on why this parameter matters"
+    }
+  },
+  "_instructions": [
+    "Replace every TODO above. Add 4-7 more parameters per panel guidance.",
+    "Required: at least one parameter MUST cite a specific published study (Vartanian, Kaplan & Kaplan, Ulrich, Munch, Joye, Bermudez, Meyers-Levy, Sommer, Barrett, etc.).",
+    "When you ship this manifest, also create a paired params/<room>_default.json with the manifest's default values; the infinigen_wrapper.py validates against this manifest at render time.",
+    "JSON-Schema $schema constraint: do not introduce // comments — use _comment keys instead."
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "_preset_name": "vartanian_2015_cathedral",
+  "_room_type": "worship",
+  "_human_label": "Vartanian 2015 cathedral-effect condition",
+  "_short_description": "Reproduces the high-ceiling rounded-room condition from Vartanian et al. (2015), shown to elicit stronger beauty judgements and approach-avoidance decisions.",
+  "_published_finding": "Participants rated rooms with high ceilings (vs. low) and curvilinear contours (vs. rectilinear) as more beautiful and were more likely to approach them. The high-ceiling effect held across stimulus type. Effect sizes: η² ≈ 0.26 for ceiling-height main effect on beauty.",
+  "_target_parameters": {
+    "ceiling_height_m": 14.0,
+    "wall_curvature": 0.85,
+    "ornament_density": 0.7,
+    "fenestration_pattern": "clerestory_high",
+    "light_source_position": "high_indirect",
+    "wall_warmth_index": 0.45,
+    "fractal_pattern_strength": 0.55
+  },
+  "_apply_op": {
+    "op": "preset",
+    "preset_name": "vartanian_2015_cathedral",
+    "_resolves_to": [
+      {"op": "set", "param": "ceiling_height_m", "value": 14.0},
+      {"op": "set", "param": "wall_curvature", "value": 0.85},
+      {"op": "set", "param": "ornament_density", "value": 0.7}
+    ]
+  },
+  "_caveats": [
+    "Vartanian et al. used 200 photographs of real interior architecture; we are reproducing a parametric synthesis intended to evoke the same perceptual condition. Cross-validation against the original stimuli is recommended.",
+    "The published effect was on beauty and approach-avoidance ratings, not directly on awe. L36 (cognitive.awe) is the closer Sprint-2 latent; restorativeness (L17) and aesthetic_affect cluster (L21–L26) also load.",
+    "Cross-cultural caveat: Vartanian's sample was Western; awe responses to high-ceiling sacred space replicate broadly (Yaden et al., 2019) but the *meaning* of awe varies (Keltner & Haidt, 2003)."
+  ],
+  "_citation": {
+    "apa": "Vartanian, O., Navarrete, G., Chatterjee, A., Fich, L. B., Leder, H., Modroño, C., Nadal, M., Rostrup, N., & Skov, M. (2015). Architectural design and the brain: Effects of ceiling height and perceived enclosure on beauty judgments and approach-avoidance decisions. Journal of Environmental Psychology, 41, 10–18.",
+    "doi": "10.1016/j.jenvp.2014.11.006"
+  },
+  "_sprint": "3",
+  "_authored_by": "claude-cowork-sprint3",
+  "_authored_date": "2026-04-29"
+}

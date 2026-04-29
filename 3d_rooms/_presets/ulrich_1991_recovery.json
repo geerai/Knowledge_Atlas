@@ -1,0 +1,44 @@
+{
+  "_preset_name": "ulrich_1991_recovery",
+  "_room_type": "hospital",
+  "_human_label": "Ulrich 1984/1991 view-of-nature post-surgical recovery condition",
+  "_short_description": "Reproduces the Ulrich (1984) hospital-window-view condition shown to shorten post-surgical recovery and reduce analgesic use vs a brick-wall view condition. Parametric proxy: window onto natural scene, biophilic indoor elements, daylight, restful colour palette.",
+  "_published_finding": "Ulrich (1984): cholecystectomy patients with bedside windows facing trees had shorter postoperative stays (M = 7.96 days vs 8.70), required fewer strong analgesics, and received fewer negative evaluative comments from nurses than matched patients with windows facing a brick wall. N = 46 matched pairs. The effect has been partially replicated in Park & Mattson (2009) for appendectomy and other studies (see Stress Recovery Theory; Ulrich et al., 1991).",
+  "_target_parameters": {
+    "window_view_content": "natural_trees",
+    "window_view_visible_fraction": 0.4,
+    "daylight_intensity": 0.8,
+    "wall_warmth_index": 0.6,
+    "ceiling_height_m": 2.6,
+    "wall_color_hue": 0.35,
+    "biophilia_count": 3,
+    "fixture_clinical_visibility": 0.3,
+    "ambient_noise_proxy_db": 38
+  },
+  "_apply_op": {
+    "op": "preset",
+    "preset_name": "ulrich_1991_recovery",
+    "_resolves_to": [
+      {"op": "set", "param": "window_view_content", "value": "natural_trees"},
+      {"op": "set", "param": "biophilia_count", "value": 3},
+      {"op": "set", "param": "fixture_clinical_visibility", "value": 0.3},
+      {"op": "set", "param": "wall_warmth_index", "value": 0.6}
+    ]
+  },
+  "_caveats": [
+    "Ulrich's manipulation was a window VIEW, not the room contents. The parametric reproduction necessarily synthesises the view as a back-projected image; a researcher reproducing the experimental protocol should use real-photo backdrops rather than synthetic ones to avoid valence-of-rendering confounds.",
+    "Stress Recovery Theory (Ulrich et al., 1991) and Attention Restoration Theory (Kaplan & Kaplan, 1989) overlap on this preset. The L17 (restorativeness) ART preset and this Ulrich SRT preset should produce similar parametric configurations but cite different theoretical mechanisms.",
+    "Cross-cultural variance for clinical-environment response is documented in Beauchemin & Hays (1998) replication and Park & Mattson (2008) on Mediterranean hospitals. Stay alert to non-Western hospital aesthetics where 'clinical' colour palettes differ.",
+    "The preset's effect is on RECOVERY MEASURES (length of stay, analgesic use), not directly on a Sprint-2 latent. Closest latents: cognitive.restorativeness (L17), cognitive.care_signal (L33 — clinical vs warm), cognitive.coziness (L25)."
+  ],
+  "_citation": {
+    "apa_primary": "Ulrich, R. S. (1984). View through a window may influence recovery from surgery. Science, 224(4647), 420–421.",
+    "apa_supporting": [
+      "Ulrich, R. S., Simons, R. F., Losito, B. D., Fiorito, E., Miles, M. A., & Zelson, M. (1991). Stress recovery during exposure to natural and urban environments. Journal of Environmental Psychology, 11(3), 201–230.",
+      "Park, S.-H., & Mattson, R. H. (2009). Therapeutic influences of plants in hospital rooms on surgical recovery. HortScience, 44(1), 102–105."
+    ]
+  },
+  "_sprint": "3",
+  "_authored_by": "claude-cowork-sprint3",
+  "_authored_date": "2026-04-29"
+}

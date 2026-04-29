@@ -90,10 +90,22 @@
           Indoors Python API, and the Blender 4.x glTF exporter.
         </div>
 
+        <div class="callout callout-teal" style="margin: 12px 0;">
+          <strong>The wrapper is shipped, not assigned.</strong> You do not
+          author <code>infinigen_wrapper.py</code> from scratch. The course
+          ships a working version at
+          <code>Knowledge_Atlas/scripts/track3/infinigen_wrapper.py</code>;
+          you extend its <code>ROOM_BUILDERS</code> dict with your assigned
+          room types and customise per-room parameter mapping. Same for
+          <code>scripts/track3/validation_gate.py</code> (Task 3) and
+          <code>3d_rooms/_scaffold/viewer_starter.html</code> (the
+          model-viewer starter you adapt for the parameter-sweep gallery).
+        </div>
+
         <h3>Wrapper signature</h3>
         <p>The script is invoked from the command line, not from a notebook:</p>
 
-<pre><code class="lang-bash">python3 scripts/infinigen_wrapper.py \
+<pre><code class="lang-bash">python3 scripts/track3/infinigen_wrapper.py \
   --manifest manifests/living_room.schema.json \
   --params   params/living_room_default.json \
   --out      renders/living_room_default.gltf</code></pre>
@@ -113,7 +125,7 @@
           repo root:
         </p>
 
-<pre><code class="lang-bash">blender --background --python scripts/infinigen_wrapper.py -- \
+<pre><code class="lang-bash">blender --background --python scripts/track3/infinigen_wrapper.py -- \
   --manifest manifests/living_room.schema.json \
   --params   params/living_room_default.json \
   --out      renders/living_room_default.gltf</code></pre>
@@ -167,7 +179,7 @@
         <div class="deliverable">
           <div class="deliverable-label">Deliverable</div>
           <p>
-            Working <code>scripts/infinigen_wrapper.py</code> plus three
+            Working <code>scripts/track3/infinigen_wrapper.py</code> plus three
             test renders per assigned room (default, perturbed-1,
             perturbed-2), each with its <code>.meta.json</code> sidecar.
             Six glTFs total across your two assigned rooms.
@@ -421,7 +433,7 @@
             <tr><th>Item</th><th>Filename / Path</th></tr>
           </thead>
           <tbody>
-            <tr><td>Python wrapper</td><td><code>scripts/infinigen_wrapper.py</code></td></tr>
+            <tr><td>Python wrapper</td><td><code>scripts/track3/infinigen_wrapper.py</code></td></tr>
             <tr><td>Test renders (3 per room &times; 2 rooms)</td><td><code>track3/&lt;your-name&gt;/renders/*.gltf</code> + <code>*.meta.json</code></td></tr>
             <tr><td>Browser viewer (one per room)</td><td><code>track3/&lt;your-name&gt;/viewer/&lt;room&gt;.html</code></td></tr>
             <tr><td>Sweep gallery (one per room)</td><td><code>track3/&lt;your-name&gt;/gallery/&lt;room&gt;.html</code></td></tr>
@@ -502,7 +514,7 @@
 git pull --rebase upstream main
 
 # Commit small as you go
-git add scripts/infinigen_wrapper.py
+git add scripts/track3/infinigen_wrapper.py
 git commit -m "task2: infinigen wrapper, JSON -> glTF + sidecar"
 
 git add track3/&lt;your-name&gt;/viewer/ track3/&lt;your-name&gt;/gallery/
@@ -549,7 +561,7 @@ git push origin track3/&lt;your-name&gt;</code></pre>
           </thead>
           <tbody>
             <tr>
-              <td><code>Knowledge_Atlas/scripts/infinigen_wrapper.py</code></td>
+              <td><code>Knowledge_Atlas/scripts/track3/infinigen_wrapper.py</code></td>
               <td>The Task&nbsp;1 deliverable. Task&nbsp;2 extends it with the glTF export path and sidecar metadata.</td>
             </tr>
             <tr>
